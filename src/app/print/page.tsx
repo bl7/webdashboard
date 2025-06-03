@@ -261,8 +261,8 @@ export default function LabelPrinter() {
     }
     setIsBtSending(true);
     try {
-      const serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
-      const characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
+      const serviceUUID = "fac1ba2f-61a2-4d83-9a8c-60087c232569";
+      const characteristicUUID = "fac1ba2f-61a2-4d83-9a8c-60087c232569";
 
       const service = await btServer.getPrimaryService(serviceUUID);
       const characteristic = await service.getCharacteristic(
