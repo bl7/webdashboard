@@ -20,6 +20,8 @@ type IngredientItem = {
   id: number;
   name: string;
   allergens: string[];
+  printedOn: string; // Added
+  expiryDate: string; // Added
 };
 
 type MenuItem = {
@@ -42,10 +44,34 @@ type PrintQueueItem = {
 };
 
 const INGREDIENTS: IngredientItem[] = [
-  { id: 1, name: "Milk", allergens: ["milk"] },
-  { id: 2, name: "Eggs", allergens: ["eggs"] },
-  { id: 3, name: "Wheat Flour", allergens: ["wheat"] },
-  { id: 4, name: "Sugar", allergens: [] },
+  {
+    id: 1,
+    name: "Milk",
+    allergens: ["milk"],
+    printedOn: "2025-06-01",
+    expiryDate: "2025-08-01",
+  },
+  {
+    id: 2,
+    name: "Eggs",
+    allergens: ["eggs"],
+    printedOn: "2025-06-02",
+    expiryDate: "2025-07-02",
+  },
+  {
+    id: 3,
+    name: "Wheat Flour",
+    allergens: ["wheat"],
+    printedOn: "2025-06-01",
+    expiryDate: "2025-12-01",
+  },
+  {
+    id: 4,
+    name: "Sugar",
+    allergens: [],
+    printedOn: "2025-06-01",
+    expiryDate: "2025-12-31",
+  },
 ];
 
 const MENU_ITEMS: MenuItem[] = [
@@ -92,6 +118,11 @@ function highlightAllergens(ingredient: string) {
     }
   }
   return ingredient;
+}
+
+// Check if an ingredient is allergenic by itself
+function isAllergenic(ingredient: IngredientItem): boolean {
+  return ingredient.allergens.length > 0;
 }
 
 // --- Bluetooth Web API typings ---
@@ -261,8 +292,8 @@ export default function LabelPrinter() {
     }
     setIsBtSending(true);
     try {
-      const serviceUUID = "fac1ba2f-61a2-4d83-9a8c-60087c232569";
-      const characteristicUUID = "fac1ba2f-61a2-4d83-9a8c-60087c232569";
+      const serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb";
+      const characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb";
 
       const service = await btServer.getPrimaryService(serviceUUID);
       const characteristic = await service.getCharacteristic(
@@ -326,6 +357,7 @@ export default function LabelPrinter() {
             }
           }
 
+          // Now both ingredients and menu items have dates
           if (item.printedOn && item.expiryDate) {
             epsonPrinter.addText(
               `Printed On: ${new Date(
@@ -371,6 +403,7 @@ export default function LabelPrinter() {
       }
     }
 
+    // Now both ingredients and menu items have dates
     if (item.printedOn && item.expiryDate) {
       lines += `Printed On: ${new Date(
         item.printedOn
@@ -421,6 +454,8 @@ export default function LabelPrinter() {
             name: ingredientItem.name,
             quantity: 1,
             allergens: ingredientItem.allergens,
+            printedOn: ingredientItem.printedOn, // Added
+            expiryDate: ingredientItem.expiryDate, // Added
           },
         ];
       } else {
@@ -468,31 +503,78 @@ export default function LabelPrinter() {
         onError={() => setMessage("Failed to load Epson ePOS SDK")}
       />
 
-      <main className="max-w-5xl mx-auto p-6 font-sans">
-        <h1 className="text-3xl font-bold mb-6 text-center">Label Printing</h1>
+      <main className=" max-w-5xl mx-auto p-6 font-sans">
+        <div className="flex flex-col md:flex-row items-center md:items-start text-sm mt-4 md:mt-0 space-y-3 md:space-y-0 md:space-x-6 border-b-2 border-black p-5">
+          {/* USB/Network Status */}
+          <div className="flex flex-col items-start space-y-0.5 min-w-[160px]">
+            <span className="font-semibold">USB/Network Status:</span>
+            <span
+              className={printerConnected ? "text-green-600" : "text-red-600"}
+            >
+              {printerConnected ? "Connected" : "Not Connected"}
+            </span>
+          </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-6 border-b border-gray-300 mb-6">
+          {/* Bluetooth Status */}
+          <div className="flex flex-col items-start space-y-0.5 min-w-[160px]">
+            <span className="font-semibold">Bluetooth Status:</span>
+            <span className={btDevice ? "text-green-600" : "text-red-600"}>
+              {btDevice
+                ? `Connected to ${btDevice.name ?? btDevice.id}`
+                : "Not Connected"}
+            </span>
+          </div>
+
+          {/* Message */}
+          <div className="flex-1 text-left md:text-left text-gray-700">
+            {message}
+          </div>
+
+          {/* Bluetooth Connect Button */}
           <button
-            className={`pb-2 font-semibold ${
-              activeTab === "ingredients"
-                ? "border-b-4 border-indigo-600 text-indigo-600"
-                : "text-gray-600 hover:text-indigo-500"
+            onClick={scanAndConnectBluetooth}
+            disabled={isBtConnecting || btDevice !== null}
+            className={`px-4 py-2 rounded font-semibold text-white transition whitespace-nowrap ${
+              !btDevice && !isBtConnecting
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
             }`}
+          >
+            {isBtConnecting
+              ? "Connecting..."
+              : btDevice
+              ? "Connected"
+              : "Connect Bluetooth"}
+          </button>
+        </div>
+
+        <h1 className="text-3xl font-bold mb-6 p-5 text-center">
+          Print Labels
+        </h1>
+        {/* Tabs */}
+        <div className="flex border-b-2 border-black p-5 mb-6">
+          <div
             onClick={() => setActiveTab("ingredients")}
+            className={`flex-1 text-center py-4 font-semibold text-lg rounded-t-lg cursor-pointer transition
+      ${
+        activeTab === "ingredients"
+          ? "bg-gray-300 border-b-4 border-gray-400 shadow-inner"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
           >
             Ingredients
-          </button>
-          <button
-            className={`pb-2 font-semibold ${
-              activeTab === "menu"
-                ? "border-b-4 border-indigo-600 text-indigo-600"
-                : "text-gray-600 hover:text-indigo-500"
-            }`}
+          </div>
+          <div
             onClick={() => setActiveTab("menu")}
+            className={`flex-1 text-center py-4 font-semibold text-lg rounded-t-lg cursor-pointer transition
+      ${
+        activeTab === "menu"
+          ? "bg-gray-300 border-b-4 border-gray-400 shadow-inner"
+          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+      }`}
           >
             Menu Items
-          </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -507,12 +589,33 @@ export default function LabelPrinter() {
                   const inQueue = printQueue.some(
                     (q) => q.id === item.id && q.type === activeTab
                   );
+                  const isIngredientAllergenic =
+                    activeTab === "ingredients" &&
+                    isAllergenic(item as IngredientItem);
                   return (
                     <li
                       key={item.id}
-                      className="flex justify-between items-center p-3 border rounded shadow-sm hover:shadow-md transition"
+                      className={`flex justify-between items-center p-3 border rounded shadow-sm hover:shadow-md transition ${
+                        isIngredientAllergenic ? "border-red-300 bg-red-50" : ""
+                      }`}
                     >
-                      <div className="font-medium">{item.name}</div>
+                      <div>
+                        <div className="font-medium flex items-center gap-2">
+                          {item.name}
+                          {isIngredientAllergenic && (
+                            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+                              ⚠ ALLERGEN
+                            </span>
+                          )}
+                        </div>
+                        {activeTab === "ingredients" &&
+                          (item as IngredientItem).allergens.length > 0 && (
+                            <div className="text-xs text-red-600 mt-1">
+                              Contains:{" "}
+                              {(item as IngredientItem).allergens.join(", ")}
+                            </div>
+                          )}
+                      </div>
                       <button
                         disabled={inQueue}
                         onClick={() => addToPrintQueue(item, activeTab)}
@@ -548,7 +651,6 @@ export default function LabelPrinter() {
                       <span className="text-xs text-gray-500 capitalize">
                         {item.type}
                       </span>
-                      {/* Allergens badges */}
                       {item.allergens && item.allergens.length > 0 && (
                         <div className="mt-1 flex flex-wrap gap-1">
                           {item.allergens.map((a) => (
@@ -561,7 +663,6 @@ export default function LabelPrinter() {
                           ))}
                         </div>
                       )}
-                      {/* Ingredients badges for menu items */}
                       {item.type === "menu" && item.ingredients && (
                         <div className="mt-1 flex flex-wrap gap-1">
                           {item.ingredients.map((ing) => (
@@ -648,7 +749,20 @@ export default function LabelPrinter() {
                       </div>
                     )}
                     <div className="text-xs">
-                      {tooLong && allergens.length > 0 ? (
+                      {item.type === "ingredients" && item.allergens?.length ? (
+                        <>
+                          <b>Allergens:</b>{" "}
+                          {item.allergens.map((a, i) => (
+                            <span
+                              key={a}
+                              className="text-red-600 font-semibold"
+                            >
+                              {a}
+                              {i < item.allergens!.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </>
+                      ) : tooLong && allergens.length > 0 ? (
                         <>
                           <b>Allergens:</b>{" "}
                           {allergens.map((a, i) => (
@@ -684,7 +798,6 @@ export default function LabelPrinter() {
 
         {/* Print Buttons & Status */}
         <div className="mt-8 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
-          {/* Epson ePOS Print */}
           <button
             disabled={!printerConnected || printQueue.length === 0}
             onClick={handleEpsonPrint}
@@ -697,25 +810,7 @@ export default function LabelPrinter() {
             Print All via USB/Network (
             {printQueue.reduce((sum, item) => sum + item.quantity, 0)})
           </button>
-
-          {/* Bluetooth Print Controls */}
           <div className="flex space-x-2 items-center">
-            <button
-              onClick={scanAndConnectBluetooth}
-              disabled={isBtConnecting || btDevice !== null}
-              className={`px-4 py-2 rounded font-semibold text-white transition ${
-                !btDevice && !isBtConnecting
-                  ? "bg-blue-600 hover:bg-blue-700"
-                  : "bg-gray-400 cursor-not-allowed"
-              }`}
-            >
-              {isBtConnecting
-                ? "Connecting..."
-                : btDevice
-                ? "Connected"
-                : "Connect Bluetooth"}
-            </button>
-
             <button
               onClick={handleBluetoothPrint}
               disabled={!btDevice || printQueue.length === 0 || isBtSending}
@@ -732,27 +827,6 @@ export default function LabelPrinter() {
                     0
                   )})`}
             </button>
-          </div>
-
-          {/* Status Messages */}
-          <div className="text-sm mt-4 md:mt-0">
-            <div>
-              <span className="font-semibold">USB/Network Status:</span>{" "}
-              <span
-                className={printerConnected ? "text-green-600" : "text-red-600"}
-              >
-                {printerConnected ? "Connected" : "Not Connected"}
-              </span>
-            </div>
-            <div>
-              <span className="font-semibold">Bluetooth Status:</span>{" "}
-              <span className={btDevice ? "text-green-600" : "text-red-600"}>
-                {btDevice
-                  ? `Connected to ${btDevice.name ?? btDevice.id}`
-                  : "Not Connected"}
-              </span>
-            </div>
-            <div className="mt-1">{message}</div>
           </div>
         </div>
       </main>
