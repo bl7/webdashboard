@@ -1,6 +1,9 @@
-import React from "react"
-import { CheckCircle } from "lucide-react"
-import { Button } from "@/components/ui/button"
+"use client"
+
+import React, { useEffect, useRef, useState } from "react"
+import { CheckCircle, ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui"
+import { motion } from "framer-motion"
 
 const features = [
   "Automated expiry and allergen labeling",
@@ -9,49 +12,86 @@ const features = [
   "Touchscreen device: rugged, hygienic, and easy to use",
 ]
 
-export const Feature = () => (
-  <section className="relative bg-gradient-to-b from-primary/10 to-white py-24">
-    <div className="container flex flex-col-reverse items-center justify-between gap-16 px-4 md:px-8 lg:flex-row">
-      {/* Text Block */}
-      <div className="w-full lg:w-1/2">
-        <h2 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl">
-          All-In-One Food Labeling Solution
-        </h2>
-        <p className="mb-8 text-lg text-gray-600">
-          Transform your kitchen with InstaLabel—trusted by 1,500+ UK businesses for effortless
-          compliance, expiry tracking, and efficiency.
-        </p>
-        <ul className="mb-8 space-y-4">
-          {features.map((feature, i) => (
-            <li key={i} className="flex items-center gap-3">
-              <CheckCircle className="h-5 w-5 text-primary" />
-              <span className="text-base font-medium text-gray-800 md:text-lg">{feature}</span>
-            </li>
-          ))}
-        </ul>
-        <Button size="lg" className="mt-2 bg-primary text-white hover:bg-primary/90">
-          See InstaLabel in Action
-        </Button>
-      </div>
+const buttonVariant = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { delay: 0.6, duration: 0.4 } },
+}
 
-      {/* Video Block with fixed aspect ratio */}
-      <div className="flex w-full justify-center lg:w-1/2">
-        <div
-          className="relative w-full max-w-md"
-          style={{ paddingTop: "40%" }} // Controls height relative to width (e.g. 40% = 2.5:1 aspect ratio)
-        >
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="absolute left-0 top-0 h-full w-full rounded-2xl object-cover"
+export const Feature = () => {
+  // Typed ref for the entire left content container
+  const textRef = useRef<HTMLDivElement>(null)
+  const [videoHeight, setVideoHeight] = useState(0)
+
+  useEffect(() => {
+    function updateHeight() {
+      if (textRef.current) {
+        setVideoHeight(textRef.current.clientHeight)
+      }
+    }
+    updateHeight()
+    window.addEventListener("resize", updateHeight)
+    return () => window.removeEventListener("resize", updateHeight)
+  }, [])
+
+  return (
+    <section className="rbg-background px-4 py-20 text-foreground">
+      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-2">
+        {/* Entire Left Content Block with ref */}
+        <div ref={textRef} className="">
+          <h2 className="mb-4 text-3xl font-bold sm:text-4xl">All-In-One Food Labeling Solution</h2>
+          <p className="mb-4 leading-relaxed text-muted-foreground">
+            Transform your kitchen with InstaLabel—trusted by 1,500+ UK businesses for effortless
+            compliance, expiry tracking, and efficiency.
+          </p>
+          <ul className="mb-6 space-y-4 leading-relaxed text-muted-foreground">
+            {features.map((feature, i) => (
+              <li key={i} className="flex items-center gap-3">
+                <CheckCircle className="h-5 w-5 text-primary" />
+                <span className="text-base font-medium text-gray-800 md:text-lg">{feature}</span>
+              </li>
+            ))}
+          </ul>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.6 }}
+            variants={buttonVariant}
           >
-            <source src="/printing.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+            <Button
+              className="w-full bg-primary px-6 py-3 text-base text-primary-foreground hover:bg-primary/90"
+              onClick={() => {
+                const el = document.getElementById("")
+                if (el) el.scrollIntoView({ behavior: "smooth" })
+              }}
+            >
+              See InstaLabel in Action
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </motion.div>
+        </div>
+
+        {/* Video Block with dynamic height */}
+        <div
+          className="flex w-full justify-center lg:w-full"
+          style={{ height: videoHeight, minHeight: 200 }} // minHeight prevents collapse
+        >
+          <div
+            className="relative w-full overflow-hidden rounded-xl border border-border shadow-md"
+            style={{ height: "100%" }} // fill parent's height
+          >
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="h-full w-full rounded-2xl object-cover"
+            >
+              <source src="/printing.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-)
+    </section>
+  )
+}

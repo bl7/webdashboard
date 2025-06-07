@@ -2,7 +2,7 @@
 
 import React from "react"
 import Image from "next/image"
-import { ClipboardCheck, Smartphone, CheckCircle2, Monitor, Printer } from "lucide-react"
+import { ClipboardCheck, Smartphone, Monitor, Printer } from "lucide-react"
 
 export const Services = () => {
   return (
@@ -19,29 +19,24 @@ export const Services = () => {
             <ul className="space-y-6">
               {[
                 {
-                  icon: ClipboardCheck,
-                  title: "EHO & Natasha’s Law Compliance",
-                  desc: "Print fully compliant labels to meet regulatory standards easily — peace of mind for your kitchen and customers.",
+                  icon: Printer,
+                  title: "Print in Seconds",
+                  desc: "No more handwriting or sticky notes. Select, tap, print.",
                 },
                 {
-                  icon: CheckCircle2,
-                  title: "No Training Required",
-                  desc: "Our intuitive system is simple to set up and use, letting your team get started right away without a steep learning curve.",
+                  icon: ClipboardCheck,
+                  title: "Track Prep & Expiry Dates Automatically",
+                  desc: "We calculate everything — so your staff doesn’t have to.",
                 },
                 {
                   icon: Monitor,
-                  title: "Web Interface & Mobile App",
-                  desc: "Manage your labels anywhere, anytime from our cloud-based dashboard or on-the-go with the mobile app.",
-                },
-                {
-                  icon: Printer,
-                  title: "Use Your Existing Epson Printer",
-                  desc: "No need to buy new hardware — our software works seamlessly with Epson TM-M30 printers you already own.",
+                  title: "Comply with Natasha’s Law & EHO Standards",
+                  desc: "Every label includes allergens, prep dates, and times — automatically.",
                 },
                 {
                   icon: Smartphone,
-                  title: "Sunmi Device Support",
-                  desc: "Optionally upgrade with Sunmi devices for integrated kitchen printing and enhanced workflow management.",
+                  title: "Works on Web & Sunmi",
+                  desc: "No special hardware required. We support what you already use.",
                 },
               ].map(({ icon: Icon, title, desc }, idx) => (
                 <li key={idx} className="flex items-start space-x-4">

@@ -15,7 +15,7 @@ const features = [
 
 const plans = [
   {
-    name: "Free Plan",
+    name: "Starter Kitchen",
     monthly: "Free",
     yearly: "Free",
     features: {
@@ -31,7 +31,7 @@ const plans = [
     cta: "Get Started Free",
   },
   {
-    name: "Basic Plan",
+    name: "🧑‍🍳 Pro Kitchen",
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
     features: {
@@ -47,7 +47,7 @@ const plans = [
     cta: "Start Basic Plan",
   },
   {
-    name: "Premium Plan",
+    name: "Multi-Site Mastery",
     monthly: "£25/mo",
     yearly: "£270/yr",
     features: {

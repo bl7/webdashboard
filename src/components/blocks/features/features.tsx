@@ -4,8 +4,8 @@ export const Features = () => {
   return (
     <>
       <FeaturesHero />
-      <FeaturesGrid />
       <CoreFeaturesGrid />
+      <FeaturesGrid />
       <WhyChooseUs />
       <FeaturesTabs />
     </>

@@ -8,6 +8,7 @@ import { buttonVariants } from "@/components/ui"
 import Image from "next/image"
 
 const navItems = [
+  { label: "Uses", href: "/uses" },
   { label: "Features", href: "/features" },
   { label: "Plan", href: "/plan" },
   { label: "About", href: "/about" },

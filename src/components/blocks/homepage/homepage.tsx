@@ -5,11 +5,11 @@ export const Homepage = () => {
   return (
     <>
       <Hero />
+      <Feature />
       <TrustedBySection />
       <BeforeAfterSection />
-      <Pricing />
-      <Feature />
       <Services />
+      <Pricing />
     </>
   )
 }

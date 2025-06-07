@@ -15,34 +15,15 @@ export const PricingHero = () => {
         <div className="relative flex min-h-[500px] w-full flex-wrap-reverse items-center justify-center py-24 md:flex-nowrap lg:justify-between">
           <div className="flex flex-col items-start justify-center">
             <h1 className="max-w-4xl text-center text-4xl font-bold md:text-start md:text-5xl lg:text-6xl">
-              Compliant Kitchen Labeling Without the Fuss
+              Flexible plans for every kitchen
             </h1>
             <p className="mt-4 max-w-3xl text-center text-base font-light text-muted-foreground sm:text-xl md:text-start">
-              Instantly print food-safe labels with your existing printer. EHO-ready, Natasha’s Law
-              compliant, no training needed.
+              Save hours, reduce waste, and stay compliant — all from a device of your choice.
             </p>
 
             {/* Trust indicators */}
             <div className="mt-6 text-center text-sm text-muted-foreground md:text-left">
               Trusted by 500+ UK Kitchens · EHO Compliant · Works with Epson TM-M30 & Sunmi
-            </div>
-
-            {/* CTA buttons */}
-            <div className="mt-8 flex w-full flex-wrap items-center justify-center gap-4 md:justify-start">
-              <Button size="lg" className="rounded-full text-lg">
-                Start Free Today
-              </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="group rounded-full bg-transparent text-lg"
-              >
-                <a href="/book-demo" className="flex items-center gap-2">
-                  Book a Demo
-                  <ArrowRight className="duration-200 group-hover:ml-2" />
-                </a>
-              </Button>
             </div>
           </div>
         </div>

@@ -16,8 +16,7 @@ export const TrustedBySection = () => {
       <div className="mx-auto max-w-5xl px-6 text-center">
         <h3 className="mb-2 text-3xl font-semibold text-gray-800">Who We Serve</h3>
         <p className="mx-auto mb-8 max-w-xl text-gray-600">
-          Any type of food business — from restaurants and cafes to food trucks and caterers.
-          InstaLabel helps kitchens stay safe, efficient, and compliant.
+          From cloud kitchens to national brands, InstaLabel makes food safety easy.
         </p>
 
         <Marquee speed={30} pauseOnHover>

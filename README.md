@@ -1,98 +1,128 @@
-🔥 1️⃣ Hero Section
-Current:
+🏠 HOME PAGE – Rewritten Copy
+Hero Section:
+Label. Track. Comply. In Seconds.
+Kitchen-safe labels for prep, cook, and allergen tracking — printed at the tap of a button.
+No training needed. No handwriting. No guesswork.
 
-Headline: Your Kitchen’s Smart Labeling Solution
+CTA Buttons:
 
-Subheadline explaining your mission.
+→ Start Free — No Setup Needed
 
-A purple gradient background with a button.
+→ See It in Action
 
-Suggestions:
-✅ Add a background image overlay (e.g. a busy chef or a label printer in a kitchen).
-✅ Include a secondary visual element (e.g. an icon or 3D render of the label printer).
-✅ Use white or contrasting text on the background to improve readability.
-✅ Add a CTA button with a stronger hook (e.g. “See How It Works” or “Book Your Free Demo”).
-✅ Animate the text or background for a more dynamic feel.
+Trusted Section:
+Trusted by 1,500+ UK Kitchens
+From cloud kitchens to national brands, InstaLabel makes food safety easy.
 
-🔥 2️⃣ Hero Image (Chef Working in Kitchen)
-Current:
+Feature Snapshots:
+⏱ Print in Seconds
+No more handwriting or sticky notes. Select, tap, print.
 
-One static image of a chef in a kitchen.
+🧾 Track Prep & Expiry Dates Automatically
+We calculate everything — so your staff doesn’t have to.
 
-Suggestions:
-✅ Make the image full-width or edge-to-edge for a modern look.
-✅ Add a subtle gradient overlay so any text on top remains legible.
-✅ Consider using multiple images in a carousel (e.g. different kitchens, staff using the printer).
-✅ Animate the image on scroll (e.g. parallax, fade-in).
+⚠️ Comply with Natasha’s Law & EHO Standards
+Every label includes allergens, prep dates, and times — automatically.
 
-🔥 3️⃣ “InstaLabel’s Inception” Section
-Current:
+📱 Works on Mobile, Tablet & Sunmi
+No special hardware required. We support what you already use.
 
-Long paragraphs of text explaining your origin story.
+Social Proof:
+“Our prep labeling used to take 30 minutes every day. Now it’s 5.”
+— Head Chef, QuickGrill Express
 
-Suggestions:
-✅ Split the text into 2-3 shorter paragraphs with bold subheadings like:
+Final CTA:
+Get compliant in 10 minutes.
+Start for free. Print your first label today.
 
-“Solving Real Kitchen Challenges”
+💳 PLANS PAGE – Rewritten Copy
+Top Line:
+Flexible plans for every kitchen
+Save hours, reduce waste, and stay compliant — all from a simple touchscreen.
 
-“Built by Chefs, for Chefs”
-✅ Add a pull quote or testimonial in a highlighted box.
-✅ Include a photo of the founders or team to humanize the story.
-✅ Add a decorative divider between sections (e.g. wavy line or icon).
+Pricing Plans:
+🍳 Starter Kitchen – For small kitchens
+Label up to 30 items
 
-🔥 4️⃣ Mission & Vision Section
-Current:
+Tablet access
 
-Text-heavy with icons.
+Print prep & expiry dates
+→ £15/mo
 
-Suggestions:
-✅ Use larger, colorful icons next to each bullet point.
-✅ Animate icons on hover or scroll (e.g. bounce or glow).
-✅ Separate Mission and Vision into two clearly defined sections with different background colors or cards.
-✅ Add background shapes (e.g. circles or gradients) for depth.
-✅ Use bullets or checkmarks to make text easier to scan.
+🧑‍🍳 Pro Kitchen – Best value
+Unlimited labeling
 
-🔥 5️⃣ Our Values Section
-Current:
+Auto allergen tags
 
-Text list with small icons.
+Access for full team
 
-Suggestions:
-✅ Increase icon size and use brand accent colors.
-✅ Group each value in a card with subtle shadows.
-✅ Add a hover effect that highlights each card.
-✅ Include a one-liner explanation under each value to keep it concise.
-✅ Add a testimonial or quote about your values in action.
+Cloud dashboard
+→ £29/mo
 
-🔥 6️⃣ Join Us on This Journey Section
-Current:
+[Best for 1–5 sites]
 
-Just an introduction to the form.
+🏬 Multi-Site Mastery – For groups/franchises
+Everything in Pro
 
-Suggestions:
-✅ Add a background shape or color to make it stand out.
-✅ Include a photo or illustration of a team member or chef.
-✅ Shorten the text to make it more punchy (e.g. “We’d love to hear from you—let’s talk kitchen labeling!”).
-✅ Use a handwritten font or signature to make it more personal.
+Multi-location management
 
-🔥 7️⃣ Contact Form Section
-Current:
+Custom setup & support
+→ £99/mo
 
-Very simple form fields in a single column.
+CTA Under Pricing:
 
-Suggestions:
-✅ Use two columns on desktop to save vertical space.
-✅ Add placeholder text that feels warmer (“Your Name” instead of “Fullname”).
-✅ Include field validation with friendly messages.
-✅ Add a success message on submission (e.g. “Thanks! We’ll get back to you soon.”).
+Start with Starter — upgrade anytime.
 
-🔥 8️⃣ Final CTA Section (“Ready to simplify your kitchen labeling?”)
-Current:
+⚙️ FEATURES PAGE – Rewritten Copy
+Hero Copy:
+Your kitchen, simplified.
+We built InstaLabel to remove chaos from food labeling — and help you stay inspection-ready.
 
-Solid purple background with two buttons.
+Feature Format (Problem > Solution > Outcome):
+🍅 Expiry Confusion? Gone.
+Automatically calculate and print expiry based on type (frozen, fresh, canned).
 
-Suggestions:
-✅ Add a subtle background image or gradient overlay (e.g. a pattern or line art).
-✅ Make the headline bolder and larger for emphasis.
-✅ Add a mini testimonial (e.g. “Loved by 200+ UK kitchens!”) to build trust.
-✅ Include a short tagline below the CTA (e.g. “No contracts, no hidden fees, just easier compliance.”).
+No more guesswork. No more handwritten mistakes.
+
+⚠️ Allergen & Compliance? Built-in.
+Labels print with allergen icons, prep time, and use-by info — ready for inspection.
+
+Fully aligned with Natasha’s Law & EHO standards.
+
+🧠 Zero Training Needed.
+The interface is touchscreen simple. Your staff will get it instantly.
+
+Built for chefs, not tech people.
+
+🌐 Manage Anywhere.
+Use our dashboard to add new ingredients or label types remotely.
+
+Even from your phone.
+
+🔌 Sunmi & Bluetooth-Ready.
+Plug-and-play compatibility with devices you already use.
+
+No new printer needed.
+
+Use Case Snapshots:
+👨‍🍳 For Head Chefs: “Print labels in the middle of rush hour.”
+
+📦 For Porters: “Know what to use first — every time.”
+
+🧾 For Managers: “No compliance gaps. Full audit trail.”
+
+👥 ABOUT PAGE – Rewritten Copy
+Headline:
+Built by food people. For food people.
+
+Our Story:
+InstaLabel started in a small café that struggled with handwritten labels, food waste, and expired ingredients. We watched kitchen staff lose time — and managers panic during surprise inspections.
+
+So, we built a simple, bulletproof system for labeling and tracking kitchen inventory. It’s now used in over 1,500 UK kitchens — and growing fast.
+
+Our Mission:
+To help every kitchen label smarter, waste less, and stay compliant — without slowing down.
+
+CTA:
+Want to join the movement?
+[Book a Demo] or [Start Free Today]

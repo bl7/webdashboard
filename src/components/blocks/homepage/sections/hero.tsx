@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui"
-import { ArrowRight, PlayCircle } from "lucide-react"
+import { ArrowRight, StepForward } from "lucide-react"
 import Image from "next/image"
 import React from "react"
 import instaLabel from "@/assets/images/instaLabel.png"
@@ -39,17 +39,17 @@ export const Hero = () => {
           transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
           className="flex max-w-2xl flex-col items-start justify-center text-center md:text-left"
         >
-          <h1 className="font-accent text-5xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-6xl lg:text-7xl">
-            InstaLabel:
+          <h1 className="font-accent leading-tight tracking-tight text-primary-foreground sm:text-6xl lg:text-7xl">
+            <span className="font-bold">Instalabel:</span>
             <br />
-            Your Kitchen’s
+            Smart Labelling,
             <br />
-            Compliance Sidekick
+            Built for Fast-Paced Kitchens
           </h1>
 
           <p className="mt-6 text-lg text-primary-foreground sm:text-xl md:text-2xl">
-            Print prep, cooked, and allergen labels in seconds — fully EHO and Natasha’s Law
-            compliant.
+            Kitchen-safe labels for prep, cook, and allergen tracking — printed at the tap of a
+            button. No training needed. No handwriting. No guesswork.
           </p>
 
           {/* CTA Buttons */}
@@ -62,8 +62,8 @@ export const Hero = () => {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button variant="ghost" size="lg" className="border border-white text-white">
-              <PlayCircle className="mr-2 h-5 w-5" />
-              Explore Features
+              <StepForward className="mr-2 h-5 w-5" />
+              Start free
             </Button>
           </div>
         </motion.div>

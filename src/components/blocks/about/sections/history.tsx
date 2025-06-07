@@ -1,27 +1,45 @@
-import React from 'react';
-import care from '@/assets/images/kitchen.jpg';
-import Image from 'next/image';
+import React from "react"
+import care from "@/assets/images/kitchen.jpg"
+import Image from "next/image"
 
 export const History = () => {
   return (
     <section>
-      <div className='container pb-24'>
-        <div className='h-96 w-full rounded-lg overflow-hidden'>
-          <Image src={care} alt='' className='h-full w-full object-cover' />
+      <div className="container pb-24">
+        <div className="h-96 w-full overflow-hidden rounded-lg">
+          <Image src={care} alt="Chef in busy kitchen" className="h-full w-full object-cover" />
         </div>
-        <h1 className='text-3xl leading-tight tracking-tight sm:text-4xl mt-12'>
-        InstaLabel&apos;s Inception: Born from Kitchen Challenges, Not Just Innovation
+        <h1 className="mt-12 text-3xl leading-tight tracking-tight sm:text-4xl">
+          From Kitchen Chaos to Labeling Clarity
         </h1>
-        <p className='mt-8 text-base leading-relaxed tracking-wide'>
-        InstaLabel was born not from a desire to create just another tech solution, but from a genuine need we observed in kitchens: the challenge of managing expiry dates, allergen information, and ingredient details manually. As kitchens and restaurants grew more complex, we noticed inefficiencies and risks that could be easily mitigated with a simple, smart solution.
+        <p className="mt-8 text-base leading-relaxed tracking-wide">
+          InstaLabel wasn’t born out of a startup incubator or a pitch deck — it started behind a
+          prep counter, during a lunch rush. We were there when the labels smudged, the expiry dates
+          faded, and nobody could remember if the sauce tub was opened today or yesterday. These
+          weren’t just annoyances — they were risks. For safety. For compliance. For trust.
         </p>
-        <p className='mt-4 text-base leading-relaxed tracking-wide'>
-        Inspired by these real-world problems, we envisioned InstaLabel—a user-friendly platform that empowers restaurants to streamline their ingredient management with automated labeling. Using cutting-edge technology, we’ve created a solution that simplifies the process, minimizes waste, and ensures that food safety and compliance are always a top priority.
+        <p className="mt-4 text-base leading-relaxed tracking-wide">
+          We knew kitchens needed a better way to track what’s fresh, what’s safe, and what’s
+          compliant. So we built it — not with flashy tech jargon, but with real kitchen problems in
+          mind. InstaLabel began as a tool for auto-calculating expiry dates and printing clear,
+          wipe-safe labels. Then it grew into something more.
         </p>
-        <p className='mt-4 text-base leading-relaxed tracking-wide'>
-        Our journey started with a passion for helping kitchens improve their operations, and today, InstaLabel is revolutionizing the way food businesses track and manage ingredients. This is only the beginning of our mission: to provide kitchens with a smarter, simpler, and more reliable way to handle labeling, expiration dates, and allergen tracking.
+        <p className="mt-4 text-base leading-relaxed tracking-wide">
+          We added allergen tracking. Prep times. Use-by info. A manager dashboard. All the things
+          that turn chaos into calm — without adding extra steps. No steep learning curves. No long
+          onboarding. Just a tool that helps food teams get it right the first time.
+        </p>
+        <p className="mt-4 text-base leading-relaxed tracking-wide">
+          Today, InstaLabel is trusted in hundreds of commercial kitchens across the UK — from
+          independent cafés to growing chains — helping them reduce food waste, pass EHO
+          inspections, and protect customers with confidence. It’s simple, fast, and made to blend
+          into the rhythm of your kitchen — not disrupt it.
+        </p>
+        <p className="mt-4 text-base leading-relaxed tracking-wide">
+          And this is just the beginning. We're building the future of kitchen labeling — one clean,
+          clear label at a time.
         </p>
       </div>
     </section>
-  );
-};
+  )
+}
