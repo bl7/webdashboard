@@ -1,90 +1,166 @@
-@import "tailwindcss";
-
-:root {
-  --background: #ffffff;
-  --foreground: #222222;
-  --accent: #4f46e5; /* Indigo-600 */
-  --accent-light: #c7d2fe; /* Indigo-300 */
-  --font-sans: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  --font-mono: 'Fira Mono', monospace;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-}
-/* 
-@media (prefers-color-scheme: dark) {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
   :root {
-    --background: linear-gradient(135deg, #121212 0%, #1e1e2f 100%);
-    --foreground: #e0e0e0;
-    --accent: #7c3aed; 
-    --accent-light: #a78bfa; 
+    --background: 0 0% 100%;
+    --foreground: 248 15% 10%; /* Deep violet-ish gray */
+
+    --card: 0 0% 100%;
+    --card-foreground: 248 15% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 248 15% 10%;
+
+    --primary: 265 80% 55%; /* Rich Purple */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 240 20% 96%;
+    --secondary-foreground: 248 15% 10%;
+
+    --muted: 240 20% 94%;
+    --muted-foreground: 248 10% 40%;
+
+    --accent: 30 100% 55%; /* Bold Orange */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 15% 88%;
+    --input: 240 15% 92%;
+    --ring: 265 80% 55%; /* Match primary */
+    --radius: 0.5rem;
+
+    --chart-1: 30 100% 55%;   /* Orange */
+    --chart-2: 158 60% 48%;   /* Soft Green */
+    --chart-3: 198 35% 30%;   /* Cool Navy */
+    --chart-4: 42 95% 60%;    /* Bright Yellow */
+    --chart-5: 342 80% 60%;   /* Warm Pink */
   }
-} */
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  transition: background 0.5s ease, color 0.5s ease;
-  min-height: 100vh;
-  margin: 0;
-  padding: 1rem;
+  .dark {
+    --background: 248 15% 10%;
+    --foreground: 0 0% 100%;
+
+    --card: 248 15% 12%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 248 15% 12%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 265 85% 65%; /* Brighter violet */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 248 10% 20%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 248 10% 25%;
+    --muted-foreground: 248 10% 65%;
+
+    --accent: 30 100% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 60% 42%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 248 10% 30%;
+    --input: 248 10% 28%;
+    --ring: 265 85% 65%;
+
+    --chart-1: 30 100% 60%;
+    --chart-2: 158 60% 48%;
+    --chart-3: 198 35% 30%;
+    --chart-4: 42 95% 60%;
+    --chart-5: 342 80% 60%;
+  }
 }
 
-/* Links using accent color */
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.3s ease;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+.rfm-marquee-container {
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  width: var(--width);
+  transform: var(--transform);
 }
 
-a:hover,
-a:focus {
-  color: var(--accent-light);
-  outline: none;
-  text-decoration: underline;
+.rfm-marquee-container:hover div {
+  animation-play-state: var(--pause-on-hover);
 }
 
-/* Buttons example with accent color */
-button {
-  background-color: var(--accent);
-  color: white;
-  font-family: var(--font-sans);
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem; /* 6px */
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.rfm-marquee-container:active div {
+  animation-play-state: var(--pause-on-click);
 }
 
-button:hover,
-button:focus {
-  background-color: var(--accent-light);
-  outline: none;
+.rfm-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 
-/* Code blocks or monospace text */
-code, pre {
-  font-family: var(--font-mono);
-  background: rgba(0,0,0,0.05);
-  padding: 0.2rem 0.4rem;
-  border-radius: 0.25rem;
-  color: var(--accent);
+.rfm-overlay::before,
+.rfm-overlay::after {
+  content: "";
+  height: 100%;
+  position: absolute;
+  width: var(--gradient-width);
+  z-index: 2;
+  pointer-events: none;
+  touch-action: none;
 }
 
-/* Add subtle shadows for depth */
-main, section, article {
-  background: var(--background);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-  border-radius: 0.5rem;
-  padding: 1rem 1.5rem;
-  transition: box-shadow 0.3s ease;
+.rfm-overlay::after {
+  right: 0;
+  top: 0;
+  transform: rotateZ(180deg);
 }
 
-main:hover, section:hover, article:hover {
-  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+.rfm-overlay::before {
+  left: 0;
+  top: 0;
+  background: linear-gradient(to right, var(--gradient-color), rgba(255, 255, 255, 0));
+}
+
+.rfm-marquee {
+  flex: 0 0 auto;
+  min-width: var(--min-width);
+  z-index: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  animation: scroll var(--duration) linear var(--delay) var(--iteration-count);
+  animation-play-state: var(--play);
+  animation-delay: var(--delay);
+  animation-direction: var(--direction);
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.rfm-initial-child-container {
+  flex: 0 0 auto;
+  display: flex;
+  min-width: auto;
+  flex-direction: row;
+  align-items: center;
+}
+
+.rfm-child {
+  transform: var(--transform);
 }

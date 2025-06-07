@@ -1,14 +1,14 @@
 declare global {
   interface Window {
-    epson?: any;
-    epsonPrinter?: any;
-    printer?: any;
+    epson?: any
+    epsonPrinter?: any
+    printer?: any
+    btSendData?: (data: Uint8Array) => Promise<void>
   }
+
   interface Navigator {
-    bluetooth: any;
-  }
-  interface Window {
-    btSendData?: (data: Uint8Array) => Promise<void>;
+    bluetooth: any
   }
 }
-export {};
+
+export {}

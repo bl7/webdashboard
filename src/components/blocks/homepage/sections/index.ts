@@ -1,0 +1,6 @@
+export * from "./features-scroll"
+export * from "./features"
+export * from "./hero"
+export * from "./services"
+export * from "./pricing"
+export * from "./beforeAfterSection"
