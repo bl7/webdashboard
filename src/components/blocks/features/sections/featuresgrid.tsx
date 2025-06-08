@@ -36,7 +36,7 @@ export const FeaturesGrid = () => {
         {/* Image / Illustration */}
         <div className="relative aspect-video w-full rounded-xl bg-muted shadow-sm">
           <Image
-            src="/images/feature-preview.png" // Replace with actual image path
+            src="/dashboard.png"
             alt="Feature overview"
             fill
             className="rounded-xl object-cover"

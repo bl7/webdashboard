@@ -4,7 +4,7 @@ import Natasha from "../../../../assets/images/athome.jpg"
 import PPDS from "../../../../assets/images/deliver.jpg"
 export const FeatureIntro = () => {
   return (
-    <section className="bg-white px-6 py-24">
+    <section className="px-66 -mt-16 py-24">
       <div className="mx-auto max-w-6xl space-y-32">
         {/* Section Title */}
 

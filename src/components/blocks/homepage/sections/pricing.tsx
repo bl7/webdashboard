@@ -2,65 +2,33 @@
 
 import React, { useState } from "react"
 import { motion } from "framer-motion"
-import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-
-const features = [
-  "Device Included",
-  "Unlimited Prints",
-  "Web Dashboard",
-  "Sunmi Support",
-  "Free Prints",
-]
-
+import { Button } from "@/components/ui"
+import Link from "next/link"
 const plans = [
   {
     name: "Free Plan",
     monthly: "Free",
     yearly: "Free",
-    features: {
-      "Device Included": false,
-      "Unlimited Prints": false,
-      "Web Dashboard": true,
-      "Sunmi Support": false,
-      "Free Prints": true,
-    },
     description:
       "Perfect for testing or small-scale use. Use your own Epson TM-M30 and get 20 free prints weekly.",
     highlight: false,
-    cta: "Start Free",
   },
   {
     name: "Basic Plan",
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
-    features: {
-      "Device Included": "Epson TM-M30",
-      "Unlimited Prints": true,
-      "Web Dashboard": false,
-      "Sunmi Support": false,
-      "Free Prints": false,
-    },
     description:
       "Great for businesses needing unlimited label printing with the Epson device included.",
     highlight: true,
-    cta: "Choose Basic",
   },
   {
     name: "Premium Plan",
     monthly: "£25/mo",
     yearly: "£270/yr",
-    features: {
-      "Device Included": "Sunmi or Epson",
-      "Unlimited Prints": true,
-      "Web Dashboard": true,
-      "Sunmi Support": true,
-      "Free Prints": false,
-    },
     description:
       "Everything in Basic, plus Sunmi device support and printing via our web dashboard.",
     highlight: false,
-    cta: "Go Premium",
   },
 ]
 
@@ -120,20 +88,16 @@ export const Pricing = () => {
               <p className="my-1 text-lg font-bold text-foreground">{plan[billingCycle]}</p>
 
               <p className="mb-4 text-sm text-muted-foreground">{plan.description}</p>
-
-              <button
-                className={cn(
-                  "mt-auto w-full rounded-md py-2 text-sm font-semibold transition",
-                  plan.highlight
-                    ? "bg-primary text-white hover:bg-primary/90"
-                    : "bg-muted text-primary hover:bg-primary/10"
-                )}
-              >
-                {plan.cta}
-              </button>
             </motion.div>
           ))}
         </div>
+
+        {/* Button below cards */}
+        <Link href="/plan" passHref>
+          <Button className="rounded-md px-6 py-3 font-semibold transition">
+            See Full List of Features
+          </Button>
+        </Link>
       </div>
     </section>
   )

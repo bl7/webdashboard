@@ -34,7 +34,7 @@ export const Feature = () => {
   }, [])
 
   return (
-    <section className="rbg-background px-4 py-20 text-foreground">
+    <section className="-mt-16 px-4 py-20 text-foreground">
       <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-2">
         {/* Entire Left Content Block with ref */}
         <div ref={textRef} className="">
