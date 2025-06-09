@@ -19,12 +19,17 @@ export default function LogsPage() {
   const [logs, setLogs] = useState<Log[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  // Replace this userId with dynamic userId as needed
-  // const userId = "01e64cfe-6d56-4f5b-898a-3840ff1f6253"
-  const userId = localStorage.getItem("userid")
+  const [userId, setUserId] = useState<string | null>(null) // <-- add state for userId
 
   useEffect(() => {
+    // safely access localStorage here inside useEffect (client only)
+    const id = localStorage.getItem("userid")
+    setUserId(id)
+  }, [])
+
+  useEffect(() => {
+    if (!userId) return // don't fetch if userId is not set yet
+
     async function fetchLogs() {
       setLoading(true)
       setError(null)
@@ -51,7 +56,6 @@ export default function LogsPage() {
   }
 
   function renderDetails(details: any) {
-    // Pretty-print JSON with indentation and line breaks
     return (
       <pre
         style={{
