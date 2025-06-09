@@ -1,0 +1,48 @@
+// /app/api/profile/route.ts
+import { NextRequest, NextResponse } from "next/server"
+import pool from "@/lib/pg"
+
+export async function GET(req: NextRequest) {
+  const userId = req.nextUrl.searchParams.get("user_id")
+  if (!userId) return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
+
+  const result = await pool.query("SELECT * FROM user_profiles WHERE user_id = $1", [userId])
+
+  if (result.rowCount === 0) {
+    return NextResponse.json({ profile: null })
+  }
+
+  return NextResponse.json({ profile: result.rows[0] })
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const { user_id, company_name, address, profile_picture } = await req.json()
+
+    if (!user_id) {
+      return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
+    }
+
+    const existingResult = await pool.query("SELECT * FROM user_profiles WHERE user_id = $1", [
+      user_id,
+    ])
+
+    if (existingResult.rowCount > 0) {
+      await pool.query(
+        "UPDATE user_profiles SET company_name = $1, address = $2, profile_picture = $3 WHERE user_id = $4",
+        [company_name, address, profile_picture, user_id]
+      )
+    } else {
+      await pool.query(
+        "INSERT INTO user_profiles (user_id, company_name, address, profile_picture) VALUES ($1, $2, $3, $4)",
+        [user_id, company_name, address, profile_picture]
+      )
+    }
+
+    return NextResponse.json({ success: true })
+  } catch (error: unknown) {
+    let message = "Internal Server Error"
+    if (error instanceof Error) message = error.message
+    return NextResponse.json({ error: message }, { status: 500 })
+  }
+}

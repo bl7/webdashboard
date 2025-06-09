@@ -29,10 +29,62 @@ const navItems = [
 export default function DashboardLayout({ children }: LayoutProps) {
   const router = useRouter()
   const [name, setName] = useState<string | null>(null)
+  const [profilePicture, setProfilePicture] = useState<string | null>(null)
+  const [editingPicture, setEditingPicture] = useState(false)
+  const [newPictureUrl, setNewPictureUrl] = useState("")
 
   useEffect(() => {
     setName(localStorage.getItem("name"))
   }, [])
+
+  // Fetch profile picture on mount
+  useEffect(() => {
+    const userId = localStorage.getItem("userid")
+    if (!userId) return
+
+    fetch(`/api/profile/picture?user_id=${encodeURIComponent(userId)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.profile_picture) {
+          setProfilePicture(data.profile_picture)
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch profile picture:", err)
+      })
+  }, [])
+
+  // Save new profile picture url to backend
+  const saveProfilePicture = async () => {
+    const userId = localStorage.getItem("userid")
+    if (!userId) {
+      alert("User ID missing")
+      return
+    }
+
+    try {
+      const res = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId,
+          company_name: "", // Keep empty or fetch actual company_name if needed
+          address: "", // Keep empty or fetch actual address if needed
+          profile_picture: newPictureUrl,
+        }),
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setProfilePicture(newPictureUrl)
+        setEditingPicture(false)
+      } else {
+        alert("Failed to update profile picture")
+      }
+    } catch (error) {
+      console.error("Error updating profile picture:", error)
+      alert("Error updating profile picture")
+    }
+  }
 
   const handleLogout = () => {
     console.log("destroying token", localStorage.getItem("token"))
@@ -83,9 +135,58 @@ export default function DashboardLayout({ children }: LayoutProps) {
         <header className="flex items-center justify-end border-b border-[hsl(var(--border))] p-6">
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium">{name || "Guest"}</span>
-            <div className="h-10 w-10 rounded-full bg-[hsl(var(--primary))]" />
+
+            {profilePicture ? (
+              <Image
+                src={profilePicture}
+                alt="Profile Picture"
+                width={40}
+                height={40}
+                className="rounded-full object-cover"
+                onClick={() => setEditingPicture(true)}
+                style={{ cursor: "pointer" }}
+              />
+            ) : (
+              <div
+                className="h-10 w-10 rounded-full bg-[hsl(var(--primary))]"
+                onClick={() => setEditingPicture(true)}
+                style={{ cursor: "pointer" }}
+              />
+            )}
           </div>
         </header>
+
+        {/* Editable profile picture input */}
+        {editingPicture && (
+          <div className="absolute right-10 top-20 z-50 flex flex-col gap-2 rounded-md bg-white p-4 shadow-lg">
+            <label htmlFor="profile-picture-url" className="text-sm font-semibold text-gray-700">
+              Profile Picture URL
+            </label>
+            <input
+              id="profile-picture-url"
+              type="text"
+              className="rounded border px-2 py-1"
+              placeholder="Enter new picture URL"
+              value={newPictureUrl}
+              onChange={(e) => setNewPictureUrl(e.target.value)}
+            />
+            <div className="flex justify-end gap-2 pt-2">
+              <button
+                className="rounded bg-gray-200 px-3 py-1 text-sm"
+                onClick={() => setEditingPicture(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded bg-blue-600 px-3 py-1 text-sm text-white"
+                onClick={saveProfilePicture}
+                disabled={!newPictureUrl.trim()}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Page content */}
         <section className="flex-grow overflow-auto p-8">{children}</section>
