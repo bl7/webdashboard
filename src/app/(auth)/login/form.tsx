@@ -44,6 +44,8 @@ export function LoginForm() {
 
         if (response?.token || response?.success) {
           localStorage.setItem("token", response.token)
+          localStorage.setItem("userid", response.uuid)
+          console.log("userid", localStorage.getItem("userid"))
           toast.success("Login successful")
           router.push("/dashboard")
           localStorage.setItem("name", response.name)

@@ -21,6 +21,7 @@ const navItems = [
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
+  { label: "Logs", icon: <FaLayerGroup />, href: "/dashboard/logs" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
