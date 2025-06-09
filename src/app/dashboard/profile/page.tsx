@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react"
 import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
-
+import Billing from "./Billing"
 const features = [
   "Device Provided",
   "Unlimited Label Printing",
@@ -103,6 +103,7 @@ const ProfileDashboard = () => {
   const handleSave = async () => {
     const userId = localStorage.getItem("userid")
     const avatarIndex = localStorage.getItem("avatar") || "1"
+
     if (!userId) return toast.error("Missing user ID")
 
     const res = await fetch("/api/profile", {
@@ -268,7 +269,7 @@ const ProfileDashboard = () => {
       )}
 
       {/* Billing Tab stays unchanged */}
-      {activeTab === "billing" && <div>{/* ... Billing UI unchanged ... */}</div>}
+      {activeTab === "billing" && userId && <Billing userid={userId} />}
 
       {/* Avatar Modal */}
       {showModal && (
