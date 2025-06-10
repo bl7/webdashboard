@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { saveData } from "@/lib/saveData"
 
 interface Plan {
   name: string
@@ -83,7 +84,7 @@ export default function PlanSelectionStep({
           setBillingPeriod(data.subscription.billing_interval || "monthly")
         }
       } catch {
-        // ignore errors
+        // ignore fetch errors silently
       }
     }
     fetchSubscription()
@@ -92,46 +93,41 @@ export default function PlanSelectionStep({
   async function savePlan(planName: string) {
     setSaving(true)
     setError(null)
-    try {
-      const planAmount =
-        billingPeriod === "monthly"
-          ? (plans.find((p) => p.name === planName)?.monthlyAmount ?? 0)
-          : (plans.find((p) => p.name === planName)?.yearlyAmount ?? 0)
 
-      const res = await fetch("/api/subscriptions", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userId,
-          stripe_customer_id: "demo-customer", // placeholder
-          stripe_subscription_id: `demo-subscription-${planName}-${Date.now()}`, // unique id
-          price_id: billingPeriod === "monthly" ? "price_monthly" : "price_yearly",
-          status: "active",
-          current_period_end: null,
-          trial_end: null,
-          plan_name: planName,
-          plan_amount: planAmount,
-          billing_interval: billingPeriod,
-          next_amount_due: null,
-          card_last4: null,
-          card_exp_month: null,
-          card_exp_year: null,
-        }),
-      })
+    const plan = plans.find((p) => p.name === planName)
+    const planAmount =
+      billingPeriod === "monthly" ? (plan?.monthlyAmount ?? 0) : (plan?.yearlyAmount ?? 0)
 
-      if (!res.ok) {
-        const errorData = await res.json()
-        throw new Error(errorData.error || "Failed to save subscription")
-      }
+    const payload = {
+      user_id: userId,
+      stripe_customer_id: "demo-customer",
+      stripe_subscription_id: `demo-subscription-${planName}-${Date.now()}`,
+      price_id: billingPeriod === "monthly" ? "price_monthly" : "price_yearly",
+      status: "active",
+      current_period_end: null,
+      trial_end: null,
+      plan_name: planName,
+      plan_amount: planAmount,
+      billing_interval: billingPeriod,
+      next_amount_due: null,
+      card_last4: null,
+      card_exp_month: null,
+      card_exp_year: null,
+    }
 
+    const success = await saveData("/api/subscriptions", payload, {
+      method: "PUT",
+      successMessage: "Plan saved!",
+      errorMessage: "Failed to save plan selection",
+    })
+
+    if (success) {
       setSelectedPlan(planName)
       alert("Yay profile completed!")
       router.push("/dashboard/profile")
-    } catch (err: any) {
-      setError(err.message || "Failed to save plan selection")
-    } finally {
-      setSaving(false)
     }
+
+    setSaving(false)
   }
 
   return (
@@ -142,28 +138,20 @@ export default function PlanSelectionStep({
 
       {/* Billing period toggle */}
       <div className="mb-6 flex justify-center gap-4">
-        <button
-          type="button"
-          onClick={() => setBillingPeriod("monthly")}
-          className={`rounded-full px-5 py-2 font-semibold transition ${
-            billingPeriod === "monthly"
-              ? "bg-blue-600 text-white shadow"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Monthly
-        </button>
-        <button
-          type="button"
-          onClick={() => setBillingPeriod("yearly")}
-          className={`rounded-full px-5 py-2 font-semibold transition ${
-            billingPeriod === "yearly"
-              ? "bg-blue-600 text-white shadow"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-          }`}
-        >
-          Yearly
-        </button>
+        {["monthly", "yearly"].map((period) => (
+          <button
+            key={period}
+            type="button"
+            onClick={() => setBillingPeriod(period as "monthly" | "yearly")}
+            className={`rounded-full px-5 py-2 font-semibold transition ${
+              billingPeriod === period
+                ? "bg-blue-600 text-white shadow"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+            }`}
+          >
+            {period.charAt(0).toUpperCase() + period.slice(1)}
+          </button>
+        ))}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">

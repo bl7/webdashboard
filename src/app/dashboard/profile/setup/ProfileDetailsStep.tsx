@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-
+import { saveData } from "@/lib/saveData"
 interface ProfileData {
   company_name: string
   address: string
@@ -79,31 +79,26 @@ export default function ProfileDetailsStep({
   const handleSubmit = async () => {
     setSaving(true)
     setError(null)
-    try {
-      const body = {
-        user_id: userId,
-        company_name: profileData.company_name,
-        address: profileData.address,
-        city: profileData.city,
-        state: profileData.state,
-        country: profileData.country,
-        zip: profileData.zip,
-        avatar: profileData.avatar,
-      }
 
-      const res = await fetch("/api/profile", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      })
-
-      if (!res.ok) throw new Error("Failed to save profile")
-      onNext()
-    } catch (err) {
-      setError((err as Error).message)
-    } finally {
-      setSaving(false)
+    const body = {
+      user_id: userId,
+      company_name: profileData.company_name,
+      address: profileData.address,
+      city: profileData.city,
+      state: profileData.state,
+      country: profileData.country,
+      zip: profileData.zip,
+      avatar: profileData.avatar,
     }
+
+    const success = await saveData("/api/profile", body, {
+      method: "PUT",
+      successMessage: "Profile saved!",
+      errorMessage: "Could not save profile",
+    })
+
+    if (success) onNext()
+    setSaving(false)
   }
 
   // Validation: all required fields must be non-empty
