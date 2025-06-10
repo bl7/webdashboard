@@ -1,10 +1,11 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import Billing from "./Billing"
+
 const features = [
   "Device Provided",
   "Unlimited Label Printing",
@@ -77,6 +78,14 @@ const ProfileDashboard = () => {
   const [avatar, setAvatar] = useState<number>(1)
   const [showModal, setShowModal] = useState(false)
 
+  // Change PIN states
+  const [currentPinDigits, setCurrentPinDigits] = useState<string[]>(["", "", "", ""])
+  const [newPinDigits, setNewPinDigits] = useState<string[]>(["", "", "", ""])
+  const [pinError, setPinError] = useState<string | null>(null)
+  const [pinSuccess, setPinSuccess] = useState<string | null>(null)
+  const currentPinRefs = useRef<(HTMLInputElement | null)[]>([])
+  const newPinRefs = useRef<(HTMLInputElement | null)[]>([])
+
   useEffect(() => {
     const storedName = localStorage.getItem("name") || ""
     const storedEmail = localStorage.getItem("email") || ""
@@ -128,6 +137,92 @@ const ProfileDashboard = () => {
     setAvatar(index)
     localStorage.setItem("avatar", index.toString())
     setShowModal(false)
+  }
+
+  // Generic PIN input handler with auto-focus
+  const handlePinChange = (
+    index: number,
+    value: string,
+    pinDigits: string[],
+    setPinDigits: React.Dispatch<React.SetStateAction<string[]>>,
+    refs: React.MutableRefObject<(HTMLInputElement | null)[]>
+  ) => {
+    if (/^\d$/.test(value)) {
+      const newPin = [...pinDigits]
+      newPin[index] = value
+      setPinDigits(newPin)
+      setPinError(null)
+      setPinSuccess(null)
+      if (index < 3) refs.current[index + 1]?.focus()
+    } else if (value === "") {
+      const newPin = [...pinDigits]
+      newPin[index] = ""
+      setPinDigits(newPin)
+      if (index > 0) refs.current[index - 1]?.focus()
+    }
+  }
+
+  // Handle Change PIN button click
+  const handleChangePin = async () => {
+    const currentPin = currentPinDigits.join("")
+    const newPin = newPinDigits.join("")
+
+    if (currentPin.length !== 4) {
+      setPinError("Please enter your current 4-digit PIN.")
+      currentPinRefs.current[0]?.focus()
+      return
+    }
+
+    if (newPin.length !== 4) {
+      setPinError("Please enter a new 4-digit PIN.")
+      newPinRefs.current[0]?.focus()
+      return
+    }
+
+    if (!userId) {
+      setPinError("User ID missing. Please reload the page.")
+      return
+    }
+
+    try {
+      // Verify current PIN
+      const verifyRes = await fetch("/api/verify-pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, pin: currentPin }),
+      })
+
+      const verifyData = await verifyRes.json()
+
+      if (!verifyRes.ok || !verifyData.valid) {
+        setPinError("Current PIN is incorrect.")
+        setPinSuccess(null)
+        currentPinRefs.current[0]?.focus()
+        return
+      }
+
+      // Set new PIN
+      const setRes = await fetch("/api/set-admin-pin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, pin: newPin }),
+      })
+
+      if (setRes.ok) {
+        setPinSuccess("PIN changed successfully!")
+        setPinError(null)
+        setCurrentPinDigits(["", "", "", ""])
+        setNewPinDigits(["", "", "", ""])
+        currentPinRefs.current[0]?.focus()
+      } else {
+        const setData = await setRes.json()
+        setPinError(setData.message || "Failed to change PIN.")
+        setPinSuccess(null)
+      }
+    } catch {
+      setPinError("Network error. Please try again.")
+      setPinSuccess(null)
+    }
   }
 
   return (
@@ -232,6 +327,88 @@ const ProfileDashboard = () => {
               >
                 Save Now
               </button>
+
+              {/* Change PIN Section */}
+              <div className="mt-6 border-t pt-4">
+                <h3 className="text-md mb-4 font-semibold">Change Admin PIN</h3>
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Enter your current PIN and a new 4-digit PIN to change your admin access PIN.
+                </p>
+
+                {/* Current PIN Inputs */}
+                <label className="mb-1 block font-medium">Current PIN</label>
+                <div className="mb-4 flex justify-center gap-3">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <input
+                      key={`current-${idx}`}
+                      type="password"
+                      maxLength={1}
+                      value={currentPinDigits[idx]}
+                      onChange={(e) =>
+                        handlePinChange(
+                          idx,
+                          e.target.value,
+                          currentPinDigits,
+                          setCurrentPinDigits,
+                          currentPinRefs
+                        )
+                      }
+                      ref={(el) => {
+                        currentPinRefs.current[idx] = el
+                      }}
+                      className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-blue-600 focus:outline-none"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      autoComplete="one-time-code"
+                      aria-label={`Current PIN digit ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {/* New PIN Inputs */}
+                <label className="mb-1 block font-medium">New PIN</label>
+                <div className="mb-4 flex justify-center gap-3">
+                  {[0, 1, 2, 3].map((idx) => (
+                    <input
+                      key={`new-${idx}`}
+                      type="password"
+                      maxLength={1}
+                      value={newPinDigits[idx]}
+                      onChange={(e) =>
+                        handlePinChange(
+                          idx,
+                          e.target.value,
+                          newPinDigits,
+                          setNewPinDigits,
+                          newPinRefs
+                        )
+                      }
+                      ref={(el) => {
+                        newPinRefs.current[idx] = el
+                      }}
+                      className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-blue-600 focus:outline-none"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      autoComplete="one-time-code"
+                      aria-label={`New PIN digit ${idx + 1}`}
+                    />
+                  ))}
+                </div>
+
+                {pinError && <p className="mb-4 text-center text-sm text-red-600">{pinError}</p>}
+                {pinSuccess && (
+                  <p className="mb-4 text-center text-sm text-green-600">{pinSuccess}</p>
+                )}
+
+                <div className="flex justify-center">
+                  <button
+                    onClick={handleChangePin}
+                    className="rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+                  >
+                    Change PIN
+                  </button>
+                </div>
+              </div>
 
               {/* Password Section */}
               <div className="mt-6 border-t pt-4">

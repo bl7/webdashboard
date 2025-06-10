@@ -21,6 +21,7 @@ interface PlanSelectionStepProps {
   billingPeriod: "monthly" | "yearly"
   setBillingPeriod: React.Dispatch<React.SetStateAction<"monthly" | "yearly">>
   onPrev: () => void
+  onNext: () => void | Promise<void>
 }
 
 const plans: Plan[] = [
