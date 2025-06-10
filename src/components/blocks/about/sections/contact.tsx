@@ -8,41 +8,65 @@ export const Contact = () => {
       <div className="mx-auto max-w-7xl lg:flex lg:gap-24">
         {/* Left Side: Info */}
         <div className="lg:w-1/2">
-          <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-            Let’s Talk About Your Project
-          </h2>
-          <p className="mt-6 max-w-xl text-lg text-gray-600">
-            InstaLabel is more than just a labeling solution; it’s a movement towards smarter, safer
-            kitchens and better food safety practices for all.
+          <h2 className="text-5xl font-bold leading-tight text-foreground">Contact Us</h2>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            Tell us a little bit about who you are, and we'll tell you a whole lot more about who we
+            are.
           </p>
 
-          <dl className="mt-10 space-y-8 text-base text-gray-600">
-            <div className="flex items-start gap-x-4">
-              <MapPin size={24} className="flex-shrink-0 text-primary" />
-              <div>
-                <dt className="font-semibold text-gray-900">Address</dt>
-                <dd>123 Food St., Flavor Town, FT 45678</dd>
+          <div className="mt-10">
+            <h3 className="mb-6 text-2xl font-semibold text-foreground">Talk to our team today</h3>
+            <div className="space-y-4 text-muted-foreground">
+              <div className="flex items-start gap-3">
+                <span className="text-lg font-medium text-foreground">1.</span>
+                <p>Understanding how our product may fulfill your need</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-lg font-medium text-foreground">2.</span>
+                <p>Discover the capabilities and get answer to your questions</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <span className="text-lg font-medium text-foreground">3.</span>
+                <p>Get a customized quote</p>
               </div>
             </div>
+          </div>
 
-            <div className="flex items-start gap-x-4">
-              <Phone size={24} className="flex-shrink-0 text-primary" />
-              <div>
-                <dt className="font-semibold text-gray-900">Phone</dt>
-                <dd>+1 (555) 123-4567</dd>
+          <div className="mt-10">
+            <h3 className="mb-6 text-2xl font-semibold text-foreground">You can fins us here</h3>
+            <dl className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-accent">
+                  <MapPin className="h-4 w-4 text-accent-foreground" />
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">Address</dt>
+                  <dd className="text-muted-foreground">Bournemouth, UK</dd>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-start gap-x-4">
-              <Mail size={24} className="flex-shrink-0 text-primary" />
-              <div>
-                <dt className="font-semibold text-gray-900">Email</dt>
-                <dd>contact@instalabel.com</dd>
+              <div className="flex items-center gap-4">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-accent">
+                  <Phone className="h-4 w-4 text-accent-foreground" />
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">Phone</dt>
+                  <dd className="text-muted-foreground">(0740)567890 </dd>
+                </div>
               </div>
-            </div>
-          </dl>
+
+              <div className="flex items-center gap-4">
+                <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-accent">
+                  <Mail className="h-4 w-4 text-accent-foreground" />
+                </div>
+                <div>
+                  <dt className="font-semibold text-foreground">Email</dt>
+                  <dd className="text-muted-foreground">contact@instalabel.co</dd>
+                </div>
+              </div>
+            </dl>
+          </div>
         </div>
-
         {/* Right Side: Form */}
         <div className="mt-16 lg:mt-0 lg:w-1/2">
           <h3 className="text-2xl font-semibold text-gray-900">Send Us a Message</h3>
