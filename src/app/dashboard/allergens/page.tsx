@@ -18,7 +18,8 @@ import {
 import { Plus, Eye, Pencil, Trash, FileDown, X } from "lucide-react"
 import * as XLSX from "xlsx"
 import { getAllAllergens, addAllergens } from "@/lib/api"
-
+import { allergenIconMap } from "../../../components/allergenicons"
+import allergenColorMap from "@/components/allergencolormap"
 type Allergen = {
   id: number
   name: string
@@ -202,7 +203,35 @@ export default function AllergenDashboard() {
           <tbody className="divide-y divide-border">
             {paginated.map((item) => (
               <tr key={item.id} className="transition hover:bg-muted">
-                <td className="px-6 py-4 font-medium">{item.name}</td>
+                <td className="px-6 py-4 font-medium">
+                  {Array.isArray(item.name)
+                    ? item.name.map((a, i) => {
+                        const key = a.toLowerCase()
+                        const icon = allergenIconMap[key] ?? allergenIconMap.default
+                        const color = allergenColorMap[key] ?? allergenColorMap.default
+
+                        return (
+                          <span key={a} className="flex items-center">
+                            <span className={`${color} mr-1`}>{icon}</span>
+                            {a}
+                            {i < item.name.length - 1 && ", "}
+                          </span>
+                        )
+                      })
+                    : (() => {
+                        const key = item.name.toLowerCase()
+                        const icon = allergenIconMap[key] ?? allergenIconMap.default
+                        const color = allergenColorMap[key] ?? allergenColorMap.default
+
+                        return (
+                          <span className="flex items-center">
+                            <span className={`${color} mr-1`}>{icon}</span>
+                            {item.name}
+                          </span>
+                        )
+                      })()}
+                </td>
+
                 <td className="px-6 py-4">{item.category}</td>
                 <td className="px-6 py-4">{item.severity}</td>
                 <td className="px-6 py-4">

@@ -11,8 +11,7 @@ export default function PrinterStatusBar() {
   }
 
   return (
-    <div className="flex w-full items-center justify-between border-b border-gray-200 bg-white px-6 py-2 shadow-sm">
-      <div className="text-sm font-medium text-gray-700">Printer Status</div>
+    <div className="flex w-full items-center justify-end">
       <div className="flex gap-6">
         <div className="text-sm text-gray-700">
           USB:{" "}
@@ -23,7 +22,7 @@ export default function PrinterStatusBar() {
         <div className="text-sm text-gray-700">
           Bluetooth:{" "}
           <span className={status.btDevice ? "text-green-600" : "text-red-500"}>
-            {status.btDevice?.name ?? "Not Connected"}
+            {status.btDevice?.name ?? "Not connected "}
           </span>
         </div>
         <button

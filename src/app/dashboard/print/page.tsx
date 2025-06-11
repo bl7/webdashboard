@@ -1,16 +1,18 @@
 "use client"
-
 import React, { useState, useEffect, useMemo } from "react"
 import { PrinterProvider, usePrinter } from "@/context/PrinterContext"
-
-const ALLERGENS = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
+import { getAllAllergens } from "@/lib/api"
+import LabelPreview from "./PreviewLabel"
+import { Allergen } from "@/types/allergen"
+import { PrintQueueItem } from "@/types/print"
+import { allergenIconMap } from "../../../components/allergenicons"
 
 type TabType = "ingredients" | "menu"
 
 type IngredientItem = {
   id: number | string
   name: string
-  allergens: string[]
+  allergens: Allergen[]
   printedOn: string
   expiryDate: string
 }
@@ -23,7 +25,6 @@ type MenuItem = {
   ingredients: string[]
 }
 
-import { PrintQueueItem } from "@/types/print"
 // --- API Functions ---
 async function getAllMenuItems(token: string | null) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
@@ -71,10 +72,6 @@ function getDefaultExpiryDays(type: "cook" | "prep" | "ppds"): number {
   }
 }
 
-function isAllergenic(ingredient: string) {
-  return ALLERGENS.includes(ingredient.toLowerCase())
-}
-
 // --- Main Page Component ---
 function LabelPrinterContent() {
   const [activeTab, setActiveTab] = useState<TabType>("ingredients")
@@ -85,6 +82,15 @@ function LabelPrinterContent() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [page, setPage] = useState(1)
+  const [data, setData] = useState<Allergen[]>([])
+  const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
+
+  const handleExpiryChange = (uid: string, value: string) => {
+    setCustomExpiry((prev) => ({
+      ...prev,
+      [uid]: value,
+    }))
+  }
   const itemsPerPage = 5
   // Printer context
   const { managerRef, status: printerStatus, message, setMessage } = usePrinter()
@@ -128,6 +134,7 @@ function LabelPrinterContent() {
       setIsLoading(true)
       try {
         const data = await getAllIngredients(token)
+        console.log(data, "ingred")
         const ingredientsData = Array.isArray(data) ? data : data.data
         const ingredients: IngredientItem[] = ingredientsData
           .map((item: any, index: number) => ({
@@ -139,6 +146,7 @@ function LabelPrinterContent() {
           }))
           .filter((item: any) => item.name && item.name.trim() !== "")
         setIngredients(ingredients)
+        console.log("ingredients", ingredients)
         setError(null)
       } catch (err: any) {
         setError(`Error fetching ingredients: ${err.message}`)
@@ -191,6 +199,43 @@ function LabelPrinterContent() {
     }
     fetchMenuItems()
   }, [])
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (!token) return console.error("No access token")
+
+    const fetchAllergens = async () => {
+      try {
+        const res = await getAllAllergens(token)
+        console.log(res)
+        if (!res?.data) return
+
+        const mapped = res.data.map(
+          (item: any): Allergen => ({
+            uuid: item.id,
+            allergenName: item.allergenName,
+            category: item.isCustom ? "Custom" : "Standard",
+
+            status: item.isActive ? "Active" : "Inactive",
+            addedAt: item.createdAt.split("T")[0],
+            isCustom: item.isCustom,
+          })
+        )
+        setData(mapped)
+      } catch (err) {
+        console.error("Failed to fetch allergens:", err)
+      }
+    }
+
+    fetchAllergens()
+  }, [])
+  const ALLERGENS = data
+    .filter((item: any) => item.status === "Active")
+    .map((item: any) => item.allergenName)
+  console.log("allergens", ALLERGENS)
+  function isAllergenic(ingredient: string) {
+    return ALLERGENS.includes(ingredient.toLowerCase())
+  }
 
   // Add item to print queue
   const addToPrintQueue = (item: IngredientItem | MenuItem, type: TabType) => {
@@ -365,101 +410,102 @@ function LabelPrinterContent() {
 
             {activeTab === "ingredients" && (
               <div className="mb-8 flex flex-col gap-3">
-                {paginatedIngredients.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
-                  >
-                    <div>
-                      <div className="font-semibold">{item.name}</div>
-                      <div className="mt-1 text-sm text-gray-500">
-                        Allergens:{" "}
-                        {item.allergens && item.allergens.length > 0 ? (
-                          <span className="text-red-600">{item.allergens.join(", ")}</span>
-                        ) : (
-                          <span className="italic text-gray-400">None</span>
-                        )}
-                      </div>
-                      <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
-                    </div>
-                    <button
-                      className="rounded-lg bg-green-600 px-5 py-1 font-medium text-white hover:bg-green-700"
-                      onClick={() => addToPrintQueue(item, "ingredients")}
+                {paginatedIngredients.map((item) => {
+                  const inQueue = printQueue.some(
+                    (q) => q.id === item.id && q.type === "ingredients"
+                  )
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
                     >
-                      Add
-                    </button>
-                  </div>
-                ))}
-                {/* Pagination Controls */}
-                <div className="mt-4 flex justify-center gap-2">
-                  <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
-                  >
-                    Prev
-                  </button>
-                  <span className="px-3 py-1">
-                    {page} / {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
+                      <div>
+                        <div className="font-semibold">{item.name}</div>
+                        <div className="mt-1 text-sm text-gray-500">
+                          Allergens:{" "}
+                          {item.allergens.length > 0 ? (
+                            <span className="flex flex-wrap items-center gap-1 text-red-600">
+                              {item.allergens.map((a) => (
+                                <span key={a.allergenName} className="flex items-center">
+                                  {allergenIconMap[a.allergenName.toLowerCase()] ??
+                                    allergenIconMap.default}
+                                  {a.allergenName}
+                                </span>
+                              ))}
+                            </span>
+                          ) : (
+                            <span className="italic text-gray-400">None</span>
+                          )}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
+                      </div>
+                      <button
+                        disabled={inQueue}
+                        onClick={() => addToPrintQueue(item, "ingredients")}
+                        className={`rounded-lg px-5 py-1 font-medium text-white ${
+                          inQueue
+                            ? "cursor-not-allowed bg-gray-300 text-gray-600"
+                            : "bg-green-600 hover:bg-green-700"
+                        }`}
+                      >
+                        {inQueue ? "Added" : "Add"}
+                      </button>
+                    </div>
+                  )
+                })}
+                {/* Pagination controls */}
               </div>
             )}
 
             {activeTab === "menu" && (
               <div className="mb-8 flex flex-col gap-3">
-                {paginatedMenuItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
-                  >
-                    <div>
-                      <div className="font-semibold">{item.name}</div>
-                      <div className="mt-1 text-sm text-gray-500">
-                        Ingredients:{" "}
-                        {item.ingredients && item.ingredients.length > 0 ? (
-                          item.ingredients.join(", ")
-                        ) : (
-                          <span className="italic text-gray-400">None</span>
-                        )}
-                      </div>
-                      <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
-                    </div>
-                    <button
-                      className="rounded-lg bg-green-600 px-5 py-1 font-medium text-white hover:bg-green-700"
-                      onClick={() => addToPrintQueue(item, "menu")}
+                {paginatedMenuItems.map((item) => {
+                  const allergenicIngredients = item.ingredients?.filter(isAllergenic) || []
+                  const inQueue = printQueue.some((q) => q.id === item.id && q.type === "menu")
+                  return (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
                     >
-                      Add
-                    </button>
-                  </div>
-                ))}
-                {/* Pagination Controls */}
-                <div className="mt-4 flex justify-center gap-2">
-                  <button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
-                  >
-                    Prev
-                  </button>
-                  <span className="px-3 py-1">
-                    {page} / {totalPages}
-                  </span>
-                  <button
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages}
-                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
+                      <div>
+                        <div className="font-semibold">{item.name}</div>
+                        <div className="mt-1 text-sm text-gray-500">
+                          Ingredients:{" "}
+                          {item.ingredients.length > 0 ? (
+                            <>
+                              {item.ingredients.join(", ")}
+                              {allergenicIngredients.length > 0 && (
+                                <div className="mt-1 font-semibold text-red-600">
+                                  Allergens:{" "}
+                                  {allergenicIngredients.map((a, i) => (
+                                    <span key={a} className="flex items-center">
+                                      {allergenIconMap[a.toLowerCase()] ?? allergenIconMap.default}
+                                      {a}
+                                      {i < allergenicIngredients.length - 1 ? ", " : ""}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <span className="italic text-gray-400">None</span>
+                          )}
+                        </div>
+                      </div>
+                      <button
+                        disabled={inQueue}
+                        onClick={() => addToPrintQueue(item, "menu")}
+                        className={`rounded-lg px-5 py-1 font-medium text-white ${
+                          inQueue
+                            ? "cursor-not-allowed bg-gray-300 text-gray-600"
+                            : "bg-green-600 hover:bg-green-700"
+                        }`}
+                      >
+                        {inQueue ? "Added" : "Add"}
+                      </button>
+                    </div>
+                  )
+                })}
               </div>
             )}
           </div>
@@ -532,7 +578,14 @@ function LabelPrinterContent() {
           </div>
         </div>
       </div>
-
+      <div className="flex">
+        <LabelPreview
+          printQueue={printQueue}
+          ALLERGENS={ALLERGENS}
+          customExpiry={customExpiry}
+          onExpiryChange={handleExpiryChange}
+        />
+      </div>
       {/* Print Actions */}
       <div className="flex gap-4">
         <button

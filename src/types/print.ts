@@ -1,11 +1,12 @@
 // types/print.ts
+import type { Allergen } from "./allergen"
 export type PrintQueueItem = {
   uid: string
   id: string | number
   type: "ingredients" | "menu"
   name: string
   quantity: number
-  allergens?: string[]
+  allergens?: Allergen[]
   ingredients?: string[]
   printedOn?: string
   expiryDate?: string
