@@ -7,28 +7,21 @@ import PaymentMethod from "./billingcomponents/paymentMethod"
 import BillingAddress from "./billingcomponents/billingAddress"
 import BillingAddressModal from "./billingcomponents/BillingAddressModal"
 import PlanSelectionModal from "./billingcomponents/planSelectionModal"
-import useBillingData from "./hooks/useBillingData"
+import useBillingData, { Profile } from "./hooks/useBillingData"
 import PlanRenewal from "./billingcomponents/planRenewal"
 import FreePrintsLeft from "./billingcomponents/freePlanLimit"
 
-interface Profile {
-  address: string
-  city: string
-  state: string
-  country: string
-  zip: string
-}
-
 const Billing: React.FC = () => {
-  const [userid, setUserid] = useState<string | null>(null)
+  const [isClient, setIsClient] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [showPlans, setShowPlans] = useState(false)
+  const [localProfile, setLocalProfile] = useState<Profile | null>(null)
 
   useEffect(() => {
-    const storedUserid = localStorage.getItem("userid")
-    if (storedUserid) {
-      setUserid(storedUserid)
-    }
+    setIsClient(true)
   }, [])
 
+  const userid = typeof window !== "undefined" ? localStorage.getItem("userid") || "" : ""
   const {
     subscription,
     invoices,
@@ -38,10 +31,7 @@ const Billing: React.FC = () => {
     refreshSubscription,
     refreshInvoices,
     refreshProfile,
-  } = useBillingData(userid || "")
-
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [localProfile, setLocalProfile] = useState<Profile | null>(profile)
+  } = useBillingData(userid)
 
   useEffect(() => {
     setLocalProfile(profile)
@@ -54,15 +44,10 @@ const Billing: React.FC = () => {
       const res = await fetch("/api/profile", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userid,
-          ...updatedProfile,
-        }),
+        body: JSON.stringify({ user_id: userid, ...updatedProfile }),
       })
 
       const data = await res.json()
-      console.log("Update API response:", data)
-
       if (!res.ok) throw new Error(data.error || "Failed to update profile")
 
       await refreshProfile()
@@ -72,32 +57,62 @@ const Billing: React.FC = () => {
     }
   }
 
-  const [showPlans, setShowPlans] = useState(false)
+  const handleUpdateSubscription = async (planName: string, billingPeriod: string) => {
+    try {
+      const res = await fetch("/api/subscriptions", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userid,
+          stripe_customer_id: `manual-customer-${userid}`,
+          stripe_subscription_id: `manual-sub-${userid}`,
+          price_id: `manual-price-${planName}`,
+          status: "active",
+          current_period_end: new Date().toISOString(),
+          trial_end: null,
+          plan_name: planName,
+          plan_amount: planName.includes("Pro") ? 2000 : 0,
+          billing_interval: billingPeriod,
+          next_amount_due: 0,
+          card_last4: "0000",
+          card_exp_month: "01",
+          card_exp_year: "30",
+        }),
+      })
+      console.log("res", res.body)
+      if (!res.ok) {
+        const error = await res.json()
+        console.error("Update subscription error:", error)
+        throw new Error("Failed to update subscription")
+      }
 
-  if (!userid || !subscription || !localProfile) return null
+      await refreshSubscription()
+      setShowPlans(false)
+    } catch (err) {
+      console.error("Plan update failed", err)
+    }
+  }
+
+  if (!isClient || !userid || !subscription || !profile || !localProfile) return null
 
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-6 p-6 bg-[#f6f9fb] min-h-screen">
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="flex min-h-screen flex-col gap-6 bg-[#f6f9fb] p-6 lg:flex-row">
+        <div className="flex flex-1 flex-col gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <SubscriptionInfo subscription={subscription} onChangePlan={() => setShowPlans(true)} />
             <PlanRenewal subscription={subscription} onChangePlan={() => setShowPlans(true)} />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <FreePrintsLeft printsUsed={2} maxPrintsPerWeek={20} />
-            <div className="bg-white rounded-2xl shadow p-6" />
+            <div className="rounded-2xl bg-white p-6 shadow" />
           </div>
 
-          <div>
-            <PaymentHistory invoices={invoices} />
-          </div>
+          <PaymentHistory invoices={invoices} />
         </div>
 
-        {/* Sidebar */}
-        <div className="w-full lg:w-[320px] flex-shrink-0 flex flex-col gap-6">
+        <div className="flex w-full flex-shrink-0 flex-col gap-6 lg:w-[320px]">
           <BillingAddress profile={localProfile} onEdit={() => setIsModalOpen(true)} />
           <PaymentMethod subscription={subscription} />
         </div>
@@ -109,6 +124,15 @@ const Billing: React.FC = () => {
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveProfile}
       />
+
+      {showPlans && (
+        <PlanSelectionModal
+          userid={userid}
+          currentPlan={subscription.plan_name || "Starter Kitchen"}
+          onClose={() => setShowPlans(false)}
+          onUpdate={handleUpdateSubscription}
+        />
+      )}
     </>
   )
 }
