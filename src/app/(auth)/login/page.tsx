@@ -1,3 +1,7 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import React from "react"
 import { LoginForm } from "./form"
 import Link from "next/link"
@@ -11,6 +15,35 @@ function getTimeOfDayGreeting() {
 }
 
 export default function LoginPage() {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    const checkAuthStatus = () => {
+      const token = localStorage.getItem("token")
+      const userId = localStorage.getItem("userid")
+
+      // If user is already logged in, redirect to dashboard
+      if (token && userId) {
+        console.log("User already authenticated, redirecting to dashboard")
+        router.push("/dashboard")
+        return
+      }
+
+      // User is not authenticated, show login form
+      setIsLoading(false)
+    }
+
+    checkAuthStatus()
+  }, [router])
+
+  // Show loading spinner while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+      </div>
+    )
+  }
   return (
     <section className="flex h-full min-h-fit w-full flex-col justify-between py-12">
       <div className="flex items-center justify-between">

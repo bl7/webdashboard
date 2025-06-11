@@ -1,446 +1,218 @@
 "use client"
 
-import React, { useState, useEffect, useCallback } from "react"
-import Script from "next/script"
+import React, { useState, useEffect, useMemo } from "react"
+import { PrinterProvider, usePrinter } from "@/context/PrinterContext"
 
 const ALLERGENS = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
 
 type TabType = "ingredients" | "menu"
 
 type IngredientItem = {
-  id: number
+  id: number | string
   name: string
   allergens: string[]
-  printedOn: string // Added
-  expiryDate: string // Added
+  printedOn: string
+  expiryDate: string
 }
 
 type MenuItem = {
-  id: number
+  id: number | string
   name: string
   printedOn: string
   expiryDate: string
   ingredients: string[]
 }
 
-type PrintQueueItem = {
-  id: number
-  type: TabType
-  name: string
-  quantity: number
-  allergens?: string[]
-  ingredients?: string[]
-  printedOn?: string
-  expiryDate?: string
+import { PrintQueueItem } from "@/types/print"
+// --- API Functions ---
+async function getAllMenuItems(token: string | null) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) throw new Error("Failed to fetch menu items")
+  return await response.json()
 }
 
-const INGREDIENTS: IngredientItem[] = [
-  {
-    id: 1,
-    name: "Milk",
-    allergens: ["milk"],
-    printedOn: "2025-06-01",
-    expiryDate: "2025-08-01",
-  },
-  {
-    id: 2,
-    name: "Eggs",
-    allergens: ["eggs"],
-    printedOn: "2025-06-02",
-    expiryDate: "2025-07-02",
-  },
-  {
-    id: 3,
-    name: "Wheat Flour",
-    allergens: ["wheat"],
-    printedOn: "2025-06-01",
-    expiryDate: "2025-12-01",
-  },
-  {
-    id: 4,
-    name: "Sugar",
-    allergens: [],
-    printedOn: "2025-06-01",
-    expiryDate: "2025-12-31",
-  },
-]
-
-const MENU_ITEMS: MenuItem[] = [
-  {
-    id: 101,
-    name: "Pancake",
-    printedOn: "2025-06-01",
-    expiryDate: "2025-12-01",
-    ingredients: ["Milk", "Eggs", "Wheat Flour", "Sugar"],
-  },
-  {
-    id: 102,
-    name: "Omelette",
-    printedOn: "2025-05-15",
-    expiryDate: "2025-11-15",
-    ingredients: ["Eggs", "Milk"],
-  },
-  {
-    id: 103,
-    name: "Toast",
-    printedOn: "2025-06-02",
-    expiryDate: "2025-12-02",
-    ingredients: ["Wheat Flour", "Milk"],
-  },
-]
-
-const MAX_INGREDIENTS_TO_FIT = 6
-
-function highlightAllergens(ingredient: string) {
-  const lower = ingredient.toLowerCase()
-  for (const allergen of ALLERGENS) {
-    if (lower.includes(allergen)) {
-      const regex = new RegExp(`(${allergen})`, "gi")
-      const parts = ingredient.split(regex)
-      return parts.map((part, i) =>
-        regex.test(part) ? (
-          <span key={i} className="font-semibold text-red-600">
-            {part}
-          </span>
-        ) : (
-          part
-        )
-      )
-    }
-  }
-  return ingredient
+async function getAllIngredients(token: string | null) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredient`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (!response.ok) throw new Error("Failed to fetch ingredients")
+  return await response.json()
 }
 
-// Check if an ingredient is allergenic by itself
-function isAllergenic(ingredient: IngredientItem): boolean {
-  return ingredient.allergens.length > 0
+// --- Utility Functions ---
+function calculateExpiryDate(days: number): string {
+  const today = new Date()
+  today.setDate(today.getDate() + days)
+  return today.toISOString().split("T")[0]
 }
 
-// --- Bluetooth Web API typings ---
-declare global {
-  interface BluetoothDevice {
-    id: string
-    name?: string
-    gatt?: BluetoothRemoteGATTServer
-    addEventListener(type: string, listener: EventListenerOrEventListenerObject): void
-  }
-
-  interface BluetoothRemoteGATTServer {
-    connected: boolean
-    connect(): Promise<BluetoothRemoteGATTServer>
-    disconnect(): void
-    getPrimaryService(serviceUUID: string): Promise<BluetoothRemoteGATTService>
-  }
-
-  interface BluetoothRemoteGATTService {
-    getCharacteristic(characteristicUUID: string): Promise<BluetoothRemoteGATTCharacteristic>
-  }
-
-  interface BluetoothRemoteGATTCharacteristic {
-    writeValue(data: ArrayBuffer): Promise<void>
+function getDefaultExpiryDays(type: "cook" | "prep" | "ppds"): number {
+  switch (type) {
+    case "cook":
+      return 1
+    case "prep":
+      return 3
+    case "ppds":
+      return 5
+    default:
+      return 3
   }
 }
 
-export default function LabelPrinter() {
-  // --- State ---
+function isAllergenic(ingredient: string) {
+  return ALLERGENS.includes(ingredient.toLowerCase())
+}
+
+// --- Main Page Component ---
+function LabelPrinterContent() {
   const [activeTab, setActiveTab] = useState<TabType>("ingredients")
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
-  const [printerConnected, setPrinterConnected] = useState(false)
-  const [message, setMessage] = useState<string | null>(null)
+  const [ingredients, setIngredients] = useState<IngredientItem[]>([])
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [page, setPage] = useState(1)
+  const itemsPerPage = 5
+  // Printer context
+  const { managerRef, status: printerStatus, message, setMessage } = usePrinter()
+  useEffect(() => {
+    setPage(1)
+  }, [activeTab, searchTerm])
+  const filteredIngredients = useMemo(() => {
+    if (!searchTerm) return ingredients
+    return ingredients.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  }, [ingredients, searchTerm])
 
-  const [scriptLoaded, setScriptLoaded] = useState(false)
+  // Filter menu items by search term
+  const filteredMenuItems = useMemo(() => {
+    if (!searchTerm) return menuItems
+    return menuItems.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  }, [menuItems, searchTerm])
 
-  // Epson USB/Network printer global (from ePOS SDK)
-  interface EpsonDevice {
-    addTextAlign(align: number): void
-    addTextSize(width: number, height: number): void
-    addText(text: string): void
-    addFeedLine(lines: number): void
-    addCut(mode: number): void
-    send(): void
-    ALIGN_CENTER: number
-    ALIGN_LEFT: number
-    CUT_FEED: number
-  }
-  const [epsonPrinter, setEpsonPrinter] = useState<EpsonDevice | null>(null)
+  // Calculate total pages based on filtered data
+  const totalPages = useMemo(() => {
+    const totalItems =
+      activeTab === "ingredients" ? filteredIngredients.length : filteredMenuItems.length
+    return Math.max(1, Math.ceil(totalItems / itemsPerPage))
+  }, [activeTab, filteredIngredients, filteredMenuItems])
 
-  // Bluetooth printer state
-  const [btDevice, setBtDevice] = useState<BluetoothDevice | null>(null)
-  const [btServer, setBtServer] = useState<BluetoothRemoteGATTServer | null>(null)
-  const [isBtConnecting, setIsBtConnecting] = useState(false)
-  const [isBtSending, setIsBtSending] = useState(false)
+  // Paginate filtered ingredients
+  const paginatedIngredients = useMemo(() => {
+    const start = (page - 1) * itemsPerPage
+    return filteredIngredients.slice(start, start + itemsPerPage)
+  }, [filteredIngredients, page])
 
-  // --- Epson USB/Network Printer Initialization ---
-  const printCallback = useCallback((deviceObj: EpsonDevice | null, errorCode: number) => {
-    if (deviceObj) {
-      setEpsonPrinter(deviceObj)
-      setPrinterConnected(true)
-      setMessage("USB/Network printer connected")
-    } else {
-      setPrinterConnected(false)
-      setMessage(`Failed to create printer device: ${errorCode}`)
+  // Paginate filtered menu items
+  const paginatedMenuItems = useMemo(() => {
+    const start = (page - 1) * itemsPerPage
+    return filteredMenuItems.slice(start, start + itemsPerPage)
+  }, [filteredMenuItems, page])
+  // Fetch ingredients
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) return
+      setIsLoading(true)
+      try {
+        const data = await getAllIngredients(token)
+        const ingredientsData = Array.isArray(data) ? data : data.data
+        const ingredients: IngredientItem[] = ingredientsData
+          .map((item: any, index: number) => ({
+            id: item.ingredientID ?? `ingredient-${index}-${Date.now()}`,
+            name: item.ingredientName || `Ingredient ${index + 1}`,
+            allergens: item.allergens || [],
+            printedOn: item.printedOn || new Date().toISOString().split("T")[0],
+            expiryDate: calculateExpiryDate(item.expiryDays || 7),
+          }))
+          .filter((item: any) => item.name && item.name.trim() !== "")
+        setIngredients(ingredients)
+        setError(null)
+      } catch (err: any) {
+        setError(`Error fetching ingredients: ${err.message}`)
+      } finally {
+        setIsLoading(false)
+      }
     }
+    fetchIngredients()
   }, [])
 
-  const connectCallback = useCallback(
-    (resultConnect: string) => {
-      if (resultConnect === "OK") {
-        window.epsonPrinter.createDevice(
-          "local_printer",
-          window.epsonPrinter.DEVICE_TYPE_PRINTER,
-          { crypto: false, buffer: false },
-          printCallback
-        )
-        setMessage("Connected to printer service. Creating printer device...")
-      } else {
-        setPrinterConnected(false)
-        setMessage(`Connection error: ${resultConnect}`)
-      }
-    },
-    [printCallback]
-  )
-
-  const initializeEpsonPrinter = useCallback(() => {
-    try {
-      if (window.epson && window.epson.ePOSDevice) {
-        window.epsonPrinter = new window.epson.ePOSDevice()
-        window.epsonPrinter.connect("localhost", 8008, connectCallback)
-        setMessage("Initializing USB/Network printer connection...")
-      } else {
-        setMessage("Epson ePOS SDK not loaded")
-      }
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setMessage(`Initialization error: ${error.message}`)
-      } else {
-        setMessage("Unknown initialization error")
-      }
-    }
-  }, [connectCallback])
-
+  // Fetch menu items
   useEffect(() => {
-    if (scriptLoaded) {
-      initializeEpsonPrinter()
-    }
-    return () => {
-      if (window.epsonPrinter) {
-        window.epsonPrinter.disconnect()
-      }
-    }
-  }, [scriptLoaded, initializeEpsonPrinter])
-
-  // --- Bluetooth Printer Functions ---
-
-  // Scan and connect to Bluetooth printer
-  async function scanAndConnectBluetooth() {
-    setMessage(null)
-    setIsBtConnecting(true)
-
-    try {
-      // 1️⃣ Prompt user to select device
-      const device = await navigator.bluetooth.requestDevice({
-        acceptAllDevices: true,
-        optionalServices: ["0000ffe0-0000-1000-8000-00805f9b34fb"], // Epson TM-m30 service UUID
-      })
-
-      if (!device.gatt) {
-        throw new Error("No GATT server available on device")
-      }
-
-      // 2️⃣ Connect to GATT server
-      const server = await device.gatt.connect()
-      setBtServer(server)
-
-      // 3️⃣ Optional: Verify the service exists
+    const fetchMenuItems = async () => {
+      setIsLoading(true)
+      const token = localStorage.getItem("token")
       try {
-        await server.getPrimaryService("0000ffe0-0000-1000-8000-00805f9b34fb")
-      } catch {
-        throw new Error("Device does not support required service")
-      }
-
-      // 4️⃣ Now safe to set device as connected
-      setBtDevice(device)
-
-      // 5️⃣ Handle disconnection
-      device.addEventListener("gattserverdisconnected", () => {
-        setMessage("Bluetooth device disconnected")
-        setBtDevice(null)
-        setBtServer(null)
-      })
-
-      // 6️⃣ Update status
-      setMessage("Bluetooth printer connected")
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setMessage(`Bluetooth connection failed: ${error.message}`)
-      } else {
-        setMessage("Bluetooth connection failed: Unknown error")
-      }
-    } finally {
-      setIsBtConnecting(false)
-    }
-  }
-
-  // Send data to Bluetooth printer
-  async function sendDataBluetooth(data: Uint8Array) {
-    if (!btServer) {
-      setMessage("No Bluetooth device connected")
-      return
-    }
-    setIsBtSending(true)
-    try {
-      const serviceUUID = "0000ffe0-0000-1000-8000-00805f9b34fb"
-      const characteristicUUID = "0000ffe1-0000-1000-8000-00805f9b34fb"
-
-      const service = await btServer.getPrimaryService(serviceUUID)
-      const characteristic = await service.getCharacteristic(characteristicUUID)
-
-      await characteristic.writeValue(data.buffer as ArrayBuffer)
-
-      setMessage("Data sent to Bluetooth printer")
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setMessage(`Send failed: ${error.message}`)
-      } else {
-        setMessage("Send failed: Unknown error")
-      }
-    } finally {
-      setIsBtSending(false)
-    }
-  }
-
-  // --- Print Functions ---
-
-  // Print via Epson USB/Network printer
-  const handleEpsonPrint = () => {
-    if (!epsonPrinter) {
-      setMessage("USB/Network printer not connected")
-      return
-    }
-    if (printQueue.length === 0) {
-      setMessage("No items to print")
-      return
-    }
-    try {
-      printQueue.forEach((item) => {
-        for (let i = 0; i < item.quantity; i++) {
-          epsonPrinter.addTextAlign(epsonPrinter.ALIGN_CENTER)
-          epsonPrinter.addTextSize(1, 1)
-          epsonPrinter.addText(`${item.name}\n`)
-          epsonPrinter.addTextAlign(epsonPrinter.ALIGN_LEFT)
-          epsonPrinter.addTextSize(1, 1)
-
-          if (item.type === "ingredients" && item.allergens?.length) {
-            epsonPrinter.addText("Allergens: " + item.allergens.join(", ") + "\n")
-          } else if (item.type === "menu" && item.ingredients?.length) {
-            const tooLong = item.ingredients.length > MAX_INGREDIENTS_TO_FIT
-            if (tooLong) {
-              const allergensInIngredients = item.ingredients
-                .map((ing) => ing.toLowerCase())
-                .filter((ing) => ALLERGENS.includes(ing))
-              if (allergensInIngredients.length > 0) {
-                epsonPrinter.addText("Allergens: " + allergensInIngredients.join(", ") + "\n")
-              }
-            } else {
-              epsonPrinter.addText("Ingredients: " + item.ingredients.join(", ") + "\n")
+        const res = await getAllMenuItems(token)
+        if (!res?.data) {
+          setError("No data found.")
+          return
+        }
+        const menuItems: MenuItem[] = []
+        let globalIndex = 0
+        for (const category of res.data) {
+          if (!category.items) continue
+          for (const item of category.items) {
+            const id = item.menuItemID ?? `menu-${globalIndex}-${Date.now()}`
+            const name = item.menuItemName || `Menu Item ${globalIndex + 1}`
+            if (name && name.trim() !== "") {
+              menuItems.push({
+                id,
+                name,
+                printedOn: new Date().toISOString().split("T")[0],
+                expiryDate: calculateExpiryDate(getDefaultExpiryDays("cook")),
+                ingredients: item.ingredients
+                  ? item.ingredients.map((ing: any) => ing.ingredientName || "Unknown Ingredient")
+                  : [],
+              })
             }
+            globalIndex++
           }
-
-          // Now both ingredients and menu items have dates
-          if (item.printedOn && item.expiryDate) {
-            epsonPrinter.addText(
-              `Printed On: ${new Date(item.printedOn).toLocaleDateString()} | Expiry: ${new Date(
-                item.expiryDate
-              ).toLocaleDateString()}\n`
-            )
-          }
-          epsonPrinter.addFeedLine(2)
-          epsonPrinter.addCut(epsonPrinter.CUT_FEED)
         }
-      })
-      epsonPrinter.send()
-      setMessage("USB/Network print job sent")
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setMessage(`Print error: ${error.message}`)
-      } else {
-        setMessage("Unknown print error")
+        setMenuItems(menuItems)
+        setError(null)
+      } catch (err: any) {
+        setError(`Failed to fetch menu items: ${err.message}`)
+      } finally {
+        setIsLoading(false)
       }
     }
-  }
+    fetchMenuItems()
+  }, [])
 
-  // Prepare and send label data over Bluetooth
-  async function printLabelOverBluetooth(item: PrintQueueItem) {
-    const encoder = new TextEncoder()
-    let lines = `${item.name}\n`
-
-    if (item.type === "ingredients" && item.allergens?.length) {
-      lines += `Allergens: ${item.allergens.join(", ")}\n`
-    } else if (item.type === "menu" && item.ingredients?.length) {
-      const tooLong = item.ingredients.length > MAX_INGREDIENTS_TO_FIT
-      if (tooLong) {
-        const allergensInIngredients = item.ingredients
-          .map((ing) => ing.toLowerCase())
-          .filter((ing) => ALLERGENS.includes(ing))
-        if (allergensInIngredients.length > 0) {
-          lines += `Allergens: ${allergensInIngredients.join(", ")}\n`
-        }
-      } else {
-        lines += `Ingredients: ${item.ingredients.join(", ")}\n`
-      }
-    }
-
-    // Now both ingredients and menu items have dates
-    if (item.printedOn && item.expiryDate) {
-      lines += `Printed On: ${new Date(item.printedOn).toLocaleDateString()} | Expiry: ${new Date(
-        item.expiryDate
-      ).toLocaleDateString()}\n`
-    }
-
-    const textBytes = encoder.encode(lines)
-    const cutBytes = new Uint8Array([0x1d, 0x56, 0x01]) // GS V 1 cut command
-    const data = new Uint8Array(textBytes.length + cutBytes.length)
-    data.set(textBytes, 0)
-    data.set(cutBytes, textBytes.length)
-
-    await sendDataBluetooth(data)
-  }
-
-  // Print all labels via Bluetooth
-  async function handleBluetoothPrint() {
-    if (!btServer) {
-      setMessage("Bluetooth printer not connected")
-      return
-    }
-    if (printQueue.length === 0) {
-      setMessage("No items to print")
-      return
-    }
-    for (const item of printQueue) {
-      for (let i = 0; i < item.quantity; i++) {
-        await printLabelOverBluetooth(item)
-      }
-    }
-    setMessage("Bluetooth print job sent")
-  }
-
-  // --- Print Queue Management ---
-
+  // Add item to print queue
   const addToPrintQueue = (item: IngredientItem | MenuItem, type: TabType) => {
     setPrintQueue((prev) => {
+      const uniqueId = `${type}-${item.id}-${Date.now()}-${Math.floor(Math.random() * 10000)}`
       if (prev.some((q) => q.id === item.id && q.type === type)) return prev
+      const baseItem = {
+        uid: uniqueId,
+        id: item.id,
+        type,
+        name: item.name,
+        quantity: 1,
+        printedOn: item.printedOn,
+        expiryDate: item.expiryDate,
+      }
       if (type === "ingredients") {
         const ingredientItem = item as IngredientItem
         return [
           ...prev,
           {
-            id: ingredientItem.id,
-            type,
-            name: ingredientItem.name,
-            quantity: 1,
+            ...baseItem,
             allergens: ingredientItem.allergens,
-            printedOn: ingredientItem.printedOn, // Added
-            expiryDate: ingredientItem.expiryDate, // Added
           },
         ]
       } else {
@@ -448,330 +220,354 @@ export default function LabelPrinter() {
         return [
           ...prev,
           {
-            id: menuItem.id,
-            type,
-            name: menuItem.name,
-            quantity: 1,
+            ...baseItem,
             ingredients: menuItem.ingredients,
-            printedOn: menuItem.printedOn,
-            expiryDate: menuItem.expiryDate,
+            labelType: "cook" as const,
           },
         ]
       }
     })
   }
 
-  const removeFromPrintQueue = (id: number, type: TabType) => {
-    setPrintQueue((prev) => prev.filter((q) => !(q.id === id && q.type === type)))
+  // Remove item from print queue by uid
+  const removeFromPrintQueue = (uid: string) => {
+    setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
   }
 
-  const updateQuantity = (id: number, type: TabType, quantity: number) => {
+  // Clear entire print queue
+  const clearPrintQueue = () => {
+    setPrintQueue([])
+  }
+
+  // Update quantity of an item in print queue
+  const updateQuantity = (uid: string, quantity: number) => {
+    setPrintQueue((prev) =>
+      prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
+    )
+  }
+
+  // Update label type and expiry date for menu items
+  const updateLabelType = (uid: string, labelType: "cook" | "prep" | "ppds") => {
     setPrintQueue((prev) =>
       prev.map((q) =>
-        q.id === id && q.type === type ? { ...q, quantity: Math.max(1, quantity) } : q
+        q.uid === uid
+          ? { ...q, labelType, expiryDate: calculateExpiryDate(getDefaultExpiryDays(labelType)) }
+          : q
       )
     )
   }
 
-  // --- JSX ---
+  // Print actions using printer manager ref
+  const handlePrintUSB = () => {
+    if (!managerRef.current) {
+      setMessage("Printer manager is not ready")
+      return
+    }
+    managerRef.current.handleEpsonPrint(printQueue)
+  }
+
+  const handlePrintBluetooth = async () => {
+    if (!managerRef.current) {
+      setMessage("Printer manager is not ready")
+      return
+    }
+    await managerRef.current.handleBluetoothPrint(printQueue)
+  }
+
+  const handleConnectBluetooth = async () => {
+    if (!managerRef.current) {
+      setMessage("Printer manager is not ready")
+      return
+    }
+    await managerRef.current.scanAndConnectBluetooth()
+  }
+
+  const totalItemsInQueue = printQueue.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <>
-      {/* Epson ePOS SDK script */}
-      <Script
-        src="/epson-epos-sdk.js"
-        onLoad={() => setScriptLoaded(true)}
-        onError={() => setMessage("Failed to load Epson ePOS SDK")}
-      />
+    <div className="mx-auto max-w-5xl p-6">
+      <div className="flex items-center gap-8">
+        <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
 
-      <main className="overflow-scrollable h-full w-full p-6 font-sans">
-        <div className="mt-4 flex flex-col items-center space-y-3 border-b-2 border-black p-5 text-sm md:mt-0 md:flex-row md:items-start md:space-x-6 md:space-y-0">
-          {/* USB/Network Status */}
-          <div className="flex min-w-[160px] flex-col items-start space-y-0.5">
-            <span className="font-semibold">USB/Network Status:</span>
-            <span className={printerConnected ? "text-green-600" : "text-red-600"}>
-              {printerConnected ? "Connected" : "Not Connected"}
+        {/* Printer status and message */}
+        <div className="mb-4">
+          <span
+            className={`mr-2 inline-block rounded-full px-3 py-1 text-xs ${
+              printerStatus.printerConnected
+                ? "bg-green-200 text-green-800"
+                : "bg-red-600 text-gray-100"
+            }`}
+          >
+            {printerStatus.printerConnected ? "Printer Connected" : "Printer Not Connected"}
+          </span>
+          {printerStatus.isBtConnecting && (
+            <span className="mr-2 inline-block rounded-full bg-yellow-200 px-3 py-1 text-xs text-yellow-800">
+              Connecting Bluetooth...
             </span>
-          </div>
-
-          {/* Bluetooth Status */}
-          <div className="flex min-w-[160px] flex-col items-start space-y-0.5">
-            <span className="font-semibold">Bluetooth Status:</span>
-            <span className={btDevice ? "text-green-600" : "text-red-600"}>
-              {btDevice ? `Connected to ${btDevice.name ?? btDevice.id}` : "Not Connected"}
+          )}
+          {printerStatus.isBtSending && (
+            <span className="mr-2 inline-block rounded-full bg-blue-200 px-3 py-1 text-xs text-blue-800">
+              Sending to Printer...
             </span>
-          </div>
-
-          {/* Message */}
-          <div className="flex-1 text-left text-gray-700 md:text-left">{message}</div>
-
-          {/* Bluetooth Connect Button */}
-          <button
-            onClick={scanAndConnectBluetooth}
-            disabled={isBtConnecting || btDevice !== null}
-            className={`whitespace-nowrap rounded px-4 py-2 font-semibold text-white transition ${
-              !btDevice && !isBtConnecting
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "cursor-not-allowed bg-gray-400"
-            }`}
-          >
-            {isBtConnecting ? "Connecting..." : btDevice ? "Connected" : "Connect Bluetooth"}
-          </button>
+          )}
+          {message && (
+            <span className="inline-block rounded-full bg-indigo-200 px-3 py-1 text-xs text-indigo-800">
+              {message}
+            </span>
+          )}
         </div>
+      </div>
 
-        <h1 className="mb-6 p-5 text-center text-3xl font-bold">Print Labels</h1>
-        {/* Tabs */}
-        <div className="mb-6 flex border-b-2 border-black p-5">
-          <div
-            onClick={() => setActiveTab("ingredients")}
-            className={`flex-1 cursor-pointer py-4 text-center text-lg font-semibold transition ${
-              activeTab === "ingredients"
-                ? "border-b-4 border-gray-400 bg-gray-300 shadow-inner"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            Ingredients
+      {/* Tab Switcher */}
+      {/* Tabs */}
+      <div className="flex gap-8">
+        {/* Left Column: Select Items */}
+        <div className="w-1/2">
+          {/* Tabs */}
+          <div className="mb-6 flex items-center justify-center border-b border-purple-700">
+            <button
+              className={`border-l border-r border-t px-6 py-2 font-medium transition ${
+                activeTab === "ingredients"
+                  ? "-mb-px border-purple-700 bg-white text-black shadow"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              } rounded-tl-md rounded-tr-md`}
+              onClick={() => setActiveTab("ingredients")}
+            >
+              Ingredients
+            </button>
+            <button
+              className={`border-l border-r border-t px-6 py-2 font-medium transition ${
+                activeTab === "menu"
+                  ? "-mb-px border-purple-700 bg-white text-black shadow"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              } rounded-tl-md rounded-tr-md`}
+              onClick={() => setActiveTab("menu")}
+            >
+              Menu Items
+            </button>
           </div>
-          <div
-            onClick={() => setActiveTab("menu")}
-            className={`flex-1 cursor-pointer py-4 text-center text-lg font-semibold transition ${
-              activeTab === "menu"
-                ? "border-b-4 border-gray-400 bg-gray-300 shadow-inner"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-            }`}
-          >
-            Menu Items
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          {/* Item List */}
           <div>
-            <h2 className="mb-4 text-xl font-semibold capitalize">{activeTab}</h2>
-            <ul className="max-h-[350px] space-y-3 overflow-auto rounded border p-4">
-              {(activeTab === "ingredients" ? INGREDIENTS : MENU_ITEMS).map((item) => {
-                const inQueue = printQueue.some((q) => q.id === item.id && q.type === activeTab)
-                const isIngredientAllergenic =
-                  activeTab === "ingredients" && isAllergenic(item as IngredientItem)
-                return (
-                  <li
+            {/* Search Input */}
+            <div className="mb-4">
+              <input
+                type="text"
+                placeholder={`Search ${activeTab === "ingredients" ? "ingredients" : "menu items"}...`}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full rounded border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            {/* Items List */}
+            {isLoading && <div>Loading...</div>}
+            {error && <div className="mb-2 text-red-600">{error}</div>}
+
+            {activeTab === "ingredients" && (
+              <div className="mb-8 flex flex-col gap-3">
+                {paginatedIngredients.map((item) => (
+                  <div
                     key={item.id}
-                    className={`flex items-center justify-between rounded border p-3 shadow-sm transition hover:shadow-md ${
-                      isIngredientAllergenic ? "border-red-300 bg-red-50" : ""
-                    }`}
+                    className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
                   >
                     <div>
-                      <div className="flex items-center gap-2 font-medium">
-                        {item.name}
-                        {isIngredientAllergenic && (
-                          <span className="rounded-full bg-red-500 px-2 py-1 text-xs font-semibold text-white">
-                            ⚠ ALLERGEN
-                          </span>
+                      <div className="font-semibold">{item.name}</div>
+                      <div className="mt-1 text-sm text-gray-500">
+                        Allergens:{" "}
+                        {item.allergens && item.allergens.length > 0 ? (
+                          <span className="text-red-600">{item.allergens.join(", ")}</span>
+                        ) : (
+                          <span className="italic text-gray-400">None</span>
                         )}
                       </div>
-                      {activeTab === "ingredients" &&
-                        (item as IngredientItem).allergens.length > 0 && (
-                          <div className="mt-1 text-xs text-red-600">
-                            Contains: {(item as IngredientItem).allergens.join(", ")}
-                          </div>
-                        )}
+                      <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
                     </div>
                     <button
-                      disabled={inQueue}
-                      onClick={() => addToPrintQueue(item, activeTab)}
-                      className={`rounded px-3 py-1 text-sm font-semibold transition ${
-                        inQueue
-                          ? "cursor-not-allowed bg-gray-300 text-gray-600"
-                          : "bg-indigo-600 text-white hover:bg-indigo-700"
-                      }`}
+                      className="rounded-lg bg-green-600 px-5 py-1 font-medium text-white hover:bg-green-700"
+                      onClick={() => addToPrintQueue(item, "ingredients")}
                     >
-                      {inQueue ? "Added" : "Add"}
+                      Add
                     </button>
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
-
-          {/* Print Queue */}
-          <div>
-            <h2 className="mb-4 text-xl font-semibold">Print Queue</h2>
-            {printQueue.length === 0 ? (
-              <p className="text-gray-500">No items selected for printing.</p>
-            ) : (
-              <ul className="max-h-[350px] space-y-3 overflow-auto rounded border p-4">
-                {printQueue.map((item) => (
-                  <li
-                    key={`${item.type}-${item.id}`}
-                    className="flex items-center justify-between rounded border p-3 shadow-sm"
-                  >
-                    <div className="flex flex-col">
-                      <span className="font-semibold">{item.name}</span>
-                      <span className="text-xs capitalize text-gray-500">{item.type}</span>
-                      {item.allergens && item.allergens.length > 0 && (
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {item.allergens.map((a) => (
-                            <span
-                              key={a}
-                              className="rounded bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700"
-                            >
-                              {a}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      {item.type === "menu" && item.ingredients && (
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          {item.ingredients.map((ing) => (
-                            <span
-                              key={ing}
-                              className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-700"
-                            >
-                              {highlightAllergens(ing)}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="number"
-                        min={1}
-                        value={item.quantity}
-                        onChange={(e) =>
-                          updateQuantity(item.id, item.type, parseInt(e.target.value) || 1)
-                        }
-                        className="w-16 rounded border px-2 py-1 text-center focus:outline-indigo-500"
-                      />
-                      <button
-                        onClick={() => removeFromPrintQueue(item.id, item.type)}
-                        className="font-semibold text-red-600 hover:text-red-800"
-                        aria-label={`Remove ${item.name} from print queue`}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </li>
+                  </div>
                 ))}
-              </ul>
+                {/* Pagination Controls */}
+                <div className="mt-4 flex justify-center gap-2">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
+                  >
+                    Prev
+                  </button>
+                  <span className="px-3 py-1">
+                    {page} / {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {activeTab === "menu" && (
+              <div className="mb-8 flex flex-col gap-3">
+                {paginatedMenuItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between rounded-xl border border-gray-200 bg-white px-4 py-3"
+                  >
+                    <div>
+                      <div className="font-semibold">{item.name}</div>
+                      <div className="mt-1 text-sm text-gray-500">
+                        Ingredients:{" "}
+                        {item.ingredients && item.ingredients.length > 0 ? (
+                          item.ingredients.join(", ")
+                        ) : (
+                          <span className="italic text-gray-400">None</span>
+                        )}
+                      </div>
+                      <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
+                    </div>
+                    <button
+                      className="rounded-lg bg-green-600 px-5 py-1 font-medium text-white hover:bg-green-700"
+                      onClick={() => addToPrintQueue(item, "menu")}
+                    >
+                      Add
+                    </button>
+                  </div>
+                ))}
+                {/* Pagination Controls */}
+                <div className="mt-4 flex justify-center gap-2">
+                  <button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
+                  >
+                    Prev
+                  </button>
+                  <span className="px-3 py-1">
+                    {page} / {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages}
+                    className="rounded border border-gray-300 px-3 py-1 disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Label Preview */}
-        <div className="mt-8">
-          <h2 className="mb-4 text-xl font-semibold">Label Preview</h2>
-          {printQueue.length === 0 ? (
-            <p className="text-gray-500">Select items to preview labels.</p>
-          ) : (
-            <div
-              className="flex flex-wrap gap-[1mm]"
-              style={{ backgroundColor: "#f9fafb", padding: "4px" }}
-            >
-              {printQueue.map((item) => {
-                const tooLong = (item.ingredients?.length ?? 0) > MAX_INGREDIENTS_TO_FIT
-                const allergens =
-                  item.type === "menu" && item.ingredients
-                    ? item.ingredients
-                        .map((ing) => ing.toLowerCase())
-                        .filter((ing) => ALLERGENS.includes(ing))
-                    : (item.allergens ?? [])
-
-                return (
+        {/* Right Column: Print Queue */}
+        <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto">
+          <div className="mb-8">
+            <h2 className="mb-2 text-xl font-bold">Print Queue</h2>
+            {printQueue.length === 0 ? (
+              <div className="mb-2 italic text-gray-500">No items in queue.</div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {printQueue.map((item) => (
                   <div
-                    key={`${item.type}-${item.id}`}
-                    style={{
-                      width: "5.5cm",
-                      height: "3.1cm",
-                      border: "1px solid #ccc",
-                      padding: "6px",
-                      fontSize: "10px",
-                      overflow: "hidden",
-                      whiteSpace: "normal",
-                      boxSizing: "border-box",
-                      backgroundColor: "white",
-                    }}
+                    key={item.uid}
+                    className="flex items-start justify-between rounded-xl border border-gray-200 bg-white p-4"
                   >
-                    <div className="mb-1 text-sm font-bold">{item.name}</div>
-                    {item.printedOn && item.expiryDate && (
-                      <div className="mb-1 text-xs">
-                        Printed On: {new Date(item.printedOn).toLocaleDateString()} | Expiry:{" "}
-                        {new Date(item.expiryDate).toLocaleDateString()}
+                    <div>
+                      <div className="font-semibold">{item.name}</div>
+                      <div className="mt-1 text-xs text-gray-400">Expires: {item.expiryDate}</div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="text-sm">Quantity</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(item.uid, parseInt(e.target.value) || 1)}
+                          className="w-16 rounded border px-2 py-1"
+                        />
                       </div>
-                    )}
-                    <div className="text-xs">
-                      {item.type === "ingredients" && item.allergens?.length ? (
-                        <>
-                          <b>Allergens:</b>{" "}
-                          {item.allergens.map((a, i) => (
-                            <span key={a} className="font-semibold text-red-600">
-                              {a}
-                              {i < item.allergens!.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </>
-                      ) : tooLong && allergens.length > 0 ? (
-                        <>
-                          <b>Allergens:</b>{" "}
-                          {allergens.map((a, i) => (
-                            <span key={a} className="font-semibold text-red-600">
-                              {a}
-                              {i < allergens.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        <>
-                          <b>Ingredients:</b>{" "}
-                          {(item.ingredients ?? []).map((ing, i) => (
-                            <span key={i}>
-                              {highlightAllergens(ing)}
-                              {i < (item.ingredients?.length ?? 0) - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </>
+                      {item.type === "menu" && (
+                        <div className="mt-2">
+                          <span className="text-sm">Label Type</span>
+                          <select
+                            value={item.labelType || "cook"}
+                            onChange={(e) =>
+                              updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
+                            }
+                            className="ml-2 rounded border px-2 py-1"
+                          >
+                            <option value="cook">Cook</option>
+                            <option value="prep">Prep</option>
+                            <option value="ppds">PPDS</option>
+                          </select>
+                        </div>
+                      )}
+                      {item.type === "ingredients" && (
+                        <div className="mt-2 text-sm text-gray-400">Label Type: —</div>
                       )}
                     </div>
+                    <button
+                      className="mt-1 h-8 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
+                      onClick={() => removeFromPrintQueue(item.uid)}
+                    >
+                      Remove
+                    </button>
                   </div>
-                )
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Print Buttons & Status */}
-        <div className="mt-8 flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-          <button
-            disabled={!printerConnected || printQueue.length === 0}
-            onClick={handleEpsonPrint}
-            className={`rounded px-6 py-3 font-semibold text-white transition ${
-              printerConnected && printQueue.length > 0
-                ? "bg-indigo-600 hover:bg-indigo-700"
-                : "cursor-not-allowed bg-gray-400"
-            }`}
-          >
-            Print All via USB/Network ({printQueue.reduce((sum, item) => sum + item.quantity, 0)})
-          </button>
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={handleBluetoothPrint}
-              disabled={!btDevice || printQueue.length === 0 || isBtSending}
-              className={`rounded px-6 py-3 font-semibold text-white transition ${
-                btDevice && printQueue.length > 0 && !isBtSending
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "cursor-not-allowed bg-gray-400"
-              }`}
-            >
-              {isBtSending
-                ? "Printing..."
-                : `Print All via Bluetooth (${printQueue.reduce(
-                    (sum, item) => sum + item.quantity,
-                    0
-                  )})`}
-            </button>
+                ))}
+              </div>
+            )}
+            {printQueue.length > 0 && (
+              <button
+                className="mt-2 rounded bg-gray-400 px-4 py-2 text-white hover:bg-gray-500"
+                onClick={clearPrintQueue}
+              >
+                Clear Queue
+              </button>
+            )}
           </div>
         </div>
-      </main>
-    </>
+      </div>
+
+      {/* Print Actions */}
+      <div className="flex gap-4">
+        <button
+          className="rounded bg-blue-700 px-6 py-2 text-white hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={handlePrintUSB}
+          disabled={!printerStatus.printerConnected || totalItemsInQueue === 0}
+        >
+          Print (USB)
+        </button>
+        <button
+          className="rounded bg-blue-500 px-6 py-2 text-white hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={handlePrintBluetooth}
+          disabled={!printerStatus.printerConnected || totalItemsInQueue === 0}
+        >
+          Print (Bluetooth)
+        </button>
+        <button
+          className="rounded bg-yellow-500 px-6 py-2 text-white hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
+          onClick={handleConnectBluetooth}
+          disabled={printerStatus.isBtConnecting}
+        >
+          Connect Bluetooth
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// --- Wrap with PrinterProvider passing printQueue ---
+export default function LabelPrinterPage() {
+  const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
+
+  return (
+    <PrinterProvider printQueue={printQueue}>
+      <LabelPrinterContent />
+    </PrinterProvider>
   )
 }
