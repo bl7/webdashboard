@@ -14,6 +14,7 @@ const features = [
   "Weekly Free Prints",
 ]
 
+
 const plans = [
   {
     name: "Free Plan",
@@ -446,7 +447,7 @@ const ProfileDashboard = () => {
       )}
 
       {/* Billing Tab stays unchanged */}
-      {activeTab === "billing" && userId && <Billing userid={userId} />}
+      {activeTab === "billing" && userId && <Billing />}
 
       {/* Avatar Modal */}
       {showModal && (

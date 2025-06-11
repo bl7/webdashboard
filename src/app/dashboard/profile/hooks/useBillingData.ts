@@ -94,6 +94,7 @@ export default function useBillingData(userid: string) {
       const res = await fetch(`/api/profile?user_id=${userid}`)
       if (!res.ok) throw new Error("Failed to fetch profile")
       const data = await res.json()
+      console.log("Billing data fetched:", data)
       setProfile(data.profile || null)
     } catch {
       setError("Could not load profile.")

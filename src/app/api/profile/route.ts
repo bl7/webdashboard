@@ -20,7 +20,6 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    // Destructure with default null to allow partial updates
     const {
       user_id,
       company_name = null,

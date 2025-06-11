@@ -1,53 +1,86 @@
 import React from "react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Invoice } from "../hooks/useBillingData"
+import { DownloadIcon } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Avatar, AvatarImage } from "@/components/ui/avatar"
 
 interface Props {
   invoices: Invoice[]
 }
 
 export default function PaymentHistory({ invoices }: Props) {
-  if (invoices.length === 0) {
-    return <div>No invoices found.</div>
-  }
 
   return (
     <div>
-      <h2 className="mb-4 text-lg font-semibold">Payment history</h2>
-      <div className="space-y-4">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Billing history</h2>
+        <button className="text-sm text-primary hover:underline">Download</button>
+      </div>
+
+      {/* Table Head */}
+      <div className="hidden md:grid grid-cols-12 px-4 py-2 text-sm text-muted-foreground font-medium">
+        <div className="col-span-1">
+          <Checkbox disabled />
+        </div>
+        <div className="col-span-3">Plan</div>
+        <div className="col-span-2">Amount</div>
+        <div className="col-span-2">Date</div>
+        <div className="col-span-3">Users on plan</div>
+        <div className="col-span-1 text-right"></div>
+      </div>
+{invoices.length === 0 ? (
+  <div className="text-sm text-muted-foreground">No invoices found.</div>
+) : (
+      <div className="space-y-2">
         {invoices.map((entry) => (
-          <Card key={entry.id}>
-            <CardContent className="space-y-2 p-4">
-              <div className="flex items-center justify-between">
-                <div className="text-sm font-medium">${entry.amount.toFixed(2)}</div>
-                <Badge variant={entry.status === "Completed" ? "default" : "secondary"}>
-                  {entry.status}
-                </Badge>
-              </div>
-              <div className="text-sm text-muted-foreground">
-                {entry.recipient_name} · {new Date(entry.invoice_date).toLocaleDateString()} · Card
-                ending {entry.payment_method_last4}
-              </div>
-              {entry.metadata && entry.metadata.plan && (
-                <div className="mt-2 rounded border p-2 text-sm">
-                  <div className="mb-1 font-medium">{entry.metadata.plan}</div>
-                  {entry.metadata.items && (
-                    <ul className="list-inside list-disc">
-                      {entry.metadata.items.map((item: string, i: number) => (
-                        <li key={i}>{item}</li>
-                      ))}
-                    </ul>
-                  )}
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    Invoice #{entry.id} · {new Date(entry.invoice_date).toLocaleDateString()}
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
+          <div
+            key={entry.id}
+            className="grid grid-cols-12 items-center bg-white rounded-xl px-4 py-3 shadow-sm hover:shadow transition"
+          >
+            {/* Checkbox */}
+            <div className="col-span-1">
+              <Checkbox />
+            </div>
+
+            {/* Plan */}
+            <div className="col-span-3 text-sm font-medium">
+              {entry.metadata?.plan || "Basic Plan"}
+            </div>
+
+            {/* Amount */}
+            <div className="col-span-2 text-sm">${entry.amount.toFixed(2)}</div>
+
+            {/* Date */}
+            <div className="col-span-2 text-sm">
+              {new Date(entry.invoice_date).toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </div>
+
+            {/* Avatars */}
+            <div className="col-span-3 flex -space-x-2">
+              {(entry.metadata?.avatars || []).map((url: string, i: number) => (
+                <Avatar key={i} className="w-7 h-7 border-2 border-white">
+                  <AvatarImage src={url} />
+                </Avatar>
+              ))}
+            </div>
+
+            {/* Download Icon */}
+            <div className="col-span-1 text-right">
+              <button className="text-muted-foreground hover:text-primary">
+                <DownloadIcon size={16} />
+              </button>
+            </div>
+          </div>
+          
         ))}
       </div>
+
+)}
     </div>
+    
   )
 }
