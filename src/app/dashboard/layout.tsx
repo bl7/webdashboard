@@ -62,6 +62,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
   const pathname = usePathname()
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [sidebarMobile, setSidebarMobile] = useState(false)
+  const [avatar, setAvatar] = useState<number | null>(null)
 
   // User info states
   const [name, setName] = useState<string | null>(null)
@@ -119,7 +120,19 @@ export default function DashboardLayout({ children }: LayoutProps) {
         const subscriptionData = await subscriptionRes.json()
         const adminData = await adminRes.json()
         setProfile(profileData.profile)
+
         setSubscription(subscriptionData.subscription)
+        const pic = profileData.profile?.profile_picture
+        if (pic && pic.startsWith("/avatar")) {
+          const match = pic.match(/\/avatar(\d+)\.png/)
+          if (match) {
+            const avatarNum = parseInt(match[1], 10)
+            if (!isNaN(avatarNum) && avatarNum >= 1 && avatarNum <= 8) {
+              setAvatar(avatarNum)
+              localStorage.setItem("avatar", avatarNum.toString())
+            }
+          }
+        }
         setLoading(false)
         setDataFetched(true)
         if (adminData.hasPin && localStorage.getItem("adminAccess") === "true") {
@@ -302,6 +315,22 @@ export default function DashboardLayout({ children }: LayoutProps) {
                 <span>Admin Access</span>
               </button>
             )}
+            {(sidebarOpen || sidebarMobile) && avatar !== null && profile?.company_name && (
+              <div className="mb-4 mt-auto flex items-center gap-4 rounded-lg bg-white/10 p-3 text-sm text-white">
+                <Image
+                  src={`/avatar${avatar}.png`}
+                  alt="Avatar"
+                  width={40}
+                  height={40}
+                  className="rounded-full border border-white"
+                />
+                <div className="flex flex-col">
+                  <span className="font-semibold">{profile.company_name}</span>
+                  <span className="text-xs text-white/70">Company</span>
+                </div>
+              </div>
+            )}
+
             {(sidebarOpen || sidebarMobile) && (
               <button
                 onClick={handleLogout}
