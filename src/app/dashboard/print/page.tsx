@@ -131,8 +131,6 @@ function LabelPrinterContent() {
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
   const managerRef = useRef<PrinterManager | null>(null)
 
-  useEpsonScript(() => setScriptLoaded(true))
-
   useEffect(() => {
     setPage(1)
   }, [activeTab, searchTerm])
