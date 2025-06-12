@@ -3,7 +3,7 @@ import { PrintQueueItem } from "@/types/print"
 
 const ALLERGENS = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
 const MAX_INGREDIENTS_TO_FIT = 6
-
+import { formatLabelForPrint } from "./labelFormatter"
 interface EpsonDevice {
   addTextAlign(align: number): void
   addTextSize(width: number, height: number): void
@@ -17,8 +17,18 @@ interface EpsonDevice {
 }
 
 export interface PrinterManagerHandles {
-  handleEpsonPrint: (queue: PrintQueueItem[]) => void
-  handleBluetoothPrint: (queue: PrintQueueItem[]) => Promise<void>
+  handleEpsonPrint: (
+    queue: PrintQueueItem[],
+    ALLERGENS: string[],
+    customExpiry: Record<string, string>,
+    MAX_INGREDIENTS_TO_FIT: number
+  ) => void
+  handleBluetoothPrint: (
+    queue: PrintQueueItem[],
+    ALLERGENS: string[],
+    customExpiry: Record<string, string>,
+    MAX_INGREDIENTS_TO_FIT: number
+  ) => Promise<void>
   scanAndConnectBluetooth: () => Promise<void>
   initializeEpsonPrinter: () => void
   printerConnected: boolean
@@ -149,23 +159,24 @@ const PrinterManager = forwardRef<PrinterManagerHandles, Props>(
       }
     }
 
-    const handleEpsonPrint = (queue: PrintQueueItem[]) => {
+    const handleEpsonPrint = (
+      queue: PrintQueueItem[],
+      ALLERGENS: string[],
+      customExpiry: Record<string, string>,
+      MAX_INGREDIENTS_TO_FIT: number
+    ) => {
       if (!epsonPrinter) return setMessage("No USB printer")
       if (!queue.length) return setMessage("Queue empty")
       queue.forEach((item) => {
         for (let i = 0; i < item.quantity; i++) {
-          epsonPrinter.addTextAlign(epsonPrinter.ALIGN_CENTER)
-          epsonPrinter.addTextSize(1, 1)
-          epsonPrinter.addText(`${item.name}\n`)
+          const labelText = formatLabelForPrint(
+            item,
+            ALLERGENS,
+            customExpiry,
+            MAX_INGREDIENTS_TO_FIT
+          )
           epsonPrinter.addTextAlign(epsonPrinter.ALIGN_LEFT)
-          if (item.type === "ingredients") {
-            if (item.allergens?.length) {
-              epsonPrinter.addText("Allergens: " + item.allergens.join(", ") + "\n")
-            }
-          } else if (item.type === "menu") {
-            epsonPrinter.addText("Ingredients: " + item.ingredients?.join(", ") + "\n")
-          }
-          epsonPrinter.addText(`Printed: ${item.printedOn} | Expiry: ${item.expiryDate}\n`)
+          epsonPrinter.addText(labelText + "\n")
           epsonPrinter.addFeedLine(2)
           epsonPrinter.addCut(epsonPrinter.CUT_FEED)
         }
@@ -174,20 +185,24 @@ const PrinterManager = forwardRef<PrinterManagerHandles, Props>(
       setMessage("USB print sent")
     }
 
-    const handleBluetoothPrint = async (queue: PrintQueueItem[]) => {
+    const handleBluetoothPrint = async (
+      queue: PrintQueueItem[],
+      ALLERGENS: string[],
+      customExpiry: Record<string, string>,
+      MAX_INGREDIENTS_TO_FIT: number
+    ) => {
       if (!btServer) return setMessage("No Bluetooth printer")
       const encoder = new TextEncoder()
       for (const item of queue) {
         for (let i = 0; i < item.quantity; i++) {
-          let text = `${item.name}\n`
-          if (item.type === "ingredients" && item.allergens?.length) {
-            text += `Allergens: ${item.allergens.join(", ")}\n`
-          } else if (item.type === "menu") {
-            text += `Ingredients: ${item.ingredients?.join(", ")}\n`
-          }
-          text += `Printed: ${item.printedOn} | Expiry: ${item.expiryDate}\n`
+          const labelText = formatLabelForPrint(
+            item,
+            ALLERGENS,
+            customExpiry,
+            MAX_INGREDIENTS_TO_FIT
+          )
           const cut = new Uint8Array([0x1d, 0x56, 0x01])
-          const body = encoder.encode(text)
+          const body = encoder.encode(labelText + "\n")
           const payload = new Uint8Array(body.length + cut.length)
           payload.set(body)
           payload.set(cut, body.length)

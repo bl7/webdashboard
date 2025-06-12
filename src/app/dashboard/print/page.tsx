@@ -12,6 +12,7 @@ const PrinterManager = dynamic(() => import("./PrinterManager"), { ssr: false })
 
 const ALLERGENS_FILTER = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
 const itemsPerPage = 5
+const MAX_INGREDIENTS_TO_FIT = 6
 
 function useEpsonScript(onLoad: () => void) {
   useEffect(() => {
@@ -90,9 +91,22 @@ type MenuItem = {
   ingredients: string[]
 }
 interface PrinterManager {
-  handleEpsonPrint: (queue: any) => void
-  handleBluetoothPrint: (queue: any) => void
-  scanAndConnectBluetooth: () => void
+  handleEpsonPrint: (
+    queue: PrintQueueItem[],
+    ALLERGENS: string[],
+    customExpiry: Record<string, string>,
+    MAX_INGREDIENTS_TO_FIT: number
+  ) => void
+  handleBluetoothPrint: (
+    queue: PrintQueueItem[],
+    ALLERGENS: string[],
+    customExpiry: Record<string, string>,
+    MAX_INGREDIENTS_TO_FIT: number
+  ) => Promise<void>
+  scanAndConnectBluetooth: () => Promise<void>
+  initializeEpsonPrinter: () => void
+  printerConnected: boolean
+  btServer: BluetoothRemoteGATTServer | null
 }
 
 function LabelPrinterContent() {
@@ -277,8 +291,21 @@ function LabelPrinterContent() {
           : q
       )
     )
-  const handlePrintUSB = () => managerRef.current?.handleEpsonPrint(printQueue)
-  const handlePrintBluetooth = () => managerRef.current?.handleBluetoothPrint(printQueue)
+  const handlePrintUSB = () =>
+    managerRef.current?.handleEpsonPrint(
+      printQueue,
+      ALLERGENS,
+      customExpiry,
+      MAX_INGREDIENTS_TO_FIT
+    )
+
+  const handlePrintBluetooth = () =>
+    managerRef.current?.handleBluetoothPrint(
+      printQueue,
+      ALLERGENS,
+      customExpiry,
+      MAX_INGREDIENTS_TO_FIT
+    )
   const handleConnectBluetooth = () => managerRef.current?.scanAndConnectBluetooth()
 
   const totalItemsInQueue = printQueue.reduce((sum, item) => sum + item.quantity, 0)
@@ -560,13 +587,6 @@ function LabelPrinterContent() {
           disabled={!printerStatus.printerConnected || totalItemsInQueue === 0}
         >
           Print (Bluetooth)
-        </button>
-        <button
-          className="rounded bg-yellow-500 px-6 py-2 text-white hover:bg-yellow-600 disabled:cursor-not-allowed disabled:opacity-50"
-          onClick={handleConnectBluetooth}
-          disabled={printerStatus.isBtConnecting}
-        >
-          Connect Bluetooth
         </button>
       </div>
     </div>
