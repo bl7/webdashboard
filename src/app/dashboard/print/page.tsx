@@ -20,6 +20,10 @@ function useEpsonScript(onLoad: () => void) {
     script.async = true
     script.onload = onLoad
     document.body.appendChild(script)
+
+    return () => {
+      document.body.removeChild(script)
+    }
   }, [onLoad])
 }
 
@@ -90,7 +94,6 @@ interface PrinterManager {
   handleBluetoothPrint: (queue: any) => void
   scanAndConnectBluetooth: () => void
 }
-const managerRef = useRef<PrinterManager | null>(null)
 
 function LabelPrinterContent() {
   const [scriptLoaded, setScriptLoaded] = useState(false)
@@ -111,6 +114,7 @@ function LabelPrinterContent() {
   const [page, setPage] = useState(1)
   const [data, setData] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
+  const managerRef = useRef<PrinterManager | null>(null)
 
   useEpsonScript(() => setScriptLoaded(true))
 
