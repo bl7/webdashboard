@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog"
 import { PrinterProvider } from "@/context/PrinterContext"
 import PrinterStatusBar from "@/components/PrinterStatusBar"
+import { cn } from "@/lib/utils"
 
 interface LayoutProps {
   children: ReactNode
@@ -278,63 +279,88 @@ export default function DashboardLayout({ children }: LayoutProps) {
         {/* Sidebar */}
         {!onProfileSetup && (
           <aside
-            className={`fixed left-0 top-0 z-50 flex h-full flex-col bg-[hsl(var(--primary))] p-6 text-[hsl(var(--primary-foreground))] shadow-lg transition-all duration-300 ${sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full"} ${sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"} `}
+            className={cn(
+              "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
+              sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",
+              sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"
+            )}
           >
-            <div className="mb-12 flex items-center space-x-3">
+            {/* Logo */}
+            <div className="mb-6 flex items-center justify-start px-2">
               <Image
                 src="/logo_white.png"
                 width={120}
                 height={40}
                 alt="Logo"
-                className={`${sidebarOpen || sidebarMobile ? "block" : "hidden"} transition-all duration-200`}
+                className={cn(
+                  "transition-opacity duration-300",
+                  sidebarOpen || sidebarMobile ? "opacity-100" : "w-0 opacity-0"
+                )}
               />
             </div>
-            <nav className="flex flex-grow flex-col space-y-6">
+
+            {/* Navigation */}
+            <nav className="flex flex-grow flex-col space-y-1">
               {filteredNavItems.map(({ label, icon, href }) => (
                 <a
                   key={label}
                   href={href}
-                  className={`flex items-center gap-4 text-lg font-semibold transition-colors hover:text-[hsl(var(--accent))] ${sidebarOpen || sidebarMobile ? "" : "justify-center"}`}
+                  className={cn(
+                    "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
+                    sidebarOpen || sidebarMobile ? "justify-start" : "justify-center"
+                  )}
                   onClick={handleSidebarClose}
                 >
-                  <span className="text-[1.2rem]">{icon}</span>
+                  <span className="text-[1.3rem]">{icon}</span>
                   {(sidebarOpen || sidebarMobile) && <span>{label}</span>}
+
+                  {/* Tooltip */}
+                  {!sidebarOpen && !sidebarMobile && (
+                    <span className="absolute left-full ml-2 hidden rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                      {label}
+                    </span>
+                  )}
                 </a>
               ))}
             </nav>
+
+            {/* Admin Button */}
             {!isAdmin && (sidebarOpen || sidebarMobile) && (
               <button
                 onClick={() => {
                   setShowPinModal(true)
                   handleSidebarClose()
                 }}
-                className="mt-4 flex items-center gap-4 text-lg font-semibold text-yellow-400 hover:text-yellow-300"
+                className="mt-4 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-yellow-300 hover:bg-yellow-400/10 hover:text-yellow-200"
                 aria-label="Request Admin Access"
               >
                 <RiAdminLine className="text-[1.3rem]" />
                 <span>Admin Access</span>
               </button>
             )}
+
+            {/* User Info */}
             {(sidebarOpen || sidebarMobile) && avatar !== null && profile?.company_name && (
-              <div className="mb-4 mt-auto flex items-center gap-4 rounded-lg bg-white/10 p-3 text-sm text-white">
+              <div className="mb-4 mt-auto flex items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
                 <Image
                   src={`/avatar${avatar}.png`}
                   alt="Avatar"
-                  width={40}
-                  height={40}
+                  width={36}
+                  height={36}
                   className="rounded-full border border-white"
                 />
                 <div className="flex flex-col">
-                  <span className="font-semibold">{profile.company_name}</span>
+                  <span className="font-medium">{profile.company_name}</span>
                   <span className="text-xs text-white/70">Company</span>
                 </div>
               </div>
             )}
 
+            {/* Logout */}
             {(sidebarOpen || sidebarMobile) && (
               <button
                 onClick={handleLogout}
-                className="mt-auto flex items-center gap-4 text-lg font-semibold text-[hsl(var(--destructive-foreground))] transition-colors hover:text-[hsl(var(--destructive))]"
+                className="mt-auto flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 transition-colors hover:bg-red-400/10 hover:text-red-300"
                 aria-label="Logout"
               >
                 <IoLogOutOutline className="text-[1.3rem]" />
