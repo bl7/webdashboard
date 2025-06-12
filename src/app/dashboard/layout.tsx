@@ -138,14 +138,13 @@ export default function DashboardLayout({ children }: LayoutProps) {
       fetchProfileAndSubscription()
     }
   }, [dataFetched])
-
   useEffect(() => {
-    if (dataFetched && profile && subscription) {
-      const onProfileSetup = pathname === "/dashboard/profile/setup"
-      const profileComplete = profile?.company_name && profile?.address
-      const subscriptionActive = subscription?.status === "active"
-      if ((!profileComplete || !subscriptionActive) && !onProfileSetup) {
-        router.push("/dashboard/profile/setup")
+    const onProfileSetup = pathname === "/setup"
+    const profileComplete = profile?.company_name && profile?.address
+    const subscriptionActive = subscription?.status === "active"
+    if (dataFetched && !onProfileSetup) {
+      if (!profile || !profileComplete || !subscription || !subscriptionActive) {
+        router.push("/setup")
       }
     }
   }, [dataFetched, profile, subscription, pathname, router])
@@ -208,7 +207,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
     }
   }
 
-  const onProfileSetup = pathname === "/dashboard/profile/setup"
+  const onProfileSetup = pathname === "/setup"
   const filteredNavItems = onProfileSetup
     ? navItems.filter((item) => item.label === "Print Labels")
     : isAdmin
