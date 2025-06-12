@@ -3,7 +3,7 @@ import { Manrope, Oxygen } from "next/font/google"
 import "./globals.css"
 import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
-
+import { AuthProvider } from "@/context/AuthContext"
 const base_font = Manrope({ subsets: ["latin"] })
 const accent_font = Oxygen({
   subsets: ["latin"],
@@ -46,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${base_font.className} ${accent_font.variable}`}>
-        {children}
+        <AuthProvider> {children}</AuthProvider>
         <Toaster />
       </body>
     </html>
