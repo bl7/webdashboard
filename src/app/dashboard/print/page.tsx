@@ -1,31 +1,47 @@
 "use client"
-import React, { useState, useEffect, useMemo } from "react"
-import { PrinterProvider, usePrinter } from "@/context/PrinterContext"
+import React, { useState, useEffect, useMemo, useRef } from "react"
+import { PrinterProvider } from "@/context/PrinterContext"
 import { getAllAllergens } from "@/lib/api"
 import LabelPreview from "./PreviewLabel"
 import { Allergen } from "@/types/allergen"
 import { PrintQueueItem } from "@/types/print"
 import { allergenIconMap } from "../../../components/allergenicons"
+import dynamic from "next/dynamic"
 
-type TabType = "ingredients" | "menu"
+const PrinterManager = dynamic(() => import("./PrinterManager"), { ssr: false })
 
-type IngredientItem = {
-  id: number | string
-  name: string
-  allergens: Allergen[]
-  printedOn: string
-  expiryDate: string
+const ALLERGENS_FILTER = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
+const itemsPerPage = 5
+
+function useEpsonScript(onLoad: () => void) {
+  useEffect(() => {
+    const script = document.createElement("script")
+    script.src = "https://epson.github.io/ePOS-Print-SDK/ePOS-Device.js"
+    script.async = true
+    script.onload = onLoad
+    document.body.appendChild(script)
+  }, [onLoad])
 }
 
-type MenuItem = {
-  id: number | string
-  name: string
-  printedOn: string
-  expiryDate: string
-  ingredients: string[]
+function calculateExpiryDate(days: number): string {
+  const today = new Date()
+  today.setDate(today.getDate() + days)
+  return today.toISOString().split("T")[0]
 }
 
-// --- API Functions ---
+function getDefaultExpiryDays(type: "cook" | "prep" | "ppds"): number {
+  switch (type) {
+    case "cook":
+      return 1
+    case "prep":
+      return 3
+    case "ppds":
+      return 5
+    default:
+      return 3
+  }
+}
+
 async function getAllMenuItems(token: string | null) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
     method: "GET",
@@ -52,28 +68,39 @@ async function getAllIngredients(token: string | null) {
   return await response.json()
 }
 
-// --- Utility Functions ---
-function calculateExpiryDate(days: number): string {
-  const today = new Date()
-  today.setDate(today.getDate() + days)
-  return today.toISOString().split("T")[0]
+type TabType = "ingredients" | "menu"
+
+type IngredientItem = {
+  id: number | string
+  name: string
+  allergens: Allergen[]
+  printedOn: string
+  expiryDate: string
 }
 
-function getDefaultExpiryDays(type: "cook" | "prep" | "ppds"): number {
-  switch (type) {
-    case "cook":
-      return 1
-    case "prep":
-      return 3
-    case "ppds":
-      return 5
-    default:
-      return 3
-  }
+type MenuItem = {
+  id: number | string
+  name: string
+  printedOn: string
+  expiryDate: string
+  ingredients: string[]
 }
+interface PrinterManager {
+  handleEpsonPrint: (queue: any) => void
+  handleBluetoothPrint: (queue: any) => void
+  scanAndConnectBluetooth: () => void
+}
+const managerRef = useRef<PrinterManager | null>(null)
 
-// --- Main Page Component ---
 function LabelPrinterContent() {
+  const [scriptLoaded, setScriptLoaded] = useState(false)
+  const [printerStatus, setPrinterStatus] = useState({
+    printerConnected: false,
+    btDevice: null,
+    isBtConnecting: false,
+    isBtSending: false,
+  })
+  const [message, setMessage] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<TabType>("ingredients")
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [ingredients, setIngredients] = useState<IngredientItem[]>([])
@@ -85,164 +112,135 @@ function LabelPrinterContent() {
   const [data, setData] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
 
-  const handleExpiryChange = (uid: string, value: string) => {
-    setCustomExpiry((prev) => ({
-      ...prev,
-      [uid]: value,
-    }))
-  }
-  const itemsPerPage = 5
-  // Printer context
-  const { managerRef, status: printerStatus, message, setMessage } = usePrinter()
+  useEpsonScript(() => setScriptLoaded(true))
+
   useEffect(() => {
     setPage(1)
   }, [activeTab, searchTerm])
-  const filteredIngredients = useMemo(() => {
-    if (!searchTerm) return ingredients
-    return ingredients.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  }, [ingredients, searchTerm])
 
-  // Filter menu items by search term
-  const filteredMenuItems = useMemo(() => {
-    if (!searchTerm) return menuItems
-    return menuItems.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
-  }, [menuItems, searchTerm])
-
-  // Calculate total pages based on filtered data
-  const totalPages = useMemo(() => {
-    const totalItems =
-      activeTab === "ingredients" ? filteredIngredients.length : filteredMenuItems.length
-    return Math.max(1, Math.ceil(totalItems / itemsPerPage))
-  }, [activeTab, filteredIngredients, filteredMenuItems])
-
-  // Paginate filtered ingredients
-  const paginatedIngredients = useMemo(() => {
-    const start = (page - 1) * itemsPerPage
-    return filteredIngredients.slice(start, start + itemsPerPage)
-  }, [filteredIngredients, page])
-
-  // Paginate filtered menu items
-  const paginatedMenuItems = useMemo(() => {
-    const start = (page - 1) * itemsPerPage
-    return filteredMenuItems.slice(start, start + itemsPerPage)
-  }, [filteredMenuItems, page])
-  // Fetch ingredients
   useEffect(() => {
-    const fetchIngredients = async () => {
-      const token = localStorage.getItem("token")
-      if (!token) return
-      setIsLoading(true)
-      try {
-        const data = await getAllIngredients(token)
-        console.log(data, "ingred")
-        const ingredientsData = Array.isArray(data) ? data : data.data
-        const ingredients: IngredientItem[] = ingredientsData
-          .map((item: any, index: number) => ({
-            id: item.ingredientID ?? `ingredient-${index}-${Date.now()}`,
-            name: item.ingredientName || `Ingredient ${index + 1}`,
+    const token = localStorage.getItem("token")
+    if (!token) return
+    setIsLoading(true)
+    getAllIngredients(token)
+      .then((data) => {
+        const items = (Array.isArray(data) ? data : data.data) || []
+        const formatted = items
+          .map((item: any, i: number) => ({
+            id: item.ingredientID ?? `ingredient-${i}-${Date.now()}`,
+            name: item.ingredientName || `Ingredient ${i + 1}`,
             allergens: item.allergens || [],
             printedOn: item.printedOn || new Date().toISOString().split("T")[0],
             expiryDate: calculateExpiryDate(item.expiryDays || 7),
           }))
-          .filter((item: any) => item.name && item.name.trim() !== "")
-        setIngredients(ingredients)
-        console.log("ingredients", ingredients)
-        setError(null)
-      } catch (err: any) {
-        setError(`Error fetching ingredients: ${err.message}`)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchIngredients()
-  }, [])
+          .filter((i: { name: string }) => i.name && i.name.trim() !== "")
 
-  // Fetch menu items
-  useEffect(() => {
-    const fetchMenuItems = async () => {
-      setIsLoading(true)
-      const token = localStorage.getItem("token")
-      try {
-        const res = await getAllMenuItems(token)
-        if (!res?.data) {
-          setError("No data found.")
-          return
-        }
-        const menuItems: MenuItem[] = []
-        let globalIndex = 0
-        for (const category of res.data) {
-          if (!category.items) continue
-          for (const item of category.items) {
-            const id = item.menuItemID ?? `menu-${globalIndex}-${Date.now()}`
-            const name = item.menuItemName || `Menu Item ${globalIndex + 1}`
-            if (name && name.trim() !== "") {
-              menuItems.push({
-                id,
-                name,
-                printedOn: new Date().toISOString().split("T")[0],
-                expiryDate: calculateExpiryDate(getDefaultExpiryDays("cook")),
-                ingredients: item.ingredients
-                  ? item.ingredients.map((ing: any) => ing.ingredientName || "Unknown Ingredient")
-                  : [],
-              })
-            }
-            globalIndex++
-          }
-        }
-        setMenuItems(menuItems)
+        setIngredients(formatted)
         setError(null)
-      } catch (err: any) {
-        setError(`Failed to fetch menu items: ${err.message}`)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-    fetchMenuItems()
+      })
+      .catch((err) => {
+        setError(`Error fetching ingredients: ${err.message}`)
+      })
+      .finally(() => setIsLoading(false))
   }, [])
 
   useEffect(() => {
     const token = localStorage.getItem("token")
-    if (!token) return console.error("No access token")
-
-    const fetchAllergens = async () => {
-      try {
-        const res = await getAllAllergens(token)
-        console.log(res)
-        if (!res?.data) return
-
-        const mapped = res.data.map(
-          (item: any): Allergen => ({
-            uuid: item.id,
-            allergenName: item.allergenName,
-            category: item.isCustom ? "Custom" : "Standard",
-
-            status: item.isActive ? "Active" : "Inactive",
-            addedAt: item.createdAt.split("T")[0],
-            isCustom: item.isCustom,
-          })
-        )
-        setData(mapped)
-      } catch (err) {
-        console.error("Failed to fetch allergens:", err)
-      }
-    }
-
-    fetchAllergens()
+    if (!token) return
+    setIsLoading(true)
+    getAllMenuItems(token)
+      .then((res) => {
+        const categories = res?.data || []
+        const formatted: MenuItem[] = []
+        let i = 0
+        for (const category of categories) {
+          for (const item of category.items || []) {
+            const id = item.menuItemID ?? `menu-${i}-${Date.now()}`
+            const name = item.menuItemName || `Menu Item ${i + 1}`
+            if (name && name.trim()) {
+              formatted.push({
+                id,
+                name,
+                printedOn: new Date().toISOString().split("T")[0],
+                expiryDate: calculateExpiryDate(getDefaultExpiryDays("cook")),
+                ingredients:
+                  item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [],
+              })
+            }
+            i++
+          }
+        }
+        setMenuItems(formatted)
+        setError(null)
+      })
+      .catch((err) => {
+        setError(`Failed to fetch menu items: ${err.message}`)
+      })
+      .finally(() => setIsLoading(false))
   }, [])
-  const ALLERGENS = data
-    .filter((item: any) => item.status === "Active")
-    .map((item: any) => item.allergenName)
-  console.log("allergens", ALLERGENS)
-  function isAllergenic(ingredient: string) {
-    return ALLERGENS.includes(ingredient.toLowerCase())
+
+  useEffect(() => {
+    const token = localStorage.getItem("token")
+    if (!token) return
+    getAllAllergens(token)
+      .then((res) => {
+        if (res?.data) {
+          const mapped = res.data.map(
+            (item: any): Allergen => ({
+              uuid: item.id,
+              allergenName: item.allergenName,
+              category: item.isCustom ? "Custom" : "Standard",
+              status: item.isActive ? "Active" : "Inactive",
+              addedAt: item.createdAt.split("T")[0],
+              isCustom: item.isCustom,
+            })
+          )
+          setData(mapped)
+        }
+      })
+      .catch((err) => console.error("Allergen fetch error", err))
+  }, [])
+
+  const ALLERGENS = useMemo(
+    () => data.filter((d) => d.status === "Active").map((d) => d.allergenName.toLowerCase()),
+    [data]
+  )
+  const isAllergenic = (ingredient: string) => ALLERGENS.includes(ingredient.toLowerCase())
+
+  const filteredIngredients = useMemo(
+    () =>
+      !searchTerm
+        ? ingredients
+        : ingredients.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    [ingredients, searchTerm]
+  )
+  const filteredMenuItems = useMemo(
+    () =>
+      !searchTerm
+        ? menuItems
+        : menuItems.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase())),
+    [menuItems, searchTerm]
+  )
+
+  const paginatedIngredients = useMemo(
+    () => filteredIngredients.slice((page - 1) * itemsPerPage, page * itemsPerPage),
+    [filteredIngredients, page]
+  )
+  const paginatedMenuItems = useMemo(
+    () => filteredMenuItems.slice((page - 1) * itemsPerPage, page * itemsPerPage),
+    [filteredMenuItems, page]
+  )
+  // const totalItemsInQueue = printQueue.reduce((sum, item) => sum + item.quantity, 0)
+
+  const handleExpiryChange = (uid: string, value: string) => {
+    setCustomExpiry((prev) => ({ ...prev, [uid]: value }))
   }
 
-  // Add item to print queue
   const addToPrintQueue = (item: IngredientItem | MenuItem, type: TabType) => {
     setPrintQueue((prev) => {
       const uniqueId = `${type}-${item.id}-${Date.now()}-${Math.floor(Math.random() * 10000)}`
       if (prev.some((q) => q.id === item.id && q.type === type)) return prev
-      const baseItem = {
+      const base = {
         uid: uniqueId,
         id: item.id,
         type,
@@ -251,48 +249,23 @@ function LabelPrinterContent() {
         printedOn: item.printedOn,
         expiryDate: item.expiryDate,
       }
-      if (type === "ingredients") {
-        const ingredientItem = item as IngredientItem
-        return [
-          ...prev,
-          {
-            ...baseItem,
-            allergens: ingredientItem.allergens,
-          },
-        ]
-      } else {
-        const menuItem = item as MenuItem
-        return [
-          ...prev,
-          {
-            ...baseItem,
-            ingredients: menuItem.ingredients,
-            labelType: "cook" as const,
-          },
-        ]
-      }
+      return [
+        ...prev,
+        type === "ingredients"
+          ? { ...base, allergens: (item as IngredientItem).allergens }
+          : { ...base, ingredients: (item as MenuItem).ingredients, labelType: "cook" },
+      ]
     })
   }
 
-  // Remove item from print queue by uid
-  const removeFromPrintQueue = (uid: string) => {
+  const removeFromPrintQueue = (uid: string) =>
     setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
-  }
-
-  // Clear entire print queue
-  const clearPrintQueue = () => {
-    setPrintQueue([])
-  }
-
-  // Update quantity of an item in print queue
-  const updateQuantity = (uid: string, quantity: number) => {
+  const clearPrintQueue = () => setPrintQueue([])
+  const updateQuantity = (uid: string, quantity: number) =>
     setPrintQueue((prev) =>
       prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
     )
-  }
-
-  // Update label type and expiry date for menu items
-  const updateLabelType = (uid: string, labelType: "cook" | "prep" | "ppds") => {
+  const updateLabelType = (uid: string, labelType: "cook" | "prep" | "ppds") =>
     setPrintQueue((prev) =>
       prev.map((q) =>
         q.uid === uid
@@ -300,32 +273,9 @@ function LabelPrinterContent() {
           : q
       )
     )
-  }
-
-  // Print actions using printer manager ref
-  const handlePrintUSB = () => {
-    if (!managerRef.current) {
-      setMessage("Printer manager is not ready")
-      return
-    }
-    managerRef.current.handleEpsonPrint(printQueue)
-  }
-
-  const handlePrintBluetooth = async () => {
-    if (!managerRef.current) {
-      setMessage("Printer manager is not ready")
-      return
-    }
-    await managerRef.current.handleBluetoothPrint(printQueue)
-  }
-
-  const handleConnectBluetooth = async () => {
-    if (!managerRef.current) {
-      setMessage("Printer manager is not ready")
-      return
-    }
-    await managerRef.current.scanAndConnectBluetooth()
-  }
+  const handlePrintUSB = () => managerRef.current?.handleEpsonPrint(printQueue)
+  const handlePrintBluetooth = () => managerRef.current?.handleBluetoothPrint(printQueue)
+  const handleConnectBluetooth = () => managerRef.current?.scanAndConnectBluetooth()
 
   const totalItemsInQueue = printQueue.reduce((sum, item) => sum + item.quantity, 0)
 
@@ -584,6 +534,11 @@ function LabelPrinterContent() {
           ALLERGENS={ALLERGENS}
           customExpiry={customExpiry}
           onExpiryChange={handleExpiryChange}
+        />
+        <PrinterManager
+          scriptLoaded={scriptLoaded}
+          setMessage={setMessage}
+          onStatusChange={setPrinterStatus}
         />
       </div>
       {/* Print Actions */}

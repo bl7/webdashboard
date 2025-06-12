@@ -51,7 +51,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     if (!token || !userId) {
       setLoading(false)
-      router.push("/login")
       return
     }
 
