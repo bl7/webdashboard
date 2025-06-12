@@ -14,7 +14,6 @@ const features = [
   "Weekly Free Prints",
 ]
 
-
 const plans = [
   {
     name: "Free Plan",
@@ -92,12 +91,18 @@ const ProfileDashboard = () => {
     const storedEmail = localStorage.getItem("email") || ""
     setName(storedName)
     setEmail(storedEmail)
-    const storedId = localStorage.getItem("userid")
-    const storedAvatar = localStorage.getItem("avatar")
-    if (storedAvatar) setAvatar(Number(storedAvatar))
 
+    const storedId = localStorage.getItem("userid")
     if (!storedId) return
     setUserId(storedId)
+
+    const storedAvatar = localStorage.getItem("avatar")
+    if (storedAvatar) {
+      const avatarNum = parseInt(storedAvatar, 10)
+      if (!isNaN(avatarNum) && avatarNum >= 1 && avatarNum <= 8) {
+        setAvatar(avatarNum)
+      }
+    }
 
     fetch(`/api/profile?user_id=${storedId}`)
       .then((res) => res.json())
@@ -105,6 +110,18 @@ const ProfileDashboard = () => {
         if (data?.profile) {
           setAddress(data.profile.address || "")
           setCompanyName(data.profile.company_name || "")
+
+          const pic = data.profile.profile_picture
+          if (pic && pic.startsWith("/avatar")) {
+            const match = pic.match(/\/avatar(\d+)\.png/)
+            if (match) {
+              const avatarNum = parseInt(match[1], 10)
+              if (!isNaN(avatarNum) && avatarNum >= 1 && avatarNum <= 8) {
+                setAvatar(avatarNum)
+                localStorage.setItem("avatar", avatarNum.toString())
+              }
+            }
+          }
         }
       })
       .catch(() => toast.error("Failed to load profile"))
