@@ -8,6 +8,8 @@ import { MdRestaurantMenu } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
 import { IoLogOutOutline } from "react-icons/io5"
 import { RiAdminLine } from "react-icons/ri"
+import { GoLog } from "react-icons/go"
+
 import Image from "next/image"
 import {
   Dialog,
@@ -30,7 +32,7 @@ const navItems = [
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
-  { label: "Logs", icon: <FaLayerGroup />, href: "/dashboard/logs" },
+  { label: "Logs", icon: <GoLog />, href: "/dashboard/logs" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
