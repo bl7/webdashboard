@@ -2,14 +2,22 @@
 
 import React, { ReactNode, useState, useEffect, useRef } from "react"
 import { useRouter, usePathname } from "next/navigation"
-import { FaHome, FaChartPie, FaCog, FaUser, FaPrint } from "react-icons/fa"
+import {
+  FaHome,
+  FaChartPie,
+  FaCog,
+  FaUser,
+  FaPrint,
+  FaBars,
+  FaChevronLeft,
+  FaChevronRight,
+} from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
 import { IoLogOutOutline } from "react-icons/io5"
 import { RiAdminLine } from "react-icons/ri"
 import { GoLog } from "react-icons/go"
-
 import Image from "next/image"
 import {
   Dialog,
@@ -20,6 +28,7 @@ import {
 } from "@/components/ui/dialog"
 import { PrinterProvider } from "@/context/PrinterContext"
 import PrinterStatusBar from "@/components/PrinterStatusBar"
+
 interface LayoutProps {
   children: ReactNode
 }
@@ -37,7 +46,6 @@ const navItems = [
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
 
-// Define which routes require admin access
 const adminOnlyRoutes = [
   "/dashboard/analytics",
   "/dashboard/allergens",
@@ -52,56 +60,44 @@ const adminOnlyRoutes = [
 export default function DashboardLayout({ children }: LayoutProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarMobile, setSidebarMobile] = useState(false)
 
   // User info states
   const [name, setName] = useState<string | null>(null)
-  const [profilePicture, setProfilePicture] = useState<string | null>(null)
   const [profile, setProfile] = useState<null | {
     company_name: string | null
     address: string | null
-    profile_picture?: string | null
   }>(null)
   const [subscription, setSubscription] = useState<null | { status: string }>(null)
-
-  // Loading and error
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [dataFetched, setDataFetched] = useState(false) // Track if data has been fetched
-
-  // Admin access states
+  const [dataFetched, setDataFetched] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
   const [showPinModal, setShowPinModal] = useState(false)
   const [pinDigits, setPinDigits] = useState<string[]>(["", "", "", ""])
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
-  // Load name and admin access from localStorage on mount
   useEffect(() => {
     setName(localStorage.getItem("name"))
     setIsAdmin(localStorage.getItem("adminAccess") === "true")
   }, [])
 
-  // Check route protection (separate from data fetching)
   useEffect(() => {
     const checkRouteAccess = () => {
       const isAdminRoute = adminOnlyRoutes.some((route) => pathname.startsWith(route))
       const onProfileSetup = pathname === "/dashboard/profile/setup"
       const currentIsAdmin = localStorage.getItem("adminAccess") === "true"
-
-      // If trying to access admin route without admin access (and not on setup page)
       if (isAdminRoute && !currentIsAdmin && !onProfileSetup) {
-        console.log("Unauthorized access attempt to:", pathname)
         router.push("/dashboard")
         return
       }
     }
-
-    // Only check route access if data has been fetched (to avoid race conditions)
     if (dataFetched) {
       checkRouteAccess()
     }
   }, [pathname, dataFetched, router])
 
-  // Fetch profile, subscription, and admin PIN existence (ONLY ONCE on mount)
   useEffect(() => {
     async function fetchProfileAndSubscription() {
       const userId = localStorage.getItem("userid")
@@ -110,34 +106,22 @@ export default function DashboardLayout({ children }: LayoutProps) {
         setLoading(false)
         return
       }
-
       try {
         const [profileRes, subscriptionRes, adminRes] = await Promise.all([
           fetch(`/api/profile?user_id=${encodeURIComponent(userId)}`),
           fetch(`/api/subscriptions?user_id=${encodeURIComponent(userId)}`),
           fetch(`/api/admin-access?user_id=${encodeURIComponent(userId)}`),
         ])
-
         if (!profileRes.ok) throw new Error("Failed to fetch profile")
         if (!subscriptionRes.ok) throw new Error("Failed to fetch subscription")
         if (!adminRes.ok) throw new Error("Failed to fetch admin access")
-
         const profileData = await profileRes.json()
         const subscriptionData = await subscriptionRes.json()
         const adminData = await adminRes.json()
-
         setProfile(profileData.profile)
         setSubscription(subscriptionData.subscription)
         setLoading(false)
-        setDataFetched(true) // Mark data as fetched
-
-        if (profileData.profile?.profile_picture) {
-          setProfilePicture(profileData.profile.profile_picture)
-        } else {
-          setProfilePicture(null)
-        }
-
-        // Set admin access if PIN exists and localStorage says true
+        setDataFetched(true)
         if (adminData.hasPin && localStorage.getItem("adminAccess") === "true") {
           setIsAdmin(true)
         } else {
@@ -145,34 +129,27 @@ export default function DashboardLayout({ children }: LayoutProps) {
           localStorage.removeItem("adminAccess")
         }
       } catch (err) {
-        console.error(err)
         setError("Error loading profile, subscription, or admin data.")
         setLoading(false)
         setDataFetched(true)
       }
     }
-
-    // Only fetch data if it hasn't been fetched yet
     if (!dataFetched) {
       fetchProfileAndSubscription()
     }
-  }, [dataFetched]) // Remove router and pathname from dependencies
+  }, [dataFetched])
 
-  // Handle profile setup redirect (separate effect that runs after data is fetched)
   useEffect(() => {
     if (dataFetched && profile && subscription) {
       const onProfileSetup = pathname === "/dashboard/profile/setup"
       const profileComplete = profile?.company_name && profile?.address
       const subscriptionActive = subscription?.status === "active"
-
-      // Redirect to setup if incomplete or no subscription
       if ((!profileComplete || !subscriptionActive) && !onProfileSetup) {
         router.push("/dashboard/profile/setup")
       }
     }
   }, [dataFetched, profile, subscription, pathname, router])
 
-  // Handle logout clears all localStorage and resets admin access
   const handleLogout = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("userid")
@@ -183,54 +160,37 @@ export default function DashboardLayout({ children }: LayoutProps) {
     router.push("/login")
   }
 
-  // PIN input handlers
   const handlePinChange = (index: number, value: string) => {
     if (/^\d$/.test(value)) {
       const newDigits = [...pinDigits]
       newDigits[index] = value
       setPinDigits(newDigits)
-
-      // Focus next input
       if (index < 3 && value) {
         inputRefs.current[index + 1]?.focus()
       }
-
-      // Auto-verify when all digits entered
       if (newDigits.every((d) => d !== "")) {
         verifyPin(newDigits.join(""))
       }
     } else if (value === "") {
-      // Allow clearing input and focus previous
       const newDigits = [...pinDigits]
       newDigits[index] = ""
       setPinDigits(newDigits)
-
       if (index > 0) {
         inputRefs.current[index - 1]?.focus()
       }
     }
   }
 
-  // Verify PIN with backend
   const verifyPin = async (pin: string) => {
     try {
       const userId = localStorage.getItem("userid")
       if (!userId) return
-
-      // Debug: Log the PIN and userId being sent
-      console.log("Sending PIN:", pin)
-      console.log("Sending userId:", userId)
-
       const res = await fetch("/api/verify-pin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, pin }),
       })
-
-      // Debug: Log the raw response
       const data = await res.json()
-      console.log("Response from /api/verify-pin:", data)
-
       if (data.valid) {
         setIsAdmin(true)
         localStorage.setItem("adminAccess", "true")
@@ -242,22 +202,28 @@ export default function DashboardLayout({ children }: LayoutProps) {
         inputRefs.current[0]?.focus()
       }
     } catch (error) {
-      console.error("PIN verification error:", error)
       alert("Error verifying PIN. Please try again.")
       setPinDigits(["", "", "", ""])
       inputRefs.current[0]?.focus()
     }
   }
 
-  // Determine if on profile setup page
   const onProfileSetup = pathname === "/dashboard/profile/setup"
-
-  // Filter nav items based on admin status and profile setup
   const filteredNavItems = onProfileSetup
     ? navItems.filter((item) => item.label === "Print Labels")
     : isAdmin
       ? navItems
       : navItems.filter((item) => item.label === "Print Labels")
+
+  // Sidebar toggle logic
+  const handleSidebarToggle = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarMobile((v) => !v)
+    } else {
+      setSidebarOpen((v) => !v)
+    }
+  }
+  const handleSidebarClose = () => setSidebarMobile(false)
 
   if (error) {
     return (
@@ -278,7 +244,79 @@ export default function DashboardLayout({ children }: LayoutProps) {
   return (
     <PrinterProvider printQueue={[]}>
       <div className="flex h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
-        {/* PIN Modal using shadcn/ui Dialog */}
+        {/* Sidebar toggle button (always visible) */}
+        {!onProfileSetup && (
+          <button
+            className="fixed left-4 top-4 z-50 flex h-10 w-10 items-center justify-center rounded-md bg-[hsl(var(--primary))] text-white shadow-lg"
+            onClick={handleSidebarToggle}
+            aria-label="Toggle navigation"
+          >
+            {sidebarMobile || sidebarOpen ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
+          </button>
+        )}
+
+        {/* Mobile backdrop */}
+        {!onProfileSetup && (
+          <div
+            className={`fixed inset-0 z-40 bg-black/30 transition-opacity lg:hidden ${sidebarMobile ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"}`}
+            onClick={handleSidebarClose}
+          />
+        )}
+
+        {/* Sidebar */}
+        {!onProfileSetup && (
+          <aside
+            className={`fixed left-0 top-0 z-50 flex h-full flex-col bg-[hsl(var(--primary))] p-6 text-[hsl(var(--primary-foreground))] shadow-lg transition-all duration-300 ${sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full"} ${sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"} `}
+          >
+            <div className="mb-12 flex items-center space-x-3">
+              <Image
+                src="/logo_white.png"
+                width={120}
+                height={40}
+                alt="Logo"
+                className={`${sidebarOpen || sidebarMobile ? "block" : "hidden"} transition-all duration-200`}
+              />
+            </div>
+            <nav className="flex flex-grow flex-col space-y-6">
+              {filteredNavItems.map(({ label, icon, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className={`flex items-center gap-4 text-lg font-semibold transition-colors hover:text-[hsl(var(--accent))] ${sidebarOpen || sidebarMobile ? "" : "justify-center"}`}
+                  onClick={handleSidebarClose}
+                >
+                  <span className="text-[1.2rem]">{icon}</span>
+                  {(sidebarOpen || sidebarMobile) && <span>{label}</span>}
+                </a>
+              ))}
+            </nav>
+            {!isAdmin && (sidebarOpen || sidebarMobile) && (
+              <button
+                onClick={() => {
+                  setShowPinModal(true)
+                  handleSidebarClose()
+                }}
+                className="mt-4 flex items-center gap-4 text-lg font-semibold text-yellow-400 hover:text-yellow-300"
+                aria-label="Request Admin Access"
+              >
+                <RiAdminLine className="text-[1.3rem]" />
+                <span>Admin Access</span>
+              </button>
+            )}
+            {(sidebarOpen || sidebarMobile) && (
+              <button
+                onClick={handleLogout}
+                className="mt-auto flex items-center gap-4 text-lg font-semibold text-[hsl(var(--destructive-foreground))] transition-colors hover:text-[hsl(var(--destructive))]"
+                aria-label="Logout"
+              >
+                <IoLogOutOutline className="text-[1.3rem]" />
+                <span>Logout</span>
+              </button>
+            )}
+          </aside>
+        )}
+
+        {/* PIN Modal */}
         <Dialog open={showPinModal} onOpenChange={setShowPinModal}>
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
@@ -313,58 +351,15 @@ export default function DashboardLayout({ children }: LayoutProps) {
           </DialogContent>
         </Dialog>
 
-        {/* Sidebar */}
-        {!onProfileSetup && (
-          <aside className="flex w-64 flex-col bg-[hsl(var(--primary))] p-6 text-[hsl(var(--primary-foreground))]">
-            <div className="mb-12 flex items-center space-x-3">
-              <Image src="/logo_white.png" width={120} height={40} alt="Logo" />
-            </div>
-
-            <nav className="flex flex-grow flex-col space-y-6">
-              {filteredNavItems.map(({ label, icon, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className="flex items-center gap-4 text-lg font-semibold transition-colors hover:text-[hsl(var(--accent))]"
-                >
-                  <span className="text-[1.2rem]">{icon}</span>
-                  <span>{label}</span>
-                </a>
-              ))}
-            </nav>
-
-            {/* Show Admin Access button only if not admin */}
-            {!isAdmin && (
-              <button
-                onClick={() => setShowPinModal(true)}
-                className="mt-4 flex items-center gap-4 text-lg font-semibold text-yellow-400 hover:text-yellow-300"
-                aria-label="Request Admin Access"
-              >
-                <RiAdminLine className="text-[1.3rem]" />
-                <span>Admin Access</span>
-              </button>
-            )}
-
-            <button
-              onClick={handleLogout}
-              className="mt-auto flex items-center gap-4 text-lg font-semibold text-[hsl(var(--destructive-foreground))] transition-colors hover:text-[hsl(var(--destructive))]"
-              aria-label="Logout"
-            >
-              <IoLogOutOutline className="text-[1.3rem]" />
-              <span>Logout</span>
-            </button>
-          </aside>
-        )}
-
         {/* Main Content */}
-        <main className="flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] p-8 text-[hsl(var(--card-foreground))]">
-          {/* Header */}
+        <main
+          className={`flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] p-8 text-[hsl(var(--card-foreground))] transition-all duration-300 ${sidebarOpen ? "lg:ml-64" : "lg:ml-20"} `}
+        >
           {!onProfileSetup && (
             <header className="mb-4 flex items-center justify-end border-b border-[hsl(var(--border))] pb-4">
               <PrinterStatusBar />
             </header>
           )}
-
           <section className={`flex-grow overflow-auto ${onProfileSetup ? "mt-0" : "mt-8"}`}>
             {children}
           </section>
