@@ -9,24 +9,25 @@ import { allergenIconMap } from "../../../components/allergenicons"
 import dynamic from "next/dynamic"
 
 const PrinterManager = dynamic(() => import("./PrinterManager"), { ssr: false })
-
+const [sdkReady, setSdkReady] = useState(false)
 const ALLERGENS_FILTER = ["milk", "eggs", "nuts", "soy", "wheat", "fish", "shellfish", "peanuts"]
 const itemsPerPage = 5
 const MAX_INGREDIENTS_TO_FIT = 6
 
-function useEpsonScript(onLoad: () => void) {
-  useEffect(() => {
+useEffect(() => {
+  if (!window.epson) {
     const script = document.createElement("script")
-    script.src = "https://epson.github.io/ePOS-Print-SDK/ePOS-Device.js"
-    script.async = true
-    script.onload = onLoad
-    document.body.appendChild(script)
-
-    return () => {
-      document.body.removeChild(script)
+    script.src = "/epson-epos-sdk.js" // Put SDK in public folder
+    script.onload = () => setSdkReady(true)
+    script.onerror = () => {
+      console.error("Failed to load Epson SDK")
+      setSdkReady(false)
     }
-  }, [onLoad])
-}
+    document.body.appendChild(script)
+  } else {
+    setSdkReady(true)
+  }
+}, [])
 
 function calculateExpiryDate(days: number): string {
   const today = new Date()
