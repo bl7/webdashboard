@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState, useMemo, useRef } from "react"
 import { PrintQueueItem } from "@/types/print"
 import { getAllAllergens } from "@/lib/api"
 import { getAllMenuItems, getAllIngredients } from "@/lib/api"
@@ -60,7 +60,52 @@ export default function LabelDemo() {
   const [page, setPage] = useState(1)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
+  const [customInitials, setCustomInitials] = useState<string[]>([])
+  const [useInitials, setUseInitials] = useState<boolean>(true)
+  const [feedbackMsg, setFeedbackMsg] = useState<string>("")
+  const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
+  const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
+  const showFeedback = (msg: string, type: "success" | "error" = "success") => {
+    setFeedbackMsg(msg)
+    setFeedbackType(type)
+    if (feedbackTimeout.current) clearTimeout(feedbackTimeout.current)
+    feedbackTimeout.current = setTimeout(() => {
+      setFeedbackMsg("")
+      setFeedbackType("")
+    }, 3000)
+  }
 
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const [settingsRes, initialsRes] = await Promise.all([
+          fetch(`/api/label-settings?user_id=${userId}`),
+          fetch(`/api/label-initials?user_id=${userId}`),
+        ])
+
+        const settingsData = await settingsRes.json()
+        const initialsData = await initialsRes.json()
+
+        const expiryMap = Object.fromEntries(
+          (settingsData.settings || []).map((item: any) => [
+            item.label_type,
+            item.expiry_days.toString(),
+          ])
+        )
+        setExpiryDays(expiryMap)
+        setUseInitials(initialsData.use_initials)
+        setCustomInitials(initialsData.initials || [])
+      } catch (err) {
+        console.error("Failed to load settings:", err)
+        showFeedback("Failed to load settings", "error")
+      }
+    }
+
+    fetchSettings()
+  }, [userId])
   useEffect(() => {
     setPage(1)
   }, [activeTab, searchTerm])
@@ -72,7 +117,34 @@ export default function LabelDemo() {
       .then((res) => res?.data && setAllergens(res.data))
       .catch((err) => console.error("Allergen error", err))
   }, [])
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const [settingsRes, initialsRes] = await Promise.all([
+          fetch(`/api/label-settings?user_id=${userId}`),
+          fetch(`/api/label-initials?user_id=${userId}`),
+        ])
 
+        const settingsData = await settingsRes.json()
+        const initialsData = await initialsRes.json()
+
+        const expiryMap = Object.fromEntries(
+          (settingsData.settings || []).map((item: any) => [
+            item.label_type,
+            item.expiry_days.toString(),
+          ])
+        )
+        setExpiryDays(expiryMap)
+        setUseInitials(initialsData.use_initials)
+        setCustomInitials(initialsData.initials || [])
+      } catch (err) {
+        console.error("Failed to load settings:", err)
+        showFeedback("Failed to load settings", "error")
+      }
+    }
+
+    fetchSettings()
+  }, [userId])
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
@@ -113,7 +185,10 @@ export default function LabelDemo() {
                 id,
                 name,
                 printedOn: new Date().toISOString().split("T")[0],
-                expiryDate: calculateExpiryDate(getDefaultExpiryDays("cook")),
+                expiryDate: calculateExpiryDate(
+                  parseInt(expiryDays["cook"] || "") || getDefaultExpiryDays("cook")
+                ),
+
                 ingredients:
                   item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [],
               })
@@ -189,7 +264,13 @@ export default function LabelDemo() {
     setPrintQueue((prev) =>
       prev.map((q) =>
         q.uid === uid
-          ? { ...q, labelType, expiryDate: calculateExpiryDate(getDefaultExpiryDays(labelType)) }
+          ? {
+              ...q,
+              labelType,
+              expiryDate: calculateExpiryDate(
+                parseInt(expiryDays[labelType] || "") || getDefaultExpiryDays(labelType)
+              ),
+            }
           : q
       )
     )
@@ -216,6 +297,7 @@ export default function LabelDemo() {
       setStatus(`Connection failed: ${e.message}`)
     }
   }
+  const clearPrintQueue = () => setPrintQueue([])
 
   const printLabels = async () => {
     if (!window.epsonPrinter || !printerConnected) {
@@ -272,108 +354,190 @@ export default function LabelDemo() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl p-4">
-      <h1 className="mb-4 text-2xl font-bold">USB Label Printer</h1>
-      <p className="mb-2">Status: {status}</p>
-
-      <div className="mb-6 flex gap-4">
-        <button onClick={connectToPrinter} className="rounded bg-blue-600 px-4 py-2 text-white">
-          {printerConnected ? "Reconnect Printer" : "Connect to USB Printer"}
-        </button>
-        <button
-          onClick={printLabels}
-          disabled={!printerConnected || printQueue.length === 0}
-          className="rounded bg-green-600 px-4 py-2 text-white"
-        >
-          Print Labels
-        </button>
-      </div>
-
-      <div className="mb-6 flex">
-        <button
-          onClick={() => setActiveTab("ingredients")}
-          className={`rounded-tl rounded-tr border px-4 py-2 ${activeTab === "ingredients" ? "bg-purple-700 text-white" : "border-purple-700 bg-white"}`}
-        >
-          Ingredients
-        </button>
-        <button
-          onClick={() => setActiveTab("menu")}
-          className={`rounded-tl rounded-tr border px-4 py-2 ${activeTab === "menu" ? "bg-purple-700 text-white" : "border-purple-700 bg-white"}`}
-        >
-          Menu Items
-        </button>
-      </div>
-
-      <div className="mb-4">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search..."
-          className="w-full rounded border px-4 py-2"
-        />
-      </div>
-
-      {isLoading && <p>Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
-
-      <div className="mb-6">
-        {(activeTab === "ingredients" ? paginatedIngredients : paginatedMenuItems).map((item) => (
-          <div key={item.id} className="mb-2 flex items-center justify-between rounded border p-4">
-            <div>
-              <p className="font-semibold">{item.name}</p>
-              <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
-            </div>
-            <button
-              onClick={() => addToPrintQueue(item, activeTab)}
-              className="rounded bg-green-600 px-3 py-1 text-white"
-            >
-              Add
-            </button>
+    <div className="mx-auto max-w-5xl p-6">
+      <div className="flex gap-8">
+        {/* Left Section: Label Printer */}
+        <div className="w-1/2">
+          <div className="flex items-center gap-8">
+            <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
           </div>
-        ))}
-      </div>
+          {/* You can include more printer-related content here */}
+        </div>
 
-      <h2 className="mb-2 text-xl font-bold">Print Queue</h2>
-      {/* Editable Print Queue Controls */}
-      <div className="mb-4">
-        {printQueue.length === 0 && <p className="text-gray-500">No items in print queue</p>}
-        {printQueue.map((item) => (
-          <div key={item.uid} className="mb-2 flex items-center gap-4 rounded border p-3">
-            <div className="flex-1">
-              <p className="font-semibold">{item.name}</p>
-              <p className="text-xs text-gray-500">Expires: {item.expiryDate}</p>
-            </div>
-            <input
-              type="number"
-              min={1}
-              value={item.quantity}
-              onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
-              className="w-16 rounded border px-2"
-            />
-            {"labelType" in item && (
-              <select
-                value={item.labelType || "cook"}
-                onChange={(e) =>
-                  updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
-                }
-                className="rounded border px-2"
-              >
-                <option value="cook">Cook</option>
-                <option value="prep">Prep</option>
-                <option value="ppds">PPDS</option>
+        {/* Right Section: Initials and Settings */}
+        <div className="w-1/2">
+          {useInitials && customInitials.length > 0 && (
+            <div className="mb-4">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Select Initials
+              </label>
+              <select className="w-full rounded border px-4 py-2">
+                {customInitials.map((initial) => (
+                  <option key={initial} value={initial}>
+                    {initial}
+                  </option>
+                ))}
               </select>
-            )}
-            <button
-              onClick={() => removeFromQueue(item.uid)}
-              className="rounded px-2 py-1 text-red-600 hover:bg-red-50"
-            >
-              Remove
-            </button>
-          </div>
-        ))}
+            </div>
+          )}
+        </div>
       </div>
 
+      <div className="flex gap-8">
+        <div className="w-1/2">
+          <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
+            <button
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                activeTab === "ingredients"
+                  ? "bg-white text-purple-700 shadow"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab("ingredients")}
+            >
+              Ingredients
+            </button>
+            <button
+              className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                activeTab === "menu"
+                  ? "bg-white text-purple-700 shadow"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
+              onClick={() => setActiveTab("menu")}
+            >
+              Menu Items
+            </button>
+          </div>
+
+          <div className="mb-4">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search..."
+              className="w-full rounded border px-4 py-2"
+            />
+          </div>
+
+          {isLoading && <p>Loading...</p>}
+          {error && <p className="text-red-600">{error}</p>}
+
+          <div className="mb-6">
+            {(activeTab === "ingredients" ? paginatedIngredients : paginatedMenuItems).map(
+              (item) => (
+                <div
+                  key={item.id}
+                  className="mb-2 flex items-center justify-between rounded border p-4"
+                >
+                  <div>
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
+                  </div>
+                  <button
+                    onClick={() => addToPrintQueue(item, activeTab)}
+                    className="rounded bg-green-600 px-3 py-1 text-white disabled:bg-gray-400"
+                    disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                  >
+                    {printQueue.some((q) => q.id === item.id && q.type === activeTab)
+                      ? "Added"
+                      : "Add"}
+                  </button>
+                </div>
+              )
+            )}
+          </div>
+        </div>
+        <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 pb-3 pt-6">
+            <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
+            <button
+              onClick={printLabels}
+              disabled={!printerConnected || printQueue.length === 0}
+              className={`rounded px-4 py-2 text-white transition-colors ${
+                !printerConnected || printQueue.length === 0
+                  ? "cursor-not-allowed bg-gray-400"
+                  : "bg-green-600 hover:bg-green-700"
+              }`}
+              title={
+                !printerConnected
+                  ? "Printer not connected"
+                  : printQueue.length === 0
+                    ? "No items in print queue"
+                    : "Print all labels in queue"
+              }
+            >
+              Print Labels
+            </button>
+            <button
+              onClick={clearPrintQueue}
+              disabled={printQueue.length === 0}
+              className="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition hover:bg-red-100 hover:text-red-600 disabled:opacity-50"
+              aria-label="Clear print queue"
+            >
+              Clear Queue
+            </button>
+          </div>
+
+          <div className="px-6 pb-6 pt-2">
+            {printQueue.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                <svg
+                  className="mb-2 h-8 w-8"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2zM9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
+                  />
+                </svg>
+                <p className="italic">No items in print queue</p>
+              </div>
+            ) : (
+              printQueue.map((item) => (
+                <div
+                  key={item.uid}
+                  className="mb-3 flex items-center gap-4 rounded-md border border-gray-300 bg-gray-50 px-4 py-3 transition-shadow hover:shadow-md"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-gray-800">{item.name}</p>
+                    <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
+                  </div>
+                  <input
+                    type="number"
+                    min={1}
+                    value={item.quantity}
+                    onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
+                    className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                  />
+                  {"labelType" in item && (
+                    <select
+                      value={item.labelType || "cook"}
+                      onChange={(e) =>
+                        updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
+                      }
+                      className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                    >
+                      <option value="cook">Cook</option>
+                      <option value="prep">Prep</option>
+                      <option value="ppds">PPDS</option>
+                    </select>
+                  )}
+                  <button
+                    onClick={() => removeFromQueue(item.uid)}
+                    className="rounded-md px-3 py-1 text-sm font-semibold text-red-600 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400"
+                    aria-label={`Remove ${item.name} from queue`}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
       {/* Label Preview */}
       <LabelPreview
         printQueue={printQueue}

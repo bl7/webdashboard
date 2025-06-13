@@ -1,60 +1,80 @@
-// "use client"
+"use client"
 
-// import React, { createContext, useContext, useRef, useState } from "react"
-// // import PrinterManager, { PrinterManagerHandles } from "@/app/dashboard/print/PrinterManager"
-// import { PrintQueueItem } from "@/types/print"
+import React, { createContext, useContext, useEffect, useState } from "react"
 
-// type PrinterStatus = {
-//   printerConnected: boolean
-//   btDevice: BluetoothDevice | null
-//   isBtConnecting: boolean
-//   isBtSending: boolean
-// }
+type Printer = USBDevice | null
+type USBConfiguration = {
+  configurationValue: number
+}
+interface PrinterContextType {
+  printer: Printer
+  connectPrinter: () => Promise<void>
+}
 
-// const PrinterContext = createContext<{
-//   // managerRef: React.RefObject<PrinterManagerHandles>
-//   status: PrinterStatus
-//   setStatus: React.Dispatch<React.SetStateAction<PrinterStatus>>
-//   message: string | null
-//   setMessage: (msg: string | null) => void
-// } | null>(null)
+const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
 
-// export const usePrinter = () => {
-//   const context = useContext(PrinterContext)
-//   if (!context) throw new Error("usePrinter must be used inside PrinterProvider")
-//   return context
-// }
+export const PrinterProvider = ({ children }: { children: React.ReactNode }) => {
+  const [printer, setPrinter] = useState<Printer>(null)
 
-// export function PrinterProvider({
-//   children,
-//   printQueue,
-// }: {
-//   children: React.ReactNode
-//   printQueue: PrintQueueItem[]
-// }) {
-//   // const managerRef = useRef<PrinterManagerHandles>(null)
+  const connectPrinter = async () => {
+    try {
+      const device = await navigator.usb.requestDevice({
+        filters: [{ vendorId: 0x04b8 }], // Example: Epson
+      })
+      await device.open()
 
-//   const [status, setStatus] = useState<PrinterStatus>({
-//     printerConnected: false,
-//     btDevice: null,
-//     isBtConnecting: false,
-//     isBtSending: false,
-//   })
+      const deviceWithConfig = device as USBDevice & { configuration: USBConfiguration | null }
 
-//   const [message, setMessage] = useState<string | null>(null)
+      if (deviceWithConfig.configuration === null) {
+        await device.selectConfiguration(1)
+      }
 
-//   const scriptLoaded = typeof window !== "undefined" && !!window.epson
+      await device.claimInterface(0)
 
-//   return (
-//     <PrinterContext.Provider value={{ managerRef, status, setStatus, message, setMessage }}>
-//       <PrinterManager
-//         ref={managerRef}
-//         scriptLoaded={scriptLoaded}
-//         setMessage={setMessage}
-//         onStatusChange={setStatus}
-//       />
+      setPrinter(device)
+      console.log("Printer connected:", device)
+    } catch (err) {
+      console.error("Printer connection failed:", err)
+    }
+  }
 
-//       {children}
-//     </PrinterContext.Provider>
-//   )
-// }
+  // Auto-reconnect on mount if already authorized
+  useEffect(() => {
+    const tryReconnect = async () => {
+      const devices = await navigator.usb.getDevices()
+      if (devices.length > 0) {
+        const device = devices[0]
+        try {
+          await device.open()
+
+          const deviceWithConfig = device as USBDevice & { configuration: USBConfiguration | null }
+
+          if (deviceWithConfig.configuration === null) {
+            await device.selectConfiguration(1)
+          }
+
+          await device.claimInterface(0)
+          setPrinter(device)
+        } catch (err) {
+          console.error("Auto-reconnect failed:", err)
+        }
+      }
+    }
+
+    tryReconnect()
+  }, [])
+
+  return (
+    <PrinterContext.Provider value={{ printer, connectPrinter }}>
+      {children}
+    </PrinterContext.Provider>
+  )
+}
+
+export const usePrinter = (): PrinterContextType => {
+  const context = useContext(PrinterContext)
+  if (!context) {
+    throw new Error("usePrinter must be used within a PrinterProvider")
+  }
+  return context
+}
