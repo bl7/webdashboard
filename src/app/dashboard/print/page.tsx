@@ -608,11 +608,11 @@
 import { useState, useEffect } from "react"
 
 // Add type safety for the custom window property
-// declare global {
-//   interface Window {
-//     epsonPrinter?: USBDevice
-//   }
-// }
+declare global {
+  interface Window {
+    epsonPrinter?: any // or a more specific type like ePOSDevice if you have the typings
+  }
+}
 
 export default function Home() {
   const [printerText, setPrinterText] = useState<string>("")
