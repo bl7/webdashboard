@@ -222,8 +222,17 @@ export default function LabelDemo() {
       setStatus("Printer not connected")
       return
     }
+
     try {
       setStatus("Printing...")
+      const encoder = new TextEncoder()
+      const ESC = 0x1b,
+        GS = 0x1d
+
+      const init = new Uint8Array([ESC, 0x40]) // initialize
+      const feedGap = new Uint8Array([ESC, 0x4a, 7]) // 1mm gap
+      const cut = new Uint8Array([GS, 0x56, 0x00]) // full cut
+
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
           const label = formatLabelForPrint(
@@ -231,25 +240,30 @@ export default function LabelDemo() {
             allergens.map((a) => a.allergenName.toLowerCase()),
             customExpiry
           )
-          const encoder = new TextEncoder()
-          const ESC = 0x1b,
-            GS = 0x1d
-          const init = new Uint8Array([ESC, 0x40])
           const text = encoder.encode(label + "\n")
-          const feed = new Uint8Array([ESC, 0x4a, 124]) // feed approx 31mm + 1mm gap
-          const cut = new Uint8Array([GS, 0x56, 0x00])
-          const buffer = new Uint8Array(init.length + text.length + feed.length + cut.length)
+
+          // Feed to match 3.1cm = 247 dots
+          const feedContent = new Uint8Array([ESC, 0x4a, 247])
+
+          const buffer = new Uint8Array(
+            init.length + text.length + feedContent.length + feedGap.length + cut.length
+          )
+
           let offset = 0
           buffer.set(init, offset)
           offset += init.length
           buffer.set(text, offset)
           offset += text.length
-          buffer.set(feed, offset)
-          offset += feed.length
+          buffer.set(feedContent, offset)
+          offset += feedContent.length
+          buffer.set(feedGap, offset)
+          offset += feedGap.length
           buffer.set(cut, offset)
+
           await window.epsonPrinter.transferOut(1, buffer)
         }
       }
+
       setStatus("Printed successfully")
     } catch (e: any) {
       console.error("Print error", e)
