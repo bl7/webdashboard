@@ -1,7 +1,7 @@
 declare global {
   interface Window {
     epson?: any
-    epsonPrinter?: any
+    epsonPrinter?: USBDevice
     printer?: any
     btSendData?: (data: Uint8Array) => Promise<void>
   }

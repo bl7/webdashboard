@@ -7,11 +7,7 @@ import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
 import { formatLabelForPrint } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
-declare global {
-  interface Window {
-    epsonPrinter?: any // or a more specific type like ePOSDevice if you have the typings
-  }
-}
+
 const itemsPerPage = 5
 
 function calculateExpiryDate(days: number): string {
