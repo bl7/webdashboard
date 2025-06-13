@@ -230,7 +230,6 @@ export default function LabelDemo() {
         GS = 0x1d
 
       const init = new Uint8Array([ESC, 0x40]) // initialize
-      const feedGap = new Uint8Array([ESC, 0x4a, 5]) // feed 0.6 mm gap
       const cut = new Uint8Array([GS, 0x56, 0x00]) // full cut
 
       for (const item of printQueue) {
@@ -243,7 +242,8 @@ export default function LabelDemo() {
           const text = encoder.encode(label + "\n")
 
           // Feed to match 3.1cm = 247 dots
-          const feedContent = new Uint8Array([ESC, 0x4a, 247])
+          const feedContent = new Uint8Array([ESC, 0x4a, 264]) // Feed 264 dots for label height
+          const feedGap = new Uint8Array([ESC, 0x4a, 24]) // Feed 24 dots for gap
 
           const buffer = new Uint8Array(
             init.length + text.length + feedContent.length + feedGap.length + cut.length
