@@ -230,7 +230,7 @@ export default function LabelDemo() {
         GS = 0x1d
 
       const init = new Uint8Array([ESC, 0x40]) // initialize
-      const feedGap = new Uint8Array([ESC, 0x4a, 7]) // 1mm gap
+      const feedGap = new Uint8Array([ESC, 0x4a, 5]) // feed 0.6 mm gap
       const cut = new Uint8Array([GS, 0x56, 0x00]) // full cut
 
       for (const item of printQueue) {
