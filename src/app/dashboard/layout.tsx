@@ -26,7 +26,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog"
-import { PrinterProvider } from "@/context/PrinterContext"
+// import { PrinterProvider } from "@/context/PrinterContext"
 import PrinterStatusBar from "@/components/PrinterStatusBar"
 import { cn } from "@/lib/utils"
 
@@ -210,167 +210,165 @@ export default function DashboardLayout({ children }: LayoutProps) {
   }
 
   return (
-    <PrinterProvider printQueue={[]}>
-      <div className="flex h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
-        {!isSetupPage && (
-          <>
-            <button
-              onClick={toggleSidebar}
-              className="fixed left-4 top-4 z-50 h-10 w-10 rounded-md bg-[hsl(var(--primary))] text-white shadow-lg"
-              aria-label="Toggle Sidebar"
-            >
-              {sidebarMobile || sidebarOpen ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
-            </button>
-
-            <div
-              onClick={() => setSidebarMobile(false)}
-              className={cn("fixed inset-0 z-40 bg-black/30 transition-opacity lg:hidden", {
-                "pointer-events-auto opacity-100": sidebarMobile,
-                "pointer-events-none opacity-0": !sidebarMobile,
-              })}
-            />
-          </>
-        )}
-
-        {/* Sidebar */}
-        {!isSetupPage && (
-          <aside
-            className={cn(
-              "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
-              sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",
-              sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"
-            )}
+    <div className="flex h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
+      {!isSetupPage && (
+        <>
+          <button
+            onClick={toggleSidebar}
+            className="fixed left-4 top-4 z-50 h-10 w-10 rounded-md bg-[hsl(var(--primary))] text-white shadow-lg"
+            aria-label="Toggle Sidebar"
           >
-            <Image
-              src="/logo_white.png"
-              alt="Logo"
-              width={120}
-              height={40}
-              className={cn("mb-6 transition-opacity", {
-                "opacity-100": sidebarOpen || sidebarMobile,
-                "w-0 opacity-0": !sidebarOpen && !sidebarMobile,
-              })}
-            />
+            {sidebarMobile || sidebarOpen ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
+          </button>
 
-            <nav className="flex flex-grow flex-col space-y-1">
-              {filteredNavItems.map(({ label, icon, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  className={cn(
-                    "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
-                    sidebarOpen || sidebarMobile ? "justify-start" : "justify-center"
-                  )}
-                  onClick={() => setSidebarMobile(false)}
-                >
-                  <span className="text-[1.3rem]">{icon}</span>
-                  {(sidebarOpen || sidebarMobile) && <span>{label}</span>}
-                  {!sidebarOpen && !sidebarMobile && (
-                    <span className="absolute left-full ml-2 hidden rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
-                      {label}
-                    </span>
-                  )}
-                </a>
-              ))}
-            </nav>
+          <div
+            onClick={() => setSidebarMobile(false)}
+            className={cn("fixed inset-0 z-40 bg-black/30 transition-opacity lg:hidden", {
+              "pointer-events-auto opacity-100": sidebarMobile,
+              "pointer-events-none opacity-0": !sidebarMobile,
+            })}
+          />
+        </>
+      )}
 
-            {!isAdmin && (sidebarOpen || sidebarMobile) && (
-              <button
-                onClick={() => {
-                  setShowPinModal(true)
-                  setSidebarMobile(false)
-                }}
-                className="mt-4 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-yellow-300 hover:bg-yellow-400/10"
-              >
-                <RiAdminLine className="text-[1.3rem]" />
-                <span>Admin Access</span>
-              </button>
-            )}
-
-            {(sidebarOpen || sidebarMobile) && (
-              <div className="mb-4 mt-auto flex items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
-                {avatar !== null && (
-                  <Image
-                    src={`/avatar${avatar}.png`}
-                    width={36}
-                    height={36}
-                    alt="Avatar"
-                    className="rounded-full border border-white"
-                  />
-                )}
-                {profile?.company_name && (
-                  <div>
-                    <span className="font-medium">{profile.company_name}</span>
-                    <span className="text-xs text-white/70">Company</span>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {(sidebarOpen || sidebarMobile) && (
-              <button
-                onClick={handleLogout}
-                className="mt-auto flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-400/10"
-              >
-                <IoLogOutOutline className="text-[1.3rem]" />
-                <span>Logout</span>
-              </button>
-            )}
-          </aside>
-        )}
-
-        <Dialog open={showPinModal} onOpenChange={setShowPinModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Enter Admin PIN</DialogTitle>
-            </DialogHeader>
-            <div className="mb-4 flex justify-center gap-3">
-              {pinDigits.map((digit, i) => (
-                <input
-                  key={i}
-                  type="password"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handlePinChange(i, e.target.value)}
-                  ref={(el) => {
-                    inputRefs.current[i] = el
-                  }}
-                  className="h-12 w-12 rounded border text-center text-2xl"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                />
-              ))}
-            </div>
-            <DialogFooter>
-              <button
-                onClick={() => setShowPinModal(false)}
-                className="rounded bg-gray-200 px-4 py-2 font-semibold hover:bg-gray-300"
-              >
-                Cancel
-              </button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        <main
+      {/* Sidebar */}
+      {!isSetupPage && (
+        <aside
           className={cn(
-            "flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] p-8 text-[hsl(var(--card-foreground))] transition-all",
-            {
-              "lg:ml-64": sidebarOpen,
-              "lg:ml-20": !sidebarOpen,
-            }
+            "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
+            sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",
+            sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"
           )}
         >
-          {!isSetupPage && (
-            <header className="mb-4 flex justify-end border-b pb-4">
-              <PrinterStatusBar />
-            </header>
+          <Image
+            src="/logo_white.png"
+            alt="Logo"
+            width={120}
+            height={40}
+            className={cn("mb-6 transition-opacity", {
+              "opacity-100": sidebarOpen || sidebarMobile,
+              "w-0 opacity-0": !sidebarOpen && !sidebarMobile,
+            })}
+          />
+
+          <nav className="flex flex-grow flex-col space-y-1">
+            {filteredNavItems.map(({ label, icon, href }) => (
+              <a
+                key={label}
+                href={href}
+                className={cn(
+                  "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
+                  sidebarOpen || sidebarMobile ? "justify-start" : "justify-center"
+                )}
+                onClick={() => setSidebarMobile(false)}
+              >
+                <span className="text-[1.3rem]">{icon}</span>
+                {(sidebarOpen || sidebarMobile) && <span>{label}</span>}
+                {!sidebarOpen && !sidebarMobile && (
+                  <span className="absolute left-full ml-2 hidden rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                    {label}
+                  </span>
+                )}
+              </a>
+            ))}
+          </nav>
+
+          {!isAdmin && (sidebarOpen || sidebarMobile) && (
+            <button
+              onClick={() => {
+                setShowPinModal(true)
+                setSidebarMobile(false)
+              }}
+              className="mt-4 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-yellow-300 hover:bg-yellow-400/10"
+            >
+              <RiAdminLine className="text-[1.3rem]" />
+              <span>Admin Access</span>
+            </button>
           )}
-          <section className={cn("flex-grow overflow-auto", { "mt-8": !isSetupPage })}>
-            {children}
-          </section>
-        </main>
-      </div>
-    </PrinterProvider>
+
+          {(sidebarOpen || sidebarMobile) && (
+            <div className="mb-4 mt-auto flex items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
+              {avatar !== null && (
+                <Image
+                  src={`/avatar${avatar}.png`}
+                  width={36}
+                  height={36}
+                  alt="Avatar"
+                  className="rounded-full border border-white"
+                />
+              )}
+              {profile?.company_name && (
+                <div>
+                  <span className="font-medium">{profile.company_name}</span>
+                  <span className="text-xs text-white/70">Company</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {(sidebarOpen || sidebarMobile) && (
+            <button
+              onClick={handleLogout}
+              className="mt-auto flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-400/10"
+            >
+              <IoLogOutOutline className="text-[1.3rem]" />
+              <span>Logout</span>
+            </button>
+          )}
+        </aside>
+      )}
+
+      <Dialog open={showPinModal} onOpenChange={setShowPinModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter Admin PIN</DialogTitle>
+          </DialogHeader>
+          <div className="mb-4 flex justify-center gap-3">
+            {pinDigits.map((digit, i) => (
+              <input
+                key={i}
+                type="password"
+                maxLength={1}
+                value={digit}
+                onChange={(e) => handlePinChange(i, e.target.value)}
+                ref={(el) => {
+                  inputRefs.current[i] = el
+                }}
+                className="h-12 w-12 rounded border text-center text-2xl"
+                inputMode="numeric"
+                pattern="[0-9]*"
+              />
+            ))}
+          </div>
+          <DialogFooter>
+            <button
+              onClick={() => setShowPinModal(false)}
+              className="rounded bg-gray-200 px-4 py-2 font-semibold hover:bg-gray-300"
+            >
+              Cancel
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <main
+        className={cn(
+          "flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] p-8 text-[hsl(var(--card-foreground))] transition-all",
+          {
+            "lg:ml-64": sidebarOpen,
+            "lg:ml-20": !sidebarOpen,
+          }
+        )}
+      >
+        {!isSetupPage && (
+          <header className="mb-4 flex justify-end border-b pb-4">
+            <PrinterStatusBar />
+          </header>
+        )}
+        <section className={cn("flex-grow overflow-auto", { "mt-8": !isSetupPage })}>
+          {children}
+        </section>
+      </main>
+    </div>
   )
 }

@@ -1,12 +1,12 @@
 "use client"
-import { usePrinter } from "@/context/PrinterContext"
+// import { usePrinter } from "@/context/PrinterContext"
 import React from "react"
 
 export default function PrinterStatusBar() {
-  const { managerRef, status, setMessage } = usePrinter()
+  // const { managerRef, status, setMessage } = usePrinter()
 
   const handleConnectBluetooth = async () => {
-    await managerRef.current?.scanAndConnectBluetooth()
+    // await managerRef.current?.scanAndConnectBluetooth()
   }
 
   // Bulb SVG component
@@ -30,21 +30,21 @@ export default function PrinterStatusBar() {
         <div className="flex items-center text-sm text-gray-700">
           USB:{" "}
           <span className="ml-1 flex items-center">
-            <Bulb color={status.printerConnected ? "#22c55e" : "#ef4444"} />
+            {/* <Bulb color={status.printerConnected ? "#22c55e" : "#ef4444"} /> */}
           </span>
         </div>
         <div className="flex items-center text-sm text-gray-700">
           Bluetooth:{" "}
           <span className="ml-1 flex items-center">
-            <Bulb color={status.btDevice ? "#22c55e" : "#ef4444"} />
+            {/* <Bulb color={status.btDevice ? "#22c55e" : "#ef4444"} /> */}
           </span>
         </div>
         <button
           onClick={handleConnectBluetooth}
-          disabled={!!status.btDevice || status.isBtConnecting}
+          // disabled={!!status.btDevice || status.isBtConnecting}
           className="rounded-md bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-700 disabled:bg-gray-300"
         >
-          {status.isBtConnecting ? "Connecting..." : "Connect Bluetooth"}
+          {/* {status.isBtConnecting ? "Connecting..." : "Connect Bluetooth"} */}
         </button>
       </div>
     </div>
