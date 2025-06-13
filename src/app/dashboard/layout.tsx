@@ -38,6 +38,7 @@ const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
   { label: "Analytics", icon: <FaChartPie />, href: "/dashboard/analytics" },
   { label: "Print Labels", icon: <FaPrint />, href: "/dashboard/print" },
+  { label: "Label Demo", icon: <FaPrint />, href: "/dashboard/labeldemo" },
   { label: "Allergens", icon: <GiShrimp />, href: "/dashboard/allergens" },
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
@@ -47,9 +48,9 @@ const NAV_ITEMS = [
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
 
-const ADMIN_ROUTES = NAV_ITEMS.filter((i) => !["Dashboard", "Print Labels"].includes(i.label)).map(
-  (i) => i.href
-)
+const ADMIN_ROUTES = NAV_ITEMS.filter(
+  (i) => !["Dashboard", "Print Labels", "Label Demo"].includes(i.label)
+).map((i) => i.href)
 
 export default function DashboardLayout({ children }: LayoutProps) {
   const router = useRouter()
@@ -73,7 +74,9 @@ export default function DashboardLayout({ children }: LayoutProps) {
   const [pinDigits, setPinDigits] = useState<string[]>(["", "", "", ""])
 
   const isSetupPage = pathname === "/setup"
-  const filteredNavItems = isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((i) => i.label === "Print Labels")
+  const filteredNavItems = isAdmin
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((i) => ["Print Labels", "Label Demo"].includes(i.label))
 
   useEffect(() => {
     setName(localStorage.getItem("name"))
