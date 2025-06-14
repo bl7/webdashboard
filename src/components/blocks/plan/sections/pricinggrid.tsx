@@ -12,55 +12,54 @@ const features = [
   "Sunmi Printer Support",
   "Weekly Free Prints",
 ]
-
 const plans = [
   {
     name: "Starter Kitchen",
-    monthly: "Free",
-    yearly: "Free",
+    monthly: "£10/mo",
+    yearly: "£108/yr (10% off)",
     features: {
       "Device Provided": false,
-      "Unlimited Label Printing": false,
+      "Unlimited Label Printing": true,
       "Access to Web Dashboard": true,
       "Sunmi Printer Support": false,
-      "Weekly Free Prints": true,
+      "Optional Rolls Add-on": "5 rolls/mo for £5",
     },
     description:
-      "Ideal for testing or low-volume use. Bring your own Epson TM-M30 and get 20 free prints every week.",
+      "Perfect for small kitchens with their own printer. Unlimited printing. Optional add-on: 5 rolls/month for just £5.",
     highlight: false,
-    cta: "Get Started Free",
+    cta: "Start Starter Plan",
   },
   {
-    name: "🧑‍🍳 Pro Kitchen",
-    monthly: "£20/mo",
-    yearly: "£216/yr (10% off)",
-    features: {
-      "Device Provided": "Epson TM-M30 Included",
-      "Unlimited Label Printing": true,
-      "Access to Web Dashboard": false,
-      "Sunmi Printer Support": false,
-      "Weekly Free Prints": false,
-    },
-    description:
-      "For growing kitchens. Get an Epson device included and enjoy unlimited print volume.",
-    highlight: true,
-    cta: "Start Basic Plan",
-  },
-  {
-    name: "Multi-Site Mastery",
+    name: "Pro Kitchen",
     monthly: "£25/mo",
-    yearly: "£270/yr",
+    yearly: "£270/yr (10% off)",
     features: {
       "Device Provided": "Sunmi or Epson Included",
       "Unlimited Label Printing": true,
       "Access to Web Dashboard": true,
       "Sunmi Printer Support": true,
-      "Weekly Free Prints": false,
+      "Monthly Rolls Included": "5 rolls/mo",
     },
     description:
-      "Everything in Basic plus Web Dashboard access and support for Sunmi touchscreen printers.",
+      "Includes a device, unlimited prints, Sunmi support, and 5 rolls every month. Ideal for busy kitchens.",
+    highlight: true,
+    cta: "Start Pro Plan",
+  },
+  {
+    name: "Multi-Site Mastery",
+    monthly: "Contact us",
+    yearly: "Custom Pricing",
+    features: {
+      "Device Provided": "All Devices Supported",
+      "Unlimited Label Printing": true,
+      "Access to Web Dashboard": true,
+      "Sunmi Printer Support": true,
+      "Multi-Location Support": true,
+    },
+    description:
+      "Tailored for enterprise kitchens and chains. Comes with everything — let's talk and set it up for your needs.",
     highlight: false,
-    cta: "Go Premium",
+    cta: "Contact Us",
   },
 ]
 
