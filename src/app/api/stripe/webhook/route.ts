@@ -1,13 +1,5 @@
-import { NextRequest } from "next/server"
 import Stripe from "stripe"
 import pool from "@/lib/pg"
-
-// Disable body parsing for webhooks
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
 
 if (!process.env.STRIPE_SECRET_KEY) throw new Error("Missing STRIPE_SECRET_KEY")
 if (!process.env.STRIPE_WEBHOOK_SECRET) throw new Error("Missing STRIPE_WEBHOOK_SECRET")
@@ -18,21 +10,22 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-export async function POST(req: NextRequest) {
-  console.log("🔔 Webhook received")
+export async function POST(request: Request) {
+  console.log("🔔 Webhook received - using raw Request")
 
   let body: string
-  let signature: string | null
+  let sig: string | null
 
   try {
-    // Get raw body as text - this is crucial for Vercel
-    body = await req.text()
-    signature = req.headers.get("stripe-signature")
+    // Use the raw Request object instead of NextRequest
+    body = await request.text()
+    sig = request.headers.get("stripe-signature")
 
     console.log("📝 Body length:", body.length)
-    console.log("✍️ Signature present:", !!signature)
+    console.log("✍️ Signature present:", !!sig)
+    console.log("🔍 Body starts with:", body.substring(0, 50))
 
-    if (!signature) {
+    if (!sig) {
       console.error("❌ Missing Stripe signature")
       return new Response("Missing Stripe signature", { status: 400 })
     }
@@ -50,15 +43,24 @@ export async function POST(req: NextRequest) {
 
   try {
     // Construct event with raw body string
-    event = stripe.webhooks.constructEvent(body, signature, endpointSecret)
+    event = stripe.webhooks.constructEvent(body, sig, endpointSecret)
     console.log("✅ Webhook signature verified:", event.type)
   } catch (err: any) {
     console.error("❌ Webhook signature verification failed:", {
       error: err.message,
       bodyLength: body.length,
-      signaturePresent: !!signature,
+      signaturePresent: !!sig,
       webhookSecret: endpointSecret ? "Present" : "Missing",
+      bodyPreview: body.substring(0, 200),
     })
+
+    // Log more details for debugging
+    console.error("🔍 Signature details:", {
+      signature: sig?.substring(0, 50) + "...",
+      secretLength: endpointSecret?.length,
+      secretPrefix: endpointSecret?.substring(0, 10),
+    })
+
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
   }
 
@@ -97,7 +99,6 @@ export async function POST(req: NextRequest) {
         const currentPeriodEnd = item.current_period_end ?? 0
         const trialEnd = subscription.trial_end ?? 0
 
-        // Safe access of latest_invoice.amount_due
         const latestInvoiceAmountDue =
           typeof subscription.latest_invoice === "object" &&
           subscription.latest_invoice !== null &&

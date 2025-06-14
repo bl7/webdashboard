@@ -1,79 +1,72 @@
 "use client"
 
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useContext, useState, ReactNode } from "react"
 
-type Printer = USBDevice | null
-type USBConfiguration = {
-  configurationValue: number
-}
 interface PrinterContextType {
-  printer: Printer
+  printer: USBDevice | null
+  isConnected: boolean
   connectPrinter: () => Promise<void>
+  disconnectPrinter: () => void
 }
 
 const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
 
-export const PrinterProvider = ({ children }: { children: React.ReactNode }) => {
-  const [printer, setPrinter] = useState<Printer>(null)
+export function PrinterProvider({ children }: { children: ReactNode }) {
+  const [printer, setPrinter] = useState<USBDevice | null>(null)
+  const [isConnected, setIsConnected] = useState(false)
 
   const connectPrinter = async () => {
     try {
-      const device = await navigator.usb.requestDevice({
-        filters: [{ vendorId: 0x04b8 }], // Example: Epson
-      })
-      await device.open()
-
-      const deviceWithConfig = device as USBDevice & { configuration: USBConfiguration | null }
-
-      if (deviceWithConfig.configuration === null) {
-        await device.selectConfiguration(1)
+      if (!navigator.usb) {
+        throw new Error("WebUSB not supported")
       }
 
+      const device = await navigator.usb.requestDevice({
+        filters: [{ vendorId: 0x04b8 }], // Epson vendor ID
+      })
+
+      await device.open()
+      await device.selectConfiguration(1)
       await device.claimInterface(0)
 
+      // Store globally for other components
+      ;(window as any).epsonPrinter = device
+
       setPrinter(device)
-      console.log("Printer connected:", device)
-    } catch (err) {
-      console.error("Printer connection failed:", err)
+      setIsConnected(true)
+    } catch (error) {
+      setIsConnected(false)
+      setPrinter(null)
+      throw error
     }
   }
 
-  // Auto-reconnect on mount if already authorized
-  useEffect(() => {
-    const tryReconnect = async () => {
-      const devices = await navigator.usb.getDevices()
-      if (devices.length > 0) {
-        const device = devices[0]
-        try {
-          await device.open()
-
-          const deviceWithConfig = device as USBDevice & { configuration: USBConfiguration | null }
-
-          if (deviceWithConfig.configuration === null) {
-            await device.selectConfiguration(1)
-          }
-
-          await device.claimInterface(0)
-          setPrinter(device)
-        } catch (err) {
-          console.error("Auto-reconnect failed:", err)
-        }
-      }
+  const disconnectPrinter = () => {
+    if (printer) {
+      printer.close()
     }
-
-    tryReconnect()
-  }, [])
+    setPrinter(null)
+    setIsConnected(false)
+    ;(window as any).epsonPrinter = null
+  }
 
   return (
-    <PrinterContext.Provider value={{ printer, connectPrinter }}>
+    <PrinterContext.Provider
+      value={{
+        printer,
+        isConnected,
+        connectPrinter,
+        disconnectPrinter,
+      }}
+    >
       {children}
     </PrinterContext.Provider>
   )
 }
 
-export const usePrinter = (): PrinterContextType => {
+export function usePrinter() {
   const context = useContext(PrinterContext)
-  if (!context) {
+  if (context === undefined) {
     throw new Error("usePrinter must be used within a PrinterProvider")
   }
   return context

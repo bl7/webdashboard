@@ -29,6 +29,7 @@ import {
 import PrinterStatusBar from "@/components/PrinterStatusBar"
 import { cn } from "@/lib/utils"
 import { PrinterProvider } from "@/context/PrinterContext"
+
 interface LayoutProps {
   children: ReactNode
 }
@@ -211,6 +212,9 @@ export default function DashboardLayout({ children }: LayoutProps) {
   return (
     <PrinterProvider>
       <div className="flex h-screen bg-[hsl(var(--background))] text-[hsl(var(--foreground))]">
+        {/* Global Printer Status Bar - only show when not on setup page */}
+        {!isSetupPage && <PrinterStatusBar />}
+
         {!isSetupPage && (
           <>
             <button
@@ -353,21 +357,16 @@ export default function DashboardLayout({ children }: LayoutProps) {
 
         <main
           className={cn(
-            "flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] p-8 text-[hsl(var(--card-foreground))] transition-all",
+            "flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] transition-all",
+            // Add top padding to account for the fixed PrinterStatusBar
+            "pt-12",
             {
               "lg:ml-64": sidebarOpen,
               "lg:ml-20": !sidebarOpen,
             }
           )}
         >
-          {!isSetupPage && (
-            <header className="mb-4 flex justify-end border-b pb-4">
-              <PrinterStatusBar />
-            </header>
-          )}
-          <section className={cn("flex-grow overflow-auto", { "mt-8": !isSetupPage })}>
-            {children}
-          </section>
+          <section className="flex-grow overflow-auto p-8">{children}</section>
         </main>
       </div>
     </PrinterProvider>

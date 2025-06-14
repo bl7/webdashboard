@@ -7,7 +7,7 @@ import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
 import { formatLabelForPrint } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
-
+import { usePrinter } from "@/context/PrinterContext"
 const itemsPerPage = 5
 
 function calculateExpiryDate(days: number): string {
@@ -48,7 +48,7 @@ type MenuItem = {
 }
 
 export default function LabelDemo() {
-  const [printerConnected, setPrinterConnected] = useState(false)
+  const { isConnected, printer } = usePrinter()
   const [status, setStatus] = useState("Ready to connect")
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
@@ -278,29 +278,10 @@ export default function LabelDemo() {
   const removeFromQueue = (uid: string) =>
     setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
 
-  const connectToPrinter = async () => {
-    try {
-      setStatus("Connecting...")
-      if (!navigator.usb) {
-        setStatus("WebUSB not supported")
-        return
-      }
-      const device = await navigator.usb.requestDevice({ filters: [{ vendorId: 0x04b8 }] })
-      await device.open()
-      await device.selectConfiguration(1)
-      await device.claimInterface(0)
-      window.epsonPrinter = device
-      setPrinterConnected(true)
-      setStatus("Printer connected")
-    } catch (e: any) {
-      console.error("Printer connection error", e)
-      setStatus(`Connection failed: ${e.message}`)
-    }
-  }
   const clearPrintQueue = () => setPrintQueue([])
 
   const printLabels = async () => {
-    if (!window.epsonPrinter || !printerConnected) {
+    if (!window.epsonPrinter || !isConnected) {
       setStatus("Printer not connected")
       return
     }
@@ -451,14 +432,14 @@ export default function LabelDemo() {
             <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
             <button
               onClick={printLabels}
-              disabled={!printerConnected || printQueue.length === 0}
+              disabled={!isConnected || printQueue.length === 0}
               className={`rounded px-4 py-2 text-white transition-colors ${
-                !printerConnected || printQueue.length === 0
+                !isConnected || printQueue.length === 0
                   ? "cursor-not-allowed bg-gray-400"
                   : "bg-green-600 hover:bg-green-700"
               }`}
               title={
-                !printerConnected
+                !isConnected
                   ? "Printer not connected"
                   : printQueue.length === 0
                     ? "No items in print queue"
