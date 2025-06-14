@@ -2,8 +2,11 @@ import { NextRequest } from "next/server"
 import Stripe from "stripe"
 import pool from "@/lib/pg"
 
+// Disable body parsing for webhooks
 export const config = {
-  runtime: "nodejs",
+  api: {
+    bodyParser: false,
+  },
 }
 
 if (!process.env.STRIPE_SECRET_KEY) throw new Error("Missing STRIPE_SECRET_KEY")
@@ -16,43 +19,70 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
 export async function POST(req: NextRequest) {
-  let rawBody: string
+  console.log("🔔 Webhook received")
+
+  let body: string
+  let signature: string | null
 
   try {
-    // Get the raw body as text to preserve the exact format Stripe sent
-    rawBody = await req.text()
+    // Get raw body as text - this is crucial for Vercel
+    body = await req.text()
+    signature = req.headers.get("stripe-signature")
+
+    console.log("📝 Body length:", body.length)
+    console.log("✍️ Signature present:", !!signature)
+
+    if (!signature) {
+      console.error("❌ Missing Stripe signature")
+      return new Response("Missing Stripe signature", { status: 400 })
+    }
+
+    if (!body) {
+      console.error("❌ Empty request body")
+      return new Response("Empty request body", { status: 400 })
+    }
   } catch (err) {
-    console.error("Failed to read request body:", err)
-    return new Response("Failed to read request body", { status: 400 })
-  }
-
-  const signature = req.headers.get("stripe-signature")
-
-  if (!signature) {
-    return new Response("Missing Stripe signature", { status: 400 })
+    console.error("❌ Failed to read request:", err)
+    return new Response("Failed to read request", { status: 400 })
   }
 
   let event: Stripe.Event
 
   try {
-    // Use the raw text body instead of Buffer.from(arrayBuffer)
-    event = stripe.webhooks.constructEvent(rawBody, signature, endpointSecret)
+    // Construct event with raw body string
+    event = stripe.webhooks.constructEvent(body, signature, endpointSecret)
+    console.log("✅ Webhook signature verified:", event.type)
   } catch (err: any) {
-    console.error("❌ Webhook signature verification failed:", err.message)
+    console.error("❌ Webhook signature verification failed:", {
+      error: err.message,
+      bodyLength: body.length,
+      signaturePresent: !!signature,
+      webhookSecret: endpointSecret ? "Present" : "Missing",
+    })
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
   }
 
   const data = event.data.object as Stripe.Subscription | Stripe.Checkout.Session | Stripe.Invoice
 
   try {
+    console.log(`🎯 Processing event: ${event.type}`)
+
     switch (event.type) {
       case "checkout.session.completed": {
+        console.log("🛒 Processing checkout session completed")
         const session = data as Stripe.Checkout.Session
         const subscriptionId = session.subscription as string
         const customerId = session.customer as string
         const userId = session.metadata?.user_id
 
+        console.log("📊 Session data:", {
+          subscriptionId: !!subscriptionId,
+          customerId: !!customerId,
+          userId: !!userId,
+        })
+
         if (!userId || !subscriptionId || !customerId) {
+          console.error("❌ Missing required metadata:", { userId, subscriptionId, customerId })
           return new Response("Missing required Stripe metadata", { status: 400 })
         }
 
@@ -115,6 +145,8 @@ export async function POST(req: NextRequest) {
             paymentMethod?.card?.exp_year ?? null,
           ]
         )
+
+        console.log("✅ Subscription saved to database")
         break
       }
 
@@ -131,6 +163,7 @@ export async function POST(req: NextRequest) {
         break
 
       case "customer.subscription.updated": {
+        console.log("🔄 Processing subscription update")
         const subscription = data as Stripe.Subscription
         const item = subscription.items.data[0]
         const plan = item.price
@@ -160,25 +193,40 @@ export async function POST(req: NextRequest) {
             subscription.id,
           ]
         )
+
+        console.log("✅ Subscription updated in database")
         break
       }
 
       case "customer.subscription.deleted": {
+        console.log("🗑️ Processing subscription deletion")
         const subscription = data as Stripe.Subscription
         await pool.query(`UPDATE subscriptions SET status = $1 WHERE stripe_subscription_id = $2`, [
           subscription.status,
           subscription.id,
         ])
+
+        console.log("✅ Subscription marked as deleted in database")
         break
       }
 
       default:
-        console.log(`Unhandled event type: ${event.type}`)
+        console.log(`ℹ️ Unhandled event type: ${event.type}`)
     }
   } catch (err) {
-    console.error("🔥 Error processing webhook event:", err)
+    console.error("🔥 Error processing webhook event:", {
+      error: err,
+      eventType: event.type,
+      eventId: event.id,
+    })
     return new Response("Internal error", { status: 500 })
   }
 
-  return new Response("Webhook received", { status: 200 })
+  console.log("✅ Webhook processed successfully")
+  return new Response(JSON.stringify({ received: true }), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
 }
