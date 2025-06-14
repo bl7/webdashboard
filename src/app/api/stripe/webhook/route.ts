@@ -15,8 +15,17 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-export async function POST(req: Request) {
-  const rawBody = await req.arrayBuffer()
+export async function POST(req: NextRequest) {
+  let rawBody: string
+
+  try {
+    // Get the raw body as text to preserve the exact format Stripe sent
+    rawBody = await req.text()
+  } catch (err) {
+    console.error("Failed to read request body:", err)
+    return new Response("Failed to read request body", { status: 400 })
+  }
+
   const signature = req.headers.get("stripe-signature")
 
   if (!signature) {
@@ -26,7 +35,8 @@ export async function POST(req: Request) {
   let event: Stripe.Event
 
   try {
-    event = stripe.webhooks.constructEvent(Buffer.from(rawBody), signature, endpointSecret)
+    // Use the raw text body instead of Buffer.from(arrayBuffer)
+    event = stripe.webhooks.constructEvent(rawBody, signature, endpointSecret)
   } catch (err: any) {
     console.error("❌ Webhook signature verification failed:", err.message)
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
