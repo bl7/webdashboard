@@ -1,25 +1,21 @@
 import { NextRequest } from "next/server"
 import Stripe from "stripe"
 import pool from "@/lib/pg"
+
 export const config = {
   runtime: "nodejs",
 }
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("Missing STRIPE_SECRET_KEY environment variable")
-}
-if (!process.env.STRIPE_WEBHOOK_SECRET) {
-  throw new Error("Missing STRIPE_WEBHOOK_SECRET environment variable")
-}
+if (!process.env.STRIPE_SECRET_KEY) throw new Error("Missing STRIPE_SECRET_KEY")
+if (!process.env.STRIPE_WEBHOOK_SECRET) throw new Error("Missing STRIPE_WEBHOOK_SECRET")
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16" as any,
 })
-console.log("env", process.env.STRIPE_SECRET_KEY)
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const rawBody = await req.arrayBuffer()
   const signature = req.headers.get("stripe-signature")
 
@@ -32,7 +28,7 @@ export async function POST(req: NextRequest) {
   try {
     event = stripe.webhooks.constructEvent(Buffer.from(rawBody), signature, endpointSecret)
   } catch (err: any) {
-    console.error("Webhook Error:", err.message)
+    console.error("❌ Webhook signature verification failed:", err.message)
     return new Response(`Webhook Error: ${err.message}`, { status: 400 })
   }
 
@@ -42,31 +38,32 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed": {
         const session = data as Stripe.Checkout.Session
-        const subscriptionId = session.subscription as string | undefined
-        const customerId = session.customer as string | undefined
+        const subscriptionId = session.subscription as string
+        const customerId = session.customer as string
         const userId = session.metadata?.user_id
 
         if (!userId || !subscriptionId || !customerId) {
-          return new Response("Missing user, subscription, or customer ID", { status: 400 })
+          return new Response("Missing required Stripe metadata", { status: 400 })
         }
 
         const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
           expand: ["default_payment_method", "latest_invoice", "items.data.price"],
         })
 
-        if (subscription.items.data.length === 0) {
-          return new Response("Subscription has no items", { status: 400 })
-        }
-
         const item = subscription.items.data[0]
         const plan = item.price
-
         const paymentMethod = subscription.default_payment_method as Stripe.PaymentMethod | null
 
-        // Use current_period_end from subscription item (not subscription)
         const currentPeriodEnd = item.current_period_end ?? 0
-        // trial_end remains on subscription object
         const trialEnd = subscription.trial_end ?? 0
+
+        // Safe access of latest_invoice.amount_due
+        const latestInvoiceAmountDue =
+          typeof subscription.latest_invoice === "object" &&
+          subscription.latest_invoice !== null &&
+          "amount_due" in subscription.latest_invoice
+            ? (subscription.latest_invoice.amount_due as number) / 100
+            : null
 
         await pool.query(
           `
@@ -102,9 +99,7 @@ export async function POST(req: NextRequest) {
             plan.nickname ?? null,
             (plan.unit_amount ?? 0) / 100,
             plan.recurring?.interval ?? null,
-            subscription.latest_invoice && typeof subscription.latest_invoice !== "string"
-              ? subscription.latest_invoice.amount_due / 100
-              : null,
+            latestInvoiceAmountDue,
             paymentMethod?.card?.last4 ?? null,
             paymentMethod?.card?.exp_month ?? null,
             paymentMethod?.card?.exp_year ?? null,
@@ -113,28 +108,22 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      case "invoice.paid": {
-        const invoice = data as Stripe.Invoice
-        console.log("✅ Invoice paid:", invoice.id)
+      case "invoice.paid":
+        console.log("✅ Invoice paid:", (data as Stripe.Invoice).id)
         break
-      }
 
-      case "invoice.payment_failed": {
-        const invoice = data as Stripe.Invoice
-        console.warn("❌ Payment failed for invoice:", invoice.id)
+      case "invoice.payment_failed":
+        console.warn("❌ Payment failed:", (data as Stripe.Invoice).id)
         break
-      }
+
+      case "invoice.created":
+        console.log("🧾 Invoice created:", (data as Stripe.Invoice).id)
+        break
 
       case "customer.subscription.updated": {
         const subscription = data as Stripe.Subscription
-
-        if (subscription.items.data.length === 0) {
-          return new Response("Subscription has no items", { status: 400 })
-        }
-
         const item = subscription.items.data[0]
         const plan = item.price
-
         const currentPeriodEnd = item.current_period_end ?? 0
         const trialEnd = subscription.trial_end ?? 0
 
@@ -149,7 +138,7 @@ export async function POST(req: NextRequest) {
               plan_amount = $6,
               billing_interval = $7
           WHERE stripe_subscription_id = $8
-          `,
+        `,
           [
             subscription.status,
             currentPeriodEnd,
@@ -173,19 +162,13 @@ export async function POST(req: NextRequest) {
         break
       }
 
-      case "invoice.created": {
-        const invoice = data as Stripe.Invoice
-        console.log("🧾 Invoice created:", invoice.id)
-        break
-      }
-
       default:
         console.log(`Unhandled event type: ${event.type}`)
     }
-  } catch (err: any) {
-    console.error("Error processing webhook event:", err)
-    return new Response("Internal Server Error", { status: 500 })
+  } catch (err) {
+    console.error("🔥 Error processing webhook event:", err)
+    return new Response("Internal error", { status: 500 })
   }
 
-  return new Response("Webhook handled", { status: 200 })
+  return new Response("Webhook received", { status: 200 })
 }

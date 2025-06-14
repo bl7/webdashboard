@@ -1,25 +1,33 @@
 import { stripe } from "@/lib/stripe"
-
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
+  let body
   try {
-    const body = await req.json()
-    const { user_id, email, price_id } = body
+    body = await req.json()
+  } catch (err) {
+    console.error("Invalid JSON body:", err)
+    return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
+  }
 
-    if (!user_id || !email || !price_id) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
-    }
+  const { user_id, email, price_id } = body
 
-    if (!process.env.NEXT_PUBLIC_APP_URL) {
-      throw new Error("NEXT_PUBLIC_APP_URL not defined")
-    }
+  if (!user_id || !email || !price_id) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+  }
 
-    // Optional: basic price_id format check (Stripe price IDs usually start with "price_")
-    if (!price_id.startsWith("price_")) {
-      return NextResponse.json({ error: "Invalid price ID" }, { status: 400 })
-    }
+  if (!price_id.startsWith("price_")) {
+    return NextResponse.json({ error: "Invalid price ID" }, { status: 400 })
+  }
 
+  const APP_URL = process.env.NEXT_PUBLIC_APP_URL
+
+  if (!APP_URL) {
+    console.error("Missing NEXT_PUBLIC_APP_URL in environment variables.")
+    return NextResponse.json({ error: "Server configuration error" }, { status: 500 })
+  }
+
+  try {
     const customer = await stripe.customers.create({
       email,
       metadata: { user_id },
@@ -31,15 +39,19 @@ export async function POST(req: NextRequest) {
       payment_method_types: ["card"],
       line_items: [{ price: price_id, quantity: 1 }],
       subscription_data: {
-        metadata: { user_id }, // Optional but useful
+        metadata: { user_id },
       },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?canceled=true`,
+      success_url: `${APP_URL}/dashboard?success=true`,
+      cancel_url: `${APP_URL}/billing?canceled=true`,
     })
 
     return NextResponse.json({ url: session.url })
   } catch (error) {
-    console.error("Stripe checkout error:", error instanceof Error ? error.stack : error)
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    console.error("Stripe checkout error:", {
+      message: error instanceof Error ? error.message : error,
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+
+    return NextResponse.json({ error: "Failed to create Stripe session" }, { status: 500 })
   }
 }

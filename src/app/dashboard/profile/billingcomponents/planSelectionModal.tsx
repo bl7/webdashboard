@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, Loader2, X, AlertTriangle, Info } from "lucide-react"
@@ -8,8 +10,8 @@ const plans = [
     name: "Starter Kitchen",
     monthly: "Free",
     yearly: "Free",
-    price_id_monthly: "null",
-    price_id_yearly: "null",
+    price_id_monthly: null,
+    price_id_yearly: null,
     features: {
       "Device Provided": false,
       "Unlimited Label Printing": false,
@@ -88,16 +90,11 @@ export default function PlanSelectionModal({
   )
 
   useEffect(() => {
-    // Determine the type of change
-    const currentPlanIndex = plans.findIndex((p) => p.name === currentPlan)
-    const selectedPlanIndex = plans.findIndex((p) => p.name === selectedPlan)
+    const currentIndex = plans.findIndex((p) => p.name === currentPlan)
+    const selectedIndex = plans.findIndex((p) => p.name === selectedPlan)
 
     if (selectedPlan !== currentPlan) {
-      if (selectedPlanIndex > currentPlanIndex) {
-        setChangeType("upgrade")
-      } else {
-        setChangeType("downgrade")
-      }
+      setChangeType(selectedIndex > currentIndex ? "upgrade" : "downgrade")
     } else if (billingPeriod !== currentBillingPeriod) {
       setChangeType("billing_change")
     } else {
@@ -106,38 +103,31 @@ export default function PlanSelectionModal({
   }, [selectedPlan, billingPeriod, currentPlan, currentBillingPeriod])
 
   const getChangeMessage = () => {
-    const selectedPlanObj = plans.find((p) => p.name === selectedPlan)
-    const currentPlanObj = plans.find((p) => p.name === currentPlan)
-
-    if (changeType === "same") return null
+    const selected = plans.find((p) => p.name === selectedPlan)
+    if (!selected) return null
 
     if (changeType === "upgrade") {
       return {
         type: "info" as const,
-        message: `You'll be upgraded immediately with prorated billing. Any unused time from your current plan will be credited toward your new plan.`,
+        message: `You'll be upgraded immediately with prorated billing. Any unused time from your current plan will be credited.`,
       }
     }
 
     if (changeType === "downgrade") {
-      if (selectedPlan === "Starter Kitchen") {
-        return {
-          type: "warning" as const,
-          message: `Your subscription will be canceled and you'll switch to the free plan at the end of your current billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
-        }
-      } else {
-        return {
-          type: "warning" as const,
-          message: `You'll be downgraded at the end of your current billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}. You'll keep your current features until then.`,
-        }
+      return {
+        type: "warning" as const,
+        message:
+          selectedPlan === "Starter Kitchen"
+            ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`
+            : `You'll be downgraded at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
       }
     }
 
     if (changeType === "billing_change") {
-      const newPrice =
-        billingPeriod === "yearly" ? selectedPlanObj?.yearly : selectedPlanObj?.monthly
+      const newPrice = billingPeriod === "yearly" ? selected.yearly : selected.monthly
       return {
         type: "info" as const,
-        message: `Your billing period will change to ${billingPeriod} (${newPrice}) at your next billing cycle${nextBillingDate ? ` on ${new Date(nextBillingDate).toLocaleDateString()}` : ""}.`,
+        message: `Your billing will change to ${billingPeriod} (${newPrice}) on your next cycle${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
       }
     }
 
@@ -149,97 +139,77 @@ export default function PlanSelectionModal({
     setError(null)
 
     const plan = plans.find((p) => p.name === selectedPlan)
-    const price_id = billingPeriod === "monthly" ? plan?.price_id_monthly : plan?.price_id_yearly
+    if (!plan) {
+      setError("Invalid plan selection.")
+      setSaving(false)
+      return
+    }
+
+    const price_id = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
 
     try {
-      if (!price_id || price_id === "null") {
-        // Free plan or downgrade - handle subscription cancellation
+      if (!price_id) {
         if (currentPlan !== "Starter Kitchen") {
           const res = await fetch("/api/stripe/cancel-subscription", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              user_id: userid,
-              immediate: false, // Cancel at period end for downgrades
-            }),
+            body: JSON.stringify({ user_id: userid, immediate: false }),
           })
-
-          if (!res.ok) {
-            throw new Error("Failed to cancel subscription")
-          }
+          if (!res.ok) throw new Error("Failed to cancel subscription")
         }
 
         await onUpdate(selectedPlan, billingPeriod)
         onClose()
       } else {
-        // Paid plan - create checkout session or update subscription
-        const endpoint =
-          currentPlan === "Starter Kitchen"
-            ? "/api/stripe/create-checkout-session"
-            : "/api/stripe/update-subscription"
-
-        const payload =
-          currentPlan === "Starter Kitchen"
-            ? {
-                user_id: userid,
-                email: localStorage.getItem("email"), // Replace this with actual logged-in email
-                price_id,
-              }
-            : {
-                user_id: userid,
-                price_id,
-                prorate: changeType === "upgrade", // Only prorate for upgrades
-              }
-
-        const res = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        })
+        const isNewSub = currentPlan === "Starter Kitchen"
+        const res = await fetch(
+          isNewSub ? "/api/stripe/create-checkout-session" : "/api/stripe/update-subscription",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: userid,
+              email: localStorage.getItem("email") || "", // fallback
+              price_id,
+              prorate: changeType === "upgrade",
+            }),
+          }
+        )
 
         const data = await res.json()
-
-        if (currentPlan === "Starter Kitchen" && data?.url) {
-          // New subscription - redirect to Stripe
+        if (isNewSub && data?.url) {
           window.location.href = data.url
-        } else if (currentPlan !== "Starter Kitchen") {
-          // Existing subscription updated
-          if (data.success) {
-            await onUpdate(selectedPlan, billingPeriod)
-            onClose()
-          } else {
-            throw new Error(data.error || "Failed to update subscription")
-          }
+        } else if (!isNewSub && data.success) {
+          await onUpdate(selectedPlan, billingPeriod)
+          onClose()
         } else {
-          throw new Error("Failed to process plan change")
+          throw new Error(data.error || "Failed to update subscription")
         }
       }
     } catch (err: any) {
       console.error(err)
-      setError(err.message || "Failed to update plan")
+      setError(err.message || "Something went wrong.")
     } finally {
       setSaving(false)
     }
   }
 
-  // Get all unique feature names from all plans
-  const allFeatures = Array.from(new Set(plans.flatMap((plan) => Object.keys(plan.features))))
+  const allFeatures = Array.from(new Set(plans.flatMap((p) => Object.keys(p.features))))
   const changeMessage = getChangeMessage()
-  const isDowngrade = changeType === "downgrade"
-  const isNoChange = changeType === "same"
 
   return (
-    <div className="animate-fade-in fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="animate-fade-up max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
         <div className="flex items-center justify-between border-b pb-4">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
               {currentPlan === "Starter Kitchen" ? "Choose A Plan That Fits" : "Update Your Plan"}
             </h2>
-            <p className="text-sm text-gray-500">
-              {currentPlan !== "Starter Kitchen" &&
-                `Currently on ${currentPlan} (${currentBillingPeriod})`}
-            </p>
+            {currentPlan !== "Starter Kitchen" && (
+              <p className="text-sm text-gray-500">
+                Currently on {currentPlan} ({currentBillingPeriod})
+              </p>
+            )}
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
             <X className="h-5 w-5" />
@@ -258,7 +228,7 @@ export default function PlanSelectionModal({
                   : "text-gray-500 hover:text-gray-800"
               )}
             >
-              {period === "monthly" ? "Bill Monthly" : "Bill Yearly (Save up to 10%)"}
+              {period === "monthly" ? "Bill Monthly" : "Bill Yearly (Save 10%)"}
             </button>
           ))}
         </div>
@@ -269,7 +239,7 @@ export default function PlanSelectionModal({
               key={plan.name}
               onClick={() => setSelectedPlan(plan.name)}
               className={clsx(
-                "relative flex cursor-pointer flex-col rounded-2xl border-2 p-6 transition duration-300 hover:shadow-xl",
+                "relative cursor-pointer rounded-2xl border-2 p-6 transition hover:shadow-lg",
                 selectedPlan === plan.name ? "bg-purple-700 text-white shadow" : "border-gray-200",
                 plan.highlight && selectedPlan !== plan.name && "ring-2 ring-orange-400",
                 plan.name === currentPlan && selectedPlan !== plan.name && "ring-2 ring-blue-400"
@@ -299,9 +269,9 @@ export default function PlanSelectionModal({
             )}
           >
             {changeMessage.type === "warning" ? (
-              <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-amber-600" />
+              <AlertTriangle className="h-5 w-5 text-amber-600" />
             ) : (
-              <Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-600" />
+              <Info className="h-5 w-5 text-blue-600" />
             )}
             <p
               className={clsx(
@@ -316,20 +286,13 @@ export default function PlanSelectionModal({
 
         <div className="mt-10">
           <h3 className="mb-4 text-lg font-semibold">Compare Features</h3>
-
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full text-left text-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full table-auto text-left text-sm">
               <thead>
                 <tr>
                   <th className="p-2 text-gray-600">Feature</th>
                   {plans.map((plan) => (
-                    <th
-                      key={plan.name}
-                      className={clsx(
-                        "p-2 text-center font-semibold",
-                        plan.name === currentPlan ? "text-blue-600" : "text-gray-900"
-                      )}
-                    >
+                    <th key={plan.name} className="p-2 text-center font-semibold text-gray-800">
                       {plan.name}
                       {plan.name === currentPlan && (
                         <div className="text-xs font-normal text-blue-500">Current</div>
@@ -344,7 +307,6 @@ export default function PlanSelectionModal({
                     <td className="p-2 text-gray-700">{feature}</td>
                     {plans.map((plan) => {
                       const val = plan.features[feature as keyof typeof plan.features]
-
                       return (
                         <td key={plan.name} className="p-2 text-center">
                           {val === true && (
@@ -366,8 +328,8 @@ export default function PlanSelectionModal({
         </div>
 
         {error && (
-          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3">
-            <div className="text-sm text-red-700">{error}</div>
+          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+            {error}
           </div>
         )}
 
@@ -377,8 +339,8 @@ export default function PlanSelectionModal({
           </Button>
           <Button
             onClick={updatePlan}
-            disabled={saving || isNoChange}
-            className={clsx(isDowngrade && "bg-amber-600 hover:bg-amber-700")}
+            disabled={saving || changeType === "same"}
+            className={clsx(changeType === "downgrade" && "bg-amber-600 hover:bg-amber-700")}
           >
             {saving ? (
               <>
@@ -386,7 +348,7 @@ export default function PlanSelectionModal({
                 {changeType === "upgrade"
                   ? "Upgrading..."
                   : changeType === "downgrade"
-                    ? "Scheduling Change..."
+                    ? "Scheduling..."
                     : "Updating..."}
               </>
             ) : (
@@ -395,9 +357,7 @@ export default function PlanSelectionModal({
                   ? "Upgrade Now"
                   : changeType === "downgrade"
                     ? "Schedule Downgrade"
-                    : changeType === "billing_change"
-                      ? "Update Billing"
-                      : "Update Plan"}
+                    : "Update Billing"}
               </>
             )}
           </Button>
