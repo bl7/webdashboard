@@ -1,6 +1,9 @@
 import { NextRequest } from "next/server"
 import Stripe from "stripe"
 import pool from "@/lib/pg"
+export const config = {
+  runtime: "nodejs",
+}
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error("Missing STRIPE_SECRET_KEY environment variable")
@@ -12,6 +15,7 @@ if (!process.env.STRIPE_WEBHOOK_SECRET) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: "2023-10-16" as any,
 })
+console.log("env", process.env.STRIPE_SECRET_KEY)
 
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
 
