@@ -30,8 +30,8 @@ const plans: Plan[] = [
     name: "Starter Kitchen",
     monthly: "Free",
     yearly: "Free",
-    price_id_monthly: "null",
-    price_id_yearly: "null",
+    price_id_monthly: "free",
+    price_id_yearly: "free",
     features: {
       "Device Provided": false,
       "Unlimited Label Printing": false,
@@ -93,99 +93,359 @@ export default function PlanSelectionStep({
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [debugInfo, setDebugInfo] = useState<any>({})
 
   useEffect(() => {
+    // Enhanced email detection with multiple fallbacks
+    const email =
+      localStorage.getItem("email") ||
+      localStorage.getItem("userEmail") ||
+      localStorage.getItem("user_email") ||
+      sessionStorage.getItem("email") ||
+      sessionStorage.getItem("userEmail")
+
+    console.log("Email detection:", {
+      localStorage_email: localStorage.getItem("email"),
+      localStorage_userEmail: localStorage.getItem("userEmail"),
+      localStorage_user_email: localStorage.getItem("user_email"),
+      sessionStorage_email: sessionStorage.getItem("email"),
+      sessionStorage_userEmail: sessionStorage.getItem("userEmail"),
+      finalEmail: email,
+    })
+
+    setUserEmail(email)
+
     async function fetchSubscription() {
       try {
+        console.log("Fetching subscription for userId:", userId)
         const res = await fetch(`/api/subscriptions/?user_id=${encodeURIComponent(userId)}`)
-        if (!res.ok) throw new Error("Failed to fetch subscription")
+
+        console.log("Subscription fetch response:", {
+          status: res.status,
+          statusText: res.statusText,
+          headers: Object.fromEntries(res.headers.entries()),
+        })
+
+        if (!res.ok) {
+          if (res.status === 404) {
+            console.log("No existing subscription found (404) - this is normal for new users")
+            return
+          }
+          const errorText = await res.text()
+          console.error("Subscription fetch failed:", errorText)
+          throw new Error(`Failed to fetch subscription: ${res.status} ${res.statusText}`)
+        }
+
         const data = await res.json()
+        console.log("Subscription data received:", data)
+
         if (data.subscription) {
           setSelectedPlan(data.subscription.plan_name)
           setBillingPeriod(data.subscription.billing_interval || "monthly")
         }
-      } catch {
-        // ignore fetch errors silently
+      } catch (err) {
+        console.warn("Failed to fetch existing subscription:", err)
+        // Don't show error to user for this
       }
     }
-    fetchSubscription()
+
+    if (userId) {
+      fetchSubscription()
+    }
   }, [userId, setSelectedPlan, setBillingPeriod])
 
   async function handlePlanSelect(planName: string) {
+    if (saving) return
+
     setSaving(true)
     setError(null)
+
+    console.log("=== PLAN SELECTION DEBUG START ===")
+    console.log("Selected plan name:", planName)
+    console.log("Current billing period:", billingPeriod)
+    console.log("User ID:", userId)
+    console.log("User email:", userEmail)
+
     const plan = plans.find((p) => p.name === planName)
     if (!plan) {
-      setError("Selected plan not found.")
+      const errorMsg = `Selected plan not found: ${planName}`
+      console.error(errorMsg)
+      console.log(
+        "Available plans:",
+        plans.map((p) => p.name)
+      )
+      setError(errorMsg)
       setSaving(false)
       return
     }
-    const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
-    const userEmail = localStorage.getItem("email")
 
-    if (priceId === "null") {
-      // Free plan: Save subscription with price_id: null
+    console.log("Found plan:", plan)
+
+    const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
+    console.log("Price ID:", priceId)
+
+    // Validation checks
+    if (!userId || userId.trim() === "") {
+      const errorMsg = "User ID is missing or empty"
+      console.error(errorMsg)
+      setError(errorMsg)
+      setSaving(false)
+      return
+    }
+
+    // Handle free plan
+    if (priceId === "free") {
+      console.log("Processing free plan selection...")
+
+      const requestBody = {
+        user_id: userId,
+        stripe_customer_id: null,
+        stripe_subscription_id: null,
+        price_id: null,
+        status: "active",
+        current_period_end: null,
+        trial_end: null,
+        plan_name: plan.name,
+        plan_amount: 0,
+        billing_interval: billingPeriod,
+        next_amount_due: 0,
+        card_last4: null,
+        card_exp_month: null,
+        card_exp_year: null,
+      }
+
+      console.log("Free plan request body:", requestBody)
+
       try {
         const res = await fetch("/api/subscriptions/", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user_id: userId,
-            stripe_customer_id: null,
-            stripe_subscription_id: null,
-            price_id: null,
-            status: "active",
-            current_period_end: null,
-            trial_end: null,
-            plan_name: plan.name,
-            plan_amount: 0,
-            billing_interval: billingPeriod,
-            next_amount_due: 0,
-            card_last4: null,
-            card_exp_month: null,
-            card_exp_year: null,
-          }),
+          body: JSON.stringify(requestBody),
         })
+
+        console.log("Free plan response:", {
+          status: res.status,
+          statusText: res.statusText,
+          headers: Object.fromEntries(res.headers.entries()),
+        })
+
         if (!res.ok) {
-          const errorData = await res.json()
-          throw new Error(errorData.error || "Failed to save free plan")
+          const errorData = await res.text()
+          console.error("Free plan selection failed:", errorData)
+
+          let parsedError
+          try {
+            parsedError = JSON.parse(errorData)
+          } catch {
+            parsedError = { error: errorData }
+          }
+
+          throw new Error(parsedError.error || `Failed to save free plan (${res.status})`)
         }
+
+        const responseData = await res.json()
+        console.log("Free plan selection successful:", responseData)
+
         setSelectedPlan(planName)
-        alert("Free plan selected!")
+        alert("Free plan selected successfully!")
         router.push("/dashboard/profile")
       } catch (e: any) {
-        setError(e.message || "Something went wrong")
+        console.error("Free plan selection error:", e)
+        setError(e.message || "Failed to select free plan")
       } finally {
         setSaving(false)
       }
       return
     }
 
-    // Paid plan: Create Stripe Checkout session
+    // Handle paid plans
+    console.log("Processing paid plan selection...")
+
+    if (!userEmail || userEmail.trim() === "") {
+      const errorMsg = "Email is required for paid plans. Please refresh and try again."
+      console.error(errorMsg, "Current email value:", userEmail)
+
+      // Try to get email one more time
+      const retryEmail = localStorage.getItem("email") || localStorage.getItem("userEmail")
+      console.log("Retry email detection:", retryEmail)
+
+      if (retryEmail) {
+        setUserEmail(retryEmail)
+        console.log("Found email on retry, continuing...")
+      } else {
+        setError(errorMsg)
+        setSaving(false)
+        return
+      }
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(userEmail!)) {
+      const errorMsg = "Invalid email format"
+      console.error(errorMsg, "Email:", userEmail)
+      setError(errorMsg)
+      setSaving(false)
+      return
+    }
+
+    const checkoutRequestBody = {
+      user_id: userId,
+      price_id: priceId,
+      email: userEmail,
+    }
+
+    console.log("Checkout session request body:", checkoutRequestBody)
+
+    // Additional debug info
+    setDebugInfo({
+      userId,
+      userEmail,
+      planName,
+      priceId,
+      billingPeriod,
+      timestamp: new Date().toISOString(),
+    })
+
     try {
       const res = await fetch("/api/stripe/create-checkout-session/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          user_id: userId,
-          price_id: priceId,
-          email: userEmail, // Add email if needed
-        }),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(checkoutRequestBody),
       })
-      const data = await res.json()
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to create checkout session")
+
+      console.log("Checkout session response:", {
+        status: res.status,
+        statusText: res.statusText,
+        headers: Object.fromEntries(res.headers.entries()),
+      })
+
+      // Get response as text first to handle both JSON and non-JSON responses
+      const responseText = await res.text()
+      console.log("Raw response body:", responseText)
+
+      let data
+      try {
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error("Failed to parse response as JSON:", parseError)
+        throw new Error(`Invalid JSON response: ${responseText}`)
       }
-      window.location.href = data.url
+
+      if (!res.ok) {
+        console.error("Checkout session creation failed:", {
+          status: res.status,
+          statusText: res.statusText,
+          data: data,
+        })
+        throw new Error(
+          data.error || `Failed to create checkout session (${res.status}: ${res.statusText})`
+        )
+      }
+
+      console.log("Checkout session created successfully:", data)
+
+      // Store plan selection temporarily for success page
+      localStorage.setItem("selectedPlan", planName)
+      localStorage.setItem("selectedBillingPeriod", billingPeriod)
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        console.log("Redirecting to Stripe checkout:", data.url)
+        window.location.href = data.url
+      } else {
+        console.error("No checkout URL in response:", data)
+        throw new Error("No checkout URL received from server")
+      }
     } catch (e: any) {
-      setError(e.message || "Something went wrong")
+      console.error("Paid plan selection error:", e)
+      console.log("=== PLAN SELECTION DEBUG END ===")
+      setError(e.message || "Failed to initiate payment process")
       setSaving(false)
     }
+  }
+
+  // Enhanced debug logging
+  useEffect(() => {
+    console.log("PlanSelection Component State:", {
+      userId,
+      userEmail,
+      selectedPlan,
+      billingPeriod,
+      saving,
+      error,
+      debugInfo,
+      localStorage_keys: Object.keys(localStorage),
+      localStorage_email_related: {
+        email: localStorage.getItem("email"),
+        userEmail: localStorage.getItem("userEmail"),
+        user_email: localStorage.getItem("user_email"),
+      },
+    })
+  }, [userId, userEmail, selectedPlan, billingPeriod, saving, error, debugInfo])
+
+  if (!userId) {
+    return (
+      <div className="mx-auto max-w-5xl px-4 py-8">
+        <div className="text-center">
+          <p className="text-red-600">User ID is required. Please refresh the page.</p>
+          <p className="mt-2 text-sm text-gray-500">
+            Debug: userId prop is {typeof userId}: "{userId}"
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8">
       <h2 className="mb-6 text-center text-3xl font-bold">Step 2: Choose Your Plan</h2>
+
+      {/* Enhanced debug info */}
+      {process.env.NODE_ENV === "development" && (
+        <div className="mb-4 rounded bg-gray-100 p-4 text-sm">
+          <p>
+            <strong>Debug Info:</strong>
+          </p>
+          <p>
+            User ID: {userId} (type: {typeof userId})
+          </p>
+          <p>
+            Email: {userEmail || "Not found"} (type: {typeof userEmail})
+          </p>
+          <p>Selected Plan: {selectedPlan || "None"}</p>
+          <p>Billing Period: {billingPeriod}</p>
+          <p>Saving: {saving.toString()}</p>
+          <p>Error: {error || "None"}</p>
+          <details className="mt-2">
+            <summary className="cursor-pointer font-semibold">LocalStorage Contents</summary>
+            <pre className="mt-2 max-h-32 overflow-auto rounded bg-white p-2 text-xs">
+              {JSON.stringify(
+                {
+                  email: localStorage.getItem("email"),
+                  userEmail: localStorage.getItem("userEmail"),
+                  user_email: localStorage.getItem("user_email"),
+                  allKeys: Object.keys(localStorage),
+                },
+                null,
+                2
+              )}
+            </pre>
+          </details>
+          {Object.keys(debugInfo).length > 0 && (
+            <details className="mt-2">
+              <summary className="cursor-pointer font-semibold">Last Request Debug</summary>
+              <pre className="mt-2 max-h-32 overflow-auto rounded bg-white p-2 text-xs">
+                {JSON.stringify(debugInfo, null, 2)}
+              </pre>
+            </details>
+          )}
+        </div>
+      )}
 
       {/* Billing period toggle */}
       <div className="mb-8 flex justify-center space-x-4">
@@ -209,6 +469,10 @@ export default function PlanSelectionStep({
       <div className="grid gap-8 md:grid-cols-3">
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.name
+          const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
+          const isPaidPlan = priceId !== "free"
+          const canSelect: boolean = !isPaidPlan || (userEmail !== null && userEmail.trim() !== "")
+
           return (
             <div
               key={plan.name}
@@ -278,40 +542,67 @@ export default function PlanSelectionStep({
                 ))}
               </ul>
 
+              {/* Enhanced button with better state management */}
               <button
-                onClick={() => !saving && handlePlanSelect(plan.name)}
-                disabled={saving}
+                onClick={() => handlePlanSelect(plan.name)}
+                disabled={saving || !canSelect}
                 className={`mt-auto rounded-md px-4 py-2 font-semibold transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                   isSelected
-                    ? "cursor-not-allowed bg-blue-600 text-white"
-                    : "bg-blue-500 text-white hover:bg-blue-600"
+                    ? "cursor-not-allowed bg-green-600 text-white"
+                    : saving
+                      ? "cursor-not-allowed bg-gray-400 text-white"
+                      : canSelect
+                        ? "bg-blue-500 text-white hover:bg-blue-600"
+                        : "cursor-not-allowed bg-gray-400 text-white"
                 }`}
               >
                 {saving && isSelected ? (
-                  <svg
-                    className="mx-auto h-5 w-5 animate-spin text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8v8H4z"
-                    ></path>
-                  </svg>
+                  <div className="flex items-center justify-center">
+                    <svg
+                      className="mr-2 h-4 w-4 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8v8H4z"
+                      ></path>
+                    </svg>
+                    Processing...
+                  </div>
+                ) : isSelected ? (
+                  "✓ Selected"
+                ) : !canSelect ? (
+                  isPaidPlan ? (
+                    "Email Required"
+                  ) : (
+                    "Unavailable"
+                  )
                 ) : (
                   plan.cta
                 )}
               </button>
+
+              {/* Debug info for each plan */}
+              {process.env.NODE_ENV === "development" && (
+                <div className="mt-2 text-xs text-gray-500">
+                  Price ID: {priceId}
+                  <br />
+                  Can Select: {canSelect.toString()}
+                  <br />
+                  Is Paid: {isPaidPlan.toString()}
+                </div>
+              )}
             </div>
           )
         })}
@@ -319,7 +610,14 @@ export default function PlanSelectionStep({
 
       {error && (
         <div className="mt-6 rounded border border-red-400 bg-red-50 px-4 py-3 text-red-700">
-          {error}
+          <p className="font-semibold">Error:</p>
+          <p>{error}</p>
+          <details className="mt-2">
+            <summary className="cursor-pointer text-sm">Show Technical Details</summary>
+            <pre className="mt-1 max-h-32 overflow-auto rounded bg-white p-2 text-xs">
+              {JSON.stringify(debugInfo, null, 2)}
+            </pre>
+          </details>
         </div>
       )}
 

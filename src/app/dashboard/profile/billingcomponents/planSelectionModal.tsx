@@ -7,7 +7,8 @@ import clsx from "clsx"
 
 const plans = [
   {
-    name: "Starter Kitchen",
+    name: "Starter Kitchen", // Keep this as display name
+    internal_name: "Free Plan", // Add internal name to match API
     monthly: "Free",
     yearly: "Free",
     price_id_monthly: null,
@@ -26,6 +27,7 @@ const plans = [
   },
   {
     name: "🧑‍🍳 Pro Kitchen",
+    internal_name: "Pro Kitchen", // Add internal name
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
     price_id_monthly: "price_1RZnHW6acbqNMwXigvqDdo8I",
@@ -44,6 +46,7 @@ const plans = [
   },
   {
     name: "Multi-Site Mastery",
+    internal_name: "Multi-Site Mastery", // Add internal name
     monthly: "£25/mo",
     yearly: "£270/yr",
     price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH",
@@ -89,11 +92,34 @@ export default function PlanSelectionModal({
     "same"
   )
 
-  useEffect(() => {
-    const currentIndex = plans.findIndex((p) => p.name === currentPlan)
-    const selectedIndex = plans.findIndex((p) => p.name === selectedPlan)
+  // Helper function to normalize plan names for comparison
+  const normalizePlanName = (planName: string) => {
+    // Handle both "Free Plan" from API and "Starter Kitchen" from UI
+    if (planName === "Free Plan" || planName === "Starter Kitchen") {
+      return "Starter Kitchen"
+    }
+    return planName
+  }
 
-    if (selectedPlan !== currentPlan) {
+  // Helper function to find plan by either display name or internal name
+  const findPlan = (planName: string) => {
+    return plans.find(
+      (p) =>
+        p.name === planName ||
+        p.internal_name === planName ||
+        (planName === "Free Plan" && p.name === "Starter Kitchen")
+    )
+  }
+
+  useEffect(() => {
+    // Normalize current plan name for consistent comparison
+    const normalizedCurrent = normalizePlanName(currentPlan)
+    const normalizedSelected = normalizePlanName(selectedPlan)
+
+    const currentIndex = plans.findIndex((p) => normalizePlanName(p.name) === normalizedCurrent)
+    const selectedIndex = plans.findIndex((p) => normalizePlanName(p.name) === normalizedSelected)
+
+    if (normalizedSelected !== normalizedCurrent) {
       setChangeType(selectedIndex > currentIndex ? "upgrade" : "downgrade")
     } else if (billingPeriod !== currentBillingPeriod) {
       setChangeType("billing_change")
@@ -103,7 +129,7 @@ export default function PlanSelectionModal({
   }, [selectedPlan, billingPeriod, currentPlan, currentBillingPeriod])
 
   const getChangeMessage = () => {
-    const selected = plans.find((p) => p.name === selectedPlan)
+    const selected = findPlan(selectedPlan)
     if (!selected) return null
 
     if (changeType === "upgrade") {
@@ -114,12 +140,13 @@ export default function PlanSelectionModal({
     }
 
     if (changeType === "downgrade") {
+      const isDowngradeToFree =
+        selected.price_id_monthly === null && selected.price_id_yearly === null
       return {
         type: "warning" as const,
-        message:
-          selectedPlan === "Starter Kitchen"
-            ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`
-            : `You'll be downgraded at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
+        message: isDowngradeToFree
+          ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`
+          : `You'll be downgraded at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
       }
     }
 
@@ -138,7 +165,7 @@ export default function PlanSelectionModal({
     setSaving(true)
     setError(null)
 
-    const plan = plans.find((p) => p.name === selectedPlan)
+    const plan = findPlan(selectedPlan)
     if (!plan) {
       setError("Invalid plan selection.")
       setSaving(false)
@@ -146,48 +173,85 @@ export default function PlanSelectionModal({
     }
 
     const price_id = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
+    const isFreePlan = price_id === null
+    const isCurrentlyFree = normalizePlanName(currentPlan) === "Starter Kitchen"
 
     try {
-      if (!price_id) {
-        if (currentPlan !== "Starter Kitchen") {
-          const res = await fetch("/api/stripe/cancel-subscription", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ user_id: userid, immediate: false }),
-          })
-          if (!res.ok) throw new Error("Failed to cancel subscription")
+      if (isFreePlan) {
+        // Switching to free plan - use the subscriptions API
+        const res = await fetch("/api/subscriptions", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: userid,
+            price_id: null, // This triggers free plan logic in your API
+            status: "active",
+            plan_name: plan.internal_name || "Free Plan",
+            plan_amount: 0,
+            billing_interval: null,
+            next_amount_due: 0,
+          }),
+        })
+
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to switch to free plan")
         }
 
         await onUpdate(selectedPlan, billingPeriod)
         onClose()
       } else {
-        const isNewSub = currentPlan === "Starter Kitchen"
-        const res = await fetch(
-          isNewSub ? "/api/stripe/create-checkout-session" : "/api/stripe/update-subscription",
-          {
+        // Switching to paid plan
+        if (isCurrentlyFree) {
+          console.log("email here", localStorage.getItem("email"))
+          // Creating new subscription from free plan
+          const res = await fetch("/api/stripe/create-checkout-session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user_id: userid,
-              email: localStorage.getItem("email") || "", // fallback
+              email: localStorage.getItem("email"),
+              price_id,
+            }),
+          })
+
+          const data = await res.json()
+          if (!res.ok) {
+            throw new Error(data.error || "Failed to create checkout session")
+          }
+
+          if (data?.url) {
+            window.location.href = data.url
+          } else {
+            throw new Error("No checkout URL received")
+          }
+        } else {
+          // Updating existing paid subscription
+          const res = await fetch("/api/stripe/update-subscription", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: userid,
               price_id,
               prorate: changeType === "upgrade",
             }),
-          }
-        )
+          })
 
-        const data = await res.json()
-        if (isNewSub && data?.url) {
-          window.location.href = data.url
-        } else if (!isNewSub && data.success) {
-          await onUpdate(selectedPlan, billingPeriod)
-          onClose()
-        } else {
-          throw new Error(data.error || "Failed to update subscription")
+          const data = await res.json()
+          if (!res.ok) {
+            throw new Error(data.error || "Failed to update subscription")
+          }
+
+          if (data.success) {
+            await onUpdate(selectedPlan, billingPeriod)
+            onClose()
+          } else {
+            throw new Error("Subscription update failed")
+          }
         }
       }
     } catch (err: any) {
-      console.error(err)
+      console.error("Plan update error:", err)
       setError(err.message || "Something went wrong.")
     } finally {
       setSaving(false)
@@ -196,6 +260,7 @@ export default function PlanSelectionModal({
 
   const allFeatures = Array.from(new Set(plans.flatMap((p) => Object.keys(p.features))))
   const changeMessage = getChangeMessage()
+  const normalizedCurrentPlan = normalizePlanName(currentPlan)
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
@@ -203,11 +268,13 @@ export default function PlanSelectionModal({
         <div className="flex items-center justify-between border-b pb-4">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
-              {currentPlan === "Starter Kitchen" ? "Choose A Plan That Fits" : "Update Your Plan"}
+              {normalizedCurrentPlan === "Starter Kitchen"
+                ? "Choose A Plan That Fits"
+                : "Update Your Plan"}
             </h2>
-            {currentPlan !== "Starter Kitchen" && (
+            {normalizedCurrentPlan !== "Starter Kitchen" && (
               <p className="text-sm text-gray-500">
-                Currently on {currentPlan} ({currentBillingPeriod})
+                Currently on {normalizedCurrentPlan} ({currentBillingPeriod})
               </p>
             )}
           </div>
@@ -234,29 +301,34 @@ export default function PlanSelectionModal({
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              onClick={() => setSelectedPlan(plan.name)}
-              className={clsx(
-                "relative cursor-pointer rounded-2xl border-2 p-6 transition hover:shadow-lg",
-                selectedPlan === plan.name ? "bg-purple-700 text-white shadow" : "border-gray-200",
-                plan.highlight && selectedPlan !== plan.name && "ring-2 ring-orange-400",
-                plan.name === currentPlan && selectedPlan !== plan.name && "ring-2 ring-blue-400"
-              )}
-            >
-              {plan.name === currentPlan && selectedPlan !== plan.name && (
-                <div className="absolute -right-2 -top-2 rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
-                  Current
+          {plans.map((plan) => {
+            const isCurrentPlan = normalizePlanName(plan.name) === normalizedCurrentPlan
+            const isSelected = normalizePlanName(plan.name) === normalizePlanName(selectedPlan)
+
+            return (
+              <div
+                key={plan.name}
+                onClick={() => setSelectedPlan(plan.name)}
+                className={clsx(
+                  "relative cursor-pointer rounded-2xl border-2 p-6 transition hover:shadow-lg",
+                  isSelected ? "bg-purple-700 text-white shadow" : "border-gray-200",
+                  plan.highlight && !isSelected && "ring-2 ring-orange-400",
+                  isCurrentPlan && !isSelected && "ring-2 ring-blue-400"
+                )}
+              >
+                {isCurrentPlan && !isSelected && (
+                  <div className="absolute -right-2 -top-2 rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
+                    Current
+                  </div>
+                )}
+                <div className="mb-2 text-xl font-semibold">{plan.name}</div>
+                <div className="mb-2 text-lg font-semibold">
+                  {billingPeriod === "monthly" ? plan.monthly : plan.yearly}
                 </div>
-              )}
-              <div className="mb-2 text-xl font-semibold">{plan.name}</div>
-              <div className="mb-2 text-lg font-semibold">
-                {billingPeriod === "monthly" ? plan.monthly : plan.yearly}
+                <div className="mb-4 text-sm opacity-90">{plan.description}</div>
               </div>
-              <div className="mb-4 text-sm opacity-90">{plan.description}</div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         {changeMessage && (
@@ -291,14 +363,17 @@ export default function PlanSelectionModal({
               <thead>
                 <tr>
                   <th className="p-2 text-gray-600">Feature</th>
-                  {plans.map((plan) => (
-                    <th key={plan.name} className="p-2 text-center font-semibold text-gray-800">
-                      {plan.name}
-                      {plan.name === currentPlan && (
-                        <div className="text-xs font-normal text-blue-500">Current</div>
-                      )}
-                    </th>
-                  ))}
+                  {plans.map((plan) => {
+                    const isCurrentPlan = normalizePlanName(plan.name) === normalizedCurrentPlan
+                    return (
+                      <th key={plan.name} className="p-2 text-center font-semibold text-gray-800">
+                        {plan.name}
+                        {isCurrentPlan && (
+                          <div className="text-xs font-normal text-blue-500">Current</div>
+                        )}
+                      </th>
+                    )
+                  })}
                 </tr>
               </thead>
               <tbody>
