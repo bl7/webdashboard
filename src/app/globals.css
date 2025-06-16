@@ -18,6 +18,7 @@
 
     --secondary: 240 20% 96%;
     --secondary-foreground: 248 15% 10%;
+    
 
     --muted: 240 20% 94%;
     --muted-foreground: 248 10% 40%;
@@ -25,6 +26,8 @@
     --accent: 30 100% 55%; /* Bold Orange */
     --accent-foreground: 0 0% 100%;
 
+    --secondary: 145 60% 98%;       /* Soft fresh mint background */
+    --secondary-foreground: 145 40% 15%;       /* Deep forest green text */
     --destructive: 0 75% 50%;
     --destructive-foreground: 0 0% 100%;
 

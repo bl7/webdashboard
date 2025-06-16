@@ -1,18 +1,35 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { CheckCircle2, Loader2, X, AlertTriangle, Info } from "lucide-react"
 import clsx from "clsx"
 
-const plans = [
+// Plan configuration with better type safety
+interface PlanConfig {
+  id: string // Unique identifier for internal use
+  name: string // Display name
+  monthly: string
+  yearly: string
+  price_id_monthly: string | null
+  price_id_yearly: string | null
+  features: Record<string, boolean | string>
+  description: string
+  highlight: boolean
+  cta: string
+  tier: number // For upgrade/downgrade logic
+  backendPlanName: string
+}
+
+const PLANS: PlanConfig[] = [
   {
-    name: "Starter Kitchen", // Keep this as display name
-    internal_name: "Free Plan", // Add internal name to match API
+    id: "free",
+    name: "Starter Kitchen",
     monthly: "Free",
     yearly: "Free",
     price_id_monthly: null,
     price_id_yearly: null,
+    tier: 0,
     features: {
       "Device Provided": false,
       "Unlimited Label Printing": false,
@@ -24,14 +41,16 @@ const plans = [
       "Ideal for testing or low-volume use. Bring your own Epson TM-M30 and get 20 free prints every week.",
     highlight: false,
     cta: "Get Started Free",
+    backendPlanName: "Free Plan", // Add this field
   },
   {
+    id: "pro_kitchen",
     name: "🧑‍🍳 Pro Kitchen",
-    internal_name: "Pro Kitchen", // Add internal name
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
     price_id_monthly: "price_1RZnHW6acbqNMwXigvqDdo8I",
     price_id_yearly: "price_1RZnI76acbqNMwXiW5y61Vfl",
+    tier: 1,
     features: {
       "Device Provided": "Epson TM-M30 Included",
       "Unlimited Label Printing": true,
@@ -42,15 +61,17 @@ const plans = [
     description:
       "For growing kitchens. Get an Epson device included and enjoy unlimited print volume.",
     highlight: true,
-    cta: "Start Basic Plan",
+    cta: "Start Pro Plan",
+    backendPlanName: "Pro Kitchen", // Add this field
   },
   {
+    id: "multi_site",
     name: "Multi-Site Mastery",
-    internal_name: "Multi-Site Mastery", // Add internal name
     monthly: "£25/mo",
-    yearly: "£270/yr",
+    yearly: "£270/yr (10% off)",
     price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH",
     price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8",
+    tier: 2,
     features: {
       "Device Provided": "Sunmi or Epson Included",
       "Unlimited Label Printing": true,
@@ -59,20 +80,43 @@ const plans = [
       "Weekly Free Prints": false,
     },
     description:
-      "Everything in Basic plus Web Dashboard access and support for Sunmi touchscreen printers.",
+      "Everything in Pro plus Web Dashboard access and support for Sunmi touchscreen printers.",
     highlight: false,
     cta: "Go Premium",
+    backendPlanName: "Multi-Site Mastery", // Add this field
   },
 ]
+
+// Legacy plan name mapping for backward compatibility
+const LEGACY_PLAN_MAPPING: Record<string, string> = {
+  // Backend plan names to frontend IDs
+  "Free Plan": "free",
+  "Pro Kitchen": "pro_kitchen",
+  "Multi-Site Mastery": "multi_site",
+  // Frontend display names to IDs
+  "Starter Kitchen": "free",
+  "🧑‍🍳 Pro Kitchen": "pro_kitchen",
+}
+
+type ChangeType = "upgrade" | "downgrade" | "same" | "billing_change"
+type SubscriptionStatus =
+  | "active"
+  | "past_due"
+  | "canceled"
+  | "trialing"
+  | "incomplete"
+  | "incomplete_expired"
+  | "unpaid"
+type BillingPeriod = "monthly" | "yearly"
 
 interface Props {
   userid: string
   currentPlan: string
-  currentBillingPeriod?: "monthly" | "yearly"
-  subscriptionStatus?: "active" | "past_due" | "canceled" | "trialing"
+  currentBillingPeriod?: BillingPeriod
+  subscriptionStatus?: SubscriptionStatus
   nextBillingDate?: string
   onClose: () => void
-  onUpdate: (planName: string, billingPeriod: string) => void
+  onUpdate: (planId: string, billingPeriod: BillingPeriod) => void
 }
 
 export default function PlanSelectionModal({
@@ -84,166 +128,329 @@ export default function PlanSelectionModal({
   onClose,
   onUpdate,
 }: Props) {
-  const [billingPeriod, setBillingPeriod] = useState<"monthly" | "yearly">(currentBillingPeriod)
-  const [selectedPlan, setSelectedPlan] = useState(currentPlan)
-  const [saving, setSaving] = useState(false)
+  // State management
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>(currentBillingPeriod)
+  const [selectedPlanId, setSelectedPlanId] = useState<string>("")
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [changeType, setChangeType] = useState<"upgrade" | "downgrade" | "same" | "billing_change">(
-    "same"
-  )
+  const [userEmail, setUserEmail] = useState<string | null>(null)
 
-  // Helper function to normalize plan names for comparison
-  const normalizePlanName = (planName: string) => {
-    // Handle both "Free Plan" from API and "Starter Kitchen" from UI
-    if (planName === "Free Plan" || planName === "Starter Kitchen") {
-      return "Starter Kitchen"
+  // Utility functions
+  const normalizePlanId = useCallback((planName: string): string => {
+    // Check legacy mapping first
+    if (LEGACY_PLAN_MAPPING[planName]) {
+      return LEGACY_PLAN_MAPPING[planName]
     }
-    return planName
-  }
 
-  // Helper function to find plan by either display name or internal name
-  const findPlan = (planName: string) => {
-    return plans.find(
-      (p) =>
-        p.name === planName ||
-        p.internal_name === planName ||
-        (planName === "Free Plan" && p.name === "Starter Kitchen")
-    )
-  }
+    // Check if it's already a valid plan ID
+    if (PLANS.find((p) => p.id === planName)) {
+      return planName
+    }
 
+    // Try to find by name
+    const plan = PLANS.find((p) => p.name === planName)
+    return plan?.id || "free" // Default to free if not found
+  }, [])
+
+  const findPlan = useCallback((planId: string): PlanConfig | undefined => {
+    return PLANS.find((p) => p.id === planId)
+  }, [])
+
+  // Initialize selected plan
   useEffect(() => {
-    // Normalize current plan name for consistent comparison
-    const normalizedCurrent = normalizePlanName(currentPlan)
-    const normalizedSelected = normalizePlanName(selectedPlan)
+    const normalizedId = normalizePlanId(currentPlan)
+    setSelectedPlanId(normalizedId)
+  }, [currentPlan, normalizePlanId])
 
-    const currentIndex = plans.findIndex((p) => normalizePlanName(p.name) === normalizedCurrent)
-    const selectedIndex = plans.findIndex((p) => normalizePlanName(p.name) === normalizedSelected)
-
-    if (normalizedSelected !== normalizedCurrent) {
-      setChangeType(selectedIndex > currentIndex ? "upgrade" : "downgrade")
-    } else if (billingPeriod !== currentBillingPeriod) {
-      setChangeType("billing_change")
-    } else {
-      setChangeType("same")
-    }
-  }, [selectedPlan, billingPeriod, currentPlan, currentBillingPeriod])
-
-  const getChangeMessage = () => {
-    const selected = findPlan(selectedPlan)
-    if (!selected) return null
-
-    if (changeType === "upgrade") {
-      return {
-        type: "info" as const,
-        message: `You'll be upgraded immediately with prorated billing. Any unused time from your current plan will be credited.`,
+  // Get user email from localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const email = localStorage.getItem("email")
+        setUserEmail(email)
+      } catch (err) {
+        console.warn("Failed to access localStorage:", err)
       }
     }
+  }, [])
 
-    if (changeType === "downgrade") {
-      const isDowngradeToFree =
-        selected.price_id_monthly === null && selected.price_id_yearly === null
+  // Calculate change type
+  const changeType = useMemo((): ChangeType => {
+    const currentPlanId = normalizePlanId(currentPlan)
+    const currentPlanConfig = findPlan(currentPlanId)
+    const selectedPlanConfig = findPlan(selectedPlanId)
+
+    if (!currentPlanConfig || !selectedPlanConfig) return "same"
+
+    if (selectedPlanId !== currentPlanId) {
+      return selectedPlanConfig.tier > currentPlanConfig.tier ? "upgrade" : "downgrade"
+    }
+
+    if (billingPeriod !== currentBillingPeriod) {
+      return "billing_change"
+    }
+
+    return "same"
+  }, [selectedPlanId, billingPeriod, currentPlan, currentBillingPeriod, normalizePlanId, findPlan])
+
+  // Get appropriate price ID
+  const getSelectedPriceId = useCallback((): string | null => {
+    const plan = findPlan(selectedPlanId)
+    if (!plan) return null
+    return billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
+  }, [selectedPlanId, billingPeriod, findPlan])
+
+  // Change message logic
+  const changeMessage = useMemo(() => {
+    const selectedPlan = findPlan(selectedPlanId)
+    if (!selectedPlan) return null
+
+    if (subscriptionStatus === "past_due") {
       return {
         type: "warning" as const,
-        message: isDowngradeToFree
-          ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`
-          : `You'll be downgraded at the end of your billing period${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
+        message:
+          "Your current subscription is past due. Please update your payment method before changing plans.",
       }
     }
 
-    if (changeType === "billing_change") {
-      const newPrice = billingPeriod === "yearly" ? selected.yearly : selected.monthly
+    if (subscriptionStatus === "canceled") {
       return {
-        type: "info" as const,
-        message: `Your billing will change to ${billingPeriod} (${newPrice}) on your next cycle${nextBillingDate ? ` (${new Date(nextBillingDate).toLocaleDateString()})` : ""}.`,
+        type: "warning" as const,
+        message:
+          "Your subscription is canceled. Selecting a new plan will create a new subscription.",
       }
     }
 
-    return null
-  }
+    const formatDate = (dateString?: string) => {
+      if (!dateString) return ""
+      try {
+        return new Date(dateString).toLocaleDateString()
+      } catch {
+        return ""
+      }
+    }
 
-  async function updatePlan() {
-    setSaving(true)
+    switch (changeType) {
+      case "upgrade":
+        return {
+          type: "info" as const,
+          message:
+            "You'll be upgraded immediately with prorated billing. Any unused time from your current plan will be credited.",
+        }
+
+      case "downgrade":
+        const isDowngradeToFree = !getSelectedPriceId()
+        const dateStr = formatDate(nextBillingDate)
+        return {
+          type: "warning" as const,
+          message: isDowngradeToFree
+            ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${dateStr ? ` (${dateStr})` : ""}.`
+            : `You'll be downgraded at the end of your billing period${dateStr ? ` (${dateStr})` : ""}.`,
+        }
+
+      case "billing_change":
+        const newPrice = billingPeriod === "yearly" ? selectedPlan.yearly : selectedPlan.monthly
+        const billingDateStr = formatDate(nextBillingDate)
+        return {
+          type: "info" as const,
+          message: `Your billing will change to ${billingPeriod} (${newPrice}) on your next cycle${billingDateStr ? ` (${billingDateStr})` : ""}.`,
+        }
+
+      default:
+        return null
+    }
+  }, [
+    selectedPlanId,
+    subscriptionStatus,
+    changeType,
+    billingPeriod,
+    nextBillingDate,
+    findPlan,
+    getSelectedPriceId,
+  ])
+  console.log("=== PLAN NAME DEBUG ===")
+  console.log("Frontend selectedPlanId:", selectedPlanId)
+  console.log("Selected plan object:", findPlan(selectedPlanId))
+  console.log("=======================")
+  // Input validation
+  const validateInputs = useCallback((): boolean => {
     setError(null)
 
-    const plan = findPlan(selectedPlan)
+    if (!userid?.trim()) {
+      setError("Invalid user ID")
+      return false
+    }
+
+    const plan = findPlan(selectedPlanId)
     if (!plan) {
+      setError("Invalid plan selection")
+      return false
+    }
+
+    const priceId = getSelectedPriceId()
+    if (priceId && !userEmail?.trim()) {
+      setError("Email is required for paid plans. Please refresh and try again.")
+      return false
+    }
+
+    return true
+  }, [userid, selectedPlanId, userEmail, findPlan, getSelectedPriceId])
+
+  // Handle successful payment callback
+  const handleSuccessfulPayment = useCallback(
+    async (sessionId: string) => {
+      try {
+        const response = await fetch("/api/subscriptions/verify-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            session_id: sessionId,
+            user_id: userid,
+          }),
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          if (data.subscription) {
+            const planId = normalizePlanId(data.subscription.plan_name)
+            const billing = data.subscription.billing_interval as BillingPeriod
+            onUpdate(planId, billing)
+          }
+        }
+      } catch (error) {
+        console.error("Error verifying payment:", error)
+        setError("Failed to verify payment. Please contact support if the issue persists.")
+      }
+    },
+    [userid, onUpdate, normalizePlanId]
+  )
+
+  // Handle URL parameters for successful payments
+  useEffect(() => {
+    if (typeof window === "undefined") return
+
+    const urlParams = new URLSearchParams(window.location.search)
+    const success = urlParams.get("success")
+    const sessionId = urlParams.get("session_id")
+
+    if (success === "true" && sessionId) {
+      handleSuccessfulPayment(sessionId)
+
+      // Clean up URL parameters
+      const cleanUrl = window.location.pathname
+      window.history.replaceState({}, "", cleanUrl)
+    }
+  }, [handleSuccessfulPayment])
+
+  // Main update function
+  const updatePlan = useCallback(async () => {
+    if (!validateInputs()) return
+
+    setLoading(true)
+    setError(null)
+
+    const selectedPlan = findPlan(selectedPlanId)
+    if (!selectedPlan) {
       setError("Invalid plan selection.")
-      setSaving(false)
+      setLoading(false)
       return
     }
 
-    const price_id = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
-    const isFreePlan = price_id === null
-    const isCurrentlyFree = normalizePlanName(currentPlan) === "Starter Kitchen"
+    const priceId = getSelectedPriceId()
+    const isFreePlan = !priceId
+    const currentPlanId = normalizePlanId(currentPlan)
+    const isCurrentlyFree = currentPlanId === "free"
+    console.log("=== DEBUG INFO ===")
+    console.log("selectedPlanId:", selectedPlanId)
+    console.log("billingPeriod:", billingPeriod)
+    console.log("selectedPlan:", selectedPlan)
+    console.log("selectedPlan.price_id_monthly:", selectedPlan?.price_id_monthly)
+    console.log("selectedPlan.price_id_yearly:", selectedPlan?.price_id_yearly)
+
+    // Debug getSelectedPriceId function directly
+    const debugPlan = findPlan(selectedPlanId)
+    const debugPriceId =
+      billingPeriod === "monthly" ? debugPlan?.price_id_monthly : debugPlan?.price_id_yearly
+    console.log("debugPlan from findPlan:", debugPlan)
+    console.log("debugPriceId (manual calculation):", debugPriceId)
+
+    console.log("priceId from getSelectedPriceId():", priceId)
+    console.log("isFreePlan:", isFreePlan)
+    console.log("=================")
 
     try {
       if (isFreePlan) {
-        // Switching to free plan - use the subscriptions API
-        const res = await fetch("/api/subscriptions", {
+        console.log("GOING TO FREE PLAN PATH")
+        // Handle free plan
+        const response = await fetch("/api/subscriptions", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             user_id: userid,
-            price_id: null, // This triggers free plan logic in your API
+            price_id: null,
             status: "active",
-            plan_name: plan.internal_name || "Free Plan",
+            plan_name: selectedPlan.name,
             plan_amount: 0,
             billing_interval: null,
             next_amount_due: 0,
           }),
         })
 
-        const data = await res.json()
-        if (!res.ok) {
+        const data = await response.json()
+        if (!response.ok) {
           throw new Error(data.error || "Failed to switch to free plan")
         }
 
-        await onUpdate(selectedPlan, billingPeriod)
+        onUpdate(selectedPlanId, billingPeriod)
         onClose()
       } else {
-        // Switching to paid plan
-        if (isCurrentlyFree) {
-          console.log("email here", localStorage.getItem("email"))
-          // Creating new subscription from free plan
-          const res = await fetch("/api/stripe/create-checkout-session", {
+        // Handle paid plans
+        console.log("GOING TO PAID PLAN PATH")
+        if (isCurrentlyFree || subscriptionStatus === "canceled") {
+          // Create new Stripe checkout session
+          if (!userEmail) {
+            throw new Error("Email is required for checkout")
+          }
+
+          const response = await fetch("/api/stripe/create-checkout-session", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user_id: userid,
-              email: localStorage.getItem("email"),
-              price_id,
+              email: userEmail,
+              price_id: priceId,
             }),
           })
 
-          const data = await res.json()
-          if (!res.ok) {
+          const data = await response.json()
+          if (!response.ok) {
             throw new Error(data.error || "Failed to create checkout session")
           }
 
-          if (data?.url) {
+          if (data.url) {
             window.location.href = data.url
           } else {
             throw new Error("No checkout URL received")
           }
         } else {
-          // Updating existing paid subscription
-          const res = await fetch("/api/stripe/update-subscription", {
+          // Update existing subscription
+          const response = await fetch("/api/subscriptions", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               user_id: userid,
-              price_id,
+              price_id: priceId,
               prorate: changeType === "upgrade",
             }),
           })
 
-          const data = await res.json()
-          if (!res.ok) {
+          const data = await response.json()
+          if (!response.ok) {
             throw new Error(data.error || "Failed to update subscription")
           }
 
           if (data.success) {
-            await onUpdate(selectedPlan, billingPeriod)
+            onUpdate(selectedPlanId, billingPeriod)
             onClose()
           } else {
             throw new Error("Subscription update failed")
@@ -252,188 +459,194 @@ export default function PlanSelectionModal({
       }
     } catch (err: any) {
       console.error("Plan update error:", err)
-      setError(err.message || "Something went wrong.")
+      setError(err.message || "An unexpected error occurred")
     } finally {
-      setSaving(false)
+      setLoading(false)
     }
-  }
+  }, [
+    validateInputs,
+    selectedPlanId,
+    billingPeriod,
+    findPlan,
+    getSelectedPriceId,
+    normalizePlanId,
+    currentPlan,
+    subscriptionStatus,
+    userid,
+    userEmail,
+    changeType,
+    onUpdate,
+    onClose,
+  ])
 
-  const allFeatures = Array.from(new Set(plans.flatMap((p) => Object.keys(p.features))))
-  const changeMessage = getChangeMessage()
-  const normalizedCurrentPlan = normalizePlanName(currentPlan)
+  // Keyboard navigation
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, planId: string) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault()
+        if (!loading) setSelectedPlanId(planId)
+      }
+    },
+    [loading]
+  )
+
+  // Determine button state
+  const isButtonDisabled = loading || changeType === "same"
+  const buttonText = loading ? "Saving..." : "Save Changes"
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <div className="animate-fade-up max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-3xl bg-white p-8 shadow-2xl">
-        <div className="flex items-center justify-between border-b pb-4">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {normalizedCurrentPlan === "Starter Kitchen"
-                ? "Choose A Plan That Fits"
-                : "Update Your Plan"}
-            </h2>
-            {normalizedCurrentPlan !== "Starter Kitchen" && (
-              <p className="text-sm text-gray-500">
-                Currently on {normalizedCurrentPlan} ({currentBillingPeriod})
-              </p>
-            )}
-          </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-700">
-            <X className="h-5 w-5" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
+      <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+        {/* Header */}
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="text-2xl font-bold">Choose Your Plan</h2>
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="rounded p-2 transition-colors hover:bg-gray-200"
+            disabled={loading}
+          >
+            <X size={20} />
           </button>
         </div>
 
-        <div className="my-6 flex justify-center gap-4 rounded-full bg-gray-100 p-1">
-          {(["yearly", "monthly"] as const).map((period) => (
-            <button
+        {/* Billing Period Toggle */}
+        <div className="mb-6 flex justify-center space-x-4">
+          {(["monthly", "yearly"] as const).map((period) => (
+            <Button
               key={period}
+              variant={billingPeriod === period ? "default" : "outline"}
               onClick={() => setBillingPeriod(period)}
-              className={clsx(
-                "rounded-full px-5 py-2 text-sm font-semibold transition",
-                billingPeriod === period
-                  ? "bg-purple-700 text-white shadow"
-                  : "text-gray-500 hover:text-gray-800"
-              )}
+              disabled={loading}
+              className="transition-all"
             >
-              {period === "monthly" ? "Bill Monthly" : "Bill Yearly (Save 10%)"}
-            </button>
+              {period === "monthly" ? "Monthly" : "Yearly (save 10%)"}
+            </Button>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {plans.map((plan) => {
-            const isCurrentPlan = normalizePlanName(plan.name) === normalizedCurrentPlan
-            const isSelected = normalizePlanName(plan.name) === normalizePlanName(selectedPlan)
+        {/* Plans Grid */}
+        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {PLANS.map((plan) => {
+            const isSelected = selectedPlanId === plan.id
+            const currentPrice = billingPeriod === "monthly" ? plan.monthly : plan.yearly
 
             return (
               <div
-                key={plan.name}
-                onClick={() => setSelectedPlan(plan.name)}
+                key={plan.id}
+                onClick={() => !loading && setSelectedPlanId(plan.id)}
                 className={clsx(
-                  "relative cursor-pointer rounded-2xl border-2 p-6 transition hover:shadow-lg",
-                  isSelected ? "bg-purple-700 text-white shadow" : "border-gray-200",
-                  plan.highlight && !isSelected && "ring-2 ring-orange-400",
-                  isCurrentPlan && !isSelected && "ring-2 ring-blue-400"
+                  "cursor-pointer rounded-lg border p-5 shadow-sm transition-all duration-200 hover:shadow-md",
+                  isSelected
+                    ? "border-blue-500 bg-blue-50 ring-1 ring-blue-200"
+                    : "border-gray-300 bg-white",
+                  plan.highlight && !isSelected && "border-yellow-400 bg-yellow-50",
+                  loading && "cursor-not-allowed opacity-50"
                 )}
+                role="radio"
+                aria-checked={isSelected}
+                tabIndex={loading ? -1 : 0}
+                onKeyDown={(e) => handleKeyDown(e, plan.id)}
               >
-                {isCurrentPlan && !isSelected && (
-                  <div className="absolute -right-2 -top-2 rounded-full bg-blue-500 px-2 py-1 text-xs text-white">
-                    Current
-                  </div>
-                )}
-                <div className="mb-2 text-xl font-semibold">{plan.name}</div>
-                <div className="mb-2 text-lg font-semibold">
-                  {billingPeriod === "monthly" ? plan.monthly : plan.yearly}
+                <div className="mb-2 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">{plan.name}</h3>
+                  {plan.highlight && (
+                    <span
+                      className="text-yellow-500"
+                      title="Recommended"
+                      aria-label="Recommended Plan"
+                    >
+                      ⭐
+                    </span>
+                  )}
                 </div>
-                <div className="mb-4 text-sm opacity-90">{plan.description}</div>
+
+                <p className="mb-3 text-sm leading-relaxed text-gray-600">{plan.description}</p>
+
+                <p className="mb-4 text-xl font-bold text-gray-900">{currentPrice}</p>
+
+                <ul className="mb-4 space-y-2 text-sm">
+                  {Object.entries(plan.features).map(([feature, included]) => (
+                    <li key={feature} className="flex items-start space-x-2">
+                      <div className="mt-0.5 flex-shrink-0">
+                        {typeof included === "boolean" ? (
+                          included ? (
+                            <CheckCircle2 className="text-green-600" size={16} />
+                          ) : (
+                            <X className="text-red-500" size={16} />
+                          )
+                        ) : (
+                          <Info className="text-blue-500" size={16} />
+                        )}
+                      </div>
+                      <span className="text-gray-700">
+                        {feature}
+                        {typeof included === "string" && `: ${included}`}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Button
+                  variant={isSelected ? "default" : "outline"}
+                  disabled={loading}
+                  className="w-full transition-all"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (!loading) setSelectedPlanId(plan.id)
+                  }}
+                >
+                  {plan.cta}
+                </Button>
               </div>
             )
           })}
         </div>
 
+        {/* Info/Warning Messages */}
         {changeMessage && (
           <div
             className={clsx(
-              "mt-6 flex items-start gap-3 rounded-lg border p-4",
+              "mb-4 flex items-start space-x-3 rounded-lg border p-4 text-sm",
               changeMessage.type === "warning"
-                ? "border-amber-200 bg-amber-50"
-                : "border-blue-200 bg-blue-50"
+                ? "border-yellow-400 bg-yellow-50 text-yellow-800"
+                : "border-blue-400 bg-blue-50 text-blue-800"
             )}
           >
-            {changeMessage.type === "warning" ? (
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
-            ) : (
-              <Info className="h-5 w-5 text-blue-600" />
-            )}
-            <p
-              className={clsx(
-                "text-sm",
-                changeMessage.type === "warning" ? "text-amber-800" : "text-blue-800"
-              )}
-            >
-              {changeMessage.message}
-            </p>
+            <div className="mt-0.5 flex-shrink-0">
+              {changeMessage.type === "warning" ? <AlertTriangle size={18} /> : <Info size={18} />}
+            </div>
+            <p className="leading-relaxed">{changeMessage.message}</p>
           </div>
         )}
 
-        <div className="mt-10">
-          <h3 className="mb-4 text-lg font-semibold">Compare Features</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full table-auto text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="p-2 text-gray-600">Feature</th>
-                  {plans.map((plan) => {
-                    const isCurrentPlan = normalizePlanName(plan.name) === normalizedCurrentPlan
-                    return (
-                      <th key={plan.name} className="p-2 text-center font-semibold text-gray-800">
-                        {plan.name}
-                        {isCurrentPlan && (
-                          <div className="text-xs font-normal text-blue-500">Current</div>
-                        )}
-                      </th>
-                    )
-                  })}
-                </tr>
-              </thead>
-              <tbody>
-                {allFeatures.map((feature) => (
-                  <tr key={feature} className="border-t">
-                    <td className="p-2 text-gray-700">{feature}</td>
-                    {plans.map((plan) => {
-                      const val = plan.features[feature as keyof typeof plan.features]
-                      return (
-                        <td key={plan.name} className="p-2 text-center">
-                          {val === true && (
-                            <CheckCircle2 className="mx-auto h-4 w-4 text-green-600" />
-                          )}
-                          {val === false && <span className="text-gray-400">✕</span>}
-                          {typeof val === "string" && (
-                            <span className="text-sm text-blue-600">{val}</span>
-                          )}
-                          {val === undefined && <span className="text-gray-300">—</span>}
-                        </td>
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+        {/* Error Message */}
         {error && (
-          <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-            {error}
+          <div className="mb-4 flex items-start space-x-3 rounded-lg border border-red-500 bg-red-50 p-4 text-sm text-red-700">
+            <div className="mt-0.5 flex-shrink-0">
+              <AlertTriangle size={18} />
+            </div>
+            <p className="leading-relaxed">{error}</p>
           </div>
         )}
 
-        <div className="mt-6 flex justify-end gap-4">
-          <Button variant="outline" onClick={onClose} disabled={saving}>
+        {/* Action Buttons */}
+        <div className="flex justify-end space-x-4 border-t pt-4">
+          <Button variant="outline" onClick={onClose} disabled={loading} className="transition-all">
             Cancel
           </Button>
           <Button
             onClick={updatePlan}
-            disabled={saving || changeType === "same"}
-            className={clsx(changeType === "downgrade" && "bg-amber-600 hover:bg-amber-700")}
+            disabled={isButtonDisabled}
+            className="min-w-[120px] transition-all"
           >
-            {saving ? (
+            {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                {changeType === "upgrade"
-                  ? "Upgrading..."
-                  : changeType === "downgrade"
-                    ? "Scheduling..."
-                    : "Updating..."}
+                Saving...
               </>
             ) : (
-              <>
-                {changeType === "upgrade"
-                  ? "Upgrade Now"
-                  : changeType === "downgrade"
-                    ? "Schedule Downgrade"
-                    : "Update Billing"}
-              </>
+              buttonText
             )}
           </Button>
         </div>

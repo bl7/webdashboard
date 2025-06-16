@@ -25,6 +25,10 @@ interface PlanSelectionStepProps {
   onNext: () => void | Promise<void>
 }
 
+// Constants for clarity and maintainability
+const FREE_PLAN_ID = "free"
+const STRIPE_PRICE_PREFIX = "price_"
+
 const plans: Plan[] = [
   {
     name: "Starter Kitchen",
@@ -97,26 +101,37 @@ export default function PlanSelectionStep({
   const [debugInfo, setDebugInfo] = useState<any>({})
 
   useEffect(() => {
+    // Enhanced user ID detection with multiple fallbacks
+    const userId =
+      localStorage.getItem("userid") ||
+      localStorage.getItem("userId") ||
+      localStorage.getItem("user_id")
+
     // Enhanced email detection with multiple fallbacks
     const email =
       localStorage.getItem("email") ||
       localStorage.getItem("userEmail") ||
-      localStorage.getItem("user_email") ||
-      sessionStorage.getItem("email") ||
-      sessionStorage.getItem("userEmail")
+      localStorage.getItem("user_email")
 
-    console.log("Email detection:", {
+    console.log("User data detection:", {
+      localStorage_userid: localStorage.getItem("userid"),
+      localStorage_userId: localStorage.getItem("userId"),
+      localStorage_user_id: localStorage.getItem("user_id"),
       localStorage_email: localStorage.getItem("email"),
       localStorage_userEmail: localStorage.getItem("userEmail"),
       localStorage_user_email: localStorage.getItem("user_email"),
-      sessionStorage_email: sessionStorage.getItem("email"),
-      sessionStorage_userEmail: sessionStorage.getItem("userEmail"),
+      finalUserId: userId,
       finalEmail: email,
     })
 
     setUserEmail(email)
 
     async function fetchSubscription() {
+      if (!userId) {
+        console.warn("No user ID found in localStorage")
+        return
+      }
+
       try {
         console.log("Fetching subscription for userId:", userId)
         const res = await fetch(`/api/subscriptions/?user_id=${encodeURIComponent(userId)}`)
@@ -153,7 +168,7 @@ export default function PlanSelectionStep({
     if (userId) {
       fetchSubscription()
     }
-  }, [userId, setSelectedPlan, setBillingPeriod])
+  }, [setSelectedPlan, setBillingPeriod])
 
   async function handlePlanSelect(planName: string) {
     if (saving) return
@@ -194,30 +209,30 @@ export default function PlanSelectionStep({
       return
     }
 
-    // Handle free plan
-    if (priceId === "free") {
+    // Handle free plan - separate flow that bypasses Stripe
+    if (priceId === FREE_PLAN_ID) {
       console.log("Processing free plan selection...")
 
-      const requestBody = {
-        user_id: userId,
-        stripe_customer_id: null,
-        stripe_subscription_id: null,
-        price_id: null,
-        status: "active",
-        current_period_end: null,
-        trial_end: null,
-        plan_name: plan.name,
-        plan_amount: 0,
-        billing_interval: billingPeriod,
-        next_amount_due: 0,
-        card_last4: null,
-        card_exp_month: null,
-        card_exp_year: null,
-      }
-
-      console.log("Free plan request body:", requestBody)
-
       try {
+        const requestBody = {
+          user_id: userId,
+          stripe_customer_id: null,
+          stripe_subscription_id: null,
+          price_id: null, // Store as null in database for free plans
+          status: "active",
+          current_period_end: null,
+          trial_end: null,
+          plan_name: plan.name,
+          plan_amount: 0,
+          billing_interval: billingPeriod,
+          next_amount_due: 0,
+          card_last4: null,
+          card_exp_month: null,
+          card_exp_year: null,
+        }
+
+        console.log("Free plan request body:", requestBody)
+
         const res = await fetch("/api/subscriptions/", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -256,56 +271,68 @@ export default function PlanSelectionStep({
       } finally {
         setSaving(false)
       }
-      return
+      return // Early return - don't process as paid plan
     }
 
-    // Handle paid plans
+    // Handle paid plans - Stripe checkout flow
     console.log("Processing paid plan selection...")
 
-    if (!userEmail || userEmail.trim() === "") {
-      const errorMsg = "Email is required for paid plans. Please refresh and try again."
-      console.error(errorMsg, "Current email value:", userEmail)
-
-      // Try to get email one more time
-      const retryEmail = localStorage.getItem("email") || localStorage.getItem("userEmail")
-      console.log("Retry email detection:", retryEmail)
-
-      if (retryEmail) {
-        setUserEmail(retryEmail)
-        console.log("Found email on retry, continuing...")
-      } else {
-        setError(errorMsg)
-        setSaving(false)
-        return
-      }
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(userEmail!)) {
-      const errorMsg = "Invalid email format"
-      console.error(errorMsg, "Email:", userEmail)
+    // Validate that this is a proper Stripe price ID
+    if (!priceId.startsWith(STRIPE_PRICE_PREFIX)) {
+      const errorMsg = "Invalid price ID format"
+      console.error(errorMsg, "Price ID:", priceId)
       setError(errorMsg)
       setSaving(false)
       return
     }
 
+    // Enhanced email validation for paid plans
+    const finalEmail =
+      userEmail || localStorage.getItem("email") || localStorage.getItem("userEmail")
+
+    if (!finalEmail || finalEmail.trim() === "") {
+      const errorMsg = "Email is required for paid plans. Please refresh and try again."
+      console.error(errorMsg, "Current email value:", finalEmail)
+      setError(errorMsg)
+      setSaving(false)
+      return
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(finalEmail)) {
+      const errorMsg = "Invalid email format"
+      console.error(errorMsg, "Email:", finalEmail)
+      setError(errorMsg)
+      setSaving(false)
+      return
+    }
+
+    // Store plan selection data for consistency
+    const planSelectionData = {
+      user_id: userId,
+      plan_name: planName,
+      billing_interval: billingPeriod,
+      price_id: priceId,
+      email: finalEmail,
+      timestamp: new Date().toISOString(),
+    }
+
+    // Store in localStorage for recovery if needed
+    localStorage.setItem("pendingPlanSelection", JSON.stringify(planSelectionData))
+
     const checkoutRequestBody = {
       user_id: userId,
       price_id: priceId,
-      email: userEmail,
+      email: finalEmail,
     }
 
     console.log("Checkout session request body:", checkoutRequestBody)
 
     // Additional debug info
     setDebugInfo({
-      userId,
-      userEmail,
-      planName,
-      priceId,
-      billingPeriod,
-      timestamp: new Date().toISOString(),
+      ...planSelectionData,
+      checkoutRequestBody,
     })
 
     try {
@@ -342,6 +369,10 @@ export default function PlanSelectionStep({
           statusText: res.statusText,
           data: data,
         })
+
+        // Clean up pending selection on error
+        localStorage.removeItem("pendingPlanSelection")
+
         throw new Error(
           data.error || `Failed to create checkout session (${res.status}: ${res.statusText})`
         )
@@ -349,9 +380,16 @@ export default function PlanSelectionStep({
 
       console.log("Checkout session created successfully:", data)
 
-      // Store plan selection temporarily for success page
+      // Store comprehensive plan selection data for success page
+      const successPageData = {
+        ...planSelectionData,
+        sessionId: data.sessionId,
+        checkoutUrl: data.url,
+      }
+
       localStorage.setItem("selectedPlan", planName)
       localStorage.setItem("selectedBillingPeriod", billingPeriod)
+      localStorage.setItem("checkoutSessionData", JSON.stringify(successPageData))
 
       // Redirect to Stripe Checkout
       if (data.url) {
@@ -359,11 +397,16 @@ export default function PlanSelectionStep({
         window.location.href = data.url
       } else {
         console.error("No checkout URL in response:", data)
+        localStorage.removeItem("pendingPlanSelection")
         throw new Error("No checkout URL received from server")
       }
     } catch (e: any) {
       console.error("Paid plan selection error:", e)
       console.log("=== PLAN SELECTION DEBUG END ===")
+
+      // Clean up on error
+      localStorage.removeItem("pendingPlanSelection")
+
       setError(e.message || "Failed to initiate payment process")
       setSaving(false)
     }
@@ -429,6 +472,8 @@ export default function PlanSelectionStep({
                   email: localStorage.getItem("email"),
                   userEmail: localStorage.getItem("userEmail"),
                   user_email: localStorage.getItem("user_email"),
+                  pendingPlanSelection: localStorage.getItem("pendingPlanSelection"),
+                  checkoutSessionData: localStorage.getItem("checkoutSessionData"),
                   allKeys: Object.keys(localStorage),
                 },
                 null,
@@ -470,8 +515,11 @@ export default function PlanSelectionStep({
         {plans.map((plan) => {
           const isSelected = selectedPlan === plan.name
           const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
-          const isPaidPlan = priceId !== "free"
-          const canSelect: boolean = !isPaidPlan || (userEmail !== null && userEmail.trim() !== "")
+          const isPaidPlan = priceId !== FREE_PLAN_ID
+          const finalEmail =
+            userEmail || localStorage.getItem("email") || localStorage.getItem("userEmail")
+          const canSelect: boolean =
+            !isPaidPlan || (finalEmail !== null && finalEmail.trim() !== "")
 
           return (
             <div
@@ -601,6 +649,8 @@ export default function PlanSelectionStep({
                   Can Select: {canSelect.toString()}
                   <br />
                   Is Paid: {isPaidPlan.toString()}
+                  <br />
+                  Final Email: {finalEmail || "None"}
                 </div>
               )}
             </div>

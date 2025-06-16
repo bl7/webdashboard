@@ -1,122 +1,175 @@
-import { useEffect, useState } from "react"
+import { useState, useEffect, useCallback } from "react"
+
+export interface Profile {
+  user_id?: string
+  name?: string
+  email?: string
+  address_line1?: string
+  address_line2?: string
+  city?: string
+  state?: string
+  postal_code?: string
+  country?: string
+  phone?: string
+}
 
 export interface Subscription {
-  plan_name: string
-  plan_amount: number
-  billing_interval: string
-  next_amount_due: number
-  card_last4: string
-  card_exp_month: number
-  card_exp_year: number
-  current_period_end: string
+  id?: number
+  user_id: string
+  stripe_customer_id?: string | null
+  stripe_subscription_id?: string | null
+  price_id?: string | null
   status: string
-  stripe_subscription_id: string
-  id: number
+  current_period_end?: string | null
+  trial_end?: string | null
+  plan_name?: string
+  plan_amount?: number
+  billing_interval?: string | null
+  next_amount_due?: number
+  card_last4?: string | null
+  card_exp_month?: string | null
+  card_exp_year?: string | null
+  created_at?: string
+  updated_at?: string
 }
 
 export interface Invoice {
-  id: number
+  id: string
   amount: number
+  currency: string
   status: string
-  recipient_name: string
-  payment_method_last4: string
-  invoice_date: string
-  metadata: any
+  created: number
+  invoice_pdf?: string
+  description?: string
 }
 
-export interface Profile {
-  address: string
-  city: string
-  state: string
-  country: string
-  zip: string
-  // other fields as needed
+interface UseBillingDataReturn {
+  subscription: Subscription | null
+  invoices: Invoice[] | null
+  profile: Profile | null
+  loading: boolean
+  error: string | null
+  refreshSubscription: () => Promise<void>
+  refreshInvoices: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
-const FREE_PLAN: Subscription = {
-  plan_name: "Free Plan",
-  plan_amount: 0,
-  billing_interval: "month",
-  next_amount_due: 0,
-  card_last4: "",
-  card_exp_month: 0,
-  card_exp_year: 0,
-  current_period_end: "",
-  status: "active",
-  stripe_subscription_id: "",
-  id: 0,
-}
-
-export default function useBillingData(userid: string) {
+const useBillingData = (userId: string): UseBillingDataReturn => {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
-  const [invoices, setInvoices] = useState<Invoice[]>([])
+  const [invoices, setInvoices] = useState<Invoice[] | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  async function fetchSubscription() {
-    try {
-      const res = await fetch(`/api/subscriptions?user_id=${userid}`)
-      if (!res.ok) throw new Error("Failed to fetch subscription")
-      const data = await res.json()
-      if (!data.subscription) {
-        setSubscription(FREE_PLAN)
-      } else {
-        setSubscription({
-          ...data.subscription,
-          plan_amount: Number(data.subscription.plan_amount) || 0,
-          next_amount_due: Number(data.subscription.next_amount_due) || 0,
-        })
-      }
-    } catch (err: any) {
-      setError(err.message || "Could not load subscription.")
-      setSubscription(FREE_PLAN)
-    }
-  }
+  // Fetch subscription data
+  const fetchSubscription = useCallback(async () => {
+    if (!userId) return
 
-  async function fetchInvoices() {
-    if (!subscription || subscription.id === 0) {
+    try {
+      const response = await fetch(`/api/subscriptions?user_id=${userId}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch subscription: ${response.statusText}`)
+      }
+      const data = await response.json()
+
+      // If no subscription exists, create a default free plan
+      if (!data.subscription) {
+        const defaultSubscription: Subscription = {
+          user_id: userId,
+          status: "active",
+          plan_name: "Free Plan",
+          plan_amount: 0,
+          billing_interval: null,
+          next_amount_due: 0,
+          stripe_customer_id: null,
+          stripe_subscription_id: null,
+          price_id: null,
+          card_last4: null,
+          card_exp_month: null,
+          card_exp_year: null,
+        }
+        setSubscription(defaultSubscription)
+      } else {
+        setSubscription(data.subscription)
+      }
+    } catch (err) {
+      console.error("Error fetching subscription:", err)
+      setError(err instanceof Error ? err.message : "Failed to fetch subscription")
+    }
+  }, [userId])
+
+  // Fetch invoices data
+  const fetchInvoices = useCallback(async () => {
+    if (!userId) return
+
+    try {
+      const response = await fetch(`/api/invoices?user_id=${userId}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch invoices: ${response.statusText}`)
+      }
+      const data = await response.json()
+      setInvoices(data.invoices || [])
+    } catch (err) {
+      console.error("Error fetching invoices:", err)
+      // Don't set error for invoices as it's not critical
       setInvoices([])
+    }
+  }, [userId])
+
+  // Fetch profile data
+  const fetchProfile = useCallback(async () => {
+    if (!userId) return
+
+    try {
+      const response = await fetch(`/api/profile?user_id=${userId}`)
+      if (!response.ok) {
+        throw new Error(`Failed to fetch profile: ${response.statusText}`)
+      }
+      const data = await response.json()
+      setProfile(data.profile || { user_id: userId })
+    } catch (err) {
+      console.error("Error fetching profile:", err)
+      // Set default profile if fetch fails
+      setProfile({ user_id: userId })
+    }
+  }, [userId])
+
+  // Refresh functions
+  const refreshSubscription = useCallback(async () => {
+    await fetchSubscription()
+  }, [fetchSubscription])
+
+  const refreshInvoices = useCallback(async () => {
+    await fetchInvoices()
+  }, [fetchInvoices])
+
+  const refreshProfile = useCallback(async () => {
+    await fetchProfile()
+  }, [fetchProfile])
+
+  // Initial data fetch
+  useEffect(() => {
+    if (!userId) {
+      setLoading(false)
       return
     }
-    try {
-      const res = await fetch(`/api/invoices?subscription_id=${subscription.id}`)
-      if (!res.ok) throw new Error("Failed to fetch invoices")
-      const data = await res.json()
-      setInvoices(data.invoices || [])
-    } catch {
-      setError("Could not load invoices.")
-    }
-  }
 
-  async function fetchProfile() {
-    try {
-      const res = await fetch(`/api/profile?user_id=${userid}`)
-      if (!res.ok) throw new Error("Failed to fetch profile")
-      const data = await res.json()
-      console.log("Billing data fetched:", data)
-      setProfile(data.profile || null)
-    } catch {
-      setError("Could not load profile.")
-    }
-  }
-
-  useEffect(() => {
-    async function fetchData() {
+    const fetchAllData = async () => {
       setLoading(true)
-      await fetchSubscription()
-      setLoading(false)
+      setError(null)
+
+      try {
+        await Promise.all([fetchSubscription(), fetchInvoices(), fetchProfile()])
+      } catch (err) {
+        console.error("Error fetching billing data:", err)
+        setError(err instanceof Error ? err.message : "Failed to fetch billing data")
+      } finally {
+        setLoading(false)
+      }
     }
-    fetchData()
-  }, [userid])
 
-  useEffect(() => {
-    fetchInvoices()
-  }, [subscription])
-
-  useEffect(() => {
-    fetchProfile()
-  }, [userid])
+    fetchAllData()
+  }, [userId, fetchSubscription, fetchInvoices, fetchProfile])
 
   return {
     subscription,
@@ -124,8 +177,10 @@ export default function useBillingData(userid: string) {
     profile,
     loading,
     error,
-    refreshSubscription: fetchSubscription,
-    refreshInvoices: fetchInvoices,
-    refreshProfile: fetchProfile,
+    refreshSubscription,
+    refreshInvoices,
+    refreshProfile,
   }
 }
+
+export default useBillingData

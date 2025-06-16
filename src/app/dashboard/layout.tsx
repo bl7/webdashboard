@@ -142,8 +142,8 @@ export default function DashboardLayout({ children }: LayoutProps) {
   useEffect(() => {
     if (!dataFetched || isSetupPage) return
     const profileComplete = profile?.company_name && profile?.address
-    const subActive = subscription?.status === "active"
-    if (!profileComplete || !subActive) router.push("/setup")
+    // const subActive = subscription?.status === "active"
+    if (!profileComplete) router.push("/setup")
   }, [dataFetched, profile, subscription, pathname])
 
   const handlePinChange = (index: number, val: string) => {
