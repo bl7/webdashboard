@@ -253,8 +253,8 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                 href={href}
                 className={cn(
                   "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
-                  pathname === href && "bg-white/20",
-                  isExpanded ? "justify-start" : "justify-center"
+                  pathname === href && "bg-white/20"
+                  //   isExpanded ? "justify-start" : "justify-center"
                 )}
                 onClick={() => setSidebarMobile(false)}
               >

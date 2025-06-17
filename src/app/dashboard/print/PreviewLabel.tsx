@@ -8,14 +8,17 @@ interface LabelPreviewProps {
   MAX_INGREDIENTS_TO_FIT?: number
   customExpiry: Record<string, string>
   onExpiryChange: (uid: string, value: string) => void
+  useInitials?: boolean
+  selectedInitial?: string
 }
-
 const LabelPreview: React.FC<LabelPreviewProps> = ({
   printQueue,
   ALLERGENS,
   MAX_INGREDIENTS_TO_FIT = 5,
   customExpiry,
   onExpiryChange,
+  useInitials = false,
+  selectedInitial = "",
 }) => {
   const allergenNames = ALLERGENS.map((a) => a.toLowerCase())
   const isAllergen = (ing: string) => allergenNames.some((a) => ing.toLowerCase().includes(a))
@@ -86,8 +89,23 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "flex-start",
+                      position: "relative",
                     }}
                   >
+                    {useInitials && selectedInitial && !isPPDS && (
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: "2px",
+                          right: "2px",
+                          fontSize: "6px",
+                          color: "#666",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {selectedInitial}
+                      </div>
+                    )}
                     {item.type === "ingredients" ? (
                       <>
                         {/* Ingredient Label */}

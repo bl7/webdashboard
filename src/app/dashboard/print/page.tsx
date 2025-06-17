@@ -64,6 +64,7 @@ export default function LabelDemo() {
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
+  const [selectedInitial, setSelectedInitial] = useState<string>("")
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -303,7 +304,10 @@ export default function LabelDemo() {
           const label = formatLabelForPrint(
             item,
             allergens.map((a) => a.allergenName.toLowerCase()),
-            customExpiry
+            customExpiry,
+            5, // MAX_INGREDIENTS_TO_FIT
+            useInitials,
+            selectedInitial
           )
           const text = encoder.encode(label + "\n")
 
@@ -360,7 +364,12 @@ export default function LabelDemo() {
                 <label className="mb-1 block text-sm font-medium text-gray-700">
                   Select Initials
                 </label>
-                <select className="w-full rounded border px-4 py-2">
+                <select
+                  className="w-full rounded border px-4 py-2"
+                  value={selectedInitial}
+                  onChange={(e) => setSelectedInitial(e.target.value)}
+                >
+                  <option value="">Select initials...</option>
                   {customInitials.map((initial) => (
                     <option key={initial} value={initial}>
                       {initial}
@@ -564,6 +573,8 @@ export default function LabelDemo() {
           ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
           customExpiry={customExpiry}
           onExpiryChange={handleExpiryChange}
+          useInitials={useInitials}
+          selectedInitial={selectedInitial}
         />
       </div>
     </div>

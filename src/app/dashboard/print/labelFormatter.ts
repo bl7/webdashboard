@@ -4,7 +4,9 @@ export function formatLabelForPrint(
   item: PrintQueueItem,
   ALLERGENS: string[],
   customExpiry: Record<string, string>,
-  MAX_INGREDIENTS_TO_FIT: number = 5
+  MAX_INGREDIENTS_TO_FIT: number = 5,
+  useInitials: boolean = false,
+  selectedInitial: string = ""
 ): string {
   const allergenNames = ALLERGENS.map((a) => a.toLowerCase())
   const isAllergen = (ing: string) => allergenNames.some((a) => ing.toLowerCase().includes(a))
@@ -15,6 +17,7 @@ export function formatLabelForPrint(
   const tooLong = ingredientList.length > MAX_INGREDIENTS_TO_FIT
   const allergensOnly = ingredientList.filter(isAllergen)
   const expiry = customExpiry[item.uid] || item.expiryDate || "N/A"
+
   let out = ""
 
   if (item.type === "ingredients") {
@@ -27,12 +30,17 @@ export function formatLabelForPrint(
     } else {
       out += `No allergens declared\n`
     }
+    // Add initials for ingredients (not PPDS)
+    if (useInitials && selectedInitial) {
+      out += `                    ${selectedInitial}\n`
+    }
   } else if (isPPDS) {
     out += `${item.name}\n`
     out += `Best Before: ${expiry}\n`
     out += `Ingredients: `
     out += ingredientList.map((ing) => (isAllergen(ing) ? `*${ing}*` : ing)).join(", ")
     out += `\n`
+    // No initials for PPDS labels
   } else {
     out += `${item.name}\n`
     out += `Printed On: ${item.printedOn ?? "N/A"}\n`
@@ -45,6 +53,11 @@ export function formatLabelForPrint(
       out += ingredientList.map((ing) => (isAllergen(ing) ? `*${ing}*` : ing)).join(", ")
     }
     out += `\n`
+    // Add initials for menu items (not PPDS)
+    if (useInitials && selectedInitial) {
+      out += `                    ${selectedInitial}\n`
+    }
   }
+
   return out
 }

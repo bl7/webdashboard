@@ -383,8 +383,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <PrinterProvider>
         <Sidebar />
         <PrinterStatusBar />
-        <main className="flex-1 overflow-auto">
-          <div className="mt-12 space-y-6 p-6">{children}</div>
+        <main className="container mt-12 flex-1 overflow-auto bg-white pt-12">
+          <div className="space-y-6 p-6">{children}</div>
         </main>
       </PrinterProvider>
     </div>
