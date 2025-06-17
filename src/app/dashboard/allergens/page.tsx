@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
   Button,
   Input,
@@ -14,47 +14,48 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui" // Assuming you have Select component, otherwise can replace with <select>
+} from "@/components/ui"
 import { Plus, Eye, Pencil, Trash, FileDown, X } from "lucide-react"
 import * as XLSX from "xlsx"
-import { getAllAllergens, addAllergens } from "@/lib/api"
+import { useAllergens, type Allergen } from "@/hooks/useAllergens"
 import { allergenIconMap } from "../../../components/allergenicons"
 import allergenColorMap from "@/components/allergencolormap"
-type Allergen = {
-  id: number
-  name: string
-  category: string
-  severity: "Low" | "Medium" | "High"
-  status: "Active" | "Inactive"
-  addedAt: string
-  isCustom: boolean
-}
-
-function estimateSeverity(name: string): "Low" | "Medium" | "High" {
-  const lower = name.toLowerCase()
-  if (["peanut", "shellfish", "tree nut"].some((k) => lower.includes(k))) return "High"
-  if (["gluten", "dairy", "soy"].some((k) => lower.includes(k))) return "Medium"
-  return "Low"
-}
 
 export default function AllergenDashboard() {
   const [query, setQuery] = useState("")
-  const [data, setData] = useState<Allergen[]>([])
   const [selected, setSelected] = useState<Allergen | null>(null)
   const [page, setPage] = useState(1)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showEditModal, setShowEditModal] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [newAllergenName, setNewAllergenName] = useState("")
+  const [editingAllergen, setEditingAllergen] = useState<Allergen | null>(null)
+  const [deletingAllergen, setDeletingAllergen] = useState<Allergen | null>(null)
+  const [isOperationLoading, setIsOperationLoading] = useState(false)
 
-  // New state to track filter type: "All" | "Custom" | "Standard"
+  // Filter type state
   const [filterType, setFilterType] = useState<"All" | "Custom" | "Standard">("All")
+
+  // Use the custom hook
+  const {
+    allergens,
+    isLoading: isFetchingAllergens,
+    error,
+    addAllergen,
+    updateAllergenItem,
+    deleteAllergenItem,
+    customCount,
+    standardCount,
+    refreshAllergens,
+  } = useAllergens()
 
   const perPage = 5
 
   // Filter data by query AND filterType
-  const filtered = data.filter((d) => {
+  const filtered = allergens.filter((d) => {
     const matchesQuery = d.name.toLowerCase().includes(query.toLowerCase())
     const matchesType =
-      filterType === "All" ? true : filterType === "Custom" ? d.isCustom : !d.isCustom // Standard
+      filterType === "All" ? true : filterType === "Custom" ? d.isCustom : !d.isCustom
     return matchesQuery && matchesType
   })
 
@@ -76,68 +77,89 @@ export default function AllergenDashboard() {
     XLSX.writeFile(workbook, `allergens-export-${Date.now()}.xlsx`)
   }
 
-  const handleAddCustomAllergen = () => {
-    const token = localStorage.getItem("token")
-    const newItem: Allergen = {
-      id: Date.now(),
-      name: newAllergenName,
-      category: "Custom",
-      severity: estimateSeverity(newAllergenName),
-      status: "Active",
-      addedAt: new Date().toISOString().split("T")[0],
-      isCustom: true,
+  const handleAddCustomAllergen = async () => {
+    if (!newAllergenName.trim()) return
+
+    setIsOperationLoading(true)
+    try {
+      await addAllergen(newAllergenName.trim())
+      setNewAllergenName("")
+      setShowAddModal(false)
+    } catch (error) {
+      console.error("Failed to add allergen:", error)
+      alert("Failed to add allergen. Please try again.")
+    } finally {
+      setIsOperationLoading(false)
     }
-    console.log(newItem, token)
-    setData([newItem, ...data])
-    addAllergens(newItem.name, token)
-    console.log("added")
-    setNewAllergenName("")
-    setShowAddModal(false)
   }
 
-  const handleDelete = (id: number) => {
-    setData((prev) => prev.filter((a) => a.id !== id))
+  const handleEditAllergen = async () => {
+    if (!editingAllergen || !newAllergenName.trim()) return
+
+    setIsOperationLoading(true)
+    try {
+      await updateAllergenItem(editingAllergen.id, newAllergenName.trim())
+      setNewAllergenName("")
+      setEditingAllergen(null)
+      setShowEditModal(false)
+    } catch (error) {
+      console.error("Failed to update allergen:", error)
+      alert("Failed to update allergen. Please try again.")
+    } finally {
+      setIsOperationLoading(false)
+    }
   }
 
-  const handleEdit = (id: number, newName: string) => {
-    setData((prev) =>
-      prev.map((a) =>
-        a.id === id ? { ...a, name: newName, severity: estimateSeverity(newName) } : a
-      )
+  const handleDeleteAllergen = async () => {
+    if (!deletingAllergen) return
+
+    setIsOperationLoading(true)
+    try {
+      await deleteAllergenItem(deletingAllergen.id)
+      setDeletingAllergen(null)
+      setShowDeleteModal(false)
+    } catch (error) {
+      console.error("Failed to delete allergen:", error)
+      alert("Failed to delete allergen. Please try again.")
+    } finally {
+      setIsOperationLoading(false)
+    }
+  }
+
+  const openEditModal = (allergen: Allergen) => {
+    setEditingAllergen(allergen)
+    setNewAllergenName(allergen.name)
+    setShowEditModal(true)
+  }
+
+  const openDeleteModal = (allergen: Allergen) => {
+    setDeletingAllergen(allergen)
+    setShowDeleteModal(true)
+  }
+
+  // Show loading state while fetching allergens
+  if (isFetchingAllergens) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="text-muted-foreground">Loading allergens...</p>
+        </div>
+      </div>
     )
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (!token) return console.error("No access token")
-
-    const fetchAllergens = async () => {
-      try {
-        const res = await getAllAllergens(token)
-        if (!res?.data) return
-
-        const mapped = res.data.map(
-          (item: any): Allergen => ({
-            id: item.id,
-            name: item.allergenName,
-            category: item.isCustom ? "Custom" : "Standard",
-            severity: estimateSeverity(item.allergenName),
-            status: item.isActive ? "Active" : "Inactive",
-            addedAt: item.createdAt.split("T")[0],
-            isCustom: item.isCustom,
-          })
-        )
-        setData(mapped)
-      } catch (err) {
-        console.error("Failed to fetch allergens:", err)
-      }
-    }
-
-    fetchAllergens()
-  }, [])
-
-  const customCount = data.filter((d) => d.isCustom).length
-  const standardCount = data.filter((d) => !d.isCustom).length
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="text-center">
+          <p className="mb-4 text-red-600">Error: {error}</p>
+          <Button onClick={refreshAllergens}>Try Again</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -174,7 +196,6 @@ export default function AllergenDashboard() {
             onChange={(e) => setQuery(e.target.value)}
           />
 
-          {/* Filter Select */}
           <Select
             value={filterType}
             onValueChange={(value) => setFilterType(value as "All" | "Custom" | "Standard")}
@@ -255,14 +276,17 @@ export default function AllergenDashboard() {
                       <Button
                         size="icon"
                         variant="ghost"
-                        onClick={() => {
-                          const newName = prompt("Edit allergen name:", item.name)
-                          if (newName) handleEdit(item.id, newName)
-                        }}
+                        onClick={() => openEditModal(item)}
+                        disabled={isOperationLoading}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button size="icon" variant="ghost" onClick={() => handleDelete(item.id)}>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => openDeleteModal(item)}
+                        disabled={isOperationLoading}
+                      >
                         <Trash className="h-4 w-4 text-red-500" />
                       </Button>
                     </>
@@ -343,13 +367,90 @@ export default function AllergenDashboard() {
             placeholder="Enter allergen name"
             value={newAllergenName}
             onChange={(e) => setNewAllergenName(e.target.value)}
+            disabled={isOperationLoading}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddModal(false)
+                setNewAllergenName("")
+              }}
+              disabled={isOperationLoading}
+            >
               Cancel
             </Button>
-            <Button onClick={handleAddCustomAllergen} disabled={!newAllergenName.trim()}>
-              Add
+            <Button
+              onClick={handleAddCustomAllergen}
+              disabled={!newAllergenName.trim() || isOperationLoading}
+            >
+              {isOperationLoading ? "Adding..." : "Add"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Allergen Dialog */}
+      <Dialog open={showEditModal} onOpenChange={() => setShowEditModal(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Custom Allergen</DialogTitle>
+          </DialogHeader>
+          <Input
+            placeholder="Enter allergen name"
+            value={newAllergenName}
+            onChange={(e) => setNewAllergenName(e.target.value)}
+            disabled={isOperationLoading}
+          />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowEditModal(false)
+                setNewAllergenName("")
+                setEditingAllergen(null)
+              }}
+              disabled={isOperationLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleEditAllergen}
+              disabled={!newAllergenName.trim() || isOperationLoading}
+            >
+              {isOperationLoading ? "Updating..." : "Update"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteModal} onOpenChange={() => setShowDeleteModal(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Allergen</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete "{deletingAllergen?.name}"? This action cannot be
+            undone.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteModal(false)
+                setDeletingAllergen(null)
+              }}
+              disabled={isOperationLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleDeleteAllergen}
+              disabled={isOperationLoading}
+            >
+              {isOperationLoading ? "Deleting..." : "Delete"}
             </Button>
           </DialogFooter>
         </DialogContent>

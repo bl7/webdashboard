@@ -184,7 +184,7 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
                 <div className="col-span-2 text-sm">{entry.status}</div>
 
                 {/* Date */}
-                <div className="col-span-1 text-sm">{dateFormatted}</div>
+                <div className="col-span-1 mr-3 text-sm">{dateFormatted}</div>
 
                 {/* Download Icon */}
                 <div className="col-span-1 text-right">

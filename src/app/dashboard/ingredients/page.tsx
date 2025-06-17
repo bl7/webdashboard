@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import * as XLSX from "xlsx"
+import { toast } from "sonner"
 import {
   Table,
   TableBody,
@@ -12,8 +13,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-// import { Pencil, Trash2, Plus, Download, FileDown } from "lucide-react"
-import { Plus, Eye, Pencil, Trash, FileDown, X } from "lucide-react"
+import { Plus, Pencil, Trash, FileDown, X, ChevronDown, Loader2 } from "lucide-react"
 
 import {
   Dialog,
@@ -25,13 +25,26 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select"
-import { getAllIngredients, addIngredient } from "@/lib/api"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu"
+import { Badge } from "@/components/ui/badge"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { useAllergens } from "@/hooks/useAllergens"
+import { useIngredients } from "@/hooks/useIngredients"
 
 type Ingredient = {
   uuid: string
@@ -42,30 +55,38 @@ type Ingredient = {
 
 export default function IngredientsTable() {
   const [search, setSearch] = useState("")
-  const [ingredients, setIngredients] = useState<Ingredient[]>([])
   const [open, setOpen] = useState(false)
+  const [editOpen, setEditOpen] = useState(false)
+  const [deleteOpen, setDeleteOpen] = useState(false)
+  const [editingIngredient, setEditingIngredient] = useState<Ingredient | null>(null)
+  const [deletingIngredient, setDeletingIngredient] = useState<Ingredient | null>(null)
   const [newIngredient, setNewIngredient] = useState({
     ingredientName: "",
     expiryDays: 0,
   })
+  const [editIngredientData, setEditIngredientData] = useState({
+    ingredientName: "",
+    expiryDays: 0,
+  })
+  const [selectedAllergens, setSelectedAllergens] = useState<string[]>([])
+  const [editSelectedAllergens, setEditSelectedAllergens] = useState<string[]>([])
+  const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
+  const [editAllergenDropdownOpen, setEditAllergenDropdownOpen] = useState(false)
 
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      const token = localStorage.getItem("token")
-      if (!token) return
-      try {
-        const data = await getAllIngredients(token)
-        setIngredients(Array.isArray(data) ? data : data.data)
-      } catch (err) {
-        console.error("Error fetching ingredients:", err)
-      }
-    }
-    fetchIngredients()
-  }, [])
+  // Use the ingredients hook
+  const {
+    ingredients,
+    loading,
+    addNewIngredient,
+    updateExistingIngredient,
+    deleteExistingIngredient,
+    filterIngredients,
+  } = useIngredients()
 
-  const filteredIngredients = ingredients.filter((item) =>
-    item.ingredientName?.toLowerCase().includes(search.toLowerCase())
-  )
+  // Use the allergens hook
+  const { allergens, isLoading: allergensLoading, error: allergensError } = useAllergens()
+
+  const filteredIngredients = filterIngredients(search)
 
   // Export filtered ingredients to XLSX
   const exportToXLSX = () => {
@@ -80,21 +101,118 @@ export default function IngredientsTable() {
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, "Ingredients")
     XLSX.writeFile(workbook, "ingredients.xlsx")
+
+    toast.success("Ingredients exported successfully")
   }
 
   const handleAddIngredient = async () => {
-    if (!newIngredient.ingredientName || newIngredient.expiryDays <= 0) return
-    const token = localStorage.getItem("token")
-    if (!token) return
-
-    try {
-      const added = await addIngredient(newIngredient, token)
-      setIngredients([...ingredients, added])
-      setNewIngredient({ ingredientName: "", expiryDays: 0 })
-      setOpen(false)
-    } catch (err) {
-      console.error("Error adding ingredient:", err)
+    if (!newIngredient.ingredientName.trim()) {
+      toast.error("Ingredient name is required")
+      return
     }
+
+    if (newIngredient.expiryDays <= 0) {
+      toast.error("Expiry days must be greater than 0")
+      return
+    }
+
+    const ingredientData = {
+      ingredientName: newIngredient.ingredientName.trim(),
+      expiryDays: newIngredient.expiryDays,
+      allergenIDs: selectedAllergens,
+    }
+
+    const success = await addNewIngredient(ingredientData)
+    if (success) {
+      setNewIngredient({ ingredientName: "", expiryDays: 0 })
+      setSelectedAllergens([])
+      setOpen(false)
+    }
+  }
+
+  const handleEditIngredient = (ingredient: Ingredient) => {
+    setEditingIngredient(ingredient)
+    setEditIngredientData({
+      ingredientName: ingredient.ingredientName,
+      expiryDays: ingredient.expiryDays,
+    })
+    setEditSelectedAllergens(ingredient.allergens.map((a) => a.uuid))
+    setEditOpen(true)
+  }
+
+  const handleUpdateIngredient = async () => {
+    if (!editingIngredient) return
+
+    if (!editIngredientData.ingredientName.trim()) {
+      toast.error("Ingredient name is required")
+      return
+    }
+
+    if (editIngredientData.expiryDays <= 0) {
+      toast.error("Expiry days must be greater than 0")
+      return
+    }
+
+    const updateData = {
+      ingredientName: editIngredientData.ingredientName.trim(),
+      expiryDays: editIngredientData.expiryDays,
+      allergenIDs: editSelectedAllergens,
+    }
+
+    const success = await updateExistingIngredient(editingIngredient.uuid, updateData)
+    if (success) {
+      setEditOpen(false)
+      setEditingIngredient(null)
+      setEditIngredientData({ ingredientName: "", expiryDays: 0 })
+      setEditSelectedAllergens([])
+    }
+  }
+
+  const handleDeleteIngredient = (ingredient: Ingredient) => {
+    setDeletingIngredient(ingredient)
+    setDeleteOpen(true)
+  }
+
+  const confirmDeleteIngredient = async () => {
+    if (!deletingIngredient) return
+
+    const success = await deleteExistingIngredient(deletingIngredient.uuid)
+    if (success) {
+      setDeleteOpen(false)
+      setDeletingIngredient(null)
+    }
+  }
+
+  const handleAllergenToggle = (allergenId: string) => {
+    setSelectedAllergens((prev) =>
+      prev.includes(allergenId) ? prev.filter((id) => id !== allergenId) : [...prev, allergenId]
+    )
+  }
+
+  const handleEditAllergenToggle = (allergenId: string) => {
+    setEditSelectedAllergens((prev) =>
+      prev.includes(allergenId) ? prev.filter((id) => id !== allergenId) : [...prev, allergenId]
+    )
+  }
+
+  const removeSelectedAllergen = (allergenId: string) => {
+    setSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
+  }
+
+  const removeEditSelectedAllergen = (allergenId: string) => {
+    setEditSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
+  }
+
+  const getSelectedAllergenNames = () => {
+    return allergens
+      .filter((allergen) => selectedAllergens.includes((allergen as any).id))
+      .map((allergen) => allergen.name)
+  }
+
+  const getEditSelectedAllergenNames = () => {
+    return allergens
+      .filter((allergen) => editSelectedAllergens.includes((allergen as any).id))
+      .map((allergen) => allergen.name)
   }
 
   return (
@@ -105,6 +223,8 @@ export default function IngredientsTable() {
           <Button variant="outline" className="mr-5" onClick={exportToXLSX}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
+
+          {/* Add Ingredient Dialog */}
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button className="bg-primary text-white hover:bg-primary/90">
@@ -112,7 +232,7 @@ export default function IngredientsTable() {
                 Add Ingredient
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-md">
               <DialogHeader>
                 <DialogTitle>Add New Ingredient</DialogTitle>
               </DialogHeader>
@@ -126,6 +246,7 @@ export default function IngredientsTable() {
                     onChange={(e) =>
                       setNewIngredient({ ...newIngredient, ingredientName: e.target.value })
                     }
+                    disabled={loading}
                   />
                 </div>
                 <div className="space-y-1">
@@ -139,18 +260,281 @@ export default function IngredientsTable() {
                     onChange={(e) =>
                       setNewIngredient({ ...newIngredient, expiryDays: Number(e.target.value) })
                     }
+                    disabled={loading}
                   />
+                </div>
+                <div className="space-y-2">
+                  <Label>Allergens</Label>
+                  <DropdownMenu open={allergenDropdownOpen} onOpenChange={setAllergenDropdownOpen}>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between text-left font-normal"
+                        disabled={allergensLoading || loading}
+                      >
+                        <span>
+                          {allergensLoading
+                            ? "Loading allergens..."
+                            : selectedAllergens.length === 0
+                              ? "Select allergens..."
+                              : `${selectedAllergens.length} allergen${selectedAllergens.length === 1 ? "" : "s"} selected`}
+                        </span>
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-80" align="start">
+                      <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {allergensError ? (
+                        <div className="px-2 py-1 text-sm text-red-500">
+                          Error loading allergens: {allergensError}
+                        </div>
+                      ) : allergensLoading ? (
+                        <div className="px-2 py-1 text-sm">Loading allergens...</div>
+                      ) : allergens.length === 0 ? (
+                        <div className="px-2 py-1 text-sm text-muted-foreground">
+                          No allergens available
+                        </div>
+                      ) : (
+                        <div className="max-h-60 overflow-y-auto">
+                          {allergens.map((allergen) => (
+                            <DropdownMenuCheckboxItem
+                              key={allergen.id}
+                              checked={selectedAllergens.includes(allergen.id)}
+                              onCheckedChange={() => handleAllergenToggle(allergen.id)}
+                              className="flex items-center space-x-2 px-2 py-2"
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">{allergen.name}</span>
+                                {allergen.category && (
+                                  <span className="text-xs text-muted-foreground">
+                                    {allergen.category}
+                                  </span>
+                                )}
+                              </div>
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </div>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Display selected allergens as badges */}
+                  {selectedAllergens.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {getSelectedAllergenNames().map((name, index) => (
+                        <Badge
+                          key={selectedAllergens[index]}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {name}
+                          <button
+                            type="button"
+                            className="ml-1 hover:text-destructive"
+                            onClick={() => removeSelectedAllergen(selectedAllergens[index])}
+                            disabled={loading}
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleAddIngredient} className="bg-primary text-white">
-                  Save
+                <Button
+                  onClick={handleAddIngredient}
+                  className="bg-primary text-white"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Adding...
+                    </>
+                  ) : (
+                    "Save"
+                  )}
                 </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
+
+          {/* Edit Ingredient Dialog */}
+          <Dialog open={editOpen} onOpenChange={setEditOpen}>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle>Edit Ingredient</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-1">
+                  <Label htmlFor="editIngredientName">Name</Label>
+                  <Input
+                    id="editIngredientName"
+                    placeholder="E.g. Sugar"
+                    value={editIngredientData.ingredientName}
+                    onChange={(e) =>
+                      setEditIngredientData({
+                        ...editIngredientData,
+                        ingredientName: e.target.value,
+                      })
+                    }
+                    disabled={loading}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="editExpiryDays">Expiry Days</Label>
+                  <Input
+                    id="editExpiryDays"
+                    type="number"
+                    min={1}
+                    placeholder="E.g. 7"
+                    value={editIngredientData.expiryDays}
+                    onChange={(e) =>
+                      setEditIngredientData({
+                        ...editIngredientData,
+                        expiryDays: Number(e.target.value),
+                      })
+                    }
+                    disabled={loading}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Allergens</Label>
+                  <DropdownMenu
+                    open={editAllergenDropdownOpen}
+                    onOpenChange={setEditAllergenDropdownOpen}
+                  >
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between text-left font-normal"
+                        disabled={allergensLoading || loading}
+                      >
+                        <span>
+                          {allergensLoading
+                            ? "Loading allergens..."
+                            : editSelectedAllergens.length === 0
+                              ? "Select allergens..."
+                              : `${editSelectedAllergens.length} allergen${editSelectedAllergens.length === 1 ? "" : "s"} selected`}
+                        </span>
+                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-80" align="start">
+                      <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {allergensError ? (
+                        <div className="px-2 py-1 text-sm text-red-500">
+                          Error loading allergens: {allergensError}
+                        </div>
+                      ) : allergensLoading ? (
+                        <div className="px-2 py-1 text-sm">Loading allergens...</div>
+                      ) : allergens.length === 0 ? (
+                        <div className="px-2 py-1 text-sm text-muted-foreground">
+                          No allergens available
+                        </div>
+                      ) : (
+                        <div className="max-h-60 overflow-y-auto">
+                          {allergens.map((allergen) => (
+                            <DropdownMenuCheckboxItem
+                              key={allergen.id}
+                              checked={editSelectedAllergens.includes(allergen.id)}
+                              onCheckedChange={() => handleEditAllergenToggle(allergen.id)}
+                              className="flex items-center space-x-2 px-2 py-2"
+                            >
+                              <div className="flex flex-col">
+                                <span className="font-medium">{allergen.name}</span>
+                                {allergen.category && (
+                                  <span className="text-xs text-muted-foreground">
+                                    {allergen.category}
+                                  </span>
+                                )}
+                              </div>
+                            </DropdownMenuCheckboxItem>
+                          ))}
+                        </div>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+
+                  {/* Display selected allergens as badges */}
+                  {editSelectedAllergens.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {getEditSelectedAllergenNames().map((name, index) => (
+                        <Badge
+                          key={editSelectedAllergens[index]}
+                          variant="secondary"
+                          className="text-xs"
+                        >
+                          {name}
+                          <button
+                            type="button"
+                            className="ml-1 hover:text-destructive"
+                            onClick={() => removeEditSelectedAllergen(editSelectedAllergens[index])}
+                            disabled={loading}
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  onClick={handleUpdateIngredient}
+                  className="bg-primary text-white"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Updating...
+                    </>
+                  ) : (
+                    "Update"
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Delete Confirmation Dialog */}
+          <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete the ingredient "{deletingIngredient?.ingredientName}
+                  ". This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={confirmDeleteIngredient}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
+
       <div className="grid grid-cols-2 gap-4">
         <div className="my-6 rounded-xl border bg-card p-6 shadow">
           <p className="text-muted-foreground">
@@ -192,11 +576,23 @@ export default function IngredientsTable() {
                     : "None"}
                 </TableCell>
                 <TableCell className="space-x-2 text-right">
-                  <Button size="icon" variant="ghost" className="text-muted-foreground">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-primary"
+                    onClick={() => handleEditIngredient(ingredient)}
+                    disabled={loading}
+                  >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  <Button size="icon" variant="ghost" className="text-white">
-                    <Trash className="h-4 w-4 text-red-500" />
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="text-muted-foreground hover:text-destructive"
+                    onClick={() => handleDeleteIngredient(ingredient)}
+                    disabled={loading}
+                  >
+                    <Trash className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>

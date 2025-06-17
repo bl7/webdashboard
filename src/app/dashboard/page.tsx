@@ -1,5 +1,3 @@
-"use client"
-
 export default function DashboardPage() {
   return (
     <section className="p-6">
