@@ -1,6 +1,7 @@
 "use client"
 
 import React, { ReactNode, useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import {
   FaHome,
@@ -37,8 +38,7 @@ interface LayoutProps {
 const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
   { label: "Analytics", icon: <FaChartPie />, href: "/dashboard/analytics" },
-  { label: "Print Labels", icon: <FaPrint />, href: "/dashboard/print" },
-  { label: "Label Demo", icon: <FaPrint />, href: "/dashboard/labeldemo" },
+  { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
   { label: "Allergens", icon: <GiShrimp />, href: "/dashboard/allergens" },
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
@@ -142,7 +142,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
   useEffect(() => {
     if (!dataFetched || isSetupPage) return
     const profileComplete = profile?.company_name && profile?.address
-    // const subActive = subscription?.status === "active"
     if (!profileComplete) router.push("/setup")
   }, [dataFetched, profile, subscription, pathname])
 
@@ -224,7 +223,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
             >
               {sidebarMobile || sidebarOpen ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
             </button>
-
             <div
               onClick={() => setSidebarMobile(false)}
               className={cn("fixed inset-0 z-40 bg-black/30 transition-opacity lg:hidden", {
@@ -257,7 +255,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
 
             <nav className="flex flex-grow flex-col space-y-1">
               {filteredNavItems.map(({ label, icon, href }) => (
-                <a
+                <Link
                   key={label}
                   href={href}
                   className={cn(
@@ -273,7 +271,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
                       {label}
                     </span>
                   )}
-                </a>
+                </Link>
               ))}
             </nav>
 
@@ -357,7 +355,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
         <main
           className={cn(
             "flex flex-grow flex-col overflow-auto bg-[hsl(var(--card))] text-[hsl(var(--card-foreground))] transition-all",
-            // Add top padding to account for the fixed PrinterStatusBar
             "pt-12",
             {
               "lg:ml-64": sidebarOpen,
