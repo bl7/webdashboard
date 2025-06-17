@@ -244,7 +244,7 @@ const ProfileDashboard = () => {
   }
 
   return (
-    <div className="container py-8">
+    <div className="container space-y-6">
       <div className="mb-6 flex space-x-4 border-b">
         {["account", "billing"].map((tab) => (
           <button

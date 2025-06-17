@@ -49,7 +49,7 @@ export default function AllergenDashboard() {
     refreshAllergens,
   } = useAllergens()
 
-  const perPage = 5
+  const perPage = 14
 
   // Filter data by query AND filterType
   const filtered = allergens.filter((d) => {

@@ -61,6 +61,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
   }, [])
 
   const filteredNavItems = isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((i) => i.label === "Print Label")
+  const isExpanded = sidebarOpen || sidebarMobile
 
   // Load initial data from localStorage
   useEffect(() => {
@@ -192,7 +193,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         <button
           onClick={toggleSidebar}
           className={cn(
-            "fixed top-1/2 z-50 hidden h-16 w-4 -translate-y-1/2 bg-[hsl(var(--primary))] text-white shadow-lg transition-all duration-300 ease-in-out hover:w-6 lg:flex lg:items-center lg:justify-center",
+            "z-1 fixed top-1/2 hidden h-16 w-4 -translate-y-1/2 bg-[hsl(var(--primary))] text-white shadow-lg transition-all duration-300 ease-in-out hover:w-6 lg:flex lg:items-center lg:justify-center",
             sidebarOpen ? "left-64 rounded-r-lg" : "left-20 rounded-r-lg"
           )}
           aria-label="Toggle Sidebar"
@@ -226,7 +227,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         >
           {/* Logo Section */}
           <div className="mb-6 flex">
-            {sidebarOpen || sidebarMobile ? (
+            {isExpanded ? (
               <Image
                 src="/long_longwhite.png"
                 alt="Logo"
@@ -253,14 +254,14 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                 className={cn(
                   "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
                   pathname === href && "bg-white/20",
-                  sidebarOpen || sidebarMobile ? "justify-start" : "justify-center"
+                  isExpanded ? "justify-start" : "justify-center"
                 )}
                 onClick={() => setSidebarMobile(false)}
               >
                 <span className="text-[1.3rem]">{icon}</span>
-                {(sidebarOpen || sidebarMobile) && <span>{label}</span>}
-                {!sidebarOpen && !sidebarMobile && (
-                  <span className="absolute left-full ml-2 hidden rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                {isExpanded && <span>{label}</span>}
+                {!isExpanded && (
+                  <span className="absolute left-full ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
                     {label}
                   </span>
                 )}
@@ -269,7 +270,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
           </nav>
 
           {/* Admin Access Button - Only show when expanded and not admin */}
-          {!isAdmin && (sidebarOpen || sidebarMobile) && (
+          {!isAdmin && isExpanded && (
             <button
               onClick={() => {
                 setShowPinModal(true)
@@ -282,11 +283,11 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
             </button>
           )}
 
-          {/* Profile Section - Fixed positioning with unified layout */}
+          {/* Profile Section - Always same structure */}
           <div className="mb-4 mt-auto">
             <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
               {avatar !== null && (
-                <div className="group relative flex-shrink-0">
+                <div className="group relative">
                   <Image
                     src={`/avatar${avatar}.png`}
                     width={32}
@@ -295,15 +296,15 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                     className="rounded-full border border-white"
                   />
                   {/* Tooltip for collapsed state */}
-                  {!sidebarOpen && !sidebarMobile && profile?.company_name && (
-                    <span className="absolute left-full ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                  {!isExpanded && profile?.company_name && (
+                    <span className="absolute left-full z-10 ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
                       {profile.company_name}
                     </span>
                   )}
                 </div>
               )}
-              {/* Company name - only show when expanded */}
-              {(sidebarOpen || sidebarMobile) && profile?.company_name && (
+              {/* Company name - simple show/hide */}
+              {isExpanded && profile?.company_name && (
                 <div>
                   <span className="font-medium">{profile.company_name}</span>
                 </div>
@@ -311,23 +312,23 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
             </div>
           </div>
 
-          {/* Logout Button - Fixed positioning with unified layout */}
+          {/* Logout Button - Always same structure */}
           <div>
             <button
               onClick={handleLogout}
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-400/10"
             >
-              <div className="group relative flex-shrink-0">
+              <div className="group relative">
                 <IoLogOutOutline className="text-[1.3rem]" />
                 {/* Tooltip for collapsed state */}
-                {!sidebarOpen && !sidebarMobile && (
-                  <span className="absolute left-full ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
+                {!isExpanded && (
+                  <span className="absolute left-full z-10 ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
                     Logout
                   </span>
                 )}
               </div>
-              {/* Logout text - only show when expanded */}
-              {(sidebarOpen || sidebarMobile) && <span>Logout</span>}
+              {/* Logout text - simple show/hide */}
+              {isExpanded && <span>Logout</span>}
             </button>
           </div>
         </aside>
