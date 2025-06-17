@@ -294,134 +294,147 @@ const ProfileDashboard = () => {
 
           {/* Profile Form */}
           <div className="md:col-span-2">
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold">Profile</h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Profile</h2>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* Company Name */}
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Company Name</label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">
+                    Company Name
+                  </label>
                   <input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full rounded-md border px-3 py-2 text-sm"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                    placeholder="Enter company name"
                   />
                 </div>
+
+                {/* Address */}
                 <div>
-                  <label className="mb-1 block text-sm font-medium">Address</label>
+                  <label className="mb-2 block text-sm font-medium text-gray-700">Address</label>
                   <input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full rounded-md border px-3 py-2 text-sm"
+                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                    placeholder="Enter address"
                   />
                 </div>
 
+                {/* Name (disabled) */}
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    Name
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-500">Name</label>
                   <input
                     type="text"
                     value={name}
                     disabled
-                    className="w-full rounded-md border bg-muted px-3 py-2 text-sm text-muted-foreground"
+                    className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
                   />
                 </div>
+
+                {/* Email (disabled) */}
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-muted-foreground">
-                    Email
-                  </label>
+                  <label className="mb-2 block text-sm font-medium text-gray-500">Email</label>
                   <input
                     type="email"
                     value={email}
                     disabled
-                    className="w-full rounded-md border bg-muted px-3 py-2 text-sm text-muted-foreground"
+                    className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
                   />
                 </div>
               </div>
+
               <button
                 onClick={handleSave}
-                className="mt-4 rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+                className="mt-6 inline-flex justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
               >
                 Save Now
               </button>
 
-              {/* Change PIN Section */}
-              <div className="mt-6 border-t pt-4">
-                <h3 className="text-md mb-4 font-semibold">Change Admin PIN</h3>
-                <p className="mb-2 text-sm text-muted-foreground">
+              <div className="mt-6 border-t border-gray-200 pt-6">
+                <h3 className="text-md mb-4 font-semibold text-gray-900">Change Admin PIN</h3>
+                <p className="mb-4 text-sm text-gray-600">
                   Enter your current PIN and a new 4-digit PIN to change your admin access PIN.
                 </p>
 
-                {/* Current PIN Inputs */}
-                <label className="mb-1 block font-medium">Current PIN</label>
-                <div className="mb-4 flex justify-center gap-3">
-                  {[0, 1, 2, 3].map((idx) => (
-                    <input
-                      key={`current-${idx}`}
-                      type="password"
-                      maxLength={1}
-                      value={currentPinDigits[idx]}
-                      onChange={(e) =>
-                        handlePinChange(
-                          idx,
-                          e.target.value,
-                          currentPinDigits,
-                          setCurrentPinDigits,
-                          currentPinRefs
-                        )
-                      }
-                      ref={(el) => {
-                        currentPinRefs.current[idx] = el
-                      }}
-                      className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-blue-600 focus:outline-none"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      autoComplete="one-time-code"
-                      aria-label={`Current PIN digit ${idx + 1}`}
-                    />
-                  ))}
+                <div className="flex flex-wrap gap-8">
+                  {/* Current PIN */}
+                  <div className="flex min-w-[200px] flex-1 flex-col">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Current PIN
+                    </label>
+                    <div className="flex gap-3">
+                      {[0, 1, 2, 3].map((idx) => (
+                        <input
+                          key={`current-${idx}`}
+                          type="password"
+                          maxLength={1}
+                          value={currentPinDigits[idx]}
+                          onChange={(e) =>
+                            handlePinChange(
+                              idx,
+                              e.target.value,
+                              currentPinDigits,
+                              setCurrentPinDigits,
+                              currentPinRefs
+                            )
+                          }
+                          ref={(el) => {
+                            currentPinRefs.current[idx] = el
+                          }}
+                          className="h-12 w-12 rounded-md border border-gray-300 bg-white text-center text-2xl text-gray-900 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          aria-label={`Current PIN digit ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* New PIN */}
+                  <div className="flex min-w-[200px] flex-1 flex-col">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">New PIN</label>
+                    <div className="flex gap-3">
+                      {[0, 1, 2, 3].map((idx) => (
+                        <input
+                          key={`new-${idx}`}
+                          type="password"
+                          maxLength={1}
+                          value={newPinDigits[idx]}
+                          onChange={(e) =>
+                            handlePinChange(
+                              idx,
+                              e.target.value,
+                              newPinDigits,
+                              setNewPinDigits,
+                              newPinRefs
+                            )
+                          }
+                          ref={(el) => {
+                            newPinRefs.current[idx] = el
+                          }}
+                          className="h-12 w-12 rounded-md border border-gray-300 bg-white text-center text-2xl text-gray-900 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          autoComplete="one-time-code"
+                          aria-label={`New PIN digit ${idx + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
-                {/* New PIN Inputs */}
-                <label className="mb-1 block font-medium">New PIN</label>
-                <div className="mb-4 flex justify-center gap-3">
-                  {[0, 1, 2, 3].map((idx) => (
-                    <input
-                      key={`new-${idx}`}
-                      type="password"
-                      maxLength={1}
-                      value={newPinDigits[idx]}
-                      onChange={(e) =>
-                        handlePinChange(
-                          idx,
-                          e.target.value,
-                          newPinDigits,
-                          setNewPinDigits,
-                          newPinRefs
-                        )
-                      }
-                      ref={(el) => {
-                        newPinRefs.current[idx] = el
-                      }}
-                      className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-blue-600 focus:outline-none"
-                      inputMode="numeric"
-                      pattern="[0-9]*"
-                      autoComplete="one-time-code"
-                      aria-label={`New PIN digit ${idx + 1}`}
-                    />
-                  ))}
-                </div>
+                <div className="mt-6">
+                  {pinError && <p className="mb-4 text-sm text-red-600">{pinError}</p>}
+                  {pinSuccess && <p className="mb-4 text-sm text-green-600">{pinSuccess}</p>}
 
-                {pinError && <p className="mb-4 text-center text-sm text-red-600">{pinError}</p>}
-                {pinSuccess && (
-                  <p className="mb-4 text-center text-sm text-green-600">{pinSuccess}</p>
-                )}
-
-                <div className="flex justify-center">
                   <button
                     onClick={handleChangePin}
-                    className="rounded bg-blue-600 px-6 py-2 font-semibold text-white hover:bg-blue-700"
+                    className="rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
                   >
                     Change PIN
                   </button>
@@ -429,31 +442,35 @@ const ProfileDashboard = () => {
               </div>
 
               {/* Password Section */}
-              <div className="mt-6 border-t pt-4">
-                <h3 className="text-md mb-4 font-semibold">Password</h3>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <div className="mt-10 border-t border-gray-200 pt-6">
+                <h3 className="text-md mb-5 font-semibold text-gray-900">Password</h3>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-sm font-medium">Current Password</label>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Current Password
+                    </label>
                     <input
                       type="password"
                       placeholder="********"
-                      className="w-full rounded-md border px-3 py-2 text-sm"
+                      className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
                       disabled
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium">New Password</label>
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      New Password
+                    </label>
                     <input
                       type="password"
                       placeholder="New Password"
-                      className="w-full rounded-md border px-3 py-2 text-sm"
+                      className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
                       disabled
                     />
                   </div>
                 </div>
                 <button
                   disabled
-                  className="mt-4 rounded-md bg-muted px-4 py-2 text-sm font-medium text-muted-foreground"
+                  className="mt-6 cursor-not-allowed rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-400"
                 >
                   Change Password
                 </button>

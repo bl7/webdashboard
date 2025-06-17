@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { stripe } from "@/lib/stripe"
 import Stripe from "stripe"
-import { getUserSubscriptionStatus } from "@/lib/getUserSubscriptionStatus"
-
 const WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET!
 
 if (!WEBHOOK_SECRET) {
@@ -40,6 +38,7 @@ interface WebhookSubscriptionData {
   plan_amount: number
   billing_interval: string | null
   next_amount_due: number
+  next_due_date: Date | null
   card_last4: string | null
   card_exp_month: number | null
   card_exp_year: number | null
@@ -172,6 +171,35 @@ function getPlanInfo(price: Stripe.Price | null): {
   }
 }
 
+// Helper function to calculate next due date
+function calculateNextDueDate(subscription: Stripe.Subscription): Date | null {
+  // For canceled subscriptions, no next due date
+  if (subscription.status === "canceled") {
+    return null
+  }
+
+  // If subscription is in trial, next due date is when trial ends
+  if (subscription.status === "trialing" && subscription.trial_end) {
+    return new Date(subscription.trial_end * 1000)
+  }
+
+  // For active subscriptions, next due date is current_period_end
+  if ((subscription as any).current_period_end) {
+    return new Date((subscription as any).current_period_end * 1000)
+  }
+
+  // For incomplete subscriptions, try to get from latest invoice
+  if (subscription.status === "incomplete" && subscription.latest_invoice) {
+    // This would need an additional API call to get invoice details
+    // For now, we'll return current_period_end if available
+    return (subscription as any).current_period_end
+      ? new Date((subscription as any).current_period_end * 1000)
+      : null
+  }
+
+  return null
+}
+
 // Extract subscription data from Stripe subscription object
 async function extractSubscriptionData(
   subscription: Stripe.Subscription
@@ -230,6 +258,9 @@ async function extractSubscriptionData(
     }
   }
 
+  // Calculate next due date
+  const nextDueDate = calculateNextDueDate(subscription)
+
   // Handle customer metadata safely
   const userId = customer?.metadata?.user_id
 
@@ -253,6 +284,7 @@ async function extractSubscriptionData(
     plan_amount: price ? (price.unit_amount || 0) / 100 : 0,
     billing_interval: billingInterval,
     next_amount_due: nextAmountDue,
+    next_due_date: nextDueDate,
     currency: price?.currency || "usd",
     collection_method: subscription.collection_method || "charge_automatically",
     default_payment_method:
@@ -300,10 +332,10 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
           stripe_customer_id = $2, stripe_subscription_id = $3, price_id = $4,
           status = $5, current_period_end = $6, trial_end = $7, trial_start = $8,
           plan_type = $9, plan_name = $10, plan_amount = $11, billing_interval = $12,
-          next_amount_due = $13, card_last4 = $14, card_exp_month = $15,
-          card_exp_year = $16, card_brand = $17, currency = $18,
-          collection_method = $19, default_payment_method = $20,
-          cancel_at_period_end = $21, canceled_at = $22,
+          next_amount_due = $13, next_due_date = $14, card_last4 = $15, card_exp_month = $16,
+          card_exp_year = $17, card_brand = $18, currency = $19,
+          collection_method = $20, default_payment_method = $21,
+          cancel_at_period_end = $22, canceled_at = $23,
           updated_at = CURRENT_TIMESTAMP
         WHERE user_id = $1`,
         [
@@ -320,6 +352,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
           subscriptionData.plan_amount,
           subscriptionData.billing_interval,
           subscriptionData.next_amount_due,
+          subscriptionData.next_due_date,
           subscriptionData.card_last4,
           subscriptionData.card_exp_month,
           subscriptionData.card_exp_year,
@@ -340,23 +373,23 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
         `INSERT INTO subscriptions (
           user_id, stripe_customer_id, stripe_subscription_id, price_id,
           status, current_period_end, trial_end, trial_start, plan_type, plan_name, plan_amount,
-          billing_interval, next_amount_due, card_last4, card_exp_month,
+          billing_interval, next_amount_due, next_due_date, card_last4, card_exp_month,
           card_exp_year, card_brand, currency, collection_method, 
           default_payment_method, cancel_at_period_end, canceled_at,
           created_at, updated_at
         ) VALUES (
           $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-          $12, $13, $14, $15, $16, $17, $18, $19,
-          $20, $21, $22, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+          $12, $13, $14, $15, $16, $17, $18, $19, $20,
+          $21, $22, $23, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
         )
         ON CONFLICT (user_id) DO UPDATE SET
           stripe_customer_id = $2, stripe_subscription_id = $3, price_id = $4,
           status = $5, current_period_end = $6, trial_end = $7, trial_start = $8,
           plan_type = $9, plan_name = $10, plan_amount = $11, billing_interval = $12,
-          next_amount_due = $13, card_last4 = $14, card_exp_month = $15,
-          card_exp_year = $16, card_brand = $17, currency = $18,
-          collection_method = $19, default_payment_method = $20,
-          cancel_at_period_end = $21, canceled_at = $22,
+          next_amount_due = $13, next_due_date = $14, card_last4 = $15, card_exp_month = $16,
+          card_exp_year = $17, card_brand = $18, currency = $19,
+          collection_method = $20, default_payment_method = $21,
+          cancel_at_period_end = $22, canceled_at = $23,
           updated_at = CURRENT_TIMESTAMP`,
         [
           subscriptionData.user_id,
@@ -372,6 +405,7 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
           subscriptionData.plan_amount,
           subscriptionData.billing_interval,
           subscriptionData.next_amount_due,
+          subscriptionData.next_due_date,
           subscriptionData.card_last4,
           subscriptionData.card_exp_month,
           subscriptionData.card_exp_year,
@@ -457,17 +491,18 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         plan_amount = $10,
         billing_interval = $11,
         next_amount_due = $12,
-        card_last4 = $13,
-        card_exp_month = $14,
-        card_exp_year = $15,
-        card_brand = $16,
-        currency = $17,
-        collection_method = $18,
-        default_payment_method = $19,
-        cancel_at_period_end = $20,
-        canceled_at = $21,
+        next_due_date = $13,
+        card_last4 = $14,
+        card_exp_month = $15,
+        card_exp_year = $16,
+        card_brand = $17,
+        currency = $18,
+        collection_method = $19,
+        default_payment_method = $20,
+        cancel_at_period_end = $21,
+        canceled_at = $22,
         updated_at = CURRENT_TIMESTAMP
-      WHERE user_id = $22`,
+      WHERE user_id = $23`,
       [
         subscriptionData.stripe_customer_id,
         subscription.id,
@@ -481,6 +516,7 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
         subscriptionData.plan_amount,
         subscriptionData.billing_interval,
         subscriptionData.next_amount_due,
+        subscriptionData.next_due_date,
         subscriptionData.card_last4,
         subscriptionData.card_exp_month,
         subscriptionData.card_exp_year,
@@ -524,6 +560,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
         cancel_at_period_end = false,
         canceled_at = CURRENT_TIMESTAMP,
         next_amount_due = 0,
+        next_due_date = NULL,
         updated_at = CURRENT_TIMESTAMP
       WHERE stripe_subscription_id = $1`,
       [subscription.id]
@@ -557,7 +594,11 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
   try {
     await client.query("BEGIN")
 
-    // Update next_amount_due and ensure status is active for successful payments
+    // Get the updated subscription to calculate new next_due_date
+    const subscription = await stripe.subscriptions.retrieve((invoice as any).subscription)
+    const nextDueDate = calculateNextDueDate(subscription)
+
+    // Update next_amount_due, next_due_date and ensure status is active for successful payments
     await client.query(
       `UPDATE subscriptions SET
         status = CASE 
@@ -566,9 +607,10 @@ async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
           ELSE status
         END,
         next_amount_due = $1,
+        next_due_date = $2,
         updated_at = CURRENT_TIMESTAMP
-      WHERE stripe_subscription_id = $2`,
-      [(invoice.amount_due || 0) / 100, (invoice as any).subscription]
+      WHERE stripe_subscription_id = $3`,
+      [(invoice.amount_due || 0) / 100, nextDueDate, (invoice as any).subscription]
     )
 
     await client.query("COMMIT")
@@ -595,14 +637,21 @@ async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
   try {
     await client.query("BEGIN")
 
+    // For failed payments, we might want to set next_due_date to a retry date
+    // or keep it as the original due date. This depends on your business logic.
+    // Here we'll keep the original due date since payment failed
+    const subscription = await stripe.subscriptions.retrieve((invoice as any).subscription)
+    const nextDueDate = calculateNextDueDate(subscription)
+
     // Update status to past_due for failed payments
     await client.query(
       `UPDATE subscriptions SET
         status = 'past_due',
         next_amount_due = $1,
+        next_due_date = $2,
         updated_at = CURRENT_TIMESTAMP
-      WHERE stripe_subscription_id = $2`,
-      [(invoice.amount_due || 0) / 100, (invoice as any).subscription]
+      WHERE stripe_subscription_id = $3`,
+      [(invoice.amount_due || 0) / 100, nextDueDate, (invoice as any).subscription]
     )
 
     await client.query("COMMIT")

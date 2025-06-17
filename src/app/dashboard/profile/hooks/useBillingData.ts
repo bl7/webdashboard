@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react"
+import { Invoice } from "@/types/invoice"
 
 export interface Profile {
   user_id?: string
@@ -31,16 +32,6 @@ export interface Subscription {
   card_exp_year?: string | null
   created_at?: string
   updated_at?: string
-}
-
-export interface Invoice {
-  id: string
-  amount: number
-  currency: string
-  status: string
-  created: number
-  invoice_pdf?: string
-  description?: string
 }
 
 interface UseBillingDataReturn {

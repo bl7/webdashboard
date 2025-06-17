@@ -2,6 +2,7 @@ import React from "react"
 import { Subscription } from "../hooks/useBillingData"
 import { Button } from "@/components/ui/button"
 import { Star } from "lucide-react"
+import { mapPlanNameToIdentifier } from "./planMapper" // Import the mapper
 
 interface Props {
   subscription: Subscription | null
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default function SubscriptionInfo({ subscription, onChangePlan }: Props) {
+  console.log(subscription, "subscriptions info")
+
   // Handle loading state
   if (!subscription) {
     return (
@@ -29,7 +32,10 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
   // Safely handle plan amount with fallback
   const planAmount = subscription.plan_amount ?? 0
   const planName = subscription.plan_name || "Free Plan"
-  const billingInterval = subscription.billing_interval
+
+  // Get the internal plan identifier
+  const planIdentifier = mapPlanNameToIdentifier(planName)
+  console.log("🎯 Plan identifier:", planIdentifier)
 
   const formatPlanAmount = () => {
     if (typeof planAmount !== "number" || isNaN(planAmount)) {
@@ -40,39 +46,37 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
     return `$${dollarAmount.toFixed(2)}`
   }
 
-  // Format billing period
-  const formatBillingPeriod = () => {
-    if (!billingInterval || planAmount === 0) {
-      return ""
-    }
-
-    switch (billingInterval.toLowerCase()) {
-      case "month":
-      case "monthly":
-        return "/month"
-      case "year":
-      case "yearly":
-      case "annual":
-        return "/year"
+  // Determine card gradient based on plan identifier
+  const getCardGradient = () => {
+    switch (planIdentifier) {
+      case "free":
+        return "from-gray-500 to-gray-600"
+      case "pro_kitchen":
+        return "from-purple-500 to-purple-600"
+      case "multi_site":
+        return "from-pink-500 to-pink-600"
       default:
-        return `/${billingInterval}`
+        return "from-gray-500 to-gray-600"
     }
   }
 
-  // Determine card gradient based on plan
-  const getCardGradient = () => {
-    if (planAmount === 0) {
-      return "from-gray-500 to-gray-600"
-    } else if (planName.toLowerCase().includes("pro")) {
-      return "from-purple-500 to-purple-600"
-    } else {
-      return "from-pink-500 to-pink-600"
+  // Get display name based on plan identifier
+  const getDisplayName = () => {
+    switch (planIdentifier) {
+      case "free":
+        return "Free Plan"
+      case "pro_kitchen":
+        return "🧑‍🍳 Pro Kitchen"
+      case "multi_site":
+        return "Multi-Site Mastery"
+      default:
+        return planName // Fallback to original name
     }
   }
 
   return (
     <div
-      className={`relative flex h-48 w-80 flex-col justify-between rounded-xl bg-gradient-to-r ${getCardGradient()} p-4 text-white shadow-lg`}
+      className={`relative flex flex-col justify-between rounded-xl bg-gradient-to-r ${getCardGradient()} min-h-[12rem] w-full max-w-md p-4 text-white shadow-lg sm:min-h-[14rem]`}
     >
       {/* Star icon at top-right */}
       <div className="absolute right-3 top-3">
@@ -82,14 +86,15 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
       <div>
         <div className="mb-1 text-xs opacity-75">Your Current Plan</div>
         <div className="flex items-baseline gap-1">
-          <div className="text-2xl font-bold">{formatPlanAmount()}</div>
-          {formatBillingPeriod() && (
-            <div className="text-sm opacity-75">{formatBillingPeriod()}</div>
+          <div className="text-2xl font-bold">{subscription.plan_amount}</div>
+          {subscription.billing_interval && (
+            <div className="text-sm opacity-75">
+              /{subscription.billing_interval === "year" ? "yr" : "mo"}
+            </div>
           )}
         </div>
-        <div className="mt-1 text-sm font-medium">{planName}</div>
+        <div className="mt-1 text-sm font-medium">{getDisplayName()}</div>
 
-        {/* Additional plan info */}
         {subscription.status && subscription.status !== "active" && (
           <div className="mt-1 text-xs capitalize opacity-75">Status: {subscription.status}</div>
         )}

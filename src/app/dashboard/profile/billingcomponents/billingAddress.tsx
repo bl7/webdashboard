@@ -103,7 +103,7 @@ export default function BillingAddress({ profile, onEdit }: Props) {
       <CardContent className="w-full space-y-4 p-6">
         <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
           <MapPin className="h-4 w-4" />
-          Billing Address
+          Billing Information
         </div>
 
         <div className="flex min-h-[120px] flex-1 items-start">

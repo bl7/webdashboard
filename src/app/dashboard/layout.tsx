@@ -304,7 +304,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
                 {profile?.company_name && (
                   <div>
                     <span className="font-medium">{profile.company_name}</span>
-                    <span className="text-xs text-white/70">Company</span>
                   </div>
                 )}
               </div>

@@ -8,6 +8,7 @@ import { Allergen } from "@/types/allergen"
 import { formatLabelForPrint } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
 import { usePrinter } from "@/context/PrinterContext"
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 const itemsPerPage = 5
 
 function calculateExpiryDate(days: number): string {
@@ -166,7 +167,9 @@ export default function LabelDemo() {
       .catch((err) => setError(`Ingredient error: ${err.message}`))
       .finally(() => setIsLoading(false))
   }, [])
-
+  useEffect(() => {
+    setPage(1)
+  }, [activeTab, searchTerm])
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
@@ -334,6 +337,10 @@ export default function LabelDemo() {
     }
   }
 
+  const totalItems =
+    activeTab === "ingredients" ? filteredIngredients.length : filteredMenuItems.length
+  const totalPages = Math.ceil(totalItems / itemsPerPage)
+
   return (
     <div className="mx-auto max-w-5xl p-6">
       <div className="flex gap-8">
@@ -425,6 +432,37 @@ export default function LabelDemo() {
                 </div>
               )
             )}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
+                page === 1
+                  ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
+                  : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
+              }`}
+            >
+              <ChevronLeftIcon className="h-4 w-4" />
+              Previous
+            </button>
+
+            <span className="min-w-[80px] text-center text-sm text-gray-700">
+              Page {page} of {totalPages}
+            </span>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages || totalPages === 0}
+              className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
+                page === totalPages || totalPages === 0
+                  ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
+                  : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
+              }`}
+            >
+              Next
+              <ChevronRightIcon className="h-4 w-4" />
+            </button>
           </div>
         </div>
         <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">

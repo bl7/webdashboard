@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 
 interface Plan {
+  id: string // Added id field for consistency
   name: string
   monthly: string
   yearly: string
@@ -13,6 +14,7 @@ interface Plan {
   description: string
   highlight: boolean
   cta: string
+  tier: number // Added tier for upgrade/downgrade logic
 }
 
 interface PlanSelectionStepProps {
@@ -31,11 +33,13 @@ const STRIPE_PRICE_PREFIX = "price_"
 
 const plans: Plan[] = [
   {
+    id: "free",
     name: "Starter Kitchen",
     monthly: "Free",
     yearly: "Free",
     price_id_monthly: "free",
     price_id_yearly: "free",
+    tier: 0,
     features: {
       "Device Provided": false,
       "Unlimited Label Printing": false,
@@ -49,11 +53,13 @@ const plans: Plan[] = [
     cta: "Get Started Free",
   },
   {
+    id: "pro_kitchen",
     name: "🧑🍳 Pro Kitchen",
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
     price_id_monthly: "price_1RZnHW6acbqNMwXigvqDdo8I",
     price_id_yearly: "price_1RZnI76acbqNMwXiW5y61Vfl",
+    tier: 1,
     features: {
       "Device Provided": "Epson TM-M30 Included",
       "Unlimited Label Printing": true,
@@ -67,11 +73,13 @@ const plans: Plan[] = [
     cta: "Start Basic Plan",
   },
   {
+    id: "multi_site",
     name: "Multi-Site Mastery",
     monthly: "£25/mo",
     yearly: "£270/yr",
     price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH",
     price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8",
+    tier: 2,
     features: {
       "Device Provided": "Sunmi or Epson Included",
       "Unlimited Label Printing": true,
@@ -86,6 +94,110 @@ const plans: Plan[] = [
   },
 ]
 
+// ✅ IMPROVED: More comprehensive plan name normalization
+const normalizePlanName = (planName: string): string => {
+  if (!planName || typeof planName !== "string") {
+    return "free"
+  }
+
+  // Clean the input - trim whitespace and normalize case
+  const cleaned = planName.trim().toLowerCase()
+
+  // Comprehensive mapping for all possible backend plan name variations
+  const mapping: Record<string, string> = {
+    // Free plan variations
+    free: "free",
+    "free plan": "free",
+    starter: "free",
+    "starter kitchen": "free",
+    basic: "free",
+
+    // Pro Kitchen variations
+    pro: "pro_kitchen",
+    "pro kitchen": "pro_kitchen",
+    "🧑🍳 pro kitchen": "pro_kitchen",
+    professional: "pro_kitchen",
+    "professional kitchen": "pro_kitchen",
+    "pro plan": "pro_kitchen",
+
+    // Multi-Site variations
+    multi: "multi_site",
+    "multi-site": "multi_site",
+    "multi site": "multi_site",
+    "multi-site mastery": "multi_site",
+    multisite: "multi_site",
+    enterprise: "multi_site",
+    premium: "multi_site",
+  }
+
+  // Direct mapping first
+  if (mapping[cleaned]) {
+    return mapping[cleaned]
+  }
+
+  // Fuzzy matching for partial matches
+  for (const [key, value] of Object.entries(mapping)) {
+    if (cleaned.includes(key) || key.includes(cleaned)) {
+      return value
+    }
+  }
+
+  // Enhanced fallback: convert to snake_case and match against known IDs
+  const fallback = cleaned
+    .replace(/[^\w\s]/g, "") // Remove special characters except spaces
+    .replace(/\s+/g, "_") // Replace spaces with underscores
+    .toLowerCase()
+
+  // Check if fallback matches any of our plan IDs
+  const knownPlanIds = ["free", "pro_kitchen", "multi_site"]
+  if (knownPlanIds.includes(fallback)) {
+    return fallback
+  }
+
+  // Final fallback to free
+  console.warn(`Unknown plan name: "${planName}", falling back to free`)
+  return "free"
+}
+
+// ✅ IMPROVED: Helper function to get current plan info
+const getCurrentPlanInfo = (planName: string) => {
+  const normalizedId = normalizePlanName(planName)
+  const planConfig = plans.find((p) => p.id === normalizedId)
+
+  return {
+    id: normalizedId,
+    config: planConfig,
+    isValid: !!planConfig,
+  }
+}
+
+// ✅ IMPROVED: Enhanced plan finding with validation
+const findPlanById = (planId: string): Plan | undefined => {
+  // First try direct match
+  let plan = plans.find((p) => p.id === planId)
+
+  // If not found, try normalizing the input
+  if (!plan) {
+    const normalizedId = normalizePlanName(planId)
+    plan = plans.find((p) => p.id === normalizedId)
+  }
+
+  return plan
+}
+
+// ✅ IMPROVED: Find plan by name with normalization
+const findPlanByName = (planName: string): Plan | undefined => {
+  // First try direct name match
+  let plan = plans.find((p) => p.name === planName)
+
+  // If not found, try normalizing and finding by ID
+  if (!plan) {
+    const normalizedId = normalizePlanName(planName)
+    plan = plans.find((p) => p.id === normalizedId)
+  }
+
+  return plan
+}
 export default function PlanSelectionStep({
   userId,
   selectedPlan,
@@ -115,11 +227,7 @@ export default function PlanSelectionStep({
 
     console.log("User data detection:", {
       localStorage_userid: localStorage.getItem("userid"),
-      localStorage_userId: localStorage.getItem("userId"),
-      localStorage_user_id: localStorage.getItem("user_id"),
       localStorage_email: localStorage.getItem("email"),
-      localStorage_userEmail: localStorage.getItem("userEmail"),
-      localStorage_user_email: localStorage.getItem("user_email"),
       finalUserId: userId,
       finalEmail: email,
     })

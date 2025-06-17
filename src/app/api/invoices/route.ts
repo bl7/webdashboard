@@ -1,66 +1,38 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import Stripe from "stripe"
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: "2022-11-15" as any,
+})
 
 export async function GET(req: NextRequest) {
-  const subscriptionId = req.nextUrl.searchParams.get("subscription_id")
-  if (!subscriptionId) {
-    return NextResponse.json({ error: "Missing subscription_id" }, { status: 400 })
+  const { searchParams } = new URL(req.url)
+  const user_id = searchParams.get("user_id")
+
+  if (!user_id) {
+    return NextResponse.json({ error: "Missing or invalid user_id" }, { status: 400 })
   }
 
-  const result = await pool.query(
-    `SELECT * FROM invoices WHERE subscription_id = $1 ORDER BY invoice_date DESC`,
-    [subscriptionId]
-  )
-
-  return NextResponse.json({ invoices: result.rows || [] })
-}
-
-export async function PUT(req: NextRequest) {
   try {
-    const {
-      subscription_id,
-      amount,
-      status,
-      recipient_name,
-      payment_method_last4,
-      invoice_date,
-      metadata,
-    } = await req.json()
-
-    if (!subscription_id || !amount || !status || !recipient_name || !invoice_date) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
-    }
-
-    // Optional: check if invoice exists (e.g. via id) to decide update or insert.
-    // For simplicity, assume insert only here.
-
-    await pool.query(
-      `
-      INSERT INTO invoices (
-        subscription_id,
-        amount,
-        status,
-        recipient_name,
-        payment_method_last4,
-        invoice_date,
-        metadata
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7)
-    `,
-      [
-        subscription_id,
-        amount,
-        status,
-        recipient_name,
-        payment_method_last4,
-        invoice_date,
-        metadata ? JSON.stringify(metadata) : null,
-      ]
+    const result = await pool.query(
+      `SELECT stripe_customer_id FROM subscriptions WHERE user_id = $1 LIMIT 1`,
+      [user_id]
     )
 
-    return NextResponse.json({ success: true })
-  } catch (error: unknown) {
-    let message = "Internal Server Error"
-    if (error instanceof Error) message = error.message
-    return NextResponse.json({ error: message }, { status: 500 })
+    if (result.rowCount === 0 || !result.rows[0].stripe_customer_id) {
+      return NextResponse.json({ error: "Stripe customer ID not found for user" }, { status: 404 })
+    }
+
+    const stripeCustomerId = result.rows[0].stripe_customer_id
+
+    const invoices = await stripe.invoices.list({
+      customer: stripeCustomerId,
+    })
+
+    return NextResponse.json({ invoices: invoices.data })
+  } catch (error) {
+    console.error("Error fetching invoices from Stripe:", error)
+    return NextResponse.json({ error: "Failed to fetch invoices" }, { status: 500 })
   }
 }

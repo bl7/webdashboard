@@ -116,7 +116,7 @@ export default function PlanRenewal({ subscription, onChangePlan }: Props) {
 
   return (
     <div
-      className={`relative flex h-48 w-80 flex-col justify-between rounded-xl bg-gradient-to-r ${getCardGradient()} p-4 text-white shadow-lg`}
+      className={`relative flex flex-col justify-between rounded-xl bg-gradient-to-r ${getCardGradient()} min-h-[12rem] w-full max-w-md p-4 text-white shadow-lg sm:min-h-[14rem]`}
     >
       {/* Icon at top-right */}
       <div className="absolute right-3 top-3">
@@ -126,18 +126,14 @@ export default function PlanRenewal({ subscription, onChangePlan }: Props) {
       <div>
         <div className="mb-1 text-xs opacity-75">{renewalInfo.label}</div>
         <div className="break-words text-2xl font-bold">{renewalInfo.date}</div>
-        <div className="mt-1 text-sm font-medium">
-          {isFreeplan ? "No billing required" : `${planName} Plan`}
-        </div>
+        <div className="mt-1 text-sm font-medium"></div>
 
-        {/* Status indicator for non-active plans */}
         {status !== "active" && !isFreeplan && (
           <div className="mt-1 text-xs capitalize opacity-75">
             Status: {status.replace("_", " ")}
           </div>
         )}
 
-        {/* Days until renewal for active paid plans */}
         {status === "active" && !isFreeplan && currentPeriodEnd && (
           <div className="mt-1 text-xs opacity-75">
             {(() => {
