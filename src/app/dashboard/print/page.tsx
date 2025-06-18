@@ -284,7 +284,98 @@ export default function LabelDemo() {
 
   const clearPrintQueue = () => setPrintQueue([])
 
-  const printLabels = async () => {
+  // Add this helper function inside your LabelDemo component, before the printLabels function
+  const createLabelImage = (
+    labelText: string,
+    width: number = 408,
+    height: number = 640
+  ): Promise<Uint8Array> => {
+    return new Promise((resolve) => {
+      const canvas = document.createElement("canvas")
+      const ctx = canvas.getContext("2d")
+
+      if (!ctx) {
+        throw new Error("Could not get canvas context")
+      }
+
+      // Set canvas size (5.1cm = 408 dots, 80mm = 640 dots at 203 DPI)
+      canvas.width = width
+      canvas.height = height
+
+      // White background
+      ctx.fillStyle = "white"
+      ctx.fillRect(0, 0, width, height)
+
+      // Black text
+      ctx.fillStyle = "black"
+      ctx.font = "bold 16px Arial"
+      ctx.textAlign = "left"
+
+      // Split text into lines and draw
+      const lines = labelText.split("\n")
+      let y = 30
+      const lineHeight = 24
+
+      lines.forEach((line: string) => {
+        if (line.trim() && y < height - 20) {
+          // Handle different font sizes for different content
+          if (line.includes("ALLERGENS:") || line.includes("INGREDIENTS:")) {
+            ctx.font = "bold 14px Arial"
+          } else if (line.length > 25) {
+            ctx.font = "12px Arial"
+          } else {
+            ctx.font = "bold 16px Arial"
+          }
+
+          // Word wrap for long lines
+          const maxWidth = width - 20
+          const words = line.split(" ")
+          let currentLine = ""
+
+          words.forEach((word: string) => {
+            const testLine = currentLine + (currentLine ? " " : "") + word
+            const metrics = ctx.measureText(testLine)
+
+            if (metrics.width > maxWidth && currentLine) {
+              ctx.fillText(currentLine, 10, y)
+              y += lineHeight
+              currentLine = word
+            } else {
+              currentLine = testLine
+            }
+          })
+
+          if (currentLine) {
+            ctx.fillText(currentLine, 10, y)
+            y += lineHeight
+          }
+        }
+      })
+
+      // Convert to 1-bit bitmap for thermal printer
+      const imageData = ctx.getImageData(0, 0, width, height)
+      const bitmap = new Uint8Array(Math.ceil((width * height) / 8))
+
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const pixelIndex = i / 4
+        const byteIndex = Math.floor(pixelIndex / 8)
+        const bitIndex = 7 - (pixelIndex % 8)
+
+        // Convert to grayscale and threshold
+        const gray = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3
+        const isBlack = gray < 128
+
+        if (isBlack) {
+          bitmap[byteIndex] |= 1 << bitIndex
+        }
+      }
+
+      resolve(bitmap)
+    })
+  }
+
+  // Replace your existing printLabels function with this:
+  const printLabels = async (): Promise<void> => {
     if (!window.epsonPrinter || !isConnected) {
       setStatus("Printer not connected")
       return
@@ -292,16 +383,14 @@ export default function LabelDemo() {
 
     try {
       setStatus("Printing...")
-      const encoder = new TextEncoder()
-      const ESC = 0x1b,
-        GS = 0x1d
+      const ESC = 0x1b
+      const GS = 0x1d
 
-      const init = new Uint8Array([ESC, 0x40]) // initialize
-      const cut = new Uint8Array([GS, 0x56, 0x00]) // full cut
+      const init = new Uint8Array([ESC, 0x40]) // Initialize printer
 
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
-          const label = formatLabelForPrint(
+          const labelText = formatLabelForPrint(
             item,
             allergens.map((a) => a.allergenName.toLowerCase()),
             customExpiry,
@@ -309,35 +398,53 @@ export default function LabelDemo() {
             useInitials,
             selectedInitial
           )
-          const text = encoder.encode(label + "\n")
 
-          // Feed to match 3.1cm = 247 dots
-          const feedContent = new Uint8Array([ESC, 0x4a, 264]) // Feed 264 dots for label height
-          const feedGap = new Uint8Array([ESC, 0x4a, 24]) // Feed 24 dots for gap
+          // Create bitmap image
+          const bitmap: Uint8Array = await createLabelImage(labelText, 408, 640)
 
+          // ESC/POS commands for bitmap printing
+          const width = 408
+          const height = 640
+          const bytesPerLine = Math.ceil(width / 8)
+
+          // Command to print bitmap: GS v 0 m xL xH yL yH d1...dk
+          const bitmapCmd = new Uint8Array([
+            GS,
+            0x76,
+            0x30,
+            0x00, // GS v 0 (raster format)
+            bytesPerLine & 0xff,
+            (bytesPerLine >> 8) & 0xff, // xL xH (bytes per line)
+            height & 0xff,
+            (height >> 8) & 0xff, // yL yH (height in dots)
+          ])
+
+          // 2mm gap = 16 dots
+          const feedGap = new Uint8Array([ESC, 0x4a, 16])
+
+          // Combine all commands
           const buffer = new Uint8Array(
-            init.length + text.length + feedContent.length + feedGap.length + cut.length
+            init.length + bitmapCmd.length + bitmap.length + feedGap.length
           )
 
           let offset = 0
           buffer.set(init, offset)
           offset += init.length
-          buffer.set(text, offset)
-          offset += text.length
-          buffer.set(feedContent, offset)
-          offset += feedContent.length
+          buffer.set(bitmapCmd, offset)
+          offset += bitmapCmd.length
+          buffer.set(bitmap, offset)
+          offset += bitmap.length
           buffer.set(feedGap, offset)
-          offset += feedGap.length
-          buffer.set(cut, offset)
 
           await window.epsonPrinter.transferOut(1, buffer)
         }
       }
 
       setStatus("Printed successfully")
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Print error", e)
-      setStatus(`Print failed: ${e.message}`)
+      const errorMessage = e instanceof Error ? e.message : "Unknown error"
+      setStatus(`Print failed: ${errorMessage}`)
     }
   }
 
@@ -443,7 +550,7 @@ export default function LabelDemo() {
                 )
               )}
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
@@ -454,11 +561,10 @@ export default function LabelDemo() {
                 }`}
               >
                 <ChevronLeftIcon className="h-4 w-4" />
-                Previous
               </button>
 
               <span className="min-w-[80px] text-center text-sm text-gray-700">
-                Page {page} of {totalPages}
+                {page} of {totalPages}
               </span>
 
               <button
@@ -470,7 +576,6 @@ export default function LabelDemo() {
                     : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
                 }`}
               >
-                Next
                 <ChevronRightIcon className="h-4 w-4" />
               </button>
             </div>
