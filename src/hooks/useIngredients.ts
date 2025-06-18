@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { toast } from "sonner"
 import { getAllIngredients, addIngredient, updateIngredient, deleteIngredient } from "@/lib/api"
 
-type Ingredient = {
+export type Ingredient = {
   uuid: string
   ingredientName: string
   expiryDays: number

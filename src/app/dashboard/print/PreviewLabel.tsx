@@ -2,6 +2,8 @@
 import React from "react"
 import { PrintQueueItem } from "@/types/print"
 
+export type LabelHeight = "40mm" | "80mm"
+
 interface LabelPreviewProps {
   printQueue: PrintQueueItem[]
   ALLERGENS: string[]
@@ -10,6 +12,7 @@ interface LabelPreviewProps {
   onExpiryChange: (uid: string, value: string) => void
   useInitials?: boolean
   selectedInitial?: string
+  labelHeight?: LabelHeight
 }
 
 // Helper function to format date as "MMM DD"
@@ -48,23 +51,34 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
   onExpiryChange,
   useInitials = false,
   selectedInitial = "",
+  labelHeight = "40mm",
 }) => {
   const allergenNames = ALLERGENS.map((a) => a.toLowerCase())
   const isAllergen = (ing: string) => allergenNames.some((a) => ing.toLowerCase().includes(a))
 
+  // Get dimensions based on label height
+  const isCompact = labelHeight === "40mm"
+  const labelHeightCm = isCompact ? "4cm" : "8cm"
+  const titleFontSize = isCompact ? "12px" : "14px"
+  const titlePadding = isCompact ? "6px 4px" : "10px 4px"
+  const contentFontSize = isCompact ? "10px" : "11px"
+  const contentPadding = isCompact ? "6px" : "8px"
+  const labelGap = isCompact ? "6px" : "12px"
+
   return (
     <div className="mt-8">
-      <h2 className="mb-4 text-xl font-semibold">Label Preview</h2>
+      <h2 className="mb-4 text-xl font-semibold">Label Preview ({labelHeight})</h2>
       {printQueue.length === 0 ? (
         <p className="text-gray-500">Select items to preview labels.</p>
       ) : (
         <>
           <p className="mb-4 text-sm text-gray-600">
-            You can change expiry dates below for some labels if you want.
+            Preview shows actual {labelHeight} height labels. You can change expiry dates below for
+            some labels if you want.
           </p>
           <div
-            className="flex flex-wrap gap-[1mm]"
-            style={{ backgroundColor: "#f9fafb", padding: "4px" }}
+            className="flex flex-wrap gap-[2mm]"
+            style={{ backgroundColor: "#f9fafb", padding: "8px" }}
           >
             {printQueue.map((item) => {
               const ingredientList = (item.ingredients ?? []).filter(
@@ -73,7 +87,6 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
               const isPPDS = item.labelType === "ppds"
               const tooLong = ingredientList.length > MAX_INGREDIENTS_TO_FIT
               const allergensOnly = ingredientList.filter(isAllergen)
-              const fontSize = ingredientList.length > 12 ? "8px" : "10px"
               const expiry = customExpiry[item.uid] || item.expiryDate || "N/A"
 
               // Format dates to short format for display
@@ -84,10 +97,10 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                 <div
                   key={item.uid}
                   style={{
-                    width: "5.5cm",
+                    width: "5.1cm", // 51mm width to match thermal printer
                     display: "flex",
                     flexDirection: "column",
-                    gap: "4px",
+                    gap: labelGap,
                   }}
                 >
                   {/* Expiry date input */}
@@ -108,13 +121,13 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                     style={{ width: "100%" }}
                   />
 
-                  {/* Label box */}
+                  {/* Label box - Adaptive height */}
                   <div
                     style={{
-                      height: "3.1cm",
-                      border: "1px solid #ccc",
-                      padding: "4px",
-                      fontSize,
+                      height: labelHeightCm,
+                      border: "2px solid #333",
+                      padding: contentPadding,
+                      fontSize: contentFontSize,
                       overflow: "hidden",
                       whiteSpace: "normal",
                       boxSizing: "border-box",
@@ -123,16 +136,17 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                       flexDirection: "column",
                       justifyContent: "flex-start",
                       position: "relative",
+                      lineHeight: isCompact ? "1.3" : "1.4",
                     }}
                   >
                     {useInitials && selectedInitial && !isPPDS && (
                       <div
                         style={{
                           position: "absolute",
-                          bottom: "2px",
-                          right: "2px",
-                          fontSize: "6px",
-                          color: "#666",
+                          bottom: contentPadding,
+                          right: contentPadding,
+                          fontSize: isCompact ? "9px" : "10px",
+                          color: "#000",
                           fontWeight: "bold",
                         }}
                       >
@@ -142,79 +156,111 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
 
                     {item.type === "ingredients" ? (
                       <>
-                        {/* Ingredient Label - Enhanced Layout */}
+                        {/* Ingredient Label */}
                         <div
-                          className="mb-1 text-center text-sm font-bold text-white"
+                          className="text-center font-bold text-white"
                           style={{
                             backgroundColor: "black",
-                            padding: "4px 2px",
-                            margin: "-4px -4px 4px -4px", // Extend to edges
+                            padding: titlePadding,
+                            margin: `-${contentPadding} -${contentPadding} ${labelGap} -${contentPadding}`,
+                            fontSize: titleFontSize,
+                            lineHeight: "1.2",
+                            marginBottom: isCompact ? "8px" : "12px",
                           }}
                         >
                           {item.name}
                         </div>
 
-                        {/* Printed On and Expiry Date on same line with short dates */}
-                        <div className="mb-2 flex justify-between text-xs">
-                          <span>
-                            <b>Printed:</b> {shortPrintedDate}
-                          </span>
-                          <span>
-                            <b>Expiry:</b> {shortExpiryDate}
-                          </span>
+                        {/* Dates section */}
+                        <div
+                          className={`text-xs font-medium ${isCompact ? "mb-2" : "mb-4"}`}
+                          style={{ fontSize: isCompact ? "9px" : "10px" }}
+                        >
+                          {isCompact ? (
+                            // Compact: single line
+                            <div>
+                              <b>Printed:</b> {shortPrintedDate} <b>Expiry:</b> {shortExpiryDate}
+                            </div>
+                          ) : (
+                            // Extended: flex layout
+                            <div className="flex justify-between">
+                              <span>
+                                <b>Printed:</b> {shortPrintedDate}
+                              </span>
+                              <span>
+                                <b>Expiry:</b> {shortExpiryDate}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
-                        {/* Contains Allergens Warning */}
-                        {item.allergens && item.allergens.length > 0 && (
-                          <div className="mb-1 text-xs font-bold text-red-600">
+                        {/* Allergens warning for extended labels */}
+                        {!isCompact && item.allergens && item.allergens.length > 0 && (
+                          <div
+                            className="mb-3 text-sm font-bold text-red-600"
+                            style={{ fontSize: "12px" }}
+                          >
                             Contains Allergens
                           </div>
                         )}
 
-                        {/* Allergens List with asterisks */}
+                        {/* Allergens List */}
                         {item.allergens && item.allergens.length > 0 ? (
-                          <div className="overflow-hidden text-ellipsis text-xs leading-snug">
+                          <div
+                            className="text-xs leading-relaxed"
+                            style={{
+                              fontSize: isCompact ? "9px" : "10px",
+                              lineHeight: isCompact ? "1.3" : "1.5",
+                            }}
+                          >
                             <b>Allergens:</b>{" "}
                             {item.allergens.map((a, i) => (
-                              <span
-                                key={a.allergenName}
-                                className="font-bold text-red-600"
-                                style={{ fontWeight: "bold" }}
-                              >
+                              <span key={a.allergenName} className="font-bold text-red-600">
                                 *{a.allergenName}*
                                 {i < (item.allergens?.length ?? 0) - 1 ? ", " : ""}
                               </span>
                             ))}
                           </div>
                         ) : (
-                          <div className="text-xs italic text-gray-400">No allergens declared</div>
+                          <div
+                            className="text-xs font-bold"
+                            style={{ fontSize: isCompact ? "9px" : "10px" }}
+                          >
+                            No allergens declared
+                          </div>
                         )}
                       </>
                     ) : isPPDS ? (
                       <>
-                        {/* Menu Item Label - PPDS - Enhanced Layout */}
+                        {/* PPDS Label */}
                         <div
-                          className="mb-1 text-center text-sm font-bold text-white"
+                          className="text-center font-bold text-white"
                           style={{
                             backgroundColor: "black",
-                            padding: "4px 2px",
-                            margin: "-4px -4px 4px -4px", // Extend to edges
+                            padding: titlePadding,
+                            margin: `-${contentPadding} -${contentPadding} ${labelGap} -${contentPadding}`,
+                            fontSize: titleFontSize,
+                            lineHeight: "1.2",
+                            marginBottom: isCompact ? "8px" : "12px",
                           }}
                         >
                           {item.name}
                         </div>
 
-                        {/* Best Before centered with short date */}
-                        <div className="mb-2 text-center text-xs font-medium">
+                        {/* Best Before */}
+                        <div
+                          className={`text-center font-bold ${isCompact ? "mb-2" : "mb-4"}`}
+                          style={{ fontSize: isCompact ? "11px" : "13px" }}
+                        >
                           <b>Best Before:</b> {shortExpiryDate}
                         </div>
 
+                        {/* Ingredients */}
                         <div
-                          className="overflow-hidden text-ellipsis text-xs leading-snug"
+                          className="text-xs leading-relaxed"
                           style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3, // Reduced to accommodate new layout
-                            WebkitBoxOrient: "vertical",
+                            fontSize: isCompact ? "9px" : "10px",
+                            lineHeight: isCompact ? "1.3" : "1.5",
                           }}
                         >
                           <b>Ingredients:</b>{" "}
@@ -222,7 +268,6 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                             <span
                               key={ing}
                               className={isAllergen(ing) ? "font-bold text-red-600" : ""}
-                              style={isAllergen(ing) ? { fontWeight: "bold" } : {}}
                             >
                               {isAllergen(ing) ? `*${ing}*` : ing}
                               {i < ingredientList.length - 1 ? ", " : ""}
@@ -232,45 +277,55 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                       </>
                     ) : (
                       <>
-                        {/* Menu Item Label - non-PPDS - Enhanced Layout */}
+                        {/* Regular Menu Item Label */}
                         <div
-                          className="mb-1 text-center text-sm font-bold text-white"
+                          className="text-center font-bold text-white"
                           style={{
                             backgroundColor: "black",
-                            padding: "4px 2px",
-                            margin: "-4px -4px 4px -4px", // Extend to edges
+                            padding: titlePadding,
+                            margin: `-${contentPadding} -${contentPadding} ${labelGap} -${contentPadding}`,
+                            fontSize: titleFontSize,
+                            lineHeight: "1.2",
+                            marginBottom: isCompact ? "8px" : "12px",
                           }}
                         >
                           {item.name}
                         </div>
 
-                        {/* Printed On and Expiry Date on same line with short dates */}
-                        <div className="mb-2 flex justify-between text-xs">
-                          <span>
-                            <b>Printed:</b> {shortPrintedDate}
-                          </span>
-                          <span>
-                            <b>Expiry:</b> {shortExpiryDate}
-                          </span>
+                        {/* Dates section */}
+                        <div
+                          className={`text-xs font-medium ${isCompact ? "mb-2" : "mb-4"}`}
+                          style={{ fontSize: isCompact ? "9px" : "10px" }}
+                        >
+                          {isCompact ? (
+                            <div>
+                              <b>Printed:</b> {shortPrintedDate} <b>Expiry:</b> {shortExpiryDate}
+                            </div>
+                          ) : (
+                            <div className="flex justify-between">
+                              <span>
+                                <b>Printed:</b> {shortPrintedDate}
+                              </span>
+                              <span>
+                                <b>Expiry:</b> {shortExpiryDate}
+                              </span>
+                            </div>
+                          )}
                         </div>
 
+                        {/* Ingredients/Allergens */}
                         <div
-                          className="overflow-hidden text-ellipsis text-xs leading-snug"
+                          className="text-xs leading-relaxed"
                           style={{
-                            display: "-webkit-box",
-                            WebkitLineClamp: 3, // Reduced to accommodate new layout
-                            WebkitBoxOrient: "vertical",
+                            fontSize: isCompact ? "9px" : "10px",
+                            lineHeight: isCompact ? "1.3" : "1.5",
                           }}
                         >
                           {tooLong ? (
                             <>
                               <b>Allergens:</b>{" "}
                               {allergensOnly.map((a, i) => (
-                                <span
-                                  key={a}
-                                  className="font-bold text-red-600"
-                                  style={{ fontWeight: "bold" }}
-                                >
+                                <span key={a} className="font-bold text-red-600">
                                   *{a}*{i < allergensOnly.length - 1 ? ", " : ""}
                                 </span>
                               ))}
@@ -282,7 +337,6 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                                 <span
                                   key={ing}
                                   className={isAllergen(ing) ? "font-bold text-red-600" : ""}
-                                  style={isAllergen(ing) ? { fontWeight: "bold" } : {}}
                                 >
                                   {isAllergen(ing) ? `*${ing}*` : ing}
                                   {i < ingredientList.length - 1 ? ", " : ""}

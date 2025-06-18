@@ -329,7 +329,7 @@ export async function getAllMenuItems(token: string | null) {
 }
 
 export async function addMenuItems(data: any, token: string) {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredients`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/items`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

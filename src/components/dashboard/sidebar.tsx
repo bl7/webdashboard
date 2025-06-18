@@ -3,7 +3,16 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
-import { FaHome, FaChartPie, FaCog, FaUser, FaPrint, FaBars, FaChevronLeft } from "react-icons/fa"
+import {
+  FaHome,
+  FaChartPie,
+  FaCog,
+  FaUser,
+  FaPrint,
+  FaBars,
+  FaChevronLeft,
+  FaUpload,
+} from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
@@ -23,6 +32,7 @@ const NAV_ITEMS = [
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Logs", icon: <GoLog />, href: "/dashboard/logs" },
+  { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
@@ -217,7 +227,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
+            "fixed left-0 top-0 z-50 flex h-full flex-col overflow-y-auto border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
             // Mobile behavior
             "lg:relative lg:z-auto lg:shadow-none",
             sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",

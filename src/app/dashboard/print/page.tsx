@@ -5,10 +5,12 @@ import { PrintQueueItem } from "@/types/print"
 import { getAllAllergens } from "@/lib/api"
 import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
-import { formatLabelForPrint } from "./labelFormatter"
+import { formatLabelForPrint, LabelHeight, getLabelDimensions } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
+import LabelHeightChooser from "./LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+
 const itemsPerPage = 5
 
 function calculateExpiryDate(days: number): string {
@@ -65,9 +67,11 @@ export default function LabelDemo() {
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [selectedInitial, setSelectedInitial] = useState<string>("")
+  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm") // New state for label height
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
+
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
     setFeedbackType(type)
@@ -80,6 +84,7 @@ export default function LabelDemo() {
 
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+
   useEffect(() => {
     const fetchSettings = async () => {
       try {
@@ -108,6 +113,7 @@ export default function LabelDemo() {
 
     fetchSettings()
   }, [userId])
+
   useEffect(() => {
     setPage(1)
   }, [activeTab, searchTerm])
@@ -119,34 +125,7 @@ export default function LabelDemo() {
       .then((res) => res?.data && setAllergens(res.data))
       .catch((err) => console.error("Allergen error", err))
   }, [])
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const [settingsRes, initialsRes] = await Promise.all([
-          fetch(`/api/label-settings?user_id=${userId}`),
-          fetch(`/api/label-initials?user_id=${userId}`),
-        ])
 
-        const settingsData = await settingsRes.json()
-        const initialsData = await initialsRes.json()
-
-        const expiryMap = Object.fromEntries(
-          (settingsData.settings || []).map((item: any) => [
-            item.label_type,
-            item.expiry_days.toString(),
-          ])
-        )
-        setExpiryDays(expiryMap)
-        setUseInitials(initialsData.use_initials)
-        setCustomInitials(initialsData.initials || [])
-      } catch (err) {
-        console.error("Failed to load settings:", err)
-        showFeedback("Failed to load settings", "error")
-      }
-    }
-
-    fetchSettings()
-  }, [userId])
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
@@ -168,9 +147,7 @@ export default function LabelDemo() {
       .catch((err) => setError(`Ingredient error: ${err.message}`))
       .finally(() => setIsLoading(false))
   }, [])
-  useEffect(() => {
-    setPage(1)
-  }, [activeTab, searchTerm])
+
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
@@ -192,7 +169,6 @@ export default function LabelDemo() {
                 expiryDate: calculateExpiryDate(
                   parseInt(expiryDays["cook"] || "") || getDefaultExpiryDays("cook")
                 ),
-
                 ingredients:
                   item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [],
               })
@@ -258,7 +234,6 @@ export default function LabelDemo() {
     setPrintQueue((prev) => [...prev, newItem])
   }
 
-  // --- Enhanced Print Queue Management ---
   const updateQuantity = (uid: string, quantity: number) =>
     setPrintQueue((prev) =>
       prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
@@ -284,7 +259,6 @@ export default function LabelDemo() {
 
   const clearPrintQueue = () => setPrintQueue([])
 
-  // Add this helper function inside your LabelDemo component, before the printLabels function
   const createLabelImage = (
     labelText: string,
     width: number = 408,
@@ -298,61 +272,117 @@ export default function LabelDemo() {
         throw new Error("Could not get canvas context")
       }
 
-      // Set canvas size (5.1cm = 408 dots, 80mm = 640 dots at 203 DPI)
       canvas.width = width
       canvas.height = height
 
-      // White background
       ctx.fillStyle = "white"
       ctx.fillRect(0, 0, width, height)
 
-      // Black text
-      ctx.fillStyle = "black"
-      ctx.font = "bold 16px Arial"
-      ctx.textAlign = "left"
+      let currentY = 20
+      let currentAlign = "left"
+      let isBold = false
+      let isInverse = false
+      let isLargeText = false
+      const lineHeight = 28
+      const largeLineHeight = 40
 
-      // Split text into lines and draw
-      const lines = labelText.split("\n")
-      let y = 30
-      const lineHeight = 24
+      const lines = labelText.split("\n").filter((line) => line.trim() !== "")
 
-      lines.forEach((line: string) => {
-        if (line.trim() && y < height - 20) {
-          // Handle different font sizes for different content
-          if (line.includes("ALLERGENS:") || line.includes("INGREDIENTS:")) {
-            ctx.font = "bold 14px Arial"
-          } else if (line.length > 25) {
-            ctx.font = "12px Arial"
-          } else {
-            ctx.font = "bold 16px Arial"
-          }
-
-          // Word wrap for long lines
-          const maxWidth = width - 20
-          const words = line.split(" ")
-          let currentLine = ""
-
-          words.forEach((word: string) => {
-            const testLine = currentLine + (currentLine ? " " : "") + word
-            const metrics = ctx.measureText(testLine)
-
-            if (metrics.width > maxWidth && currentLine) {
-              ctx.fillText(currentLine, 10, y)
-              y += lineHeight
-              currentLine = word
-            } else {
-              currentLine = testLine
-            }
-          })
-
-          if (currentLine) {
-            ctx.fillText(currentLine, 10, y)
-            y += lineHeight
-          }
+      lines.forEach((line: string, lineIndex: number) => {
+        if (!line.trim()) {
+          currentY += (isLargeText ? largeLineHeight : lineHeight) * 0.5
+          return
         }
+
+        let displayText = line
+        let tempAlign = currentAlign
+        let tempBold = isBold
+        let tempInverse = isInverse
+        let tempLargeText = isLargeText
+
+        if (displayText.includes("\x1B\x61\x01")) {
+          tempAlign = "center"
+          displayText = displayText.replace(/\x1B\x61\x01/g, "")
+        }
+        if (displayText.includes("\x1B\x61\x00")) {
+          tempAlign = "left"
+          displayText = displayText.replace(/\x1B\x61\x00/g, "")
+        }
+
+        if (displayText.includes("\x1B\x45\x01")) {
+          tempBold = true
+          displayText = displayText.replace(/\x1B\x45\x01/g, "")
+        }
+        if (displayText.includes("\x1B\x45\x00")) {
+          tempBold = false
+          displayText = displayText.replace(/\x1B\x45\x00/g, "")
+        }
+
+        if (displayText.includes("\x1D\x42\x01")) {
+          tempInverse = true
+          displayText = displayText.replace(/\x1D\x42\x01/g, "")
+        }
+        if (displayText.includes("\x1D\x42\x00")) {
+          tempInverse = false
+          displayText = displayText.replace(/\x1D\x42\x00/g, "")
+        }
+
+        if (displayText.includes("\x1D\x21\x11")) {
+          tempLargeText = true
+          displayText = displayText.replace(/\x1D\x21\x11/g, "")
+        }
+        if (displayText.includes("\x1D\x21\x00")) {
+          tempLargeText = false
+          displayText = displayText.replace(/\x1D\x21\x00/g, "")
+        }
+
+        displayText = displayText.replace(/[\x00-\x1F\x7F]/g, "")
+
+        if (!displayText.trim()) {
+          currentY += (tempLargeText ? largeLineHeight : lineHeight) * 0.3
+          return
+        }
+
+        const fontSize = tempLargeText ? 22 : 16
+        const fontWeight = tempBold ? "bold" : "normal"
+        ctx.font = `${fontWeight} ${fontSize}px Arial`
+
+        if (tempInverse) {
+          const textMetrics = ctx.measureText(displayText)
+          const textWidth = textMetrics.width
+          const textHeight = fontSize + 8
+
+          let rectX = 0
+          if (tempAlign === "center") {
+            rectX = (width - textWidth) / 2 - 8
+          } else {
+            rectX = 10 - 8
+          }
+
+          ctx.fillStyle = "black"
+          ctx.fillRect(0, currentY - fontSize - 4, width, textHeight + 8)
+
+          ctx.fillStyle = "white"
+        } else {
+          ctx.fillStyle = "black"
+        }
+
+        if (tempAlign === "center") {
+          ctx.textAlign = "center"
+          ctx.fillText(displayText, width / 2, currentY)
+        } else {
+          ctx.textAlign = "left"
+          ctx.fillText(displayText, 10, currentY)
+        }
+
+        currentY += tempLargeText ? largeLineHeight : lineHeight
+
+        currentAlign = tempAlign
+        isBold = tempBold
+        isInverse = tempInverse
+        isLargeText = tempLargeText
       })
 
-      // Convert to 1-bit bitmap for thermal printer
       const imageData = ctx.getImageData(0, 0, width, height)
       const bitmap = new Uint8Array(Math.ceil((width * height) / 8))
 
@@ -361,7 +391,6 @@ export default function LabelDemo() {
         const byteIndex = Math.floor(pixelIndex / 8)
         const bitIndex = 7 - (pixelIndex % 8)
 
-        // Convert to grayscale and threshold
         const gray = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3
         const isBlack = gray < 128
 
@@ -374,7 +403,6 @@ export default function LabelDemo() {
     })
   }
 
-  // Replace your existing printLabels function with this:
   const printLabels = async (): Promise<void> => {
     if (!window.epsonPrinter || !isConnected) {
       setStatus("Printer not connected")
@@ -386,7 +414,10 @@ export default function LabelDemo() {
       const ESC = 0x1b
       const GS = 0x1d
 
-      const init = new Uint8Array([ESC, 0x40]) // Initialize printer
+      const init = new Uint8Array([ESC, 0x40])
+
+      // Get label dimensions based on selected height
+      const dimensions = getLabelDimensions(labelHeight)
 
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
@@ -394,35 +425,36 @@ export default function LabelDemo() {
             item,
             allergens.map((a) => a.allergenName.toLowerCase()),
             customExpiry,
-            5, // MAX_INGREDIENTS_TO_FIT
+            5,
             useInitials,
-            selectedInitial
+            selectedInitial,
+            labelHeight // Pass the selected label height
           )
 
-          // Create bitmap image
-          const bitmap: Uint8Array = await createLabelImage(labelText, 408, 640)
+          // Create bitmap image with selected dimensions
+          const bitmap: Uint8Array = await createLabelImage(
+            labelText,
+            dimensions.width,
+            dimensions.height
+          )
 
-          // ESC/POS commands for bitmap printing
-          const width = 408
-          const height = 640
+          const width = dimensions.width
+          const height = dimensions.height
           const bytesPerLine = Math.ceil(width / 8)
 
-          // Command to print bitmap: GS v 0 m xL xH yL yH d1...dk
           const bitmapCmd = new Uint8Array([
             GS,
             0x76,
             0x30,
-            0x00, // GS v 0 (raster format)
+            0x00,
             bytesPerLine & 0xff,
-            (bytesPerLine >> 8) & 0xff, // xL xH (bytes per line)
+            (bytesPerLine >> 8) & 0xff,
             height & 0xff,
-            (height >> 8) & 0xff, // yL yH (height in dots)
+            (height >> 8) & 0xff,
           ])
 
-          // 2mm gap = 16 dots
           const feedGap = new Uint8Array([ESC, 0x4a, 16])
 
-          // Combine all commands
           const buffer = new Uint8Array(
             init.length + bitmapCmd.length + bitmap.length + feedGap.length
           )
@@ -461,7 +493,14 @@ export default function LabelDemo() {
             <div className="flex items-center gap-8">
               <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
             </div>
-            {/* You can include more printer-related content here */}
+            {/* Label Height Chooser */}
+            <div className="mb-6">
+              <LabelHeightChooser
+                selectedHeight={labelHeight}
+                onHeightChange={setLabelHeight}
+                className="mb-4"
+              />
+            </div>
           </div>
 
           {/* Right Section: Initials and Settings */}
@@ -599,7 +638,7 @@ export default function LabelDemo() {
                       : "Print all labels in queue"
                 }
               >
-                Print Labels
+                Print Labels ({labelHeight})
               </button>
               <button
                 onClick={clearPrintQueue}
@@ -672,7 +711,7 @@ export default function LabelDemo() {
             </div>
           </div>
         </div>
-        {/* Label Preview */}
+        {/* Label Preview with selected height */}
         <LabelPreview
           printQueue={printQueue}
           ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
@@ -680,6 +719,7 @@ export default function LabelDemo() {
           onExpiryChange={handleExpiryChange}
           useInitials={useInitials}
           selectedInitial={selectedInitial}
+          labelHeight={labelHeight} // Pass the selected label height
         />
       </div>
     </div>
