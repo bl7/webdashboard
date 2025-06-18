@@ -35,7 +35,7 @@ export default function PrinterStatusBar() {
   }
 
   return (
-    <nav className="fixed left-0 right-0 top-0 flex h-12 items-center justify-end gap-4 border-b border-gray-200 bg-white px-6 py-3 shadow-md">
+    <nav className="fixed left-0 right-0 top-0 z-10 flex h-12 items-center justify-end gap-4 border-b border-gray-200 bg-white px-6 py-3 shadow-md">
       {isConnected ? (
         <div className="flex items-center gap-1 text-sm font-medium text-green-600">
           <CheckCircle2 size={18} />
