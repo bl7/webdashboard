@@ -67,6 +67,32 @@ export default function MenuItemsDashboard() {
   const { ingredients, loading: ingredientsLoading } = useIngredients()
   const perPage = 5
 
+  // Helper function to convert ingredient names to IDs
+  const getIngredientIdsByNames = (ingredientNames: string[]): string[] => {
+    if (!ingredients || ingredients.length === 0) return []
+
+    return ingredientNames
+      .map((name) => {
+        const ingredient = ingredients.find(
+          (ing) => ing.ingredientName.toLowerCase().trim() === name.toLowerCase().trim()
+        )
+        return ingredient?.uuid || null
+      })
+      .filter((id) => id !== null) as string[]
+  }
+
+  // Helper function to convert ingredient IDs to names
+  const getIngredientNamesByIds = (ingredientIds: string[]): string[] => {
+    if (!ingredients || ingredients.length === 0) return []
+
+    return ingredientIds
+      .map((id) => {
+        const ingredient = ingredients.find((ing) => ing.uuid === id)
+        return ingredient?.ingredientName || null
+      })
+      .filter((name) => name !== null) as string[]
+  }
+
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) {
@@ -87,13 +113,16 @@ export default function MenuItemsDashboard() {
         for (const category of res.data) {
           if (!category.items) continue
           for (const item of category.items) {
-            const ingredientIds = item.ingredients?.map((ing: any) => ing.ingredientID) || []
+            // Get ingredient names from API
+            const ingredientNames = item.ingredients?.map((ing: any) => ing.ingredientName) || []
+
+            // Convert names to IDs using our ingredients list
+            const ingredientIds = getIngredientIdsByNames(ingredientNames)
+
             menuItems.push({
               id: item.menuItemID,
               name: item.menuItemName,
-              ingredients: item.ingredients
-                ? item.ingredients.map((ing: any) => ing.ingredientName).join(", ")
-                : "",
+              ingredients: ingredientNames.join(", "),
               ingredientIds,
               status: "Active", // default since API does not provide this
               addedAt: new Date().toISOString().split("T")[0],
@@ -111,8 +140,11 @@ export default function MenuItemsDashboard() {
       }
     }
 
-    fetchMenuItems()
-  }, [])
+    // Only fetch menu items after ingredients are loaded
+    if (!ingredientsLoading && ingredients.length > 0) {
+      fetchMenuItems()
+    }
+  }, [ingredients, ingredientsLoading])
 
   const filtered = data.filter((item) => {
     const matchesQuery = item.name.toLowerCase().includes(query.toLowerCase())
@@ -207,7 +239,7 @@ export default function MenuItemsDashboard() {
     setSelected(item)
     setEditItem({
       name: item.name,
-      ingredientIds: [...item.ingredientIds], // Create a copy to avoid mutation
+      ingredientIds: [...item.ingredientIds], // This should now have proper IDs
       status: item.status,
     })
     setShowEditModal(true)
@@ -274,7 +306,7 @@ export default function MenuItemsDashboard() {
 
       {error && <div className="rounded-md bg-red-100 p-3 text-red-700">{error}</div>}
 
-      {loading ? (
+      {loading || ingredientsLoading ? (
         <div className="py-8 text-center text-muted-foreground">Loading menu items...</div>
       ) : (
         <>

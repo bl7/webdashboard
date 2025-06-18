@@ -26,6 +26,7 @@ import {
 import { Label } from "@/components/ui/label"
 import {
   DropdownMenu,
+  DropdownMenuItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
@@ -130,16 +131,6 @@ export default function IngredientsTable() {
     }
   }
 
-  const handleEditIngredient = (ingredient: Ingredient) => {
-    setEditingIngredient(ingredient)
-    setEditIngredientData({
-      ingredientName: ingredient.ingredientName,
-      expiryDays: ingredient.expiryDays,
-    })
-    setEditSelectedAllergens(ingredient.allergens.map((a) => a.uuid))
-    setEditOpen(true)
-  }
-
   const handleUpdateIngredient = async () => {
     if (!editingIngredient) return
 
@@ -209,12 +200,58 @@ export default function IngredientsTable() {
       .map((allergen) => allergen.name)
   }
 
-  const getEditSelectedAllergenNames = () => {
-    return allergens
-      .filter((allergen) => editSelectedAllergens.includes((allergen as any).id))
-      .map((allergen) => allergen.name)
+  const mapAllergenNamesToIds = (ingredientAllergens: { uuid: string; allergenName: string }[]) => {
+    return ingredientAllergens
+      .map((ingredientAllergen: { uuid: string; allergenName: string }) => {
+        // Find the allergen in your allergens list by matching the name
+        const foundAllergen = allergens.find((a) => a.name === ingredientAllergen.allergenName)
+        return foundAllergen ? foundAllergen.id : null // or foundAllergen.uuid
+      })
+      .filter((id): id is string => id !== null) // Type-safe filter to remove null values
+  }
+  const getEditSelectedAllergenDetails = () => {
+    return editSelectedAllergens
+      .map((allergenId) => {
+        const allergen = allergens.find((a) => a.id === allergenId) // or a.uuid - match your data structure
+        return allergen
+          ? {
+              id: allergenId,
+              name: allergen.name,
+              category: allergen.category,
+            }
+          : null
+      })
+      .filter(
+        (allergen): allergen is { id: string; name: string; category: string } => allergen !== null
+      )
   }
 
+  const getAvailableAllergens = () => {
+    return allergens.filter(
+      (allergen) => !editSelectedAllergens.includes(allergen.id) // or allergen.uuid - match your data structure
+    )
+  }
+
+  const handleAddEditAllergen = (allergenId: string) => {
+    setEditSelectedAllergens((prev) => [...prev, allergenId])
+  }
+
+  const handleRemoveEditAllergen = (allergenId: string) => {
+    setEditSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
+  }
+
+  const handleEditIngredient = (ingredient: Ingredient) => {
+    setEditingIngredient(ingredient)
+    setEditIngredientData({
+      ingredientName: ingredient.ingredientName,
+      expiryDays: ingredient.expiryDays,
+    })
+
+    // Map allergen names to IDs by reverse-engineering from your allergens list
+    const allergenIds = mapAllergenNamesToIds(ingredient.allergens)
+    setEditSelectedAllergens(allergenIds)
+    setEditOpen(true)
+  }
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -364,15 +401,15 @@ export default function IngredientsTable() {
 
           {/* Edit Ingredient Dialog */}
           <Dialog open={editOpen} onOpenChange={setEditOpen}>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>Edit Ingredient</DialogTitle>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="space-y-1">
-                  <Label htmlFor="editIngredientName">Name</Label>
+              <div className="grid gap-6 py-4">
+                {/* Ingredient Name */}
+                <div>
+                  <Label className="mb-2 block text-sm font-medium">Ingredient Name</Label>
                   <Input
-                    id="editIngredientName"
                     placeholder="E.g. Sugar"
                     value={editIngredientData.ingredientName}
                     onChange={(e) =>
@@ -384,10 +421,11 @@ export default function IngredientsTable() {
                     disabled={loading}
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="editExpiryDays">Expiry Days</Label>
+
+                {/* Expiry Days */}
+                <div>
+                  <Label className="mb-2 block text-sm font-medium">Expiry Days</Label>
                   <Input
-                    id="editExpiryDays"
                     type="number"
                     min={1}
                     placeholder="E.g. 7"
@@ -401,94 +439,129 @@ export default function IngredientsTable() {
                     disabled={loading}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Allergens</Label>
-                  <DropdownMenu
-                    open={editAllergenDropdownOpen}
-                    onOpenChange={setEditAllergenDropdownOpen}
-                  >
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between text-left font-normal"
-                        disabled={allergensLoading || loading}
-                      >
-                        <span>
-                          {allergensLoading
-                            ? "Loading allergens..."
-                            : editSelectedAllergens.length === 0
-                              ? "Select allergens..."
-                              : `${editSelectedAllergens.length} allergen${editSelectedAllergens.length === 1 ? "" : "s"} selected`}
-                        </span>
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80" align="start">
-                      <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {allergensError ? (
-                        <div className="px-2 py-1 text-sm text-red-500">
-                          Error loading allergens: {allergensError}
-                        </div>
-                      ) : allergensLoading ? (
-                        <div className="px-2 py-1 text-sm">Loading allergens...</div>
-                      ) : allergens.length === 0 ? (
-                        <div className="px-2 py-1 text-sm text-muted-foreground">
-                          No allergens available
-                        </div>
-                      ) : (
-                        <div className="max-h-60 overflow-y-auto">
-                          {allergens.map((allergen) => (
-                            <DropdownMenuCheckboxItem
-                              key={allergen.id}
-                              checked={editSelectedAllergens.includes(allergen.id)}
-                              onCheckedChange={() => handleEditAllergenToggle(allergen.id)}
-                              className="flex items-center space-x-2 px-2 py-2"
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">{allergen.name}</span>
-                                {allergen.category && (
-                                  <span className="text-xs text-muted-foreground">
-                                    {allergen.category}
-                                  </span>
-                                )}
-                              </div>
-                            </DropdownMenuCheckboxItem>
-                          ))}
-                        </div>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
 
-                  {/* Display selected allergens as badges */}
-                  {editSelectedAllergens.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {getEditSelectedAllergenNames().map((name, index) => (
-                        <Badge
-                          key={editSelectedAllergens[index]}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          {name}
-                          <button
-                            type="button"
-                            className="ml-1 hover:text-destructive"
-                            onClick={() => removeEditSelectedAllergen(editSelectedAllergens[index])}
-                            disabled={loading}
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
+                {/* Allergens Management */}
+                <div>
+                  <Label className="mb-3 block text-sm font-medium">Manage Allergens</Label>
+                  {allergensLoading ? (
+                    <div className="text-sm text-muted-foreground">Loading allergens...</div>
+                  ) : allergensError ? (
+                    <div className="text-sm text-red-500">
+                      Error loading allergens: {allergensError}
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {/* Current Allergens Display */}
+                      <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 dark:border-orange-800 dark:bg-orange-950/50">
+                        <Label className="mb-3 block text-sm font-medium text-orange-800 dark:text-orange-300">
+                          Current Allergens ({editSelectedAllergens.length})
+                        </Label>
+                        {editSelectedAllergens.length === 0 ? (
+                          <p className="text-sm italic text-muted-foreground">
+                            No allergens selected. Add some allergens below.
+                          </p>
+                        ) : (
+                          <div className="flex flex-wrap gap-2">
+                            {getEditSelectedAllergenDetails().map((allergen) => (
+                              <div
+                                key={allergen.id}
+                                className="flex items-center gap-2 rounded-md bg-orange-100 px-3 py-2 text-sm shadow-sm dark:bg-orange-900/30"
+                              >
+                                <div className="flex flex-col">
+                                  <span className="font-medium">{allergen.name}</span>
+                                  {allergen.category && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {allergen.category}
+                                    </span>
+                                  )}
+                                </div>
+                                <Button
+                                  size="icon"
+                                  variant="ghost"
+                                  className="h-5 w-5 rounded-full hover:bg-orange-200 dark:hover:bg-orange-800"
+                                  onClick={() => handleRemoveEditAllergen(allergen.id)}
+                                  title={`Remove ${allergen.name}`}
+                                  disabled={loading}
+                                >
+                                  <X className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Add More Allergens Section */}
+                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/50">
+                        <Label className="mb-3 block text-sm font-medium text-blue-800 dark:text-blue-300">
+                          Add More Allergens
+                        </Label>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className="w-full justify-between"
+                              disabled={getAvailableAllergens().length === 0 || loading}
+                            >
+                              {getAvailableAllergens().length === 0
+                                ? "All allergens selected"
+                                : `Add Allergen (${getAvailableAllergens().length} available)`}
+                              <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent className="max-h-48 w-full overflow-y-auto">
+                            <DropdownMenuLabel>Available Allergens</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {getAvailableAllergens().length === 0 ? (
+                              <div className="px-2 py-2 text-center text-sm text-muted-foreground">
+                                No more allergens available
+                              </div>
+                            ) : (
+                              getAvailableAllergens().map((allergen) => (
+                                <DropdownMenuItem
+                                  key={allergen.id}
+                                  onClick={() => handleAddEditAllergen(allergen.id)}
+                                  className="cursor-pointer"
+                                >
+                                  <Plus className="mr-2 h-4 w-4" />
+                                  <div className="flex flex-col">
+                                    <span className="font-medium">{allergen.name}</span>
+                                    {allergen.category && (
+                                      <span className="text-xs text-muted-foreground">
+                                        {allergen.category}
+                                      </span>
+                                    )}
+                                  </div>
+                                </DropdownMenuItem>
+                              ))
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
               <DialogFooter>
                 <Button
-                  onClick={handleUpdateIngredient}
-                  className="bg-primary text-white"
+                  variant="outline"
+                  onClick={() => {
+                    setEditOpen(false)
+                    setEditingIngredient(null)
+                    setEditIngredientData({ ingredientName: "", expiryDays: 0 })
+                    setEditSelectedAllergens([])
+                  }}
                   disabled={loading}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleUpdateIngredient}
+                  disabled={
+                    !editIngredientData.ingredientName.trim() ||
+                    editIngredientData.expiryDays <= 0 ||
+                    loading
+                  }
                 >
                   {loading ? (
                     <>
@@ -496,7 +569,7 @@ export default function IngredientsTable() {
                       Updating...
                     </>
                   ) : (
-                    "Update"
+                    "Update Ingredient"
                   )}
                 </Button>
               </DialogFooter>

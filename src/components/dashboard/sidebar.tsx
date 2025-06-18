@@ -189,7 +189,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   return (
     <>
-      <div className="z-20">
+      <div className="sticky top-0 z-20 h-screen shrink-0 overflow-y-auto">
         {/* Mobile Toggle Button */}
         <button
           onClick={toggleSidebar}
