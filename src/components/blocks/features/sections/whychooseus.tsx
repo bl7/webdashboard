@@ -18,7 +18,7 @@ const features = [
   {
     icon: <Layers3 className="h-6 w-6 text-primary" />,
     title: "Scalable Infrastructure",
-    description: "Whether you’re a small business or a large chain, our platform grows with you.",
+    description: "Whether you're a small business or a large chain, our platform grows with you.",
   },
   {
     icon: <Lightbulb className="h-6 w-6 text-primary" />,
@@ -35,11 +35,11 @@ const features = [
 export const WhyChooseUs = () => {
   return (
     <section className="bg-white py-24">
-      <div className="container space-y-12 text-center">
+      <div className="container space-y-12 px-4 text-center sm:px-6 md:px-12 lg:px-16">
         <div className="mx-auto max-w-3xl space-y-4">
           <h2 className="text-4xl font-bold tracking-tight">Why Choose InstaLabel?</h2>
           <p className="text-lg text-muted-foreground">
-            We’ve built our platform with the needs of real businesses in mind — fast, scalable, and
+            We've built our platform with the needs of real businesses in mind — fast, scalable, and
             beautifully simple.
           </p>
         </div>

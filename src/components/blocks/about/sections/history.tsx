@@ -5,7 +5,7 @@ import Image from "next/image"
 export const History = () => {
   return (
     <section>
-      <div className="container pb-24">
+      <div className="container px-4 pb-24 sm:px-6 md:px-12 lg:px-16">
         <div className="h-96 w-full overflow-hidden rounded-lg">
           <Image src={care} alt="Chef in busy kitchen" className="h-full w-full object-cover" />
         </div>
@@ -13,13 +13,13 @@ export const History = () => {
           From Kitchen Chaos to Labeling Clarity
         </h1>
         <p className="mt-8 text-base leading-relaxed tracking-wide">
-          InstaLabel wasn’t born out of a startup incubator or a pitch deck — it started behind a
+          InstaLabel wasn't born out of a startup incubator or a pitch deck — it started behind a
           prep counter, during a lunch rush. We were there when the labels smudged, the expiry dates
           faded, and nobody could remember if the sauce tub was opened today or yesterday. These
-          weren’t just annoyances — they were risks. For safety. For compliance. For trust.
+          weren't just annoyances — they were risks. For safety. For compliance. For trust.
         </p>
         <p className="mt-4 text-base leading-relaxed tracking-wide">
-          We knew kitchens needed a better way to track what’s fresh, what’s safe, and what’s
+          We knew kitchens needed a better way to track what's fresh, what's safe, and what's
           compliant. So we built it — not with flashy tech jargon, but with real kitchen problems in
           mind. InstaLabel began as a tool for auto-calculating expiry dates and printing clear,
           wipe-safe labels. Then it grew into something more.
@@ -32,7 +32,7 @@ export const History = () => {
         <p className="mt-4 text-base leading-relaxed tracking-wide">
           Today, InstaLabel is trusted in hundreds of commercial kitchens across the UK — from
           independent cafés to growing chains — helping them reduce food waste, pass EHO
-          inspections, and protect customers with confidence. It’s simple, fast, and made to blend
+          inspections, and protect customers with confidence. It's simple, fast, and made to blend
           into the rhythm of your kitchen — not disrupt it.
         </p>
         <p className="mt-4 text-base leading-relaxed tracking-wide">

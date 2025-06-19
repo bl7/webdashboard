@@ -151,6 +151,7 @@ export default function IngredientsTable() {
     }
 
     const success = await updateExistingIngredient(editingIngredient.uuid, updateData)
+    console.log(";updated data", updateData)
     if (success) {
       setEditOpen(false)
       setEditingIngredient(null)

@@ -3,7 +3,7 @@
 import React from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Logo } from "@/assets/jsx/logo"
+
 import { FaLinkedin, FaFacebook, FaXTwitter, FaInstagram } from "react-icons/fa6"
 
 // CTA + Footer
@@ -49,13 +49,10 @@ export const Footer = () => {
 
       {/* Footer Section */}
       <footer className="bg-black pt-20 text-white">
-        <div className="container mx-auto grid grid-cols-1 gap-12 px-6 pb-12 md:grid-cols-4">
+        <div className="container grid grid-cols-1 gap-12 px-6 pb-12 md:grid-cols-4">
           {/* Logo + Description */}
-          <div>
-            <div className="mb-4 flex items-center gap-2">
-              <Logo className="h-10 w-10" />
-              <h2 className="font-accent text-2xl font-bold">InstaLabel</h2>
-            </div>
+          <div className="">
+            <Image src="/long_longwhite.png" width={180} height={40} alt="instalabel logo" />
             <p className="text-sm text-white/80">
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
               one app.

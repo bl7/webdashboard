@@ -7,7 +7,7 @@ import { motion } from "framer-motion"
 
 const features = [
   "Automated expiry and allergen labeling",
-  "Natasha’s Law & EHO compliant, always up-to-date",
+  "Natasha's Law & EHO compliant, always up-to-date",
   "Cloud-based management across all your locations",
   "Touchscreen device: rugged, hygienic, and easy to use",
 ]
@@ -34,8 +34,8 @@ export const Feature = () => {
   }, [])
 
   return (
-    <section className="-mt-16 px-4 py-20 text-foreground">
-      <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 md:grid-cols-2">
+    <section className="-mt-16 px-4 py-20 text-foreground sm:px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto grid grid-cols-1 items-center gap-12 md:grid-cols-2">
         {/* Entire Left Content Block with ref */}
         <div ref={textRef} className="">
           <h2 className="mb-4 text-3xl font-bold sm:text-4xl">All-In-One Food Labeling Solution</h2>

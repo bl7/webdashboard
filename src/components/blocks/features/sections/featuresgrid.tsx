@@ -12,11 +12,11 @@ export const FeaturesGrid = () => {
 
   return (
     <section className="bg-white py-24">
-      <div className="container grid items-center gap-12 md:grid-cols-2">
+      <div className="container grid items-center gap-12 px-4 sm:px-6 md:grid-cols-2 md:px-12 lg:px-16">
         {/* Text Content */}
         <div>
           <h2 className="text-4xl font-bold tracking-tight text-primary">
-            Everything you need, nothing you don’t
+            Everything you need, nothing you don't
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             InstaLabel is built for speed and simplicity. Print directly from the web, monitor

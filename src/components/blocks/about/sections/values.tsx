@@ -2,12 +2,12 @@ import React from "react"
 
 export const Values = () => {
   return (
-    <section className="bg-gradient-to-b from-primary/10 to-white py-24">
-      <div className="container mx-auto max-w-6xl px-6">
+    <section className="bg-muted/20">
+      <div className="container mx-auto max-w-6xl px-4 sm:px-6 md:px-12 lg:px-16">
         {/* Mission */}
         <div className="mx-auto mb-20 max-w-3xl text-center">
-          <h1 className="mb-6 text-4xl font-extrabold tracking-tight text-gray-900">Our Mission</h1>
-          <p className="text-xl leading-relaxed text-gray-700">
+          <h1 className="mb-6 text-4xl font-bold tracking-tight">Our Mission</h1>
+          <p className="text-lg text-muted-foreground">
             To help every kitchen label smarter, waste less, and stay compliant — without slowing
             down.
           </p>

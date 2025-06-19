@@ -1,5 +1,5 @@
 import React from "react"
-import { FeaturesHero, FeaturesGrid, CoreFeaturesGrid, WhyChooseUs, FeaturesTabs } from "."
+import { FeaturesHero, FeaturesGrid, CoreFeaturesGrid, WhyChooseUs } from "."
 export const Features = () => {
   return (
     <>
@@ -7,7 +7,6 @@ export const Features = () => {
       <CoreFeaturesGrid />
       <FeaturesGrid />
       <WhyChooseUs />
-      <FeaturesTabs />
     </>
   )
 }

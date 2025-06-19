@@ -5,14 +5,15 @@ import Image from "next/image"
 import { ClipboardCheck, Smartphone, Monitor, Printer } from "lucide-react"
 import { Button } from "@/components/ui"
 import { ArrowRight, StepForward } from "lucide-react"
+
 export const Services = () => {
   return (
-    <section id="features" className="py-24">
-      <div className="container mx-auto max-w-7xl px-6">
-        <div className="flex flex-col-reverse items-center gap-12 md:flex-row md:items-start">
+    <section id="features" className="px-4 py-24 sm:px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto max-w-6xl">
+        <div className="flex flex-col-reverse items-center gap-16 md:flex-row md:items-start">
           {/* Left Content */}
-          <div className="space-y-8 md:w-1/2">
-            <h2 className="text-4xl font-extrabold leading-tight text-gray-900">
+          <div className="w-full max-w-2xl space-y-6">
+            <h2 className="font-accent text-3xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-4xl">
               Powerful features built for kitchens, by kitchens.
             </h2>
 
@@ -27,11 +28,11 @@ export const Services = () => {
                 {
                   icon: ClipboardCheck,
                   title: "Track Prep & Expiry Dates Automatically",
-                  desc: "We calculate everything — so your staff doesn’t have to.",
+                  desc: "We calculate everything — so your staff doesn't have to.",
                 },
                 {
                   icon: Monitor,
-                  title: "Comply with Natasha’s Law & EHO Standards",
+                  title: "Comply with Natasha's Law & EHO Standards",
                   desc: "Every label includes allergens, prep dates, and times — automatically.",
                 },
                 {
@@ -44,16 +45,16 @@ export const Services = () => {
                   <div className="flex-shrink-0 rounded-full bg-gray-200 p-3">
                     <Icon className="h-7 w-7 text-gray-700" />
                   </div>
-                  <div>
+                  <div className="max-w-xl">
                     <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-                    <p className="mt-1 text-sm text-gray-700">{desc}</p>
+                    <p className="mt-1 text-gray-600">{desc}</p>
                   </div>
                 </li>
               ))}
             </ul>
 
             {/* CTA Buttons */}
-            <div className="mt-10 flex flex-wrap gap-4">
+            <div className="flex flex-wrap items-center gap-4 pt-4">
               <Button size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
                 See full list of features
                 <ArrowRight className="ml-2 h-4 w-4" />

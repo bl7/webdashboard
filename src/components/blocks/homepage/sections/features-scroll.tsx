@@ -1,5 +1,6 @@
 import Marquee from "@/lib/marqee"
 import React from "react"
+import { Button } from "@/components/ui"
 
 const foodBusinesses = [
   { name: "Restaurant A", logo: "/noodle.png" },
@@ -12,10 +13,10 @@ const foodBusinesses = [
 
 export const TrustedBySection = () => {
   return (
-    <section className="bg-gray-50 py-12">
-      <div className="mx-auto max-w-5xl px-6 text-center">
-        <h3 className="mb-2 text-3xl font-semibold text-gray-800">Who We Serve</h3>
-        <p className="mx-auto mb-8 max-w-xl text-gray-600">
+    <section className="bg-gray-50 px-4 py-12 sm:px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto text-center">
+        <h3 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Who We Serve</h3>
+        <p className="mx-auto mb-8 max-w-xl text-base text-muted-foreground sm:text-lg md:text-xl">
           From cloud kitchens to national brands, InstaLabel makes food safety easy.
         </p>
 
@@ -32,12 +33,12 @@ export const TrustedBySection = () => {
           </div>
         </Marquee>
 
-        <button
-          // onClick={() => (window.location.href = "/signup")}
-          className="hover:bg-primary-dark mt-10 inline-block rounded bg-primary px-6 py-3 font-semibold text-white transition"
+        <Button
+          size="lg"
+          className="mt-10 bg-primary px-6 py-3 text-base text-white hover:bg-primary/90"
         >
           Get Started Today
-        </button>
+        </Button>
       </div>
     </section>
   )

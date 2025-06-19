@@ -211,7 +211,7 @@ export default function MenuItemsDashboard() {
         ingredientIds: editItem.ingredientIds,
         status: editItem.status as "Active" | "Inactive",
       }
-
+      console.log("updated item", updatedItem)
       setData((prev) => prev.map((item) => (item.id === selected.id ? updatedItem : item)))
       setShowEditModal(false)
       setSelected(null)

@@ -68,7 +68,7 @@ export const PricingGrid = () => {
 
   return (
     <section id="pricing" className="bg-muted/20 py-24">
-      <div className="container space-y-16 text-center">
+      <div className="container space-y-16 px-4 text-center sm:px-6 md:px-12 lg:px-16">
         {/* Heading */}
         <div className="mx-auto max-w-3xl space-y-4">
           <h2 className="text-4xl font-bold tracking-tight">Start Free, Scale as You Grow</h2>

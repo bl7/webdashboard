@@ -5,7 +5,7 @@ import React from "react"
 export const TestedInKitchens = () => {
   return (
     <section className="bg-white py-24">
-      <div className="container mx-auto max-w-4xl space-y-10 text-center">
+      <div className="container mx-auto max-w-4xl space-y-10 px-4 text-center sm:px-6 md:px-12 lg:px-16">
         {/* Heading */}
         <div className="space-y-4">
           <h2 className="text-4xl font-bold tracking-tight">

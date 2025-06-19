@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -17,6 +17,16 @@ const navItems = [
 
 export const Header = () => {
   const pathname = usePathname()
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/"
@@ -24,65 +34,99 @@ export const Header = () => {
   }
 
   return (
-    <header className="sticky top-0 z-30 w-full border-b bg-white/80 backdrop-blur-md">
-      <div className="container flex h-16 items-center justify-between">
-        {/* Logo */}
-        <Link href="/" className="flex items-center">
-          <Image src="/logo_long.png" alt="InstaLabel" width={120} height={28} priority />
+    <header
+      className={cn(
+        "sticky top-0 z-30 w-full border-b transition-all duration-300 ease-in-out",
+        isScrolled
+          ? "border-gray-200/50 bg-white/95 shadow-lg backdrop-blur-lg"
+          : "border-gray-200/30 bg-white/80 backdrop-blur-md"
+      )}
+    >
+      <div className="container flex h-16 items-center justify-between px-4 sm:px-6 md:px-12 lg:px-16">
+        {/* Logo with hover animation */}
+        <Link
+          href="/"
+          className={cn(
+            "flex items-center transition-all duration-300 ease-out",
+            "hover:scale-105 active:scale-95"
+          )}
+        >
+          <div className="relative overflow-hidden rounded-lg">
+            <Image
+              src="/logo_long.png"
+              alt="InstaLabel"
+              width={120}
+              height={28}
+              priority
+              className="transition-all duration-300 hover:brightness-110"
+            />
+            <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 ease-out hover:translate-x-full" />
+          </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-6 text-base font-medium text-gray-800 md:flex">
-          {navItems.map((item) => (
+        {/* Navigation + CTA + Auth moved to right */}
+        <div className="flex items-center gap-8">
+          {/* Desktop Nav */}
+          <nav className="hidden items-center gap-6 text-base font-medium text-gray-800 md:flex">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "transition-colors duration-200",
+                  isActive(item.href)
+                    ? "border-b-2 border-primary font-semibold text-primary"
+                    : "text-gray-700 hover:text-primary"
+                )}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* CTA + Auth */}
+          <div className="flex items-center gap-3">
             <Link
-              key={item.href}
-              href={item.href}
+              href="/book"
               className={cn(
-                "transition-colors hover:text-primary",
-                isActive(item.href)
-                  ? "border-b-2 border-primary font-semibold text-primary"
-                  : "text-gray-700"
+                buttonVariants({ variant: "default", size: "sm" }),
+                "h-9 rounded-full px-5 text-base"
               )}
             >
-              {item.label}
+              Book a Demo
             </Link>
-          ))}
-        </nav>
 
-        {/* CTA + Auth */}
-        <div className="flex items-center gap-2">
-          <Link
-            href="/book"
-            className={cn(
-              buttonVariants({ variant: "default", size: "sm" }),
-              "h-9 rounded-full px-5 text-base"
-            )}
-          >
-            Book a Demo
-          </Link>
-          <Link
-            href="/login"
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "h-9 rounded-full px-4 text-base"
-            )}
-          >
-            Sign In
-          </Link>
+            <Link
+              href="/login"
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "h-9 rounded-full px-4 text-base"
+              )}
+            >
+              Sign In
+            </Link>
+          </div>
         </div>
       </div>
 
-      {/* Mobile Nav */}
-      <div className="container border-t md:hidden">
-        <nav className="flex h-11 items-center justify-center gap-5 text-base font-medium text-gray-700">
-          {navItems.map((item) => (
+      {/* Mobile Nav with slide-in animation */}
+      <div
+        className={cn(
+          "container border-t px-4 transition-all duration-300 ease-out sm:px-6 md:hidden md:px-12 lg:px-16",
+          isScrolled ? "border-gray-200/50 bg-white/50" : "border-gray-200/30"
+        )}
+      >
+        <nav className="flex h-12 items-center justify-center gap-6 text-base font-medium text-gray-700">
+          {navItems.map((item, index) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "transition-colors hover:text-primary",
-                isActive(item.href) ? "font-semibold text-primary" : ""
+                "transition-colors duration-200",
+                "duration-300 animate-in fade-in slide-in-from-bottom-2",
+                isActive(item.href) ? "font-semibold text-primary" : "hover:text-primary"
               )}
+              style={{ animationDelay: `${index * 50}ms` }}
             >
               {item.label}
             </Link>
