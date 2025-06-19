@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from "react"
 import * as XLSX from "xlsx"
-import { Upload, FileText, CheckCircle, AlertCircle, X } from "lucide-react"
+import { Upload, FileText, CheckCircle, AlertCircle, X, Download } from "lucide-react"
 import DataTable from "./DataTable"
 import {
   useImportProcessor,
@@ -40,8 +40,6 @@ const customStyles = `
     to {
       opacity: 1;
     }
-  }
-
   }
 `
 
@@ -161,6 +159,58 @@ const ExcelUpload: React.FC = () => {
     setUploadError("")
   }
 
+  const downloadTemplate = () => {
+    // Create sample data for the template
+    const templateData = [
+      {
+        menu_item_name: "Caesar Salad",
+        ingredient_name: "Romaine Lettuce",
+        shelf_life_hours: 72,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Caesar Salad",
+        ingredient_name: "Parmesan Cheese",
+        shelf_life_hours: 168,
+        allergens: "Dairy",
+      },
+      {
+        menu_item_name: "Caesar Salad",
+        ingredient_name: "Caesar Dressing",
+        shelf_life_hours: 336,
+        allergens: "Eggs, Fish",
+      },
+      {
+        menu_item_name: "Margherita Pizza",
+        ingredient_name: "Pizza Dough",
+        shelf_life_hours: 48,
+        allergens: "Gluten",
+      },
+      {
+        menu_item_name: "Margherita Pizza",
+        ingredient_name: "Mozzarella Cheese",
+        shelf_life_hours: 240,
+        allergens: "Dairy",
+      },
+      {
+        menu_item_name: "Margherita Pizza",
+        ingredient_name: "Tomato Sauce",
+        shelf_life_hours: 120,
+        allergens: "None",
+      },
+    ]
+
+    // Create workbook and worksheet
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(templateData)
+
+    // Add the worksheet to workbook
+    XLSX.utils.book_append_sheet(wb, ws, "Menu Template")
+
+    // Save the file
+    XLSX.writeFile(wb, "menu_import_template.xlsx")
+  }
+
   return (
     <>
       <style>{customStyles}</style>
@@ -207,6 +257,17 @@ const ExcelUpload: React.FC = () => {
                               className="hidden"
                             />
                           </label>
+
+                          <div className="mt-4 text-sm text-gray-500">
+                            <span>Don't have a file ready? </span>
+                            <button
+                              onClick={downloadTemplate}
+                              className="inline-flex items-center font-medium text-blue-600 underline decoration-2 underline-offset-2 transition-colors duration-200 hover:text-blue-700"
+                            >
+                              <Download className="mr-1 h-4 w-4" />
+                              Download Template
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -277,6 +338,14 @@ const ExcelUpload: React.FC = () => {
                         >
                           <X className="mr-2 h-4 w-4" />
                           Start Over
+                        </button>
+
+                        <button
+                          onClick={downloadTemplate}
+                          className="flex w-full transform items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 transition-all duration-200 hover:scale-[1.02] hover:border-gray-400 hover:bg-gray-50"
+                        >
+                          <Download className="mr-2 h-4 w-4" />
+                          Download Template
                         </button>
                       </div>
                     </div>
