@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// Types
+// Mock data (same as before)
 interface MenuItem {
   id: number
   name: string
@@ -20,7 +20,6 @@ interface Group {
   menuItems: MenuItem[]
 }
 
-// Mock data - replace with database calls
 const groups: Group[] = [
   {
     id: 1,
@@ -87,43 +86,27 @@ const groups: Group[] = [
   },
 ]
 
-export async function GET(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function GET(req: NextRequest) {
   try {
-    const { slug } = params
+    const url = new URL(req.url)
+    const slug = url.pathname.split("/").pop()
 
     if (!slug) {
-      return NextResponse.json({ error: "Slug parameter is required" }, { status: 400 })
+      return NextResponse.json({ error: "Slug is required" }, { status: 400 })
     }
-
-    // TODO: Replace with actual database query
-    // Example with Prisma:
-    // const group = await prisma.group.findFirst({
-    //   where: {
-    //     slug: slug,
-    //     isPublic: true
-    //   },
-    //   include: {
-    //     menuItems: true
-    //   }
-    // })
 
     const group = groups.find((g) => g.slug === slug && g.isPublic)
 
     if (!group) {
-      return NextResponse.json({ error: "Menu not found or not public" }, { status: 404 })
+      return NextResponse.json({ error: "Group not found" }, { status: 404 })
     }
 
-    // Return the group data
-    return NextResponse.json({
-      success: true,
-      data: group,
-    })
-  } catch (error) {
-    console.error("Error fetching menu:", error)
+    return NextResponse.json({ success: true, data: group })
+  } catch (err) {
+    console.error("Error fetching menu:", err)
     return NextResponse.json({ error: "Internal server error" }, { status: 500 })
   }
 }
-
 // Optional: Handle other HTTP methods
 export async function POST() {
   return NextResponse.json({ error: "Method not allowed" }, { status: 405 })

@@ -110,6 +110,19 @@ export default function QRDashboardPage() {
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState("")
   const [copySuccess, setCopySuccess] = useState(false)
   const qrRef = useRef(null)
+  const [publicUrl, setPublicUrl] = useState("")
+  useEffect(() => {
+    if (typeof window !== "undefined" && selectedGroup) {
+      const url = `${window.location.origin}/p/${selectedGroup.slug}`
+      setPublicUrl(url)
+
+      if (selectedGroup.isPublic) {
+        generateRealQRCode(url).then(setQrCodeDataUrl)
+      } else {
+        setQrCodeDataUrl("")
+      }
+    }
+  }, [selectedGroup])
 
   // Generate real QR code using QR Server API
   const generateRealQRCode = async (url: string): Promise<string> => {
@@ -125,7 +138,14 @@ export default function QRDashboardPage() {
   // Update QR code when selected group or public status changes
   useEffect(() => {
     if (selectedGroup.isPublic) {
-      const publicUrl = `${window.location.origin}/p/${selectedGroup.slug}`
+      const [publicUrl, setPublicUrl] = useState("")
+
+      useEffect(() => {
+        if (typeof window !== "undefined" && selectedGroup) {
+          setPublicUrl(`${window.location.origin}/p/${selectedGroup.slug}`)
+        }
+      }, [selectedGroup])
+
       generateRealQRCode(publicUrl).then(setQrCodeDataUrl)
     } else {
       setQrCodeDataUrl("")
@@ -238,8 +258,13 @@ export default function QRDashboardPage() {
       setSelectedGroup({ ...selectedGroup, isPublic: !selectedGroup.isPublic })
     }
   }
-
-  const publicUrl = `${window.location.origin}/p/${selectedGroup.slug}`
+  useEffect(() => {
+    if (selectedGroup.isPublic && typeof window !== "undefined") {
+      generateRealQRCode(publicUrl).then(setQrCodeDataUrl)
+    } else {
+      setQrCodeDataUrl("")
+    }
+  }, [selectedGroup])
 
   const downloadQR = async (): Promise<void> => {
     if (!qrCodeDataUrl) return
@@ -467,7 +492,11 @@ export default function QRDashboardPage() {
                         {showPreview ? "Hide" : "Show"} Preview
                       </button>
                       <button
-                        onClick={() => window.open(publicUrl, "_blank")}
+                        onClick={() => {
+                          if (typeof window !== "undefined") {
+                            window.open(publicUrl, "_blank")
+                          }
+                        }}
                         className="flex flex-1 items-center justify-center gap-2 rounded-md border border-gray-300 px-4 py-2 hover:bg-gray-50"
                       >
                         <Globe className="h-4 w-4" />
