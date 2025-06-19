@@ -135,23 +135,6 @@ export default function QRDashboardPage() {
     }
   }
 
-  // Update QR code when selected group or public status changes
-  useEffect(() => {
-    if (selectedGroup.isPublic) {
-      const [publicUrl, setPublicUrl] = useState("")
-
-      useEffect(() => {
-        if (typeof window !== "undefined" && selectedGroup) {
-          setPublicUrl(`${window.location.origin}/p/${selectedGroup.slug}`)
-        }
-      }, [selectedGroup])
-
-      generateRealQRCode(publicUrl).then(setQrCodeDataUrl)
-    } else {
-      setQrCodeDataUrl("")
-    }
-  }, [selectedGroup])
-
   // Utility functions for slug management
   const generateSlug = (name: string): string => {
     return name
