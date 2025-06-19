@@ -12,6 +12,7 @@ import {
   FaBars,
   FaChevronLeft,
   FaUpload,
+  FaQrcode,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
@@ -32,6 +33,7 @@ const NAV_ITEMS = [
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Logs", icon: <GoLog />, href: "/dashboard/logs" },
+  { label: "QR", icon: <FaQrcode />, href: "/dashboard/qr" },
   { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
