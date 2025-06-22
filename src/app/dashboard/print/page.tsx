@@ -8,7 +8,6 @@ import { Allergen } from "@/types/allergen"
 import { formatLabelForPrint, LabelHeight, getLabelDimensions } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
 import LabelHeightChooser from "./LabelHeightChooser"
-import { usePrinter } from "@/context/PrinterContext"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 
 const itemsPerPage = 5
@@ -50,9 +49,18 @@ type MenuItem = {
   ingredients: string[]
 }
 
+interface PrinterStatus {
+  isConnected: boolean
+  printerName: string
+  status: string
+}
+
 export default function LabelDemo() {
-  const { isConnected, printer } = usePrinter()
-  const [status, setStatus] = useState("Ready to connect")
+  const [printerStatus, setPrinterStatus] = useState<PrinterStatus>({
+    isConnected: false,
+    printerName: "No Printer",
+    status: "Checking connection...",
+  })
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
@@ -67,7 +75,7 @@ export default function LabelDemo() {
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [selectedInitial, setSelectedInitial] = useState<string>("")
-  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm") // New state for label height
+  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -84,6 +92,65 @@ export default function LabelDemo() {
 
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+
+  // Check printer connection status
+  const checkPrinterStatus = async () => {
+    try {
+      const ws = new WebSocket("ws://localhost:8080")
+
+      ws.onopen = () => {
+        ws.send(JSON.stringify({ type: "check-printer-status" }))
+      }
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          if (data.type === "printer-status") {
+            setPrinterStatus({
+              isConnected: data.isConnected || false,
+              printerName: data.printerName || "No Printer",
+              status: data.status || "Unknown",
+            })
+          }
+        } catch (err) {
+          console.error("Error parsing printer status:", err)
+        }
+        ws.close()
+      }
+
+      ws.onerror = () => {
+        setPrinterStatus({
+          isConnected: false,
+          printerName: "No Printer",
+          status: "Server connection failed",
+        })
+        ws.close()
+      }
+
+      ws.onclose = (event) => {
+        if (event.code !== 1000) {
+          setPrinterStatus({
+            isConnected: false,
+            printerName: "No Printer",
+            status: "Connection lost",
+          })
+        }
+      }
+    } catch (err) {
+      setPrinterStatus({
+        isConnected: false,
+        printerName: "No Printer",
+        status: "Connection error",
+      })
+    }
+  }
+
+  useEffect(() => {
+    checkPrinterStatus()
+    // Check printer status every 30 seconds
+    const interval = setInterval(checkPrinterStatus, 30000)
+    return () => clearInterval(interval)
+  }, [])
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -259,224 +326,114 @@ export default function LabelDemo() {
 
   const clearPrintQueue = () => setPrintQueue([])
 
-  const createLabelImage = (
-    labelText: string,
-    width: number = 408,
-    height: number = 640
-  ): Promise<Uint8Array> => {
-    return new Promise((resolve) => {
-      const canvas = document.createElement("canvas")
-      const ctx = canvas.getContext("2d")
-
-      if (!ctx) {
-        throw new Error("Could not get canvas context")
-      }
-
-      canvas.width = width
-      canvas.height = height
-
-      ctx.fillStyle = "white"
-      ctx.fillRect(0, 0, width, height)
-
-      let currentY = 20
-      let currentAlign = "left"
-      let isBold = false
-      let isInverse = false
-      let isLargeText = false
-      const lineHeight = 28
-      const largeLineHeight = 40
-
-      const lines = labelText.split("\n").filter((line) => line.trim() !== "")
-
-      lines.forEach((line: string, lineIndex: number) => {
-        if (!line.trim()) {
-          currentY += (isLargeText ? largeLineHeight : lineHeight) * 0.5
-          return
-        }
-
-        let displayText = line
-        let tempAlign = currentAlign
-        let tempBold = isBold
-        let tempInverse = isInverse
-        let tempLargeText = isLargeText
-
-        if (displayText.includes("\x1B\x61\x01")) {
-          tempAlign = "center"
-          displayText = displayText.replace(/\x1B\x61\x01/g, "")
-        }
-        if (displayText.includes("\x1B\x61\x00")) {
-          tempAlign = "left"
-          displayText = displayText.replace(/\x1B\x61\x00/g, "")
-        }
-
-        if (displayText.includes("\x1B\x45\x01")) {
-          tempBold = true
-          displayText = displayText.replace(/\x1B\x45\x01/g, "")
-        }
-        if (displayText.includes("\x1B\x45\x00")) {
-          tempBold = false
-          displayText = displayText.replace(/\x1B\x45\x00/g, "")
-        }
-
-        if (displayText.includes("\x1D\x42\x01")) {
-          tempInverse = true
-          displayText = displayText.replace(/\x1D\x42\x01/g, "")
-        }
-        if (displayText.includes("\x1D\x42\x00")) {
-          tempInverse = false
-          displayText = displayText.replace(/\x1D\x42\x00/g, "")
-        }
-
-        if (displayText.includes("\x1D\x21\x11")) {
-          tempLargeText = true
-          displayText = displayText.replace(/\x1D\x21\x11/g, "")
-        }
-        if (displayText.includes("\x1D\x21\x00")) {
-          tempLargeText = false
-          displayText = displayText.replace(/\x1D\x21\x00/g, "")
-        }
-
-        displayText = displayText.replace(/[\x00-\x1F\x7F]/g, "")
-
-        if (!displayText.trim()) {
-          currentY += (tempLargeText ? largeLineHeight : lineHeight) * 0.3
-          return
-        }
-
-        const fontSize = tempLargeText ? 22 : 16
-        const fontWeight = tempBold ? "bold" : "normal"
-        ctx.font = `${fontWeight} ${fontSize}px Arial`
-
-        if (tempInverse) {
-          const textMetrics = ctx.measureText(displayText)
-          const textWidth = textMetrics.width
-          const textHeight = fontSize + 8
-
-          let rectX = 0
-          if (tempAlign === "center") {
-            rectX = (width - textWidth) / 2 - 8
-          } else {
-            rectX = 10 - 8
-          }
-
-          ctx.fillStyle = "black"
-          ctx.fillRect(0, currentY - fontSize - 4, width, textHeight + 8)
-
-          ctx.fillStyle = "white"
-        } else {
-          ctx.fillStyle = "black"
-        }
-
-        if (tempAlign === "center") {
-          ctx.textAlign = "center"
-          ctx.fillText(displayText, width / 2, currentY)
-        } else {
-          ctx.textAlign = "left"
-          ctx.fillText(displayText, 10, currentY)
-        }
-
-        currentY += tempLargeText ? largeLineHeight : lineHeight
-
-        currentAlign = tempAlign
-        isBold = tempBold
-        isInverse = tempInverse
-        isLargeText = tempLargeText
-      })
-
-      const imageData = ctx.getImageData(0, 0, width, height)
-      const bitmap = new Uint8Array(Math.ceil((width * height) / 8))
-
-      for (let i = 0; i < imageData.data.length; i += 4) {
-        const pixelIndex = i / 4
-        const byteIndex = Math.floor(pixelIndex / 8)
-        const bitIndex = 7 - (pixelIndex % 8)
-
-        const gray = (imageData.data[i] + imageData.data[i + 1] + imageData.data[i + 2]) / 3
-        const isBlack = gray < 128
-
-        if (isBlack) {
-          bitmap[byteIndex] |= 1 << bitIndex
-        }
-      }
-
-      resolve(bitmap)
-    })
-  }
-
   const printLabels = async (): Promise<void> => {
-    if (!window.epsonPrinter || !isConnected) {
-      setStatus("Printer not connected")
+    if (!printerStatus.isConnected) {
+      showFeedback("Printer not connected", "error")
+      return
+    }
+
+    if (printQueue.length === 0) {
+      showFeedback("No items in print queue", "error")
       return
     }
 
     try {
-      setStatus("Printing...")
-      const ESC = 0x1b
-      const GS = 0x1d
+      // Create WebSocket connection to server
+      const ws = new WebSocket("ws://localhost:8080")
 
-      const init = new Uint8Array([ESC, 0x40])
+      ws.onopen = () => {
+        console.log("Connected to print server")
 
-      // Get label dimensions based on selected height
-      const dimensions = getLabelDimensions(labelHeight)
+        // Prepare all print jobs
+        const printJobs: Array<{
+          content: string
+          options: {
+            labelHeight: string
+            itemName: string
+            quantity: number
+          }
+        }> = []
 
-      for (const item of printQueue) {
-        for (let i = 0; i < item.quantity; i++) {
-          const labelText = formatLabelForPrint(
-            item,
-            allergens.map((a) => a.allergenName.toLowerCase()),
-            customExpiry,
-            5,
-            useInitials,
-            selectedInitial,
-            labelHeight // Pass the selected label height
-          )
+        for (const item of printQueue) {
+          for (let i = 0; i < item.quantity; i++) {
+            const labelText = formatLabelForPrint(
+              item,
+              allergens.map((a) => a.allergenName.toLowerCase()),
+              customExpiry,
+              5,
+              useInitials,
+              selectedInitial,
+              labelHeight
+            )
 
-          // Create bitmap image with selected dimensions
-          const bitmap: Uint8Array = await createLabelImage(
-            labelText,
-            dimensions.width,
-            dimensions.height
-          )
+            printJobs.push({
+              content: labelText,
+              options: {
+                labelHeight: labelHeight,
+                itemName: item.name,
+                quantity: 1, // Each job is for 1 label
+              },
+            })
+          }
+        }
 
-          const width = dimensions.width
-          const height = dimensions.height
-          const bytesPerLine = Math.ceil(width / 8)
+        // Send print jobs via WebSocket
+        const message = {
+          type: "print-multiple",
+          jobs: printJobs,
+        }
 
-          const bitmapCmd = new Uint8Array([
-            GS,
-            0x76,
-            0x30,
-            0x00,
-            bytesPerLine & 0xff,
-            (bytesPerLine >> 8) & 0xff,
-            height & 0xff,
-            (height >> 8) & 0xff,
-          ])
+        ws.send(JSON.stringify(message))
+      }
 
-          const feedGap = new Uint8Array([ESC, 0x4a, 16])
+      ws.onmessage = (event) => {
+        try {
+          const result = JSON.parse(event.data)
 
-          const buffer = new Uint8Array(
-            init.length + bitmapCmd.length + bitmap.length + feedGap.length
-          )
+          if (result.type === "print-result") {
+            if (result.success) {
+              const totalJobs = result.totalJobs || printQueue.length
+              showFeedback(`Printed ${totalJobs} labels successfully`, "success")
+              // Optionally clear the queue after successful printing
+              // clearPrintQueue()
+            } else {
+              const errorMsg = result.message || "Print failed"
+              showFeedback(errorMsg, "error")
+            }
+          }
+        } catch (parseError) {
+          console.error("Error parsing WebSocket response:", parseError)
+          showFeedback("Print failed: Invalid server response", "error")
+        }
 
-          let offset = 0
-          buffer.set(init, offset)
-          offset += init.length
-          buffer.set(bitmapCmd, offset)
-          offset += bitmapCmd.length
-          buffer.set(bitmap, offset)
-          offset += bitmap.length
-          buffer.set(feedGap, offset)
+        ws.close()
+      }
 
-          await window.epsonPrinter.transferOut(1, buffer)
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error)
+        showFeedback("Print failed: Connection error", "error")
+        ws.close()
+      }
+
+      ws.onclose = (event) => {
+        if (event.code !== 1000) {
+          // 1000 is normal closure
+          console.error("WebSocket closed unexpectedly:", event.code, event.reason)
+          showFeedback("Print failed: Connection closed", "error")
         }
       }
 
-      setStatus("Printed successfully")
+      // Set a timeout to close the connection if no response
+      setTimeout(() => {
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.close()
+          showFeedback("Print failed: Server timeout", "error")
+        }
+      }, 30000) // 30 second timeout
     } catch (e: unknown) {
       console.error("Print error", e)
       const errorMessage = e instanceof Error ? e.message : "Unknown error"
-      setStatus(`Print failed: ${errorMessage}`)
+      showFeedback(`Print failed: ${errorMessage}`, "error")
     }
   }
 
@@ -492,6 +449,18 @@ export default function LabelDemo() {
           <div className="w-1/2">
             <div className="flex items-center gap-8">
               <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
+              <div className="mb-4">
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    printerStatus.isConnected
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
+                  }`}
+                >
+                  {printerStatus.isConnected ? "● Connected" : "● Disconnected"}
+                </span>
+                <p className="mt-1 text-sm text-gray-600">{printerStatus.printerName}</p>
+              </div>
             </div>
             {/* Label Height Chooser */}
             <div className="mb-6">
@@ -526,6 +495,19 @@ export default function LabelDemo() {
             )}
           </div>
         </div>
+
+        {/* Feedback Messages */}
+        {feedbackMsg && (
+          <div
+            className={`mb-4 rounded-md p-4 ${
+              feedbackType === "success"
+                ? "border border-green-200 bg-green-50 text-green-800"
+                : "border border-red-200 bg-red-50 text-red-800"
+            }`}
+          >
+            {feedbackMsg}
+          </div>
+        )}
 
         <div className="flex gap-8">
           <div className="w-1/2">
@@ -624,14 +606,14 @@ export default function LabelDemo() {
               <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
               <button
                 onClick={printLabels}
-                disabled={!isConnected || printQueue.length === 0}
+                disabled={!printerStatus.isConnected || printQueue.length === 0}
                 className={`rounded px-4 py-2 text-white transition-colors ${
-                  !isConnected || printQueue.length === 0
+                  !printerStatus.isConnected || printQueue.length === 0
                     ? "cursor-not-allowed bg-gray-400"
                     : "bg-green-600 hover:bg-green-700"
                 }`}
                 title={
-                  !isConnected
+                  !printerStatus.isConnected
                     ? "Printer not connected"
                     : printQueue.length === 0
                       ? "No items in print queue"
@@ -719,7 +701,7 @@ export default function LabelDemo() {
           onExpiryChange={handleExpiryChange}
           useInitials={useInitials}
           selectedInitial={selectedInitial}
-          labelHeight={labelHeight} // Pass the selected label height
+          labelHeight={labelHeight}
         />
       </div>
     </div>
