@@ -85,7 +85,7 @@ export default function LabelDemo() {
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [selectedInitial, setSelectedInitial] = useState<string>("")
-  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
+  const [labelHeight, setLabelHeight] = useState<LabelHeight>("31mm")
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -465,7 +465,7 @@ export default function LabelDemo() {
         const printJobs: Array<{
           content: string
           options: {
-            labelHeight: string
+            labelHeight: "31mm"
             itemName: string
             quantity: number
           }
@@ -480,13 +480,13 @@ export default function LabelDemo() {
               5,
               useInitials,
               selectedInitial,
-              labelHeight
+              "31mm"
             )
 
             printJobs.push({
               content: labelText,
               options: {
-                labelHeight: labelHeight,
+                labelHeight: "31mm",
                 itemName: item.name,
                 quantity: 1, // Each job is for 1 label
               },
@@ -597,13 +597,6 @@ export default function LabelDemo() {
               </div>
             </div>
             {/* Label Height Chooser */}
-            <div className="mb-6">
-              <LabelHeightChooser
-                selectedHeight={labelHeight}
-                onHeightChange={setLabelHeight}
-                className="mb-4"
-              />
-            </div>
           </div>
 
           {/* Right Section: Initials and Settings */}

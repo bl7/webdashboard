@@ -1,6 +1,6 @@
 import { PrintQueueItem } from "@/types/print"
 
-export type LabelHeight = "40mm" | "80mm"
+export type LabelHeight = "31mm" | "40mm" | "80mm"
 
 // Helper function to format date as "MMM DD"
 function formatShortDate(dateString: string): string {
@@ -30,7 +30,7 @@ function formatShortDate(dateString: string): string {
   }
 }
 
-// Enhanced formatLabelForPrint function with adaptive height support:
+// Enhanced formatLabelForPrint function with fixed 5.6cm x 3.1cm dimensions:
 export function formatLabelForPrint(
   item: PrintQueueItem,
   ALLERGENS: string[],
@@ -64,40 +64,22 @@ export function formatLabelForPrint(
   const LARGE_TEXT = "\x1D\x21\x11"
   const NORMAL_TEXT = "\x1D\x21\x00"
 
-  // Adjust spacing based on label height
-  const isCompact = labelHeight === "40mm"
-  const titleSpacing = isCompact ? "\n" : "\n\n"
-  const sectionSpacing = isCompact ? "\n" : "\n\n"
-  const endSpacing = isCompact ? "" : "\n\n"
+  // Fixed spacing for 5.6cm x 3.1cm labels - compact format
+  const titleSpacing = "\n"
+  const sectionSpacing = "\n"
+  const endSpacing = ""
 
   let out = ""
 
   if (item.type === "ingredients") {
     // Centered name with black background
-    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${isCompact ? "" : LARGE_TEXT}${item.name}${NORMAL_TEXT}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
+    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${item.name}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
 
-    // Printed and Expiry dates
-    if (isCompact) {
-      // Compact: Single line format
-      out += `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate} ${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}${sectionSpacing}`
-    } else {
-      // Extended: Two separate lines or spaced single line
-      const printedText = `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate}`
-      const expiryText = `${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}`
-      const spacing = Math.max(
-        0,
-        32 -
-          printedText.replace(/\x1B\[[0-9;]*[mGKH]/g, "").length -
-          expiryText.replace(/\x1B\[[0-9;]*[mGKH]/g, "").length
-      )
-      out += `${printedText}${" ".repeat(spacing)}${expiryText}${sectionSpacing}`
-    }
+    // Printed and Expiry dates - single line format for compact labels
+    out += `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate} ${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}${sectionSpacing}`
 
     // Allergens section
     if (item.allergens && item.allergens.length > 0) {
-      if (!isCompact) {
-        out += `${BOLD_ON}${LARGE_TEXT}Contains Allergens${NORMAL_TEXT}${BOLD_OFF}${sectionSpacing}`
-      }
       out += `${BOLD_ON}Allergens:${BOLD_OFF} `
       const allergenText = item.allergens
         .map((a) => `${BOLD_ON}*${a.allergenName}*${BOLD_OFF}`)
@@ -113,10 +95,10 @@ export function formatLabelForPrint(
     }
   } else if (isPPDS) {
     // PPDS Label
-    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${isCompact ? "" : LARGE_TEXT}${item.name}${NORMAL_TEXT}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
+    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${item.name}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
 
     // Best Before
-    out += `${CENTER_ON}${BOLD_ON}${isCompact ? "" : LARGE_TEXT}Best Before: ${shortExpiryDate}${NORMAL_TEXT}${BOLD_OFF}${LEFT_ALIGN}${sectionSpacing}`
+    out += `${CENTER_ON}${BOLD_ON}Best Before: ${shortExpiryDate}${BOLD_OFF}${LEFT_ALIGN}${sectionSpacing}`
 
     // Ingredients
     out += `${BOLD_ON}Ingredients:${BOLD_OFF} `
@@ -126,22 +108,10 @@ export function formatLabelForPrint(
     out += `${ingredientsText}${sectionSpacing}`
   } else {
     // Regular Menu Item Label
-    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${isCompact ? "" : LARGE_TEXT}${item.name}${NORMAL_TEXT}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
+    out += `${CENTER_ON}${INVERSE_ON}${BOLD_ON}${item.name}${BOLD_OFF}${INVERSE_OFF}${LEFT_ALIGN}${titleSpacing}`
 
-    // Printed and Expiry dates
-    if (isCompact) {
-      out += `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate} ${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}${sectionSpacing}`
-    } else {
-      const printedText = `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate}`
-      const expiryText = `${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}`
-      const spacing = Math.max(
-        0,
-        32 -
-          printedText.replace(/\x1B\[[0-9;]*[mGKH]/g, "").length -
-          expiryText.replace(/\x1B\[[0-9;]*[mGKH]/g, "").length
-      )
-      out += `${printedText}${" ".repeat(spacing)}${expiryText}${sectionSpacing}`
-    }
+    // Printed and Expiry dates - single line format
+    out += `${BOLD_ON}Printed:${BOLD_OFF} ${shortPrintedDate} ${BOLD_ON}Expiry:${BOLD_OFF} ${shortExpiryDate}${sectionSpacing}`
 
     // Ingredients/Allergens
     if (tooLong) {
@@ -166,16 +136,12 @@ export function formatLabelForPrint(
   return out
 }
 
-// Helper function to get label dimensions based on height
-export function getLabelDimensions(height: LabelHeight): { width: number; height: number } {
-  const width = 408 // 51mm at 203 DPI (standard thermal printer width)
+// Helper function to get label dimensions - now fixed to 5.6cm x 3.1cm
+export function getLabelDimensions(labelHeight: LabelHeight): { width: number; height: number } {
+  // Fixed dimensions for 5.6cm x 3.1cm labels at 203 DPI
+  const width = 448 // 5.6cm at 203 DPI (5.6 * 203 / 2.54)
+  const height = 248 // 3.1cm at 203 DPI (3.1 * 203 / 2.54)
 
-  switch (height) {
-    case "40mm":
-      return { width, height: 320 } // 40mm at 203 DPI
-    case "80mm":
-      return { width, height: 640 } // 80mm at 203 DPI
-    default:
-      return { width, height: 320 }
-  }
+  // Return same dimensions regardless of labelHeight parameter since we're using fixed size labels
+  return { width, height }
 }
