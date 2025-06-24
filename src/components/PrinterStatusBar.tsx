@@ -13,7 +13,7 @@ export default function PrinterStatusBar() {
   } = usePrinterStatus()
 
   return (
-    <div className="fixed bottom-3 right-4 z-50 w-[260px] rounded border border-gray-200 bg-white px-4 py-3 text-sm shadow-lg dark:border-gray-700 dark:bg-gray-900">
+    <div className="fixed right-4 top-3 z-50 w-[260px] rounded border border-gray-200 bg-white px-4 py-3 text-sm shadow-lg dark:border-gray-700 dark:bg-gray-900">
       {isConnected ? (
         <div className="space-y-2 text-green-600">
           <div>
@@ -22,7 +22,6 @@ export default function PrinterStatusBar() {
               Default: <strong>{defaultPrinter}</strong>
             </div>
           </div>
-
           <div className="text-black dark:text-white">
             <label htmlFor="printer-select" className="text-xs font-medium">
               Selected Printer:

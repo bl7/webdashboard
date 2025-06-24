@@ -11,6 +11,7 @@ import LabelHeightChooser, { LabelHeight } from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import qz, { PrintData } from "qz-tray"
 import { usePrinterStatus } from "@/context/PrinterContext"
+import { logAction } from "@/lib/logAction"
 
 const itemsPerPage = 5
 
@@ -77,6 +78,10 @@ export default function LabelDemo() {
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
   const { isConnected } = usePrinterStatus()
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
+  const [showDefrostModal, setShowDefrostModal] = useState(false)
+
+  // Add state for defrost search
+  const [defrostSearch, setDefrostSearch] = useState("")
 
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
@@ -211,6 +216,14 @@ export default function LabelDemo() {
     [filteredMenuItems, page]
   )
 
+  const filteredDefrostIngredients = useMemo(
+    () =>
+      !defrostSearch
+        ? ingredients
+        : ingredients.filter((i) => i.name.toLowerCase().includes(defrostSearch.toLowerCase())),
+    [ingredients, defrostSearch]
+  )
+
   const handleExpiryChange = (uid: string, value: string) =>
     setCustomExpiry((prev) => ({ ...prev, [uid]: value }))
 
@@ -299,7 +312,7 @@ export default function LabelDemo() {
             labelHeight // Default label height, can be adjusted
           )
 
-          const config = qz.configs.create("Your_Printer_Name", {
+          const config = qz.configs.create(selectedPrinter, {
             density: 203,
             scaleContent: true,
             rasterize: true,
@@ -315,17 +328,116 @@ export default function LabelDemo() {
           ]
 
           await qz.print(config, data)
+
+          await logAction("print_label", {
+            labelType: item.labelType || item.type,
+            itemId: item.uid || item.id,
+            itemName: item.name,
+            quantity: item.quantity || 1,
+            printedAt: new Date().toISOString(),
+            initial: selectedInitial,
+          })
         }
       }
 
       showFeedback(`Printed ${printQueue.length} labels successfully`, "success")
     } catch (err) {
       console.error("Print error:", err)
-      showFeedback("Print failed", "error")
+      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
     } finally {
       if (qz.websocket.isActive()) {
         await qz.websocket.disconnect()
       }
+    }
+  }
+
+  // Handler for "Use First"
+  const handleUseFirstPrint = async () => {
+    if (!isConnected) {
+      showFeedback("Printer not connected", "error")
+      return
+    }
+    try {
+      if (!qz.websocket.isActive()) {
+        await qz.websocket.connect()
+      }
+      const html = `<span style="width:100%;font-size:2.2rem;font-weight:bold;letter-spacing:0.1em;text-align:center;">USE FIRST</span>`
+      const imageDataUrl = await printSimpleLabel(html)
+      const config = qz.configs.create(selectedPrinter, {
+        density: 203,
+        scaleContent: true,
+        rasterize: true,
+      })
+      const data: PrintData[] = [
+        {
+          type: "pixel",
+          format: "image",
+          flavor: "base64",
+          data: imageDataUrl.split(",")[1],
+        },
+      ]
+      await qz.print(config, data)
+      showFeedback("Printed USE FIRST label", "success")
+
+      await logAction("print_label", {
+        labelType: "use_first",
+        itemName: "USE FIRST",
+        printedAt: new Date().toISOString(),
+        initial: selectedInitial,
+      })
+    } catch (err) {
+      showFeedback("Print failed", "error")
+    } finally {
+      if (qz.websocket.isActive()) await qz.websocket.disconnect()
+    }
+  }
+
+  // Handler for "Defrost"
+  const handleDefrostPrint = async (ingredient: IngredientItem) => {
+    setShowDefrostModal(false)
+    if (!isConnected) {
+      showFeedback("Printer not connected", "error")
+      return
+    }
+    try {
+      if (!qz.websocket.isActive()) {
+        await qz.websocket.connect()
+      }
+      const now = new Date()
+      const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+      const html = `
+        <div style="font-size:1.3rem;font-weight:bold;margin-bottom:8px;text-align:center;">${ingredient.name} (defrosted)</div>
+        <div style="font-size:1rem;margin-bottom:4px;">Defrosted: ${now.toLocaleString("en-GB")}</div>
+        <div style="font-size:1rem;margin-bottom:4px;">Expiry: ${expiry.toLocaleString("en-GB")}</div>
+        <div style="font-size:1rem;margin-top:8px;">${selectedInitial ? `By: ${selectedInitial}` : ""}</div>
+      `
+      const imageDataUrl = await printSimpleLabel(html)
+      const config = qz.configs.create(selectedPrinter, {
+        density: 203,
+        scaleContent: true,
+        rasterize: true,
+      })
+      const data: PrintData[] = [
+        {
+          type: "pixel",
+          format: "image",
+          flavor: "base64",
+          data: imageDataUrl.split(",")[1],
+        },
+      ]
+      await qz.print(config, data)
+      showFeedback("Printed defrosted label", "success")
+
+      await logAction("print_label", {
+        labelType: "defrost",
+        itemName: ingredient.name,
+        printedAt: new Date().toISOString(),
+        initial: selectedInitial,
+      })
+    } catch (err) {
+      showFeedback("Print failed", "error")
+    } finally {
+      if (qz.websocket.isActive()) await qz.websocket.disconnect()
     }
   }
 
@@ -574,7 +686,96 @@ export default function LabelDemo() {
           selectedInitial={selectedInitial}
           labelHeight={labelHeight}
         />
+
+        {/* Floating Action Buttons */}
+        <div
+          style={{
+            position: "fixed",
+            bottom: 32,
+            right: 32,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            zIndex: 50,
+          }}
+        >
+          <button
+            onClick={handleUseFirstPrint}
+            className="rounded-full bg-purple-700 px-6 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-purple-800"
+            aria-label="Print USE FIRST label"
+            tabIndex={0}
+          >
+            Use First
+          </button>
+          <button
+            onClick={() => setShowDefrostModal(true)}
+            className="rounded-full bg-blue-700 px-6 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-blue-800"
+            aria-label="Print Defrosted label"
+            tabIndex={0}
+          >
+            Defrost
+          </button>
+        </div>
+
+        {/* Defrost Modal */}
+        {showDefrostModal && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+              <h2 className="mb-4 text-xl font-bold">Select Ingredient to Defrost</h2>
+              <input
+                type="text"
+                value={defrostSearch}
+                onChange={(e) => setDefrostSearch(e.target.value)}
+                placeholder="Search ingredients..."
+                className="mb-3 w-full rounded border px-3 py-2"
+              />
+              <ul className="mb-4 max-h-60 overflow-y-auto">
+                {filteredDefrostIngredients.map((ing) => (
+                  <li key={ing.id} className="mb-2">
+                    <button
+                      className="w-full rounded px-4 py-2 text-left hover:bg-blue-100"
+                      onClick={() => handleDefrostPrint(ing)}
+                    >
+                      {ing.name}
+                    </button>
+                  </li>
+                ))}
+                {filteredDefrostIngredients.length === 0 && (
+                  <li className="px-4 py-2 text-gray-400">No ingredients found.</li>
+                )}
+              </ul>
+              <button
+                className="mt-2 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
+                onClick={() => setShowDefrostModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
+}
+
+async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm") {
+  const container = document.createElement("div")
+  container.style.width = width
+  container.style.height = height
+  container.style.background = "white"
+  container.style.display = "flex"
+  container.style.flexDirection = "column"
+  container.style.justifyContent = "center"
+  container.style.alignItems = "center"
+  container.style.fontFamily = "monospace"
+  container.style.border = "2px solid black"
+  container.innerHTML = html
+  document.body.appendChild(container)
+  const imageDataUrl = await (await import("html-to-image")).toPng(container)
+  container.remove()
+  return imageDataUrl
 }

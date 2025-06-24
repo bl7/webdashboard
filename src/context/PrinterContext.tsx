@@ -23,16 +23,8 @@ export function PrinterProvider({ children }: { children: ReactNode }) {
 
   const reconnect = async () => {
     try {
-      if (!qz.websocket.isActive()) {
-        await qz.websocket.connect()
-      }
-
-      // Security setup
-      qz.security.setCertificatePromise(() =>
-        Promise.resolve("-----BEGIN CERTIFICATE-----\n...cert...\n-----END CERTIFICATE-----")
-      )
-      qz.security.setSignaturePromise(() => Promise.resolve("...signature..."))
-
+      await qz.websocket.connect()
+      // Only use documented API methods:
       const allPrinters = await qz.printers.find()
       const printers = Array.isArray(allPrinters) ? allPrinters : [allPrinters]
       const defaultP = await qz.printers.getDefault()
@@ -42,8 +34,7 @@ export function PrinterProvider({ children }: { children: ReactNode }) {
       setDefaultPrinter(defaultP)
       setSelectedPrinter((prev) => prev ?? defaultP)
     } catch (err) {
-      console.error("Printer reconnect failed", err)
-      setIsConnected(false)
+      // handle error
     }
   }
 
