@@ -45,6 +45,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <script src="https://cdn.jsdelivr.net/npm/qz-tray/qz-tray.js"></script>
+
       <body className={`${base_font.className} ${accent_font.variable}`}>
         <AuthProvider> {children}</AuthProvider>
         <Toaster />

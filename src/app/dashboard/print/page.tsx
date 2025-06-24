@@ -5,11 +5,11 @@ import { PrintQueueItem } from "@/types/print"
 import { getAllAllergens } from "@/lib/api"
 import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
-import { formatLabelForPrint, LabelHeight, getLabelDimensions } from "./labelFormatter"
 import LabelPreview from "./PreviewLabel"
+import { formatLabelForPrintImage } from "./labelFormatter"
 import LabelHeightChooser from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
-
+import qz, { PrintData } from "qz-tray"
 const itemsPerPage = 5
 interface Printer {
   name: string
@@ -85,7 +85,7 @@ export default function LabelDemo() {
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [selectedInitial, setSelectedInitial] = useState<string>("")
-  const [labelHeight, setLabelHeight] = useState<LabelHeight>("31mm")
+
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
@@ -442,115 +442,64 @@ export default function LabelDemo() {
     setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
 
   const clearPrintQueue = () => setPrintQueue([])
-
   const printLabels = async (): Promise<void> => {
-    if (!printerStatus.isConnected) {
-      showFeedback("Printer not connected", "error")
-      return
-    }
-
     if (printQueue.length === 0) {
       showFeedback("No items in print queue", "error")
       return
     }
 
     try {
-      // Create WebSocket connection to server
-      const ws = new WebSocket("ws://localhost:8080")
-
-      ws.onopen = () => {
-        console.log("Connected to print server")
-
-        // Prepare all print jobs
-        const printJobs: Array<{
-          content: string
-          options: {
-            labelHeight: "31mm"
-            itemName: string
-            quantity: number
-          }
-        }> = []
-
-        for (const item of printQueue) {
-          for (let i = 0; i < item.quantity; i++) {
-            const labelText = formatLabelForPrint(
-              item,
-              allergens.map((a) => a.allergenName.toLowerCase()),
-              customExpiry,
-              5,
-              useInitials,
-              selectedInitial,
-              "31mm"
-            )
-
-            printJobs.push({
-              content: labelText,
-              options: {
-                labelHeight: "31mm",
-                itemName: item.name,
-                quantity: 1, // Each job is for 1 label
-              },
-            })
-          }
-        }
-
-        // Send print jobs via WebSocket
-        const message = {
-          type: "print-multiple",
-          jobs: printJobs,
-        }
-
-        ws.send(JSON.stringify(message))
+      if (!qz.websocket.isActive()) {
+        await qz.websocket.connect()
       }
 
-      ws.onmessage = (event) => {
-        try {
-          const result = JSON.parse(event.data)
+      qz.security.setCertificatePromise(() =>
+        Promise.resolve(
+          "-----BEGIN CERTIFICATE-----\n...your cert here...\n-----END CERTIFICATE-----"
+        )
+      )
+      qz.security.setSignaturePromise(() => Promise.resolve("...your-signature..."))
 
-          if (result.type === "print-result") {
-            if (result.success) {
-              const totalJobs = result.totalJobs || printQueue.length
-              showFeedback(`Printed ${totalJobs} labels successfully`, "success")
-              // Optionally clear the queue after successful printing
-              // clearPrintQueue()
-            } else {
-              const errorMsg = result.message || "Print failed"
-              showFeedback(errorMsg, "error")
-            }
-          }
-        } catch (parseError) {
-          console.error("Error parsing WebSocket response:", parseError)
-          showFeedback("Print failed: Invalid server response", "error")
-        }
+      for (const item of printQueue) {
+        for (let i = 0; i < item.quantity; i++) {
+          const imageDataUrl = await formatLabelForPrintImage(
+            item,
+            allergens.map((a) => a.allergenName.toLowerCase()),
+            customExpiry,
+            5,
+            useInitials,
+            selectedInitial,
+            "31mm"
+          )
 
-        ws.close()
-      }
+          const config = qz.configs.create("Your_Printer_Name", {
+            density: 203,
+            scaleContent: true,
+            rasterize: true,
+          })
 
-      ws.onerror = (error) => {
-        console.error("WebSocket error:", error)
-        showFeedback("Print failed: Connection error", "error")
-        ws.close()
-      }
+          // Use 'as const' to ensure 'type' is a literal string to satisfy typings
+          const data: PrintData[] = [
+            {
+              type: "pixel",
+              format: "image",
+              flavor: "base64", // <-- Add this line
+              data: imageDataUrl.split(",")[1],
+            },
+          ]
 
-      ws.onclose = (event) => {
-        if (event.code !== 1000) {
-          // 1000 is normal closure
-          console.error("WebSocket closed unexpectedly:", event.code, event.reason)
-          showFeedback("Print failed: Connection closed", "error")
+          await qz.print(config, data)
         }
       }
 
-      // Set a timeout to close the connection if no response
-      setTimeout(() => {
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.close()
-          showFeedback("Print failed: Server timeout", "error")
-        }
-      }, 30000) // 30 second timeout
-    } catch (e: unknown) {
-      console.error("Print error", e)
-      const errorMessage = e instanceof Error ? e.message : "Unknown error"
-      showFeedback(`Print failed: ${errorMessage}`, "error")
+      showFeedback(`Printed ${printQueue.length} labels successfully`, "success")
+    } catch (err) {
+      console.error("Print error:", err)
+      showFeedback("Print failed", "error")
+    } finally {
+      if (qz.websocket.isActive()) {
+        await qz.websocket.disconnect()
+      }
     }
   }
 
@@ -746,9 +695,7 @@ export default function LabelDemo() {
                       ? "No items in print queue"
                       : "Print all labels in queue"
                 }
-              >
-                Print Labels ({labelHeight})
-              </button>
+              ></button>
               <button
                 onClick={clearPrintQueue}
                 disabled={printQueue.length === 0}
@@ -828,7 +775,7 @@ export default function LabelDemo() {
           onExpiryChange={handleExpiryChange}
           useInitials={useInitials}
           selectedInitial={selectedInitial}
-          labelHeight={labelHeight}
+          // labelHeight={labelHeight}
         />
       </div>
     </div>
