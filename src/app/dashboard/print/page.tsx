@@ -10,18 +10,12 @@ import { formatLabelForPrintImage } from "./labelFormatter"
 import LabelHeightChooser from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import qz, { PrintData } from "qz-tray"
-const itemsPerPage = 5
-interface Printer {
-  name: string
-  needsSetup: boolean
-  status?: string
-  // add other properties based on your actual printer object structure
-}
+import { usePrinterStatus } from "@/context/PrinterContext"
 
-interface PrinterStatusData {
-  printers: Printer[]
-  // other properties
-}
+const itemsPerPage = 5
+
+// and access localStorage
+const selectedPrinter = localStorage.getItem("selectedPrinter") || "Fallback_Printer"
 function calculateExpiryDate(days: number): string {
   const today = new Date()
   today.setDate(today.getDate() + days)
@@ -59,18 +53,7 @@ type MenuItem = {
   ingredients: string[]
 }
 
-interface PrinterStatus {
-  isConnected: boolean
-  printerName: string
-  status: string
-}
-
 export default function LabelDemo() {
-  const [printerStatus, setPrinterStatus] = useState<PrinterStatus>({
-    isConnected: false,
-    printerName: "No Printer",
-    status: "Checking connection...",
-  })
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
@@ -89,6 +72,7 @@ export default function LabelDemo() {
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
+  const { isConnected } = usePrinterStatus()
 
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
@@ -102,172 +86,6 @@ export default function LabelDemo() {
 
   const userId =
     typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
-
-  // Check printer connection status
-  // Replace the checkPrinterStatus function in your React component with this:
-
-  // Replace your checkPrinterStatus function with this improved version:
-  // Replace your checkPrinterStatus function with this debug version:
-
-  // Replace your checkPrinterStatus function with this debug version:
-
-  const checkPrinterStatus = async () => {
-    try {
-      console.log("=== PRINTER STATUS CHECK START ===")
-      const ws = new WebSocket("ws://localhost:8080")
-
-      const timeout = setTimeout(() => {
-        if (ws.readyState === WebSocket.CONNECTING || ws.readyState === WebSocket.OPEN) {
-          console.log("WebSocket timeout, closing connection")
-          ws.close()
-          setPrinterStatus({
-            isConnected: false,
-            printerName: "No Printer",
-            status: "Connection timeout",
-          })
-        }
-      }, 10000)
-
-      ws.onopen = () => {
-        console.log("✅ WebSocket connected, sending status request...")
-        clearTimeout(timeout)
-        ws.send(JSON.stringify({ type: "check-printer-status" }))
-      }
-
-      ws.onmessage = (event) => {
-        console.log("📨 Raw server response:", event.data)
-        clearTimeout(timeout)
-
-        try {
-          const data = JSON.parse(event.data)
-          console.log("📋 Parsed data:", JSON.stringify(data, null, 2))
-
-          if (data.type === "printer-status") {
-            console.log("🖨️ Processing printer-status response:")
-            console.log("  - isConnected:", data.isConnected)
-            console.log("  - printerName:", data.printerName)
-            console.log("  - status:", data.status)
-
-            // Set status based on server response
-            setPrinterStatus({
-              isConnected: Boolean(data.isConnected), // Ensure it's a boolean
-              printerName: data.printerName || "Unknown Printer",
-              status: data.status || "Unknown",
-            })
-          } else if (data.type === "initial_status" || data.type === "status") {
-            console.log("📊 Processing initial_status/status response:")
-            const printers = data.data?.printers || data.printers || []
-            console.log("  - Total printers found:", printers.length)
-            console.log("  - Printers array:", JSON.stringify(printers, null, 2))
-
-            if (printers.length > 0) {
-              printers.forEach((printer: Printer, index: number) => {
-                console.log(`  - Printer ${index + 1}:`, {
-                  name: printer.name,
-                  needsSetup: printer.needsSetup,
-                  status: printer.status,
-                })
-              })
-            }
-
-            // Check for ready printers (those that don't need setup)
-            const readyPrinters = printers.filter((p: Printer) => !p.needsSetup)
-            const hasReadyPrinter = readyPrinters.length > 0
-
-            console.log("  - Ready printers:", readyPrinters.length)
-            console.log("  - Has ready printer:", hasReadyPrinter)
-
-            if (hasReadyPrinter) {
-              const selectedPrinter = readyPrinters[0]
-              console.log("  - Selected printer:", selectedPrinter.name)
-
-              setPrinterStatus({
-                isConnected: true, // Force true if we have a ready printer
-                printerName: selectedPrinter.name,
-                status: selectedPrinter.status || "Ready",
-              })
-            } else if (printers.length > 0) {
-              // Has printers but they need setup
-              setPrinterStatus({
-                isConnected: false,
-                printerName: printers[0].name + " (needs setup)",
-                status: "Printer needs configuration",
-              })
-            } else {
-              // No printers at all
-              setPrinterStatus({
-                isConnected: false,
-                printerName: "No Printer",
-                status: "No printers found",
-              })
-            }
-          } else {
-            console.log("❓ Unknown response type:", data.type)
-            console.log("Full response:", data)
-
-            // If we get any response, assume server is working
-            // but printer status is unclear
-            setPrinterStatus({
-              isConnected: false,
-              printerName: "Response received",
-              status: `Unknown response type: ${data.type}`,
-            })
-          }
-        } catch (parseError) {
-          console.error("❌ Parse error:", parseError)
-          console.error("Raw data:", event.data)
-          setPrinterStatus({
-            isConnected: false,
-            printerName: "Parse Error",
-            status: "Invalid server response",
-          })
-        }
-
-        ws.close()
-        console.log("=== PRINTER STATUS CHECK END ===")
-      }
-
-      ws.onerror = (error) => {
-        console.error("❌ WebSocket error:", error)
-        clearTimeout(timeout)
-        setPrinterStatus({
-          isConnected: false,
-          printerName: "Connection Error",
-          status: "Server connection failed",
-        })
-      }
-
-      ws.onclose = (event) => {
-        console.log(`🔌 WebSocket closed: code=${event.code}, reason="${event.reason}"`)
-        clearTimeout(timeout)
-      }
-    } catch (error) {
-      console.error("❌ Connection error:", error)
-      setPrinterStatus({
-        isConnected: false,
-        printerName: "Connection Failed",
-        status: "Failed to connect to server",
-      })
-    }
-  }
-
-  // Also add this helper function to manually test printer status
-  const debugPrinterStatus = () => {
-    console.log("🔍 Current printer status:", {
-      isConnected: printerStatus.isConnected,
-      printerName: printerStatus.printerName,
-      status: printerStatus.status,
-    })
-
-    // Force check printer status
-    checkPrinterStatus()
-  }
-  useEffect(() => {
-    checkPrinterStatus()
-    // Check printer status every 30 seconds
-    const interval = setInterval(checkPrinterStatus, 30000)
-    return () => clearInterval(interval)
-  }, [])
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -442,7 +260,12 @@ export default function LabelDemo() {
     setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
 
   const clearPrintQueue = () => setPrintQueue([])
+
   const printLabels = async (): Promise<void> => {
+    if (!isConnected) {
+      showFeedback("Printer not connected", "error")
+      return
+    }
     if (printQueue.length === 0) {
       showFeedback("No items in print queue", "error")
       return
@@ -453,12 +276,12 @@ export default function LabelDemo() {
         await qz.websocket.connect()
       }
 
-      qz.security.setCertificatePromise(() =>
-        Promise.resolve(
-          "-----BEGIN CERTIFICATE-----\n...your cert here...\n-----END CERTIFICATE-----"
-        )
-      )
-      qz.security.setSignaturePromise(() => Promise.resolve("...your-signature..."))
+      // qz.security.setCertificatePromise(() =>
+      //   Promise.resolve(
+      //     "-----BEGIN CERTIFICATE-----\n...your cert here...\n-----END CERTIFICATE-----"
+      //   )
+      // )
+      // qz.security.setSignaturePromise(() => Promise.resolve("...your-signature..."))
 
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
@@ -478,12 +301,11 @@ export default function LabelDemo() {
             rasterize: true,
           })
 
-          // Use 'as const' to ensure 'type' is a literal string to satisfy typings
           const data: PrintData[] = [
             {
               type: "pixel",
               format: "image",
-              flavor: "base64", // <-- Add this line
+              flavor: "base64",
               data: imageDataUrl.split(",")[1],
             },
           ]
@@ -513,39 +335,7 @@ export default function LabelDemo() {
         <div className="flex gap-8">
           {/* Left Section: Label Printer */}
           <div className="w-1/2">
-            <div className="flex items-center gap-8">
-              <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
-              <div className="mb-4">
-                <span
-                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                    printerStatus.isConnected
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {printerStatus.isConnected ? "● Connected" : "● Disconnected"}
-                </span>
-                <p className="mt-1 text-sm text-gray-600">{printerStatus.printerName}</p>
-              </div>
-              <div className="mb-4 rounded border border-yellow-200 bg-yellow-50 p-3">
-                <h3 className="mb-2 text-sm font-semibold text-yellow-800">Debug Info</h3>
-                <p className="text-xs text-yellow-700">Status: {printerStatus.status}</p>
-                <p className="text-xs text-yellow-700">
-                  Connected: {printerStatus.isConnected ? "true" : "false"}
-                </p>
-                <p className="text-xs text-yellow-700">Name: {printerStatus.printerName}</p>
-                <button
-                  onClick={() => {
-                    console.log("🔄 Manual printer status check triggered")
-                    checkPrinterStatus()
-                  }}
-                  className="mt-2 rounded bg-yellow-600 px-3 py-1 text-xs text-white hover:bg-yellow-700"
-                >
-                  Refresh Status
-                </button>
-              </div>
-            </div>
-            {/* Label Height Chooser */}
+            <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
           </div>
 
           {/* Right Section: Initials and Settings */}
@@ -682,20 +472,18 @@ export default function LabelDemo() {
               <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
               <button
                 onClick={printLabels}
-                disabled={!printerStatus.isConnected || printQueue.length === 0}
+                disabled={printQueue.length === 0}
                 className={`rounded px-4 py-2 text-white transition-colors ${
-                  !printerStatus.isConnected || printQueue.length === 0
+                  printQueue.length === 0
                     ? "cursor-not-allowed bg-gray-400"
                     : "bg-green-600 hover:bg-green-700"
                 }`}
                 title={
-                  !printerStatus.isConnected
-                    ? "Printer not connected"
-                    : printQueue.length === 0
-                      ? "No items in print queue"
-                      : "Print all labels in queue"
+                  printQueue.length === 0 ? "No items in print queue" : "Print all labels in queue"
                 }
-              ></button>
+              >
+                Print Labels
+              </button>
               <button
                 onClick={clearPrintQueue}
                 disabled={printQueue.length === 0}
@@ -775,7 +563,6 @@ export default function LabelDemo() {
           onExpiryChange={handleExpiryChange}
           useInitials={useInitials}
           selectedInitial={selectedInitial}
-          // labelHeight={labelHeight}
         />
       </div>
     </div>
