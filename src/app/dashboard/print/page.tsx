@@ -7,7 +7,7 @@ import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
 import LabelPreview from "./PreviewLabel"
 import { formatLabelForPrintImage } from "./labelFormatter"
-import LabelHeightChooser from "./LabelHeightChooser"
+import LabelHeightChooser, { LabelHeight } from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import qz, { PrintData } from "qz-tray"
 import { usePrinterStatus } from "@/context/PrinterContext"
@@ -15,7 +15,10 @@ import { usePrinterStatus } from "@/context/PrinterContext"
 const itemsPerPage = 5
 
 // and access localStorage
-const selectedPrinter = localStorage.getItem("selectedPrinter") || "Fallback_Printer"
+const selectedPrinter =
+  typeof window !== "undefined"
+    ? localStorage.getItem("selectedPrinter") || "Fallback_Printer"
+    : "Fallback_Printer"
 function calculateExpiryDate(days: number): string {
   const today = new Date()
   today.setDate(today.getDate() + days)
@@ -73,6 +76,7 @@ export default function LabelDemo() {
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
   const { isConnected } = usePrinterStatus()
+  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
 
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
@@ -292,7 +296,7 @@ export default function LabelDemo() {
             5,
             useInitials,
             selectedInitial,
-            "31mm"
+            labelHeight // Default label height, can be adjusted
           )
 
           const config = qz.configs.create("Your_Printer_Name", {
@@ -336,6 +340,11 @@ export default function LabelDemo() {
           {/* Left Section: Label Printer */}
           <div className="w-1/2">
             <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
+            <LabelHeightChooser
+              selectedHeight={labelHeight}
+              onHeightChange={(val) => setLabelHeight(val)}
+              className="mb-4"
+            />
           </div>
 
           {/* Right Section: Initials and Settings */}
@@ -563,6 +572,7 @@ export default function LabelDemo() {
           onExpiryChange={handleExpiryChange}
           useInitials={useInitials}
           selectedInitial={selectedInitial}
+          labelHeight={labelHeight}
         />
       </div>
     </div>
