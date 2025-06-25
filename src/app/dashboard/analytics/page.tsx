@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Printer, Users, CalendarDays, AlertTriangle } from "lucide-react"
@@ -43,37 +43,46 @@ const fetcher = async (url: string) => {
   return res.json()
 }
 
-function processLogs(logs: any[]) {
+const RANGE_OPTIONS = [
+  { label: "1 Week", value: "week" },
+  { label: "1 Month", value: "month" },
+]
+
+function processLogs(logs: any[], range: "week" | "month") {
   const now = new Date()
-  const startOfWeek = new Date(now)
-  startOfWeek.setDate(now.getDate() - now.getDay())
-  startOfWeek.setHours(0, 0, 0, 0)
+  let startOfRange = new Date(now)
+  if (range === "week") {
+    startOfRange.setDate(now.getDate() - now.getDay())
+  } else {
+    startOfRange.setDate(1)
+  }
+  startOfRange.setHours(0, 0, 0, 0)
   const nowTime = now.getTime()
-  const startOfWeekTime = startOfWeek.getTime()
+  const startOfRangeTime = startOfRange.getTime()
 
   const printLogs = (logs || []).filter((log: any) => log.action === "print_label")
-  const weekLogs = printLogs.filter((log: any) => {
+  const rangeLogs = printLogs.filter((log: any) => {
     const printedAtTime = new Date(log.details.printedAt).getTime()
-    return printedAtTime >= startOfWeekTime && printedAtTime <= nowTime
+    return printedAtTime >= startOfRangeTime && printedAtTime <= nowTime
   })
 
   // Count by labelType (for this week)
   const stats: LabelStats = {}
-  weekLogs.forEach((log: any) => {
+  rangeLogs.forEach((log: any) => {
     const type = log.details.labelType || "other"
     stats[type] = (stats[type] || 0) + (log.details.quantity || 1)
   })
 
   // Count by initial (for this week)
   const initialsStats: { [initial: string]: number } = {}
-  weekLogs.forEach((log: any) => {
+  rangeLogs.forEach((log: any) => {
     const initial = log.details.initial || "Unknown"
     initialsStats[initial] = (initialsStats[initial] || 0) + (log.details.quantity || 1)
   })
 
   // Labels printed per day (for line chart)
   const labelsPerDay: { [date: string]: number } = {}
-  weekLogs.forEach((log: any) => {
+  rangeLogs.forEach((log: any) => {
     const date = new Date(log.details.printedAt)
     const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
     labelsPerDay[key] = (labelsPerDay[key] || 0) + (log.details.quantity || 1)
@@ -81,9 +90,11 @@ function processLogs(logs: any[]) {
 
   // Prepare data for line chart
   const days = []
-  for (let i = 0; i <= 6; i++) {
-    const d = new Date(startOfWeek)
-    d.setDate(startOfWeek.getDate() + i)
+  const daysCount =
+    range === "week" ? 7 : new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
+  for (let i = 0; i < daysCount; i++) {
+    const d = new Date(startOfRange)
+    d.setDate(startOfRange.getDate() + i)
     const key = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
     days.push({
       date: `${d.getMonth() + 1}/${d.getDate()}`,
@@ -104,7 +115,7 @@ function processLogs(logs: any[]) {
   }))
 
   // Total for the week (not just today)
-  const totalThisWeek = weekLogs.reduce(
+  const totalThisWeek = rangeLogs.reduce(
     (sum: number, log: any) => sum + (log.details.quantity || 1),
     0
   )
@@ -140,7 +151,7 @@ function processLogs(logs: any[]) {
   }).length
 
   const formatDate = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
-  const weekRange = `${formatDate(startOfWeek)} - ${formatDate(now)}`
+  const weekRange = `${formatDate(startOfRange)} - ${formatDate(now)}`
 
   return {
     stats,
@@ -195,6 +206,7 @@ const MetricCard = ({
 )
 
 const AnalyticsDashboard: React.FC = () => {
+  const [range, setRange] = useState<"week" | "month">("week")
   const { data, isLoading } = useSWR("/api/logs", fetcher, { suspense: false })
 
   if (isLoading || !data) {
@@ -216,7 +228,7 @@ const AnalyticsDashboard: React.FC = () => {
     activeStaff,
     dailyAvg,
     expiringSoon,
-  } = processLogs(data.logs)
+  } = processLogs(data.logs, range)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
@@ -230,6 +242,24 @@ const AnalyticsDashboard: React.FC = () => {
           time.
         </p>
       </header>
+      {/* Range Selector */}
+      <div className="mx-auto mb-6 flex max-w-6xl justify-end">
+        <div className="inline-flex rounded-lg bg-white/70 shadow">
+          {RANGE_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              className={`rounded-lg px-4 py-2 font-medium transition ${
+                range === opt.value
+                  ? "bg-blue-500 text-white shadow"
+                  : "text-blue-700 hover:bg-blue-100"
+              }`}
+              onClick={() => setRange(opt.value as "week" | "month")}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
       {/* Metric Cards */}
       <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
@@ -261,7 +291,6 @@ const AnalyticsDashboard: React.FC = () => {
           gradient={GRADIENTS[3]}
         />
       </section>
-
       {/* Expiring Items */}
       <section className="mx-auto mb-10 w-full max-w-6xl">
         <AboutToExpireList />
