@@ -5,6 +5,8 @@ import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import Billing from "./Billing"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
 const features = [
   "Device Provided",
@@ -245,6 +247,7 @@ const ProfileDashboard = () => {
 
   return (
     <div className="">
+      {/* --- Tabs section (unchanged) --- */}
       <div className="mb-6 flex border-b">
         {["account", "billing"].map((tab) => (
           <button
@@ -272,12 +275,15 @@ const ProfileDashboard = () => {
                 alt="User Avatar"
                 className="h-32 w-32 rounded-full object-cover"
               />
-              <button
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
                 onClick={() => setShowModal(true)}
-                className="absolute bottom-0 left-0 right-0 bg-black/60 py-1 text-xs text-white"
+                className="absolute bottom-0 left-0 right-0 rounded-none rounded-b-full bg-black/60 py-1 text-xs text-white"
               >
                 Change Avatar
-              </button>
+              </Button>
             </div>
             <h2 className="text-lg font-semibold">{name}</h2>
             <p className="text-center text-sm text-muted-foreground">
@@ -303,11 +309,10 @@ const ProfileDashboard = () => {
                   <label className="mb-2 block text-sm font-medium text-gray-700">
                     Company Name
                   </label>
-                  <input
+                  <Input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
                     placeholder="Enter company name"
                   />
                 </div>
@@ -315,11 +320,10 @@ const ProfileDashboard = () => {
                 {/* Address */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-700">Address</label>
-                  <input
+                  <Input
                     type="text"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
                     placeholder="Enter address"
                   />
                 </div>
@@ -327,32 +331,19 @@ const ProfileDashboard = () => {
                 {/* Name (disabled) */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-500">Name</label>
-                  <input
-                    type="text"
-                    value={name}
-                    disabled
-                    className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
-                  />
+                  <Input type="text" value={name} disabled className="cursor-not-allowed" />
                 </div>
 
                 {/* Email (disabled) */}
                 <div>
                   <label className="mb-2 block text-sm font-medium text-gray-500">Email</label>
-                  <input
-                    type="email"
-                    value={email}
-                    disabled
-                    className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
-                  />
+                  <Input type="email" value={email} disabled className="cursor-not-allowed" />
                 </div>
               </div>
 
-              <button
-                onClick={handleSave}
-                className="mt-6 inline-flex justify-center rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-              >
+              <Button onClick={handleSave} className="mt-6">
                 Save Now
-              </button>
+              </Button>
 
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <h3 className="text-md mb-4 font-semibold text-gray-900">Change Admin PIN</h3>
@@ -368,7 +359,7 @@ const ProfileDashboard = () => {
                     </label>
                     <div className="flex gap-3">
                       {[0, 1, 2, 3].map((idx) => (
-                        <input
+                        <Input
                           key={`current-${idx}`}
                           type="password"
                           maxLength={1}
@@ -385,7 +376,7 @@ const ProfileDashboard = () => {
                           ref={(el) => {
                             currentPinRefs.current[idx] = el
                           }}
-                          className="h-12 w-12 rounded-md border border-gray-300 bg-white text-center text-2xl text-gray-900 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                          className="h-12 w-12 text-center text-2xl"
                           inputMode="numeric"
                           pattern="[0-9]*"
                           autoComplete="one-time-code"
@@ -400,7 +391,7 @@ const ProfileDashboard = () => {
                     <label className="mb-2 block text-sm font-medium text-gray-700">New PIN</label>
                     <div className="flex gap-3">
                       {[0, 1, 2, 3].map((idx) => (
-                        <input
+                        <Input
                           key={`new-${idx}`}
                           type="password"
                           maxLength={1}
@@ -417,7 +408,7 @@ const ProfileDashboard = () => {
                           ref={(el) => {
                             newPinRefs.current[idx] = el
                           }}
-                          className="h-12 w-12 rounded-md border border-gray-300 bg-white text-center text-2xl text-gray-900 shadow-sm transition focus:border-blue-600 focus:ring-1 focus:ring-blue-600"
+                          className="h-12 w-12 text-center text-2xl"
                           inputMode="numeric"
                           pattern="[0-9]*"
                           autoComplete="one-time-code"
@@ -432,12 +423,7 @@ const ProfileDashboard = () => {
                   {pinError && <p className="mb-4 text-sm text-red-600">{pinError}</p>}
                   {pinSuccess && <p className="mb-4 text-sm text-green-600">{pinSuccess}</p>}
 
-                  <button
-                    onClick={handleChangePin}
-                    className="rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
-                  >
-                    Change PIN
-                  </button>
+                  <Button onClick={handleChangePin}>Change PIN</Button>
                 </div>
               </div>
 
@@ -449,10 +435,10 @@ const ProfileDashboard = () => {
                     <label className="mb-2 block text-sm font-medium text-gray-700">
                       Current Password
                     </label>
-                    <input
+                    <Input
                       type="password"
                       placeholder="********"
-                      className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
+                      className="cursor-not-allowed"
                       disabled
                     />
                   </div>
@@ -460,20 +446,17 @@ const ProfileDashboard = () => {
                     <label className="mb-2 block text-sm font-medium text-gray-700">
                       New Password
                     </label>
-                    <input
+                    <Input
                       type="password"
                       placeholder="New Password"
-                      className="w-full cursor-not-allowed rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-sm text-gray-500"
+                      className="cursor-not-allowed"
                       disabled
                     />
                   </div>
                 </div>
-                <button
-                  disabled
-                  className="mt-6 cursor-not-allowed rounded-md bg-gray-200 px-4 py-2 text-sm font-medium text-gray-400"
-                >
+                <Button disabled className="mt-6" variant="secondary">
                   Change Password
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -502,12 +485,9 @@ const ProfileDashboard = () => {
                 />
               ))}
             </div>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-6 w-full rounded-md bg-muted px-4 py-2 text-sm text-muted-foreground"
-            >
+            <Button onClick={() => setShowModal(false)} variant="secondary" className="mt-6 w-full">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}

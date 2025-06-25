@@ -22,6 +22,8 @@ import { GoLog } from "react-icons/go"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import AdminPinModal from "./adminPinModal"
+import SidebarSkeleton from "./SidebarSkeleton"
+import * as Tooltip from "@radix-ui/react-tooltip"
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
@@ -70,7 +72,9 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
     setMounted(true)
   }, [])
 
-  const filteredNavItems = isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((i) => i.label === "Print Label")
+  const filteredNavItems = isAdmin
+    ? NAV_ITEMS
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label))
   const isExpanded = sidebarOpen || sidebarMobile
 
   // Load initial data from localStorage
@@ -180,15 +184,11 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
   }
 
   if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-[hsl(var(--primary))] border-t-transparent" />
-      </div>
-    )
+    return <SidebarSkeleton />
   }
 
   return (
-    <>
+    <Tooltip.Provider>
       <div className="sticky top-0 z-20 h-screen shrink-0 overflow-y-auto">
         {/* Mobile Toggle Button */}
         <button
@@ -227,11 +227,10 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 z-50 flex h-full flex-col overflow-y-auto border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
-            // Mobile behavior
+            "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
+            // removed overflow-y-auto here!
             "lg:relative lg:z-auto lg:shadow-none",
             sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",
-            // Desktop behavior
             sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"
           )}
         >
@@ -256,91 +255,134 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
             )}
           </div>
 
-          <nav className="flex flex-grow flex-col space-y-1">
+          {/* Make only the nav scrollable */}
+          <nav className="flex flex-grow flex-col space-y-1 overflow-y-auto">
             {filteredNavItems.map(({ label, icon, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className={cn(
-                  "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
-                  pathname === href && "bg-white/20"
-                  //   isExpanded ? "justify-start" : "justify-center"
-                )}
-                onClick={() => setSidebarMobile(false)}
-              >
-                <span className="text-[1.3rem]">{icon}</span>
-                {isExpanded && <span>{label}</span>}
+              <Tooltip.Root key={label} delayDuration={100}>
+                <Tooltip.Trigger asChild>
+                  <Link
+                    href={href}
+                    className={cn(
+                      "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
+                      pathname === href && "bg-white/20"
+                    )}
+                    onClick={() => setSidebarMobile(false)}
+                  >
+                    <span className="text-[1.3rem]">{icon}</span>
+                    {isExpanded && <span>{label}</span>}
+                  </Link>
+                </Tooltip.Trigger>
+                {/* Only show tooltip when sidebar is collapsed */}
                 {!isExpanded && (
-                  <span className="absolute left-full ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
-                    {label}
-                  </span>
+                  <Tooltip.Portal>
+                    <Tooltip.Content
+                      side="right"
+                      align="center"
+                      className="z-[2147483647] select-none rounded bg-black px-2 py-1 text-xs text-white shadow-lg"
+                      sideOffset={8}
+                    >
+                      {label}
+                      <Tooltip.Arrow className="fill-black" />
+                    </Tooltip.Content>
+                  </Tooltip.Portal>
                 )}
-              </Link>
+              </Tooltip.Root>
             ))}
           </nav>
 
-          {/* Admin Access Button - Only show when expanded and not admin */}
-          {!isAdmin && isExpanded && (
-            <button
-              onClick={() => {
-                setShowPinModal(true)
-                setSidebarMobile(false)
-              }}
-              className="mt-4 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-yellow-300 hover:bg-yellow-400/10"
-            >
-              <RiAdminLine className="text-[1.3rem]" />
-              <span>Admin Access</span>
-            </button>
+          {/* Admin Access Button - Always show when not admin */}
+          {!isAdmin && (
+            <Tooltip.Root delayDuration={100}>
+              <Tooltip.Trigger asChild>
+                <button
+                  onClick={() => {
+                    setShowPinModal(true)
+                    setSidebarMobile(false)
+                  }}
+                  className="group relative mt-4 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-yellow-300 hover:bg-yellow-400/10"
+                >
+                  <RiAdminLine className="text-[1.3rem]" />
+                  {isExpanded && <span>Admin Access</span>}
+                </button>
+              </Tooltip.Trigger>
+              {!isExpanded && (
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    side="right"
+                    align="center"
+                    className="z-[2147483647] select-none rounded bg-black px-2 py-1 text-xs text-white shadow-lg"
+                    sideOffset={8}
+                  >
+                    Admin Access
+                    <Tooltip.Arrow className="fill-black" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
+              )}
+            </Tooltip.Root>
           )}
 
-          {/* Profile Section - Always same structure */}
+          {/* Profile Section */}
           <div className="mb-4 mt-auto">
-            <div className="flex items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
-              {avatar !== null && (
-                <div className="group relative">
-                  <Image
-                    src={`/avatar${avatar}.png`}
-                    width={32}
-                    height={32}
-                    alt="Avatar"
-                    className="rounded-full border border-white"
-                  />
-                  {/* Tooltip for collapsed state */}
-                  {!isExpanded && profile?.company_name && (
-                    <span className="absolute left-full z-10 ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
-                      {profile.company_name}
-                    </span>
+            <Tooltip.Root delayDuration={100}>
+              <Tooltip.Trigger asChild>
+                <div className="group relative flex cursor-pointer items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
+                  {avatar !== null && (
+                    <Image
+                      src={`/avatar${avatar}.png`}
+                      width={32}
+                      height={32}
+                      alt="Avatar"
+                      className="rounded-full border border-white"
+                    />
+                  )}
+                  {isExpanded && profile?.company_name && (
+                    <span className="font-medium">{profile.company_name}</span>
                   )}
                 </div>
+              </Tooltip.Trigger>
+              {/* Tooltip for collapsed state */}
+              {!isExpanded && profile?.company_name && (
+                <Tooltip.Portal>
+                  <Tooltip.Content
+                    side="right"
+                    align="center"
+                    className="z-[2147483647] select-none rounded bg-black px-2 py-1 text-xs text-white shadow-lg"
+                    sideOffset={8}
+                  >
+                    {profile.company_name}
+                    <Tooltip.Arrow className="fill-black" />
+                  </Tooltip.Content>
+                </Tooltip.Portal>
               )}
-              {/* Company name - simple show/hide */}
-              {isExpanded && profile?.company_name && (
-                <div>
-                  <span className="font-medium">{profile.company_name}</span>
-                </div>
-              )}
-            </div>
+            </Tooltip.Root>
           </div>
 
-          {/* Logout Button - Always same structure */}
-          <div>
-            <button
-              onClick={handleLogout}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-400/10"
-            >
-              <div className="group relative">
+          {/* Logout Button */}
+          <Tooltip.Root delayDuration={100}>
+            <Tooltip.Trigger asChild>
+              <button
+                onClick={handleLogout}
+                className="group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-semibold text-red-400 hover:bg-red-400/10"
+              >
                 <IoLogOutOutline className="text-[1.3rem]" />
-                {/* Tooltip for collapsed state */}
-                {!isExpanded && (
-                  <span className="absolute left-full z-10 ml-2 hidden whitespace-nowrap rounded bg-black px-2 py-1 text-xs text-white group-hover:block">
-                    Logout
-                  </span>
-                )}
-              </div>
-              {/* Logout text - simple show/hide */}
-              {isExpanded && <span>Logout</span>}
-            </button>
-          </div>
+                {isExpanded && <span>Logout</span>}
+              </button>
+            </Tooltip.Trigger>
+            {/* Tooltip for collapsed state */}
+            {!isExpanded && (
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  side="right"
+                  align="center"
+                  className="z-[2147483647] select-none rounded bg-black px-2 py-1 text-xs text-white shadow-lg"
+                  sideOffset={8}
+                >
+                  Logout
+                  <Tooltip.Arrow className="fill-black" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            )}
+          </Tooltip.Root>
         </aside>
 
         {/* Admin PIN Modal */}
@@ -350,6 +392,6 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
           onSuccess={handleAdminSuccess}
         />
       </div>
-    </>
+    </Tooltip.Provider>
   )
 }

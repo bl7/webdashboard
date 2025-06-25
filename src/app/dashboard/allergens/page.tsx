@@ -20,6 +20,26 @@ import * as XLSX from "xlsx"
 import { useAllergens, type Allergen } from "@/hooks/useAllergens"
 import { allergenIconMap } from "../../../components/allergenicons"
 import allergenColorMap from "@/components/allergencolormap"
+import AppLoader from "@/components/AppLoader" // Use your loader if available
+
+function AllergensSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted-foreground/20" />
+        <div className="flex gap-2">
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
+        <div className="h-24 animate-pulse rounded-xl bg-muted-foreground/10" />
+        <div className="h-24 animate-pulse rounded-xl bg-muted-foreground/10" />
+      </div>
+      <div className="h-96 animate-pulse rounded-2xl bg-muted-foreground/10" />
+    </div>
+  )
+}
 
 export default function AllergenDashboard() {
   const [query, setQuery] = useState("")
@@ -32,11 +52,8 @@ export default function AllergenDashboard() {
   const [editingAllergen, setEditingAllergen] = useState<Allergen | null>(null)
   const [deletingAllergen, setDeletingAllergen] = useState<Allergen | null>(null)
   const [isOperationLoading, setIsOperationLoading] = useState(false)
-
-  // Filter type state
   const [filterType, setFilterType] = useState<"All" | "Custom" | "Standard">("All")
 
-  // Use the custom hook
   const {
     allergens,
     isLoading: isFetchingAllergens,
@@ -51,7 +68,6 @@ export default function AllergenDashboard() {
 
   const perPage = 14
 
-  // Filter data by query AND filterType
   const filtered = allergens.filter((d) => {
     const matchesQuery = d.name.toLowerCase().includes(query.toLowerCase())
     const matchesType =
@@ -137,25 +153,29 @@ export default function AllergenDashboard() {
     setShowDeleteModal(true)
   }
 
-  // Show loading state while fetching allergens
-  if (isFetchingAllergens) {
+  // Loading state
+  if (isFetchingAllergens && allergens.length === 0) {
+    return <AllergensSkeleton />
+  }
+
+  // Loader for in-place loading (e.g., during add/edit/delete)
+  if (isFetchingAllergens && allergens.length > 0) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-          <p className="text-muted-foreground">Loading allergens...</p>
-        </div>
+        <AppLoader message="Loading allergens..." />
       </div>
     )
   }
 
-  // Show error state
+  // Error state
   if (error) {
     return (
       <div className="flex h-64 items-center justify-center">
         <div className="text-center">
           <p className="mb-4 text-red-600">Error: {error}</p>
-          <Button onClick={refreshAllergens}>Try Again</Button>
+          <Button onClick={refreshAllergens} variant="default">
+            Try Again
+          </Button>
         </div>
       </div>
     )
@@ -169,7 +189,7 @@ export default function AllergenDashboard() {
           <Button variant="outline" className="mr-5" onClick={handleExportExcel}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
-          <Button onClick={() => setShowAddModal(true)}>
+          <Button onClick={() => setShowAddModal(true)} variant="default">
             <Plus className="mr-2 h-4 w-4" />
             Add Allergen
           </Button>
@@ -314,6 +334,51 @@ export default function AllergenDashboard() {
         >
           Previous
         </Button>
+
+        {/* First page */}
+        <Button
+          variant={page === 1 ? "default" : "outline"}
+          onClick={() => setPage(1)}
+          className="min-w-[36px] px-2 py-1"
+        >
+          1
+        </Button>
+
+        {/* Ellipsis before current range */}
+        {page > 3 && maxPages > 5 && <span className="px-2 py-1 text-muted-foreground">...</span>}
+
+        {/* Pages around current */}
+        {Array.from({ length: maxPages }, (_, i) => i + 1)
+          .filter(
+            (p) => p !== 1 && p !== maxPages && Math.abs(p - page) <= 1 // show current, previous, next
+          )
+          .map((p) => (
+            <Button
+              key={p}
+              variant={page === p ? "default" : "outline"}
+              onClick={() => setPage(p)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              {p}
+            </Button>
+          ))}
+
+        {/* Ellipsis after current range */}
+        {page < maxPages - 2 && maxPages > 5 && (
+          <span className="px-2 py-1 text-muted-foreground">...</span>
+        )}
+
+        {/* Last page */}
+        {maxPages > 1 && (
+          <Button
+            variant={page === maxPages ? "default" : "outline"}
+            onClick={() => setPage(maxPages)}
+            className="min-w-[36px] px-2 py-1"
+          >
+            {maxPages}
+          </Button>
+        )}
+
         <Button
           variant="outline"
           onClick={() => setPage((p) => Math.min(maxPages, p + 1))}

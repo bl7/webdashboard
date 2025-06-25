@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { FileDown } from "lucide-react"
+import AppLoader from "@/components/AppLoader"
 
 // Define the log type
 interface Log {
@@ -21,6 +22,19 @@ interface Log {
   action: string
   details: any
   timestamp: string
+}
+
+function LogsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted-foreground/20" />
+        <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+      </div>
+      <div className="h-24 animate-pulse rounded-xl bg-muted-foreground/10" />
+      <div className="h-96 animate-pulse rounded-2xl bg-muted-foreground/10" />
+    </div>
+  )
 }
 
 export default function LogsPage() {
@@ -94,6 +108,17 @@ export default function LogsPage() {
     XLSX.writeFile(workbook, "logs.xlsx")
   }
 
+  // Pagination logic
+  const itemsPerPage = 20
+  const [page, setPage] = useState(1)
+  const totalPages = Math.ceil(filteredLogs.length / itemsPerPage)
+  const paginatedLogs = filteredLogs.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+
+  // Show skeleton if loading and no data loaded yet
+  if (loading && logs.length === 0) {
+    return <LogsSkeleton />
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -122,7 +147,8 @@ export default function LogsPage() {
           </div>
         </div>
 
-        {loading && <p className="p-6">Loading logs...</p>}
+        {/* In-place loader for subsequent loads */}
+        {loading && logs.length > 0 && <AppLoader message="Loading logs..." />}
         {error && <p className="p-6 text-red-600">Error: {error}</p>}
         {!loading && !error && (
           <Table>
@@ -135,7 +161,7 @@ export default function LogsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredLogs.map(({ id, action, timestamp, details }) => (
+              {paginatedLogs.map(({ id, action, timestamp, details }) => (
                 <TableRow key={id}>
                   <TableCell>{id}</TableCell>
                   <TableCell>{action}</TableCell>
@@ -148,10 +174,70 @@ export default function LogsPage() {
         )}
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
             Previous
           </Button>
-          <Button variant="outline" size="sm">
+
+          {/* First page */}
+          <Button
+            variant={page === 1 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPage(1)}
+            className="min-w-[36px] px-2 py-1"
+          >
+            1
+          </Button>
+
+          {/* Ellipsis before current range */}
+          {page > 3 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Pages around current */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(
+              (p) => p !== 1 && p !== totalPages && Math.abs(p - page) <= 1 // show current, previous, next
+            )
+            .map((p) => (
+              <Button
+                key={p}
+                variant={page === p ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPage(p)}
+                className="min-w-[36px] px-2 py-1"
+              >
+                {p}
+              </Button>
+            ))}
+
+          {/* Ellipsis after current range */}
+          {page < totalPages - 2 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Last page */}
+          {totalPages > 1 && (
+            <Button
+              variant={page === totalPages ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPage(totalPages)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              {totalPages}
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
             Next
           </Button>
         </div>

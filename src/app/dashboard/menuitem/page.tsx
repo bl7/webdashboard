@@ -41,6 +41,22 @@ type MenuItemFormData = {
   status: string
 }
 
+function MenuItemsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted-foreground/20" />
+        <div className="flex gap-2">
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+        </div>
+      </div>
+      <div className="h-24 animate-pulse rounded-xl bg-muted-foreground/10" />
+      <div className="h-96 animate-pulse rounded-2xl bg-muted-foreground/10" />
+    </div>
+  )
+}
+
 export default function MenuItemsDashboard() {
   const [query, setQuery] = useState("")
   const [data, setData] = useState<MenuItem[]>([])
@@ -290,6 +306,24 @@ export default function MenuItemsDashboard() {
     return ingredients.filter((ing) => !ingredientIds.includes(ing.uuid))
   }
 
+  // Loader and skeleton logic
+  if (loading || ingredientsLoading) {
+    return <MenuItemsSkeleton />
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="text-center">
+          <p className="mb-4 text-red-600">{error}</p>
+          <Button onClick={() => window.location.reload()} variant="default">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -430,16 +464,70 @@ export default function MenuItemsDashboard() {
             </table>
 
             {/* Pagination */}
-            <div className="flex justify-between p-5">
-              <Button disabled={page <= 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+            <div className="flex justify-end gap-2 p-5">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
                 Previous
               </Button>
-              <span className="text-sm text-muted-foreground">
-                Page {page} of {maxPages}
-              </span>
+
+              {/* First page */}
               <Button
-                disabled={page >= maxPages}
+                variant={page === 1 ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPage(1)}
+                className="min-w-[36px] px-2 py-1"
+              >
+                1
+              </Button>
+
+              {/* Ellipsis before current range */}
+              {page > 3 && maxPages > 5 && (
+                <span className="px-2 py-1 text-muted-foreground">...</span>
+              )}
+
+              {/* Pages around current */}
+              {Array.from({ length: maxPages }, (_, i) => i + 1)
+                .filter(
+                  (p) => p !== 1 && p !== maxPages && Math.abs(p - page) <= 1 // show current, previous, next
+                )
+                .map((p) => (
+                  <Button
+                    key={p}
+                    variant={page === p ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setPage(p)}
+                    className="min-w-[36px] px-2 py-1"
+                  >
+                    {p}
+                  </Button>
+                ))}
+
+              {/* Ellipsis after current range */}
+              {page < maxPages - 2 && maxPages > 5 && (
+                <span className="px-2 py-1 text-muted-foreground">...</span>
+              )}
+
+              {/* Last page */}
+              {maxPages > 1 && (
+                <Button
+                  variant={page === maxPages ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPage(maxPages)}
+                  className="min-w-[36px] px-2 py-1"
+                >
+                  {maxPages}
+                </Button>
+              )}
+
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => setPage((p) => Math.min(maxPages, p + 1))}
+                disabled={page === maxPages}
               >
                 Next
               </Button>

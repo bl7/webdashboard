@@ -8,6 +8,8 @@ import BillingAddressModal from "./billingcomponents/BillingAddressModal"
 import PlanSelectionModal from "./billingcomponents/planSelectionModal"
 import useBillingData, { Profile } from "./hooks/useBillingData"
 import PlanRenewal from "./billingcomponents/planRenewal"
+import { Button } from "@/components/ui/button"
+import AppLoader from "@/components/AppLoader"
 
 const Billing: React.FC = () => {
   const [isClient, setIsClient] = useState(false)
@@ -89,10 +91,7 @@ const Billing: React.FC = () => {
   if (!isClient || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#f6f9fb]">
-        <div className="text-center">
-          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
-          <p className="text-gray-600">Loading billing information...</p>
-        </div>
+        <AppLoader message="Loading billing information..." />
       </div>
     )
   }
@@ -104,12 +103,9 @@ const Billing: React.FC = () => {
         <div className="text-center">
           <div className="mb-4 text-lg text-red-500">⚠️ Error loading billing data</div>
           <p className="mb-4 text-gray-600">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
-          >
+          <Button onClick={() => window.location.reload()} variant="default">
             Retry
-          </button>
+          </Button>
         </div>
       </div>
     )

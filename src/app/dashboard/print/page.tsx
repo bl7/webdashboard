@@ -12,6 +12,9 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import qz, { PrintData } from "qz-tray"
 import { usePrinterStatus } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"
 
 const itemsPerPage = 5
 
@@ -445,317 +448,350 @@ export default function LabelDemo() {
     activeTab === "ingredients" ? filteredIngredients.length : filteredMenuItems.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
 
+  // Show skeleton if loading and no data loaded yet
+  const initialDataLoading = isLoading && ingredients.length === 0 && menuItems.length === 0
+
+  if (initialDataLoading) {
+    return <PrintPageSkeleton />
+  }
+
   return (
     <div className="space-y-6">
       <div className="mx-auto">
-        <div className="flex gap-8">
-          {/* Left Section: Label Printer */}
-          <div className="w-1/2">
-            <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
-            <LabelHeightChooser
-              selectedHeight={labelHeight}
-              onHeightChange={(val) => setLabelHeight(val)}
-              className="mb-4"
-            />
+        {/* In-place loader for subsequent loads */}
+        {isLoading && (ingredients.length > 0 || menuItems.length > 0) ? (
+          <div className="flex h-32 items-center justify-center">
+            <svg className="h-8 w-8 animate-spin text-purple-600" fill="none" viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+            </svg>
+            <span className="ml-4 text-lg text-gray-500">Loading Print Label...</span>
           </div>
+        ) : (
+          <>
+            <div className="flex gap-8">
+              {/* Left Section: Label Printer */}
+              <div className="w-1/2">
+                <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
+                <LabelHeightChooser
+                  selectedHeight={labelHeight}
+                  onHeightChange={(val) => setLabelHeight(val)}
+                  className="mb-4"
+                />
+              </div>
 
-          {/* Right Section: Initials and Settings */}
-          <div className="w-1/2">
-            {useInitials && customInitials.length > 0 && (
-              <div className="mb-4">
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  Select Initials
-                </label>
-                <select
-                  className="w-full rounded border px-4 py-2"
-                  value={selectedInitial}
-                  onChange={(e) => setSelectedInitial(e.target.value)}
-                >
-                  <option value="">Select initials...</option>
-                  {customInitials.map((initial) => (
-                    <option key={initial} value={initial}>
-                      {initial}
-                    </option>
-                  ))}
-                </select>
+              {/* Right Section: Initials and Settings */}
+              <div className="w-1/2">
+                {useInitials && customInitials.length > 0 && (
+                  <div className="mb-4">
+                    <label className="mb-1 block text-sm font-medium text-gray-700">
+                      Select Initials
+                    </label>
+                    <select
+                      className="w-full rounded border px-4 py-2"
+                      value={selectedInitial}
+                      onChange={(e) => setSelectedInitial(e.target.value)}
+                    >
+                      <option value="">Select initials...</option>
+                      {customInitials.map((initial) => (
+                        <option key={initial} value={initial}>
+                          {initial}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Feedback Messages */}
+            {feedbackMsg && (
+              <div
+                className={`mb-4 rounded-md p-4 ${
+                  feedbackType === "success"
+                    ? "border border-green-200 bg-green-50 text-green-800"
+                    : "border border-red-200 bg-red-50 text-red-800"
+                }`}
+              >
+                {feedbackMsg}
               </div>
             )}
-          </div>
-        </div>
 
-        {/* Feedback Messages */}
-        {feedbackMsg && (
-          <div
-            className={`mb-4 rounded-md p-4 ${
-              feedbackType === "success"
-                ? "border border-green-200 bg-green-50 text-green-800"
-                : "border border-red-200 bg-red-50 text-red-800"
-            }`}
-          >
-            {feedbackMsg}
-          </div>
-        )}
-
-        <div className="flex gap-8">
-          <div className="w-1/2">
-            <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
-              <button
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                  activeTab === "ingredients"
-                    ? "bg-white text-purple-700 shadow"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-                onClick={() => setActiveTab("ingredients")}
-              >
-                Ingredients
-              </button>
-              <button
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                  activeTab === "menu"
-                    ? "bg-white text-purple-700 shadow"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
-                onClick={() => setActiveTab("menu")}
-              >
-                Menu Items
-              </button>
-            </div>
-
-            <div className="mb-4">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search..."
-                className="w-full rounded border px-4 py-2"
-              />
-            </div>
-
-            {isLoading && <p>Loading...</p>}
-            {error && <p className="text-red-600">{error}</p>}
-
-            <div className="mb-6">
-              {(activeTab === "ingredients" ? paginatedIngredients : paginatedMenuItems).map(
-                (item) => (
-                  <div
-                    key={item.id}
-                    className="mb-2 flex items-center justify-between rounded border p-4"
+            <div className="flex gap-8">
+              <div className="w-1/2">
+                <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
+                  <button
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                      activeTab === "ingredients"
+                        ? "bg-white text-purple-700 shadow"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setActiveTab("ingredients")}
                   >
-                    <div>
-                      <p className="font-semibold">{item.name}</p>
-                      <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
-                    </div>
-                    <button
-                      onClick={() => addToPrintQueue(item, activeTab)}
-                      className="rounded bg-green-600 px-3 py-1 text-white disabled:bg-gray-400"
-                      disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
-                    >
-                      {printQueue.some((q) => q.id === item.id && q.type === activeTab)
-                        ? "Added"
-                        : "Add"}
-                    </button>
-                  </div>
-                )
-              )}
-            </div>
-            <div className="flex items-center justify-center gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
-                  page === 1
-                    ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
-                }`}
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </button>
-
-              <span className="min-w-[80px] text-center text-sm text-gray-700">
-                {page} of {totalPages}
-              </span>
-
-              <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages || totalPages === 0}
-                className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
-                  page === totalPages || totalPages === 0
-                    ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
-                }`}
-              >
-                <ChevronRightIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-          <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 pb-3 pt-6">
-              <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
-              <button
-                onClick={printLabels}
-                disabled={printQueue.length === 0}
-                className={`rounded px-4 py-2 text-white transition-colors ${
-                  printQueue.length === 0
-                    ? "cursor-not-allowed bg-gray-400"
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-                title={
-                  printQueue.length === 0 ? "No items in print queue" : "Print all labels in queue"
-                }
-              >
-                Print Labels
-              </button>
-              <button
-                onClick={clearPrintQueue}
-                disabled={printQueue.length === 0}
-                className="rounded-md bg-gray-100 px-3 py-1 text-sm font-medium text-gray-700 transition hover:bg-red-100 hover:text-red-600 disabled:opacity-50"
-                aria-label="Clear print queue"
-              >
-                Clear Queue
-              </button>
-            </div>
-
-            <div className="px-6 pb-6 pt-2">
-              {printQueue.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                  <svg
-                    className="mb-2 h-8 w-8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
+                    Ingredients
+                  </button>
+                  <button
+                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
+                      activeTab === "menu"
+                        ? "bg-white text-purple-700 shadow"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setActiveTab("menu")}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2zM9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
-                    />
-                  </svg>
-                  <p className="italic">No items in print queue</p>
+                    Menu Items
+                  </button>
                 </div>
-              ) : (
-                printQueue.map((item) => (
-                  <div
-                    key={item.uid}
-                    className="mb-3 flex items-center gap-4 rounded-md border border-gray-300 bg-gray-50 px-4 py-3 transition-shadow hover:shadow-md"
-                  >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-gray-800">{item.name}</p>
-                      <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
-                    </div>
-                    <input
-                      type="number"
-                      min={1}
-                      value={item.quantity}
-                      onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
-                      className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                    />
-                    {"labelType" in item && (
-                      <select
-                        value={item.labelType || "cook"}
-                        onChange={(e) =>
-                          updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
-                        }
-                        className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+
+                <div className="mb-4">
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search..."
+                    className="w-full rounded border px-4 py-2"
+                  />
+                </div>
+
+                {isLoading && <p>Loading...</p>}
+                {error && <p className="text-red-600">{error}</p>}
+
+                <div className="mb-6">
+                  {(activeTab === "ingredients" ? paginatedIngredients : paginatedMenuItems).map(
+                    (item) => (
+                      <div
+                        key={item.id}
+                        className="mb-2 flex items-center justify-between rounded border p-4"
                       >
-                        <option value="cook">Cook</option>
-                        <option value="prep">Prep</option>
-                        <option value="ppds">PPDS</option>
-                      </select>
-                    )}
-                    <button
-                      onClick={() => removeFromQueue(item.uid)}
-                      className="rounded-md px-3 py-1 text-sm font-semibold text-red-600 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-400"
-                      aria-label={`Remove ${item.name} from queue`}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))
-              )}
+                        <div>
+                          <p className="font-semibold">{item.name}</p>
+                          <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
+                        </div>
+                        {/* Add to print queue */}
+                        <Button
+                          onClick={() => addToPrintQueue(item, activeTab)}
+                          disabled={printQueue.some(
+                            (q) => q.id === item.id && q.type === activeTab
+                          )}
+                          variant="default"
+                        >
+                          {printQueue.some((q) => q.id === item.id && q.type === activeTab)
+                            ? "Added"
+                            : "Add"}
+                        </Button>
+                      </div>
+                    )
+                  )}
+                </div>
+                {/* Pagination */}
+                <div className="flex items-center justify-center gap-2">
+                  <Button
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    disabled={page === 1}
+                    variant="outline"
+                    className="flex items-center gap-1"
+                  >
+                    <ChevronLeftIcon className="h-4 w-4" />
+                  </Button>
+
+                  <span className="min-w-[80px] text-center text-sm text-gray-700">
+                    {page} of {totalPages}
+                  </span>
+
+                  <Button
+                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={page === totalPages || totalPages === 0}
+                    variant="outline"
+                    className="flex items-center gap-1"
+                  >
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+                <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 pb-3 pt-6">
+                  <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
+                  {/* Print Labels */}
+                  <Button
+                    onClick={printLabels}
+                    disabled={printQueue.length === 0}
+                    variant="default"
+                    title={
+                      printQueue.length === 0
+                        ? "No items in print queue"
+                        : "Print all labels in queue"
+                    }
+                  >
+                    Print Labels
+                  </Button>
+                  {/* Clear Queue */}
+                  <Button
+                    onClick={clearPrintQueue}
+                    disabled={printQueue.length === 0}
+                    variant="secondary"
+                    aria-label="Clear print queue"
+                  >
+                    Clear Queue
+                  </Button>
+                </div>
+
+                <div className="px-6 pb-6 pt-2">
+                  {printQueue.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                      <svg
+                        className="mb-2 h-8 w-8"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2zM9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
+                        />
+                      </svg>
+                      <p className="italic">No items in print queue</p>
+                    </div>
+                  ) : (
+                    printQueue.map((item) => (
+                      <div
+                        key={item.uid}
+                        className="mb-3 flex items-center gap-4 rounded-md border border-gray-300 bg-gray-50 px-4 py-3 transition-shadow hover:shadow-md"
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium text-gray-800">{item.name}</p>
+                          <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
+                        </div>
+                        <input
+                          type="number"
+                          min={1}
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
+                          className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                        />
+                        {"labelType" in item && (
+                          <select
+                            value={item.labelType || "cook"}
+                            onChange={(e) =>
+                              updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
+                            }
+                            className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+                          >
+                            <option value="cook">Cook</option>
+                            <option value="prep">Prep</option>
+                            <option value="ppds">PPDS</option>
+                          </select>
+                        )}
+                        {/* Remove from queue */}
+                        <Button
+                          onClick={() => removeFromQueue(item.uid)}
+                          variant="outline"
+                          className="text-red-600 hover:bg-red-100"
+                          aria-label={`Remove ${item.name} from queue`}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        {/* Label Preview with selected height */}
-        <LabelPreview
-          printQueue={printQueue}
-          ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
-          customExpiry={customExpiry}
-          onExpiryChange={handleExpiryChange}
-          useInitials={useInitials}
-          selectedInitial={selectedInitial}
-          labelHeight={labelHeight}
-        />
+            {/* Label Preview with selected height */}
+            <LabelPreview
+              printQueue={printQueue}
+              ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
+              customExpiry={customExpiry}
+              onExpiryChange={handleExpiryChange}
+              useInitials={useInitials}
+              selectedInitial={selectedInitial}
+              labelHeight={labelHeight}
+            />
 
-        {/* Floating Action Buttons */}
-        <div
-          style={{
-            position: "fixed",
-            bottom: 32,
-            right: 32,
-            display: "flex",
-            flexDirection: "column",
-            gap: 16,
-            zIndex: 50,
-          }}
-        >
-          <button
-            onClick={handleUseFirstPrint}
-            className="rounded-full bg-purple-700 px-6 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-purple-800"
-            aria-label="Print USE FIRST label"
-            tabIndex={0}
-          >
-            Use First
-          </button>
-          <button
-            onClick={() => setShowDefrostModal(true)}
-            className="rounded-full bg-blue-700 px-6 py-3 text-lg font-bold text-white shadow-lg transition hover:bg-blue-800"
-            aria-label="Print Defrosted label"
-            tabIndex={0}
-          >
-            Defrost
-          </button>
-        </div>
-
-        {/* Defrost Modal */}
-        {showDefrostModal && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
-            role="dialog"
-            aria-modal="true"
-          >
-            <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-              <h2 className="mb-4 text-xl font-bold">Select Ingredient to Defrost</h2>
-              <input
-                type="text"
-                value={defrostSearch}
-                onChange={(e) => setDefrostSearch(e.target.value)}
-                placeholder="Search ingredients..."
-                className="mb-3 w-full rounded border px-3 py-2"
-              />
-              <ul className="mb-4 max-h-60 overflow-y-auto">
-                {filteredDefrostIngredients.map((ing) => (
-                  <li key={ing.id} className="mb-2">
-                    <button
-                      className="w-full rounded px-4 py-2 text-left hover:bg-blue-100"
-                      onClick={() => handleDefrostPrint(ing)}
-                    >
-                      {ing.name}
-                    </button>
-                  </li>
-                ))}
-                {filteredDefrostIngredients.length === 0 && (
-                  <li className="px-4 py-2 text-gray-400">No ingredients found.</li>
-                )}
-              </ul>
-              <button
-                className="mt-2 rounded bg-gray-200 px-4 py-2 hover:bg-gray-300"
-                onClick={() => setShowDefrostModal(false)}
+            {/* Floating Action Buttons */}
+            <div
+              style={{
+                position: "fixed",
+                bottom: 32,
+                right: 32,
+                display: "flex",
+                flexDirection: "column",
+                gap: 16,
+                zIndex: 50,
+              }}
+            >
+              <Button
+                onClick={handleUseFirstPrint}
+                className="rounded-full px-6 py-3 text-lg font-bold shadow-lg"
+                variant="default"
+                aria-label="Print USE FIRST label"
+                tabIndex={0}
               >
-                Cancel
-              </button>
+                Use First
+              </Button>
+              <Button
+                onClick={() => setShowDefrostModal(true)}
+                className="rounded-full px-6 py-3 text-lg font-bold shadow-lg"
+                variant="default"
+                aria-label="Print Defrosted label"
+                tabIndex={0}
+              >
+                Defrost
+              </Button>
             </div>
-          </div>
+
+            {/* Defrost Modal */}
+            {showDefrostModal && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+                role="dialog"
+                aria-modal="true"
+              >
+                <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+                  <h2 className="mb-4 text-xl font-bold">Select Ingredient to Defrost</h2>
+                  <input
+                    type="text"
+                    value={defrostSearch}
+                    onChange={(e) => setDefrostSearch(e.target.value)}
+                    placeholder="Search ingredients..."
+                    className="mb-3 w-full rounded border px-3 py-2"
+                  />
+                  <ul className="mb-4 max-h-60 overflow-y-auto">
+                    {filteredDefrostIngredients.map((ing) => (
+                      <li key={ing.id} className="mb-2">
+                        {/* Defrost Modal List */}
+                        <Button
+                          className="w-full text-left"
+                          variant="ghost"
+                          onClick={() => handleDefrostPrint(ing)}
+                        >
+                          {ing.name}
+                        </Button>
+                      </li>
+                    ))}
+                    {filteredDefrostIngredients.length === 0 && (
+                      <li className="px-4 py-2 text-gray-400">No ingredients found.</li>
+                    )}
+                  </ul>
+                  {/* Defrost Modal Cancel */}
+                  <Button
+                    className="mt-2 w-full"
+                    variant="secondary"
+                    onClick={() => setShowDefrostModal(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -778,4 +814,32 @@ async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm")
   const imageDataUrl = await (await import("html-to-image")).toPng(container)
   container.remove()
   return imageDataUrl
+}
+
+function PrintPageSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex gap-8">
+        <div className="w-1/2">
+          <div className="mb-4 h-8 w-1/2 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="mb-4 h-10 w-full animate-pulse rounded bg-muted-foreground/10" />
+        </div>
+        <div className="w-1/2">
+          <div className="mb-4 h-8 w-1/2 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="mb-4 h-10 w-full animate-pulse rounded bg-muted-foreground/10" />
+        </div>
+      </div>
+      <div className="flex gap-8">
+        <div className="w-1/2">
+          <div className="mb-6 h-10 w-1/2 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="mb-4 h-10 w-full animate-pulse rounded bg-muted-foreground/10" />
+          <div className="h-64 w-full animate-pulse rounded bg-muted-foreground/10" />
+        </div>
+        <div className="w-1/2">
+          <div className="mb-4 h-8 w-1/2 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-96 w-full animate-pulse rounded bg-muted-foreground/10" />
+        </div>
+      </div>
+    </div>
+  )
 }

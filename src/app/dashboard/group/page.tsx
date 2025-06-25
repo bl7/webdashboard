@@ -98,9 +98,19 @@ export default function GroupsTable() {
   })
 
   const [expandedGroupId, setExpandedGroupId] = useState<number | null>(null)
+  const [page, setPage] = useState(1)
+
+  const [loading, setLoading] = useState(false)
 
   const filteredGroups = groups.filter((group) =>
     group.name.toLowerCase().includes(search.toLowerCase())
+  )
+
+  const itemsPerPage = 10
+  const totalPages = Math.ceil(filteredGroups.length / itemsPerPage)
+  const paginatedGroups = filteredGroups.slice(
+    expandedGroupId ? 0 : (page - 1) * itemsPerPage,
+    expandedGroupId ? filteredGroups.length : page * itemsPerPage
   )
 
   const handleAddGroup = () => {
@@ -162,6 +172,11 @@ export default function GroupsTable() {
     setGroups((prev) => prev.filter((g) => g.id !== currentGroup.id))
     setOpenDelete(false)
     setCurrentGroup(null)
+  }
+
+  // Loader and skeleton logic
+  if (loading) {
+    return <GroupsSkeleton />
   }
 
   return (
@@ -259,7 +274,7 @@ export default function GroupsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredGroups.map((group) => (
+            {paginatedGroups.map((group) => (
               <React.Fragment key={group.id}>
                 <TableRow
                   onClick={() => setExpandedGroupId(expandedGroupId === group.id ? null : group.id)}
@@ -409,14 +424,87 @@ export default function GroupsTable() {
         </Dialog>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
             Previous
           </Button>
-          <Button variant="outline" size="sm">
+
+          {/* First page */}
+          <Button
+            variant={page === 1 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPage(1)}
+            className="min-w-[36px] px-2 py-1"
+          >
+            1
+          </Button>
+
+          {/* Ellipsis before current range */}
+          {page > 3 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Pages around current */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(
+              (p) => p !== 1 && p !== totalPages && Math.abs(p - page) <= 1 // show current, previous, next
+            )
+            .map((p) => (
+              <Button
+                key={p}
+                variant={page === p ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPage(p)}
+                className="min-w-[36px] px-2 py-1"
+              >
+                {p}
+              </Button>
+            ))}
+
+          {/* Ellipsis after current range */}
+          {page < totalPages - 2 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Last page */}
+          {totalPages > 1 && (
+            <Button
+              variant={page === totalPages ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPage(totalPages)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              {totalPages}
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
             Next
           </Button>
         </div>
       </div>
+    </div>
+  )
+}
+
+function GroupsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted-foreground/20" />
+        <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+      </div>
+      <div className="h-10 w-full animate-pulse rounded bg-muted-foreground/10" />
+      <div className="h-96 animate-pulse rounded-2xl bg-muted-foreground/10" />
     </div>
   )
 }

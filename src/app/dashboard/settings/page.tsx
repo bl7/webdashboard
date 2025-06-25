@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
-import { Plus, X } from "lucide-react"
+import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
 
 const labelTypes = [
   { label: "Cooked", key: "cooked" },
@@ -19,6 +19,7 @@ export default function Settings() {
   const [customInitials, setCustomInitials] = useState<string[]>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [newInitial, setNewInitial] = useState<string>("")
+  const [isSaving, setIsSaving] = useState(false)
 
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
@@ -122,6 +123,7 @@ export default function Settings() {
   }
 
   const handleSave = async () => {
+    setIsSaving(true)
     const expiryPayload = labelTypes.map(({ key }) => ({
       label_type: key,
       expiry_days: Number(expiryDays[key] || "0"),
@@ -142,6 +144,8 @@ export default function Settings() {
     } catch (error) {
       console.error("Failed to save expiry settings:", error)
       showFeedback("Failed to save expiry settings", "error")
+    } finally {
+      setIsSaving(false)
     }
   }
 
@@ -150,63 +154,89 @@ export default function Settings() {
       <CardHeader>
         <CardTitle className="text-xl font-semibold">Label Settings</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-8 p-6">
+      <CardContent className="space-y-10 p-6">
         {/* Expiry Days Settings */}
-        <div className="space-y-4">
-          <h2 className="text-lg font-semibold">Label Type Expiry Settings (in days)</h2>
-          {labelTypes.map(({ label, key }) => (
-            <div key={key} className="flex items-center justify-between gap-4">
-              <Label>{label}</Label>
-              <Input
-                type="number"
-                placeholder="Days"
-                value={expiryDays[key] || ""}
-                onChange={(e) => handleChange(key, e.target.value)}
-                className="w-32"
-                min={0}
-              />
-            </div>
-          ))}
-        </div>
-        <Button onClick={handleSave}>Save Expiry Settings</Button>
-        {/* Label Initials Section */}
-        <div className="space-y-4">
-          {/* Move Add Initials input + button above title */}
-          {useInitials && (
-            <div className="mb-2 flex items-center gap-4">
-              <Input
-                value={newInitial}
-                onChange={(e) => setNewInitial(e.target.value)}
-                placeholder="Enter Initial (e.g., CH)"
-                className="w-40"
-                maxLength={10}
-              />
-              <Button variant="outline" onClick={handleAddInitial}>
-                <Plus className="mr-1 h-4 w-4" /> Add Initial
-              </Button>
-            </div>
-          )}
+        <section className="rounded-lg bg-muted/40 p-6">
+          <h2 className="mb-4 text-lg font-semibold">Label Type Expiry Settings (in days)</h2>
+          <div className="space-y-4">
+            {labelTypes.map(({ label, key }) => (
+              <div key={key} className="flex items-center justify-between gap-4">
+                <Label>{label}</Label>
+                <Input
+                  type="number"
+                  placeholder="Days"
+                  value={expiryDays[key] || ""}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  className="w-32"
+                  min={0}
+                />
+              </div>
+            ))}
+          </div>
+          <Button onClick={handleSave} className="mt-6" disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                </svg>
+                Saving...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+                Save Expiry Settings
+              </>
+            )}
+          </Button>
+        </section>
 
-          <div className="flex items-center justify-between">
+        {/* Divider */}
+        <div className="border-t border-muted" />
+
+        {/* Label Initials Section */}
+        <section className="rounded-lg bg-muted/40 p-6">
+          <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Label Initials</h2>
             <div className="flex items-center gap-2">
               <Label>Use Initials</Label>
               <Switch checked={useInitials} onCheckedChange={handleToggleUseInitials} />
             </div>
           </div>
-
           {useInitials && (
             <>
+              <div className="mb-4 flex items-center gap-4">
+                <Input
+                  value={newInitial}
+                  onChange={(e) => setNewInitial(e.target.value)}
+                  placeholder="Enter Initial (e.g., CH)"
+                  className="w-40"
+                  maxLength={10}
+                />
+                <Button variant="outline" onClick={handleAddInitial}>
+                  <Plus className="mr-1 h-4 w-4" /> Add Initial
+                </Button>
+              </div>
               {/* Display current initials */}
               <div className="flex flex-wrap gap-2">
+                {customInitials.length === 0 && (
+                  <span className="text-sm text-muted-foreground">No initials added yet.</span>
+                )}
                 {customInitials.map((initial) => (
                   <span
                     key={initial}
-                    className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-sm text-foreground"
+                    className="inline-flex items-center rounded-full border border-muted-foreground bg-white px-3 py-1 text-sm text-foreground shadow-sm transition hover:bg-red-50"
                   >
                     {initial}
                     <X
-                      className="ml-2 h-4 w-4 cursor-pointer text-muted-foreground"
+                      className="ml-2 h-4 w-4 cursor-pointer text-muted-foreground transition hover:text-red-500"
                       onClick={() => handleRemoveInitial(initial)}
                     />
                   </span>
@@ -214,17 +244,20 @@ export default function Settings() {
               </div>
             </>
           )}
-        </div>
-
-        {/* Save Button only saves expiry settings now */}
+        </section>
 
         {/* Feedback message */}
         {feedbackMsg && (
           <div
-            className={`mt-4 rounded-md px-4 py-2 text-sm font-medium ${
+            className={`mt-4 flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium ${
               feedbackType === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
             }`}
           >
+            {feedbackType === "success" ? (
+              <CheckCircle2 className="h-4 w-4" />
+            ) : (
+              <AlertTriangle className="h-4 w-4" />
+            )}
             {feedbackMsg}
           </div>
         )}

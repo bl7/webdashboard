@@ -54,6 +54,22 @@ type Ingredient = {
   allergens: { uuid: string; allergenName: string }[]
 }
 
+function IngredientsSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="h-8 w-48 animate-pulse rounded bg-muted-foreground/20" />
+        <div className="flex gap-2">
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+          <div className="h-10 w-32 animate-pulse rounded bg-muted-foreground/20" />
+        </div>
+      </div>
+      <div className="h-24 animate-pulse rounded-xl bg-muted-foreground/10" />
+      <div className="h-96 animate-pulse rounded-2xl bg-muted-foreground/10" />
+    </div>
+  )
+}
+
 export default function IngredientsTable() {
   const [search, setSearch] = useState("")
   const [open, setOpen] = useState(false)
@@ -252,6 +268,33 @@ export default function IngredientsTable() {
     const allergenIds = mapAllergenNamesToIds(ingredient.allergens)
     setEditSelectedAllergens(allergenIds)
     setEditOpen(true)
+  }
+
+  // Pagination logic
+  const itemsPerPage = 10
+  const [page, setPage] = useState(1)
+  const totalPages = Math.ceil(filteredIngredients.length / itemsPerPage)
+  const paginatedIngredients = filteredIngredients.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  )
+
+  // Loader and skeleton logic
+  if (loading || allergensLoading) {
+    return <IngredientsSkeleton />
+  }
+
+  if (allergensError) {
+    return (
+      <div className="flex h-64 items-center justify-center">
+        <div className="text-center">
+          <p className="mb-4 text-red-600">Error: {allergensError || "Failed to load data."}</p>
+          <Button onClick={() => window.location.reload()} variant="default">
+            Try Again
+          </Button>
+        </div>
+      </div>
+    )
   }
   return (
     <div className="space-y-6">
@@ -640,7 +683,7 @@ export default function IngredientsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredIngredients.map((ingredient) => (
+            {paginatedIngredients.map((ingredient) => (
               <TableRow key={ingredient.uuid}>
                 <TableCell>{ingredient.ingredientName}</TableCell>
                 <TableCell>{ingredient.expiryDays}</TableCell>
@@ -675,10 +718,70 @@ export default function IngredientsTable() {
         </Table>
 
         <div className="mt-4 flex justify-end gap-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
             Previous
           </Button>
-          <Button variant="outline" size="sm">
+
+          {/* First page */}
+          <Button
+            variant={page === 1 ? "default" : "outline"}
+            size="sm"
+            onClick={() => setPage(1)}
+            className="min-w-[36px] px-2 py-1"
+          >
+            1
+          </Button>
+
+          {/* Ellipsis before current range */}
+          {page > 3 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Pages around current */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter(
+              (p) => p !== 1 && p !== totalPages && Math.abs(p - page) <= 1 // show current, previous, next
+            )
+            .map((p) => (
+              <Button
+                key={p}
+                variant={page === p ? "default" : "outline"}
+                size="sm"
+                onClick={() => setPage(p)}
+                className="min-w-[36px] px-2 py-1"
+              >
+                {p}
+              </Button>
+            ))}
+
+          {/* Ellipsis after current range */}
+          {page < totalPages - 2 && totalPages > 5 && (
+            <span className="px-2 py-1 text-muted-foreground">...</span>
+          )}
+
+          {/* Last page */}
+          {totalPages > 1 && (
+            <Button
+              variant={page === totalPages ? "default" : "outline"}
+              size="sm"
+              onClick={() => setPage(totalPages)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              {totalPages}
+            </Button>
+          )}
+
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+          >
             Next
           </Button>
         </div>

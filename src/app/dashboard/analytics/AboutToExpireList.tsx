@@ -2,6 +2,7 @@
 import { useIngredients, Ingredient } from "@/hooks/useIngredients"
 import { useMenuItems, MenuItem } from "@/hooks/useMenuItem"
 import React, { useEffect, useState } from "react"
+import AppLoader from "@/components/AppLoader"
 
 type ExpiringItem = { name: string; type: string; expiresAt: string }
 
@@ -15,15 +16,33 @@ type PrintLog = {
   action: string
 }
 
+function AboutToExpireSkeleton() {
+  return (
+    <div className="mt-8">
+      <div className="mb-4 h-6 w-1/3 animate-pulse rounded bg-muted-foreground/20" />
+      <ul className="space-y-2">
+        {[1, 2, 3].map((i) => (
+          <li key={i} className="h-6 w-2/3 animate-pulse rounded bg-muted-foreground/10" />
+        ))}
+      </ul>
+    </div>
+  )
+}
+
 export default function AboutToExpireList() {
   const { ingredients } = useIngredients()
   const { menuItems } = useMenuItems()
   const [aboutToExpire, setAboutToExpire] = useState<ExpiringItem[]>([])
+  const [loading, setLoading] = useState(true) // <-- Add loading state
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true) // Start loading
       const userId = typeof window !== "undefined" ? localStorage.getItem("userid") : null
-      if (!userId) return
+      if (!userId) {
+        setLoading(false)
+        return
+      }
       const res = await fetch(`/api/logs?user_id=${userId}`)
       const data = await res.json()
       const printLogs: PrintLog[] = (data.logs || []).filter(
@@ -90,6 +109,7 @@ export default function AboutToExpireList() {
       }
 
       setAboutToExpire(result)
+      setLoading(false) // Done loading
     }
     fetchData()
   }, [ingredients, menuItems])
@@ -97,7 +117,9 @@ export default function AboutToExpireList() {
   return (
     <div className="mt-8">
       <h2 className="mb-4 text-xl font-bold">About to Expire (Next 24h)</h2>
-      {aboutToExpire.length === 0 ? (
+      {loading ? (
+        <AboutToExpireSkeleton />
+      ) : aboutToExpire.length === 0 ? (
         <div className="text-gray-500">No ingredients or menu items are about to expire.</div>
       ) : (
         <ul className="space-y-2">

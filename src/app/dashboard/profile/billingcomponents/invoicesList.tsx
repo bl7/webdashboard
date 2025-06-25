@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { DownloadIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Button } from "@/components/ui/button"
 import { Invoice } from "@/types/invoice"
 
 export interface InvoiceLine {
@@ -113,17 +114,14 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
             <span className="text-sm text-gray-600">{selectedIds.size} selected</span>
           )}
         </div>
-        <button
+        <Button
           onClick={downloadSelected}
           disabled={selectedIds.size === 0}
-          className={`rounded px-3 py-1 text-sm ${
-            selectedIds.size === 0
-              ? "cursor-not-allowed bg-gray-300 text-gray-600"
-              : "bg-blue-600 text-white hover:bg-blue-700"
-          }`}
+          variant="default"
+          className="px-3 py-1 text-sm"
         >
           Download Selected
-        </button>
+        </Button>
       </div>
 
       {/* Table Head */}
@@ -219,61 +217,74 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
             invoices
           </div>
 
-          <div className="flex items-center gap-2">
-            <button
+          <div className="flex items-center gap-1">
+            {/* Prev */}
+            <Button
               onClick={goToPreviousPage}
               disabled={currentPage === 1}
-              className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
-                currentPage === 1
-                  ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                  : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
-              }`}
+              variant="outline"
+              className="flex items-center gap-1 px-3 py-2 text-sm"
             >
               <ChevronLeftIcon size={16} />
-              Previous
-            </button>
+              Prev
+            </Button>
 
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                let pageNumber
-                if (totalPages <= 5) {
-                  pageNumber = i + 1
-                } else if (currentPage <= 3) {
-                  pageNumber = i + 1
-                } else if (currentPage >= totalPages - 2) {
-                  pageNumber = totalPages - 4 + i
-                } else {
-                  pageNumber = currentPage - 2 + i
-                }
+            {/* First page */}
+            <Button
+              variant={currentPage === 1 ? "default" : "outline"}
+              onClick={() => goToPage(1)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              1
+            </Button>
 
-                return (
-                  <button
-                    key={pageNumber}
-                    onClick={() => goToPage(pageNumber)}
-                    className={`min-w-[40px] rounded border px-3 py-2 text-sm ${
-                      currentPage === pageNumber
-                        ? "border-accent bg-accent text-accent-foreground"
-                        : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
-                    }`}
-                  >
-                    {pageNumber}
-                  </button>
-                )
-              })}
-            </div>
+            {/* Ellipsis before current range */}
+            {currentPage > 3 && totalPages > 5 && (
+              <span className="px-2 py-1 text-muted-foreground">...</span>
+            )}
 
-            <button
+            {/* Pages around current */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(
+                (p) => p !== 1 && p !== totalPages && Math.abs(p - currentPage) <= 1 // show current, previous, next
+              )
+              .map((p) => (
+                <Button
+                  key={p}
+                  variant={currentPage === p ? "default" : "outline"}
+                  onClick={() => goToPage(p)}
+                  className="min-w-[36px] px-2 py-1"
+                >
+                  {p}
+                </Button>
+              ))}
+
+            {/* Ellipsis after current range */}
+            {currentPage < totalPages - 2 && totalPages > 5 && (
+              <span className="px-2 py-1 text-muted-foreground">...</span>
+            )}
+
+            {/* Last page */}
+            {totalPages > 1 && (
+              <Button
+                variant={currentPage === totalPages ? "default" : "outline"}
+                onClick={() => goToPage(totalPages)}
+                className="min-w-[36px] px-2 py-1"
+              >
+                {totalPages}
+              </Button>
+            )}
+
+            {/* Next */}
+            <Button
               onClick={goToNextPage}
               disabled={currentPage === totalPages}
-              className={`flex items-center gap-1 rounded border px-3 py-2 text-sm ${
-                currentPage === totalPages
-                  ? "cursor-not-allowed border-gray-200 bg-gray-100 text-gray-400"
-                  : "border-gray-300 bg-white text-gray-700 hover:bg-accent hover:text-accent-foreground"
-              }`}
+              variant="outline"
+              className="flex items-center gap-1 px-3 py-2 text-sm"
             >
               Next
               <ChevronRightIcon size={16} />
-            </button>
+            </Button>
           </div>
         </div>
       )}
