@@ -3,34 +3,39 @@
 import React from "react"
 import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Printer } from "lucide-react"
+import { Printer, Users, CalendarDays, AlertTriangle } from "lucide-react"
 import AboutToExpireList from "./AboutToExpireList"
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts"
 
-type LabelStats = {
-  [labelType: string]: number
-}
+type LabelStats = { [labelType: string]: number }
 
-function AnalyticsSkeleton() {
-  return (
-    <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {[1, 2, 3, 4].map((i) => (
-        <Card key={i} className="flex animate-pulse flex-col justify-between">
-          <CardHeader>
-            <div className="mb-2 h-5 w-2/3 rounded bg-muted-foreground/20" />
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4 h-10 w-1/3 rounded bg-muted-foreground/20" />
-            <div className="mb-2 h-4 w-1/2 rounded bg-muted-foreground/10" />
-            <div className="mb-2 h-4 w-1/4 rounded bg-muted-foreground/10" />
-            <div className="h-4 w-1/3 rounded bg-muted-foreground/10" />
-          </CardContent>
-        </Card>
-      ))}
-    </section>
-  )
-}
+const GRADIENTS = [
+  "from-blue-500 to-indigo-500",
+  "from-green-400 to-emerald-500",
+  "from-purple-500 to-pink-500",
+  "from-orange-400 to-red-500",
+]
+const ICONS = [
+  <Printer className="h-7 w-7 text-white drop-shadow" />,
+  <Users className="h-7 w-7 text-white drop-shadow" />,
+  <CalendarDays className="h-7 w-7 text-white drop-shadow" />,
+  <AlertTriangle className="h-7 w-7 text-white drop-shadow" />,
+]
 
-// Fetcher function for SWR
 const fetcher = async (url: string) => {
   const userId = typeof window !== "undefined" ? localStorage.getItem("userid") : null
   if (!userId) return { logs: [] }
@@ -43,12 +48,13 @@ function processLogs(logs: any[]) {
   const startOfWeek = new Date(now)
   startOfWeek.setDate(now.getDate() - now.getDay())
   startOfWeek.setHours(0, 0, 0, 0)
-  const weekRange = `${startOfWeek.toLocaleDateString()} - ${now.toLocaleDateString()}`
+  const nowTime = now.getTime()
+  const startOfWeekTime = startOfWeek.getTime()
 
   const printLogs = (logs || []).filter((log: any) => log.action === "print_label")
   const weekLogs = printLogs.filter((log: any) => {
-    const printedAt = new Date(log.details.printedAt)
-    return printedAt >= startOfWeek && printedAt <= now
+    const printedAtTime = new Date(log.details.printedAt).getTime()
+    return printedAtTime >= startOfWeekTime && printedAtTime <= nowTime
   })
 
   // Count by labelType (for this week)
@@ -65,68 +71,328 @@ function processLogs(logs: any[]) {
     initialsStats[initial] = (initialsStats[initial] || 0) + (log.details.quantity || 1)
   })
 
-  const totalToday = weekLogs.reduce(
+  // Labels printed per day (for line chart)
+  const labelsPerDay: { [date: string]: number } = {}
+  weekLogs.forEach((log: any) => {
+    const date = new Date(log.details.printedAt)
+    const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    labelsPerDay[key] = (labelsPerDay[key] || 0) + (log.details.quantity || 1)
+  })
+
+  // Prepare data for line chart
+  const days = []
+  for (let i = 0; i <= 6; i++) {
+    const d = new Date(startOfWeek)
+    d.setDate(startOfWeek.getDate() + i)
+    const key = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
+    days.push({
+      date: `${d.getMonth() + 1}/${d.getDate()}`,
+      count: labelsPerDay[key] || 0,
+    })
+  }
+
+  // Prepare data for bar chart (labels by staff initial)
+  const initialsBarData = Object.entries(initialsStats).map(([initial, count]) => ({
+    initial,
+    count,
+  }))
+
+  // Prepare data for pie chart (label type breakdown)
+  const labelTypePieData = Object.entries(stats).map(([type, count]) => ({
+    name: type,
+    value: count,
+  }))
+
+  // Total for the week (not just today)
+  const totalThisWeek = weekLogs.reduce(
     (sum: number, log: any) => sum + (log.details.quantity || 1),
     0
   )
 
-  return { stats, initialsStats, totalToday, weekRange }
+  // Active staff (unique initials)
+  const activeStaff = Object.keys(initialsStats).length
+
+  // Daily average
+  const dailyAvg = days.reduce((sum, d) => sum + d.count, 0) / days.length
+
+  // Expiring soon count (simulate: count logs with expiryDate within 24h and not printed today)
+  const nowDate = new Date()
+  const expiringSoon = Object.values(
+    printLogs.reduce((acc: any, log: any) => {
+      const key = log.details.itemName
+      if (
+        !acc[key] ||
+        new Date(log.details.printedAt).getTime() > new Date(acc[key].details.printedAt).getTime()
+      ) {
+        acc[key] = log
+      }
+      return acc
+    }, {})
+  ).filter((log: any) => {
+    const expiryDate = new Date(log.details.expiryDate)
+    const printedAt = new Date(log.details.printedAt)
+    const hoursLeft = (expiryDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60)
+    const isPrintedToday =
+      printedAt.getFullYear() === nowDate.getFullYear() &&
+      printedAt.getMonth() === nowDate.getMonth() &&
+      printedAt.getDate() === nowDate.getDate()
+    return hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday
+  }).length
+
+  const formatDate = (d: Date) => `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
+  const weekRange = `${formatDate(startOfWeek)} - ${formatDate(now)}`
+
+  return {
+    stats,
+    initialsStats,
+    totalThisWeek,
+    weekRange,
+    days,
+    initialsBarData,
+    labelTypePieData,
+    activeStaff,
+    dailyAvg,
+    expiringSoon,
+  }
 }
+
+const PIE_COLORS = ["#6366f1", "#10b981", "#f59e42", "#a78bfa", "#f43f5e", "#fbbf24"]
+
+const MetricCard = ({
+  icon,
+  title,
+  value,
+  subtitle,
+  gradient,
+  trend,
+}: {
+  icon: React.ReactNode
+  title: string
+  value: React.ReactNode
+  subtitle: string
+  gradient: string
+  trend?: string
+}) => (
+  <Card
+    className={`border-0 bg-gradient-to-br shadow-lg transition-transform duration-200 hover:-translate-y-1 hover:shadow-2xl ${gradient}`}
+  >
+    <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <div className="flex flex-col">
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-white">
+          {icon}
+          {title}
+        </CardTitle>
+        <span className="mt-2 text-4xl font-extrabold text-white">{value}</span>
+        <span className="mt-1 text-xs text-white/80">{subtitle}</span>
+      </div>
+      {trend && (
+        <span className="ml-2 rounded-full bg-white/20 px-2 py-1 text-xs font-bold text-white">
+          {trend}
+        </span>
+      )}
+    </CardHeader>
+  </Card>
+)
 
 const AnalyticsDashboard: React.FC = () => {
   const { data, isLoading } = useSWR("/api/logs", fetcher, { suspense: false })
 
   if (isLoading || !data) {
-    return <AnalyticsSkeleton />
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
+        <AnalyticsSkeleton />
+      </div>
+    )
   }
 
-  const { stats, initialsStats, totalToday, weekRange } = processLogs(data.logs)
+  const {
+    stats,
+    initialsStats,
+    totalThisWeek,
+    weekRange,
+    days,
+    initialsBarData,
+    labelTypePieData,
+    activeStaff,
+    dailyAvg,
+    expiringSoon,
+  } = processLogs(data.logs)
 
   return (
-    <section className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <Card className="flex flex-col justify-between">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-semibold text-muted-foreground">
-            <Printer className="h-5 w-5 text-primary" />
-            Labels Printed This Week
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-4xl font-bold text-foreground">{totalToday}</div>
-          <div className="mt-4 space-y-1">
-            {Object.entries(stats).map(([type, count]) => (
-              <div key={type} className="flex justify-between text-sm">
-                <span className="capitalize">{type.replace("_", " ")}</span>
-                <span className="font-semibold">{count}</span>
-              </div>
-            ))}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
+      {/* Header */}
+      <header className="mb-10 flex flex-col items-center text-center">
+        <h1 className="mb-2 text-5xl font-extrabold text-primary drop-shadow-lg">
+          Analytics Dashboard
+        </h1>
+        <p className="mx-auto max-w-2xl text-lg font-medium text-gray-600">
+          Visualize your label printing activity, staff performance, and expiring items in real
+          time.
+        </p>
+      </header>
+      {/* Metric Cards */}
+      <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <MetricCard
+          icon={ICONS[0]}
+          title="Labels Printed"
+          value={totalThisWeek}
+          subtitle={weekRange}
+          gradient={GRADIENTS[0]}
+        />
+        <MetricCard
+          icon={ICONS[1]}
+          title="Active Staff"
+          value={activeStaff}
+          subtitle="This Week"
+          gradient={GRADIENTS[1]}
+        />
+        <MetricCard
+          icon={ICONS[2]}
+          title="Daily Average"
+          value={dailyAvg.toFixed(1)}
+          subtitle="Labels/Day"
+          gradient={GRADIENTS[2]}
+        />
+        <MetricCard
+          icon={ICONS[3]}
+          title="Expiring Soon"
+          value={expiringSoon}
+          subtitle="Next 24h"
+          gradient={GRADIENTS[3]}
+        />
+      </section>
+
+      {/* Expiring Items */}
+      <section className="mx-auto mb-10 w-full max-w-6xl">
+        <AboutToExpireList />
+      </section>
+
+      {/* Charts */}
+      <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+        <Card className="border-0 bg-white/70 shadow-xl backdrop-blur-md">
+          <CardHeader className="rounded-t-lg bg-gradient-to-r from-blue-100 to-indigo-100">
+            <CardTitle className="flex items-center gap-2 text-lg font-bold text-blue-700">
+              <CalendarDays className="h-5 w-5 text-blue-500" />
+              Labels Printed Each Day
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={days}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="count"
+                  stroke="#6366f1"
+                  strokeWidth={3}
+                  dot={{ r: 5 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card className="border-0 bg-white/70 shadow-xl backdrop-blur-md">
+          <CardHeader className="rounded-t-lg bg-gradient-to-r from-green-100 to-emerald-100">
+            <CardTitle className="flex items-center gap-2 text-lg font-bold text-green-700">
+              <Users className="h-5 w-5 text-green-500" />
+              Staff Performance
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={initialsBarData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="initial" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="count" fill="#10b981" />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        <Card className="col-span-1 border-0 bg-white/70 shadow-xl backdrop-blur-md md:col-span-2">
+          <CardHeader className="rounded-t-lg bg-gradient-to-r from-purple-100 to-pink-100">
+            <CardTitle className="flex items-center gap-2 text-lg font-bold text-purple-700">
+              <Printer className="h-5 w-5 text-purple-500" />
+              Label Type Breakdown
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={labelTypePieData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#8884d8"
+                  label={({ name, percent }) => `${name}: ${((percent ?? 0) * 100).toFixed(0)}%`}
+                >
+                  {labelTypePieData.map((entry, idx) => (
+                    <Cell key={`cell-${idx}`} fill={PIE_COLORS[idx % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </section>
+    </div>
+  )
+}
+
+function AnalyticsSkeleton() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
+      {/* Header Skeleton */}
+      <div className="mb-10 flex flex-col items-center text-center">
+        <div className="mb-2 h-10 w-64 rounded bg-blue-100/60" />
+        <div className="mx-auto mb-2 h-6 w-80 rounded bg-gray-200/60" />
+      </div>
+      {/* Metric Cards Skeleton */}
+      <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {[1, 2, 3, 4].map((i) => (
+          <div
+            key={i}
+            className="flex flex-col rounded-2xl border-0 bg-white/70 p-6 shadow-lg backdrop-blur-md"
+          >
+            <div className="mb-4 h-6 w-1/3 rounded bg-blue-100/60" />
+            <div className="mb-2 h-10 w-1/2 rounded bg-blue-200/60" />
+            <div className="h-4 w-1/3 rounded bg-blue-100/40" />
           </div>
-          <p className="mb-2 text-sm text-muted-foreground">Week: {weekRange}</p>
-        </CardContent>
-      </Card>
-      <Card className="flex flex-col justify-between">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg font-semibold text-muted-foreground">
-            👤 Labels Printed by Staff (This Week)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="mt-2 space-y-1">
-            {Object.entries(initialsStats).length === 0 ? (
-              <div className="text-gray-400">No labels printed this week.</div>
-            ) : (
-              Object.entries(initialsStats).map(([initial, count]) => (
-                <div key={initial} className="flex justify-between text-sm">
-                  <span className="font-mono">{initial}</span>
-                  <span className="font-semibold">{count}</span>
-                </div>
-              ))
-            )}
+        ))}
+      </section>
+      {/* AboutToExpireList Skeleton */}
+      <section className="mx-auto mb-10 w-full max-w-6xl">
+        <div className="rounded-2xl bg-orange-100/40 p-6 shadow-md backdrop-blur-md">
+          <div className="mb-4 h-6 w-1/4 rounded bg-orange-200/60" />
+          <div className="mb-2 h-4 w-1/2 rounded bg-orange-100/60" />
+          <div className="h-4 w-1/3 rounded bg-orange-100/40" />
+        </div>
+      </section>
+      {/* Charts Skeleton */}
+      <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className={`rounded-2xl bg-white/70 p-6 shadow-xl backdrop-blur-md ${
+              i === 3 ? "md:col-span-2" : ""
+            }`}
+          >
+            <div className="mb-4 h-6 w-1/4 rounded bg-gray-200/60" />
+            <div className="h-48 w-full rounded bg-gray-100/60" />
           </div>
-        </CardContent>
-      </Card>
-      <AboutToExpireList />
-    </section>
+        ))}
+      </section>
+    </div>
   )
 }
 

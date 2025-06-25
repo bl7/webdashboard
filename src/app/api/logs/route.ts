@@ -67,7 +67,11 @@ export async function GET(req: NextRequest) {
       [userId]
     )
 
-    return NextResponse.json({ logs: result.rows }, { status: 200 })
+    const logs = result.rows.map((row: any) => ({
+      ...row,
+      details: typeof row.details === "string" ? JSON.parse(row.details) : row.details,
+    }))
+    return NextResponse.json({ logs }, { status: 200 })
   } catch (error) {
     console.error("Error fetching logs in GET /api/logs:", error)
     return NextResponse.json(
