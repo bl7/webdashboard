@@ -250,8 +250,8 @@ const AnalyticsDashboard: React.FC = () => {
               key={opt.value}
               className={`rounded-lg px-4 py-2 font-medium transition ${
                 range === opt.value
-                  ? "bg-blue-500 text-white shadow"
-                  : "text-blue-700 hover:bg-blue-100"
+                  ? "bg-purple-500 text-white shadow"
+                  : "text-purple-700 hover:bg-blue-100"
               }`}
               onClick={() => setRange(opt.value as "week" | "month")}
             >
