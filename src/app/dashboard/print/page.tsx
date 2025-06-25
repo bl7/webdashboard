@@ -13,16 +13,10 @@ import qz, { PrintData } from "qz-tray"
 import { usePrinterStatus } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select"
+
 
 const itemsPerPage = 5
 
-// and access localStorage
-const selectedPrinter =
-  typeof window !== "undefined"
-    ? localStorage.getItem("selectedPrinter") || "Fallback_Printer"
-    : "Fallback_Printer"
 function calculateExpiryDate(days: number): string {
   const today = new Date()
   today.setDate(today.getDate() + days)
@@ -60,6 +54,77 @@ type MenuItem = {
   ingredients: string[]
 }
 
+// Add QZ security setup helper
+async function setupQZSecurity() {
+  if (process.env.NODE_ENV === "production") {
+    qz.security.setCertificatePromise(() =>
+      fetch("/api/qz/certificate").then(res => res.text())
+    )
+    qz.security.setSignaturePromise((toSign: string) =>
+      fetch("/api/qz/sign", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: toSign })
+      })
+        .then(res => res.text())
+    )
+  } else {
+    // In dev, allow unsigned
+    qz.security.setCertificatePromise(() => Promise.resolve("DEBUG"))
+    qz.security.setSignaturePromise(() => Promise.resolve("DEBUG"))
+  }
+}
+
+// Enhanced getBestAvailablePrinter function for robust printer selection
+function getBestAvailablePrinter(
+  selectedPrinter: string | null,
+  defaultPrinter: string | null,
+  availablePrinters: string[]
+): { printer: string | null; reason: string } {
+  console.log("🖨️ Printer Selection Debug:", {
+    selectedPrinter,
+    defaultPrinter,
+    availablePrinters: availablePrinters?.slice(0, 5), // Limit log spam
+    availableCount: availablePrinters?.length || 0
+  });
+
+  // Ensure we have a valid array
+  const validPrinters = (availablePrinters || []).filter(printer => 
+    printer && 
+    typeof printer === 'string' &&
+    printer.trim() !== "" && 
+    printer !== "Fallback_Printer" &&
+    !printer.toLowerCase().includes('fallback')
+  );
+
+  console.log("🖨️ Valid printers after filtering:", validPrinters);
+
+  // First priority: selected printer (if it exists in valid printers)
+  if (selectedPrinter && 
+      selectedPrinter !== "Fallback_Printer" && 
+      validPrinters.includes(selectedPrinter)) {
+    console.log("🖨️ ✅ Using selected printer:", selectedPrinter);
+    return { printer: selectedPrinter, reason: "Selected printer available" };
+  }
+  
+  // Second priority: default printer (if it exists in valid printers)
+  if (defaultPrinter && 
+      defaultPrinter !== "Fallback_Printer" && 
+      validPrinters.includes(defaultPrinter)) {
+    console.log("🖨️ ✅ Using default printer:", defaultPrinter);
+    return { printer: defaultPrinter, reason: "Default printer available" };
+  }
+  
+  // Third priority: first available valid printer
+  if (validPrinters.length > 0) {
+    console.log("🖨️ ✅ Using first available printer:", validPrinters[0]);
+    return { printer: validPrinters[0], reason: "First available printer" };
+  }
+  
+  console.log("🖨️ ❌ No valid printers found");
+  return { printer: null, reason: "No valid printers available" };
+}
+
 export default function LabelDemo() {
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
@@ -79,7 +144,15 @@ export default function LabelDemo() {
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
   const [feedbackType, setFeedbackType] = useState<"success" | "error" | "">("")
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
-  const { isConnected } = usePrinterStatus()
+  const {
+    isConnected,
+    availablePrinters,
+    selectedPrinter,
+    defaultPrinter,
+    reconnect,
+    loading: printerLoading,
+    error: printerError,
+  } = usePrinterStatus()
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
   const [showDefrostModal, setShowDefrostModal] = useState(false)
 
@@ -282,95 +355,148 @@ export default function LabelDemo() {
   const clearPrintQueue = () => setPrintQueue([])
 
   const printLabels = async (): Promise<void> => {
+    console.log("🖨️ Starting print process...");
+    if (printerLoading) {
+      showFeedback("Checking printer status, please wait...", "error");
+      return;
+    }
     if (!isConnected) {
-      showFeedback("Printer not connected", "error")
-      return
+      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error");
+      reconnect();
+      return;
     }
     if (printQueue.length === 0) {
-      showFeedback("No items in print queue", "error")
-      return
+      showFeedback("No items in print queue", "error");
+      return;
     }
-
+    // Enhanced printer selection with detailed feedback
+    const printerSelection = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters);
+    if (!printerSelection.printer) {
+      const errorMsg = `No printer available: ${printerSelection.reason}. Available printers: [${availablePrinters.join(', ')}]`;
+      showFeedback(errorMsg, "error");
+      console.error("❌ Printer selection failed:", {
+        selectedPrinter,
+        defaultPrinter,
+        availablePrinters,
+        isConnected,
+        reason: printerSelection.reason
+      });
+      return;
+    }
+    console.log(`🖨️ Using printer: ${printerSelection.printer} (${printerSelection.reason})`);
     try {
+      await setupQZSecurity();
+      // Verify connection before printing
       if (!qz.websocket.isActive()) {
-        await qz.websocket.connect()
+        await qz.websocket.connect();
       }
-
-      // qz.security.setCertificatePromise(() =>
-      //   Promise.resolve(
-      //     "-----BEGIN CERTIFICATE-----\n...your cert here...\n-----END CERTIFICATE-----"
-      //   )
-      // )
-      // qz.security.setSignaturePromise(() => Promise.resolve("...your-signature..."))
-
+      // Double-check printer is still available
+      const currentPrinters = await qz.printers.find();
+      const currentPrintersArray = Array.isArray(currentPrinters) ? currentPrinters : [currentPrinters];
+      if (!currentPrintersArray.includes(printerSelection.printer)) {
+        showFeedback(`Printer \"${printerSelection.printer}\" is no longer available. Please refresh and try again.`, "error");
+        return;
+      }
+      let successCount = 0;
+      let failCount = 0;
+      let failItems: string[] = [];
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
-          const imageDataUrl = await formatLabelForPrintImage(
-            item,
-            allergens.map((a) => a.allergenName.toLowerCase()),
-            customExpiry,
-            5,
-            useInitials,
-            selectedInitial,
-            labelHeight // Default label height, can be adjusted
-          )
-
-          const config = qz.configs.create(selectedPrinter, {
-            density: 203,
-            scaleContent: true,
-            rasterize: true,
-          })
-
-          const data: PrintData[] = [
-            {
-              type: "pixel",
-              format: "image",
-              flavor: "base64",
-              data: imageDataUrl.split(",")[1],
-            },
-          ]
-
-          await qz.print(config, data)
-
-          await logAction("print_label", {
-            labelType: item.labelType || item.type,
-            itemId: item.uid || item.id,
-            itemName: item.name,
-            quantity: item.quantity || 1,
-            printedAt: new Date().toISOString(),
-            initial: selectedInitial,
-          })
+          try {
+            const imageDataUrl = await formatLabelForPrintImage(
+              item,
+              allergens.map((a) => a.allergenName.toLowerCase()),
+              customExpiry,
+              5,
+              useInitials,
+              selectedInitial,
+              labelHeight
+            );
+            const config = qz.configs.create(printerSelection.printer, {
+              density: 203,
+              scaleContent: true,
+              rasterize: true,
+            });
+            const data: PrintData[] = [
+              {
+                type: "pixel",
+                format: "image",
+                flavor: "base64",
+                data: imageDataUrl.split(",")[1],
+              },
+            ];
+            await qz.print(config, data);
+            await logAction("print_label", {
+              labelType: item.labelType || item.type,
+              itemId: item.uid || item.id,
+              itemName: item.name,
+              quantity: item.quantity || 1,
+              printedAt: new Date().toISOString(),
+              initial: selectedInitial,
+              printerUsed: printerSelection.printer,
+            });
+            successCount++;
+          } catch (itemErr) {
+            failCount++;
+            failItems.push(item.name);
+            console.error("❌ Print error for item", item.name, itemErr);
+          }
         }
       }
-
-      showFeedback(`Printed ${printQueue.length} labels successfully`, "success")
+      if (failCount === 0) {
+        showFeedback(`Successfully printed ${successCount} labels using ${printerSelection.printer}`, "success");
+      } else {
+        showFeedback(`Printed ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`, "error");
+      }
     } catch (err) {
-      console.error("Print error:", err)
-      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
+      console.error("❌ Print process error:", err);
+      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error");
     } finally {
       if (qz.websocket.isActive()) {
-        await qz.websocket.disconnect()
+        await qz.websocket.disconnect().catch(console.error);
       }
     }
   }
 
   // Handler for "Use First"
   const handleUseFirstPrint = async () => {
-    if (!isConnected) {
-      showFeedback("Printer not connected", "error")
+    if (printerLoading) {
+      showFeedback("Checking printer status, please wait...", "error")
       return
     }
+    
+    if (!isConnected) {
+      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error")
+      reconnect()
+      return
+    }
+
+    // Get the best available printer using our helper function
+    const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    
+    if (!printerToUse) {
+      showFeedback("No printer available. Please check your printer connection and try again.", "error")
+      return
+    }
+
     try {
       if (!qz.websocket.isActive()) {
         await qz.websocket.connect()
       }
+
       const html = `<span style="width:100%;font-size:2.2rem;font-weight:bold;letter-spacing:0.1em;text-align:center;">USE FIRST</span>`
       const imageDataUrl = await printSimpleLabel(html)
-      const config = qz.configs.create(selectedPrinter, {
+      
+      if (!printerToUse.printer) {
+        showFeedback("No valid printer selected.", "error");
+        return;
+      }
+      const config = qz.configs.create(printerToUse.printer, {
         density: 203,
         scaleContent: true,
         rasterize: true,
       })
+
       const data: PrintData[] = [
         {
           type: "pixel",
@@ -379,6 +505,7 @@ export default function LabelDemo() {
           data: imageDataUrl.split(",")[1],
         },
       ]
+
       await qz.print(config, data)
       showFeedback("Printed USE FIRST label", "success")
 
@@ -387,9 +514,11 @@ export default function LabelDemo() {
         itemName: "USE FIRST",
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
+        printerUsed: printerToUse.printer,
       })
     } catch (err) {
-      showFeedback("Print failed", "error")
+      console.error("USE FIRST print error:", err)
+      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
     } finally {
       if (qz.websocket.isActive()) await qz.websocket.disconnect()
     }
@@ -398,14 +527,31 @@ export default function LabelDemo() {
   // Handler for "Defrost"
   const handleDefrostPrint = async (ingredient: IngredientItem) => {
     setShowDefrostModal(false)
-    if (!isConnected) {
-      showFeedback("Printer not connected", "error")
+    
+    if (printerLoading) {
+      showFeedback("Checking printer status, please wait...", "error")
       return
     }
+    
+    if (!isConnected) {
+      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error")
+      reconnect()
+      return
+    }
+
+    // Get the best available printer using our helper function
+    const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    
+    if (!printerToUse) {
+      showFeedback("No printer available. Please check your printer connection and try again.", "error")
+      return
+    }
+
     try {
       if (!qz.websocket.isActive()) {
         await qz.websocket.connect()
       }
+
       const now = new Date()
       const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
       const html = `
@@ -415,11 +561,17 @@ export default function LabelDemo() {
         <div style="font-size:1rem;margin-top:8px;">${selectedInitial ? `By: ${selectedInitial}` : ""}</div>
       `
       const imageDataUrl = await printSimpleLabel(html)
-      const config = qz.configs.create(selectedPrinter, {
+      
+      if (!printerToUse.printer) {
+        showFeedback("No valid printer selected.", "error");
+        return;
+      }
+      const config = qz.configs.create(printerToUse.printer, {
         density: 203,
         scaleContent: true,
         rasterize: true,
       })
+
       const data: PrintData[] = [
         {
           type: "pixel",
@@ -428,6 +580,7 @@ export default function LabelDemo() {
           data: imageDataUrl.split(",")[1],
         },
       ]
+
       await qz.print(config, data)
       showFeedback("Printed defrosted label", "success")
 
@@ -436,9 +589,11 @@ export default function LabelDemo() {
         itemName: ingredient.name,
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
+        printerUsed: printerToUse.printer,
       })
     } catch (err) {
-      showFeedback("Print failed", "error")
+      console.error("Defrost print error:", err)
+      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
     } finally {
       if (qz.websocket.isActive()) await qz.websocket.disconnect()
     }
@@ -485,6 +640,33 @@ export default function LabelDemo() {
                   onHeightChange={(val) => setLabelHeight(val)}
                   className="mb-4"
                 />
+                
+                {/* Printer Status Display */}
+                <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                  <h3 className="mb-2 font-semibold">Printer Status</h3>
+                  <div className="text-sm">
+                    <p className={`mb-1 ${isConnected ? 'text-green-600' : 'text-red-600'}`}>
+                      QZ Tray: {isConnected ? 'Connected' : 'Disconnected'}
+                    </p>
+                    {isConnected && (
+                      <>
+                        <p className="mb-1">
+                          Available Printers: {availablePrinters.length}
+                        </p>
+                        <p className="mb-1">
+                          Selected: {getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters).printer || 'None'}
+                          {" "}
+                          <span className="text-xs text-gray-500">
+                            ({getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters).reason})
+                          </span>
+                        </p>
+                      </>
+                    )}
+                    {printerError && (
+                      <p className="text-red-600">Error: {printerError}</p>
+                    )}
+                  </div>
+                </div>
               </div>
 
               {/* Right Section: Initials and Settings */}
