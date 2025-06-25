@@ -1,4 +1,3 @@
-import IngredientsTable from "@/app/dashboard/ingredients/page"
 import { logAction } from "@/lib/logAction"
 
 export async function registerUser(data: any) {
