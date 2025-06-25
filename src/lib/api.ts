@@ -348,3 +348,75 @@ export async function addMenuItems(data: any, token: string) {
   await logAction("addMenuItems_success", resData)
   return resData
 }
+
+export async function sendForgotPasswordEmail(email: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/forgot-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ email }),
+  })
+
+  const contentType = response.headers.get("content-type")
+  if (!response.ok) {
+    if (contentType && contentType.includes("application/json")) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Failed to send reset email")
+    } else {
+      const errorText = await response.text()
+      throw new Error(errorText || "Failed to send reset email")
+    }
+  }
+
+  return await response.json()
+}
+
+export async function verifyOtpPin(email: string, pin: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/verify-pin`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ email, pin }),
+  })
+
+  const contentType = response.headers.get("content-type")
+  if (!response.ok) {
+    if (contentType && contentType.includes("application/json")) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "OTP verification failed")
+    } else {
+      const errorText = await response.text()
+      throw new Error(errorText || "OTP verification failed")
+    }
+  }
+
+  return await response.json()
+}
+
+export async function resetPassword(email: string, newPassword: string, confirmPassword: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reset-password`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ email, newPassword, confirmPassword }),
+  })
+
+  const contentType = response.headers.get("content-type")
+  if (!response.ok) {
+    if (contentType && contentType.includes("application/json")) {
+      const errorData = await response.json()
+      throw new Error(errorData.message || "Failed to reset password")
+    } else {
+      const errorText = await response.text()
+      throw new Error(errorText || "Failed to reset password")
+    }
+  }
+
+  return await response.json()
+}

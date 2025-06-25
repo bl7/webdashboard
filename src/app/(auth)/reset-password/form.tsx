@@ -10,13 +10,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Link from "next/link"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { resetPassword } from "@/lib/api"
 
 const forgotPassFormSchema = z
   .object({
@@ -29,17 +31,39 @@ const forgotPassFormSchema = z
     message: "Passwords don't match",
     path: ["confirm"],
   })
+
 export function ForgotPasswordForm() {
   const form = useForm<z.infer<typeof forgotPassFormSchema>>({
     resolver: zodResolver(forgotPassFormSchema),
     defaultValues: {
       password: "",
+      confirm: "",
     },
   })
 
-  function onSubmit(values: z.infer<typeof forgotPassFormSchema>) {
-    console.log(values)
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+
+  useEffect(() => {
+    setEmail(localStorage.getItem("resetEmail") || "")
+  }, [])
+
+  async function onSubmit(values: z.infer<typeof forgotPassFormSchema>) {
+    setError(null)
+    setLoading(true)
+    try {
+      await resetPassword(email, values.password, values.confirm)
+      localStorage.removeItem("resetEmail")
+      router.push("/login")
+    } catch (err: any) {
+      setError(err.message || "Failed to reset password")
+    } finally {
+      setLoading(false)
+    }
   }
+
   return (
     <Form {...form}>
       <form className="w-full max-w-lg space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,7 +72,7 @@ export function ForgotPasswordForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>New Password</FormLabel>
               <FormControl>
                 <PasswordInput id="password" placeholder="Password" className="w-full" {...field} />
               </FormControl>
@@ -67,13 +91,21 @@ export function ForgotPasswordForm() {
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <PasswordInput id="password" placeholder="Password" className="w-full" {...field} />
+                <PasswordInput
+                  id="confirm"
+                  placeholder="Confirm Password"
+                  className="w-full"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="mt-4 w-full">Send OTP</Button>
+        {error && <div className="text-sm text-red-600">{error}</div>}
+        <Button className="mt-4 w-full" disabled={loading}>
+          {loading ? "Resetting..." : "Reset Password"}
+        </Button>
         <div className="mt-6 flex items-center justify-end gap-2">
           <p className="text-sm text-muted-foreground">Don&apos;t have an account?</p>
           <Link

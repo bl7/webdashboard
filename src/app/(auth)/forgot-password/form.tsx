@@ -15,6 +15,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import { sendForgotPasswordEmail } from "@/lib/api"
+import { useState } from "react"
 
 const forgotPassFormSchema = z.object({
   email: z.string().email({ message: "Input must me a valid email" }),
@@ -27,11 +29,23 @@ export function ForgotPasswordForm() {
     },
   })
   const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
-  function onSubmit(values: z.infer<typeof forgotPassFormSchema>) {
-    console.log(values)
-    router.push("/verify-otp")
+  async function onSubmit(values: z.infer<typeof forgotPassFormSchema>) {
+    setError(null)
+    setLoading(true)
+    try {
+      await sendForgotPasswordEmail(values.email)
+      localStorage.setItem("resetEmail", values.email)
+      router.push("/verify-otp")
+    } catch (err: any) {
+      setError(err.message || "Failed to send reset email")
+    } finally {
+      setLoading(false)
+    }
   }
+
   return (
     <Form {...form}>
       <form className="w-full max-w-lg space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
@@ -48,7 +62,10 @@ export function ForgotPasswordForm() {
             </FormItem>
           )}
         />
-        <Button className="mt-4 w-full">Send OTP</Button>
+        {error && <div className="text-sm text-red-600">{error}</div>}
+        <Button className="mt-4 w-full" disabled={loading}>
+          {loading ? "Sending..." : "Send OTP"}
+        </Button>
         <div className="mt-6 flex items-center justify-end gap-2">
           <p className="text-sm text-muted-foreground">Don&apos;t have an account?</p>
           <Link
