@@ -17,7 +17,7 @@ import { useState, useCallback } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { loginUser } from "@/lib/api" // make sure this points to correct function
+import { loginUser } from "@/lib/api" 
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -46,6 +46,8 @@ export function LoginForm() {
           localStorage.setItem("token", response.token)
           localStorage.setItem("userid", response.uuid)
           localStorage.setItem("email", response.email)
+          localStorage.setItem("full_name", response.name)
+          console.log("full_name", localStorage.getItem("full_name"))
           console.log("userid", localStorage.getItem("userid"))
           toast.success("Login successful")
           router.push("/dashboard")

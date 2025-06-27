@@ -15,25 +15,31 @@ export interface Profile {
 }
 
 export interface Subscription {
-  id?: number
+  id?: string
   user_id: string
   stripe_customer_id?: string | null
   stripe_subscription_id?: string | null
-  price_id?: string | null
+  plan_id?: string | null
+  plan_name?: string | null
   status: string
-  current_period_end?: string | null
+  trial_start?: string | null
   trial_end?: string | null
-  plan_name?: string
-  plan_amount?: number
+  current_period_start?: string | null
+  current_period_end?: string | null
   billing_interval?: string | null
-  next_amount_due?: number
-  card_last4?: string | null
-  card_exp_month?: string | null
-  card_exp_year?: string | null
-  created_at?: string
-  updated_at?: string
+  amount?: number | null
+  currency?: string | null
+  cancel_at_period_end?: boolean | null
   pending_plan_change?: string | null
   pending_plan_change_effective?: string | null
+  card_brand?: string | null
+  card_last4?: string | null
+  card_exp_month?: number | null
+  card_exp_year?: number | null
+  card_country?: string | null
+  card_fingerprint?: string | null
+  created_at?: string
+  updated_at?: string
 }
 
 interface UseBillingDataReturn {
@@ -57,40 +63,14 @@ const useBillingData = (userId: string): UseBillingDataReturn => {
   // Fetch subscription data
   const fetchSubscription = useCallback(async () => {
     if (!userId) return
-
     try {
-      const response = await fetch(`/api/subscriptions?user_id=${userId}`)
+      const response = await fetch(`/api/subscription_better/status?user_id=${userId}`)
       if (!response.ok) {
         throw new Error(`Failed to fetch subscription: ${response.statusText}`)
       }
       const data = await response.json()
-
-      // If no subscription exists, create a default free plan
-      if (!data.subscription) {
-        const defaultSubscription: Subscription = {
-          user_id: userId,
-          status: "active",
-          plan_name: "Free Plan",
-          plan_amount: 0,
-          billing_interval: null,
-          next_amount_due: 0,
-          stripe_customer_id: null,
-          stripe_subscription_id: null,
-          price_id: null,
-          card_last4: null,
-          card_exp_month: null,
-          card_exp_year: null,
-        }
-        setSubscription(defaultSubscription)
-      } else {
-        setSubscription({
-          ...data.subscription,
-          pending_plan_change: data.pending_plan_change || null,
-          pending_plan_change_effective: data.pending_plan_change_effective || null,
-        })
-      }
+      setSubscription(data.subscription || null)
     } catch (err) {
-      console.error("Error fetching subscription:", err)
       setError(err instanceof Error ? err.message : "Failed to fetch subscription")
     }
   }, [userId])
@@ -150,23 +130,10 @@ const useBillingData = (userId: string): UseBillingDataReturn => {
       setLoading(false)
       return
     }
-
-    const fetchAllData = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        await Promise.all([fetchSubscription(), fetchInvoices(), fetchProfile()])
-      } catch (err) {
-        console.error("Error fetching billing data:", err)
-        setError(err instanceof Error ? err.message : "Failed to fetch billing data")
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchAllData()
-  }, [userId, fetchSubscription, fetchInvoices, fetchProfile])
+    setLoading(true)
+    setError(null)
+    Promise.all([fetchSubscription(), fetchProfile()]).finally(() => setLoading(false))
+  }, [userId, fetchSubscription, fetchProfile])
 
   return {
     subscription,

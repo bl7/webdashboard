@@ -2,18 +2,18 @@
 import React, { useState, useEffect } from "react"
 import { Search, Plus, Users, X, Eye } from "lucide-react"
 import { useDarkMode } from "../context/DarkModeContext"
+
 interface User {
   id: number
   user_id: string
   company_name: string
-  address: string
+  plan_name: string
+  status: string
+  current_period_end: string | null
+  trial_end: string | null
+  pending_plan_change: string | null
+  pending_plan_change_effective: string | null
   created_at: string
-  profile_picture: string | null
-  name: string | null
-  city: string | null
-  state: string | null
-  country: string | null
-  zip: string | null
 }
 
 interface UsersPageProps {
@@ -44,7 +44,7 @@ export default function UsersPage() {
     const fetchUsers = async () => {
       try {
         setLoading(true)
-        const response = await fetch("/api/users")
+        const response = await fetch("/api/subscription_better/users")
         const data = await response.json()
         setUsers(data)
       } catch (error) {
@@ -59,7 +59,8 @@ export default function UsersPage() {
   const filteredUsers = users.filter(
     (user) =>
       (user.company_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.address || "").toLowerCase().includes(searchTerm.toLowerCase())
+      (user.plan_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (user.status || "").toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   // Pagination
@@ -114,7 +115,7 @@ export default function UsersPage() {
         <div>
           <h1 className="mb-2 text-2xl font-bold">Users Management</h1>
           <p className={`${darkMode ? "text-gray-400" : "text-gray-600"}`}>
-            Manage your users and their details
+            Manage your users and their subscriptions
           </p>
         </div>
         <button
@@ -126,76 +127,50 @@ export default function UsersPage() {
         </button>
       </div>
 
-      {/* Search and Stats */}
-      <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="relative max-w-md flex-1">
-          <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search company or address..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className={`w-full rounded-lg border py-2 pl-10 pr-4 transition-colors ${
-              darkMode
-                ? "border-gray-600 bg-gray-800 text-white placeholder-gray-400 focus:border-purple-500"
-                : "border-gray-300 bg-white text-gray-900 placeholder-gray-500 focus:border-purple-500"
-            } focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20`}
-          />
-        </div>
-        <div className="flex items-center space-x-4 text-sm">
-          <div
-            className={`flex items-center space-x-2 ${darkMode ? "text-gray-400" : "text-gray-600"}`}
-          >
-            <Users className="h-4 w-4" />
-            <span>Total: {users.length}</span>
-          </div>
-        </div>
+      {/* Filters */}
+      <div className="mb-6 flex flex-wrap gap-4">
+        <select className="rounded border p-2" onChange={e => setSearchTerm(e.target.value)}>
+          <option value="">All Plans</option>
+          {[...new Set(users.map(u => u.plan_name))].map(plan => (
+            <option key={plan} value={plan}>{plan}</option>
+          ))}
+        </select>
+        <select className="rounded border p-2" onChange={e => setSearchTerm(e.target.value)}>
+          <option value="">All Statuses</option>
+          {[...new Set(users.map(u => u.status))].map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </select>
       </div>
 
       {/* Users Table */}
-      <div
-        className={`overflow-hidden rounded-lg border ${darkMode ? "border-gray-700" : "border-gray-200"}`}
-      >
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className={darkMode ? "bg-gray-800" : "bg-gray-50"}>
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Company
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Address
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                  Actions
-                </th>
+      <div className="overflow-x-auto rounded-lg border">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Company</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Plan</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Renewal</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Trial End</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Pending Change</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {users.map(user => (
+              <tr key={user.user_id}>
+                <td className="px-6 py-4">{user.company_name}</td>
+                <td className="px-6 py-4">{user.plan_name}</td>
+                <td className="px-6 py-4">{user.status}</td>
+                <td className="px-6 py-4">{user.current_period_end ? new Date(user.current_period_end).toLocaleDateString() : '-'}</td>
+                <td className="px-6 py-4">{user.trial_end ? new Date(user.trial_end).toLocaleDateString() : '-'}</td>
+                <td className="px-6 py-4">{user.pending_plan_change ? `${user.pending_plan_change} (${user.pending_plan_change_effective ? new Date(user.pending_plan_change_effective).toLocaleDateString() : ''})` : '-'}</td>
+                <td className="px-6 py-4"><button className="rounded bg-purple-600 text-white px-3 py-1">View</button></td>
               </tr>
-            </thead>
-            <tbody
-              className={`divide-y ${darkMode ? "divide-gray-700 bg-gray-900" : "divide-gray-200 bg-white"}`}
-            >
-              {paginatedUsers.map((user) => (
-                <tr key={user.id}>
-                  <td className="px-6 py-4">{user.company_name}</td>
-                  <td className="px-6 py-4">{user.address}</td>
-                  <td className="px-6 py-4">
-                    <button
-                      onClick={() => openViewModal(user)}
-                      className={`inline-flex items-center space-x-1 rounded-md px-3 py-1 text-sm font-medium transition-colors ${
-                        darkMode
-                          ? "bg-purple-600 text-white hover:bg-purple-700"
-                          : "bg-purple-100 text-purple-700 hover:bg-purple-200"
-                      }`}
-                    >
-                      <Eye className="h-4 w-4" />
-                      <span>View</span>
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Pagination */}
@@ -376,45 +351,27 @@ export default function UsersPage() {
                 <span className="font-semibold">Company:</span> {selectedUser.company_name}
               </div>
               <div>
-                <span className="font-semibold">Address:</span> {selectedUser.address}
+                <span className="font-semibold">Plan:</span> {selectedUser.plan_name}
               </div>
               <div>
-                <span className="font-semibold">User ID:</span> {selectedUser.user_id}
+                <span className="font-semibold">Status:</span> {selectedUser.status}
+              </div>
+              <div>
+                <span className="font-semibold">Renewal Date:</span>{" "}
+                {selectedUser.current_period_end ? new Date(selectedUser.current_period_end).toLocaleDateString() : '-'}
+              </div>
+              <div>
+                <span className="font-semibold">Trial End:</span>{" "}
+                {selectedUser.trial_end ? new Date(selectedUser.trial_end).toLocaleDateString() : '-'}
+              </div>
+              <div>
+                <span className="font-semibold">Pending Change:</span>{" "}
+                {selectedUser.pending_plan_change ? `${selectedUser.pending_plan_change} (${selectedUser.pending_plan_change_effective ? new Date(selectedUser.pending_plan_change_effective).toLocaleDateString() : ''})` : '-'}
               </div>
               <div>
                 <span className="font-semibold">Created At:</span>{" "}
                 {new Date(selectedUser.created_at).toLocaleString()}
               </div>
-              {selectedUser.profile_picture && (
-                <div>
-                  <span className="font-semibold">Profile Picture:</span>
-                  <img
-                    src={selectedUser.profile_picture}
-                    alt="Profile"
-                    className="mt-1 h-16 w-16 rounded-full object-cover"
-                  />
-                </div>
-              )}
-              {selectedUser.city && (
-                <div>
-                  <span className="font-semibold">City:</span> {selectedUser.city}
-                </div>
-              )}
-              {selectedUser.state && (
-                <div>
-                  <span className="font-semibold">State:</span> {selectedUser.state}
-                </div>
-              )}
-              {selectedUser.country && (
-                <div>
-                  <span className="font-semibold">Country:</span> {selectedUser.country}
-                </div>
-              )}
-              {selectedUser.zip && (
-                <div>
-                  <span className="font-semibold">Zip:</span> {selectedUser.zip}
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -6,7 +6,7 @@ export async function GET(req: NextRequest) {
   if (!userId) return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
 
   const result = await pool.query(
-    `SELECT user_id, company_name, address, city, state, country, zip, profile_picture 
+    `SELECT user_id, full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture 
      FROM user_profiles WHERE user_id = $1`,
     [userId]
   )
@@ -22,13 +22,18 @@ export async function PUT(req: NextRequest) {
   try {
     const {
       user_id,
+      full_name = null,
+      email = null,
       company_name = null,
-      address = null,
+      address_line1 = null,
+      address_line2 = null,
       city = null,
       state = null,
       country = null,
-      zip = null,
+      postal_code = null,
+      phone = null,
       profile_picture = null,
+      avatar = null,
     } = await req.json()
 
     if (!user_id) {
@@ -42,22 +47,26 @@ export async function PUT(req: NextRequest) {
     if (existingResult.rowCount > 0) {
       await pool.query(
         `UPDATE user_profiles SET 
-          company_name = COALESCE($1, company_name), 
-          address = COALESCE($2, address), 
-          city = COALESCE($3, city),
-          state = COALESCE($4, state),
-          country = COALESCE($5, country),
-          zip = COALESCE($6, zip),
-          profile_picture = COALESCE($7, profile_picture)
-         WHERE user_id = $8`,
-        [company_name, address, city, state, country, zip, profile_picture, user_id]
+          full_name = COALESCE($1, full_name),
+          email = COALESCE($2, email),
+          company_name = COALESCE($3, company_name),
+          address_line1 = COALESCE($4, address_line1),
+          address_line2 = COALESCE($5, address_line2),
+          city = COALESCE($6, city),
+          state = COALESCE($7, state),
+          country = COALESCE($8, country),
+          postal_code = COALESCE($9, postal_code),
+          phone = COALESCE($10, phone),
+          profile_picture = COALESCE($11, profile_picture)
+         WHERE user_id = $12`,
+        [full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture, user_id]
       )
     } else {
       await pool.query(
         `INSERT INTO user_profiles (
-          user_id, company_name, address, city, state, country, zip, profile_picture
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-        [user_id, company_name, address, city, state, country, zip, profile_picture]
+          user_id, full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+        [user_id, full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture]
       )
     }
 

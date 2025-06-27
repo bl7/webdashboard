@@ -21,7 +21,7 @@ interface PlanConfig {
   yearlyValue: number
 }
 
-const PLANS: PlanConfig[] = [
+export const PLANS: PlanConfig[] = [
   {
     id: "pro_kitchen",
     name: "🧑‍🍳 Pro Kitchen",
@@ -444,8 +444,8 @@ export default function PlanSelectionModal({
       console.log("========================")
 
       // Only handle paid plan updates
-      if (subscriptionStatus === "active") {
-        console.log("🔄 Updating existing paid subscription")
+      if (subscriptionStatus === "active" || (subscriptionStatus === "trialing" && changeType === "upgrade")) {
+        console.log("🔄 Updating paid or trialing subscription (upgrade allowed)")
         const result = await onUpdate(priceId)
         if (result && typeof result === 'object' && 'message' in result && typeof result.message === 'string') {
           setBackendMessage(result.message)
@@ -544,6 +544,31 @@ export default function PlanSelectionModal({
 
   const isButtonDisabled = loading || changeType === "same"
 
+  // Detect pending plan change
+  const hasPendingChange = !!subscriptionData?.pending_plan_change && !!subscriptionData?.pending_plan_change_effective;
+  const pendingPlanName = hasPendingChange ? (PLANS.find(p => p.id === normalizePlanName(subscriptionData.pending_plan_change))?.name || subscriptionData.pending_plan_change) : null;
+  const pendingPlanEffective = hasPendingChange ? new Date(subscriptionData.pending_plan_change_effective).toLocaleDateString() : null;
+
+  // Get the current plan's price_id for the current interval
+  const currentPlanPriceId = useMemo(() => {
+    if (!subscriptionData) return null;
+    if (subscriptionData.billing_interval === 'year' || subscriptionData.billing_interval === 'yearly') {
+      return subscriptionData.plan_id;
+    } else {
+      return subscriptionData.plan_id;
+    }
+  }, [subscriptionData]);
+
+  // Helper to normalize interval values
+  const normalizeInterval = (interval: string | undefined | null) => {
+    if (!interval) return '';
+    if (interval === 'month' || interval === 'monthly') return 'monthly';
+    if (interval === 'year' || interval === 'yearly' || interval === 'annual') return 'yearly';
+    return interval;
+  };
+
+  const currentPlanInterval = normalizeInterval(subscriptionData?.billing_interval);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
@@ -562,254 +587,83 @@ export default function PlanSelectionModal({
           </button>
         </div>
 
-        {/* Enhanced Current Plan Display */}
-        {currentPlanInfo.config && (
-          <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Crown className="h-5 w-5 text-blue-600" />
-                <div>
-                  <h3 className="font-semibold text-blue-900">
-                    Current Plan {!currentPlanInfo.isValid && "(⚠️ Normalized)"}
-                  </h3>
-                  <p className="text-sm text-blue-700">
-                    {currentPlanInfo.config.name} -{" "}
-                    {currentBillingPeriod === "monthly"
-                      ? currentPlanInfo.config.monthly
-                      : currentPlanInfo.config.yearly}{" "}
-                    ({currentBillingPeriod})
-                  </p>
-                  {subscriptionStatus !== "active" && (
-                    <span
-                      className={clsx(
-                        "mt-1 inline-block rounded-full px-2 py-1 text-xs font-medium",
-                        subscriptionStatus === "past_due"
-                          ? "bg-red-100 text-red-800"
-                          : subscriptionStatus === "canceled"
-                            ? "bg-gray-100 text-gray-800"
-                            : "bg-yellow-100 text-yellow-800"
-                      )}
-                    >
-                      {subscriptionStatus.replace("_", " ").toUpperCase()}
-                    </span>
-                  )}
-                  {/* Pending plan change status */}
-                  {subscriptionData?.pending_plan_change && subscriptionData?.pending_plan_change_effective && (
-                    <div className="mt-2 flex flex-col">
-                      <span className="inline-block rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
-                        PENDING {(() => {
-                          // Determine if upgrade, downgrade, or interval change
-                          const currentId = normalizePlanName(currentPlan)
-                          const pendingId = normalizePlanName(subscriptionData.pending_plan_change)
-                          const currentPlanConfig = findPlan(currentId)
-                          const pendingPlanConfig = findPlan(pendingId)
-                          if (!currentPlanConfig || !pendingPlanConfig) return "CHANGE"
-                          const currentMonthly = getEffectiveMonthlyValue(currentPlanConfig, currentBillingPeriod)
-                          // Guess interval from priceId
-                          const pendingIsYearly = subscriptionData.pending_plan_change.toLowerCase().includes('year')
-                          const pendingMonthly = getEffectiveMonthlyValue(pendingPlanConfig, pendingIsYearly ? "yearly" : "monthly")
-                          if (pendingMonthly > currentMonthly) return "UPGRADE"
-                          if (pendingMonthly < currentMonthly) return "DOWNGRADE"
-                          if (currentBillingPeriod !== (pendingIsYearly ? "yearly" : "monthly")) return "INTERVAL CHANGE"
-                          return "CHANGE"
-                        })()}
-                      </span>
-                      <span className="mt-1 text-xs text-yellow-900">
-                        New plan: <strong>{findPlan(normalizePlanName(subscriptionData.pending_plan_change))?.name || subscriptionData.pending_plan_change}</strong> ({subscriptionData.pending_plan_change.toLowerCase().includes('year') ? 'Yearly' : 'Monthly'})<br />
-                        Starts: {new Date(subscriptionData.pending_plan_change_effective).toLocaleDateString()}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-              {nextBillingDate && subscriptionStatus === "active" && (
-                <div className="text-right">
-                  <p className="text-xs text-blue-600">Next billing</p>
-                  <p className="text-sm font-medium text-blue-900">
-                    {new Date(nextBillingDate).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Plans Grid - show all 4 plan/interval combos as cards, no toggle */}
-        {(() => {
-          // Debug: log current plan info before rendering the grid
-          console.log('DEBUG: Current Plan', {
-            price_id: subscriptionData?.price_id,
-            name: currentPlanInfo?.config?.name,
-            interval: subscriptionData?.billing_interval || currentBillingPeriod,
-            subscriptionData,
-            currentPlan,
-            currentBillingPeriod
-          });
-          return null;
-        })()}
-        <div className="mb-6 grid grid-cols-1 gap-8 md:grid-cols-4">
-          {PLANS.flatMap((plan) => [
-            { ...plan, interval: 'monthly', price: plan.monthly, price_id: plan.price_id_monthly },
-            { ...plan, interval: 'yearly', price: plan.yearly, price_id: plan.price_id_yearly },
-          ]).filter((planVariant) => {
-            // Normalize intervals for comparison
-            const cardInterval = planVariant.interval === 'monthly' ? 'month' : 'year'
-            const currentIntervalRaw = subscriptionData?.billing_interval || currentBillingPeriod || ''
-            const currentInterval = typeof currentIntervalRaw === 'string' ? currentIntervalRaw.replace('ly', '') : ''
-            // Normalize plan names for comparison
-            const cardNameNorm = normalizePlanName(planVariant.name)
-            const currentNameNorm = normalizePlanName(currentPlan)
-            // Hide the card if both normalized name and interval match
-            return !(cardNameNorm === currentNameNorm && cardInterval === currentInterval)
-          }).map((planVariant) => {
-            // Determine badge and CTA
-            const currentName = currentPlanInfo.config?.name
-            const actualInterval = subscriptionData?.billing_interval || currentBillingPeriod
-            const currentPlanObj = PLANS.find(p => p.name === currentName)
-            const currentMonthly = currentPlanObj ? (actualInterval === 'yearly' ? currentPlanObj.yearlyValue / 12 : currentPlanObj.monthlyValue) : 0
-            const planMonthly = planVariant.interval === 'yearly' ? planVariant.yearlyValue / 12 : planVariant.monthlyValue
-            let badge = ''
-            let cta = planVariant.cta
-            if (planMonthly > currentMonthly) {
-              badge = 'Upgrade'
-              cta = 'Upgrade'
-            } else if (planMonthly < currentMonthly) {
-              badge = 'Downgrade'
-              cta = 'Downgrade'
-            } else if (planVariant.interval !== actualInterval) {
-              badge = 'Switch Billing'
-              cta = planVariant.interval === 'yearly' ? 'Switch to Annual' : 'Switch to Monthly'
-            }
-            // Recommended badge for your preferred plan
-            const isRecommended = planVariant.id === 'multi_site' && planVariant.interval === 'yearly'
-            return (
-              <div
-                key={planVariant.id + '-' + planVariant.interval}
-                onClick={() => !loading && (setSelectedPlanId(planVariant.id), setBillingPeriod(planVariant.interval === 'monthly' ? 'monthly' : 'yearly'))}
-                className={clsx(
-                  "cursor-pointer rounded-2xl border p-6 shadow-lg transition-all duration-200 hover:shadow-2xl hover:border-blue-400 bg-white flex flex-col justify-between min-h-[420px]",
-                  badge === 'Upgrade' && 'border-blue-500',
-                  badge === 'Downgrade' && 'border-yellow-500',
-                  badge === 'Switch Billing' && 'border-gray-400',
-                  isRecommended && 'border-purple-600',
-                  loading && "cursor-not-allowed opacity-50"
-                )}
-                role="radio"
-                aria-checked={selectedPlanId === planVariant.id && billingPeriod === planVariant.interval}
-                tabIndex={loading ? -1 : 0}
-                onKeyDown={(e) => handleKeyDown(e, planVariant.id)}
-              >
-                <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{planVariant.name}</h3>
-                  <div className="flex items-center space-x-2">
-                    <span className="rounded bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">
-                      {planVariant.interval === 'monthly' ? 'Monthly' : 'Yearly'}
-                    </span>
-                    {badge && (
-                      <span className={clsx(
-                        'rounded-full px-2 py-0.5 text-xs font-semibold',
-                        badge === 'Upgrade' && 'bg-blue-100 text-blue-700',
-                        badge === 'Downgrade' && 'bg-yellow-100 text-yellow-800',
-                        badge === 'Switch Billing' && 'bg-gray-100 text-gray-700'
-                      )}>{badge}</span>
-                    )}
-                    {isRecommended && (
-                      <span className="rounded-full bg-purple-600 px-2 py-0.5 text-xs font-semibold text-white ml-1">
-                        Recommended
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <p className="mb-3 text-sm leading-relaxed text-gray-600">{planVariant.description}</p>
-                <p className="mb-4 text-2xl font-bold text-gray-900">{planVariant.price}</p>
-                <ul className="mb-4 space-y-2 text-sm">
-                  {Object.entries(planVariant.features).map(([feature, included]) => (
-                    <li key={feature} className="flex items-start space-x-2">
-                      <div className="mt-0.5 flex-shrink-0">
-                        {typeof included === "boolean" ? (
-                          included ? (
-                            <CheckCircle2 className="text-green-600" size={16} />
-                          ) : (
-                            <X className="text-red-500" size={16} />
-                          )
-                        ) : (
-                          <Info className="text-blue-500" size={16} />
-                        )}
-                      </div>
-                      <span className="text-gray-700">
-                        {feature}
-                        {typeof included === "string" && `: ${included}`}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  variant={selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "default" : "outline"}
-                  disabled={loading}
-                  className={clsx("w-full transition-all mt-auto font-semibold text-base py-2")}
-                >
-                  {selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "Selected" : cta}
-                </Button>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Info/Warning Messages */}
-        {changeMessage && (
-          <div
-            className={clsx(
-              "mb-4 flex items-start space-x-3 rounded-lg border p-4 text-sm",
-              changeMessage.type === "warning"
-                ? "border-yellow-400 bg-yellow-50 text-yellow-800"
-                : "border-blue-400 bg-blue-50 text-blue-800"
-            )}
-          >
-            <div className="mt-0.5 flex-shrink-0">
-              {changeMessage.type === "warning" ? <AlertTriangle size={18} /> : <Info size={18} />}
-            </div>
-            <p className="leading-relaxed">{changeMessage.message}</p>
-          </div>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="mb-4 flex items-start space-x-3 rounded-lg border border-red-500 bg-red-50 p-4 text-sm text-red-700">
-            <div className="mt-0.5 flex-shrink-0">
-              <AlertTriangle size={18} />
-            </div>
-            <p className="leading-relaxed">{error}</p>
-          </div>
-        )}
-
-        {/* Backend Message */}
-        {backendMessage && (
-          <div className="mb-4 flex items-start space-x-3 rounded-lg border border-blue-500 bg-blue-50 p-4 text-sm text-blue-700">
-            <div className="mt-0.5 flex-shrink-0">
-              <Info size={18} />
-            </div>
-            <p className="leading-relaxed">{backendMessage}</p>
-          </div>
-        )}
-
-        {/* Policy summary section */}
-        <div className="mt-8 rounded-lg bg-blue-50 p-6 text-blue-900 shadow">
-          <h4 className="mb-2 text-lg font-semibold">Subscription Policy Highlights</h4>
-          <ul className="list-disc pl-5 space-y-1 text-base">
-            <li>All paid plans start with a <strong>10-day free trial</strong>.</li>
-            <li><strong>Monthly:</strong> Cancel anytime. <strong>No refund</strong> for the current month.</li>
-            <li><strong>Yearly:</strong> Cancel anytime. At the end of the current month, you'll receive a refund of <strong>50% of the unused months</strong>.</li>
-            <li><strong>Upgrades</strong> take effect immediately and are prorated.</li>
-            <li><strong>Downgrades</strong> take effect at the end of your current billing period.</li>
+        {/* Policy Explanation Banner */}
+        <div className="mb-6 rounded-xl bg-blue-50 border-l-8 border-blue-400 p-4 text-blue-900 shadow">
+          <div className="font-bold mb-1">Plan Change Policy</div>
+          <ul className="list-disc pl-5 text-sm">
+            <li>Upgrades take effect <span className="font-semibold">immediately</span> and are prorated. You will be charged the difference for the rest of your billing period.</li>
+            <li>Downgrades take effect <span className="font-semibold">at the end of your current billing period</span>. You will continue to enjoy your current plan until then.</li>
+            <li>No automatic refunds are issued for downgrades or cancellations. If you need a refund, please contact support.</li>
+            <li>You can switch between monthly and yearly billing. Changes take effect at the next renewal.</li>
           </ul>
         </div>
 
-        {/* Action Buttons */}
+        {/* Prominent Change Message */}
+        {changeMessage && (
+          <div className={clsx(
+            "mb-6 p-4 rounded-xl shadow text-base font-medium",
+            changeMessage.type === "warning" ? "bg-yellow-50 border-l-8 border-yellow-400 text-yellow-900" : "bg-blue-50 border-l-8 border-blue-400 text-blue-900"
+          )}>
+            {changeMessage.message}
+          </div>
+        )}
+
+        {/* Pending Plan Change Banner */}
+        {hasPendingChange && (
+          <div className="mb-6 rounded-xl bg-yellow-50 border-l-8 border-yellow-400 p-4 text-yellow-900 shadow font-medium">
+            <div className="font-bold mb-1">Pending Plan Change</div>
+            <div>
+              You have requested to change your plan to <span className="font-bold">{pendingPlanName}</span>.<br />
+              This will take effect on <span className="font-bold">{pendingPlanEffective}</span>.<br />
+              You cannot change your plan again until then.
+            </div>
+          </div>
+        )}
+
+        {/* Plan Cards (hide only the exact current plan+interval) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {PLANS.flatMap(plan => [
+            { ...plan, interval: 'monthly', price: plan.monthly, price_id: plan.price_id_monthly },
+            { ...plan, interval: 'yearly', price: plan.yearly, price_id: plan.price_id_yearly },
+          ])
+            .filter(planVariant => {
+              // Hide only the exact current plan+interval by price_id and normalized interval
+              return !(
+                planVariant.price_id === currentPlanPriceId &&
+                normalizeInterval(planVariant.interval) === currentPlanInterval
+              );
+            })
+            .map(planVariant => (
+              <div key={planVariant.id + '-' + planVariant.interval} className={clsx(
+                "rounded-xl border bg-white p-6 shadow flex flex-col justify-between",
+                selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "ring-2 ring-blue-500" : "",
+                hasPendingChange ? "opacity-50 pointer-events-none" : ""
+              )}>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl font-bold">{planVariant.name}</span>
+                  {planVariant.highlight && <Crown className="h-5 w-5 text-yellow-500" />}
+                  <span className="ml-2 rounded bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">{planVariant.interval === 'monthly' ? 'Monthly' : 'Yearly'}</span>
+                </div>
+                <div className="mb-2 text-lg font-semibold">{planVariant.price}</div>
+                <div className="mb-4 text-sm text-gray-600">{planVariant.description}</div>
+                <Button
+                  variant={selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "default" : "outline"}
+                  className="mt-auto"
+                  onClick={() => { setSelectedPlanId(planVariant.id); setBillingPeriod(planVariant.interval as BillingPeriod); }}
+                  disabled={loading || hasPendingChange}
+                >
+                  {selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "Selected" : planVariant.cta}
+                </Button>
+              </div>
+            ))}
+        </div>
+
+        {/* Billing period toggle and action buttons remain unchanged */}
         <div className="flex justify-end space-x-4 border-t pt-4">
           <Button variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
-          <Button onClick={updatePlan} disabled={isButtonDisabled} className="min-w-[120px]">
+          <Button onClick={updatePlan} disabled={isButtonDisabled || hasPendingChange} className="min-w-[120px]">
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

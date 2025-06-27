@@ -28,7 +28,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     setLoading(true)
     setError(null)
     try {
-      console.log("🔌 Connecting to WebSocket printer service...")
+      // console.log("🔌 Connecting to WebSocket printer service...")
       
       // Close existing connection if any
       if (wsRef.current) {
@@ -41,7 +41,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
 
       // Set up event handlers
       ws.onopen = () => {
-        console.log("✅ WebSocket printer connection established")
+        // console.log("✅ WebSocket printer connection established")
         setIsConnected(true)
         setError(null)
         setLoading(false)
@@ -50,7 +50,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data)
-          console.log("📨 Received message from printer service:", data)
+          // console.log("📨 Received message from printer service:", data)
           
           // Handle different message types
           if (data.type === 'status') {
@@ -74,21 +74,21 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
       }
 
       ws.onerror = (error) => {
-        console.error("❌ WebSocket printer connection error:", error)
+        // console.error("❌ WebSocket printer connection error:", error)
         setError("Failed to connect to printer service")
         setIsConnected(false)
         setLoading(false)
       }
 
       ws.onclose = (event) => {
-        console.log("🔌 WebSocket printer connection closed:", event.code, event.reason)
+        // console.log("🔌 WebSocket printer connection closed:", event.code, event.reason)
         setIsConnected(false)
         setLoading(false)
         
         // Auto-reconnect if not manually closed
         if (event.code !== 1000) {
           setTimeout(() => {
-            console.log("🔄 Attempting to reconnect to printer service...")
+            // console.log("🔄 Attempting to reconnect to printer service...")
             connect()
           }, 3000)
         }
@@ -104,7 +104,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
 
   const disconnect = async () => {
     try {
-      console.log("🔌 Disconnecting from printer service...")
+      // console.log("🔌 Disconnecting from printer service...")
       if (wsRef.current) {
         wsRef.current.close(1000, "Manual disconnect")
         wsRef.current = null

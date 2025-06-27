@@ -6,12 +6,16 @@ import ProfileDetailsStep from "./ProfileDetailsStep"
 import PlanSelectionStep from "./PlanSelectionStep"
 
 interface ProfileData {
+  full_name: string
+  email: string
   company_name: string
-  address: string
+  address_line1: string
+  address_line2: string
   city: string
   state: string
   country: string
-  zip: string
+  postal_code: string
+  phone: string
   avatar: number
 }
 
@@ -24,17 +28,20 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
 
   const [profileData, setProfileData] = useState<ProfileData>(() => {
     const saved = localStorage.getItem("profileData")
-    return saved
-      ? JSON.parse(saved)
-      : {
-          company_name: "",
-          address: "",
-          city: "",
-          state: "",
-          country: "",
-          zip: "",
-          avatar: 1,
-        }
+    const base = {
+      full_name: "",
+      email: "",
+      company_name: "",
+      address_line1: "",
+      address_line2: "",
+      city: "",
+      state: "",
+      country: "",
+      postal_code: "",
+      phone: "",
+      avatar: 1,
+    }
+    return saved ? { ...base, ...JSON.parse(saved) } : base
   })
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null)

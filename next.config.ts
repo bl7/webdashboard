@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverComponentsExternalPackages: ["stripe"],
-  },
+  serverExternalPackages: ["stripe"],
   // Ensure raw body is preserved for webhooks
   async rewrites() {
     return []

@@ -1,94 +1,66 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { DownloadIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { Invoice } from "@/types/invoice"
-
-export interface InvoiceLine {
-  id: string
-  amount: number
-  description?: string
-}
 
 interface Props {
-  invoices: Invoice[]
-  itemsPerPage: number // Made required since it should be passed from parent
+  userId: string
+  itemsPerPage: number
 }
 
-export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
+export default function PaymentHistory({ userId, itemsPerPage }: Props) {
+  const [invoices, setInvoices] = useState<any[]>([])
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Pagination calculations
+  useEffect(() => {
+    if (!userId) return
+    fetch(`/api/subscription_better/invoices?user_id=${userId}`)
+      .then(res => res.json())
+      .then(data => setInvoices(data.invoices || []))
+  }, [userId])
+
   const totalPages = Math.ceil(invoices.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const currentInvoices = invoices.slice(startIndex, endIndex)
 
-  // Pagination handlers
-  const goToPage = (page: number) => {
-    setCurrentPage(Math.max(1, Math.min(page, totalPages)))
-  }
+  const goToPage = (page: number) => setCurrentPage(Math.max(1, Math.min(page, totalPages)))
+  const goToPreviousPage = () => setCurrentPage((prev) => Math.max(1, prev - 1))
+  const goToNextPage = () => setCurrentPage((prev) => Math.min(totalPages, prev + 1))
 
-  const goToPreviousPage = () => {
-    setCurrentPage((prev) => Math.max(1, prev - 1))
-  }
-
-  const goToNextPage = () => {
-    setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-  }
-
-  // Toggle selection of a single invoice
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
       const newSet = new Set(prev)
-      if (newSet.has(id)) {
-        newSet.delete(id)
-      } else {
-        newSet.add(id)
-      }
+      if (newSet.has(id)) newSet.delete(id)
+      else newSet.add(id)
       return newSet
     })
   }
-
-  // Toggle select all invoices (current page only)
   const toggleSelectAll = () => {
     const currentPageIds = currentInvoices.map((inv) => inv.id)
     const allCurrentSelected = currentPageIds.every((id) => selectedIds.has(id))
-
     setSelectedIds((prev) => {
       const newSet = new Set(prev)
-      if (allCurrentSelected) {
-        // Deselect all on current page
-        currentPageIds.forEach((id) => newSet.delete(id))
-      } else {
-        // Select all on current page
-        currentPageIds.forEach((id) => newSet.add(id))
-      }
+      if (allCurrentSelected) currentPageIds.forEach((id) => newSet.delete(id))
+      else currentPageIds.forEach((id) => newSet.add(id))
       return newSet
     })
   }
-
-  // Download selected invoices - confirm each one individually
   const downloadSelected = async () => {
     if (selectedIds.size === 0) {
       alert("Please select at least one invoice to download.")
       return
     }
-
     const invoicesToDownload = invoices.filter((inv) => selectedIds.has(inv.id) && inv.invoice_pdf)
-
     if (invoicesToDownload.length === 0) {
       alert("Selected invoices do not have downloadable PDFs.")
       return
     }
-
-    // Download each invoice with individual confirmation
     for (const inv of invoicesToDownload) {
       if (inv.invoice_pdf) {
         const planName = inv.description || inv.lines?.data?.[0]?.description || `Invoice ${inv.id}`
         const proceed = confirm(`Download invoice: ${planName}?`)
-
         if (proceed) {
           const link = document.createElement("a")
           link.href = inv.invoice_pdf
@@ -101,10 +73,7 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
       }
     }
   }
-
-  const allCurrentSelected =
-    currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
-
+  const allCurrentSelected = currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
@@ -123,8 +92,6 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
           Download Selected
         </Button>
       </div>
-
-      {/* Table Head */}
       <div className="hidden grid-cols-12 px-4 py-2 text-sm font-medium text-muted-foreground md:grid">
         <div className="col-span-1">
           <Checkbox checked={allCurrentSelected} onCheckedChange={toggleSelectAll} />
@@ -135,7 +102,6 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
         <div className="col-span-2">Date</div>
         <div className="col-span-1 text-right"></div>
       </div>
-
       {invoices.length === 0 ? (
         <div className="text-sm text-muted-foreground">No invoices found.</div>
       ) : (
@@ -147,145 +113,41 @@ export default function PaymentHistory({ invoices, itemsPerPage }: Props) {
               day: "numeric",
               year: "numeric",
             })
-            const planName = entry.description || entry.metadata?.plan || "Invoice"
+            const planName = entry.description || entry.lines?.data?.[0]?.description || "Invoice"
             const isSelected = selectedIds.has(entry.id)
-
             return (
-              <div
-                key={entry.id}
-                className="grid grid-cols-12 items-center rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow"
-              >
-                {/* Checkbox */}
+              <div key={entry.id} className="grid grid-cols-12 items-center rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow">
                 <div className="col-span-1">
                   <Checkbox checked={isSelected} onCheckedChange={() => toggleSelect(entry.id)} />
                 </div>
-
-                {/* Plan */}
-                <div className="col-span-4 text-sm font-medium">
-                  {entry.lines?.data && entry.lines.data.length > 0 ? (
-                    <div className="space-y-1">
-                      {entry.lines.data.map((line, index) => (
-                        <div key={line.id} className={index > 0 ? "text-xs text-gray-600" : ""}>
-                          {line.description || "Plan Item"}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    entry.description || "Invoice"
-                  )}
-                </div>
-
-                {/* Amount */}
+                <div className="col-span-4 text-sm font-medium">{planName}</div>
                 <div className="col-span-2 text-sm">${amountFormatted}</div>
-
-                {/* Status */}
                 <div className="col-span-2 text-sm">{entry.status}</div>
-
-                {/* Date */}
-                <div className="col-span-1 mr-3 text-sm">{dateFormatted}</div>
-
-                {/* Download Icon */}
+                <div className="col-span-2 text-sm">{dateFormatted}</div>
                 <div className="col-span-1 text-right">
                   {entry.invoice_pdf ? (
-                    <a
-                      href={entry.invoice_pdf}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-primary"
-                      aria-label={`Download invoice ${entry.id} PDF`}
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <a href={entry.invoice_pdf} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary" aria-label={`Download invoice ${entry.id} PDF`} onClick={(e) => e.stopPropagation()}>
                       <DownloadIcon size={16} />
                     </a>
-                  ) : (
-                    <span className="text-muted-foreground">N/A</span>
-                  )}
+                  ) : null}
                 </div>
-
-                {/* Invoice line items - removed since we're showing them in the plan column now */}
               </div>
             )
           })}
         </div>
       )}
-
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-6 flex flex-col items-center justify-between gap-4 border-t pt-4 sm:flex-row">
-          <div className="text-sm text-gray-600">
-            Showing {startIndex + 1}-{Math.min(endIndex, invoices.length)} of {invoices.length}{" "}
-            invoices
-          </div>
-
-          <div className="flex items-center gap-1">
-            {/* Prev */}
-            <Button
-              onClick={goToPreviousPage}
-              disabled={currentPage === 1}
-              variant="outline"
-              className="flex items-center gap-1 px-3 py-2 text-sm"
-            >
-              <ChevronLeftIcon size={16} />
-              Prev
-            </Button>
-
-            {/* First page */}
-            <Button
-              variant={currentPage === 1 ? "default" : "outline"}
-              onClick={() => goToPage(1)}
-              className="min-w-[36px] px-2 py-1"
-            >
-              1
-            </Button>
-
-            {/* Ellipsis before current range */}
-            {currentPage > 3 && totalPages > 5 && (
-              <span className="px-2 py-1 text-muted-foreground">...</span>
-            )}
-
-            {/* Pages around current */}
-            {Array.from({ length: totalPages }, (_, i) => i + 1)
-              .filter(
-                (p) => p !== 1 && p !== totalPages && Math.abs(p - currentPage) <= 1 // show current, previous, next
-              )
-              .map((p) => (
-                <Button
-                  key={p}
-                  variant={currentPage === p ? "default" : "outline"}
-                  onClick={() => goToPage(p)}
-                  className="min-w-[36px] px-2 py-1"
-                >
-                  {p}
-                </Button>
-              ))}
-
-            {/* Ellipsis after current range */}
-            {currentPage < totalPages - 2 && totalPages > 5 && (
-              <span className="px-2 py-1 text-muted-foreground">...</span>
-            )}
-
-            {/* Last page */}
-            {totalPages > 1 && (
-              <Button
-                variant={currentPage === totalPages ? "default" : "outline"}
-                onClick={() => goToPage(totalPages)}
-                className="min-w-[36px] px-2 py-1"
-              >
-                {totalPages}
-              </Button>
-            )}
-
-            {/* Next */}
-            <Button
-              onClick={goToNextPage}
-              disabled={currentPage === totalPages}
-              variant="outline"
-              className="flex items-center gap-1 px-3 py-2 text-sm"
-            >
-              Next
-              <ChevronRightIcon size={16} />
-            </Button>
-          </div>
+        <div className="mt-4 flex items-center justify-center gap-2">
+          <Button variant="outline" size="sm" onClick={goToPreviousPage} disabled={currentPage === 1}>
+            <ChevronLeftIcon size={16} />
+          </Button>
+          <span className="text-sm">
+            Page {currentPage} of {totalPages}
+          </span>
+          <Button variant="outline" size="sm" onClick={goToNextPage} disabled={currentPage === totalPages}>
+            <ChevronRightIcon size={16} />
+          </Button>
         </div>
       )}
     </div>

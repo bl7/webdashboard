@@ -57,7 +57,8 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
   const [name, setName] = useState<string | null>(null)
   const [profile, setProfile] = useState<{
     company_name: string | null
-    address: string | null
+    email: string | null
+    address?: string | null
   } | null>(null)
   const [subscription, setSubscription] = useState<{ status: string } | null>(null)
   const [loading, setLoading] = useState(true)
@@ -109,7 +110,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
       try {
         const [profileRes, subRes, adminRes] = await Promise.all([
           fetch(`/api/profile?user_id=${userId}`),
-          fetch(`/api/subscriptions?user_id=${userId}`),
+          fetch(`/api/subscription_better/status?user_id=${userId}`),
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
 
@@ -148,7 +149,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
   // Profile setup redirect
   useEffect(() => {
     if (!dataFetched || isSetupPage || !mounted) return
-    const profileComplete = profile?.company_name && profile?.address
+    const profileComplete = profile?.company_name && profile?.email
     if (!profileComplete) router.push("/setup")
   }, [dataFetched, profile, subscription, pathname, isSetupPage, mounted])
 

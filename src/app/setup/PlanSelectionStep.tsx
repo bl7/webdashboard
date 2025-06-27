@@ -91,16 +91,16 @@ export default function PlanSelectionStep({
         throw new Error("Email not found. Please refresh and try again.")
       }
 
-      const response = await fetch("/api/stripe/create-checkout-session/", {
+      const response = await fetch("/api/subscription_better/create-checkout-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: userId,
-          price_id: priceId,
+          plan_id: priceId,
           email: userEmail,
         }),
       })
-
+console.log(response,'stripe feilds')
       if (!response.ok) {
         const errorData = await response.json()
         throw new Error(errorData.error || "Failed to create checkout session")

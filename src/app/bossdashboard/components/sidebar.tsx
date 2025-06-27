@@ -28,10 +28,8 @@ export default function Sidebar({ isOpen, onClose, darkMode }: SidebarProps) {
     { name: "Dashboard", href: "/bossdashboard", icon: Home },
     { name: "Users", href: "/bossdashboard/users", icon: Users },
     { name: "Analytics", href: "/bossdashboard/analytics", icon: BarChart3 },
-    { name: "Database", href: "/bossdashboard/database", icon: Database },
+    { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
-    { name: "Activity", href: "/bossdashboard/activity", icon: Activity },
-    { name: "Settings", href: "/bossdashboard/settings", icon: Settings },
   ]
 
   const isActive = (href: string) => {

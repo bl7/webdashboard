@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const [profileRes, subscriptionRes, adminRes] = await Promise.all([
           fetch(`/api/profile?user_id=${userId}`),
-          fetch(`/api/subscriptions?user_id=${userId}`),
+          fetch(`/api/subscription_better/status?user_id=${userId}`),
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
         if (!profileRes.ok) throw new Error("Failed to fetch profile")
