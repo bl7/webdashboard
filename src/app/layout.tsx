@@ -4,7 +4,6 @@ import "./globals.css"
 import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
-import Script from "next/script"
 
 const base_font = Manrope({ subsets: ["latin"] })
 const accent_font = Oxygen({
@@ -48,10 +47,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script
-          src="https://cdn.jsdelivr.net/npm/qz-tray/qz-tray.js"
-          strategy="beforeInteractive"
-        />
       </head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
         <AuthProvider> {children}</AuthProvider>

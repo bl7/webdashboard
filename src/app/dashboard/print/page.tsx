@@ -9,8 +9,7 @@ import LabelPreview from "./PreviewLabel"
 import { formatLabelForPrintImage } from "./labelFormatter"
 import LabelHeightChooser, { LabelHeight } from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
-import qz, { PrintData } from "qz-tray"
-import { usePrinterStatus } from "@/context/PrinterContext"
+import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
 
@@ -52,27 +51,6 @@ type MenuItem = {
   printedOn: string
   expiryDate: string
   ingredients: string[]
-}
-
-// Add QZ security setup helper
-async function setupQZSecurity() {
-  if (process.env.NODE_ENV === "production") {
-    qz.security.setCertificatePromise(() =>
-      fetch("/api/qz/certificate").then(res => res.text())
-    )
-    qz.security.setSignaturePromise((toSign: string) =>
-      fetch("/api/qz/sign", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: toSign })
-      })
-        .then(res => res.text())
-    )
-  } else {
-    // In dev, allow unsigned
-    qz.security.setCertificatePromise(() => Promise.resolve("DEBUG"))
-    qz.security.setSignaturePromise(() => Promise.resolve("DEBUG"))
-  }
 }
 
 // Enhanced getBestAvailablePrinter function for robust printer selection
@@ -146,15 +124,16 @@ export default function LabelDemo() {
   const feedbackTimeout = useRef<NodeJS.Timeout | null>(null)
   const {
     isConnected,
-    availablePrinters,
-    selectedPrinter,
+    printers: availablePrinters,
     defaultPrinter,
     reconnect,
     loading: printerLoading,
     error: printerError,
-  } = usePrinterStatus()
+    print,
+  } = usePrinter()
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
   const [showDefrostModal, setShowDefrostModal] = useState(false)
+  const [selectedPrinter, setSelectedPrinter] = useState<string | null>(null)
 
   // Add state for defrost search
   const [defrostSearch, setDefrostSearch] = useState("")
@@ -355,54 +334,44 @@ export default function LabelDemo() {
   const clearPrintQueue = () => setPrintQueue([])
 
   const printLabels = async (): Promise<void> => {
-    console.log("🖨️ Starting print process...");
-    if (printerLoading) {
-      showFeedback("Checking printer status, please wait...", "error");
-      return;
-    }
-    if (!isConnected) {
-      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error");
-      reconnect();
-      return;
-    }
     if (printQueue.length === 0) {
-      showFeedback("No items in print queue", "error");
-      return;
+      showFeedback("No items in print queue", "error")
+      return
     }
-    // Enhanced printer selection with detailed feedback
-    const printerSelection = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters);
+
+    if (printerLoading) {
+      showFeedback("Checking printer status, please wait...", "error")
+      return
+    }
+
+    console.log("🖨️ Starting print process for", printQueue.length, "items")
+    
+    // Get the best available printer using our helper function
+    const printerSelection = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    
+    if (!isConnected) {
+      console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
+      showFeedback("Printer not connected - printing for debug", "error")
+      // Don't return, continue with printing for debug
+    }
+
     if (!printerSelection.printer) {
-      const errorMsg = `No printer available: ${printerSelection.reason}. Available printers: [${availablePrinters.join(', ')}]`;
-      showFeedback(errorMsg, "error");
-      console.error("❌ Printer selection failed:", {
-        selectedPrinter,
-        defaultPrinter,
-        availablePrinters,
-        isConnected,
-        reason: printerSelection.reason
-      });
-      return;
+      console.warn("⚠️ No printer available, but allowing print for debug purposes")
+      // Don't return, continue with printing for debug
     }
-    console.log(`🖨️ Using printer: ${printerSelection.printer} (${printerSelection.reason})`);
+
+    setIsLoading(true)
+    let successCount = 0
+    let failCount = 0
+    const failItems: string[] = []
+
     try {
-      await setupQZSecurity();
-      // Verify connection before printing
-      if (!qz.websocket.isActive()) {
-        await qz.websocket.connect();
-      }
-      // Double-check printer is still available
-      const currentPrinters = await qz.printers.find();
-      const currentPrintersArray = Array.isArray(currentPrinters) ? currentPrinters : [currentPrinters];
-      if (!currentPrintersArray.includes(printerSelection.printer)) {
-        showFeedback(`Printer \"${printerSelection.printer}\" is no longer available. Please refresh and try again.`, "error");
-        return;
-      }
-      let successCount = 0;
-      let failCount = 0;
-      let failItems: string[] = [];
       for (const item of printQueue) {
         for (let i = 0; i < item.quantity; i++) {
           try {
+            console.log(`🖨️ Processing item ${i + 1}/${item.quantity}: ${item.name}`)
+            
+            // Generate label image
             const imageDataUrl = await formatLabelForPrintImage(
               item,
               allergens.map((a) => a.allergenName.toLowerCase()),
@@ -412,20 +381,18 @@ export default function LabelDemo() {
               selectedInitial,
               labelHeight
             );
-            const config = qz.configs.create(printerSelection.printer, {
-              density: 203,
-              scaleContent: true,
-              rasterize: true,
-            });
-            const data: PrintData[] = [
-              {
-                type: "pixel",
-                format: "image",
-                flavor: "base64",
-                data: imageDataUrl.split(",")[1],
-              },
-            ];
-            await qz.print(config, data);
+
+            console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
+
+            // Print using WebSocket (if connected) or just log for debug
+            if (isConnected) {
+              await print(imageDataUrl);
+              console.log(`✅ Printed ${item.name} successfully`)
+            } else {
+              console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
+            }
+
+            // Log the print action
             await logAction("print_label", {
               labelType: item.labelType || item.type,
               itemId: item.uid || item.id,
@@ -433,8 +400,9 @@ export default function LabelDemo() {
               quantity: item.quantity || 1,
               printedAt: new Date().toISOString(),
               initial: selectedInitial,
-              printerUsed: printerSelection.printer,
+              printerUsed: printerSelection.printer || 'Debug Mode',
             });
+
             successCount++;
           } catch (itemErr) {
             failCount++;
@@ -443,8 +411,16 @@ export default function LabelDemo() {
           }
         }
       }
+
       if (failCount === 0) {
-        showFeedback(`Successfully printed ${successCount} labels using ${printerSelection.printer}`, "success");
+        const message = isConnected 
+          ? `Successfully printed ${successCount} labels using ${printerSelection.printer}`
+          : `DEBUG: Would print ${successCount} labels (printer not connected)`;
+        showFeedback(message, "success");
+        
+        // Clear print queue and reset form after successful print
+        setPrintQueue([]);
+        setCustomExpiry({});
       } else {
         showFeedback(`Printed ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`, "error");
       }
@@ -452,9 +428,7 @@ export default function LabelDemo() {
       console.error("❌ Print process error:", err);
       showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error");
     } finally {
-      if (qz.websocket.isActive()) {
-        await qz.websocket.disconnect().catch(console.error);
-      }
+      setIsLoading(false);
     }
   }
 
@@ -466,61 +440,43 @@ export default function LabelDemo() {
     }
     
     if (!isConnected) {
-      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error")
-      reconnect()
-      return
+      console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
+      showFeedback("Printer not connected - printing for debug", "error")
+      // Don't return, continue with printing for debug
     }
 
     // Get the best available printer using our helper function
     const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
     
-    if (!printerToUse) {
-      showFeedback("No printer available. Please check your printer connection and try again.", "error")
-      return
+    if (!printerToUse.printer) {
+      console.warn("⚠️ No printer available, but allowing print for debug purposes")
+      // Don't return, continue with printing for debug
     }
 
     try {
-      if (!qz.websocket.isActive()) {
-        await qz.websocket.connect()
-      }
-
+      // Generate USE FIRST label image
       const html = `<span style="width:100%;font-size:2.2rem;font-weight:bold;letter-spacing:0.1em;text-align:center;">USE FIRST</span>`
       const imageDataUrl = await printSimpleLabel(html)
       
-      if (!printerToUse.printer) {
-        showFeedback("No valid printer selected.", "error");
-        return;
+      // Print using WebSocket (if connected) or just log for debug
+      if (isConnected) {
+        await print(imageDataUrl)
+        showFeedback("Printed USE FIRST label", "success")
+      } else {
+        console.log("🖨️ DEBUG: Would print USE FIRST label:", imageDataUrl.substring(0, 100) + "...")
+        showFeedback("DEBUG: Would print USE FIRST label (printer not connected)", "success")
       }
-      const config = qz.configs.create(printerToUse.printer, {
-        density: 203,
-        scaleContent: true,
-        rasterize: true,
-      })
-
-      const data: PrintData[] = [
-        {
-          type: "pixel",
-          format: "image",
-          flavor: "base64",
-          data: imageDataUrl.split(",")[1],
-        },
-      ]
-
-      await qz.print(config, data)
-      showFeedback("Printed USE FIRST label", "success")
 
       await logAction("print_label", {
         labelType: "use_first",
         itemName: "USE FIRST",
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
-        printerUsed: printerToUse.printer,
+        printerUsed: printerToUse.printer || 'Debug Mode',
       })
     } catch (err) {
       console.error("USE FIRST print error:", err)
       showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
-    } finally {
-      if (qz.websocket.isActive()) await qz.websocket.disconnect()
     }
   }
 
@@ -534,68 +490,52 @@ export default function LabelDemo() {
     }
     
     if (!isConnected) {
-      showFeedback("Printer not connected. Please start QZ Tray and reconnect.", "error")
-      reconnect()
-      return
+      console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
+      showFeedback("Printer not connected - printing for debug", "error")
+      // Don't return, continue with printing for debug
     }
 
     // Get the best available printer using our helper function
     const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
     
-    if (!printerToUse) {
-      showFeedback("No printer available. Please check your printer connection and try again.", "error")
-      return
+    if (!printerToUse.printer) {
+      console.warn("⚠️ No printer available, but allowing print for debug purposes")
+      // Don't return, continue with printing for debug
     }
 
     try {
-      if (!qz.websocket.isActive()) {
-        await qz.websocket.connect()
-      }
-
+      // Generate defrost label image
       const now = new Date()
       const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
       const html = `
-        <div style="font-size:1.3rem;font-weight:bold;margin-bottom:8px;text-align:center;">${ingredient.name} (defrosted)</div>
-        <div style="font-size:1rem;margin-bottom:4px;">Defrosted: ${now.toLocaleString("en-GB")}</div>
-        <div style="font-size:1rem;margin-bottom:4px;">Expiry: ${expiry.toLocaleString("en-GB")}</div>
-        <div style="font-size:1rem;margin-top:8px;">${selectedInitial ? `By: ${selectedInitial}` : ""}</div>
+        <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8px;box-sizing:border-box;">
+          <div style="font-size:1.3rem;font-weight:bold;margin-bottom:8px;text-align:center;">${ingredient.name}(defrosted)</div>
+          <div style="font-size:0.9rem;margin-bottom:2px;">Defrosted: ${now.toLocaleDateString("en-GB")} ${now.toLocaleTimeString("en-GB", {hour: '2-digit', minute:'2-digit'})}</div>
+          <div style="font-size:0.9rem;margin-bottom:4px;">Use by: ${expiry.toLocaleDateString("en-GB")} ${expiry.toLocaleTimeString("en-GB", {hour: '2-digit', minute:'2-digit'})}</div>
+          ${selectedInitial ? `<div style="font-size:0.9rem;text-align:right;width:100%;">By: ${selectedInitial}</div>` : ""}
+        </div>
       `
       const imageDataUrl = await printSimpleLabel(html)
       
-      if (!printerToUse.printer) {
-        showFeedback("No valid printer selected.", "error");
-        return;
+      // Print using WebSocket (if connected) or just log for debug
+      if (isConnected) {
+        await print(imageDataUrl)
+        showFeedback("Printed defrosted label", "success")
+      } else {
+        console.log("🖨️ DEBUG: Would print defrost label:", imageDataUrl.substring(0, 100) + "...")
+        showFeedback("DEBUG: Would print defrosted label (printer not connected)", "success")
       }
-      const config = qz.configs.create(printerToUse.printer, {
-        density: 203,
-        scaleContent: true,
-        rasterize: true,
-      })
-
-      const data: PrintData[] = [
-        {
-          type: "pixel",
-          format: "image",
-          flavor: "base64",
-          data: imageDataUrl.split(",")[1],
-        },
-      ]
-
-      await qz.print(config, data)
-      showFeedback("Printed defrosted label", "success")
 
       await logAction("print_label", {
         labelType: "defrost",
         itemName: ingredient.name,
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
-        printerUsed: printerToUse.printer,
+        printerUsed: printerToUse.printer || 'Debug Mode',
       })
     } catch (err) {
       console.error("Defrost print error:", err)
       showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
-    } finally {
-      if (qz.websocket.isActive()) await qz.websocket.disconnect()
     }
   }
 
@@ -640,33 +580,6 @@ export default function LabelDemo() {
                   onHeightChange={(val) => setLabelHeight(val)}
                   className="mb-4"
                 />
-                
-                {/* Printer Status Display */}
-                <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
-                  <h3 className="mb-2 font-semibold">Printer Status</h3>
-                  <div className="text-sm">
-                    <p className={`mb-1 ${isConnected ? 'text-green-600' : 'text-red-600'}`}>
-                      QZ Tray: {isConnected ? 'Connected' : 'Disconnected'}
-                    </p>
-                    {isConnected && (
-                      <>
-                        <p className="mb-1">
-                          Available Printers: {availablePrinters.length}
-                        </p>
-                        <p className="mb-1">
-                          Selected: {getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters).printer || 'None'}
-                          {" "}
-                          <span className="text-xs text-gray-500">
-                            ({getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters).reason})
-                          </span>
-                        </p>
-                      </>
-                    )}
-                    {printerError && (
-                      <p className="text-red-600">Error: {printerError}</p>
-                    )}
-                  </div>
-                </div>
               </div>
 
               {/* Right Section: Initials and Settings */}
@@ -980,24 +893,6 @@ export default function LabelDemo() {
   )
 }
 
-async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm") {
-  const container = document.createElement("div")
-  container.style.width = width
-  container.style.height = height
-  container.style.background = "white"
-  container.style.display = "flex"
-  container.style.flexDirection = "column"
-  container.style.justifyContent = "center"
-  container.style.alignItems = "center"
-  container.style.fontFamily = "monospace"
-  container.style.border = "2px solid black"
-  container.innerHTML = html
-  document.body.appendChild(container)
-  const imageDataUrl = await (await import("html-to-image")).toPng(container)
-  container.remove()
-  return imageDataUrl
-}
-
 function PrintPageSkeleton() {
   return (
     <div className="space-y-6">
@@ -1024,4 +919,31 @@ function PrintPageSkeleton() {
       </div>
     </div>
   )
+}
+
+async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm") {
+  console.log("🧪 Testing simple label generation...")
+  
+  const container = document.createElement("div")
+  container.style.width = width
+  container.style.height = height
+  container.style.background = "white"
+  container.style.display = "flex"
+  container.style.flexDirection = "column"
+  container.style.justifyContent = "center"
+  container.style.alignItems = "center"
+  container.style.fontFamily = "monospace"
+  container.style.border = "2px solid black"
+  container.innerHTML = html
+  document.body.appendChild(container)
+  
+  console.log("🧪 Simple container created, dimensions:", container.offsetWidth, "x", container.offsetHeight)
+  
+  const imageDataUrl = await (await import("html-to-image")).toPng(container)
+  
+  console.log("🧪 Simple PNG generated, length:", imageDataUrl.length)
+  console.log("🧪 Simple PNG starts with:", imageDataUrl.substring(0, 50))
+  
+  container.remove()
+  return imageDataUrl
 }

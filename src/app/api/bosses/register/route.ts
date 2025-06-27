@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       [username, email, hash]
     )
 
-    return NextResponse.json(result.rows[0], { status: 201 })
+    return NextResponse.json(result.rows[0], { status: 201 })x
   } catch (err: any) {
     console.error("Error creating boss:", err)
 

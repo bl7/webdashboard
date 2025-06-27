@@ -32,6 +32,8 @@ export interface Subscription {
   card_exp_year?: string | null
   created_at?: string
   updated_at?: string
+  pending_plan_change?: string | null
+  pending_plan_change_effective?: string | null
 }
 
 interface UseBillingDataReturn {
@@ -81,7 +83,11 @@ const useBillingData = (userId: string): UseBillingDataReturn => {
         }
         setSubscription(defaultSubscription)
       } else {
-        setSubscription(data.subscription)
+        setSubscription({
+          ...data.subscription,
+          pending_plan_change: data.pending_plan_change || null,
+          pending_plan_change_effective: data.pending_plan_change_effective || null,
+        })
       }
     } catch (err) {
       console.error("Error fetching subscription:", err)

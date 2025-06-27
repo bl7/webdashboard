@@ -14,15 +14,17 @@ export async function formatLabelForPrintImage(
   selectedInitial: string = "",
   labelHeight: LabelHeight
 ): Promise<string> {
+  console.log("🖼️ Starting image generation for:", item.name)
+  
   const container = document.createElement("div")
-  container.style.position = "fixed"
-  container.style.top = "-9999px"
-  container.style.left = "-9999px"
+  container.style.position = "absolute"
+  container.style.top = "0"
+  container.style.left = "0"
   container.style.width = "5.6cm"
-  // Set height based on labelHeight
-  container.style.height =
-    labelHeight === "31mm" ? "3.1cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
+  container.style.height = labelHeight === "31mm" ? "3.1cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
   container.style.backgroundColor = "white"
+  container.style.zIndex = "-1"
+  container.style.visibility = "hidden"
   document.body.appendChild(container)
 
   const root = ReactDOM.createRoot(container)
@@ -34,13 +36,41 @@ export async function formatLabelForPrintImage(
       selectedInitial={selectedInitial}
       allergens={ALLERGENS}
       maxIngredients={MAX_INGREDIENTS_TO_FIT}
-      labelHeight={labelHeight} // Pass down
+      labelHeight={labelHeight}
     />
   )
 
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  const imageData = await toPng(container, { cacheBust: true })
+  // Wait for React to render
+  await new Promise((resolve) => setTimeout(resolve, 300))
+  
+  console.log("🖼️ Container created, generating PNG...")
+  console.log("🖼️ Container dimensions:", container.offsetWidth, "x", container.offsetHeight)
+  console.log("🖼️ Container content:", container.innerHTML.substring(0, 200) + "...")
+  
+  // Make sure container is visible for rendering
+  container.style.visibility = "visible"
+  
+  const imageData = await toPng(container, { 
+    cacheBust: true,
+    width: container.offsetWidth,
+    height: container.offsetHeight,
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left'
+    }
+  })
+  
+  console.log("🖼️ PNG generated, length:", imageData.length)
+  console.log("🖼️ PNG starts with:", imageData.substring(0, 50))
+  
+  if (!imageData || imageData.length < 100) {
+    console.error("❌ Generated image data is empty or too small!")
+    throw new Error("Failed to generate valid image data")
+  }
+  
   root.unmount()
   container.remove()
+  
+  console.log("✅ Image generation completed successfully")
   return imageData
 }

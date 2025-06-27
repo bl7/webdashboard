@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     )
 
     if (result.rowCount === 0 || !result.rows[0].stripe_customer_id) {
-      return NextResponse.json({ error: "Stripe customer ID not found for user" }, { status: 404 })
+      return NextResponse.json({ invoices: [] }, { status: 200 })
     }
 
     const stripeCustomerId = result.rows[0].stripe_customer_id
@@ -33,6 +33,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ invoices: invoices.data })
   } catch (error) {
     console.error("Error fetching invoices from Stripe:", error)
-    return NextResponse.json({ error: "Failed to fetch invoices" }, { status: 500 })
+    return NextResponse.json({ invoices: [] }, { status: 200 })
   }
 }

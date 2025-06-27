@@ -1,217 +1,196 @@
-// context/PrinterContext.tsx
 "use client"
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react"
-import qz from "qz-tray"
-import { toast } from "react-hot-toast"
+import React, { createContext, useContext, useState, useEffect, useRef } from "react"
 
 interface PrinterContextType {
   isConnected: boolean
-  availablePrinters: string[]
-  selectedPrinter: string | null
-  defaultPrinter: string | null
-  reconnect: () => void
-  setSelectedPrinter: (printer: string) => void
   loading: boolean
   error: string | null
+  printers: any[]
+  defaultPrinter: any | null
+  connect: () => Promise<void>
+  disconnect: () => Promise<void>
+  reconnect: () => Promise<void>
+  print: (imageData: string) => Promise<void>
 }
 
 const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
 
-export function PrinterProvider({ children }: { children: ReactNode }) {
+export function PrinterProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false)
-  const [availablePrinters, setAvailablePrinters] = useState<string[]>([])
-  const [selectedPrinter, setSelectedPrinter] = useState<string | null>(null)
-  const [defaultPrinter, setDefaultPrinter] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [printers, setPrinters] = useState<any[]>([])
+  const [defaultPrinter, setDefaultPrinter] = useState<any | null>(null)
+  const wsRef = useRef<WebSocket | null>(null)
 
-  // Helper to persist selected printer
-  useEffect(() => {
-    if (selectedPrinter && selectedPrinter !== "Fallback_Printer") {
-      localStorage.setItem("selectedPrinter", selectedPrinter)
-    }
-  }, [selectedPrinter])
-
-  // Helper to load selected printer from localStorage
-  useEffect(() => {
-    const stored = localStorage.getItem("selectedPrinter")
-    // Only set if it's not a fallback printer name
-    if (stored && stored !== "Fallback_Printer" && stored.trim() !== "") {
-      setSelectedPrinter(stored)
-    }
-  }, [])
-
-  // Enhanced reconnect logic with better error handling
-  const reconnect = async (showToast = true) => {
-    console.log("🔄 PrinterContext: Starting reconnect...")
+  const connect = async () => {
     setLoading(true)
     setError(null)
-    
     try {
-      // Ensure QZ websocket is connected
-      if (!qz.websocket.isActive()) {
-        console.log("🔌 Connecting to QZ websocket...")
-        await qz.websocket.connect()
-      }
-
-      // Get all available printers
-      console.log("🔍 Finding printers...")
-      const allPrinters = await qz.printers.find()
-      console.log("🖨️ Raw printer response:", allPrinters)
+      console.log("🔌 Connecting to WebSocket printer service...")
       
-      // Ensure we have an array and filter out invalid entries
-      const printers = Array.isArray(allPrinters) 
-        ? allPrinters.filter(p => p && p.trim() !== "" && p !== "Fallback_Printer")
-        : (allPrinters && allPrinters.trim() !== "" && allPrinters !== "Fallback_Printer") 
-          ? [allPrinters] 
-          : []
-
-      console.log("🖨️ Filtered printers:", printers)
-
-      // Get default printer
-      let defaultP: string | null = null
-      try {
-        defaultP = await qz.printers.getDefault()
-        console.log("🎯 Default printer:", defaultP)
-        
-        // Filter out fallback printer from default as well
-        if (defaultP === "Fallback_Printer" || !defaultP || defaultP.trim() === "") {
-          defaultP = null
-        }
-      } catch (defaultErr) {
-        console.warn("⚠️ Could not get default printer:", defaultErr)
-        defaultP = null
+      // Close existing connection if any
+      if (wsRef.current) {
+        wsRef.current.close()
       }
 
-      // Update connection state
-      setIsConnected(true)
-      setAvailablePrinters(printers)
-      setDefaultPrinter(defaultP)
+      // Create new WebSocket connection
+      const ws = new WebSocket('ws://localhost:8080')
+      wsRef.current = ws
 
-      // Smart printer selection with comprehensive fallback logic
-      setSelectedPrinter((currentSelected) => {
-        console.log("🎯 Current selected printer:", currentSelected)
+      // Set up event handlers
+      ws.onopen = () => {
+        console.log("✅ WebSocket printer connection established")
+        setIsConnected(true)
+        setError(null)
+        setLoading(false)
+      }
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data)
+          console.log("📨 Received message from printer service:", data)
+          
+          // Handle different message types
+          if (data.type === 'status') {
+            // Update printer status
+            if (data.printers) {
+              setPrinters(data.printers)
+            }
+            if (data.defaultPrinter) {
+              setDefaultPrinter(data.defaultPrinter)
+            }
+          } else if (data.type === 'error') {
+            setError(data.message || 'Printer service error')
+          } else if (data.type === 'print_success') {
+            console.log("✅ Print job completed successfully")
+          } else if (data.type === 'print_error') {
+            setError(data.message || 'Print job failed')
+          }
+        } catch (err) {
+          console.error("Failed to parse WebSocket message:", err)
+        }
+      }
+
+      ws.onerror = (error) => {
+        console.error("❌ WebSocket printer connection error:", error)
+        setError("Failed to connect to printer service")
+        setIsConnected(false)
+        setLoading(false)
+      }
+
+      ws.onclose = (event) => {
+        console.log("🔌 WebSocket printer connection closed:", event.code, event.reason)
+        setIsConnected(false)
+        setLoading(false)
         
-        // Priority 1: Keep current selection if it's still available and valid
-        if (currentSelected && 
-            currentSelected !== "Fallback_Printer" && 
-            printers.includes(currentSelected)) {
-          console.log("✅ Keeping current selected printer:", currentSelected)
-          return currentSelected
-        }
-
-        // Priority 2: Use default printer if available and valid
-        if (defaultP && printers.includes(defaultP)) {
-          console.log("✅ Using default printer:", defaultP)
-          return defaultP
-        }
-
-        // Priority 3: Use first available printer
-        if (printers.length > 0) {
-          console.log("✅ Using first available printer:", printers[0])
-          return printers[0]
-        }
-
-        // No valid printers found
-        console.log("❌ No valid printers found")
-        return null
-      })
-
-      // Show appropriate messages
-      if (printers.length === 0) {
-        const errorMsg = "No printers found. Please check your printer connection and ensure printers are properly installed."
-        setError(errorMsg)
-        if (showToast) {
-          toast.error(errorMsg)
-        }
-      } else {
-        console.log(`✅ Successfully connected. Found ${printers.length} printer(s)`)
-        if (showToast) {
-          toast.success(`Connected! Found ${printers.length} printer(s)`)
+        // Auto-reconnect if not manually closed
+        if (event.code !== 1000) {
+          setTimeout(() => {
+            console.log("🔄 Attempting to reconnect to printer service...")
+            connect()
+          }, 3000)
         }
       }
 
     } catch (err: any) {
-      console.error("❌ PrinterContext reconnect error:", err)
-      
-      // Reset all state on error
+      console.error("❌ Printer connection error:", err)
+      setError(err.message || "Failed to connect to printer service")
       setIsConnected(false)
-      setAvailablePrinters([])
-      setDefaultPrinter(null)
-      setSelectedPrinter(null)
-      
-      const errorMsg = err.message || "QZ Tray not running or cannot connect. Please ensure QZ Tray is installed and running."
-      setError(errorMsg)
-      
-      if (showToast) {
-        toast.error(errorMsg)
-      }
-    } finally {
       setLoading(false)
     }
   }
 
-  // Enhanced setSelectedPrinter with validation
-  const setSelectedPrinterSafe = (printer: string) => {
-    console.log("🎯 Setting selected printer:", printer)
-    
-    // Validate printer exists in available list
-    if (printer && printer !== "Fallback_Printer" && availablePrinters.includes(printer)) {
-      setSelectedPrinter(printer)
-    } else {
-      console.warn("⚠️ Attempted to select invalid printer:", printer)
-      toast.error(`Printer "${printer}" is not available`)
+  const disconnect = async () => {
+    try {
+      console.log("🔌 Disconnecting from printer service...")
+      if (wsRef.current) {
+        wsRef.current.close(1000, "Manual disconnect")
+        wsRef.current = null
+      }
+      setIsConnected(false)
+      setError(null)
+    } catch (err: any) {
+      console.error("Failed to disconnect:", err)
     }
   }
 
-  // Auto-reconnect on mount and periodic checks
-  useEffect(() => {
-    // Initial connection
-    reconnect(false)
+  const reconnect = async () => {
+    await disconnect()
+    await connect()
+  }
 
-    // Set up periodic reconnection for disconnected state
-    const interval = setInterval(() => {
-      if (!isConnected && !loading) {
-        console.log("🔄 Auto-reconnecting...")
-        reconnect(false)
+  const print = async (imageData: string) => {
+    if (!isConnected || !wsRef.current) {
+      throw new Error("Printer not connected. Please connect first.")
+    }
+
+    try {
+      console.log("🖨️ Sending print job...")
+      console.log("🖨️ Original image data length:", imageData.length)
+      console.log("🖨️ Original image data starts with:", imageData.substring(0, 50))
+      
+      // Remove data URL prefix if present
+      const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
+      
+      console.log("🖨️ Clean image data length:", cleanImageData.length)
+      console.log("🖨️ Clean image data starts with:", cleanImageData.substring(0, 50))
+      
+      if (!cleanImageData || cleanImageData.length < 100) {
+        throw new Error("Invalid or empty image data")
       }
-    }, 30000) // Check every 30 seconds
+      
+      const printJob = {
+        type: 'print',
+        images: [cleanImageData]
+      }
 
-    return () => clearInterval(interval)
-  }, [isConnected, loading])
+      console.log("🖨️ Sending print job with", printJob.images.length, "images")
+      wsRef.current.send(JSON.stringify(printJob))
+      console.log("✅ Print job sent successfully")
+    } catch (err: any) {
+      console.error("❌ Print job failed:", err)
+      throw new Error(err.message || "Failed to send print job")
+    }
+  }
 
-  // Cleanup on unmount
   useEffect(() => {
+    // Auto-connect on mount
+    console.log("🖨️ Printer context initialized - connecting to WebSocket service")
+    connect()
+
+    // Cleanup on unmount
     return () => {
-      if (qz.websocket.isActive()) {
-        qz.websocket.disconnect().catch(console.error)
+      if (wsRef.current) {
+        wsRef.current.close()
       }
     }
   }, [])
 
-  const contextValue: PrinterContextType = {
+  const value: PrinterContextType = {
     isConnected,
-    availablePrinters,
-    selectedPrinter,
-    defaultPrinter,
-    reconnect: () => reconnect(true),
-    setSelectedPrinter: setSelectedPrinterSafe,
     loading,
     error,
+    printers,
+    defaultPrinter,
+    connect,
+    disconnect,
+    reconnect,
+    print,
   }
 
   return (
-    <PrinterContext.Provider value={contextValue}>
+    <PrinterContext.Provider value={value}>
       {children}
     </PrinterContext.Provider>
   )
 }
 
-export function usePrinterStatus() {
+export function usePrinter() {
   const context = useContext(PrinterContext)
-  if (!context) {
-    throw new Error("usePrinterStatus must be used within a PrinterProvider")
+  if (context === undefined) {
+    throw new Error("usePrinter must be used within a PrinterProvider")
   }
   return context
-}
+} 

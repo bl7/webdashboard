@@ -23,6 +23,8 @@ export default function PaymentMethod({ subscription }: Props) {
   }
 
   const hasCard = !!subscription.card_last4
+  const cardBrand = (subscription as any)?.card_brand || "CARD"
+  const cardLast4 = subscription.card_last4 || "0000"
 
   return (
     <Card className="flex w-full max-w-sm flex-col justify-between rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 p-6 text-white shadow-lg">
@@ -34,13 +36,13 @@ export default function PaymentMethod({ subscription }: Props) {
           </svg>
         </div>
         <h3 className="text-lg font-semibold tracking-wide">
-          {(subscription as any).card_brand.toUpperCase()}
+          {cardBrand.toUpperCase()}
         </h3>
       </div>
 
       <div className="flex flex-grow flex-col space-y-1">
         <p className="font-mono text-xl tracking-widest">
-          {hasCard ? `•••• •••• •••• ${subscription.card_last4}` : "No payment method available"}
+          {hasCard ? `•••• •••• •••• ${cardLast4}` : "No payment method available"}
         </p>
         {subscription.card_exp_month && subscription.card_exp_year && (
           <p className="self-end text-sm opacity-80">

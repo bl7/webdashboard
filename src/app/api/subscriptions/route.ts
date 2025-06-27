@@ -91,13 +91,8 @@ function getPlanConfig(priceId: string | null) {
 }
 
 function getPlanNameFromPriceId(price_id: string | null): string {
-  if (!price_id || price_id === "free" || price_id === "" || price_id === "null") {
-    return "Free Plan"
-  }
-
   const config = getPlanConfig(price_id)
   if (config) return config.name
-
   const formattedName = formatPlanName(price_id)
   if (formattedName && formattedName !== price_id) {
     return formattedName
@@ -106,13 +101,11 @@ function getPlanNameFromPriceId(price_id: string | null): string {
 }
 
 async function getPlanNameWithStripeCheck(price_id: string | null): Promise<string> {
-  if (!price_id || price_id === "free" || price_id === "" || price_id === "null") {
-    return "Free Plan"
+  if (!price_id || typeof price_id !== 'string') {
+    throw new Error('Invalid price_id: must be a non-null string for paid plans')
   }
-
   const config = getPlanConfig(price_id)
   if (config) return config.name
-
   try {
     const price = await stripe.prices.retrieve(price_id, {
       expand: ["product"],
@@ -155,86 +148,81 @@ async function logSubscriptionEvent(
   }
 }
 
-// Handle cancellation with 30-day notice policy
-async function handleCancellationNotice(
-  client: any,
-  subscription: any,
-  immediate: boolean = false
-) {
+// Handle cancellation at period end
+async function handleCancellationAtPeriodEnd(client: any, subscription: any) {
+  // Always cancel at period end
   const now = new Date()
+  const effectiveDate = new Date(subscription.current_period_end)
 
-  if (immediate) {
-    // Immediate cancellation - forfeit remaining period
-    const cancelledAt = now
-    const effectiveDate = now
-
-    await client.query(
-      `UPDATE subscriptions SET
-        cancellation_notice_given_at = $1,
-        cancellation_effective_date = $2,
-        canceled_at = $3,
-        cancel_at_period_end = false,
-        status = 'canceled',
-        data_retention_until = $4,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE id = $5`,
-      [
-        cancelledAt,
-        effectiveDate,
-        cancelledAt,
-        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 12 months data retention
-        subscription.id,
-      ]
-    )
-
-    await logSubscriptionEvent(
-      client,
-      subscription.id,
-      "immediate_cancellation",
-      {
-        cancelled_at: cancelledAt,
-        effective_date: effectiveDate,
-        forfeited_period: true,
-      },
-      "Customer requested immediate cancellation with forfeiture of remaining period"
-    )
-
-    return { type: "immediate", effectiveDate }
-  } else {
-    // 30-day notice cancellation
-    const noticeDate = now
-    const effectiveDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
-
-    await client.query(
-      `UPDATE subscriptions SET
-        cancellation_notice_given_at = $1,
-        cancellation_effective_date = $2,
-        cancel_at_period_end = true,
-        data_retention_until = $3,
-        updated_at = CURRENT_TIMESTAMP
-      WHERE id = $4`,
-      [
-        noticeDate,
-        effectiveDate,
-        new Date(effectiveDate.getTime() + 365 * 24 * 60 * 60 * 1000), // 12 months after cancellation
-        subscription.id,
-      ]
-    )
-
-    await logSubscriptionEvent(
-      client,
-      subscription.id,
-      "cancellation_notice_given",
-      {
-        notice_date: noticeDate,
-        effective_date: effectiveDate,
-        notice_period_days: 30,
-      },
-      "30-day cancellation notice given"
-    )
-
-    return { type: "notice", effectiveDate }
+  // Determine plan interval (monthly/yearly)
+  const planConfig = getPlanConfig(subscription.price_id)
+  let interval = 'monthly'
+  if (planConfig?.name?.toLowerCase().includes('year') || (subscription.price_id && subscription.price_id.toLowerCase().includes('year'))) {
+    interval = 'yearly'
   }
+
+  let refundInfo = null
+  if (interval === 'yearly') {
+    // Calculate unused months after current month
+    const start = new Date(subscription.current_period_start)
+    const end = new Date(subscription.current_period_end)
+    const nowDate = new Date()
+    // Find the first day of the next month after cancellation
+    const nextMonth = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, 1)
+    // Unused months = months between nextMonth and end
+    let unusedMonths = (end.getFullYear() - nextMonth.getFullYear()) * 12 + (end.getMonth() - nextMonth.getMonth())
+    if (unusedMonths < 0) unusedMonths = 0
+    // Refund = 50% of unused months' value
+    const monthlyAmount = subscription.plan_amount
+    const refundAmount = Math.floor(unusedMonths * monthlyAmount * 0.5 * 100) / 100
+    refundInfo = { unusedMonths, refundAmount }
+    // Store refund info in DB for webhook
+    await client.query(
+      `UPDATE subscriptions SET
+        pending_refund_amount = $1,
+        pending_refund_months = $2,
+        updated_at = CURRENT_TIMESTAMP
+      WHERE id = $3`,
+      [refundAmount, unusedMonths, subscription.id]
+    )
+  }
+
+  // Update Stripe subscription to cancel at period end
+  if (subscription.stripe_subscription_id) {
+    await stripe.subscriptions.update(subscription.stripe_subscription_id, {
+      cancel_at_period_end: true,
+    })
+  }
+
+  // Update DB
+  await client.query(
+    `UPDATE subscriptions SET
+      cancel_at_period_end = true,
+      cancellation_effective_date = $1,
+      cancellation_notice_given_at = $2,
+      updated_at = CURRENT_TIMESTAMP
+    WHERE id = $3`,
+    [
+      effectiveDate,
+      now,
+      subscription.id,
+    ]
+  )
+
+  await logSubscriptionEvent(
+    client,
+    subscription.id,
+    "cancellation_scheduled",
+    {
+      effective_date: effectiveDate,
+      scheduled_at: now,
+      interval,
+      refundInfo,
+    },
+    "Cancellation scheduled at period end"
+  )
+
+  return { type: "scheduled", effectiveDate, interval, refundInfo }
 }
 
 // Handle device management for Premium Kitchen plans
@@ -356,27 +344,92 @@ async function handlePlanUpgrade(client: any, currentSub: any, newPriceId: strin
     // Get new price details
     const newPrice = await stripe.prices.retrieve(newPriceId)
     const newPlanConfig = getPlanConfig(newPriceId)
-
-    // Update Stripe subscription with proration
-    const updatedSubscription = await stripe.subscriptions.update(
-      currentSub.stripe_subscription_id,
-      {
-        items: [
-          {
-            id: currentSub.stripe_subscription_id,
-            price: newPriceId,
-          },
-        ],
-        proration_behavior: "create_prorations", // Always prorate upgrades
-        expand: ["default_payment_method", "latest_invoice"],
+    const currentPlanConfig = getPlanConfig(currentSub.price_id)
+    // Determine intervals
+    const getInterval = (planConfig: any, priceId: string) => {
+      if (planConfig?.name?.toLowerCase().includes('year') || (priceId && priceId.toLowerCase().includes('year'))) return 'yearly'
+      return 'monthly'
+    }
+    const currentInterval = getInterval(currentPlanConfig, currentSub.price_id)
+    const newInterval = getInterval(newPlanConfig, newPriceId)
+    // If interval changes, schedule new plan at period end (no proration)
+    if (currentInterval !== newInterval) {
+      const currentPeriodEnd = new Date(currentSub.current_period_end)
+      // Log event and update DB
+      await logSubscriptionEvent(
+        client,
+        currentSub.id,
+        "interval_change_scheduled",
+        {
+          old_price_id: currentSub.price_id,
+          new_price_id: newPriceId,
+          old_plan: currentSub.plan_name,
+          new_plan: newPlanConfig?.name,
+          effective_date: currentPeriodEnd,
+          current_period_retained: true,
+          interval_change: `${currentInterval} -> ${newInterval}`,
+        },
+        `Interval change scheduled from ${currentSub.plan_name} (${currentInterval}) to ${newPlanConfig?.name} (${newInterval}) at period end`
+      )
+      // Optionally, store pending plan change in DB for later processing
+      await client.query(
+        `UPDATE subscriptions SET
+          pending_plan_change = $1,
+          pending_plan_change_effective = $2,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $3`,
+        [newPriceId, currentPeriodEnd, userId]
+      )
+      return {
+        success: true,
+        planName: newPlanConfig?.name,
+        effectiveDate: currentPeriodEnd,
+        intervalChange: true,
+        message: `Your new plan will start after your current billing period ends.`
       }
-    )
-
+    }
+    // Otherwise, proceed with immediate/prorated upgrade
     // Calculate prorated amount
     let proratedAmount = 0
-    if (updatedSubscription.latest_invoice) {
-      const invoice = await stripe.invoices.retrieve(updatedSubscription.latest_invoice as string)
-      proratedAmount = (invoice.amount_due || 0) / 100
+    if (currentSub.stripe_subscription_id) {
+      // First, retrieve the current subscription to get the subscription item ID
+      const currentStripeSubscription = await stripe.subscriptions.retrieve(
+        currentSub.stripe_subscription_id,
+        { expand: ['items'] }
+      )
+      
+      // Get the subscription item ID from the first item
+      const subscriptionItemId = currentStripeSubscription.items.data[0]?.id
+      if (!subscriptionItemId) {
+        throw new Error("No subscription item found in the subscription")
+      }
+
+      const updatedSubscription = await stripe.subscriptions.update(
+        currentSub.stripe_subscription_id,
+        {
+          items: [
+            {
+              id: subscriptionItemId, // Use the correct subscription item ID
+              price: newPriceId,
+            },
+          ],
+          proration_behavior: "create_prorations", // Always prorate upgrades
+          expand: ["default_payment_method", "latest_invoice"],
+        }
+      )
+      
+      // Handle invoice to calculate prorated amount
+      if (updatedSubscription.latest_invoice) {
+        let invoice
+        if (typeof updatedSubscription.latest_invoice === 'string') {
+          // If it's an ID, retrieve the invoice
+          invoice = await stripe.invoices.retrieve(updatedSubscription.latest_invoice)
+        } else {
+          // If it's already expanded, use it directly
+          invoice = updatedSubscription.latest_invoice
+        }
+        proratedAmount = (invoice.amount_due || 0) / 100
+      }
     }
 
     // Update database
@@ -428,10 +481,11 @@ async function handlePlanUpgrade(client: any, currentSub: any, newPriceId: strin
       planName,
       proratedAmount,
       effectiveImmediately: true,
+      message: `Plan upgraded from ${currentSub.plan_name} to ${planName} with proration`
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Upgrade failed:", error)
-    throw error
+    return { success: false, message: error.message || String(error) }
   }
 }
 
@@ -450,15 +504,70 @@ async function handlePlanDowngrade(
     const newPrice = await stripe.prices.retrieve(newPriceId)
     const newPlanConfig = getPlanConfig(newPriceId)
     const currentPlanConfig = getPlanConfig(currentSub.price_id)
-
+    // Determine intervals
+    const getInterval = (planConfig: any, priceId: string) => {
+      if (planConfig?.name?.toLowerCase().includes('year') || (priceId && priceId.toLowerCase().includes('year'))) return 'yearly'
+      return 'monthly'
+    }
+    const currentInterval = getInterval(currentPlanConfig, currentSub.price_id)
+    const newInterval = getInterval(newPlanConfig, newPriceId)
+    // If interval changes, schedule new plan at period end (no proration)
+    if (currentInterval !== newInterval) {
+      const currentPeriodEnd = new Date(currentSub.current_period_end)
+      // Log event and update DB
+      await logSubscriptionEvent(
+        client,
+        currentSub.id,
+        "interval_change_scheduled",
+        {
+          old_price_id: currentSub.price_id,
+          new_price_id: newPriceId,
+          old_plan: currentSub.plan_name,
+          new_plan: newPlanConfig?.name,
+          effective_date: currentPeriodEnd,
+          current_period_retained: true,
+          interval_change: `${currentInterval} -> ${newInterval}`,
+        },
+        `Interval change scheduled from ${currentSub.plan_name} (${currentInterval}) to ${newPlanConfig?.name} (${newInterval}) at period end`
+      )
+      // Optionally, store pending plan change in DB for later processing
+      await client.query(
+        `UPDATE subscriptions SET
+          pending_plan_change = $1,
+          pending_plan_change_effective = $2,
+          updated_at = CURRENT_TIMESTAMP
+        WHERE user_id = $3`,
+        [newPriceId, currentPeriodEnd, userId]
+      )
+      return {
+        success: true,
+        planName: newPlanConfig?.name,
+        effectiveDate: currentPeriodEnd,
+        intervalChange: true,
+        message: `Your new plan will start after your current billing period ends.`
+      }
+    }
+    // Otherwise, proceed with scheduled downgrade
     // Schedule downgrade at end of current period
     const currentPeriodEnd = new Date(currentSub.current_period_end)
 
     // Update Stripe subscription to change at period end
+    // First, retrieve the current subscription to get the subscription item ID
+    const currentStripeSubscription = await stripe.subscriptions.retrieve(
+      currentSub.stripe_subscription_id,
+      { expand: ['items'] }
+    )
+    
+    // Get the subscription item ID from the first item
+    const subscriptionItemId = currentStripeSubscription.items.data[0]?.id
+    if (!subscriptionItemId) {
+      throw new Error("No subscription item found in the subscription")
+    }
+
     await stripe.subscriptions.update(currentSub.stripe_subscription_id, {
       items: [
         {
-          id: currentSub.stripe_subscription_id,
+          id: subscriptionItemId, // Use the correct subscription item ID
           price: newPriceId,
         },
       ],
@@ -505,69 +614,11 @@ async function handlePlanDowngrade(
       planName,
       effectiveDate: currentPeriodEnd,
       retainCurrentFeatures: true,
+      message: `Plan downgraded from ${currentSub.plan_name} to ${planName} at period end`
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("Downgrade failed:", error)
-    throw error
-  }
-}
-
-// Free plan downgrade logic
-async function handleFreePlanDowngrade(client: any, user_id: string, existingSubscription: any) {
-  // Cancel Stripe subscription if it exists
-  if (
-    existingSubscription?.stripe_subscription_id &&
-    !existingSubscription.stripe_subscription_id.startsWith("free-")
-  ) {
-    try {
-      await stripe.subscriptions.cancel(existingSubscription.stripe_subscription_id)
-    } catch (err) {
-      console.warn("Stripe subscription cancel failed (may already be canceled):", err)
-    }
-  }
-
-  // Handle device return for Premium Kitchen cancellations
-  const currentPlanConfig = getPlanConfig(existingSubscription?.price_id)
-  if (currentPlanConfig?.requiresDevice) {
-    await handleDeviceManagement(client, existingSubscription, "return_required")
-  }
-
-  // Update DB to reflect Free Plan
-  await client.query(
-    `UPDATE subscriptions
-     SET status = $1,
-         price_id = NULL,
-         plan_name = $2,
-         plan_type = 'free',
-         plan_amount = 0,
-         billing_interval = NULL,
-         stripe_subscription_id = NULL,
-         cancel_at_period_end = false,
-         canceled_at = NOW(),
-         data_retention_until = $3,
-         updated_at = NOW()
-     WHERE user_id = $4`,
-    [
-      "canceled",
-      "Free Plan",
-      new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 12 months data retention
-      user_id,
-    ]
-  )
-
-  // Log downgrade to free
-  if (existingSubscription) {
-    await logSubscriptionEvent(
-      client,
-      existingSubscription.id,
-      "downgraded_to_free",
-      {
-        old_plan: existingSubscription.plan_name,
-        old_price_id: existingSubscription.price_id,
-        device_return_required: currentPlanConfig?.requiresDevice || false,
-      },
-      "Subscription downgraded to Free Plan"
-    )
+    return { success: false, message: error.message || String(error) }
   }
 }
 
@@ -612,6 +663,63 @@ export async function GET(req: NextRequest) {
 
     const subscription = result.rows[0] || null
     const planName = subscription ? getPlanNameFromPriceId(subscription.price_id) : "Free Plan"
+
+    // Debug logging for renewal date issue
+    if (subscription) {
+      console.log("🔍 Subscription data for renewal debugging:", {
+        user_id: subscription.user_id,
+        stripe_subscription_id: subscription.stripe_subscription_id,
+        current_period_end: subscription.current_period_end,
+        current_period_end_type: typeof subscription.current_period_end,
+        billing_interval: subscription.billing_interval,
+        plan_name: subscription.plan_name,
+        status: subscription.status
+      })
+    }
+
+    // If subscription exists but current_period_end is missing, try to fetch it from Stripe
+    if (subscription && !subscription.current_period_end && subscription.stripe_subscription_id) {
+      try {
+        console.log(`🔧 Fetching missing current_period_end for subscription ${subscription.stripe_subscription_id}`)
+        const stripeSubscription = await stripe.subscriptions.retrieve(subscription.stripe_subscription_id)
+        
+        if (stripeSubscription.current_period_end) {
+          const currentPeriodEnd = new Date(stripeSubscription.current_period_end * 1000).toISOString()
+          
+          // Update the database with the correct current_period_end
+          await pool.query(
+            `UPDATE subscriptions 
+             SET current_period_end = $1, updated_at = CURRENT_TIMESTAMP 
+             WHERE id = $2`,
+            [currentPeriodEnd, subscription.id]
+          )
+          
+          // Update the subscription object for the response
+          subscription.current_period_end = currentPeriodEnd
+          console.log(`✅ Updated current_period_end to ${currentPeriodEnd}`)
+        }
+      } catch (stripeError) {
+        console.error("Failed to fetch current_period_end from Stripe:", stripeError)
+        // Don't fail the request, just log the error
+      }
+    }
+
+    // Ensure current_period_end is properly formatted as ISO string for frontend
+    if (subscription && (subscription as any).current_period_end) {
+      // Convert timestamp to ISO string if it's not already
+      if (typeof (subscription as any).current_period_end === 'string') {
+        // Already a string, ensure it's in ISO format
+        try {
+          const date = new Date((subscription as any).current_period_end)
+          ;(subscription as any).current_period_end = date.toISOString()
+        } catch (e) {
+          console.error("Failed to parse current_period_end as date:", (subscription as any).current_period_end)
+        }
+      } else if ((subscription as any).current_period_end instanceof Date) {
+        // Convert Date object to ISO string
+        ;(subscription as any).current_period_end = (subscription as any).current_period_end.toISOString()
+      }
+    }
 
     // Update status if computed status is different
     if (subscription && subscription.computed_status !== subscription.status) {
@@ -659,6 +767,8 @@ export async function GET(req: NextRequest) {
             )
           : 0,
       },
+      pending_plan_change: subscription?.pending_plan_change || null,
+      pending_plan_change_effective: subscription?.pending_plan_change_effective || null,
       message: subscription ? "Subscription found" : "No subscription found",
     })
   } catch (error) {
@@ -669,33 +779,47 @@ export async function GET(req: NextRequest) {
 
 // POST endpoint - enhanced with full policy implementation
 export async function POST(req: NextRequest) {
+  const url = req.nextUrl.pathname
+  if (url.endsWith('/cancel-pending-change')) {
+    const { user_id } = await req.json()
+    if (!user_id) {
+      return NextResponse.json({ success: false, message: 'Missing user_id' }, { status: 400 })
+    }
+    const client = await pool.connect()
+    try {
+      // Find the subscription
+      const { rows } = await client.query('SELECT * FROM subscriptions WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1', [user_id])
+      const sub = rows[0]
+      if (!sub || !sub.pending_plan_change) {
+        return NextResponse.json({ success: false, message: 'No pending plan change to cancel.' }, { status: 400 })
+      }
+      // Clear pending plan change and refund info
+      await client.query(`UPDATE subscriptions SET pending_plan_change = NULL, pending_plan_change_effective = NULL, pending_refund_amount = NULL, pending_refund_months = NULL, updated_at = CURRENT_TIMESTAMP WHERE user_id = $1`, [user_id])
+      await logSubscriptionEvent(client, sub.id, 'pending_change_cancelled', { old_pending_plan_change: sub.pending_plan_change }, 'User cancelled pending plan change', user_id)
+      return NextResponse.json({ success: true, message: 'Pending plan change cancelled.' })
+    } catch (error: any) {
+      return NextResponse.json({ success: false, message: error.message || String(error) }, { status: 500 })
+    } finally {
+      client.release()
+    }
+  }
   const client = await pool.connect()
   try {
     await client.query("BEGIN")
     const { user_id, price_id, prorate = true, upgrade = null } = await req.json()
-
     if (!user_id) {
       await client.query("ROLLBACK")
       return NextResponse.json({ error: "user_id is required" }, { status: 400 })
     }
-
+    if (!price_id || typeof price_id !== 'string') {
+      await client.query("ROLLBACK")
+      return NextResponse.json({ error: "A valid paid plan price_id is required" }, { status: 400 })
+    }
     // Get current subscription
     const currentSubResult = await client.query(`SELECT * FROM subscriptions WHERE user_id = $1`, [
       user_id,
     ])
     const currentSub = currentSubResult.rows[0]
-
-    // Handle downgrade to Free Plan
-    if (!price_id || price_id === "free" || price_id === "" || price_id === "null") {
-      await handleFreePlanDowngrade(client, user_id, currentSub)
-      await client.query("COMMIT")
-      return NextResponse.json({
-        success: true,
-        message: "Downgraded to Free Plan",
-        plan_name: "Free Plan",
-      })
-    }
-
     // Validate new price
     let price
     try {
@@ -704,16 +828,13 @@ export async function POST(req: NextRequest) {
       await client.query("ROLLBACK")
       return NextResponse.json({ error: "Invalid Stripe price ID" }, { status: 400 })
     }
-
     if (!price.active) {
       await client.query("ROLLBACK")
       return NextResponse.json({ error: "Inactive Stripe price" }, { status: 400 })
     }
-
     // Determine if this is an upgrade or downgrade
     const isUpgrade =
       upgrade !== null ? upgrade : (currentSub?.plan_amount || 0) < (price.unit_amount || 0) / 100
-
     if (isUpgrade) {
       const result = await handlePlanUpgrade(client, currentSub, price_id, user_id)
       await client.query("COMMIT")
@@ -738,50 +859,27 @@ export async function POST(req: NextRequest) {
 // DELETE endpoint - enhanced with 30-day notice policy
 export async function DELETE(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("user_id")
-  const immediate = req.nextUrl.searchParams.get("immediate") === "true"
-
   if (!userId) {
     return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
   }
-
   const client = await pool.connect()
   try {
     await client.query("BEGIN")
-
     // Get current subscription
     const result = await client.query(`SELECT * FROM subscriptions WHERE user_id = $1`, [userId])
-
     const subscription = result.rows[0]
     if (!subscription) {
       await client.query("ROLLBACK")
       return NextResponse.json({ error: "No subscription found" }, { status: 404 })
     }
-
-    // Handle cancellation based on policy
-    const cancellationResult = await handleCancellationNotice(client, subscription, immediate)
-
-    // Cancel Stripe subscription if exists and immediate
-    if (
-      immediate &&
-      subscription.stripe_subscription_id &&
-      !subscription.stripe_subscription_id.startsWith("free-")
-    ) {
-      try {
-        await stripe.subscriptions.cancel(subscription.stripe_subscription_id)
-      } catch (err) {
-        console.warn("Stripe cancellation failed:", err)
-      }
-    }
-
+    // Always schedule cancellation at period end
+    const cancellationResult = await handleCancellationAtPeriodEnd(client, subscription)
     await client.query("COMMIT")
-
     return NextResponse.json({
       success: true,
       cancellation_type: cancellationResult.type,
       effective_date: cancellationResult.effectiveDate,
-      message: immediate
-        ? "Subscription canceled immediately"
-        : "30-day cancellation notice given. Service continues until effective date.",
+      message: "Subscription will be canceled at the end of the current billing period.",
     })
   } catch (error: any) {
     await client.query("ROLLBACK")

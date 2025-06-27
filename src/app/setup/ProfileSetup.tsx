@@ -118,7 +118,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
   }
 
   return (
-    <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-lg transition-all duration-300">
+    <div className="mx-auto max-w-4xl rounded-lg bg-white p-8 shadow-lg">
       <ProgressBar step={step} steps={steps} />
 
       <div className="transition-all duration-300">
@@ -194,7 +194,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
             billingPeriod={billingPeriod}
             setBillingPeriod={setBillingPeriod}
             onPrev={prevStep}
-            onNext={nextStep} // ✅ ADD THIS
+            onNext={nextStep}
           />
         )}
       </div>
@@ -204,26 +204,36 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
 
 function ProgressBar({ step, steps }: { step: number; steps: string[] }) {
   return (
-    <div className="mb-8 flex">
-      {steps.map((label, idx) => {
-        const s = idx + 1
-        return (
-          <div key={label} className="flex-1">
+    <div className="mb-8">
+      <div className="flex items-center justify-between">
+        {steps.map((stepName, index) => (
+          <div key={index} className="flex items-center">
             <div
-              className={`h-2 rounded-full transition-colors duration-300 ${
-                s <= step ? "bg-blue-600" : "bg-gray-300"
-              }`}
-            />
-            <p
-              className={`mt-2 text-center text-sm font-medium ${
-                s === step ? "text-blue-600" : "text-gray-500"
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
+                index + 1 <= step
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200 text-gray-600"
               }`}
             >
-              {label}
-            </p>
+              {index + 1}
+            </div>
+            <span
+              className={`ml-2 text-sm font-medium ${
+                index + 1 <= step ? "text-blue-600" : "text-gray-500"
+              }`}
+            >
+              {stepName}
+            </span>
+            {index < steps.length - 1 && (
+              <div
+                className={`mx-4 h-0.5 w-8 ${
+                  index + 1 < step ? "bg-blue-600" : "bg-gray-200"
+                }`}
+              />
+            )}
           </div>
-        )
-      })}
+        ))}
+      </div>
     </div>
   )
 }

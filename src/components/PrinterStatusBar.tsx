@@ -1,16 +1,14 @@
 "use client"
 
-import { usePrinterStatus } from "@/context/PrinterContext"
+import { usePrinter } from "@/context/PrinterContext"
 
 export default function PrinterStatusBar() {
   const {
     isConnected,
     defaultPrinter,
-    selectedPrinter,
-    availablePrinters,
-    setSelectedPrinter,
+    printers: availablePrinters,
     reconnect,
-  } = usePrinterStatus()
+  } = usePrinter()
 
   return (
     <div
@@ -22,26 +20,13 @@ export default function PrinterStatusBar() {
           <div className="flex items-center gap-2">
             🖨️ <span className="font-medium">Connected</span>
             <span className="ml-2 text-xs text-gray-700 dark:text-gray-300">
-              Default: <strong>{defaultPrinter}</strong>
+              WebSocket: ws://localhost:8080
             </span>
           </div>
           <div className="flex items-center gap-2 text-black dark:text-white">
-            <label htmlFor="printer-select" className="text-xs font-medium">
-              Selected Printer:
-            </label>
-            <select
-              id="printer-select"
-              value={selectedPrinter ?? ""}
-              onChange={(e) => setSelectedPrinter(e.target.value)}
-              className="rounded border border-gray-300 bg-white px-2 py-1 text-xs dark:border-gray-600 dark:bg-gray-800 dark:text-white"
-              style={{ minWidth: 120 }}
-            >
-              {availablePrinters.map((printer) => (
-                <option key={printer} value={printer}>
-                  {printer}
-                </option>
-              ))}
-            </select>
+            <span className="text-xs font-medium">
+              Available Printers: {availablePrinters.length}
+            </span>
           </div>
         </div>
       ) : (

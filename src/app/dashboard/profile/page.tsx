@@ -18,22 +18,6 @@ const features = [
 
 const plans = [
   {
-    name: "Free Plan",
-    monthly: "Free",
-    yearly: "Free",
-    features: {
-      "Device Provided": false,
-      "Unlimited Label Printing": false,
-      "Access to Web Dashboard": true,
-      "Sunmi Printer Support": false,
-      "Weekly Free Prints": true,
-    },
-    description:
-      "Ideal for testing or low-volume use. Bring your own Epson TM-M30 and get 20 free prints every week.",
-    highlight: false,
-    cta: "Get Started Free",
-  },
-  {
     name: "Basic Plan",
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
@@ -491,6 +475,18 @@ const ProfileDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Add a section in the UI (where plans are shown or in billing tab) with: */}
+      {/* <div className="mt-8 rounded-lg bg-blue-50 p-6 text-blue-900 shadow"> */}
+      {/*   <h4 className="mb-2 text-lg font-semibold">Subscription Policy Highlights</h4> */}
+      {/*   <ul className="list-disc pl-5 space-y-1 text-base"> */}
+      {/*     <li>All paid plans start with a <strong>10-day free trial</strong>.</li> */}
+      {/*     <li><strong>Monthly:</strong> Cancel anytime. <strong>No refund</strong> for the current month.</li> */}
+      {/*     <li><strong>Yearly:</strong> Cancel anytime. At the end of the current month, you'll receive a refund of <strong>50% of the unused months</strong>.</li> */}
+      {/*     <li><strong>Upgrades</strong> take effect immediately and are prorated.</li> */}
+      {/*     <li><strong>Downgrades</strong> take effect at the end of your current billing period.</li> */}
+      {/*   </ul> */}
+      {/* </div> */}
     </div>
   )
 }

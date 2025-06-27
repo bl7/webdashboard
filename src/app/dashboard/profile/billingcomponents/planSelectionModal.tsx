@@ -23,28 +23,6 @@ interface PlanConfig {
 
 const PLANS: PlanConfig[] = [
   {
-    id: "free",
-    name: "Starter Kitchen",
-    monthly: "Free",
-    yearly: "Free",
-    price_id_monthly: null,
-    price_id_yearly: null,
-    tier: 0,
-    monthlyValue: 0,
-    yearlyValue: 0,
-    features: {
-      "Device Provided": false,
-      "Unlimited Label Printing": false,
-      "Access to Web Dashboard": true,
-      "Sunmi Printer Support": false,
-      "Weekly Free Prints": true,
-    },
-    description:
-      "Ideal for testing or low-volume use. Bring your own Epson TM-M30 and get 20 free prints every week.",
-    highlight: false,
-    cta: "Get Started Free",
-  },
-  {
     id: "pro_kitchen",
     name: "🧑‍🍳 Pro Kitchen",
     monthly: "£20/mo",
@@ -226,7 +204,7 @@ interface Props {
   nextBillingDate?: string
   subscriptionData?: any // For debugging
   onClose: () => void
-  onUpdate: (priceId: string | null) => void
+  onUpdate: (priceId: string | null) => Promise<any>
 }
 
 export default function PlanSelectionModal({
@@ -244,6 +222,7 @@ export default function PlanSelectionModal({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [userEmail, setUserEmail] = useState<string | null>(null)
+  const [backendMessage, setBackendMessage] = useState<string | null>(null)
 
   // Enhanced plan finding with better logging (from first file)
   const findPlan = useCallback((planId: string): PlanConfig | undefined => {
@@ -390,16 +369,13 @@ export default function PlanSelectionModal({
         }
 
       case "downgrade":
-        const isDowngradeToFree = !getSelectedPriceId()
         const dateStr = formatDate(nextBillingDate)
         const savingsMessage =
           costDifference > 0 ? ` You'll save £${costDifference.toFixed(2)} per month.` : ""
 
         return {
           type: "warning" as const,
-          message: isDowngradeToFree
-            ? `Your subscription will be canceled and you'll switch to the free plan at the end of your billing period${dateStr ? ` (${dateStr})` : ""}.${savingsMessage}`
-            : `You'll be downgraded at the end of your billing period${dateStr ? ` (${dateStr})` : ""}.${savingsMessage}`,
+          message: `You'll be downgraded at the end of your billing period${dateStr ? ` (${dateStr})` : ""}.${savingsMessage}`,
         }
 
       case "billing_change":
@@ -453,47 +429,36 @@ export default function PlanSelectionModal({
 
   const updatePlan = useCallback(async () => {
     if (!validateInputs()) return
-
     setLoading(true)
     setError(null)
-
+    setBackendMessage(null)
     try {
       const priceId = getSelectedPriceId()
-      const isFreePlan = !priceId
-      const currentPlanId = normalizePlanName(currentPlan)
-      const isCurrentlyFree = currentPlanId === "free"
-
+      // All plans are now paid, so no free plan logic
       console.log("=== PLAN UPDATE DEBUG ===")
       console.log("selectedPlanId:", selectedPlanId)
       console.log("billingPeriod:", billingPeriod)
       console.log("priceId:", priceId)
       console.log("changeType:", changeType)
-      console.log("isCurrentlyFree:", isCurrentlyFree)
       console.log("subscriptionStatus:", subscriptionStatus)
       console.log("========================")
 
-      // Case 1: Downgrading to free plan
-      if (isFreePlan) {
-        console.log("🔄 Downgrading to free plan")
-        await onUpdate(priceId) // This should handle the downgrade to free
-      }
-      // Case 2: Already have active subscription - update it
-      else if (!isCurrentlyFree && subscriptionStatus === "active") {
+      // Only handle paid plan updates
+      if (subscriptionStatus === "active") {
         console.log("🔄 Updating existing paid subscription")
-        await onUpdate(priceId) // This should call POST /api/subscriptions
-      }
-      // Case 3: Moving from free to paid, or reactivating canceled subscription
-      else if (
-        isCurrentlyFree ||
-        subscriptionStatus === "canceled" ||
-        subscriptionStatus === "incomplete"
-      ) {
-        console.log("🔄 Creating new subscription (free to paid or reactivating)")
-
+        const result = await onUpdate(priceId)
+        if (result && typeof result === 'object' && 'message' in result && typeof result.message === 'string') {
+          setBackendMessage(result.message)
+        } else if (typeof result === 'string') {
+          setBackendMessage(result)
+        } else {
+          setBackendMessage("Plan updated successfully.")
+        }
+      } else if (subscriptionStatus === "canceled" || subscriptionStatus === "incomplete") {
+        console.log("🔄 Creating new subscription (reactivating)")
         if (!userEmail) {
           throw new Error("Email is required for checkout")
         }
-
         const response = await fetch("/api/stripe/create-checkout-session", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -503,58 +468,51 @@ export default function PlanSelectionModal({
             price_id: priceId,
           }),
         })
-
         const data = await response.json()
         if (!response.ok) {
           throw new Error(data.error || "Failed to create checkout session")
         }
-
         if (data.url) {
           window.location.href = data.url
         } else {
           throw new Error("No checkout URL received")
         }
-      }
-      // Case 4: Other subscription statuses that need special handling
-      else {
-        console.log("🔄 Handling special subscription status:", subscriptionStatus)
-
-        // For past_due, unpaid, etc. - try to update but might need checkout
-        if (subscriptionStatus === "past_due" || subscriptionStatus === "unpaid") {
-          // First try to update the subscription
-          try {
-            await onUpdate(priceId)
-          } catch (error) {
-            console.log("Update failed, falling back to checkout:", error)
-            // If update fails, fall back to checkout for payment method update
-            if (!userEmail) {
-              throw new Error("Email is required for checkout")
-            }
-
-            const response = await fetch("/api/stripe/create-checkout-session", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                user_id: userid,
-                email: userEmail,
-                price_id: priceId,
-              }),
-            })
-
-            const data = await response.json()
-            if (!response.ok) {
-              throw new Error(data.error || "Failed to create checkout session")
-            }
-
-            if (data.url) {
-              window.location.href = data.url
-            } else {
-              throw new Error("No checkout URL received")
-            }
+      } else if (subscriptionStatus === "past_due" || subscriptionStatus === "unpaid") {
+        try {
+          const result = await onUpdate(priceId)
+          if (result && typeof result === 'object' && 'message' in result && typeof result.message === 'string') {
+            setBackendMessage(result.message)
+          } else if (typeof result === 'string') {
+            setBackendMessage(result)
+          } else {
+            setBackendMessage("Plan updated successfully.")
           }
-        } else {
-          throw new Error(`Cannot update subscription with status: ${subscriptionStatus}`)
+        } catch (error) {
+          console.log("Update failed, falling back to checkout:", error)
+          if (!userEmail) {
+            throw new Error("Email is required for checkout")
+          }
+          const response = await fetch("/api/stripe/create-checkout-session", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: userid,
+              email: userEmail,
+              price_id: priceId,
+            }),
+          })
+          const data = await response.json()
+          if (!response.ok) {
+            throw new Error(data.error || "Failed to create checkout session")
+          }
+          if (data.url) {
+            window.location.href = data.url
+          } else {
+            throw new Error("No checkout URL received")
+          }
         }
+      } else {
+        throw new Error(`Cannot update subscription with status: ${subscriptionStatus}`)
       }
     } catch (err: any) {
       console.error("Plan update error:", err)
@@ -589,6 +547,8 @@ export default function PlanSelectionModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 p-4">
       <div className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-lg bg-white p-6 shadow-lg">
+        {/* Make modal wider for 4 cards */}
+        <style>{`.max-w-4xl { max-width: 72rem !important; }`}</style>
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold">Choose Your Plan</h2>
@@ -633,6 +593,33 @@ export default function PlanSelectionModal({
                       {subscriptionStatus.replace("_", " ").toUpperCase()}
                     </span>
                   )}
+                  {/* Pending plan change status */}
+                  {subscriptionData?.pending_plan_change && subscriptionData?.pending_plan_change_effective && (
+                    <div className="mt-2 flex flex-col">
+                      <span className="inline-block rounded-full bg-yellow-100 px-2 py-1 text-xs font-medium text-yellow-800">
+                        PENDING {(() => {
+                          // Determine if upgrade, downgrade, or interval change
+                          const currentId = normalizePlanName(currentPlan)
+                          const pendingId = normalizePlanName(subscriptionData.pending_plan_change)
+                          const currentPlanConfig = findPlan(currentId)
+                          const pendingPlanConfig = findPlan(pendingId)
+                          if (!currentPlanConfig || !pendingPlanConfig) return "CHANGE"
+                          const currentMonthly = getEffectiveMonthlyValue(currentPlanConfig, currentBillingPeriod)
+                          // Guess interval from priceId
+                          const pendingIsYearly = subscriptionData.pending_plan_change.toLowerCase().includes('year')
+                          const pendingMonthly = getEffectiveMonthlyValue(pendingPlanConfig, pendingIsYearly ? "yearly" : "monthly")
+                          if (pendingMonthly > currentMonthly) return "UPGRADE"
+                          if (pendingMonthly < currentMonthly) return "DOWNGRADE"
+                          if (currentBillingPeriod !== (pendingIsYearly ? "yearly" : "monthly")) return "INTERVAL CHANGE"
+                          return "CHANGE"
+                        })()}
+                      </span>
+                      <span className="mt-1 text-xs text-yellow-900">
+                        New plan: <strong>{findPlan(normalizePlanName(subscriptionData.pending_plan_change))?.name || subscriptionData.pending_plan_change}</strong> ({subscriptionData.pending_plan_change.toLowerCase().includes('year') ? 'Yearly' : 'Monthly'})<br />
+                        Starts: {new Date(subscriptionData.pending_plan_change_effective).toLocaleDateString()}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
               {nextBillingDate && subscriptionStatus === "active" && (
@@ -647,68 +634,96 @@ export default function PlanSelectionModal({
           </div>
         )}
 
-        {/* Billing Period Toggle */}
-        <div className="mb-6 flex justify-center space-x-4">
-          {(["monthly", "yearly"] as const).map((period) => (
-            <Button
-              key={period}
-              variant={billingPeriod === period ? "default" : "outline"}
-              onClick={() => setBillingPeriod(period)}
-              disabled={loading}
-              className="transition-all"
-            >
-              {period === "monthly" ? "Monthly" : "Yearly (save 10%)"}
-            </Button>
-          ))}
-        </div>
-
-        {/* Plans Grid */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {PLANS.map((plan) => {
-            const isSelected = selectedPlanId === plan.id
-            const isCurrent = plan.id === normalizePlanName(currentPlan)
-            const currentPrice = billingPeriod === "monthly" ? plan.monthly : plan.yearly
-
+        {/* Plans Grid - show all 4 plan/interval combos as cards, no toggle */}
+        {(() => {
+          // Debug: log current plan info before rendering the grid
+          console.log('DEBUG: Current Plan', {
+            price_id: subscriptionData?.price_id,
+            name: currentPlanInfo?.config?.name,
+            interval: subscriptionData?.billing_interval || currentBillingPeriod,
+            subscriptionData,
+            currentPlan,
+            currentBillingPeriod
+          });
+          return null;
+        })()}
+        <div className="mb-6 grid grid-cols-1 gap-8 md:grid-cols-4">
+          {PLANS.flatMap((plan) => [
+            { ...plan, interval: 'monthly', price: plan.monthly, price_id: plan.price_id_monthly },
+            { ...plan, interval: 'yearly', price: plan.yearly, price_id: plan.price_id_yearly },
+          ]).filter((planVariant) => {
+            // Normalize intervals for comparison
+            const cardInterval = planVariant.interval === 'monthly' ? 'month' : 'year'
+            const currentIntervalRaw = subscriptionData?.billing_interval || currentBillingPeriod || ''
+            const currentInterval = typeof currentIntervalRaw === 'string' ? currentIntervalRaw.replace('ly', '') : ''
+            // Normalize plan names for comparison
+            const cardNameNorm = normalizePlanName(planVariant.name)
+            const currentNameNorm = normalizePlanName(currentPlan)
+            // Hide the card if both normalized name and interval match
+            return !(cardNameNorm === currentNameNorm && cardInterval === currentInterval)
+          }).map((planVariant) => {
+            // Determine badge and CTA
+            const currentName = currentPlanInfo.config?.name
+            const actualInterval = subscriptionData?.billing_interval || currentBillingPeriod
+            const currentPlanObj = PLANS.find(p => p.name === currentName)
+            const currentMonthly = currentPlanObj ? (actualInterval === 'yearly' ? currentPlanObj.yearlyValue / 12 : currentPlanObj.monthlyValue) : 0
+            const planMonthly = planVariant.interval === 'yearly' ? planVariant.yearlyValue / 12 : planVariant.monthlyValue
+            let badge = ''
+            let cta = planVariant.cta
+            if (planMonthly > currentMonthly) {
+              badge = 'Upgrade'
+              cta = 'Upgrade'
+            } else if (planMonthly < currentMonthly) {
+              badge = 'Downgrade'
+              cta = 'Downgrade'
+            } else if (planVariant.interval !== actualInterval) {
+              badge = 'Switch Billing'
+              cta = planVariant.interval === 'yearly' ? 'Switch to Annual' : 'Switch to Monthly'
+            }
+            // Recommended badge for your preferred plan
+            const isRecommended = planVariant.id === 'multi_site' && planVariant.interval === 'yearly'
             return (
               <div
-                key={plan.id}
-                onClick={() => !loading && setSelectedPlanId(plan.id)}
+                key={planVariant.id + '-' + planVariant.interval}
+                onClick={() => !loading && (setSelectedPlanId(planVariant.id), setBillingPeriod(planVariant.interval === 'monthly' ? 'monthly' : 'yearly'))}
                 className={clsx(
-                  "cursor-pointer rounded-lg border p-5 shadow-sm transition-all duration-200 hover:shadow-md",
-                  isSelected
-                    ? "border-blue-500 bg-blue-50 ring-1 ring-blue-200"
-                    : isCurrent && !isSelected
-                      ? "border-green-500 bg-green-50 ring-1 ring-green-200"
-                      : "border-gray-300 bg-white",
-                  plan.highlight && !isSelected && !isCurrent && "border-yellow-400 bg-yellow-50",
+                  "cursor-pointer rounded-2xl border p-6 shadow-lg transition-all duration-200 hover:shadow-2xl hover:border-blue-400 bg-white flex flex-col justify-between min-h-[420px]",
+                  badge === 'Upgrade' && 'border-blue-500',
+                  badge === 'Downgrade' && 'border-yellow-500',
+                  badge === 'Switch Billing' && 'border-gray-400',
+                  isRecommended && 'border-purple-600',
                   loading && "cursor-not-allowed opacity-50"
                 )}
                 role="radio"
-                aria-checked={isSelected}
+                aria-checked={selectedPlanId === planVariant.id && billingPeriod === planVariant.interval}
                 tabIndex={loading ? -1 : 0}
-                onKeyDown={(e) => handleKeyDown(e, plan.id)}
+                onKeyDown={(e) => handleKeyDown(e, planVariant.id)}
               >
                 <div className="mb-2 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">{plan.name}</h3>
+                  <h3 className="text-lg font-semibold">{planVariant.name}</h3>
                   <div className="flex items-center space-x-2">
-                    {isCurrent && (
-                      <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
-                        CURRENT
-                      </span>
+                    <span className="rounded bg-gray-200 px-2 py-0.5 text-xs font-medium text-gray-700">
+                      {planVariant.interval === 'monthly' ? 'Monthly' : 'Yearly'}
+                    </span>
+                    {badge && (
+                      <span className={clsx(
+                        'rounded-full px-2 py-0.5 text-xs font-semibold',
+                        badge === 'Upgrade' && 'bg-blue-100 text-blue-700',
+                        badge === 'Downgrade' && 'bg-yellow-100 text-yellow-800',
+                        badge === 'Switch Billing' && 'bg-gray-100 text-gray-700'
+                      )}>{badge}</span>
                     )}
-                    {plan.highlight && (
-                      <span className="text-yellow-500" title="Recommended">
-                        ⭐
+                    {isRecommended && (
+                      <span className="rounded-full bg-purple-600 px-2 py-0.5 text-xs font-semibold text-white ml-1">
+                        Recommended
                       </span>
                     )}
                   </div>
                 </div>
-
-                <p className="mb-3 text-sm leading-relaxed text-gray-600">{plan.description}</p>
-                <p className="mb-4 text-xl font-bold text-gray-900">{currentPrice}</p>
-
+                <p className="mb-3 text-sm leading-relaxed text-gray-600">{planVariant.description}</p>
+                <p className="mb-4 text-2xl font-bold text-gray-900">{planVariant.price}</p>
                 <ul className="mb-4 space-y-2 text-sm">
-                  {Object.entries(plan.features).map(([feature, included]) => (
+                  {Object.entries(planVariant.features).map(([feature, included]) => (
                     <li key={feature} className="flex items-start space-x-2">
                       <div className="mt-0.5 flex-shrink-0">
                         {typeof included === "boolean" ? (
@@ -728,20 +743,12 @@ export default function PlanSelectionModal({
                     </li>
                   ))}
                 </ul>
-
                 <Button
-                  variant={isSelected ? "default" : isCurrent ? "outline" : "outline"}
+                  variant={selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "default" : "outline"}
                   disabled={loading}
-                  className={clsx(
-                    "w-full transition-all",
-                    isCurrent && !isSelected && "border-green-500 text-green-700 hover:bg-green-50"
-                  )}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (!loading) setSelectedPlanId(plan.id)
-                  }}
+                  className={clsx("w-full transition-all mt-auto font-semibold text-base py-2")}
                 >
-                  {isCurrent ? "Current Plan" : plan.cta}
+                  {selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "Selected" : cta}
                 </Button>
               </div>
             )
@@ -774,6 +781,28 @@ export default function PlanSelectionModal({
             <p className="leading-relaxed">{error}</p>
           </div>
         )}
+
+        {/* Backend Message */}
+        {backendMessage && (
+          <div className="mb-4 flex items-start space-x-3 rounded-lg border border-blue-500 bg-blue-50 p-4 text-sm text-blue-700">
+            <div className="mt-0.5 flex-shrink-0">
+              <Info size={18} />
+            </div>
+            <p className="leading-relaxed">{backendMessage}</p>
+          </div>
+        )}
+
+        {/* Policy summary section */}
+        <div className="mt-8 rounded-lg bg-blue-50 p-6 text-blue-900 shadow">
+          <h4 className="mb-2 text-lg font-semibold">Subscription Policy Highlights</h4>
+          <ul className="list-disc pl-5 space-y-1 text-base">
+            <li>All paid plans start with a <strong>10-day free trial</strong>.</li>
+            <li><strong>Monthly:</strong> Cancel anytime. <strong>No refund</strong> for the current month.</li>
+            <li><strong>Yearly:</strong> Cancel anytime. At the end of the current month, you'll receive a refund of <strong>50% of the unused months</strong>.</li>
+            <li><strong>Upgrades</strong> take effect immediately and are prorated.</li>
+            <li><strong>Downgrades</strong> take effect at the end of your current billing period.</li>
+          </ul>
+        </div>
 
         {/* Action Buttons */}
         <div className="flex justify-end space-x-4 border-t pt-4">

@@ -262,7 +262,38 @@ async function extractSubscriptionData(
   const nextDueDate = calculateNextDueDate(subscription)
 
   // Handle customer metadata safely
-  const userId = customer?.metadata?.user_id
+  let userId = customer?.metadata?.user_id
+  let fallbackReason = ''
+  if (!userId) {
+    // Fallback 1: Look up by Stripe customer ID in subscriptions table
+    const client = await pool.connect()
+    try {
+      const res = await client.query('SELECT user_id FROM subscriptions WHERE stripe_customer_id = $1 LIMIT 1', [subscription.customer])
+      if (res.rows.length > 0) {
+        userId = res.rows[0].user_id
+        fallbackReason = 'Found user_id by stripe_customer_id in subscriptions table.'
+      } else if (customer?.email) {
+        // Fallback 2: Look up by email in subscriptions table
+        const res2 = await client.query('SELECT user_id FROM subscriptions WHERE user_id = $1 OR user_id = $2 LIMIT 1', [customer.email, customer.email?.toLowerCase()])
+        if (res2.rows.length > 0) {
+          userId = res2.rows[0].user_id
+          fallbackReason = 'Found user_id by email in subscriptions table.'
+        } else {
+          // Fallback 3: Use placeholder user_id
+          userId = 'unknown-' + subscription.customer
+          fallbackReason = 'No user_id found; using placeholder.'
+        }
+      } else {
+        userId = 'unknown-' + subscription.customer
+        fallbackReason = 'No user_id or email found; using placeholder.'
+      }
+    } finally {
+      client.release()
+    }
+    if (fallbackReason) {
+      console.warn(`extractSubscriptionData fallback: ${fallbackReason} user_id=${userId}`)
+    }
+  }
 
   return {
     user_id: userId,
@@ -306,8 +337,12 @@ async function handleSubscriptionCreated(subscription: Stripe.Subscription) {
   const subscriptionData = await extractSubscriptionData(subscription)
 
   if (!subscriptionData.user_id) {
-    console.error(`No user_id found in customer metadata for subscription ${subscription.id}`)
-    return
+    console.error(`No user_id found in customer metadata for subscription ${subscription.id} (even after fallback)`)
+    // Use a placeholder user_id
+    subscriptionData.user_id = 'unknown-' + subscription.customer
+  }
+  if (subscriptionData.user_id.startsWith('unknown-')) {
+    console.warn(`Subscription created with placeholder user_id: ${subscriptionData.user_id}. Manual review recommended.`)
   }
 
   const client = await pool.connect()
@@ -554,6 +589,51 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   try {
     await client.query("BEGIN")
 
+    // Fetch subscription from DB to get pending_refund_amount and plan info
+    const dbResult = await client.query(
+      `SELECT pending_refund_amount, pending_refund_months, plan_amount, price_id FROM subscriptions WHERE stripe_subscription_id = $1`,
+      [subscription.id]
+    )
+    const dbSub = dbResult.rows[0]
+    let refundCreated = false
+    let refundId = null
+    let refundAmount = 0
+    let refundReason = ''
+    // Only refund for yearly plans with a pending_refund_amount
+    const isYearly = dbSub && (dbSub.price_id?.toLowerCase().includes('year') || (dbSub.plan_amount && dbSub.pending_refund_amount > 0))
+    if (isYearly && dbSub.pending_refund_amount > 0) {
+      // Find the last successful invoice for this subscription
+      const invoices = await stripe.invoices.list({
+        subscription: subscription.id,
+        limit: 5,
+        status: 'paid',
+      })
+      const lastInvoice = invoices.data
+        .filter(inv => (inv as any).paid && inv.amount_paid > 0 && inv.status === 'paid')
+        .sort((a, b) => (b.created || 0) - (a.created || 0))[0]
+      if (lastInvoice && (lastInvoice as any).payment_intent) {
+        refundAmount = Math.floor(dbSub.pending_refund_amount * 100)
+        if (refundAmount > 0) {
+          const refund = await stripe.refunds.create({
+            payment_intent: (lastInvoice as any).payment_intent as string,
+            amount: refundAmount,
+            reason: 'requested_by_customer',
+            metadata: {
+              subscription_id: subscription.id,
+              policy: 'half-unused-months-on-cancel',
+              unused_months: dbSub.pending_refund_months,
+            },
+          })
+          refundCreated = true
+          refundId = refund.id
+          refundReason = `Refunded £${refundAmount / 100} for ${dbSub.pending_refund_months} unused months (50% policy)`
+          console.log(refundReason)
+        }
+      }
+    } else {
+      console.log('No refund issued: not a yearly plan or no pending refund.')
+    }
+
     const result = await client.query(
       `UPDATE subscriptions SET
         status = 'canceled',
@@ -568,6 +648,21 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
 
     if (result.rowCount === 0) {
       console.warn(`No subscription found to cancel for stripe_subscription_id ${subscription.id}`)
+    }
+
+    // Optionally log the refund in the DB
+    if (refundCreated && refundId) {
+      await client.query(
+        `INSERT INTO subscription_events (subscription_id, event_type, event_data, notes, created_by)
+         VALUES ((SELECT id FROM subscriptions WHERE stripe_subscription_id = $1), $2, $3, $4, $5)`,
+        [
+          subscription.id,
+          'half_refund_unused_yearly_months',
+          JSON.stringify({ refund_id: refundId, amount: refundAmount, months: dbSub.pending_refund_months }),
+          refundReason,
+          'system',
+        ]
+      )
     }
 
     await client.query("COMMIT")

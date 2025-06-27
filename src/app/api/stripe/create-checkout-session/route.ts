@@ -101,6 +101,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: price_id, quantity: 1 }],
       subscription_data: {
         metadata: { user_id },
+        trial_period_days: 10,
       },
       // Add metadata to the session itself for tracking
       metadata: {
