@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import Sidebar from "./components/sidebar"
 import Header from "./components/header"
 import { DarkModeProvider, useDarkMode } from "./context/DarkModeContext" // Adjust path as needed
+import { useRouter } from "next/navigation"
 
 interface LayoutProps {
   children: React.ReactNode
@@ -11,12 +12,28 @@ interface LayoutProps {
 
 // Inner layout component that uses the dark mode context
 function AdminLayoutInner({ children, title = "Dashboard" }: LayoutProps) {
-  const { darkMode, toggleDarkMode } = useDarkMode()
+  const { isDarkMode, toggleDarkMode } = useDarkMode()
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
+
+  // Check authentication on mount
+  useEffect(() => {
+    const token = localStorage.getItem("bossToken")
+    if (!token) {
+      router.push("/boss/login")
+      return
+    }
+    setIsAuthenticated(true)
+    setIsLoading(false)
+  }, [router])
 
   const handleLogout = () => {
-    console.log("Logging out...")
+    localStorage.removeItem("bossToken")
+    router.push("/boss/login")
   }
 
   useEffect(() => {
@@ -29,17 +46,42 @@ function AdminLayoutInner({ children, title = "Dashboard" }: LayoutProps) {
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  return (
-    <div className={`flex h-screen overflow-hidden ${darkMode ? "bg-gray-900" : "bg-gray-50"}`}>
-      {/* Sidebar */}
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} darkMode={darkMode} />
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
 
-      {/* Main content area - add left margin on desktop to account for sidebar */}
-      <div className="flex flex-1 flex-col overflow-hidden lg:ml-64">
+  // Don't render anything if not authenticated (will redirect)
+  if (!isAuthenticated) {
+    return null
+  }
+
+  return (
+    <div className={`flex h-screen overflow-hidden ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+      {/* Sidebar */}
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        isCollapsed={sidebarCollapsed}
+        onClose={() => setSidebarOpen(false)} 
+        onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        darkMode={isDarkMode} 
+      />
+
+      {/* Main content area - adjust margin based on sidebar state */}
+      <div className={`flex flex-1 flex-col overflow-hidden transition-all duration-300 ${
+        sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
+      }`}>
         {/* Header (sticky on top) */}
         <Header
           title={title}
-          darkMode={darkMode}
+          darkMode={isDarkMode}
           onToggleDarkMode={toggleDarkMode}
           onOpenSidebar={() => setSidebarOpen(true)}
           userMenuOpen={userMenuOpen}
@@ -49,7 +91,7 @@ function AdminLayoutInner({ children, title = "Dashboard" }: LayoutProps) {
 
         {/* Page content */}
         <main
-          className={`flex-1 overflow-auto ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}
+          className={`flex-1 overflow-auto ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}
         >
           {children}
         </main>

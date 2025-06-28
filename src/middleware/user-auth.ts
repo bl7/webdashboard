@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-export function middleware(req: NextRequest) {
+export function userAuthMiddleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   const token = req.cookies.get("token")?.value
   
@@ -22,18 +22,4 @@ export function middleware(req: NextRequest) {
   }
 
   return NextResponse.next()
-}
-
-export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - boss (boss routes - handled separately)
-     */
-    "/((?!api|_next/static|_next/image|favicon.ico|boss).*)",
-  ],
-}
+} 

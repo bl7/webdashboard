@@ -1,6 +1,16 @@
 "use client"
 import React from "react"
-import { Search, Menu, LogOut, ChevronDown, User, Moon, Sun } from "lucide-react"
+import { Search, Menu, LogOut, ChevronDown, User, Moon, Sun, Bell, Settings } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { useRouter } from "next/navigation"
 
 interface HeaderProps {
   title: string
@@ -21,6 +31,16 @@ export default function Header({
   onToggleUserMenu,
   onLogout,
 }: HeaderProps) {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    // Clear the bossToken from localStorage
+    localStorage.removeItem("bossToken")
+    
+    // Redirect to boss login
+    router.push("/boss/login")
+  }
+
   return (
     <header
       className={`sticky top-0 z-50 ${
@@ -63,75 +83,63 @@ export default function Header({
           </div>
 
           {/* Dark mode toggle */}
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onToggleDarkMode}
-            className={`rounded-lg p-2 transition-colors duration-200 ${
+            className={`h-9 w-9 p-0 ${
               darkMode
                 ? "text-gray-400 hover:bg-gray-700 hover:text-white"
                 : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
             }`}
-            aria-label="Toggle dark mode"
           >
-            {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-          </button>
+            {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+
+          {/* Notifications */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className={`h-9 w-9 p-0 ${
+              darkMode
+                ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+            }`}
+          >
+            <Bell className="h-4 w-4" />
+          </Button>
 
           {/* User menu */}
-          <div className="relative">
-            <button
-              onClick={onToggleUserMenu}
-              className={`flex items-center space-x-2 rounded-lg p-2 transition-colors duration-200 ${
-                darkMode
-                  ? "text-gray-400 hover:bg-gray-700 hover:text-white"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-              }`}
-            >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500">
-                <User className="h-4 w-4 text-white" />
-              </div>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-
-            {userMenuOpen && (
-              <div
-                className={`absolute right-0 z-50 mt-2 w-48 rounded-lg border shadow-lg ${
-                  darkMode ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                className={`h-9 w-9 rounded-full p-0 ${
+                  darkMode
+                    ? "text-gray-400 hover:bg-gray-700 hover:text-white"
+                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
-                <div className="py-2">
-                  <a
-                    href="#"
-                    className={`block px-4 py-2 text-sm transition-colors duration-200 ${
-                      darkMode
-                        ? "text-gray-300 hover:bg-gray-700 hover:text-white"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    Profile Settings
-                  </a>
-                  <a
-                    href="#"
-                    className={`block px-4 py-2 text-sm transition-colors duration-200 ${
-                      darkMode
-                        ? "text-gray-300 hover:bg-gray-700 hover:text-white"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                  >
-                    Account Security
-                  </a>
-                  <hr className={`my-2 ${darkMode ? "border-gray-700" : "border-gray-200"}`} />
-                  <button
-                    onClick={onLogout}
-                    className={`flex w-full items-center space-x-2 px-4 py-2 text-left text-sm transition-colors duration-200 ${
-                      darkMode ? "text-red-400 hover:bg-gray-700" : "text-red-600 hover:bg-gray-100"
-                    }`}
-                  >
-                    <LogOut className="h-4 w-4" />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+                <User className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Settings className="mr-2 h-4 w-4" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <User className="mr-2 h-4 w-4" />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </header>

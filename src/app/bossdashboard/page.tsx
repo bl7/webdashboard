@@ -1,7 +1,674 @@
-export default function Page() {
+"use client"
+
+import React, { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { 
+  Users, 
+  TrendingUp, 
+  CreditCard, 
+  AlertTriangle, 
+  Calendar,
+  DollarSign,
+  Activity,
+  Building2,
+  UserPlus,
+  Settings,
+  BarChart3,
+  PieChart,
+  LineChart,
+  ArrowUpRight,
+  ArrowDownRight,
+  Eye,
+  MoreHorizontal
+} from 'lucide-react'
+import { useDarkMode } from './context/DarkModeContext'
+
+interface AnalyticsData {
+  total: number
+  active: number
+  trialing: number
+  canceled: number
+  mrr: number
+  arr: number
+  arpu: number
+  churnRate: number
+  trialConversion: number
+  planDistribution: Array<{ name: string; value: number }>
+  statusDistribution: Array<{ name: string; value: number }>
+  recentSignups: Array<any>
+  topCustomers: Array<any>
+  upcomingRenewals: Array<any>
+  pendingChanges: Array<any>
+  failedPayments: Array<any>
+}
+
+interface User {
+  user_id: string
+  company_name: string
+  plan_name: string
+  status: string
+  current_period_end: string
+  trial_end: string
+  pending_plan_change: string | null
+  pending_plan_change_effective: string | null
+  created_at: string
+}
+
+export default function BossDashboard() {
+  const { isDarkMode } = useDarkMode()
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
+  const [users, setUsers] = useState<User[]>([])
+  
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState('overview')
+  const [showAddUserModal, setShowAddUserModal] = useState(false)
+  const [showPlanModal, setShowPlanModal] = useState(false)
+  const [editPlan, setEditPlan] = useState<any | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        
+        // Fetch analytics data
+        const analyticsResponse = await fetch('/api/subscription_better/analytics')
+        if (!analyticsResponse.ok) {
+          throw new Error('Failed to fetch analytics data')
+        }
+        const analytics = await analyticsResponse.json()
+        
+        // Fetch users data
+        const usersResponse = await fetch('/api/subscription_better/users')
+        if (!usersResponse.ok) {
+          throw new Error('Failed to fetch users data')
+        }
+        const usersData = await usersResponse.json()
+        
+        setAnalyticsData(analytics)
+        setUsers(usersData)
+       
+      } catch (err) {
+        console.error('Error fetching data:', err)
+        setError(err instanceof Error ? err.message : 'Failed to fetch data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-GB', {
+      style: 'currency',
+      currency: 'GBP',
+    }).format(amount)
+  }
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+      case 'trialing':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+      case 'canceled':
+        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      case 'past_due':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+    }
+  }
+
+  const getPlanColor = (planName: string) => {
+    switch (planName?.toLowerCase()) {
+      case 'basic':
+      case 'basic plan':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+      case 'pro':
+      case 'pro kitchen':
+      case 'pro_kitchen':
+        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
+      case 'multi-kitchen':
+      case 'multi_site':
+      case 'multi-site mastery':
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200'
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
+    }
+  }
+
+  // Quick link handlers
+  const handleQuickLink = (tab: string, action?: string) => {
+    setActiveTab(tab)
+    if (tab === 'users' && action === 'add') setShowAddUserModal(true)
+  
+  }
+
+  if (loading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="text-center">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Error Loading Dashboard</h2>
+          <p className="text-muted-foreground">{error}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            className="mt-4"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-white">Hello</h1>
+    <div className={`min-h-screen ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+      <div className="container mx-auto p-6 space-y-6">
+        {/* Header */}
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Boss Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Manage your SaaS business and monitor performance
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Button variant="outline">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
+            <Button onClick={() => handleQuickLink('users', 'add')}>
+              <UserPlus className="h-4 w-4 mr-2" />
+              Add User
+            </Button>
+          </div>
+        </div>
+
+        {/* Key Metrics */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Total Users
+              </CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {analyticsData?.total || 0}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {analyticsData?.active || 0} active subscriptions
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Monthly Revenue
+              </CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {formatCurrency(analyticsData?.mrr || 0)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {formatCurrency(analyticsData?.arr || 0)} annually
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                ARPU
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {formatCurrency(analyticsData?.arpu || 0)}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Average revenue per user
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Churn Rate
+              </CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                {((analyticsData?.churnRate || 0) * 100).toFixed(1)}%
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {analyticsData?.canceled || 0} canceled subscriptions
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="users">Users</TabsTrigger>
+         
+            <TabsTrigger value="actions">Quick Actions</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Plan Distribution */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <PieChart className="h-5 w-5" />
+                    Plan Distribution
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData?.planDistribution?.map((plan, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${
+                            index === 0 ? 'bg-blue-500' : 
+                            index === 1 ? 'bg-purple-500' : 'bg-orange-500'
+                          }`}></div>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white">
+                            {plan.name}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {plan.value} users
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Status Distribution */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    Subscription Status
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData?.statusDistribution?.map((status, index) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className={`w-3 h-3 rounded-full ${
+                            status.name === 'active' ? 'bg-green-500' :
+                            status.name === 'trialing' ? 'bg-blue-500' :
+                            status.name === 'canceled' ? 'bg-red-500' : 'bg-gray-500'
+                          }`}></div>
+                          <span className="text-sm font-medium text-gray-900 dark:text-white capitalize">
+                            {status.name}
+                          </span>
+                        </div>
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {status.value} users
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Recent Activity */}
+            <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-5 w-5" />
+                  Recent Signups
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {analyticsData?.recentSignups?.slice(0, 5).map((user: any, index: number) => (
+                    <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                          <span className="text-white text-sm font-medium">
+                            {user.company_name?.charAt(0) || 'U'}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {user.company_name || 'Unknown Company'}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {formatDate(user.created_at)}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge className={getPlanColor(user.plan_name)}>
+                        {user.plan_name || 'No Plan'}
+                      </Badge>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Top Customers */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5" />
+                    Top Customers
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData?.topCustomers?.slice(0, 5).map((customer: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                            <span className="text-white text-sm font-medium">
+                              {customer.company_name?.charAt(0) || 'C'}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {customer.company_name || 'Unknown Company'}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {customer.plan_name || 'No Plan'}
+                            </p>
+                          </div>
+                        </div>
+                        <span className="text-sm font-medium text-gray-900 dark:text-white">
+                          {formatCurrency(customer.amount || 0)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Upcoming Renewals */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Upcoming Renewals
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {analyticsData?.upcomingRenewals?.slice(0, 5).map((renewal: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <Calendar className="h-4 w-4 text-white" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {renewal.company_name || 'Unknown Company'}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {formatDate(renewal.current_period_end)}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge className={getPlanColor(renewal.plan_name)}>
+                          {renewal.plan_name || 'No Plan'}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Alerts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Pending Changes */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                    Pending Plan Changes
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {(analyticsData?.pendingChanges?.length || 0) > 0 ? (
+                      analyticsData!.pendingChanges!.slice(0, 5).map((change: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 bg-yellow-50 dark:bg-yellow-900/20">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {change.company_name || 'Unknown Company'}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Changing to: {change.pending_plan_change}
+                            </p>
+                          </div>
+                          <Badge variant="outline" className="border-yellow-500 text-yellow-700 dark:text-yellow-300">
+                            Pending
+                          </Badge>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-600 dark:text-gray-400 text-center py-4">
+                        No pending plan changes
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Failed Payments */}
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5 text-red-500" />
+                    Failed Payments
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {(analyticsData?.failedPayments?.length || 0) > 0 ? (
+                      analyticsData!.failedPayments!.slice(0, 5).map((payment: any, index: number) => (
+                        <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20">
+                          <div>
+                            <p className="font-medium text-gray-900 dark:text-white">
+                              {payment.company_name || 'Unknown Company'}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Status: {payment.status}
+                            </p>
+                          </div>
+                          <Badge variant="outline" className="border-red-500 text-red-700 dark:text-red-300">
+                            Failed
+                          </Badge>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-gray-600 dark:text-gray-400 text-center py-4">
+                        No failed payments
+                      </p>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="users" className="space-y-6">
+            <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  All Users
+                </CardTitle>
+                <CardDescription>
+                  Manage your subscription users and their status
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {users.map((user, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                          <span className="text-white font-medium">
+                            {user.company_name?.charAt(0) || 'U'}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            {user.company_name || 'Unknown Company'}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Created: {formatDate(user.created_at)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge className={getPlanColor(user.plan_name)}>
+                          {user.plan_name || 'No Plan'}
+                        </Badge>
+                        <Badge className={getStatusColor(user.status)}>
+                          {user.status}
+                        </Badge>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+         
+
+          <TabsContent value="actions" className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+             
+
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    Generate Reports
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Generate detailed reports and analytics
+                  </p>
+                  <Button variant="outline" className="w-full">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CreditCard className="h-5 w-5" />
+                    Billing Overview
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    View billing information and payment history
+                  </p>
+                  <Button variant="outline" className="w-full">
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    View Billing
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <AlertTriangle className="h-5 w-5" />
+                    Handle Issues
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Address failed payments and subscription issues
+                  </p>
+                  <Button variant="outline" className="w-full">
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    View Issues
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Settings className="h-5 w-5" />
+                    System Settings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    Configure system settings and preferences
+                  </p>
+                  <Button variant="outline" className="w-full">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Settings
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   )
 }

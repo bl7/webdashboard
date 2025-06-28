@@ -1,32 +1,23 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui"
 import Link from "next/link"
 
-const plans = [
-  {
-    name: "Basic Plan",
-    monthly: "£20/mo",
-    yearly: "£216/yr (10% off)",
-    description:
-      "Great for businesses needing unlimited label printing with the Epson device included.",
-    highlight: true,
-  },
-  {
-    name: "Premium Plan",
-    monthly: "£25/mo",
-    yearly: "£270/yr",
-    description:
-      "Everything in Basic, plus Sunmi device support and printing via our web dashboard.",
-    highlight: false,
-  },
-]
-
 export const Pricing = () => {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
+  const [plans, setPlans] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch("/api/plans/public")
+      .then((res) => res.json())
+      .then((data) => setPlans(data))
+      .catch(() => setPlans([]))
+      .finally(() => setLoading(false))
+  }, [])
 
   return (
     <section id="pricing" className="bg-muted/20 px-4 py-24 sm:px-6 md:px-12 lg:px-16">
@@ -61,33 +52,47 @@ export const Pricing = () => {
 
         {/* Pricing Cards */}
         <div className="flex justify-center">
-          <div className="grid max-w-4xl gap-8 md:grid-cols-2">
-            {plans.map((plan, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className={cn(
-                  "relative flex flex-col rounded-xl border bg-white p-6 text-left shadow-sm transition-all hover:shadow-md",
-                  plan.highlight
-                    ? "border-primary bg-primary/5 ring-2 ring-primary"
-                    : "border-border"
-                )}
-              >
-                {plan.highlight && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs text-white shadow">
-                    Best Value
-                  </span>
-                )}
+          <div className="grid max-w-6xl gap-8 md:grid-cols-3">
+            {loading ? (
+              <div className="col-span-3 py-12 text-center text-lg">Loading plans...</div>
+            ) : plans.length === 0 ? (
+              <div className="col-span-3 py-12 text-center text-lg text-gray-500">No plans available.</div>
+            ) : (
+              plans.map((plan, index) => (
+                <motion.div
+                  key={plan.id || index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className={cn(
+                    "relative flex flex-col rounded-xl border bg-white p-6 text-left shadow-sm transition-all hover:shadow-md",
+                    index === 1
+                      ? "border-primary bg-primary/5 ring-2 ring-primary"
+                      : "border-border"
+                  )}
+                >
+                  {index === 1 && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs text-white shadow">
+                      Best Value
+                    </span>
+                  )}
 
-                <h3 className="text-xl font-semibold text-primary">{plan.name}</h3>
-                <p className="my-1 text-lg font-bold text-foreground">{plan[billingCycle]}</p>
+                  <h3 className="text-xl font-semibold text-primary">{plan.name}</h3>
+                  <p className="my-1 text-lg font-bold text-foreground">
+                    {billingCycle === "monthly"
+                      ? plan.price_monthly
+                        ? `£${(plan.price_monthly / 100).toFixed(2)}/mo`
+                        : "Contact us"
+                      : plan.price_yearly
+                        ? `£${(plan.price_yearly / 100).toFixed(2)}/yr`
+                        : "Custom Pricing"}
+                  </p>
 
-                <p className="mb-4 text-sm text-gray-600">{plan.description}</p>
-              </motion.div>
-            ))}
+                  <p className="mb-4 text-sm text-gray-600">{plan.description}</p>
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
 

@@ -23,48 +23,72 @@ interface PlanConfig {
 
 export const PLANS: PlanConfig[] = [
   {
-    id: "pro_kitchen",
-    name: "🧑‍🍳 Pro Kitchen",
+    id: "basic",
+    name: "Basic Plan",
     monthly: "£20/mo",
     yearly: "£216/yr (10% off)",
     price_id_monthly: "price_1RZnHW6acbqNMwXigvqDdo8I",
     price_id_yearly: "price_1RZnI76acbqNMwXiW5y61Vfl",
-    tier: 1,
+    tier: 0,
     monthlyValue: 20,
     yearlyValue: 216,
     features: {
       "Device Provided": "Epson TM-M30 Included",
       "Unlimited Label Printing": true,
-      "Access to Web Dashboard": false,
+      "Access to Web Dashboard": true,
       "Sunmi Printer Support": false,
       "Weekly Free Prints": false,
     },
     description:
-      "For growing kitchens. Get an Epson device included and enjoy unlimited print volume.",
-    highlight: true,
-    cta: "Start Pro Plan",
+      "For small kitchens. Get an Epson device included and enjoy unlimited print volume with web dashboard access.",
+    highlight: false,
+    cta: "Start Basic Plan",
   },
   {
-    id: "multi_site",
-    name: "Multi-Site Mastery",
+    id: "pro_kitchen",
+    name: "🧑‍🍳 Pro Kitchen",
     monthly: "£25/mo",
     yearly: "£270/yr (10% off)",
     price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH",
     price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8",
-    tier: 2,
+    tier: 1,
     monthlyValue: 25,
     yearlyValue: 270,
     features: {
-      "Device Provided": "Sunmi or Epson Included",
+      "Device Provided": "Sunmi Device Included",
       "Unlimited Label Printing": true,
       "Access to Web Dashboard": true,
       "Sunmi Printer Support": true,
       "Weekly Free Prints": false,
     },
     description:
-      "Everything in Pro plus Web Dashboard access and support for Sunmi touchscreen printers.",
+      "For growing kitchens. Get a Sunmi device included and enjoy unlimited print volume with advanced features.",
+    highlight: true,
+    cta: "Start Pro Plan",
+  },
+  {
+    id: "multi_site",
+    name: "Multi-Kitchen",
+    monthly: "£50/mo",
+    yearly: "£540/yr (10% off)",
+    price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH", // TODO: Update with correct price ID
+    price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8", // TODO: Update with correct price ID
+    tier: 2,
+    monthlyValue: 50,
+    yearlyValue: 540,
+    features: {
+      "Device Provided": "Multiple Devices Included",
+      "Unlimited Label Printing": true,
+      "Access to Web Dashboard": true,
+      "Sunmi Printer Support": true,
+      "Weekly Free Prints": false,
+      "Multiple Kitchen Support": true,
+      "Centralized Management": true,
+    },
+    description:
+      "For restaurant chains and multi-location businesses. Manage 5+ kitchens with centralized control and multiple devices.",
     highlight: false,
-    cta: "Go Premium",
+    cta: "Go Multi-Kitchen",
   },
 ]
 
@@ -87,10 +111,12 @@ const normalizePlanName = (planName: string): string => {
     console.log("💰 Found price in plan name:", price)
 
     const priceMapping: Record<number, string> = {
-      270: "multi_site", // £270/yr = Multi-Site Mastery yearly
-      25: "multi_site", // £25/mo = Multi-Site Mastery monthly
-      216: "pro_kitchen", // £216/yr = Pro Kitchen yearly
-      20: "pro_kitchen", // £20/mo = Pro Kitchen monthly
+      540: "multi_site", // £540/yr = Multi-Kitchen yearly
+      50: "multi_site", // £50/mo = Multi-Kitchen monthly
+      270: "pro_kitchen", // £270/yr = Pro Kitchen yearly
+      25: "pro_kitchen", // £25/mo = Pro Kitchen monthly
+      216: "basic", // £216/yr = Basic Plan yearly
+      20: "basic", // £20/mo = Basic Plan monthly
       0: "free", // Free plan
     }
 
@@ -107,7 +133,11 @@ const normalizePlanName = (planName: string): string => {
     "free plan": "free",
     starter: "free",
     "starter kitchen": "free",
-    basic: "free",
+
+    // Basic plan variations
+    basic: "basic",
+    "basic plan": "basic",
+    "basic kitchen": "basic",
 
     // Pro Kitchen variations
     pro: "pro_kitchen",
@@ -117,10 +147,12 @@ const normalizePlanName = (planName: string): string => {
     "professional kitchen": "pro_kitchen",
     "pro plan": "pro_kitchen",
 
-    // Multi-Site variations
+    // Multi-Kitchen variations
     multi: "multi_site",
     "multi-site": "multi_site",
     "multi site": "multi_site",
+    "multi-kitchen": "multi_site",
+    "multi kitchen": "multi_site",
     "multi-site mastery": "multi_site",
     multisite: "multi_site",
     enterprise: "multi_site",

@@ -1,42 +1,66 @@
-import { NextResponse } from "next/server"
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
+import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import bcrypt from "bcryptjs"
+import { createToken } from "@/lib/auth"
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json()
-    const { email, password } = body
+    const { email, password } = await request.json()
 
     if (!email || !password) {
-      return NextResponse.json({ message: "Missing email or password" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Email and password are required" },
+        { status: 400 }
+      )
     }
 
-    const result = await pool.query("SELECT * FROM bossess WHERE email = $1", [email])
-
-    if (!result.rows.length) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 })
-    }
-
-    const boss = result.rows[0]
-    const valid = await bcrypt.compare(password, boss.password_hash)
-
-    if (!valid) {
-      return NextResponse.json({ message: "Invalid credentials" }, { status: 401 })
-    }
-
-    const token = jwt.sign(
-      { id: boss.id, email: boss.email, role: "boss" },
-      process.env.JWT_SECRET!,
-      { expiresIn: "1d" }
+    // Get user from database
+    const result = await pool.query(
+      "SELECT id, username, email, password_hash FROM bossess WHERE email = $1",
+      [email]
     )
 
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      )
+    }
+
+    const user = result.rows[0]
+
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.password_hash)
+
+    if (!isValidPassword) {
+      return NextResponse.json(
+        { error: "Invalid email or password" },
+        { status: 401 }
+      )
+    }
+
+    // Create JWT token
+    const token = await createToken({
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: "boss"
+    })
+
     return NextResponse.json({
+      success: true,
       token,
-      boss: { id: boss.id, username: boss.username, email: boss.email },
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username
+      }
     })
   } catch (error) {
-    console.error("Login Error:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Login error:", error)
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    )
   }
 }

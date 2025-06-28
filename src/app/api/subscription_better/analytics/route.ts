@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     const { rows } = await client.query(`
       SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
       FROM user_profiles u
-      LEFT JOIN subscription_better s ON u.user_id = s.user_id
+      LEFT JOIN subscription_better s ON u.user_id::text = s.user_id::text
     `);
     client.release();
     const subs = rows;
@@ -43,31 +43,7 @@ export async function GET(req: NextRequest) {
     const failedPayments = subs.filter((s: any) => s.status === 'past_due' || s.status === 'unpaid');
     return NextResponse.json({ total, active, trialing, canceled, mrr, arr, arpu, churnRate, trialConversion, planDistribution, statusDistribution, recentSignups, topCustomers, upcomingRenewals, pendingChanges, failedPayments });
   } catch (e) {
-    // Fallback mock data
-    return NextResponse.json({
-      total: 10,
-      active: 6,
-      trialing: 2,
-      canceled: 2,
-      mrr: 200,
-      arr: 2400,
-      arpu: 33.33,
-      churnRate: 0.2,
-      trialConversion: 0.8,
-      planDistribution: [
-        { name: 'Pro Kitchen (Monthly)', value: 4 },
-        { name: 'Multi-Site Mastery (Yearly)', value: 3 },
-      ],
-      statusDistribution: [
-        { name: 'active', value: 6 },
-        { name: 'trialing', value: 2 },
-        { name: 'canceled', value: 2 },
-      ],
-      recentSignups: [],
-      topCustomers: [],
-      upcomingRenewals: [],
-      pendingChanges: [],
-      failedPayments: [],
-    });
+    console.error('Error fetching analytics:', e);
+    return NextResponse.json({ error: 'Failed to fetch analytics data' }, { status: 500 });
   }
 } 

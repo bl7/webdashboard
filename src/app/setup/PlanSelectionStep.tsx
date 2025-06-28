@@ -28,8 +28,8 @@ interface PlanSelectionStepProps {
 
 const plans: Plan[] = [
   {
-    id: "pro_kitchen",
-    name: "Pro Kitchen",
+    id: "basic",
+    name: "Basic Plan",
     monthly: "£20/mo",
     yearly: "£216/yr",
     price_id_monthly: "price_1RZnHW6acbqNMwXigvqDdo8I",
@@ -37,30 +37,52 @@ const plans: Plan[] = [
     features: [
       "Epson TM-M30 Device Included",
       "Unlimited Label Printing",
+      "Web Dashboard Access",
       "Basic Support",
       "10-day Free Trial"
     ],
-    description: "Perfect for growing kitchens. Get started with a professional label printer included.",
-    highlight: true,
-    cta: "Start Pro Plan",
+    description: "For small kitchens. Get started with a professional label printer included.",
+    highlight: false,
+    cta: "Start Basic Plan",
   },
   {
-    id: "multi_site",
-    name: "Multi-Site",
+    id: "pro_kitchen",
+    name: "Pro Kitchen",
     monthly: "£25/mo",
     yearly: "£270/yr",
     price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH",
     price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8",
     features: [
-      "Sunmi or Epson Device Included",
+      "Sunmi Device Included",
       "Unlimited Label Printing",
       "Web Dashboard Access",
+      "Advanced Features",
       "Priority Support",
       "10-day Free Trial"
     ],
-    description: "For multi-location businesses. Full web dashboard and advanced printer support.",
+    description: "For growing kitchens. Get a Sunmi device with advanced features.",
+    highlight: true,
+    cta: "Start Pro Plan",
+  },
+  {
+    id: "multi_site",
+    name: "Multi-Kitchen",
+    monthly: "£50/mo",
+    yearly: "£540/yr",
+    price_id_monthly: "price_1RZnIb6acbqNMwXiSMZnDKvH", // TODO: Update with correct price ID
+    price_id_yearly: "price_1RZnIv6acbqNMwXi4cEZhKU8", // TODO: Update with correct price ID
+    features: [
+      "Multiple Devices Included",
+      "Unlimited Label Printing",
+      "Web Dashboard Access",
+      "Multiple Kitchen Support",
+      "Centralized Management",
+      "Enterprise Support",
+      "10-day Free Trial"
+    ],
+    description: "For restaurant chains and multi-location businesses. Manage 5+ kitchens.",
     highlight: false,
-    cta: "Start Multi-Site Plan",
+    cta: "Start Multi-Kitchen Plan",
   },
 ]
 
@@ -155,7 +177,7 @@ console.log(response,'stripe feilds')
       </div>
 
       {/* Plans Grid */}
-      <div className="grid md:grid-cols-2 gap-8 mb-8">
+      <div className="grid md:grid-cols-3 gap-8 mb-8">
         {plans.map((plan) => {
           const price = billingPeriod === "monthly" ? plan.monthly : plan.yearly
           const isSelected = selectedPlan === plan.name

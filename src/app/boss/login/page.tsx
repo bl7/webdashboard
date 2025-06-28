@@ -2,8 +2,8 @@
 import React, { useState } from "react"
 import { Eye, EyeOff, Shield, Zap, Lock, User, AlertCircle, CheckCircle } from "lucide-react"
 import FloatingParticles from "./FloatingParticles"
-
 import { useRouter } from "next/navigation"
+
 export default function BossLogin() {
   const [formData, setFormData] = useState({
     email: "",
@@ -14,6 +14,7 @@ export default function BossLogin() {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const router = useRouter()
+
   const handleInputChange = (e: any) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -43,14 +44,13 @@ export default function BossLogin() {
         throw new Error(data.message || "Login failed")
       }
 
+      // Store token in localStorage
+      localStorage.setItem("bossToken", data.token)
+      
       setSuccess("Login successful! Redirecting...")
-      router.push("/bossdashboard")
-      if (typeof window !== "undefined") {
-        localStorage.setItem("adminToken", data.token)
-      }
-
+      
       setTimeout(() => {
-        console.log("Redirecting to admin dashboard...")
+        router.push("/bossdashboard")
       }, 1500)
     } catch (err: any) {
       setError(err?.message || err?.toString() || "An error occurred during login")
@@ -121,13 +121,13 @@ export default function BossLogin() {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="block w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-12 text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
-                    placeholder="••••••••"
+                    className="block w-full rounded-xl border border-white/20 bg-white/10 py-3 pl-10 pr-10 text-white placeholder-slate-400 backdrop-blur-sm transition-all duration-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 transition-colors duration-200 hover:text-white"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-300"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
