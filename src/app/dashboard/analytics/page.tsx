@@ -130,6 +130,7 @@ function processLogs(logs: any[], range: "week" | "month") {
   const nowDate = new Date()
   const expiringSoon = Object.values(
     printLogs.reduce((acc: any, log: any) => {
+      if (log.details.labelType === "ppds") return acc;
       const key = log.details.itemName
       if (
         !acc[key] ||
@@ -140,6 +141,7 @@ function processLogs(logs: any[], range: "week" | "month") {
       return acc
     }, {})
   ).filter((log: any) => {
+    if (log.details.labelType === "ppds") return false;
     const expiryDate = new Date(log.details.expiryDate)
     const printedAt = new Date(log.details.printedAt)
     const hoursLeft = (expiryDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60)

@@ -81,6 +81,9 @@ export default function AboutToExpireList() {
           printedAt.getMonth() === now.getMonth() &&
           printedAt.getDate() === now.getDate()
 
+        // Filter out 'ppds' label type
+        if (log.details.labelType === "ppds") return
+
         if (hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday) {
           result.push({
             name: log.details.itemName,
@@ -90,7 +93,7 @@ export default function AboutToExpireList() {
         }
       })
 
-      setAboutToExpire(result)
+      setAboutToExpire(result.filter(item => item.type !== "ppds"))
       setLoading(false)
     }
     fetchData()
