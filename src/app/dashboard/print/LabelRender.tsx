@@ -116,7 +116,7 @@ export default function LabelRender({
         border: "2px solid black",
         borderRadius: 6,
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }}
     >
       {/* Watermark text for PPDS, all sizes */}
@@ -125,17 +125,21 @@ export default function LabelRender({
           style={{
             position: "absolute",
             left: "50%",
-            top: "70%",
-            transform: "translate(-50%, -50%)",
-            opacity: 0.15,
+            bottom: 2,
+            transform: "translateX(-50%)",
+            opacity: 0.3,
             pointerEvents: "none",
-            zIndex: 0,
-            fontSize: fontSize - 2,
-            fontWeight: 400,
-            color: "#666",
+            zIndex: 100,
+            fontSize: Math.max(fontSize - 3, 8),
+            fontWeight: 600,
+            color: "#888",
             textAlign: "center",
             fontFamily: "monospace",
             letterSpacing: 0.5,
+            textShadow: "0 0 2px rgba(255,255,255,1)",
+            backgroundColor: "rgba(255,255,255,0.8)",
+            padding: "1px 4px",
+            borderRadius: 2,
           }}
         >
           instalabel.co
