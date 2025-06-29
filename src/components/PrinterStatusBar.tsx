@@ -1,5 +1,6 @@
 "use client"
 
+import React from "react"
 import { usePrinter } from "@/context/PrinterContext"
 
 export default function PrinterStatusBar() {
@@ -7,6 +8,8 @@ export default function PrinterStatusBar() {
     isConnected,
     defaultPrinter,
     printers: availablePrinters,
+    selectedPrinter,
+    selectPrinter,
     reconnect,
   } = usePrinter()
 
@@ -28,6 +31,28 @@ export default function PrinterStatusBar() {
               Available Printers: {availablePrinters.length}
             </span>
           </div>
+          {availablePrinters.length > 0 && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-black dark:text-white">
+                Selected:
+              </span>
+              <select
+                value={selectedPrinter?.name || ''}
+                onChange={(e) => {
+                  const printer = availablePrinters.find(p => p.name === e.target.value)
+                  selectPrinter(printer || null)
+                }}
+                className="rounded border border-gray-300 bg-white px-2 py-1 text-xs text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+              >
+                <option value="">Select Printer</option>
+                {availablePrinters.map((printer) => (
+                  <option key={printer.name} value={printer.name}>
+                    {printer.name} {printer.isDefault ? '(Default)' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       ) : (
         <div className="flex items-center gap-4 text-red-600">
@@ -42,4 +67,4 @@ export default function PrinterStatusBar() {
       )}
     </div>
   )
-}
+} 

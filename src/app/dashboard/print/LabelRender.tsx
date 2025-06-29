@@ -105,7 +105,7 @@ export default function LabelRender({
       style={{
         width: "5.6cm",
         height: `${heightCm}cm`,
-        padding: labelHeight === "31mm" ? 4 : 8,
+        padding: labelHeight === "31mm" ? 3 : 8,
         backgroundColor: "white",
         fontFamily: "monospace",
         fontWeight: "bold",
@@ -126,7 +126,7 @@ export default function LabelRender({
           style={{
             position: "absolute",
             left: "50%",
-            bottom: labelHeight === "31mm" ? 1 : 2,
+            bottom: labelHeight === "31mm" ? 0.5 : 2,
             transform: "translateX(-50%)",
             opacity: 0.3,
             pointerEvents: "none",

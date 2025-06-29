@@ -21,7 +21,7 @@ export async function formatLabelForPrintImage(
   container.style.top = "0"
   container.style.left = "0"
   container.style.width = "5.6cm"
-  container.style.height = labelHeight === "31mm" ? "3.1cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
+  container.style.height = labelHeight === "31mm" ? "3.2cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
   container.style.backgroundColor = "white"
   container.style.zIndex = "-1"
   container.style.visibility = "hidden"

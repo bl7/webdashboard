@@ -13,6 +13,15 @@ import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
 
+// Define Printer type locally to match PrinterContext
+interface Printer {
+  name: string
+  systemName: string
+  driverName: string
+  state: string
+  location: string
+  isDefault: boolean
+}
 
 const itemsPerPage = 5
 
@@ -55,47 +64,47 @@ type MenuItem = {
 
 // Enhanced getBestAvailablePrinter function for robust printer selection
 function getBestAvailablePrinter(
-  selectedPrinter: string | null,
-  defaultPrinter: string | null,
-  availablePrinters: string[]
-): { printer: string | null; reason: string } {
+  selectedPrinter: Printer | null,
+  defaultPrinter: Printer | null,
+  availablePrinters: Printer[]
+): { printer: Printer | null; reason: string } {
   console.log("🖨️ Printer Selection Debug:", {
-    selectedPrinter,
-    defaultPrinter,
-    availablePrinters: availablePrinters?.slice(0, 5), // Limit log spam
+    selectedPrinter: selectedPrinter?.name,
+    defaultPrinter: defaultPrinter?.name,
+    availablePrinters: availablePrinters?.slice(0, 5).map(p => p.name), // Limit log spam
     availableCount: availablePrinters?.length || 0
   });
 
   // Ensure we have a valid array
   const validPrinters = (availablePrinters || []).filter(printer => 
     printer && 
-    typeof printer === 'string' &&
-    printer.trim() !== "" && 
-    printer !== "Fallback_Printer" &&
-    !printer.toLowerCase().includes('fallback')
+    printer.name &&
+    printer.name.trim() !== "" && 
+    printer.name !== "Fallback_Printer" &&
+    !printer.name.toLowerCase().includes('fallback')
   );
 
-  console.log("🖨️ Valid printers after filtering:", validPrinters);
+  console.log("🖨️ Valid printers after filtering:", validPrinters.map(p => p.name));
 
   // First priority: selected printer (if it exists in valid printers)
   if (selectedPrinter && 
-      selectedPrinter !== "Fallback_Printer" && 
-      validPrinters.includes(selectedPrinter)) {
-    console.log("🖨️ ✅ Using selected printer:", selectedPrinter);
+      selectedPrinter.name !== "Fallback_Printer" && 
+      validPrinters.some(p => p.name === selectedPrinter.name)) {
+    console.log("🖨️ ✅ Using selected printer:", selectedPrinter.name);
     return { printer: selectedPrinter, reason: "Selected printer available" };
   }
   
   // Second priority: default printer (if it exists in valid printers)
   if (defaultPrinter && 
-      defaultPrinter !== "Fallback_Printer" && 
-      validPrinters.includes(defaultPrinter)) {
-    console.log("🖨️ ✅ Using default printer:", defaultPrinter);
+      defaultPrinter.name !== "Fallback_Printer" && 
+      validPrinters.some(p => p.name === defaultPrinter.name)) {
+    console.log("🖨️ ✅ Using default printer:", defaultPrinter.name);
     return { printer: defaultPrinter, reason: "Default printer available" };
   }
   
   // Third priority: first available valid printer
   if (validPrinters.length > 0) {
-    console.log("🖨️ ✅ Using first available printer:", validPrinters[0]);
+    console.log("🖨️ ✅ Using first available printer:", validPrinters[0].name);
     return { printer: validPrinters[0], reason: "First available printer" };
   }
   
@@ -126,6 +135,8 @@ export default function LabelDemo() {
     isConnected,
     printers: availablePrinters,
     defaultPrinter,
+    selectedPrinter,
+    selectPrinter,
     reconnect,
     loading: printerLoading,
     error: printerError,
@@ -133,7 +144,6 @@ export default function LabelDemo() {
   } = usePrinter()
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
   const [showDefrostModal, setShowDefrostModal] = useState(false)
-  const [selectedPrinter, setSelectedPrinter] = useState<string | null>(null)
 
   // Add state for defrost search
   const [defrostSearch, setDefrostSearch] = useState("")
@@ -414,7 +424,7 @@ export default function LabelDemo() {
 
       if (failCount === 0) {
         const message = isConnected 
-          ? `Successfully printed ${successCount} labels using ${printerSelection.printer}`
+          ? `Successfully printed ${successCount} labels using ${printerSelection.printer?.name}`
           : `DEBUG: Would print ${successCount} labels (printer not connected)`;
         showFeedback(message, "success");
         
@@ -584,6 +594,55 @@ export default function LabelDemo() {
 
               {/* Right Section: Initials and Settings */}
               <div className="w-1/2">
+                {/* Printer Selection */}
+                <div className="mb-4">
+                  <label className="mb-1 block text-sm font-medium text-gray-700">
+                    Printer Selection
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                      <span className="text-xs text-gray-600">
+                        {isConnected ? 'Connected' : 'Disconnected'}
+                      </span>
+                    </div>
+                    {!isConnected && (
+                      <Button
+                        onClick={reconnect}
+                        size="sm"
+                        variant="outline"
+                        className="text-xs"
+                      >
+                        Reconnect
+                      </Button>
+                    )}
+                  </div>
+                  {availablePrinters.length > 0 ? (
+                    <select
+                      className="mt-2 w-full rounded border px-4 py-2"
+                      value={selectedPrinter?.name || ''}
+                      onChange={(e) => {
+                        const printer = availablePrinters.find(p => p.name === e.target.value)
+                        selectPrinter(printer || null)
+                      }}
+                    >
+                      <option value="">Select Printer</option>
+                      {availablePrinters.map((printer) => (
+                        <option key={printer.name} value={printer.name}>
+                          {printer.name} {printer.isDefault ? '(Default)' : ''}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="mt-2 text-sm text-gray-500">
+                      {printerLoading ? 'Loading printers...' : 'No printers available'}
+                    </p>
+                  )}
+                  {printerError && (
+                    <p className="mt-1 text-xs text-red-600">{printerError}</p>
+                  )}
+                </div>
+
                 {useInitials && customInitials.length > 0 && (
                   <div className="mb-4">
                     <label className="mb-1 block text-sm font-medium text-gray-700">
@@ -925,7 +984,7 @@ async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm")
   console.log("🧪 Testing simple label generation...")
   
   // Convert label height to cm
-  const heightCm = labelHeight === "31mm" ? "3.1cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
+  const heightCm = labelHeight === "31mm" ? "3.2cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
   
   const container = document.createElement("div")
   container.style.position = "absolute"

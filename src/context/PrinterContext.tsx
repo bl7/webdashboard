@@ -2,16 +2,27 @@
 
 import React, { createContext, useContext, useState, useEffect, useRef } from "react"
 
+interface Printer {
+  name: string
+  systemName: string
+  driverName: string
+  state: string
+  location: string
+  isDefault: boolean
+}
+
 interface PrinterContextType {
   isConnected: boolean
   loading: boolean
   error: string | null
-  printers: any[]
-  defaultPrinter: any | null
+  printers: Printer[]
+  defaultPrinter: Printer | null
+  selectedPrinter: Printer | null
   connect: () => Promise<void>
   disconnect: () => Promise<void>
   reconnect: () => Promise<void>
-  print: (imageData: string) => Promise<void>
+  print: (imageData: string, printer?: Printer) => Promise<void>
+  selectPrinter: (printer: Printer | null) => void
 }
 
 const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
@@ -20,8 +31,9 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [printers, setPrinters] = useState<any[]>([])
-  const [defaultPrinter, setDefaultPrinter] = useState<any | null>(null)
+  const [printers, setPrinters] = useState<Printer[]>([])
+  const [defaultPrinter, setDefaultPrinter] = useState<Printer | null>(null)
+  const [selectedPrinter, setSelectedPrinter] = useState<Printer | null>(null)
   const wsRef = useRef<WebSocket | null>(null)
 
   const connect = async () => {
@@ -57,9 +69,14 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
             // Update printer status
             if (data.printers) {
               setPrinters(data.printers)
-            }
-            if (data.defaultPrinter) {
-              setDefaultPrinter(data.defaultPrinter)
+              // Set default printer if available
+              if (data.defaultPrinter) {
+                setDefaultPrinter(data.defaultPrinter)
+                // Auto-select default printer if no printer is currently selected
+                if (!selectedPrinter) {
+                  setSelectedPrinter(data.defaultPrinter)
+                }
+              }
             }
           } else if (data.type === 'error') {
             setError(data.message || 'Printer service error')
@@ -121,15 +138,26 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     await connect()
   }
 
-  const print = async (imageData: string) => {
+  const selectPrinter = (printer: Printer | null) => {
+    setSelectedPrinter(printer)
+  }
+
+  const print = async (imageData: string, printer?: Printer) => {
     if (!isConnected || !wsRef.current) {
       throw new Error("Printer not connected. Please connect first.")
+    }
+
+    // Use provided printer, selected printer, or default printer
+    const targetPrinter = printer || selectedPrinter || defaultPrinter
+    if (!targetPrinter) {
+      throw new Error("No printer selected. Please select a printer first.")
     }
 
     try {
       console.log("🖨️ Sending print job...")
       console.log("🖨️ Original image data length:", imageData.length)
       console.log("🖨️ Original image data starts with:", imageData.substring(0, 50))
+      console.log("🖨️ Using printer:", targetPrinter.name)
       
       // Remove data URL prefix if present
       const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
@@ -143,7 +171,8 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
       
       const printJob = {
         type: 'print',
-        images: [cleanImageData]
+        images: [cleanImageData],
+        selectedPrinter: targetPrinter.name
       }
 
       console.log("🖨️ Sending print job with", printJob.images.length, "images")
@@ -174,10 +203,12 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     error,
     printers,
     defaultPrinter,
+    selectedPrinter,
     connect,
     disconnect,
     reconnect,
     print,
+    selectPrinter,
   }
 
   return (
