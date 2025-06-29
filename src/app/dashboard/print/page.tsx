@@ -514,18 +514,32 @@ export default function LabelDemo() {
     }
 
     try {
-      // Generate defrost label image
+      // Create a defrost item for LabelRender
       const now = new Date()
       const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
-      const html = `
-        <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:8px;box-sizing:border-box;">
-          <div style="font-size:1.3rem;font-weight:bold;margin-bottom:8px;text-align:center;">${ingredient.name}(defrosted)</div>
-          <div style="font-size:0.9rem;margin-bottom:2px;">Defrosted: ${now.toLocaleDateString("en-GB")} ${now.toLocaleTimeString("en-GB", {hour: '2-digit', minute:'2-digit'})}</div>
-          <div style="font-size:0.9rem;margin-bottom:4px;">Use by: ${expiry.toLocaleDateString("en-GB")} ${expiry.toLocaleTimeString("en-GB", {hour: '2-digit', minute:'2-digit'})}</div>
-          ${selectedInitial ? `<div style="font-size:0.9rem;text-align:right;width:100%;">By: ${selectedInitial}</div>` : ""}
-        </div>
-      `
-      const imageDataUrl = await printSimpleLabel(html, labelHeight)
+      
+      const defrostItem: PrintQueueItem = {
+        uid: `defrost-${ingredient.id}-${Date.now()}`,
+        id: ingredient.id,
+        type: "ingredients",
+        name: `${ingredient.name} (defrosted)`,
+        quantity: 1,
+        printedOn: now.toISOString().split("T")[0],
+        expiryDate: expiry.toISOString().split("T")[0],
+        allergens: ingredient.allergens,
+        labelType: "prep" as const,
+      }
+
+      // Generate defrost label image using LabelRender
+      const imageDataUrl = await formatLabelForPrintImage(
+        defrostItem,
+        allergens.map((a) => a.allergenName.toLowerCase()),
+        {},
+        5,
+        useInitials,
+        selectedInitial,
+        labelHeight
+      )
       
       // Print using WebSocket (if connected) or just log for debug
       if (isConnected) {
@@ -983,8 +997,8 @@ function PrintPageSkeleton() {
 async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm") {
   console.log("🧪 Testing simple label generation...")
   
-  // Convert label height to cm
-  const heightCm = labelHeight === "31mm" ? "3.2cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
+  // Convert label height to cm, reducing by 0.5mm to prevent bottom cutoff
+  const heightCm = labelHeight === "31mm" ? "3.05cm" : labelHeight === "40mm" ? "3.95cm" : "7.95cm"
   
   const container = document.createElement("div")
   container.style.position = "absolute"
@@ -1000,7 +1014,7 @@ async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm")
   container.style.fontFamily = "monospace"
   container.style.border = "2px solid black"
   container.style.borderRadius = "6px"
-  container.style.padding = "8px"
+  container.style.padding = "6px" // Reduced padding to remove top gap
   container.style.boxSizing = "border-box"
   container.style.zIndex = "-1"
   container.style.visibility = "hidden"

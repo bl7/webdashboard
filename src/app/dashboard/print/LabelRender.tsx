@@ -27,7 +27,7 @@ export default function LabelRender({
   labelHeight = "31mm", // Default
 }: LabelRenderProps) {
   // --- Sizing and layout logic ---
-  let heightCm = 3.1
+  let heightCm = 3.05
   let fontSize = 12
   let nameFontSize = 15
   let sectionSpacing = 2
@@ -42,7 +42,7 @@ export default function LabelRender({
   let maxAllergenLen = 10
 
   if (labelHeight === "40mm") {
-    heightCm = 4.0
+    heightCm = 3.95
     fontSize = 13
     nameFontSize = 18
     sectionSpacing = 4
@@ -56,7 +56,7 @@ export default function LabelRender({
     maxIngLen = 16
     maxAllergenLen = 12
   } else if (labelHeight === "80mm") {
-    heightCm = 8.0
+    heightCm = 7.95
     fontSize = 15
     nameFontSize = 22
     sectionSpacing = 8
@@ -105,7 +105,7 @@ export default function LabelRender({
       style={{
         width: "5.6cm",
         height: `${heightCm}cm`,
-        padding: labelHeight === "31mm" ? 3 : 8,
+        padding: labelHeight === "31mm" ? 2 : 6,
         backgroundColor: "white",
         fontFamily: "monospace",
         fontWeight: "bold",
