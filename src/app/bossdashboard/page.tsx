@@ -8,21 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   Users, 
   TrendingUp, 
-  CreditCard, 
   AlertTriangle, 
   Calendar,
   DollarSign,
   Activity,
-  Building2,
   UserPlus,
   Settings,
   BarChart3,
-  PieChart,
-  LineChart,
-  ArrowUpRight,
-  ArrowDownRight,
-  Eye,
-  MoreHorizontal
+  PieChart
 } from 'lucide-react'
 import { useDarkMode } from './context/DarkModeContext'
 
@@ -87,6 +80,13 @@ export default function BossDashboard() {
           throw new Error('Failed to fetch users data')
         }
         const usersData = await usersResponse.json()
+        
+        // Fetch plans data
+        const plansResponse = await fetch('/api/plans')
+        if (!plansResponse.ok) {
+          throw new Error('Failed to fetch plans data')
+        }
+        const plansData = await plansResponse.json()
         
         setAnalyticsData(analytics)
         setUsers(usersData)
@@ -154,7 +154,7 @@ export default function BossDashboard() {
   const handleQuickLink = (tab: string, action?: string) => {
     setActiveTab(tab)
     if (tab === 'users' && action === 'add') setShowAddUserModal(true)
-  
+    if (tab === 'plans' && action === 'add') setShowPlanModal(true)
   }
 
   if (loading) {
@@ -284,12 +284,9 @@ export default function BossDashboard() {
 
         {/* Main Content */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="users">Users</TabsTrigger>
-         
-            <TabsTrigger value="actions">Quick Actions</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -535,134 +532,6 @@ export default function BossDashboard() {
                       </p>
                     )}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="users" className="space-y-6">
-            <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  All Users
-                </CardTitle>
-                <CardDescription>
-                  Manage your subscription users and their status
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {users.map((user, index) => (
-                    <div key={index} className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
-                          <span className="text-white font-medium">
-                            {user.company_name?.charAt(0) || 'U'}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            {user.company_name || 'Unknown Company'}
-                          </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Created: {formatDate(user.created_at)}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Badge className={getPlanColor(user.plan_name)}>
-                          {user.plan_name || 'No Plan'}
-                        </Badge>
-                        <Badge className={getStatusColor(user.status)}>
-                          {user.status}
-                        </Badge>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-         
-
-          <TabsContent value="actions" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             
-
-              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Generate Reports
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Generate detailed reports and analytics
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Generate Report
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CreditCard className="h-5 w-5" />
-                    Billing Overview
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    View billing information and payment history
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    View Billing
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5" />
-                    Handle Issues
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Address failed payments and subscription issues
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    <AlertTriangle className="h-4 w-4 mr-2" />
-                    View Issues
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Settings className="h-5 w-5" />
-                    System Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                    Configure system settings and preferences
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
-                  </Button>
                 </CardContent>
               </Card>
             </div>

@@ -14,6 +14,7 @@ interface User {
   pending_plan_change: string | null
   pending_plan_change_effective: string | null
   created_at: string
+  email: string
 }
 
 export default function UsersPage() {
@@ -42,6 +43,7 @@ export default function UsersPage() {
       setLoading(true)
       const res = await fetch("/api/subscription_better/users")
       const data = await res.json()
+      console.log('Users API response:', data)
       if (data.error) {
         setUsers([])
       } else {
@@ -155,6 +157,7 @@ export default function UsersPage() {
           <thead className={isDarkMode ? "bg-gray-800" : "bg-gray-100"}>
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Company</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Plan</th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Renewal</th>
@@ -167,6 +170,7 @@ export default function UsersPage() {
             {paginatedUsers.map(user => (
               <tr key={user.user_id} className={isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"}>
                 <td className="px-6 py-4">{user.company_name}</td>
+                <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.plan_name}</td>
                 <td className="px-6 py-4">{user.status}</td>
                 <td className="px-6 py-4">{user.current_period_end ? new Date(user.current_period_end).toLocaleDateString() : '-'}</td>
