@@ -6,7 +6,6 @@ import { usePrinter } from "@/context/PrinterContext"
 export default function PrinterStatusBar() {
   const {
     isConnected,
-    defaultPrinter,
     printers: availablePrinters,
     selectedPrinter,
     selectPrinter,
