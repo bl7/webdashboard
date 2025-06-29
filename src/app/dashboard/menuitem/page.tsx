@@ -22,23 +22,15 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 import * as XLSX from "xlsx"
-import { getAllMenuItems } from "@/lib/api"
+import { useMenuItems, type MenuItem } from "@/hooks/useMenuItem"
 import { useIngredients } from "@/hooks/useIngredients"
 import { toast } from "sonner"
 
-type MenuItem = {
-  id: string
-  name: string
-  ingredients: string
-  ingredientIds: string[]
-  status: "Active" | "Inactive"
-  addedAt: string
-}
-
 type MenuItemFormData = {
-  name: string
-  ingredientIds: string[]
-  status: string
+  menuItemName: string
+  ingredientIDs: string[]
+  categoryID?: string
+  menuItemID?: string
 }
 
 function MenuItemsSkeleton() {
@@ -59,125 +51,47 @@ function MenuItemsSkeleton() {
 
 export default function MenuItemsDashboard() {
   const [query, setQuery] = useState("")
-  const [data, setData] = useState<MenuItem[]>([])
   const [selected, setSelected] = useState<MenuItem | null>(null)
   const [page, setPage] = useState(1)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
   const [newItem, setNewItem] = useState<MenuItemFormData>({
-    name: "",
-    ingredientIds: [],
-    status: "Active",
+    menuItemName: "",
+    ingredientIDs: [],
   })
   const [editItem, setEditItem] = useState<MenuItemFormData>({
-    name: "",
-    ingredientIds: [],
-    status: "Active",
+    menuItemName: "",
+    ingredientIDs: [],
   })
   const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null)
-  const [filterType, setFilterType] = useState<"All" | "Active" | "Inactive">("All")
 
+  const { 
+    menuItems, 
+    loading, 
+    error, 
+    addNewMenuItem, 
+    updateExistingMenuItem, 
+    deleteExistingMenuItem 
+  } = useMenuItems()
+  
   const { ingredients, loading: ingredientsLoading } = useIngredients()
-  const perPage = 5
+  const perPage = 10
 
-  // Helper function to convert ingredient names to IDs
-  const getIngredientIdsByNames = (ingredientNames: string[]): string[] => {
-    if (!ingredients || ingredients.length === 0) return []
-
-    return ingredientNames
-      .map((name) => {
-        const ingredient = ingredients.find(
-          (ing) => ing.ingredientName.toLowerCase().trim() === name.toLowerCase().trim()
-        )
-        return ingredient?.uuid || null
-      })
-      .filter((id) => id !== null) as string[]
-  }
-
-  // Helper function to convert ingredient IDs to names
-  const getIngredientNamesByIds = (ingredientIds: string[]): string[] => {
-    if (!ingredients || ingredients.length === 0) return []
-
-    return ingredientIds
-      .map((id) => {
-        const ingredient = ingredients.find((ing) => ing.uuid === id)
-        return ingredient?.ingredientName || null
-      })
-      .filter((name) => name !== null) as string[]
-  }
-
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    if (!token) {
-      setError("No token found. Please log in.")
-      return
-    }
-
-    const fetchMenuItems = async () => {
-      setLoading(true)
-      try {
-        const res = await getAllMenuItems(token)
-        if (!res?.data) {
-          setError("No data found.")
-          return
-        }
-
-        const menuItems: MenuItem[] = []
-        for (const category of res.data) {
-          if (!category.items) continue
-          for (const item of category.items) {
-            // Get ingredient names from API
-            const ingredientNames = item.ingredients?.map((ing: any) => ing.ingredientName) || []
-
-            // Convert names to IDs using our ingredients list
-            const ingredientIds = getIngredientIdsByNames(ingredientNames)
-
-            menuItems.push({
-              id: item.menuItemID,
-              name: item.menuItemName,
-              ingredients: ingredientNames.join(", "),
-              ingredientIds,
-              status: "Active", // default since API does not provide this
-              addedAt: new Date().toISOString().split("T")[0],
-            })
-          }
-        }
-
-        setData(menuItems)
-        setError(null)
-      } catch (err) {
-        setError("Failed to fetch menu items.")
-        console.error(err)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    // Only fetch menu items after ingredients are loaded
-    if (!ingredientsLoading && ingredients.length > 0) {
-      fetchMenuItems()
-    }
-  }, [ingredients, ingredientsLoading])
-
-  const filtered = data.filter((item) => {
-    const matchesQuery = item.name.toLowerCase().includes(query.toLowerCase())
-    const matchesFilter = filterType === "All" ? true : item.status === filterType
-    return matchesQuery && matchesFilter
-  })
+  const filtered = menuItems.filter((item) =>
+    item.menuItemName.toLowerCase().includes(query.toLowerCase())
+  )
 
   const paginated = filtered.slice((page - 1) * perPage, page * perPage)
   const maxPages = Math.ceil(filtered.length / perPage)
 
   const handleExportExcel = () => {
     const exportData = filtered.map((item) => ({
-      ID: item.id,
-      Name: item.name,
-      Ingredients: item.ingredients,
-      Status: item.status,
-      AddedAt: item.addedAt,
+      ID: item.menuItemID,
+      Name: item.menuItemName,
+      Ingredients: item.ingredients.map(ing => ing.ingredientName).join(", "),
+      Allergens: item.allergens.map(all => all.allergenName).join(", "),
+      ExpiryDays: item.expiryDays || "N/A",
     }))
     const worksheet = XLSX.utils.json_to_sheet(exportData)
     const workbook = XLSX.utils.book_new()
@@ -186,77 +100,67 @@ export default function MenuItemsDashboard() {
   }
 
   const handleAddItem = async () => {
-    try {
-      // Here you would call your API to add the menu item
-      // For now, we'll simulate it locally
-      const selectedIngredients = ingredients.filter((ing) =>
-        newItem.ingredientIds.includes(ing.uuid)
-      )
+    if (!newItem.menuItemName.trim()) {
+      toast.error("Menu item name is required")
+      return
+    }
 
-      const newMenuItem: MenuItem = {
-        id: (Math.random() * 100000).toFixed(0),
-        name: newItem.name,
-        ingredients: selectedIngredients.map((ing) => ing.ingredientName).join(", "),
-        ingredientIds: newItem.ingredientIds,
-        status: newItem.status as "Active" | "Inactive",
-        addedAt: new Date().toISOString().split("T")[0],
-      }
+    if (newItem.ingredientIDs.length === 0) {
+      toast.error("At least one ingredient is required")
+      return
+    }
 
-      setData((prev) => [...prev, newMenuItem])
+    const success = await addNewMenuItem({
+      menuItemName: newItem.menuItemName.trim(),
+      ingredientIDs: newItem.ingredientIDs,
+      categoryID: newItem.categoryID,
+    })
+
+    if (success) {
+      setNewItem({ menuItemName: "", ingredientIDs: [] })
       setShowAddModal(false)
-      setNewItem({ name: "", ingredientIds: [], status: "Active" })
-      toast.success("Menu item added successfully")
-    } catch (err) {
-      toast.error("Failed to add menu item")
     }
   }
 
   const handleEditItem = async () => {
-    if (!selected) return
+    if (!editItem.menuItemName.trim()) {
+      toast.error("Menu item name is required")
+      return
+    }
 
-    try {
-      // Here you would call your API to update the menu item
-      const selectedIngredients = ingredients.filter((ing) =>
-        editItem.ingredientIds.includes(ing.uuid)
-      )
+    if (!editItem.menuItemID) {
+      toast.error("Menu item ID is missing")
+      return
+    }
 
-      const updatedItem: MenuItem = {
-        ...selected,
-        name: editItem.name,
-        ingredients: selectedIngredients.map((ing) => ing.ingredientName).join(", "),
-        ingredientIds: editItem.ingredientIds,
-        status: editItem.status as "Active" | "Inactive",
-      }
-      console.log("updated item", updatedItem)
-      setData((prev) => prev.map((item) => (item.id === selected.id ? updatedItem : item)))
+    const success = await updateExistingMenuItem(editItem.menuItemID, {
+      menuItemName: editItem.menuItemName.trim(),
+      ingredientIDs: editItem.ingredientIDs,
+      categoryID: editItem.categoryID,
+    })
+
+    if (success) {
+      setEditItem({ menuItemName: "", ingredientIDs: [] })
       setShowEditModal(false)
-      setSelected(null)
-      toast.success("Menu item updated successfully")
-    } catch (err) {
-      toast.error("Failed to update menu item")
     }
   }
 
   const handleDeleteItem = async () => {
     if (!itemToDelete) return
 
-    try {
-      // Here you would call your API to delete the menu item
-      setData((prev) => prev.filter((item) => item.id !== itemToDelete.id))
-      setShowDeleteModal(false)
+    const success = await deleteExistingMenuItem(itemToDelete.menuItemID)
+    if (success) {
       setItemToDelete(null)
-      toast.success("Menu item deleted successfully")
-    } catch (err) {
-      toast.error("Failed to delete menu item")
+      setShowDeleteModal(false)
     }
   }
 
   const openEditModal = (item: MenuItem) => {
-    setSelected(item)
     setEditItem({
-      name: item.name,
-      ingredientIds: [...item.ingredientIds], // This should now have proper IDs
-      status: item.status,
+      menuItemName: item.menuItemName,
+      ingredientIDs: item.ingredients.map(ing => ing.uuid),
+      categoryID: item.categoryID,
+      menuItemID: item.menuItemID,
     })
     setShowEditModal(true)
   }
@@ -268,19 +172,19 @@ export default function MenuItemsDashboard() {
 
   const handleAddIngredient = (ingredientId: string, isEdit = false) => {
     if (isEdit) {
-      if (!editItem.ingredientIds.includes(ingredientId)) {
-        setEditItem((prev) => ({
-          ...prev,
-          ingredientIds: [...prev.ingredientIds, ingredientId],
-        }))
-      }
+      setEditItem((prev) => ({
+        ...prev,
+        ingredientIDs: prev.ingredientIDs.includes(ingredientId)
+          ? prev.ingredientIDs
+          : [...prev.ingredientIDs, ingredientId],
+      }))
     } else {
-      if (!newItem.ingredientIds.includes(ingredientId)) {
-        setNewItem((prev) => ({
-          ...prev,
-          ingredientIds: [...prev.ingredientIds, ingredientId],
-        }))
-      }
+      setNewItem((prev) => ({
+        ...prev,
+        ingredientIDs: prev.ingredientIDs.includes(ingredientId)
+          ? prev.ingredientIDs
+          : [...prev.ingredientIDs, ingredientId],
+      }))
     }
   }
 
@@ -288,12 +192,12 @@ export default function MenuItemsDashboard() {
     if (isEdit) {
       setEditItem((prev) => ({
         ...prev,
-        ingredientIds: prev.ingredientIds.filter((id) => id !== ingredientId),
+        ingredientIDs: prev.ingredientIDs.filter((id) => id !== ingredientId),
       }))
     } else {
       setNewItem((prev) => ({
         ...prev,
-        ingredientIds: prev.ingredientIds.filter((id) => id !== ingredientId),
+        ingredientIDs: prev.ingredientIDs.filter((id) => id !== ingredientId),
       }))
     }
   }
@@ -306,16 +210,17 @@ export default function MenuItemsDashboard() {
     return ingredients.filter((ing) => !ingredientIds.includes(ing.uuid))
   }
 
-  // Loader and skeleton logic
-  if (loading || ingredientsLoading) {
+  // Loading state
+  if (loading && menuItems.length === 0) {
     return <MenuItemsSkeleton />
   }
 
+  // Error state
   if (error) {
     return (
       <div className="flex h-64 items-center justify-center">
         <div className="text-center">
-          <p className="mb-4 text-red-600">{error}</p>
+          <p className="mb-4 text-red-600">Error: {error}</p>
           <Button onClick={() => window.location.reload()} variant="default">
             Try Again
           </Button>
@@ -329,480 +234,384 @@ export default function MenuItemsDashboard() {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold">Menu Items Dashboard</h2>
         <div>
-          <Button variant="outline" className="mr-5" onClick={handleExportExcel} disabled={loading}>
+          <Button variant="outline" className="mr-5" onClick={handleExportExcel}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
-          <Button onClick={() => setShowAddModal(true)} disabled={loading}>
-            <Plus className="mr-2 h-4 w-4" /> Add Menu Item
+          <Button onClick={() => setShowAddModal(true)} variant="default">
+            <Plus className="mr-2 h-4 w-4" />
+            Add Menu Item
           </Button>
         </div>
       </div>
 
-      {error && <div className="rounded-md bg-red-100 p-3 text-red-700">{error}</div>}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="rounded-xl border bg-card p-6 shadow">
+          <p className="text-muted-foreground">Total Menu Items</p>
+          <h3 className="text-2xl font-bold">{menuItems.length}</h3>
+        </div>
+        <div className="rounded-xl border bg-card p-6 shadow">
+          <p className="text-muted-foreground">Items with Allergens</p>
+          <h3 className="text-2xl font-bold">
+            {menuItems.filter((d) => d.allergens.length > 0).length}
+          </h3>
+        </div>
+      </div>
 
-      {loading || ingredientsLoading ? (
-        <div className="py-8 text-center text-muted-foreground">Loading menu items...</div>
-      ) : (
-        <>
-          {/* Summary Cards */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-xl border bg-card p-6 shadow">
-              <p className="text-muted-foreground">Active Items</p>
-              <h3 className="text-2xl font-bold">
-                {data.filter((d) => d.status === "Active").length}
-              </h3>
-            </div>
-            <div className="rounded-xl border bg-card p-6 shadow">
-              <p className="text-muted-foreground">Inactive Items</p>
-              <h3 className="text-2xl font-bold">
-                {data.filter((d) => d.status === "Inactive").length}
-              </h3>
-            </div>
-          </div>
+      <div className="mt-4 overflow-x-auto rounded-2xl border bg-card shadow-sm">
+        <div className="mt-4 flex items-center justify-between gap-4 p-5">
+          <Input
+            placeholder="Search menu items..."
+            className="max-w-sm"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            disabled={loading}
+          />
+        </div>
+        <table className="min-w-full text-left text-sm">
+          <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
+            <tr>
+              <th className="px-6 py-4">Name</th>
+              <th className="px-6 py-4">Ingredients</th>
+              <th className="px-6 py-4">Allergens</th>
+              <th className="px-6 py-4">Expiry Days</th>
+              <th className="px-6 py-4 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-border">
+            {paginated.map((item) => (
+              <tr key={item.menuItemID} className="transition hover:bg-muted">
+                <td className="px-6 py-4 font-medium">{item.menuItemName}</td>
+                <td className="px-6 py-4">{item.ingredients.map(ing => ing.ingredientName).join(", ")}</td>
+                <td className="px-6 py-4">
+                  {item.allergens.length > 0 ? (
+                    <div className="flex flex-wrap gap-1">
+                      {item.allergens.map((allergen) => (
+                        <span
+                          key={allergen.uuid}
+                          className="inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800 dark:bg-red-600/20 dark:text-red-300"
+                        >
+                          {allergen.allergenName}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground">None</span>
+                  )}
+                </td>
+                <td className="px-6 py-4">{item.expiryDays || "N/A"}</td>
+                <td className="flex justify-end gap-2 px-6 py-4 text-right">
+                  <Button size="icon" variant="ghost" onClick={() => setSelected(item)}>
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => openEditModal(item)}
+                    disabled={loading}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={() => openDeleteModal(item)}
+                    disabled={loading}
+                  >
+                    <Trash className="h-4 w-4 text-red-500" />
+                  </Button>
+                </td>
+              </tr>
+            ))}
+            {paginated.length === 0 && (
+              <tr>
+                <td colSpan={5} className="py-8 text-center text-muted-foreground">
+                  No menu items found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
-          {/* Table */}
-          <div className="mt-4 overflow-x-auto rounded-2xl border bg-card shadow-sm">
-            <div className="mt-4 flex items-center justify-between gap-4 p-5">
+      {/* Pagination */}
+      <div className="flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </Button>
+
+        {/* First page */}
+        <Button
+          variant={page === 1 ? "default" : "outline"}
+          onClick={() => setPage(1)}
+          className="min-w-[36px] px-2 py-1"
+        >
+          1
+        </Button>
+
+        {/* Ellipsis before current range */}
+        {page > 3 && maxPages > 5 && <span className="px-2 py-1 text-muted-foreground">...</span>}
+
+        {/* Pages around current */}
+        {Array.from({ length: maxPages }, (_, i) => i + 1)
+          .filter(
+            (p) => p !== 1 && p !== maxPages && Math.abs(p - page) <= 1 // show current, previous, next
+          )
+          .map((p) => (
+            <Button
+              key={p}
+              variant={page === p ? "default" : "outline"}
+              onClick={() => setPage(p)}
+              className="min-w-[36px] px-2 py-1"
+            >
+              {p}
+            </Button>
+          ))}
+
+        {/* Ellipsis after current range */}
+        {page < maxPages - 2 && maxPages > 5 && (
+          <span className="px-2 py-1 text-muted-foreground">...</span>
+        )}
+
+        {/* Last page */}
+        {maxPages > 1 && (
+          <Button
+            variant={page === maxPages ? "default" : "outline"}
+            onClick={() => setPage(maxPages)}
+            className="min-w-[36px] px-2 py-1"
+          >
+            {maxPages}
+          </Button>
+        )}
+
+        <Button
+          variant="outline"
+          onClick={() => setPage((p) => Math.min(maxPages, p + 1))}
+          disabled={page === maxPages}
+        >
+          Next
+        </Button>
+      </div>
+
+      {/* Add Menu Item Dialog */}
+      <Dialog open={showAddModal} onOpenChange={() => setShowAddModal(false)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Menu Item</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="name">Menu Item Name</Label>
               <Input
-                placeholder="Search menu items..."
-                className="max-w-sm"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                disabled={loading}
+                id="name"
+                placeholder="Menu Item Name"
+                value={newItem.menuItemName}
+                onChange={(e) => setNewItem({ ...newItem, menuItemName: e.target.value })}
               />
+            </div>
 
-              {/* Status Filter Dropdown */}
+            <div>
+              <Label>Ingredients</Label>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="w-[150px] justify-between"
-                    disabled={loading}
+                    className="w-full justify-between"
+                    disabled={getAvailableIngredients(newItem.ingredientIDs).length === 0}
                   >
-                    {filterType}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[150px]">
-                  <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={filterType === "All"}
-                    onCheckedChange={() => setFilterType("All")}
-                  >
-                    All
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={filterType === "Active"}
-                    onCheckedChange={() => setFilterType("Active")}
-                  >
-                    Active
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={filterType === "Inactive"}
-                    onCheckedChange={() => setFilterType("Inactive")}
-                  >
-                    Inactive
-                  </DropdownMenuCheckboxItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            <table className="min-w-full text-left text-sm">
-              <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
-                <tr>
-                  <th className="px-6 py-4">Name</th>
-                  <th className="px-6 py-4">Ingredients</th>
-                  <th className="px-6 py-4">Status</th>
-                  <th className="px-6 py-4">Added</th>
-                  <th className="px-6 py-4 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {paginated.map((item) => (
-                  <tr key={item.id} className="transition hover:bg-muted">
-                    <td className="px-6 py-4 font-medium">{item.name}</td>
-                    <td className="px-6 py-4">{item.ingredients}</td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-block rounded-full px-3 py-1 text-xs font-semibold ${
-                          item.status === "Active"
-                            ? "bg-green-100 text-green-800 dark:bg-green-600/20 dark:text-green-300"
-                            : "bg-gray-100 text-gray-800 dark:bg-gray-600/20 dark:text-gray-300"
-                        }`}
-                      >
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-muted-foreground">{item.addedAt}</td>
-                    <td className="flex justify-end gap-2 px-6 py-4 text-right">
-                      <Button size="icon" variant="ghost" onClick={() => setSelected(item)}>
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="ghost" onClick={() => openEditModal(item)}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-red-500 hover:text-red-700"
-                        onClick={() => openDeleteModal(item)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-                {paginated.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="py-8 text-center text-muted-foreground">
-                      No menu items found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            {/* Pagination */}
-            <div className="flex justify-end gap-2 p-5">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
-                Previous
-              </Button>
-
-              {/* First page */}
-              <Button
-                variant={page === 1 ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPage(1)}
-                className="min-w-[36px] px-2 py-1"
-              >
-                1
-              </Button>
-
-              {/* Ellipsis before current range */}
-              {page > 3 && maxPages > 5 && (
-                <span className="px-2 py-1 text-muted-foreground">...</span>
-              )}
-
-              {/* Pages around current */}
-              {Array.from({ length: maxPages }, (_, i) => i + 1)
-                .filter(
-                  (p) => p !== 1 && p !== maxPages && Math.abs(p - page) <= 1 // show current, previous, next
-                )
-                .map((p) => (
-                  <Button
-                    key={p}
-                    variant={page === p ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setPage(p)}
-                    className="min-w-[36px] px-2 py-1"
-                  >
-                    {p}
-                  </Button>
-                ))}
-
-              {/* Ellipsis after current range */}
-              {page < maxPages - 2 && maxPages > 5 && (
-                <span className="px-2 py-1 text-muted-foreground">...</span>
-              )}
-
-              {/* Last page */}
-              {maxPages > 1 && (
-                <Button
-                  variant={page === maxPages ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setPage(maxPages)}
-                  className="min-w-[36px] px-2 py-1"
-                >
-                  {maxPages}
-                </Button>
-              )}
-
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.min(maxPages, p + 1))}
-                disabled={page === maxPages}
-              >
-                Next
-              </Button>
-            </div>
-          </div>
-        </>
-      )}
-
-      {/* Add Item Modal */}
-      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Add New Menu Item</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <Input
-              placeholder="Menu Item Name"
-              value={newItem.name}
-              onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-            />
-
-            <div>
-              <Label className="mb-2 block text-sm font-medium">Select Ingredients</Label>
-              {ingredientsLoading ? (
-                <div className="text-sm text-muted-foreground">Loading ingredients...</div>
-              ) : (
-                <>
-                  {/* Ingredient Dropdown */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full justify-between">
-                        Add Ingredient
-                        <ChevronDown className="ml-2 h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="max-h-48 w-full overflow-y-auto">
-                      <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {getAvailableIngredients(newItem.ingredientIds).length === 0 ? (
-                        <div className="px-2 py-1 text-sm text-muted-foreground">
-                          No more ingredients available
-                        </div>
-                      ) : (
-                        getAvailableIngredients(newItem.ingredientIds).map((ingredient) => (
-                          <DropdownMenuItem
-                            key={ingredient.uuid}
-                            onClick={() => handleAddIngredient(ingredient.uuid)}
-                          >
-                            {ingredient.ingredientName}
-                          </DropdownMenuItem>
-                        ))
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Selected Ingredients */}
-                  {newItem.ingredientIds.length > 0 && (
-                    <div className="mt-3">
-                      <Label className="mb-2 block text-sm font-medium">Selected Ingredients</Label>
-                      <div className="flex flex-wrap gap-2">
-                        {getSelectedIngredients(newItem.ingredientIds).map((ingredient) => (
-                          <div
-                            key={ingredient.uuid}
-                            className="flex items-center gap-2 rounded-md bg-blue-100 px-3 py-1 text-sm dark:bg-blue-900/20"
-                          >
-                            <span>{ingredient.ingredientName}</span>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-4 w-4 hover:bg-blue-200 dark:hover:bg-blue-800"
-                              onClick={() => handleRemoveIngredient(ingredient.uuid)}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-
-            {/* Status Dropdown for Add Modal */}
-            <div>
-              <Label className="mb-2 block text-sm font-medium">Status</Label>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {newItem.status}
+                    {getAvailableIngredients(newItem.ingredientIDs).length === 0
+                      ? "All ingredients selected"
+                      : `Add Ingredient (${getAvailableIngredients(newItem.ingredientIDs).length} available)`}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-full">
-                  <DropdownMenuLabel>Select Status</DropdownMenuLabel>
+                  <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={newItem.status === "Active"}
-                    onCheckedChange={() => setNewItem({ ...newItem, status: "Active" })}
-                  >
-                    Active
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={newItem.status === "Inactive"}
-                    onCheckedChange={() => setNewItem({ ...newItem, status: "Inactive" })}
-                  >
-                    Inactive
-                  </DropdownMenuCheckboxItem>
+                  {getAvailableIngredients(newItem.ingredientIDs).length === 0 ? (
+                    <div className="px-2 py-1 text-sm text-muted-foreground">
+                      No more ingredients available
+                    </div>
+                  ) : (
+                    getAvailableIngredients(newItem.ingredientIDs).map((ingredient) => (
+                      <DropdownMenuItem
+                        key={ingredient.uuid}
+                        onClick={() => handleAddIngredient(ingredient.uuid)}
+                      >
+                        {ingredient.ingredientName}
+                      </DropdownMenuItem>
+                    ))
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
+
+              {/* Selected Ingredients */}
+              {newItem.ingredientIDs.length > 0 && (
+                <div className="mt-3">
+                  <Label className="mb-2 block text-sm font-medium">Selected Ingredients</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {getSelectedIngredients(newItem.ingredientIDs).map((ingredient) => (
+                      <div
+                        key={ingredient.uuid}
+                        className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm dark:bg-blue-900/30"
+                      >
+                        <span>{ingredient.ingredientName}</span>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-4 w-4 p-0 hover:bg-blue-200 dark:hover:bg-blue-800"
+                          onClick={() => handleRemoveIngredient(ingredient.uuid)}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowAddModal(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddModal(false)
+                setNewItem({ menuItemName: "", ingredientIDs: [] })
+              }}
+            >
               Cancel
             </Button>
-            <Button onClick={handleAddItem} disabled={!newItem.name.trim()}>
+            <Button onClick={handleAddItem} disabled={!newItem.menuItemName.trim()}>
               Save
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Edit Item Modal */}
-      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
-        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[600px]">
+      {/* Edit Menu Item Dialog */}
+      <Dialog open={showEditModal} onOpenChange={() => setShowEditModal(false)}>
+        <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Edit Menu Item</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-6 py-4">
+          <div className="space-y-4">
             <div>
-              <Label className="mb-2 block text-sm font-medium">Menu Item Name</Label>
+              <Label htmlFor="edit-name">Menu Item Name</Label>
               <Input
+                id="edit-name"
                 placeholder="Menu Item Name"
-                value={editItem.name}
-                onChange={(e) => setEditItem({ ...editItem, name: e.target.value })}
+                value={editItem.menuItemName}
+                onChange={(e) => setEditItem({ ...editItem, menuItemName: e.target.value })}
               />
             </div>
 
             <div>
-              <Label className="mb-3 block text-sm font-medium">Manage Ingredients</Label>
-              {ingredientsLoading ? (
-                <div className="text-sm text-muted-foreground">Loading ingredients...</div>
-              ) : (
-                <div className="space-y-4">
-                  {/* Current Ingredients Display */}
-                  <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/50">
-                    <Label className="mb-3 block text-sm font-medium text-green-800 dark:text-green-300">
-                      Current Ingredients ({editItem.ingredientIds.length})
-                    </Label>
-                    {editItem.ingredientIds.length === 0 ? (
-                      <p className="text-sm italic text-muted-foreground">
-                        No ingredients selected. Add some ingredients below.
-                      </p>
-                    ) : (
-                      <div className="flex flex-wrap gap-2">
-                        {getSelectedIngredients(editItem.ingredientIds).map((ingredient) => (
-                          <div
-                            key={ingredient.uuid}
-                            className="flex items-center gap-2 rounded-md bg-green-100 px-3 py-2 text-sm shadow-sm dark:bg-green-900/30"
-                          >
-                            <span className="font-medium">{ingredient.ingredientName}</span>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              className="h-5 w-5 rounded-full hover:bg-green-200 dark:hover:bg-green-800"
-                              onClick={() => handleRemoveIngredient(ingredient.uuid, true)}
-                              title={`Remove ${ingredient.ingredientName}`}
-                            >
-                              <X className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Add More Ingredients Section */}
-                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/50">
-                    <Label className="mb-3 block text-sm font-medium text-blue-800 dark:text-blue-300">
-                      Add More Ingredients
-                    </Label>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
+              <Label>Ingredients</Label>
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/50">
+                <Label className="mb-3 block text-sm font-medium text-green-800 dark:text-green-300">
+                  Current Ingredients ({editItem.ingredientIDs.length})
+                </Label>
+                {editItem.ingredientIDs.length === 0 ? (
+                  <p className="text-sm italic text-muted-foreground">
+                    No ingredients selected. Add some ingredients below.
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {getSelectedIngredients(editItem.ingredientIDs).map((ingredient) => (
+                      <div
+                        key={ingredient.uuid}
+                        className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                      >
+                        <span>{ingredient.ingredientName}</span>
                         <Button
-                          variant="outline"
-                          className="w-full justify-between"
-                          disabled={getAvailableIngredients(editItem.ingredientIds).length === 0}
+                          size="sm"
+                          variant="ghost"
+                          className="h-4 w-4 p-0 hover:bg-green-200 dark:hover:bg-green-800"
+                          onClick={() => handleRemoveIngredient(ingredient.uuid, true)}
                         >
-                          {getAvailableIngredients(editItem.ingredientIds).length === 0
-                            ? "All ingredients selected"
-                            : `Add Ingredient (${getAvailableIngredients(editItem.ingredientIds).length} available)`}
-                          <ChevronDown className="ml-2 h-4 w-4" />
+                          <X className="h-3 w-3" />
                         </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="max-h-48 w-full overflow-y-auto">
-                        <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        {getAvailableIngredients(editItem.ingredientIds).length === 0 ? (
-                          <div className="px-2 py-2 text-center text-sm text-muted-foreground">
-                            No more ingredients available
-                          </div>
-                        ) : (
-                          getAvailableIngredients(editItem.ingredientIds).map((ingredient) => (
-                            <DropdownMenuItem
-                              key={ingredient.uuid}
-                              onClick={() => handleAddIngredient(ingredient.uuid, true)}
-                              className="cursor-pointer"
-                            >
-                              <Plus className="mr-2 h-4 w-4" />
-                              {ingredient.ingredientName}
-                            </DropdownMenuItem>
-                          ))
-                        )}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                      </div>
+                    ))}
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            {/* Status Dropdown for Edit Modal */}
-            <div>
-              <Label className="mb-2 block text-sm font-medium">Status</Label>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
-                    {editItem.status}
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between"
+                    disabled={getAvailableIngredients(editItem.ingredientIDs).length === 0}
+                  >
+                    {getAvailableIngredients(editItem.ingredientIDs).length === 0
+                      ? "All ingredients selected"
+                      : `Add Ingredient (${getAvailableIngredients(editItem.ingredientIDs).length} available)`}
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-full">
-                  <DropdownMenuLabel>Select Status</DropdownMenuLabel>
+                  <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem
-                    checked={editItem.status === "Active"}
-                    onCheckedChange={() => setEditItem({ ...editItem, status: "Active" })}
-                  >
-                    Active
-                  </DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem
-                    checked={editItem.status === "Inactive"}
-                    onCheckedChange={() => setEditItem({ ...editItem, status: "Inactive" })}
-                  >
-                    Inactive
-                  </DropdownMenuCheckboxItem>
+                  {getAvailableIngredients(editItem.ingredientIDs).length === 0 ? (
+                    <div className="px-2 py-2 text-center text-sm text-muted-foreground">
+                      No more ingredients available
+                    </div>
+                  ) : (
+                    getAvailableIngredients(editItem.ingredientIDs).map((ingredient) => (
+                      <DropdownMenuItem
+                        key={ingredient.uuid}
+                        onClick={() => handleAddIngredient(ingredient.uuid, true)}
+                      >
+                        {ingredient.ingredientName}
+                      </DropdownMenuItem>
+                    ))
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowEditModal(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowEditModal(false)
+                setEditItem({ menuItemName: "", ingredientIDs: [] })
+                setSelected(null)
+              }}
+            >
               Cancel
             </Button>
-            <Button onClick={handleEditItem} disabled={!editItem.name.trim()}>
+            <Button onClick={handleEditItem} disabled={!editItem.menuItemName.trim()}>
               Update Menu Item
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Modal */}
-      <Dialog open={showDeleteModal} onOpenChange={setShowDeleteModal}>
-        <DialogContent className="sm:max-w-[425px]">
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={showDeleteModal} onOpenChange={() => setShowDeleteModal(false)}>
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Menu Item</DialogTitle>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              Are you sure you want to delete "<strong>{itemToDelete?.name}</strong>"? This action
+              Are you sure you want to delete "<strong>{itemToDelete?.menuItemName}</strong>"? This action
               cannot be undone.
             </p>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowDeleteModal(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowDeleteModal(false)
+                setItemToDelete(null)
+              }}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={handleDeleteItem}>
@@ -812,28 +621,36 @@ export default function MenuItemsDashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* View Details Modal */}
-      <Dialog open={!!selected && !showEditModal} onOpenChange={() => setSelected(null)}>
-        <DialogContent className="sm:max-w-[425px]">
+      {/* View Dialog */}
+      <Dialog open={!!selected} onOpenChange={() => setSelected(null)}>
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Menu Item Details</DialogTitle>
+            <DialogTitle>View Menu Item</DialogTitle>
           </DialogHeader>
-          <div className="grid gap-2 py-4">
-            <p>
-              <strong>Name:</strong> {selected?.name}
-            </p>
-            <p>
-              <strong>Ingredients:</strong> {selected?.ingredients || "None"}
-            </p>
-            <p>
-              <strong>Status:</strong> {selected?.status}
-            </p>
-            <p>
-              <strong>Added At:</strong> {selected?.addedAt}
-            </p>
-          </div>
+          {selected && (
+            <div className="grid gap-2 py-4">
+              <p>
+                <strong>Name:</strong> {selected.menuItemName}
+              </p>
+              <p>
+                <strong>Ingredients:</strong> {selected.ingredients.map(ing => ing.ingredientName).join(", ")}
+              </p>
+              <p>
+                <strong>Allergens:</strong>{" "}
+                {selected.allergens.length > 0
+                  ? selected.allergens.map(all => all.allergenName).join(", ")
+                  : "None"}
+              </p>
+              <p>
+                <strong>Expiry Days:</strong> {selected.expiryDays || "N/A"}
+              </p>
+            </div>
+          )}
           <DialogFooter>
-            <Button onClick={() => setSelected(null)}>Close</Button>
+            <Button onClick={() => setSelected(null)}>
+              <X className="mr-2 h-4 w-4" />
+              Close
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

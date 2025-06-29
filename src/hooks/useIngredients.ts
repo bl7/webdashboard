@@ -60,8 +60,9 @@ export function useIngredients() {
 
     setLoading(true)
     try {
-      const added = await addIngredient(ingredientData, token)
-      setIngredients((prev) => [...prev, added])
+      await addIngredient(ingredientData, token)
+      // Refresh the ingredients list to ensure state is in sync
+      await fetchIngredients()
       toast.success("Ingredient added successfully")
       return true
     } catch (err: any) {
@@ -83,8 +84,9 @@ export function useIngredients() {
 
     setLoading(true)
     try {
-      const updated = await updateIngredient(uuid, ingredientData, token)
-      setIngredients((prev) => prev.map((ing) => (ing.uuid === uuid ? updated : ing)))
+      await updateIngredient(uuid, ingredientData, token)
+      // Refresh the ingredients list to ensure state is in sync
+      await fetchIngredients()
       toast.success("Ingredient updated successfully")
       return true
     } catch (err: any) {

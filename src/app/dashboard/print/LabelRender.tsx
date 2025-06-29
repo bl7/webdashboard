@@ -13,6 +13,10 @@ interface LabelRenderProps {
   labelHeight?: LabelHeight // Add this line
 }
 
+function fitText(text: string, maxLen: number) {
+  return text.length > maxLen ? text.slice(0, maxLen - 3) + "..." : text
+}
+
 export default function LabelRender({
   item,
   expiry,
@@ -22,6 +26,51 @@ export default function LabelRender({
   maxIngredients = 5,
   labelHeight = "31mm", // Default
 }: LabelRenderProps) {
+  // --- Sizing and layout logic ---
+  let heightCm = 3.1
+  let fontSize = 12
+  let nameFontSize = 15
+  let sectionSpacing = 2
+  let maxIngredientsToShow = 2
+  let showLogo = false
+  let showInitials = false
+  let showAllergens = true
+  let showIngredients = false
+  let showPrintedExpiry = true
+  let maxNameLen = 18
+  let maxIngLen = 12
+  let maxAllergenLen = 10
+
+  if (labelHeight === "40mm") {
+    heightCm = 4.0
+    fontSize = 13
+    nameFontSize = 18
+    sectionSpacing = 4
+    maxIngredientsToShow = 5
+    showLogo = false
+    showInitials = true
+    showAllergens = true
+    showIngredients = true
+    showPrintedExpiry = true
+    maxNameLen = 22
+    maxIngLen = 16
+    maxAllergenLen = 12
+  } else if (labelHeight === "80mm") {
+    heightCm = 8.0
+    fontSize = 15
+    nameFontSize = 22
+    sectionSpacing = 8
+    maxIngredientsToShow = 12
+    showLogo = true
+    showInitials = true
+    showAllergens = true
+    showIngredients = true
+    showPrintedExpiry = true
+    maxNameLen = 32
+    maxIngLen = 22
+    maxAllergenLen = 18
+  }
+
   const shortDate = (date: string) => {
     try {
       const d = new Date(date)
@@ -42,11 +91,14 @@ export default function LabelRender({
     (ing): ing is string => typeof ing === "string" && ing.trim() !== ""
   )
   const allergensOnly = ingredientList.filter(isAllergen)
-  const tooLong = ingredientList.length > maxIngredients
+  const tooLong = ingredientList.length > maxIngredientsToShow
   const isPPDS = item.labelType === "ppds"
 
-  // Set height based on labelHeight
-  const heightCm = labelHeight === "31mm" ? 3.1 : labelHeight === "40mm" ? 4.0 : 8.0
+  // Truncate ingredients/allergens for small labels
+  const shownIngredients = ingredientList.slice(0, maxIngredientsToShow)
+  const hiddenIngredients = ingredientList.length - shownIngredients.length
+  const shownAllergens = allergensOnly.slice(0, maxIngredientsToShow)
+  const hiddenAllergens = allergensOnly.length - shownAllergens.length
 
   return (
     <div
@@ -57,28 +109,29 @@ export default function LabelRender({
         backgroundColor: "white",
         fontFamily: "monospace",
         fontWeight: "bold",
-        fontSize: 12,
+        fontSize,
         display: "flex",
         flexDirection: "column",
         boxSizing: "border-box",
-        border: "1px solid black",
-        position: "relative", // <-- Add this
-        overflow: "hidden", // <-- Add this to prevent overflow
+        border: "2px solid black",
+        borderRadius: 6,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* Watermark logo for PPDS */}
-      {isPPDS && (
+      {/* Watermark logo for PPDS, only on 80mm */}
+      {isPPDS && showLogo && (
         <img
           src="/logo_long.png"
           alt="Logo"
           style={{
             position: "absolute",
             left: "50%",
-            top: "70%", // Move further down
+            top: "70%",
             transform: "translate(-50%, -50%)",
             opacity: 0.13,
-            maxWidth: "98%", // Make it a bit wider
-            maxHeight: "75%", // Make it a bit taller
+            maxWidth: "98%",
+            maxHeight: "75%",
             objectFit: "contain",
             pointerEvents: "none",
             zIndex: 0,
@@ -88,79 +141,150 @@ export default function LabelRender({
         />
       )}
 
+      {/* Item Name */}
       <div
         style={{
           textAlign: "center",
           backgroundColor: "black",
           color: "white",
           padding: "2px 0",
-          marginBottom: 6,
+          marginBottom: sectionSpacing,
           zIndex: 1,
           position: "relative",
+          fontSize: nameFontSize,
+          fontWeight: 900,
+          letterSpacing: 1,
+          textTransform: "uppercase",
+          borderRadius: 2,
         }}
       >
-        {item.name}
+        {fitText(item.name, maxNameLen)}
       </div>
 
-      <div
-        style={{
-          fontSize: 10,
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          zIndex: 1,
-          position: "relative",
-        }}
-      >
-        {/* Only show Printed/Expiry for non-PPDS */}
-        {!isPPDS && (
-          <div>
-            Printed: {shortPrinted} &nbsp;&nbsp; Expiry: {shortExpiry}
-          </div>
-        )}
+      {/* Dates */}
+      {showPrintedExpiry && !isPPDS && (
+        <div
+          style={{
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+          }}
+        >
+          <span>Printed: {shortPrinted}</span>
+          <span>Expiry: {shortExpiry}</span>
+        </div>
+      )}
+      {showPrintedExpiry && isPPDS && (
+        <div
+          style={{
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            textAlign: "center",
+          }}
+        >
+          Best Before: {shortExpiry}
+        </div>
+      )}
 
-        {item.type === "ingredients" ? (
-          <div>
-            Allergens:{" "}
-            {item.allergens?.length
-              ? item.allergens.map((a) => <span key={a.allergenName}>*{a.allergenName}* </span>)
-              : "No allergens declared"}
-          </div>
-        ) : isPPDS ? (
-          <>
-            <div style={{ textAlign: "center" }}>Best Before: {shortExpiry}</div>
-            <div>
-              Ingredients:{" "}
-              {ingredientList.map((ing) =>
-                isAllergen(ing) ? <b key={ing}>*{ing}* </b> : <span key={ing}>{ing} </span>
-              )}
-            </div>
-          </>
-        ) : (
-          <div>
-            {tooLong ? (
-              <>
-                Allergens:{" "}
-                {allergensOnly.map((a) => (
-                  <b key={a}>*{a}* </b>
-                ))}
-              </>
+      {/* Ingredients */}
+      {showIngredients && shownIngredients.length > 0 && (
+        <div
+          style={{
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <span style={{ fontWeight: 700 }}>Ingredients:</span>
+          {shownIngredients.map((ing, idx) =>
+            isAllergen(ing) ? (
+              <span
+                key={ing + idx}
+                style={{
+                  fontWeight: 900,
+                  border: "1px solid black",
+                  padding: "0 2px",
+                  marginLeft: 2,
+                  marginRight: 2,
+                  fontSize: fontSize - 1,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                }}
+              >
+                *{fitText(ing, maxIngLen)}*
+              </span>
             ) : (
-              <>
-                Ingredients:{" "}
-                {ingredientList.map((ing) =>
-                  isAllergen(ing) ? <b key={ing}>*{ing}* </b> : <span key={ing}>{ing} </span>
-                )}
-              </>
-            )}
-          </div>
-        )}
+              <span key={ing + idx} style={{ marginLeft: 2, fontWeight: 500 }}>
+                {fitText(ing, maxIngLen)}
+              </span>
+            )
+          )}
+          {hiddenIngredients > 0 && (
+            <span style={{ fontWeight: 700, marginLeft: 4 }}>+{hiddenIngredients} more</span>
+          )}
+        </div>
+      )}
 
-        {useInitials && selectedInitial && (
-          <div style={{ textAlign: "right" }}>{selectedInitial}</div>
-        )}
-      </div>
+      {/* Allergens (if not shown inline) */}
+      {showAllergens && !showIngredients && shownAllergens.length > 0 && (
+        <div
+          style={{
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            textTransform: "uppercase",
+          }}
+        >
+          Contains:
+          {shownAllergens.map((a, idx) => (
+            <span
+              key={a + idx}
+              style={{
+                fontWeight: 900,
+                border: "1px solid black",
+                padding: "0 2px",
+                marginLeft: 2,
+                marginRight: 2,
+                fontSize: fontSize - 1,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              *{fitText(a, maxAllergenLen)}*
+            </span>
+          ))}
+          {hiddenAllergens > 0 && (
+            <span style={{ fontWeight: 700, marginLeft: 4 }}>+{hiddenAllergens} more</span>
+          )}
+        </div>
+      )}
+
+      {/* Initials */}
+      {showInitials && useInitials && selectedInitial && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 6,
+            right: 8,
+            fontSize: fontSize + 2,
+            fontWeight: 900,
+            border: "1.5px solid black",
+            borderRadius: 4,
+            padding: "0 6px",
+            background: "white",
+            zIndex: 2,
+          }}
+        >
+          {selectedInitial}
+        </div>
+      )}
     </div>
   )
 }

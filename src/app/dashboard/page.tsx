@@ -64,7 +64,7 @@ export default function DashboardPage() {
     listItems = ingredients.map((i) => i.ingredientName)
   } else if (activeList === "menuItems") {
     listTitle = "Menu Items"
-    listItems = menuItems.map((m) => m.name)
+    listItems = menuItems.map((m) => m.menuItemName)
   }
 
   // Card configs
@@ -97,7 +97,7 @@ export default function DashboardPage() {
             Dashboard
           </h1>
           <p className="mx-auto mb-10 max-w-2xl text-center text-lg font-medium text-gray-600">
-            Welcome to your InstaLabel! Here you’ll find an overview of your projects and stats.
+            Welcome to your InstaLabel! Here you'll find an overview of your projects and stats.
           </p>
           <div className={`grid grid-cols-1 md:grid-cols-3 ${activeList ? "gap-0" : "gap-6"}`}>
             {cards.map((card) => {

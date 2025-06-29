@@ -1,26 +1,36 @@
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { getAllMenuItems, addMenuItems } from "@/lib/api"
+import { getAllMenuItems, addMenuItems, getMenuItem, updateMenuItem, deleteMenuItem } from "@/lib/api"
 
 export type MenuItem = {
-  id: string
-  name: string
-  ingredients: string
-  ingredientIds: string[]
-  status: "Active" | "Inactive"
-  addedAt: string
+  menuItemID: string
+  menuItemName: string
+  expiryDays?: number
+  categoryID?: string
+  ingredients: {
+    uuid: string
+    ingredientName: string
+    category?: {
+      uuid: string
+      categoryName: string
+    }
+  }[]
+  allergens: {
+    uuid: string
+    allergenName: string
+  }[]
 }
 
 type AddMenuItemData = {
-  name: string
-  ingredientIds: string[]
-  status: string
+  menuItemName: string
+  ingredientIDs: string[]
+  categoryID?: string
 }
 
 type UpdateMenuItemData = {
-  name: string
-  ingredientIds: string[]
-  status: string
+  menuItemName?: string
+  ingredientIDs?: string[]
+  categoryID?: string
 }
 
 export function useMenuItems() {
@@ -42,29 +52,27 @@ export function useMenuItems() {
     try {
       const res = await getAllMenuItems(token)
       if (!res?.data) {
-        setError("No data found.")
+        setMenuItems([])
         return
       }
 
-      const menuItemsData: MenuItem[] = []
+      // Flatten the grouped data into a single array
+      const flattenedMenuItems: MenuItem[] = []
       for (const category of res.data) {
         if (!category.items) continue
         for (const item of category.items) {
-          const ingredientIds = item.ingredients?.map((ing: any) => ing.ingredientID) || []
-          menuItemsData.push({
-            id: item.menuItemID,
-            name: item.menuItemName,
-            ingredients: item.ingredients
-              ? item.ingredients.map((ing: any) => ing.ingredientName).join(", ")
-              : "",
-            ingredientIds,
-            status: "Active", // default since API does not provide this
-            addedAt: new Date().toISOString().split("T")[0],
+          flattenedMenuItems.push({
+            menuItemID: item.menuItemID,
+            menuItemName: item.menuItemName,
+            expiryDays: item.expiryDays,
+            categoryID: item.categoryID,
+            ingredients: item.ingredients || [],
+            allergens: item.allergens || [],
           })
         }
       }
 
-      setMenuItems(menuItemsData)
+      setMenuItems(flattenedMenuItems)
       setError(null)
     } catch (err: any) {
       console.error("Error fetching menu items:", err)
@@ -86,21 +94,11 @@ export function useMenuItems() {
 
     setLoading(true)
     try {
-      // Note: You might need to update the addMenuItems API function
-      // as it currently seems to post to /ingredients endpoint
-      const added = await addMenuItems(menuItemData, token)
-
-      // For now, we'll simulate the addition locally until API is fixed
-      const newMenuItem: MenuItem = {
-        id: (Math.random() * 100000).toFixed(0),
-        name: menuItemData.name,
-        ingredients: "", // Will be populated with ingredient names
-        ingredientIds: menuItemData.ingredientIds,
-        status: menuItemData.status as "Active" | "Inactive",
-        addedAt: new Date().toISOString().split("T")[0],
-      }
-
-      setMenuItems((prev) => [...prev, newMenuItem])
+      const response = await addMenuItems(menuItemData, token)
+      
+      // Refresh the menu items list to get the updated data
+      await fetchMenuItems()
+      
       toast.success("Menu item added successfully")
       return true
     } catch (err: any) {
@@ -113,7 +111,7 @@ export function useMenuItems() {
   }
 
   // Update existing menu item
-  const updateExistingMenuItem = async (id: string, menuItemData: UpdateMenuItemData) => {
+  const updateExistingMenuItem = async (menuItemId: string, menuItemData: UpdateMenuItemData) => {
     const token = localStorage.getItem("token")
     if (!token) {
       toast.error("Authentication token not found")
@@ -122,22 +120,11 @@ export function useMenuItems() {
 
     setLoading(true)
     try {
-      // TODO: Implement updateMenuItem API call when available
-      // const updated = await updateMenuItem(id, menuItemData, token)
-
-      // For now, update locally
-      setMenuItems((prev) =>
-        prev.map((item) =>
-          item.id === id
-            ? {
-                ...item,
-                name: menuItemData.name,
-                ingredientIds: menuItemData.ingredientIds,
-                status: menuItemData.status as "Active" | "Inactive",
-              }
-            : item
-        )
-      )
+      await updateMenuItem(menuItemId, menuItemData, token)
+      
+      // Refresh the menu items list to get the updated data
+      await fetchMenuItems()
+      
       toast.success("Menu item updated successfully")
       return true
     } catch (err: any) {
@@ -150,7 +137,7 @@ export function useMenuItems() {
   }
 
   // Delete menu item
-  const deleteExistingMenuItem = async (id: string) => {
+  const deleteExistingMenuItem = async (menuItemId: string) => {
     const token = localStorage.getItem("token")
     if (!token) {
       toast.error("Authentication token not found")
@@ -159,11 +146,11 @@ export function useMenuItems() {
 
     setLoading(true)
     try {
-      // TODO: Implement deleteMenuItem API call when available
-      // await deleteMenuItem(id, token)
-
-      // For now, delete locally
-      setMenuItems((prev) => prev.filter((item) => item.id !== id))
+      await deleteMenuItem(menuItemId, token)
+      
+      // Remove from local state
+      setMenuItems((prev) => prev.filter((item) => item.menuItemID !== menuItemId))
+      
       toast.success("Menu item deleted successfully")
       return true
     } catch (err: any) {
@@ -175,26 +162,35 @@ export function useMenuItems() {
     }
   }
 
-  // Filter menu items by search term and status
-  const filterMenuItems = (
-    searchTerm: string,
-    statusFilter: "All" | "Active" | "Inactive" = "All"
-  ) => {
-    return menuItems.filter((item) => {
-      const matchesQuery = item.name.toLowerCase().includes(searchTerm.toLowerCase())
-      const matchesFilter = statusFilter === "All" ? true : item.status === statusFilter
-      return matchesQuery && matchesFilter
-    })
+  // Get single menu item by ID
+  const getMenuItemById = async (menuItemId: string) => {
+    const token = localStorage.getItem("token")
+    if (!token) {
+      toast.error("Authentication token not found")
+      return null
+    }
+
+    try {
+      const response = await getMenuItem(menuItemId, token)
+      return response.data
+    } catch (err: any) {
+      console.error("Error fetching menu item:", err)
+      toast.error(err.message || "Failed to fetch menu item")
+      return null
+    }
   }
 
-  // Get active menu items count
-  const getActiveCount = () => {
-    return menuItems.filter((item) => item.status === "Active").length
+  // Filter menu items by search term
+  const filterMenuItems = (searchTerm: string) => {
+    return menuItems.filter((item) =>
+      item.menuItemName.toLowerCase().includes(searchTerm.toLowerCase())
+    )
   }
 
-  // Get inactive menu items count
-  const getInactiveCount = () => {
-    return menuItems.filter((item) => item.status === "Inactive").length
+  // Get menu items by category
+  const getMenuItemsByCategory = (categoryID?: string) => {
+    if (!categoryID) return menuItems
+    return menuItems.filter((item) => item.categoryID === categoryID)
   }
 
   // Initialize data on mount
@@ -210,8 +206,8 @@ export function useMenuItems() {
     addNewMenuItem,
     updateExistingMenuItem,
     deleteExistingMenuItem,
+    getMenuItemById,
     filterMenuItems,
-    getActiveCount,
-    getInactiveCount,
+    getMenuItemsByCategory,
   }
 }

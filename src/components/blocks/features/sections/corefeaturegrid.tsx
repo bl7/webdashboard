@@ -47,6 +47,7 @@ const features = [
     solution: "Print in the middle of service without delay.",
     outcome: "Labels don't slow down the line.",
   },
+  
 ]
 
 const roles = [

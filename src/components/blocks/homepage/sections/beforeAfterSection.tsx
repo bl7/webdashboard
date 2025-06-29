@@ -37,8 +37,8 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
       onTouchMove={handleMouseMove}
     >
       <Image src={beforeImage} alt="Before" fill className="object-cover" draggable={false} />
-      <div className="absolute inset-0 overflow-hidden" style={{ width: `${sliderPos}%` }}>
-        <Image src={afterImage} alt="After" fill className="object-cover" draggable={false} />
+      <div className="absolute inset-0 overflow-hidden" style={{ width: `${sliderPos}%`, height: '100%', top: 0, left: 0 }}>
+        <Image src={afterImage} alt="After" draggable={false} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       </div>
       <div className="absolute bottom-0 top-0" style={{ left: `${sliderPos}%` }}>
         <div className="relative mx-auto h-full w-1 bg-primary">

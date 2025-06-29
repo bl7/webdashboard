@@ -1,7 +1,11 @@
 import React, { useState, ChangeEvent } from "react"
 import * as XLSX from "xlsx"
-import { Upload, FileText, CheckCircle, AlertCircle, X, Download } from "lucide-react"
+import { Upload, FileText, CheckCircle, AlertCircle, X, Download, Play, RefreshCw, ExternalLink } from "lucide-react"
 import DataTable from "./DataTable"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import Link from "next/link"
 import {
   useImportProcessor,
   ParsedAllergen,
@@ -48,12 +52,14 @@ const ExcelUpload: React.FC = () => {
   const [importResult, setImportResult] = useState<any>(null)
   const [uploadError, setUploadError] = useState<string>("")
   const [hasUploaded, setHasUploaded] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
+  const [importCompleted, setImportCompleted] = useState(false)
   const { processImport, processing } = useImportProcessor()
 
   const validateFileFormat = (jsonData: Array<Record<string, any>>): boolean => {
     if (!jsonData.length) return false
 
-    const requiredColumns = ["menu_item_name", "ingredient_name", "shelf_life_hours", "allergens"]
+    const requiredColumns = ["menu_item_name", "ingredient_name", "shelf_life_days", "allergens"]
     const firstRow = jsonData[0]
     const hasRequiredColumns = requiredColumns.some((col) =>
       Object.keys(firstRow).some((key) =>
@@ -86,64 +92,13 @@ const ExcelUpload: React.FC = () => {
 
         if (!validateFileFormat(jsonData as Array<Record<string, any>>)) {
           setUploadError(
-            "File format not recognized. Please ensure your file contains columns for menu items, ingredients, shelf life, and allergens."
+            "File format not recognized. Please ensure your file contains columns: menu_item_name, ingredient_name, shelf_life_days, allergens"
           )
           return
         }
 
         setData(jsonData as Array<Record<string, any>>)
         setHasUploaded(true)
-
-        // Transform raw jsonData into structured parsed arrays
-        const allergensSet = new Set<string>()
-        const ingredientsMap = new Map<string, { expiryDays: number; allergenNames: string[] }>()
-        const menuItemsMap = new Map<string, Set<string>>()
-
-        ;(jsonData as Array<Record<string, any>>).forEach((row) => {
-          const menuItemName = (row["menu_item_name"] || "").trim()
-          const ingredientName = (row["ingredient_name"] || "").trim()
-          const shelfLifeRaw = row["shelf_life_hours"]
-          const shelfLife =
-            typeof shelfLifeRaw === "number" ? shelfLifeRaw : parseInt(shelfLifeRaw as string) || 0
-          const allergenStr = (row["allergens"] || "") as string
-          const allergenNames = allergenStr
-            .split(",")
-            .map((a) => a.trim())
-            .filter((a) => a.length > 0)
-
-          allergenNames.forEach((a) => allergensSet.add(a))
-
-          if (!ingredientsMap.has(ingredientName)) {
-            ingredientsMap.set(ingredientName, {
-              expiryDays: shelfLife,
-              allergenNames,
-            })
-          }
-
-          if (!menuItemsMap.has(menuItemName)) {
-            menuItemsMap.set(menuItemName, new Set())
-          }
-          menuItemsMap.get(menuItemName)?.add(ingredientName)
-        })
-
-        const parsedAllergens: ParsedAllergen[] = Array.from(allergensSet).map((name) => ({ name }))
-        const parsedIngredients: ParsedIngredient[] = Array.from(ingredientsMap.entries()).map(
-          ([name, { expiryDays, allergenNames }]) => ({
-            name,
-            expiryDays,
-            allergenNames,
-          })
-        )
-        const parsedMenuItems: ParsedMenuItem[] = Array.from(menuItemsMap.entries()).map(
-          ([name, ingredientSet]) => ({
-            name,
-            ingredientNames: Array.from(ingredientSet),
-          })
-        )
-
-        // Call the import processor hook to compare and prepare data
-        const result = await processImport(parsedAllergens, parsedIngredients, parsedMenuItems)
-        setImportResult(result)
       } catch (error) {
         console.error("Import processing failed", error)
         setUploadError("Failed to process the file. Please check the format and try again.")
@@ -152,11 +107,79 @@ const ExcelUpload: React.FC = () => {
     reader.readAsBinaryString(file)
   }
 
+  const handleImport = async () => {
+    if (!data.length) return
+
+    setIsImporting(true)
+    setImportCompleted(false)
+
+    try {
+      // Transform raw jsonData into structured parsed arrays
+      const allergensSet = new Set<string>()
+      const ingredientsMap = new Map<string, { expiryDays: number; allergenNames: string[] }>()
+      const menuItemsMap = new Map<string, Set<string>>()
+
+      data.forEach((row) => {
+        const menuItemName = (row["menu_item_name"] || "").trim()
+        const ingredientName = (row["ingredient_name"] || "").trim()
+        const shelfLifeRaw = row["shelf_life_days"]
+        const shelfLife =
+          typeof shelfLifeRaw === "number" ? shelfLifeRaw : parseInt(shelfLifeRaw as string) || 0
+        const allergenStr = (row["allergens"] || "") as string
+        const allergenNames = allergenStr
+          .split(",")
+          .map((a) => a.trim())
+          .filter((a) => a.length > 0)
+
+        allergenNames.forEach((a) => allergensSet.add(a))
+
+        if (!ingredientsMap.has(ingredientName)) {
+          ingredientsMap.set(ingredientName, {
+            expiryDays: shelfLife,
+            allergenNames,
+          })
+        }
+
+        if (!menuItemsMap.has(menuItemName)) {
+          menuItemsMap.set(menuItemName, new Set())
+        }
+        menuItemsMap.get(menuItemName)?.add(ingredientName)
+      })
+
+      const parsedAllergens: ParsedAllergen[] = Array.from(allergensSet).map((name) => ({ name }))
+      const parsedIngredients: ParsedIngredient[] = Array.from(ingredientsMap.entries()).map(
+        ([name, { expiryDays, allergenNames }]) => ({
+          name,
+          expiryDays,
+          allergenNames,
+        })
+      )
+      const parsedMenuItems: ParsedMenuItem[] = Array.from(menuItemsMap.entries()).map(
+        ([name, ingredientSet]) => ({
+          name,
+          ingredientNames: Array.from(ingredientSet),
+        })
+      )
+
+      // Call the import processor hook to compare and prepare data
+      const result = await processImport(parsedAllergens, parsedIngredients, parsedMenuItems)
+      setImportResult(result)
+      setImportCompleted(true)
+    } catch (error) {
+      console.error("Import processing failed", error)
+      setUploadError("Failed to process the import. Please check the data and try again.")
+    } finally {
+      setIsImporting(false)
+    }
+  }
+
   const resetUpload = () => {
     setHasUploaded(false)
     setData([])
     setImportResult(null)
     setUploadError("")
+    setImportCompleted(false)
+    setIsImporting(false)
   }
 
   const downloadTemplate = () => {
@@ -165,38 +188,134 @@ const ExcelUpload: React.FC = () => {
       {
         menu_item_name: "Caesar Salad",
         ingredient_name: "Romaine Lettuce",
-        shelf_life_hours: 72,
+        shelf_life_days: 3,
         allergens: "None",
       },
       {
         menu_item_name: "Caesar Salad",
         ingredient_name: "Parmesan Cheese",
-        shelf_life_hours: 168,
+        shelf_life_days: 7,
         allergens: "Dairy",
       },
       {
         menu_item_name: "Caesar Salad",
         ingredient_name: "Caesar Dressing",
-        shelf_life_hours: 336,
+        shelf_life_days: 14,
         allergens: "Eggs, Fish",
+      },
+      {
+        menu_item_name: "Caesar Salad",
+        ingredient_name: "Croutons",
+        shelf_life_days: 30,
+        allergens: "Gluten, Wheat",
       },
       {
         menu_item_name: "Margherita Pizza",
         ingredient_name: "Pizza Dough",
-        shelf_life_hours: 48,
-        allergens: "Gluten",
+        shelf_life_days: 2,
+        allergens: "Gluten, Wheat",
       },
       {
         menu_item_name: "Margherita Pizza",
         ingredient_name: "Mozzarella Cheese",
-        shelf_life_hours: 240,
+        shelf_life_days: 10,
         allergens: "Dairy",
       },
       {
         menu_item_name: "Margherita Pizza",
         ingredient_name: "Tomato Sauce",
-        shelf_life_hours: 120,
+        shelf_life_days: 5,
         allergens: "None",
+      },
+      {
+        menu_item_name: "Margherita Pizza",
+        ingredient_name: "Fresh Basil",
+        shelf_life_days: 1,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chicken Burger",
+        ingredient_name: "Chicken Patty",
+        shelf_life_days: 2,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chicken Burger",
+        ingredient_name: "Burger Bun",
+        shelf_life_days: 3,
+        allergens: "Gluten, Wheat",
+      },
+      {
+        menu_item_name: "Chicken Burger",
+        ingredient_name: "Lettuce",
+        shelf_life_days: 4,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chicken Burger",
+        ingredient_name: "Tomato",
+        shelf_life_days: 3,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chicken Burger",
+        ingredient_name: "Mayonnaise",
+        shelf_life_days: 7,
+        allergens: "Eggs",
+      },
+      {
+        menu_item_name: "Pasta Carbonara",
+        ingredient_name: "Spaghetti",
+        shelf_life_days: 365,
+        allergens: "Gluten, Wheat",
+      },
+      {
+        menu_item_name: "Pasta Carbonara",
+        ingredient_name: "Bacon",
+        shelf_life_days: 7,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Pasta Carbonara",
+        ingredient_name: "Eggs",
+        shelf_life_days: 7,
+        allergens: "Eggs",
+      },
+      {
+        menu_item_name: "Pasta Carbonara",
+        ingredient_name: "Parmesan Cheese",
+        shelf_life_days: 7,
+        allergens: "Dairy",
+      },
+      {
+        menu_item_name: "Chocolate Cake",
+        ingredient_name: "Flour",
+        shelf_life_days: 365,
+        allergens: "Gluten, Wheat",
+      },
+      {
+        menu_item_name: "Chocolate Cake",
+        ingredient_name: "Sugar",
+        shelf_life_days: 730,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chocolate Cake",
+        ingredient_name: "Eggs",
+        shelf_life_days: 7,
+        allergens: "Eggs",
+      },
+      {
+        menu_item_name: "Chocolate Cake",
+        ingredient_name: "Chocolate",
+        shelf_life_days: 365,
+        allergens: "None",
+      },
+      {
+        menu_item_name: "Chocolate Cake",
+        ingredient_name: "Butter",
+        shelf_life_days: 7,
+        allergens: "Dairy",
       },
     ]
 
@@ -243,7 +362,7 @@ const ExcelUpload: React.FC = () => {
                               Choose your menu file
                             </h3>
                             <p className="mb-6 text-gray-600">
-                              Upload Excel or CSV files with your menu items, ingredients, and
+                              Upload Excel or CSV files with your menu items, ingredients, shelf life (days), and
                               allergens
                             </p>
                           </div>
@@ -280,13 +399,18 @@ const ExcelUpload: React.FC = () => {
                     </div>
 
                     {processing && (
-                      <div className="mt-6 animate-[fadeIn_0.5s_ease-out] rounded-xl border border-blue-200 bg-blue-50 p-4">
+                      <div className="animate-[fadeIn_0.5s_ease-out] rounded-xl border border-blue-200 bg-blue-50 p-4">
                         <div className="flex items-center space-x-3">
                           <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
-                          <p className="font-medium text-blue-700">
-                            Processing import, please wait...
+                          <p className="text-sm font-medium text-blue-700">
+                            {isImporting ? "Importing data to database..." : "Processing import, please wait..."}
                           </p>
                         </div>
+                        {isImporting && (
+                          <div className="mt-2 text-xs text-blue-600">
+                            Creating allergens, ingredients, and menu items...
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -322,6 +446,27 @@ const ExcelUpload: React.FC = () => {
                       </div>
 
                       <div className="animate-[slideInLeft_0.6s_ease-out_0.4s_both] space-y-4">
+                        {!importCompleted && (
+                          <Button
+                            onClick={handleImport}
+                            disabled={isImporting || processing}
+                            className="w-full"
+                            size="lg"
+                          >
+                            {isImporting ? (
+                              <>
+                                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                Importing...
+                              </>
+                            ) : (
+                              <>
+                                <Play className="mr-2 h-4 w-4" />
+                                Start Import
+                              </>
+                            )}
+                          </Button>
+                        )}
+
                         <label className="inline-flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-blue-100 px-4 py-3 font-medium text-blue-700 transition-all duration-200 hover:scale-[1.02] hover:bg-blue-200">
                           <Upload className="mr-2 h-4 w-4" />
                           Change File
@@ -359,13 +504,8 @@ const ExcelUpload: React.FC = () => {
                       </div>
                     )}
 
-                    {importResult && (
-                      <div className="min-h-0 flex-1 animate-[slideInLeft_0.6s_ease-out_0.6s_both] overflow-hidden rounded-xl border border-gray-200 bg-gray-50 p-4">
-                        <h3 className="mb-3 font-semibold text-gray-800">Import Results</h3>
-                        <pre className="h-full overflow-auto text-xs text-gray-600">
-                          {JSON.stringify(importResult, null, 2)}
-                        </pre>
-                      </div>
+                    {importCompleted && (
+                      <></>
                     )}
                   </div>
                 </div>
@@ -374,16 +514,267 @@ const ExcelUpload: React.FC = () => {
               {/* Right Panel - Data Preview (2/3) */}
               <div className="lg:col-span-2">
                 <div className="flex h-full animate-[slideInRight_0.8s_ease-out] flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-700 ease-out hover:shadow-xl">
-                  <div className="animate-[slideInRight_0.6s_ease-out_0.2s_both] border-b border-gray-200 bg-gray-50 p-6">
-                    <h2 className="text-2xl font-bold text-gray-800">Imported Data Preview</h2>
-                    <p className="mt-1 text-gray-600">
-                      Review your menu data before finalizing the import
-                    </p>
-                  </div>
+                  {!isImporting && !importCompleted ? (
+                    <>
+                      <div className="animate-[slideInRight_0.6s_ease-out_0.2s_both] border-b border-gray-200 bg-gray-50 p-6">
+                        <h2 className="text-2xl font-bold text-gray-800">Imported Data Preview</h2>
+                        <p className="mt-1 text-gray-600">
+                          Review your menu data before finalizing the import
+                        </p>
+                      </div>
 
-                  <div className="min-h-0 flex-1 animate-[slideInRight_0.6s_ease-out_0.4s_both] overflow-auto bg-white p-6">
-                    <DataTable data={data} />
-                  </div>
+                      <div className="min-h-0 flex-1 animate-[slideInRight_0.6s_ease-out_0.4s_both] overflow-auto bg-white p-6">
+                        <DataTable data={data} />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="animate-[slideInRight_0.6s_ease-out_0.2s_both] border-b border-gray-200 bg-gray-50 p-6">
+                        <h2 className="text-2xl font-bold text-gray-800">Import Summary</h2>
+                        <p className="mt-1 text-gray-600">
+                          {isImporting ? "Processing your import..." : "Import completed successfully!"}
+                        </p>
+                      </div>
+
+                      <div className="min-h-0 flex-1 animate-[slideInRight_0.6s_ease-out_0.4s_both] overflow-auto bg-white p-6">
+                        {isImporting ? (
+                          <div className="flex h-full items-center justify-center">
+                            <div className="text-center">
+                              <div className="mb-4 h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
+                              <h3 className="text-lg font-semibold text-gray-800 mb-2">Importing Data</h3>
+                              <p className="text-gray-600">
+                                Creating allergens, ingredients, and menu items...
+                              </p>
+                              <div className="mt-4 text-sm text-gray-500">
+                                This may take a few moments depending on the amount of data
+                              </div>
+                            </div>
+                          </div>
+                        ) : importCompleted ? (
+                          <div className="space-y-4">
+                            {/* Calculate summary statistics */}
+                            {(() => {
+                              const { stats, warnings, createdMenuItems, existingItems, newItems } = importResult
+                              const totalProcessed = stats.allergens.existing + stats.allergens.created + 
+                                                    stats.ingredients.existing + stats.ingredients.created + 
+                                                    stats.menuItems.existing + stats.menuItems.created + stats.menuItems.skipped
+                              const totalReused = stats.allergens.existing + stats.ingredients.existing + stats.menuItems.existing
+                              const totalCreated = stats.allergens.created + stats.ingredients.created + stats.menuItems.created
+                              const efficiencyPercentage = totalProcessed > 0 ? Math.round((totalReused / totalProcessed) * 100) : 0
+
+                              return (
+                                <>
+                                  {/* Summary Card */}
+                                  <Card className="border-green-200 bg-green-50">
+                                    <CardContent className="pt-6">
+                                      <div className="flex items-center justify-between">
+                                        <div>
+                                          <h3 className="text-lg font-semibold text-green-800">Import Completed Successfully!</h3>
+                                          <p className="text-sm text-green-600">
+                                            Processed {totalProcessed} items with {efficiencyPercentage}% efficiency
+                                          </p>
+                                        </div>
+                                        <div className="text-right">
+                                          <div className="text-2xl font-bold text-green-800">{totalCreated}</div>
+                                          <div className="text-xs text-green-600">New Items</div>
+                                        </div>
+                                      </div>
+                                      <div className="mt-4 grid grid-cols-3 gap-4 text-center">
+                                        <div>
+                                          <div className="text-lg font-semibold text-green-700">{totalReused}</div>
+                                          <div className="text-xs text-green-600">Reused</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-lg font-semibold text-green-700">{totalCreated}</div>
+                                          <div className="text-xs text-green-600">Created</div>
+                                        </div>
+                                        <div>
+                                          <div className="text-lg font-semibold text-green-700">{efficiencyPercentage}%</div>
+                                          <div className="text-xs text-green-600">Efficiency</div>
+                                        </div>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+
+                                  {/* Detailed Results */}
+                                  <Card>
+                                    <CardHeader>
+                                      <CardTitle className="flex items-center gap-2">
+                                        <CheckCircle className="h-5 w-5 text-green-600" />
+                                        Import Details
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-4">
+                                      <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                          <h4 className="font-semibold text-sm">Allergens</h4>
+                                          <div className="flex gap-2">
+                                            <Badge variant="outline">{stats.allergens.existing} existing</Badge>
+                                            <Badge variant="default">{stats.allergens.created} created</Badge>
+                                          </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                          <h4 className="font-semibold text-sm">Ingredients</h4>
+                                          <div className="flex gap-2">
+                                            <Badge variant="outline">{stats.ingredients.existing} existing</Badge>
+                                            <Badge variant="default">{stats.ingredients.created} created</Badge>
+                                          </div>
+                                        </div>
+                                        <div className="space-y-2">
+                                          <h4 className="font-semibold text-sm">Menu Items</h4>
+                                          <div className="flex gap-2">
+                                            <Badge variant="outline">{stats.menuItems.existing} existing</Badge>
+                                            <Badge variant="default">{stats.menuItems.created} created</Badge>
+                                            <Badge variant="destructive">{stats.menuItems.skipped} skipped</Badge>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      {/* Existing Items Section */}
+                                      {(existingItems.allergens.length > 0 || existingItems.ingredients.length > 0 || existingItems.menuItems.length > 0) && (
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-blue-600 flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4" />
+                                            Existing Items Found & Reused
+                                          </h4>
+                                          
+                                          {existingItems.allergens.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Allergens ({existingItems.allergens.length})</h5>
+                                              <div className="grid grid-cols-2 gap-1">
+                                                {existingItems.allergens.map((allergen: { name: string; id: string }, index: number) => (
+                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                    ✓ {allergen.name}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {existingItems.ingredients.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Ingredients ({existingItems.ingredients.length})</h5>
+                                              <div className="grid grid-cols-2 gap-1">
+                                                {existingItems.ingredients.map((ingredient: { name: string; id: string }, index: number) => (
+                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                    ✓ {ingredient.name}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {existingItems.menuItems.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Menu Items ({existingItems.menuItems.length})</h5>
+                                              <div className="grid grid-cols-1 gap-1">
+                                                {existingItems.menuItems.map((menuItem: { name: string; id: string }, index: number) => (
+                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                    ✓ {menuItem.name} (skipped - already exists)
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {/* New Items Section */}
+                                      {(newItems.allergens.length > 0 || newItems.ingredients.length > 0 || newItems.menuItems.length > 0) && (
+                                        <div className="space-y-3">
+                                          <h4 className="font-semibold text-sm text-green-600 flex items-center gap-2">
+                                            <CheckCircle className="h-4 w-4" />
+                                            New Items Created
+                                          </h4>
+                                          
+                                          {newItems.allergens.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Allergens ({newItems.allergens.length})</h5>
+                                              <div className="grid grid-cols-2 gap-1">
+                                                {newItems.allergens.map((allergen: { name: string; id: string }, index: number) => (
+                                                  <div key={index} className="text-xs bg-green-50 text-green-700 p-2 rounded">
+                                                    ➕ {allergen.name}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {newItems.ingredients.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Ingredients ({newItems.ingredients.length})</h5>
+                                              <div className="grid grid-cols-2 gap-1">
+                                                {newItems.ingredients.map((ingredient: { name: string; id: string }, index: number) => (
+                                                  <div key={index} className="text-xs bg-green-50 text-green-700 p-2 rounded">
+                                                    ➕ {ingredient.name}
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+
+                                          {newItems.menuItems.length > 0 && (
+                                            <div className="space-y-2">
+                                              <h5 className="text-xs font-medium text-gray-600">Menu Items ({newItems.menuItems.length})</h5>
+                                              <div className="grid grid-cols-1 gap-1">
+                                                {newItems.menuItems.map((menuItem: { name: string; id: string; ingredientIds: string[] }, index: number) => (
+                                                  <div key={index} className="text-xs bg-green-50 text-green-700 p-2 rounded">
+                                                    ➕ {menuItem.name} ({menuItem.ingredientIds.length} ingredients)
+                                                  </div>
+                                                ))}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      )}
+
+                                      {warnings.length > 0 && (
+                                        <div className="space-y-2">
+                                          <h4 className="font-semibold text-sm text-amber-600">Warnings</h4>
+                                          <div className="space-y-1">
+                                            {warnings.map((warning: string, index: number) => (
+                                              <p key={index} className="text-sm text-amber-700 bg-amber-50 p-2 rounded">
+                                                ⚠️ {warning}
+                                              </p>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {/* Navigation Buttons */}
+                                      <div className="border-t pt-4">
+                                        <h4 className="font-semibold text-sm mb-3">View Your Data</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                          <Link href="/dashboard/allergens">
+                                            <Button variant="outline" size="sm" className="text-xs">
+                                              <ExternalLink className="h-3 w-3 mr-1" />
+                                              View Allergens
+                                            </Button>
+                                          </Link>
+                                          <Link href="/dashboard/ingredients">
+                                            <Button variant="outline" size="sm" className="text-xs">
+                                              <ExternalLink className="h-3 w-3 mr-1" />
+                                              View Ingredients
+                                            </Button>
+                                          </Link>
+                                          <Link href="/dashboard/menuitem">
+                                            <Button variant="outline" size="sm" className="text-xs">
+                                              <ExternalLink className="h-3 w-3 mr-1" />
+                                              View Menu Items
+                                            </Button>
+                                          </Link>
+                                        </div>
+                                      </div>
+                                    </CardContent>
+                                  </Card>
+                                </>
+                              )
+                            })()}
+                          </div>
+                        ) : null}
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

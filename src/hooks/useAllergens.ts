@@ -1,6 +1,6 @@
 // hooks/useAllergens.ts
 import { useState, useEffect, useCallback } from "react"
-import { getAllAllergens, addAllergens, updateAllergen, deleteAllergen } from "@/lib/api"
+import { getAllCustomAllergens, addCustomAllergen, updateCustomAllergen, deleteCustomAllergen } from "@/lib/api"
 import { UUID } from "crypto"
 
 export type Allergen = {
@@ -38,25 +38,26 @@ export function useAllergens() {
       setIsLoading(true)
       setError(null)
 
-      const res = await getAllAllergens(token)
+      const res = await getAllCustomAllergens(token)
       if (!res?.data) {
         setAllergens([])
         return
       }
 
       const mapped = res.data.map(
-        (item: any): Allergen => ({
-          id: item.id,
-          name: item.allergenName,
-          category: item.isCustom ? "Custom" : "Standard",
-          severity: estimateSeverity(item.allergenName),
-          status: item.isActive ? "Active" : "Inactive",
-          addedAt: item.createdAt.split("T")[0],
-          isCustom: item.isCustom,
-        })
+        (item: any): Allergen => {
+          return {
+            id: item.uuid,
+            name: item.allergenName,
+            category: item.isCustom ? "Custom" : "Standard",
+            severity: estimateSeverity(item.allergenName),
+            status: item.isActive ? "Active" : "Inactive",
+            addedAt: item.createdAt.split("T")[0],
+            isCustom: item.isCustom,
+          }
+        }
       )
       setAllergens(mapped)
-      console.log(allergens, "ingredients allergens")
     } catch (err) {
       console.error("Failed to fetch allergens:", err)
       setError(err instanceof Error ? err.message : "Failed to fetch allergens")
@@ -73,11 +74,11 @@ export function useAllergens() {
     }
 
     try {
-      const response = await addAllergens(allergenName.trim(), token)
+      const response = await addCustomAllergen(allergenName.trim(), token)
 
       // Create new allergen object with response data
       const newItem: Allergen = {
-        id: response.data?.id || Date.now(),
+        id: response.data?.uuid || response.data?.id || Date.now().toString(),
         name: allergenName.trim(),
         category: "Custom",
         severity: estimateSeverity(allergenName),
@@ -102,7 +103,7 @@ export function useAllergens() {
     }
 
     try {
-      await updateAllergen(id, allergenName.trim(), token)
+      await updateCustomAllergen(id, allergenName.trim(), token)
 
       // Update local state
       setAllergens((prev) =>
@@ -130,7 +131,7 @@ export function useAllergens() {
     }
 
     try {
-      await deleteAllergen(id, token)
+      await deleteCustomAllergen(id, token)
 
       // Remove from local state
       setAllergens((prev) => prev.filter((allergen) => allergen.id !== id))

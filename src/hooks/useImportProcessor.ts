@@ -22,6 +22,16 @@ type ProcessingResults = {
   }
   warnings: string[]
   createdMenuItems: { name: string; ingredientIds: string[] }[]
+  existingItems: {
+    allergens: { name: string; id: string }[]
+    ingredients: { name: string; id: string }[]
+    menuItems: { name: string; id: string }[]
+  }
+  newItems: {
+    allergens: { name: string; id: string }[]
+    ingredients: { name: string; id: string }[]
+    menuItems: { name: string; id: string; ingredientIds: string[] }[]
+  }
 }
 
 export function useImportProcessor() {
@@ -43,7 +53,7 @@ export function useImportProcessor() {
   }
 
   // Enhanced fuzzy matching for all entity types
-  const findExistingByName = <T extends { name?: string; ingredientName?: string }>(
+  const findExistingByName = <T extends { name?: string; ingredientName?: string; menuItemName?: string }>(
     searchName: string,
     items: T[],
     getNameFn: (item: T) => string
@@ -104,6 +114,16 @@ export function useImportProcessor() {
       },
       warnings: [],
       createdMenuItems: [],
+      existingItems: {
+        allergens: [],
+        ingredients: [],
+        menuItems: [],
+      },
+      newItems: {
+        allergens: [],
+        ingredients: [],
+        menuItems: [],
+      },
     }
 
     // Master ID mapping for all entities
@@ -132,71 +152,108 @@ export function useImportProcessor() {
       }
       console.log(`Pre-loaded ${ingredients.length} existing ingredients`)
 
-      // ========== STEP 2: PROCESS ALLERGENS ==========
+      // ========== STEP 2: COLLECT ALL REQUIRED ALLERGENS AND INGREDIENTS ==========
+      console.log("Collecting all required allergens and ingredients...")
+      
+      // Collect all allergens from parsed ingredients
+      const allRequiredAllergens = new Set<string>()
+      parsedAllergens.forEach(allergen => allRequiredAllergens.add(allergen.name))
+      
+      // Collect all ingredients from parsed ingredients and menu items
+      const allRequiredIngredients = new Map<string, { expiryDays: number; allergenNames: string[] }>()
+      
+      // Add ingredients from parsed ingredients
+      parsedIngredients.forEach(ingredient => {
+        allRequiredIngredients.set(ingredient.name, {
+          expiryDays: ingredient.expiryDays,
+          allergenNames: ingredient.allergenNames
+        })
+      })
+      
+      // Add ingredients from menu items (with default values if not in parsed ingredients)
+      parsedMenuItems.forEach(menuItem => {
+        menuItem.ingredientNames.forEach(ingredientName => {
+          if (!allRequiredIngredients.has(ingredientName)) {
+            allRequiredIngredients.set(ingredientName, {
+              expiryDays: 7, // Default expiry days
+              allergenNames: [] // No allergens by default
+            })
+          }
+        })
+      })
+      
+      // Collect allergens from all ingredients
+      allRequiredIngredients.forEach(ingredient => {
+        ingredient.allergenNames.forEach(allergen => allRequiredAllergens.add(allergen))
+      })
+
+      // ========== STEP 3: PROCESS ALLERGENS ==========
       console.log("Processing allergens...")
 
-      for (const parsedAllergen of parsedAllergens) {
-        if (!parsedAllergen.name?.trim()) continue
+      for (const allergenName of allRequiredAllergens) {
+        if (!allergenName?.trim()) continue
 
         // Check if allergen exists in DB (using fuzzy matching)
-        const existingAllergen = findExistingByName(parsedAllergen.name, allergens, (a) => a.name)
+        const existingAllergen = findExistingByName(allergenName, allergens, (a) => a.name)
 
         if (existingAllergen) {
           // EXISTS: Use existing ID, don't create
-          const key1 = parsedAllergen.name.toLowerCase()
-          const key2 = normalizeName(parsedAllergen.name)
+          const key1 = allergenName.toLowerCase()
+          const key2 = normalizeName(allergenName)
           allergenIdMap.set(key1, existingAllergen.id)
           allergenIdMap.set(key2, existingAllergen.id)
           results.stats.allergens.existing++
           console.log(
-            `✓ Found existing allergen: "${parsedAllergen.name}" matches "${existingAllergen.name}" (ID: ${existingAllergen.id})`
+            `✓ Found existing allergen: "${allergenName}" matches "${existingAllergen.name}" (ID: ${existingAllergen.id})`
           )
+          results.existingItems.allergens.push({ name: existingAllergen.name, id: existingAllergen.id })
         } else {
           // NEW: Create custom allergen
-          console.log(`+ Creating new allergen: "${parsedAllergen.name}"`)
-          const newAllergen = await addAllergen(parsedAllergen.name)
+          console.log(`+ Creating new allergen: "${allergenName}"`)
+          const newAllergen = await addAllergen(allergenName)
 
-          const key1 = parsedAllergen.name.toLowerCase()
-          const key2 = normalizeName(parsedAllergen.name)
+          const key1 = allergenName.toLowerCase()
+          const key2 = normalizeName(allergenName)
           allergenIdMap.set(key1, newAllergen.id)
           allergenIdMap.set(key2, newAllergen.id)
           results.stats.allergens.created++
-          console.log(`✓ Created allergen: "${parsedAllergen.name}" (ID: ${newAllergen.id})`)
+          console.log(`✓ Created allergen: "${allergenName}" (ID: ${newAllergen.id})`)
+          results.newItems.allergens.push({ name: allergenName, id: newAllergen.id })
         }
       }
 
-      // ========== STEP 3: PROCESS INGREDIENTS ==========
+      // ========== STEP 4: PROCESS INGREDIENTS ==========
       console.log("Processing ingredients...")
 
-      for (const parsedIngredient of parsedIngredients) {
-        if (!parsedIngredient.name?.trim()) continue
+      for (const [ingredientName, ingredientData] of allRequiredIngredients) {
+        if (!ingredientName?.trim()) continue
 
         // Check if ingredient exists in DB (using fuzzy matching)
         const existingIngredient = findExistingByName(
-          parsedIngredient.name,
+          ingredientName,
           ingredients,
           (i) => i.ingredientName
         )
 
         if (existingIngredient) {
           // EXISTS: Use existing ID, don't create
-          const key1 = parsedIngredient.name.toLowerCase()
-          const key2 = normalizeName(parsedIngredient.name)
+          const key1 = ingredientName.toLowerCase()
+          const key2 = normalizeName(ingredientName)
           ingredientIdMap.set(key1, existingIngredient.uuid)
           ingredientIdMap.set(key2, existingIngredient.uuid)
           results.stats.ingredients.existing++
           console.log(
-            `✓ Found existing ingredient: "${parsedIngredient.name}" matches "${existingIngredient.ingredientName}" (ID: ${existingIngredient.uuid})`
+            `✓ Found existing ingredient: "${ingredientName}" matches "${existingIngredient.ingredientName}" (ID: ${existingIngredient.uuid})`
           )
+          results.existingItems.ingredients.push({ name: existingIngredient.ingredientName, id: existingIngredient.uuid })
         } else {
           // NEW: Create ingredient with resolved allergen IDs
-          console.log(`+ Creating new ingredient: "${parsedIngredient.name}"`)
+          console.log(`+ Creating new ingredient: "${ingredientName}"`)
 
           // Resolve allergen IDs for this ingredient
           const resolvedAllergenIds: string[] = []
-          const missingAllergens: string[] = []
 
-          for (const allergenName of parsedIngredient.allergenNames) {
+          for (const allergenName of ingredientData.allergenNames) {
             if (!allergenName?.trim()) continue
 
             // Try direct lookup first
@@ -217,61 +274,57 @@ export function useImportProcessor() {
             if (allergenId) {
               resolvedAllergenIds.push(allergenId)
             } else {
-              missingAllergens.push(allergenName)
+              console.warn(`Warning: Could not resolve allergen "${allergenName}" for ingredient "${ingredientName}"`)
             }
-          }
-
-          if (missingAllergens.length > 0) {
-            results.warnings.push(
-              `Ingredient "${parsedIngredient.name}" references unknown allergens: ${missingAllergens.join(", ")}`
-            )
           }
 
           // Create new ingredient
           const success = await addNewIngredient({
-            ingredientName: parsedIngredient.name,
-            expiryDays: parsedIngredient.expiryDays,
+            ingredientName: ingredientName,
+            expiryDays: ingredientData.expiryDays,
             allergenIDs: resolvedAllergenIds,
           })
 
           if (success) {
             // Get the newly created ingredient ID
             const newIngredient = findExistingByName(
-              parsedIngredient.name,
+              ingredientName,
               ingredients,
               (i) => i.ingredientName
             )
             if (newIngredient) {
-              const key1 = parsedIngredient.name.toLowerCase()
-              const key2 = normalizeName(parsedIngredient.name)
+              const key1 = ingredientName.toLowerCase()
+              const key2 = normalizeName(ingredientName)
               ingredientIdMap.set(key1, newIngredient.uuid)
               ingredientIdMap.set(key2, newIngredient.uuid)
               results.stats.ingredients.created++
               console.log(
-                `✓ Created ingredient: "${parsedIngredient.name}" (ID: ${newIngredient.uuid})`
+                `✓ Created ingredient: "${ingredientName}" (ID: ${newIngredient.uuid})`
               )
+              results.newItems.ingredients.push({ name: ingredientName, id: newIngredient.uuid })
             }
           } else {
-            results.warnings.push(`Failed to create ingredient: ${parsedIngredient.name}`)
+            results.warnings.push(`Failed to create ingredient: ${ingredientName}`)
           }
         }
       }
 
-      // ========== STEP 4: PROCESS MENU ITEMS ==========
+      // ========== STEP 5: PROCESS MENU ITEMS ==========
       console.log("Processing menu items...")
 
       for (const parsedMenuItem of parsedMenuItems) {
         if (!parsedMenuItem.name?.trim()) continue
 
         // Check if menu item exists in DB (using fuzzy matching)
-        const existingMenuItem = findExistingByName(parsedMenuItem.name, menuItems, (m) => m.name)
+        const existingMenuItem = findExistingByName(parsedMenuItem.name, menuItems, (m) => m.menuItemName)
 
         if (existingMenuItem) {
           // EXISTS: Skip completely, don't create
           results.stats.menuItems.existing++
           console.log(
-            `✓ Found existing menu item: "${parsedMenuItem.name}" matches "${existingMenuItem.name}" - skipping`
+            `✓ Found existing menu item: "${parsedMenuItem.name}" matches "${existingMenuItem.menuItemName}" - skipping`
           )
+          results.existingItems.menuItems.push({ name: existingMenuItem.menuItemName, id: existingMenuItem.menuItemID })
           continue
         }
 
@@ -279,7 +332,6 @@ export function useImportProcessor() {
         console.log(`+ Creating new menu item: "${parsedMenuItem.name}"`)
 
         const resolvedIngredientIds: string[] = []
-        const missingIngredients: string[] = []
         const foundIngredients: string[] = []
 
         for (const ingredientName of parsedMenuItem.ingredientNames) {
@@ -308,25 +360,24 @@ export function useImportProcessor() {
             resolvedIngredientIds.push(ingredientId)
             foundIngredients.push(ingredientName)
           } else {
-            missingIngredients.push(ingredientName)
+            console.error(`Error: Could not find ingredient "${ingredientName}" for menu item "${parsedMenuItem.name}"`)
+            results.warnings.push(`Could not resolve ingredient "${ingredientName}" for menu item "${parsedMenuItem.name}"`)
           }
         }
 
         console.log(`  Found ingredients: ${foundIngredients.join(", ")}`)
-        if (missingIngredients.length > 0) {
-          console.log(`  Missing ingredients: ${missingIngredients.join(", ")}`)
-          results.warnings.push(
-            `Skipping menu item "${parsedMenuItem.name}" - missing ingredients: ${missingIngredients.join(", ")}`
-          )
+        
+        if (resolvedIngredientIds.length === 0) {
+          console.error(`Error: No ingredients resolved for menu item "${parsedMenuItem.name}"`)
+          results.warnings.push(`No ingredients could be resolved for menu item "${parsedMenuItem.name}"`)
           results.stats.menuItems.skipped++
           continue
         }
 
-        // All ingredients resolved - create the menu item
+        // Create the menu item
         const success = await addNewMenuItem({
-          name: parsedMenuItem.name,
-          ingredientIds: resolvedIngredientIds,
-          status: "active",
+          menuItemName: parsedMenuItem.name,
+          ingredientIDs: resolvedIngredientIds,
         })
 
         if (success) {
@@ -338,6 +389,7 @@ export function useImportProcessor() {
           console.log(
             `✓ Created menu item: "${parsedMenuItem.name}" with ${resolvedIngredientIds.length} ingredients`
           )
+          results.newItems.menuItems.push({ name: parsedMenuItem.name, id: resolvedIngredientIds[0], ingredientIds: resolvedIngredientIds })
         } else {
           results.warnings.push(`Failed to create menu item: ${parsedMenuItem.name}`)
           results.stats.menuItems.skipped++
