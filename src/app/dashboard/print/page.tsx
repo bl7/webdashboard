@@ -456,7 +456,7 @@ export default function LabelDemo() {
     try {
       // Generate USE FIRST label image
       const html = `<span style="width:100%;font-size:2.2rem;font-weight:bold;letter-spacing:0.1em;text-align:center;">USE FIRST</span>`
-      const imageDataUrl = await printSimpleLabel(html)
+      const imageDataUrl = await printSimpleLabel(html, labelHeight)
       
       // Print using WebSocket (if connected) or just log for debug
       if (isConnected) {
@@ -515,7 +515,7 @@ export default function LabelDemo() {
           ${selectedInitial ? `<div style="font-size:0.9rem;text-align:right;width:100%;">By: ${selectedInitial}</div>` : ""}
         </div>
       `
-      const imageDataUrl = await printSimpleLabel(html)
+      const imageDataUrl = await printSimpleLabel(html, labelHeight)
       
       // Print using WebSocket (if connected) or just log for debug
       if (isConnected) {
@@ -921,12 +921,18 @@ function PrintPageSkeleton() {
   )
 }
 
-async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm") {
+async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm") {
   console.log("🧪 Testing simple label generation...")
   
+  // Convert label height to cm
+  const heightCm = labelHeight === "31mm" ? "3.1cm" : labelHeight === "40mm" ? "4.0cm" : "8.0cm"
+  
   const container = document.createElement("div")
-  container.style.width = width
-  container.style.height = height
+  container.style.position = "absolute"
+  container.style.top = "0"
+  container.style.left = "0"
+  container.style.width = "5.6cm"
+  container.style.height = heightCm
   container.style.background = "white"
   container.style.display = "flex"
   container.style.flexDirection = "column"
@@ -934,12 +940,28 @@ async function printSimpleLabel(html: string, width = "5.6cm", height = "4.0cm")
   container.style.alignItems = "center"
   container.style.fontFamily = "monospace"
   container.style.border = "2px solid black"
+  container.style.borderRadius = "6px"
+  container.style.padding = "8px"
+  container.style.boxSizing = "border-box"
+  container.style.zIndex = "-1"
+  container.style.visibility = "hidden"
   container.innerHTML = html
   document.body.appendChild(container)
   
   console.log("🧪 Simple container created, dimensions:", container.offsetWidth, "x", container.offsetHeight)
   
-  const imageDataUrl = await (await import("html-to-image")).toPng(container)
+  // Make sure container is visible for rendering
+  container.style.visibility = "visible"
+  
+  const imageDataUrl = await (await import("html-to-image")).toPng(container, {
+    cacheBust: true,
+    width: container.offsetWidth,
+    height: container.offsetHeight,
+    style: {
+      transform: 'scale(1)',
+      transformOrigin: 'top left'
+    }
+  })
   
   console.log("🧪 Simple PNG generated, length:", imageDataUrl.length)
   console.log("🧪 Simple PNG starts with:", imageDataUrl.substring(0, 50))

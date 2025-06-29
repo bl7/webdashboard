@@ -105,7 +105,7 @@ export default function LabelRender({
       style={{
         width: "5.6cm",
         height: `${heightCm}cm`,
-        padding: 8,
+        padding: labelHeight === "31mm" ? 4 : 8,
         backgroundColor: "white",
         fontFamily: "monospace",
         fontWeight: "bold",
@@ -117,6 +117,7 @@ export default function LabelRender({
         borderRadius: 6,
         position: "relative",
         overflow: "visible",
+        margin: 0,
       }}
     >
       {/* Watermark text for PPDS, all sizes */}
@@ -125,12 +126,12 @@ export default function LabelRender({
           style={{
             position: "absolute",
             left: "50%",
-            bottom: 2,
+            bottom: labelHeight === "31mm" ? 1 : 2,
             transform: "translateX(-50%)",
             opacity: 0.3,
             pointerEvents: "none",
             zIndex: 100,
-            fontSize: Math.max(fontSize - 3, 8),
+            fontSize: Math.max(fontSize - 3, 6),
             fontWeight: 600,
             color: "#888",
             textAlign: "center",
