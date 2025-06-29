@@ -27,12 +27,11 @@ export default function LabelRender({
   labelHeight = "31mm", // Default
 }: LabelRenderProps) {
   // --- Sizing and layout logic ---
-  let heightCm = 3.05
+  let heightCm = 3.05 // 31mm - 0.5mm = 30.5mm = 3.05cm
   let fontSize = 12
   let nameFontSize = 15
   let sectionSpacing = 2
   let maxIngredientsToShow = 2
-  let showLogo = false
   let showInitials = false
   let showAllergens = true
   let showIngredients = false
@@ -42,12 +41,11 @@ export default function LabelRender({
   let maxAllergenLen = 10
 
   if (labelHeight === "40mm") {
-    heightCm = 3.95
+    heightCm = 3.95 // 40mm - 0.5mm = 39.5mm = 3.95cm
     fontSize = 13
     nameFontSize = 18
     sectionSpacing = 4
     maxIngredientsToShow = 5
-    showLogo = false
     showInitials = true
     showAllergens = true
     showIngredients = true
@@ -56,12 +54,11 @@ export default function LabelRender({
     maxIngLen = 16
     maxAllergenLen = 12
   } else if (labelHeight === "80mm") {
-    heightCm = 7.95
+    heightCm = 7.95 // 80mm - 0.5mm = 79.5mm = 7.95cm
     fontSize = 15
     nameFontSize = 22
     sectionSpacing = 8
     maxIngredientsToShow = 12
-    showLogo = true
     showInitials = true
     showAllergens = true
     showIngredients = true
@@ -120,7 +117,7 @@ export default function LabelRender({
         margin: 0,
       }}
     >
-      {/* Watermark text for PPDS, all sizes */}
+      {/* Watermark text for PPDS, all sizes - optimized for thermal printers */}
       {isPPDS && (
         <div
           style={{
@@ -128,19 +125,21 @@ export default function LabelRender({
             left: "50%",
             bottom: labelHeight === "31mm" ? 0.5 : 2,
             transform: "translateX(-50%)",
-            opacity: 0.3,
+            opacity: 0.7, // Increased from 0.3 to 0.7 for better thermal printer visibility
             pointerEvents: "none",
             zIndex: 100,
-            fontSize: Math.max(fontSize - 3, 6),
-            fontWeight: 600,
-            color: "#888",
+            fontSize: Math.max(fontSize - 2, 8), // Slightly larger font for better visibility
+            fontWeight: 700, // Increased from 600 to 700
+            color: "#333", // Darker color for better thermal printer contrast
             textAlign: "center",
             fontFamily: "monospace",
             letterSpacing: 0.5,
-            textShadow: "0 0 2px rgba(255,255,255,1)",
-            backgroundColor: "rgba(255,255,255,0.8)",
+            // Removed textShadow and background for better thermal printer compatibility
             padding: "1px 4px",
             borderRadius: 2,
+            // Add border for better thermal printer visibility
+            border: "1px solid #666",
+            backgroundColor: "rgba(255,255,255,0.9)", // More opaque background
           }}
         >
           instalabel.co
