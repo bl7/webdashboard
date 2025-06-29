@@ -144,6 +144,8 @@ export default function LabelDemo() {
   } = usePrinter()
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
   const [showDefrostModal, setShowDefrostModal] = useState(false)
+  const [showUseFirstModal, setShowUseFirstModal] = useState(false)
+  const [useFirstQuantity, setUseFirstQuantity] = useState(1)
 
   // Add state for defrost search
   const [defrostSearch, setDefrostSearch] = useState("")
@@ -297,13 +299,18 @@ export default function LabelDemo() {
     [filteredMenuItems, page]
   )
 
-  const filteredDefrostIngredients = useMemo(
-    () =>
-      !defrostSearch
-        ? ingredients
-        : ingredients.filter((i) => i.name.toLowerCase().includes(defrostSearch.toLowerCase())),
-    [ingredients, defrostSearch]
+  // Filter defrost ingredients based on search
+  const filteredDefrostIngredients = ingredients.filter((ing) =>
+    ing.name.toLowerCase().includes(defrostSearch.toLowerCase())
   )
+
+  // Filter defrost menu items based on search
+  const filteredDefrostMenuItems = menuItems.filter((item) =>
+    item.name.toLowerCase().includes(defrostSearch.toLowerCase())
+  )
+
+  // Get the current filtered items based on selected tab
+  const currentDefrostItems = filteredDefrostIngredients
 
   const handleExpiryChange = (uid: string, value: string) =>
     setCustomExpiry((prev) => ({ ...prev, [uid]: value }))
@@ -460,7 +467,7 @@ export default function LabelDemo() {
   }
 
   // Handler for "Use First"
-  const handleUseFirstPrint = async () => {
+  const handleUseFirstPrint = async (quantity: number = 1) => {
     if (printerLoading) {
       showFeedback("Checking printer status, please wait...", "error")
       return
@@ -481,22 +488,53 @@ export default function LabelDemo() {
     }
 
     try {
-      // Generate USE FIRST label image
-      const html = `<span style="width:100%;font-size:2.2rem;font-weight:bold;letter-spacing:0.1em;text-align:center;">USE FIRST</span>`
-      const imageDataUrl = await printSimpleLabel(html, labelHeight)
+      // Create a "USE FIRST" item for LabelRender
+      const now = new Date()
+      const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
       
-      // Print using WebSocket (if connected) or just log for debug
-      if (isConnected) {
-        await print(imageDataUrl)
-        showFeedback("Printed USE FIRST label", "success")
-      } else {
-        console.log("🖨️ DEBUG: Would print USE FIRST label:", imageDataUrl.substring(0, 100) + "...")
-        showFeedback("DEBUG: Would print USE FIRST label (printer not connected)", "success")
+      const useFirstItem: PrintQueueItem = {
+        uid: `use-first-${Date.now()}`,
+        id: "use-first",
+        type: "ingredients",
+        name: "USE FIRST",
+        quantity: 1,
+        printedOn: now.toISOString().split("T")[0],
+        expiryDate: expiry.toISOString().split("T")[0],
+        allergens: [],
+        labelType: "prep" as const,
       }
+
+      // Print multiple labels based on quantity
+      for (let i = 0; i < quantity; i++) {
+        // Generate "USE FIRST" label image using LabelRender
+        const imageDataUrl = await formatLabelForPrintImage(
+          useFirstItem,
+          allergens.map((a) => a.allergenName.toLowerCase()),
+          {},
+          5,
+          useInitials,
+          selectedInitial,
+          labelHeight
+        )
+        
+        // Print using WebSocket (if connected) or just log for debug
+        if (isConnected) {
+          await print(imageDataUrl)
+          console.log(`✅ Printed USE FIRST label ${i + 1}/${quantity}`)
+        } else {
+          console.log(`🖨️ DEBUG: Would print USE FIRST label ${i + 1}/${quantity}:`, imageDataUrl.substring(0, 100) + "...")
+        }
+      }
+
+      const message = isConnected 
+        ? `Successfully printed ${quantity} USE FIRST label(s) using ${printerToUse.printer?.name}`
+        : `DEBUG: Would print ${quantity} USE FIRST label(s) (printer not connected)`;
+      showFeedback(message, "success")
 
       await logAction("print_label", {
         labelType: "use_first",
         itemName: "USE FIRST",
+        quantity: quantity,
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
         labelHeight: labelHeight,
@@ -841,7 +879,7 @@ export default function LabelDemo() {
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
-                          d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2zM9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
+                          d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
                         />
                       </svg>
                       <p className="italic">No items in print queue</p>
@@ -915,7 +953,7 @@ export default function LabelDemo() {
               }}
             >
               <Button
-                onClick={handleUseFirstPrint}
+                onClick={() => setShowUseFirstModal(true)}
                 className="rounded-full px-6 py-3 text-lg font-bold shadow-lg"
                 variant="default"
                 aria-label="Print USE FIRST label"
@@ -934,6 +972,51 @@ export default function LabelDemo() {
               </Button>
             </div>
 
+            {/* Use First Quantity Modal */}
+            {showUseFirstModal && (
+              <div
+                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+                role="dialog"
+                aria-modal="true"
+              >
+                <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+                  <h2 className="mb-4 text-xl font-bold">How many USE FIRST labels?</h2>
+                  <div className="mb-4">
+                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                      Quantity
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="50"
+                      value={useFirstQuantity}
+                      onChange={(e) => setUseFirstQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      className="w-full rounded border px-3 py-2"
+                      placeholder="Enter quantity..."
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      className="flex-1"
+                      onClick={() => {
+                        handleUseFirstPrint(useFirstQuantity)
+                        setShowUseFirstModal(false)
+                      }}
+                    >
+                      Print {useFirstQuantity} Label{useFirstQuantity !== 1 ? 's' : ''}
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      variant="secondary"
+                      onClick={() => setShowUseFirstModal(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Defrost Modal */}
             {showDefrostModal && (
               <div
@@ -942,7 +1025,8 @@ export default function LabelDemo() {
                 aria-modal="true"
               >
                 <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-                  <h2 className="mb-4 text-xl font-bold">Select Ingredient to Defrost</h2>
+                  <h2 className="mb-4 text-xl font-bold">Select Item to Defrost</h2>
+                  
                   <input
                     type="text"
                     value={defrostSearch}
@@ -951,23 +1035,23 @@ export default function LabelDemo() {
                     className="mb-3 w-full rounded border px-3 py-2"
                   />
                   <ul className="mb-4 max-h-60 overflow-y-auto">
-                    {filteredDefrostIngredients.map((ing) => (
-                      <li key={ing.id} className="mb-2">
-                        {/* Defrost Modal List */}
+                    {currentDefrostItems.map((item) => (
+                      <li key={item.id} className="mb-2">
                         <Button
                           className="w-full text-left"
                           variant="ghost"
-                          onClick={() => handleDefrostPrint(ing)}
+                          onClick={() => handleDefrostPrint(item as IngredientItem)}
                         >
-                          {ing.name}
+                          {item.name}
                         </Button>
                       </li>
                     ))}
-                    {filteredDefrostIngredients.length === 0 && (
-                      <li className="px-4 py-2 text-gray-400">No ingredients found.</li>
+                    {currentDefrostItems.length === 0 && (
+                      <li className="px-4 py-2 text-gray-400">
+                        No ingredients found.
+                      </li>
                     )}
                   </ul>
-                  {/* Defrost Modal Cancel */}
                   <Button
                     className="mt-2 w-full"
                     variant="secondary"

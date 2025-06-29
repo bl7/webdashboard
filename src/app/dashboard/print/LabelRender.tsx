@@ -90,12 +90,70 @@ export default function LabelRender({
   const allergensOnly = ingredientList.filter(isAllergen)
   const tooLong = ingredientList.length > maxIngredientsToShow
   const isPPDS = item.labelType === "ppds"
+  const isUseFirst = item.name === "USE FIRST"
 
   // Truncate ingredients/allergens for small labels
   const shownIngredients = ingredientList.slice(0, maxIngredientsToShow)
   const hiddenIngredients = ingredientList.length - shownIngredients.length
   const shownAllergens = allergensOnly.slice(0, maxIngredientsToShow)
   const hiddenAllergens = allergensOnly.length - shownAllergens.length
+
+  // Special USE FIRST label layout
+  if (isUseFirst) {
+    return (
+      <div
+        style={{
+          width: "5.6cm",
+          height: `${heightCm}cm`,
+          padding: 0,
+          backgroundColor: "black",
+          fontFamily: "monospace",
+          fontWeight: "bold",
+          fontSize,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          boxSizing: "border-box",
+          border: "2px solid black",
+          borderRadius: 6,
+          position: "relative",
+          overflow: "visible",
+          margin: 0,
+        }}
+      >
+        {/* Circle with USE FIRST text */}
+        <div
+          style={{
+            width: labelHeight === "31mm" ? "2.2cm" : labelHeight === "40mm" ? "2.8cm" : "4.5cm",
+            height: labelHeight === "31mm" ? "2.2cm" : labelHeight === "40mm" ? "2.8cm" : "4.5cm",
+            borderRadius: "50%",
+            backgroundColor: "white",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            border: "3px solid white",
+            boxShadow: "0 0 0 2px black",
+          }}
+        >
+          <div
+            style={{
+              textAlign: "center",
+              color: "black",
+              fontSize: labelHeight === "31mm" ? 14 : labelHeight === "40mm" ? 18 : 24,
+              fontWeight: 900,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              lineHeight: 1.2,
+              padding: "4px",
+            }}
+          >
+            USE<br />FIRST
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div
