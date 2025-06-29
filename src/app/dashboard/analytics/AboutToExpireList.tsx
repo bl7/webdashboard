@@ -91,12 +91,17 @@ export default function AboutToExpireList() {
           // Filter out 'ppds' label type
           if (log.details.labelType === "ppds") return
 
-          if (hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday) {
-            result.push({
-              name: log.details.itemName,
-              type: log.details.labelType,
-              expiresAt: expiryDate.toLocaleString(),
-            })
+          // Include items that expire within 24 hours, including defrost labels printed today
+          if (hoursLeft > 0 && hoursLeft <= 24) {
+            // For defrost labels, always include them regardless of when they were printed
+            // For other labels, exclude if printed today (unless they're defrost)
+            if (log.details.labelType === "defrost" || !isPrintedToday) {
+              result.push({
+                name: log.details.itemName,
+                type: log.details.labelType,
+                expiresAt: expiryDate.toLocaleString(),
+              })
+            }
           }
         })
 

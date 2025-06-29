@@ -610,6 +610,7 @@ export default function LabelDemo() {
         labelType: "defrost",
         itemName: ingredient.name,
         printedAt: new Date().toISOString(),
+        expiryDate: expiry.toISOString().split("T")[0],
         initial: selectedInitial,
         labelHeight: labelHeight,
         printerUsed: printerToUse.printer || 'Debug Mode',

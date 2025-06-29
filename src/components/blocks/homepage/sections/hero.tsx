@@ -27,7 +27,7 @@ export const Hero = () => {
         >
           <Image
             src={instaLabel}
-            alt="InstaLabel Printer"
+            alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
             className="w-full object-contain transition duration-300 hover:-rotate-3 hover:scale-105"
             priority
           />
@@ -41,32 +41,42 @@ export const Hero = () => {
           className="w-full max-w-2xl space-y-6 text-center md:text-left"
         >
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-            <span className="text-primary">InstaLabel:</span>
+            <span className="text-primary">Professional Kitchen Labeling System</span>
             <br className="hidden md:block" />
-            <span className="">Smart Labelling Built for Fast-Paced Kitchens</span>
+            <span className="">Food Safety Labels & Expiry Tracking</span>
           </h1>
 
           <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-            Kitchen-safe labels for prep, cook, and allergen tracking — printed at the tap of a
-            button. No training needed. No handwriting. No guesswork.
+            InstaLabel: The #1 kitchen labeling system for restaurants, cafes, and food businesses. Print HACCP-compliant food safety labels, allergen warnings, expiry dates, and prep labels instantly with thermal printers. No training needed.
           </p>
 
-          {/* Optional: real-world quote */}
-          <p className="text-sm italic text-gray-500 md:text-base">
-            “We used to handwrite 50+ labels daily. Now we just tap and print.” – Head Chef,
-            Manchester
-          </p>
+          {/* Social proof */}
+          <div className="space-y-2">
+            <p className="text-sm italic text-gray-500 md:text-base">
+              "We used to handwrite 50+ labels daily. Now we just tap and print." – Head Chef, Manchester
+            </p>
+            <p className="text-xs text-gray-400">
+              Trusted by 500+ restaurants • HACCP Compliant • Thermal Printer Compatible
+            </p>
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
             <Button size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
-              Book a Demo
+              Start Free Trial
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button variant="ghost" size="lg" className="border border-primary text-primary">
               <StepForward className="mr-2 h-5 w-5" />
-              Start Free
+              Book Demo
             </Button>
+          </div>
+
+          {/* Trust indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
+            <span>✓ Free 14-day trial</span>
+            <span>✓ No credit card required</span>
+            <span>✓ Setup in 5 minutes</span>
           </div>
         </motion.div>
       </div>

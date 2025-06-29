@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow private areas
+Disallow: /dashboard/
+Disallow: /boss/
+Disallow: /bossdashboard/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /private/
+
+# Sitemap
+Sitemap: https://instalabel.co/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1 

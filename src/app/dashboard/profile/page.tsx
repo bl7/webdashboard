@@ -56,7 +56,6 @@ const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 const ProfileDashboard = () => {
   const [activeTab, setActiveTab] = useState<"account" | "billing">("account")
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
-  const [address, setAddress] = useState("")
   const [companyName, setCompanyName] = useState("")
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState("")
@@ -94,7 +93,6 @@ const ProfileDashboard = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data?.profile) {
-          setAddress(data.profile.address || "")
           setCompanyName(data.profile.company_name || "")
 
           const pic = data.profile.profile_picture
@@ -119,12 +117,15 @@ const ProfileDashboard = () => {
 
     if (!userId) return toast.error("Missing user ID")
 
+    // Save name and email to localStorage
+    localStorage.setItem("name", name)
+    localStorage.setItem("email", email)
+
     const res = await fetch("/api/profile", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         user_id: userId,
-        address,
         company_name: companyName,
         profile_picture: `/avatar${avatarIndex}.png`,
       }),
@@ -270,10 +271,55 @@ const ProfileDashboard = () => {
               </Button>
             </div>
             <h2 className="text-lg font-semibold">{name}</h2>
-            <p className="text-center text-sm text-muted-foreground">
-              {address || "No address set"}
-            </p>
-            <div className="mt-2 flex items-center">
+            <p className="text-center text-sm text-muted-foreground">{email}</p>
+            
+            {/* Company Name and Email Section */}
+            <div className="mt-4 w-full space-y-3">
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-700">
+                  Company Name
+                </label>
+                <Input
+                  type="text"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="Enter company name"
+                  className="text-sm"
+                />
+              </div>
+              
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-700">
+                  Name
+                </label>
+                <Input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name"
+                  className="text-sm"
+                />
+              </div>
+              
+              <div>
+                <label className="mb-1 block text-xs font-medium text-gray-700">
+                  Email
+                </label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="text-sm"
+                />
+              </div>
+              
+              <Button onClick={handleSave} className="w-full text-sm">
+                Save Changes
+              </Button>
+            </div>
+            
+            <div className="mt-4 flex items-center">
               <span className="text-yellow-500">★ 5.0</span>
               <span className="ml-1 text-xs text-muted-foreground">(1)</span>
               <span className="ml-2 rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
@@ -282,52 +328,10 @@ const ProfileDashboard = () => {
             </div>
           </div>
 
-          {/* Profile Form */}
+          {/* Profile Form - Now only contains PIN and Password sections */}
           <div className="md:col-span-2">
             <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-6 text-lg font-semibold text-gray-900">Profile</h2>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Company Name */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">
-                    Company Name
-                  </label>
-                  <Input
-                    type="text"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Enter company name"
-                  />
-                </div>
-
-                {/* Address */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-700">Address</label>
-                  <Input
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    placeholder="Enter address"
-                  />
-                </div>
-
-                {/* Name (disabled) */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-500">Name</label>
-                  <Input type="text" value={name} disabled className="cursor-not-allowed" />
-                </div>
-
-                {/* Email (disabled) */}
-                <div>
-                  <label className="mb-2 block text-sm font-medium text-gray-500">Email</label>
-                  <Input type="email" value={email} disabled className="cursor-not-allowed" />
-                </div>
-              </div>
-
-              <Button onClick={handleSave} className="mt-6">
-                Save Now
-              </Button>
+              <h2 className="mb-6 text-lg font-semibold text-gray-900">Security Settings</h2>
 
               <div className="mt-6 border-t border-gray-200 pt-6">
                 <h3 className="text-md mb-4 font-semibold text-gray-900">Change Admin PIN</h3>
