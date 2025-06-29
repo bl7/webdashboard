@@ -119,26 +119,27 @@ export default function LabelRender({
         overflow: "hidden",
       }}
     >
-      {/* Watermark logo for PPDS, only on 80mm */}
-      {isPPDS && showLogo && (
-        <img
-          src="/logo_long.png"
-          alt="Logo"
+      {/* Watermark text for PPDS, all sizes */}
+      {isPPDS && (
+        <div
           style={{
             position: "absolute",
             left: "50%",
             top: "70%",
             transform: "translate(-50%, -50%)",
-            opacity: 0.13,
-            maxWidth: "98%",
-            maxHeight: "75%",
-            objectFit: "contain",
+            opacity: 0.15,
             pointerEvents: "none",
             zIndex: 0,
-            filter: "grayscale(100%)",
+            fontSize: fontSize - 2,
+            fontWeight: 400,
+            color: "#666",
+            textAlign: "center",
+            fontFamily: "monospace",
+            letterSpacing: 0.5,
           }}
-          draggable={false}
-        />
+        >
+          instalabel.co
+        </div>
       )}
 
       {/* Item Name */}
