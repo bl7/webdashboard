@@ -37,10 +37,21 @@ const ICONS = [
 ]
 
 const fetcher = async (url: string) => {
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userid") : null
-  if (!userId) return { logs: [] }
-  const res = await fetch(`${url}?user_id=${userId}`)
-  return res.json()
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  if (!token) return { logs: [] }
+  
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    return res.json()
+  } catch (error) {
+    console.error("Failed to fetch logs:", error)
+    return { logs: [] }
+  }
 }
 
 const RANGE_OPTIONS = [

@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
 
 export async function GET(req: NextRequest) {
-  const userId = req.nextUrl.searchParams.get("user_id")
-  if (!userId) return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
+  try {
+    // Verify JWT token and get user UUID
+    const { userUuid } = await verifyAuthToken(req)
+    
+    const [settingsResult, initialsResult] = await Promise.all([
+      pool.query("SELECT use_initials FROM label_initials WHERE user_id = $1", [userUuid]),
+      pool.query("SELECT initial FROM label_initial_items WHERE user_id = $1", [userUuid]),
+    ])
 
-  const [settingsResult, initialsResult] = await Promise.all([
-    pool.query("SELECT use_initials FROM label_initials WHERE user_id = $1", [userId]),
-    pool.query("SELECT initial FROM label_initial_items WHERE user_id = $1", [userId]),
-  ])
-
-  return NextResponse.json({
-    use_initials: settingsResult.rows[0]?.use_initials ?? true,
-    initials: initialsResult.rows.map((r: { initial: string }) => r.initial),
-  })
+    return NextResponse.json({
+      use_initials: settingsResult.rows[0]?.use_initials ?? true,
+      initials: initialsResult.rows.map((r: { initial: string }) => r.initial),
+    })
+  } catch (error: any) {
+    if (error.message.includes("Unauthorized")) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+  }
 }
 
 export async function PUT(req: NextRequest) {

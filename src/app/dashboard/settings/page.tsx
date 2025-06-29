@@ -41,9 +41,25 @@ export default function Settings() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
+        const token = localStorage.getItem("token")
+        if (!token) {
+          console.error("No token found")
+          return
+        }
+
         const [settingsRes, initialsRes] = await Promise.all([
-          fetch(`/api/label-settings?user_id=${userId}`),
-          fetch(`/api/label-initials?user_id=${userId}`),
+          fetch(`/api/label-settings`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }),
+          fetch(`/api/label-initials`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }),
         ])
 
         const settingsData = await settingsRes.json()
@@ -65,7 +81,7 @@ export default function Settings() {
     }
 
     fetchSettings()
-  }, [userId])
+  }, [])
 
   const handleChange = (type: string, value: string) => {
     setExpiryDays((prev) => ({ ...prev, [type]: value }))
@@ -74,9 +90,18 @@ export default function Settings() {
   // Helper to sync initials with backend immediately
   const saveInitials = async (initials: string[], useInitialsVal: boolean) => {
     try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        showFeedback("No authentication token found", "error")
+        return
+      }
+
       const res = await fetch("/api/label-initials", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({
           user_id: userId,
           use_initials: useInitialsVal,
@@ -130,9 +155,18 @@ export default function Settings() {
     }))
 
     try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        showFeedback("No authentication token found", "error")
+        return
+      }
+
       const res = await fetch("/api/label-settings", {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ user_id: userId, settings: expiryPayload }),
       })
 

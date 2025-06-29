@@ -1,4 +1,3 @@
-import { logAction } from "@/lib/logAction"
 
 export async function registerUser(data: any) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
@@ -65,7 +64,6 @@ export async function getAllAllergens(token: string | null) {
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("getAllAllergens_failed", { status: response.status })
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Registration failed")
@@ -92,7 +90,6 @@ export async function addAllergens(data: string, token: string | null) {
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("addAllergens_failed", { allergenName: data })
     if (contentType?.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Add allergen failed")
@@ -103,7 +100,6 @@ export async function addAllergens(data: string, token: string | null) {
   }
 
   const resData = await response.json()
-  await logAction("addAllergens_success", resData)
   return resData
 }
 
@@ -120,7 +116,6 @@ export async function updateAllergen(id: string, allergenName: string, token: st
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("updateAllergen_failed", { id, allergenName, status: response.status })
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Update allergen failed")
@@ -131,7 +126,6 @@ export async function updateAllergen(id: string, allergenName: string, token: st
   }
 
   const data = await response.json()
-  await logAction("updateAllergen_success", data)
   return data
 }
 
@@ -146,8 +140,7 @@ export async function deleteAllergen(id: string, token: string | null) {
   })
 
   if (!response.ok) {
-    await logAction("deleteAllergen_failed", { id, status: response.status })
-    const contentType = response.headers.get("content-type")
+      const contentType = response.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Delete allergen failed")
@@ -164,7 +157,6 @@ export async function deleteAllergen(id: string, token: string | null) {
     data = await response.json()
   }
 
-  await logAction("deleteAllergen_success", { id })
   return data
 }
 // Allergen
@@ -182,7 +174,6 @@ export async function getAllIngredients(token: string | null) {
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("getAllIngredients_failed", { status: response.status })
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Failed to fetch ingredients")
@@ -209,8 +200,7 @@ export async function getIngredient(ingredientId: string, token: string | null) 
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("getIngredient_failed", { ingredientId, status: response.status })
-    if (contentType && contentType.includes("application/json")) {
+      if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Failed to fetch ingredient")
     } else {
@@ -245,8 +235,7 @@ export async function addIngredient(
   })
 
   if (!res.ok) {
-    await logAction("addIngredient_failed", data)
-    const contentType = res.headers.get("content-type")
+        const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
       throw new Error(errorData.message || "Failed to add ingredient")
@@ -257,7 +246,6 @@ export async function addIngredient(
   }
 
   const resData = await res.json()
-  await logAction("addIngredient_success", resData)
   return resData
 }
 
@@ -285,7 +273,6 @@ export async function updateIngredient(
   })
 
   if (!res.ok) {
-    await logAction("updateIngredient_failed", { ingredientId, ...data })
     const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
@@ -297,8 +284,7 @@ export async function updateIngredient(
   }
 
   const resData = await res.json()
-  await logAction("updateIngredient_success", resData)
-  return resData
+    return resData
 }
 
 // Optional: Add function to delete ingredient
@@ -312,7 +298,6 @@ export async function deleteIngredient(ingredientId: string, token: string) {
   })
 
   if (!res.ok) {
-    await logAction("deleteIngredient_failed", { ingredientId })
     const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
@@ -323,7 +308,6 @@ export async function deleteIngredient(ingredientId: string, token: string) {
     }
   }
 
-  await logAction("deleteIngredient_success", { ingredientId })
   return true
 }
 // Ingredients
@@ -340,7 +324,6 @@ export async function getAllMenuItems(token: string | null) {
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("getAllMenuItems_failed", { status: response.status })
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Registration failed")
@@ -365,13 +348,11 @@ export async function addMenuItems(data: any, token: string) {
   })
 
   if (!res.ok) {
-    await logAction("addMenuItems_failed", data)
     const errText = await res.text()
     throw new Error(errText || "Failed to add ingredient")
   }
 
   const resData = await res.json()
-  await logAction("addMenuItems_success", resData)
   return resData
 }
 
@@ -388,7 +369,6 @@ export async function getMenuItem(menuItemId: string, token: string | null) {
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-    await logAction("getMenuItem_failed", { menuItemId, status: response.status })
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Failed to fetch menu item")
@@ -422,7 +402,6 @@ export async function updateMenuItem(
   })
 
   if (!res.ok) {
-    await logAction("updateMenuItem_failed", { menuItemId, ...data })
     const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
@@ -434,7 +413,6 @@ export async function updateMenuItem(
   }
 
   const resData = await res.json()
-  await logAction("updateMenuItem_success", resData)
   return resData
 }
 
@@ -449,7 +427,6 @@ export async function deleteMenuItem(menuItemId: string, token: string) {
   })
 
   if (!res.ok) {
-    await logAction("deleteMenuItem_failed", { menuItemId })
     const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
@@ -460,7 +437,6 @@ export async function deleteMenuItem(menuItemId: string, token: string) {
     }
   }
 
-  await logAction("deleteMenuItem_success", { menuItemId })
   return true
 }
 

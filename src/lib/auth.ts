@@ -26,6 +26,34 @@ export function getTokenFromCookie(req: NextRequest) {
   return req.cookies.get("token")?.value
 }
 
+export function getTokenFromHeader(req: NextRequest) {
+  const authHeader = req.headers.get("authorization")
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return null
+  }
+  return authHeader.substring(7) // Remove "Bearer " prefix
+}
+
+export async function verifyAuthToken(req: NextRequest) {
+  const token = getTokenFromHeader(req)
+  if (!token) {
+    throw new Error("Unauthorized: No token provided")
+  }
+  
+  const payload = await verifyToken(token)
+  if (!payload) {
+    throw new Error("Unauthorized: Invalid token")
+  }
+  
+  // Extract uuid from payload (prioritize uuid over id)
+  const userUuid = payload.uuid || payload.id
+  if (!userUuid) {
+    throw new Error("Unauthorized: No user identifier found in token")
+  }
+  
+  return { payload, userUuid }
+}
+
 export function requireAuth(req: NextRequest) {
   const token = getTokenFromCookie(req)
   if (!token) {

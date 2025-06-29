@@ -33,7 +33,7 @@ const NAV_ITEMS = [
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
-  { label: "Logs", icon: <GoLog />, href: "/dashboard/logs" },
+  { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
   { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
@@ -105,12 +105,18 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
     const loadUserData = async () => {
       const userId = localStorage.getItem("userid")
-      if (!userId) return setError("User ID not found. Please login.")
+      const token = localStorage.getItem("token")
+      if (!userId || !token) return setError("User ID or token not found. Please login.")
 
       try {
         const [profileRes, subRes, adminRes] = await Promise.all([
           fetch(`/api/profile?user_id=${userId}`),
-          fetch(`/api/subscription_better/status?user_id=${userId}`),
+          fetch(`/api/subscription_better/status`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }),
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
 

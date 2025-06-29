@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
 
 export async function GET(req: NextRequest) {
-  const userId = req.nextUrl.searchParams.get("user_id")
-  if (!userId) return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
+  try {
+    // Verify JWT token and get user UUID
+    const { userUuid } = await verifyAuthToken(req)
+    
+    const result = await pool.query(
+      "SELECT label_type, expiry_days FROM label_settings WHERE user_id = $1",
+      [userUuid]
+    )
 
-  const result = await pool.query(
-    "SELECT label_type, expiry_days FROM label_settings WHERE user_id = $1",
-    [userId]
-  )
-
-  return NextResponse.json({ settings: result.rows })
+    return NextResponse.json({ settings: result.rows })
+  } catch (error: any) {
+    if (error.message.includes("Unauthorized")) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+  }
 }
 
 export async function PUT(req: NextRequest) {

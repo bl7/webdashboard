@@ -1,23 +1,23 @@
 export async function logAction(action: string, details: any = {}) {
   console.log("logAction triggered:", action, details)
 
-  let userId: string | null = null
+  let token: string | null = null
 
   if (typeof window !== "undefined") {
-    userId = localStorage.getItem("userid")
+    token = localStorage.getItem("token")
   } else {
-    userId = "system" // or null if you want to skip logging on server
-  }
-
-  if (!userId) {
-    console.warn("logAction skipped: userid missing")
+    // For server-side logging, we might need a different approach
+    console.warn("logAction on server side - token not available")
     return
   }
 
-  // No parsing to int, just use userId string
+  if (!token) {
+    console.warn("logAction skipped: token missing")
+    return
+  }
+
   try {
     console.log("Sending log to /api/logs", {
-      user_id: userId,
       action,
       details,
     })
@@ -28,9 +28,11 @@ export async function logAction(action: string, details: any = {}) {
         : "/api/logs",
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({
-          user_id: userId,
           action,
           details,
         }),

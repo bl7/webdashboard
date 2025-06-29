@@ -64,7 +64,17 @@ const useBillingData = (userId: string): UseBillingDataReturn => {
   const fetchSubscription = useCallback(async () => {
     if (!userId) return
     try {
-      const response = await fetch(`/api/subscription_better/status?user_id=${userId}`)
+      const token = localStorage.getItem("token")
+      if (!token) {
+        throw new Error("No authentication token found")
+      }
+
+      const response = await fetch(`/api/subscription_better/status`, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      })
       if (!response.ok) {
         throw new Error(`Failed to fetch subscription: ${response.statusText}`)
       }

@@ -164,9 +164,25 @@ export default function LabelDemo() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
+        const token = localStorage.getItem("token")
+        if (!token) {
+          console.error("No token found")
+          return
+        }
+
         const [settingsRes, initialsRes] = await Promise.all([
-          fetch(`/api/label-settings?user_id=${userId}`),
-          fetch(`/api/label-initials?user_id=${userId}`),
+          fetch(`/api/label-settings`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }),
+          fetch(`/api/label-initials`, {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json"
+            }
+          }),
         ])
 
         const settingsData = await settingsRes.json()
@@ -188,7 +204,7 @@ export default function LabelDemo() {
     }
 
     fetchSettings()
-  }, [userId])
+  }, [])
 
   useEffect(() => {
     setPage(1)
@@ -410,6 +426,7 @@ export default function LabelDemo() {
               quantity: item.quantity || 1,
               printedAt: new Date().toISOString(),
               initial: selectedInitial,
+              labelHeight: labelHeight,
               printerUsed: printerSelection.printer || 'Debug Mode',
             });
 
@@ -482,6 +499,7 @@ export default function LabelDemo() {
         itemName: "USE FIRST",
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
+        labelHeight: labelHeight,
         printerUsed: printerToUse.printer || 'Debug Mode',
       })
     } catch (err) {
@@ -555,6 +573,7 @@ export default function LabelDemo() {
         itemName: ingredient.name,
         printedAt: new Date().toISOString(),
         initial: selectedInitial,
+        labelHeight: labelHeight,
         printerUsed: printerToUse.printer || 'Debug Mode',
       })
     } catch (err) {

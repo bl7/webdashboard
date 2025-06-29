@@ -1,35 +1,43 @@
 // app/api/logs/route.ts
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
 
 // CREATE log
 export async function POST(req: NextRequest) {
   try {
+    // Verify JWT token and get user UUID
+    const { userUuid } = await verifyAuthToken(req)
+    
     const body = await req.json()
     console.log("Received log POST body:", body)
 
-    const { user_id, action, details } = body
+    const { action, details } = body
 
-    if (!user_id || !action) {
-      console.log("Missing user_id or action in request")
-      return NextResponse.json({ error: "Missing user_id or action" }, { status: 400 })
+    if (!action) {
+      console.log("Missing action in request")
+      return NextResponse.json({ error: "Missing action" }, { status: 400 })
     }
 
     const result = await pool.query(
       `INSERT INTO activity_logs (user_id, action, details)
        VALUES ($1, $2, $3)
        RETURNING *`,
-      [user_id, action, details || {}]
+      [userUuid, action, details || {}]
     )
 
     console.log("Inserted log:", result.rows[0])
     return NextResponse.json({ log: result.rows[0] }, { status: 201 })
-  } catch (err) {
-    console.error("POST /api/logs error:", err)
+  } catch (error: any) {
+    console.error("POST /api/logs error:", error)
+    
+    if (error.message.includes("Unauthorized")) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
 
-    if (err instanceof Error) {
+    if (error instanceof Error) {
       return NextResponse.json(
-        { error: "Failed to create log", details: err.message },
+        { error: "Failed to create log", details: error.message },
         { status: 500 }
       )
     }
@@ -42,29 +50,16 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get("user_id")
-
-  if (!userId) {
-    return NextResponse.json({ error: "Missing user_id in query parameters" }, { status: 400 })
-  }
-
-  // UUID v4 validation regex
-  const uuidV4Regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-  if (!uuidV4Regex.test(userId)) {
-    return NextResponse.json(
-      { error: "Invalid user_id format (not a valid UUID)" },
-      { status: 400 }
-    )
-  }
-
   try {
+    // Verify JWT token and get user UUID
+    const { userUuid } = await verifyAuthToken(req)
+
     const result = await pool.query(
       `SELECT id, user_id, action, details, timestamp
        FROM activity_logs
        WHERE user_id = $1
        ORDER BY timestamp DESC`,
-      [userId]
+      [userUuid]
     )
 
     const logs = result.rows.map((row: any) => ({
@@ -72,8 +67,13 @@ export async function GET(req: NextRequest) {
       details: typeof row.details === "string" ? JSON.parse(row.details) : row.details,
     }))
     return NextResponse.json({ logs }, { status: 200 })
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching logs in GET /api/logs:", error)
+    
+    if (error.message.includes("Unauthorized")) {
+      return NextResponse.json({ error: error.message }, { status: 401 })
+    }
+
     return NextResponse.json(
       {
         error: "Failed to fetch logs",

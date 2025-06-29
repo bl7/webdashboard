@@ -45,56 +45,67 @@ export default function AboutToExpireList() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      const userId = typeof window !== "undefined" ? localStorage.getItem("userid") : null
-      if (!userId) {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+      if (!token) {
         setLoading(false)
         return
       }
-      const res = await fetch(`/api/logs?user_id=${userId}`)
-      const data = await res.json()
-      const printLogs: PrintLog[] = (data.logs || []).filter(
-        (log: PrintLog) => log.action === "print_label"
-      )
+      
+      try {
+        const res = await fetch(`/api/logs`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        })
+        const data = await res.json()
+        const printLogs: PrintLog[] = (data.logs || []).filter(
+          (log: PrintLog) => log.action === "print_label"
+        )
 
-      // Group logs by itemName (or itemId if you prefer)
-      const latestLogsByItem: { [key: string]: PrintLog } = {}
-      for (const log of printLogs) {
-        const key = log.details.itemName // or use itemId if you want
-        if (
-          !latestLogsByItem[key] ||
-          new Date(log.details.printedAt).getTime() >
-            new Date(latestLogsByItem[key].details.printedAt).getTime()
-        ) {
-          latestLogsByItem[key] = log
+        // Group logs by itemName (or itemId if you prefer)
+        const latestLogsByItem: { [key: string]: PrintLog } = {}
+        for (const log of printLogs) {
+          const key = log.details.itemName // or use itemId if you want
+          if (
+            !latestLogsByItem[key] ||
+            new Date(log.details.printedAt).getTime() >
+              new Date(latestLogsByItem[key].details.printedAt).getTime()
+          ) {
+            latestLogsByItem[key] = log
+          }
         }
+
+        const now = new Date()
+        const result: ExpiringItem[] = []
+
+        Object.values(latestLogsByItem).forEach((log) => {
+          const expiryDate = new Date(log.details.expiryDate)
+          const printedAt = new Date(log.details.printedAt)
+          const hoursLeft = (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60)
+          const isPrintedToday =
+            printedAt.getFullYear() === now.getFullYear() &&
+            printedAt.getMonth() === now.getMonth() &&
+            printedAt.getDate() === now.getDate()
+
+          // Filter out 'ppds' label type
+          if (log.details.labelType === "ppds") return
+
+          if (hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday) {
+            result.push({
+              name: log.details.itemName,
+              type: log.details.labelType,
+              expiresAt: expiryDate.toLocaleString(),
+            })
+          }
+        })
+
+        setAboutToExpire(result.filter(item => item.type !== "ppds"))
+      } catch (error) {
+        console.error("Failed to fetch logs:", error)
+      } finally {
+        setLoading(false)
       }
-
-      const now = new Date()
-      const result: ExpiringItem[] = []
-
-      Object.values(latestLogsByItem).forEach((log) => {
-        const expiryDate = new Date(log.details.expiryDate)
-        const printedAt = new Date(log.details.printedAt)
-        const hoursLeft = (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60)
-        const isPrintedToday =
-          printedAt.getFullYear() === now.getFullYear() &&
-          printedAt.getMonth() === now.getMonth() &&
-          printedAt.getDate() === now.getDate()
-
-        // Filter out 'ppds' label type
-        if (log.details.labelType === "ppds") return
-
-        if (hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday) {
-          result.push({
-            name: log.details.itemName,
-            type: log.details.labelType,
-            expiresAt: expiryDate.toLocaleString(),
-          })
-        }
-      })
-
-      setAboutToExpire(result.filter(item => item.type !== "ppds"))
-      setLoading(false)
     }
     fetchData()
   }, [])
