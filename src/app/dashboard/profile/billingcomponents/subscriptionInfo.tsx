@@ -30,29 +30,6 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
   const pendingPlanEffective = hasPendingChange && subscription.pending_plan_change_effective ? new Date(subscription.pending_plan_change_effective) : null;
   const pendingDaysLeft = hasPendingChange && pendingPlanEffective ? Math.max(0, Math.ceil((pendingPlanEffective.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : null;
 
-  const handleCancelPendingChange = async () => {
-    setCancelLoading(true)
-    setCancelMessage(null)
-    try {
-      const res = await fetch("/api/subscription_better/cancel-pending-change", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: subscription.user_id }),
-      })
-      const data = await res.json()
-      if (res.ok) {
-        setCancelMessage("Pending plan change cancelled.")
-        setTimeout(() => window.location.reload(), 1000)
-      } else {
-        setCancelMessage(data.error || "Failed to cancel pending change.")
-      }
-    } catch (err: any) {
-      setCancelMessage(err.message || "Failed to cancel pending change.")
-    } finally {
-      setCancelLoading(false)
-    }
-  }
-
   return (
     <div className="relative flex flex-col justify-between rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 min-h-[12rem] w-full max-w-md p-4 text-white shadow-lg sm:min-h-[14rem]">
       {/* Pending Plan Change Banner */}
@@ -89,20 +66,6 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
       >
         Change Plan
       </Button>
-      {/* Cancel Pending Change Button */}
-      {hasPendingChange && (
-        <Button
-          variant="destructive"
-          className="mt-2 self-start"
-          onClick={handleCancelPendingChange}
-          disabled={cancelLoading}
-        >
-          {cancelLoading ? "Cancelling..." : "Cancel Pending Change"}
-        </Button>
-      )}
-      {cancelMessage && (
-        <div className="mt-2 text-sm text-green-900 bg-green-100 rounded p-2">{cancelMessage}</div>
-      )}
     </div>
   )
 }

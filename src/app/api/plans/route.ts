@@ -16,6 +16,7 @@ export async function GET() {
         description,
         features,
         is_active,
+        tier,
         created_at,
         updated_at
       FROM plans 
@@ -48,7 +49,8 @@ export async function POST(request: NextRequest) {
       stripe_product_id, 
       description, 
       features, 
-      is_active 
+      is_active, 
+      tier
     } = body;
 
     if (!name || !name.trim()) {
@@ -118,8 +120,9 @@ export async function POST(request: NextRequest) {
         stripe_product_id,
         description,
         features,
-        is_active
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        is_active,
+        tier
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
       RETURNING *`,
       [
         name.trim(),
@@ -130,7 +133,8 @@ export async function POST(request: NextRequest) {
         stripe_product_id || null,
         description || null,
         JSON.stringify(features || []),
-        is_active !== undefined ? is_active : true
+        is_active !== undefined ? is_active : true,
+        typeof tier === 'number' ? tier : null
       ]
     );
 

@@ -14,6 +14,7 @@ interface PlanFormData {
   description: string
   features: string
   is_active: boolean
+  tier: string
 }
 
 interface FormErrors {
@@ -25,6 +26,7 @@ interface FormErrors {
   stripe_product_id?: string
   description?: string
   features?: string
+  tier?: string
 }
 
 function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "add" }: any) {
@@ -38,6 +40,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
     description: "",
     features: "",
     is_active: true,
+    tier: ""
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(false)
@@ -57,6 +60,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           description: plan.description || "",
           features: Array.isArray(plan.features) ? plan.features.join(", ") : "",
           is_active: plan.is_active ?? true,
+          tier: plan.tier !== undefined && plan.tier !== null ? String(plan.tier) : ""
         })
       } else {
         setForm({
@@ -69,6 +73,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           description: "",
           features: "",
           is_active: true,
+          tier: ""
         })
       }
       setErrors({})
@@ -110,6 +115,11 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
       newErrors.description = "Description must be less than 500 characters"
     }
 
+    // Tier validation
+    if (!form.tier || isNaN(Number(form.tier))) {
+      newErrors.tier = "Tier is required and must be a number"
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -145,6 +155,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
         price_monthly: Math.round(Number(form.price_monthly) * 100),
         price_yearly: Math.round(Number(form.price_yearly) * 100),
         features: form.features.split(",").map(f => f.trim()).filter(Boolean),
+        tier: Number(form.tier)
       }
 
       const url = mode === "edit" ? `/api/plans/${plan.id}` : "/api/plans"
@@ -202,7 +213,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           <div className="flex gap-2">
             <div className="flex-1">
               <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}>
-                Monthly Price (£) *
+                Monthly Price (\u00a3) *
               </label>
               <input 
                 name="price_monthly" 
@@ -217,7 +228,7 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
             </div>
             <div className="flex-1">
               <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}>
-                Yearly Price (£) *
+                Yearly Price (\u00a3) *
               </label>
               <input 
                 name="price_yearly" 
@@ -229,6 +240,21 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
                 className={`w-full rounded-md border px-3 py-2 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-gray-900"} ${errors.price_yearly ? "border-red-500" : ""}`} 
               />
               {errors.price_yearly && <p className="mt-1 text-sm text-red-500">{errors.price_yearly}</p>}
+            </div>
+            <div className="flex-1">
+              <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}>
+                Tier *
+              </label>
+              <input 
+                name="tier" 
+                type="number" 
+                min="1" 
+                step="1" 
+                value={form.tier} 
+                onChange={handleChange} 
+                className={`w-full rounded-md border px-3 py-2 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-gray-900"} ${errors.tier ? "border-red-500" : ""}`} 
+              />
+              {errors.tier && <p className="mt-1 text-sm text-red-500">{errors.tier}</p>}
             </div>
           </div>
           <div className="flex gap-2">
@@ -507,6 +533,7 @@ export default function PlansPage() {
                 <th className="px-4 py-2 text-left">Name</th>
                 <th className="px-4 py-2 text-left">Monthly</th>
                 <th className="px-4 py-2 text-left">Yearly</th>
+                <th className="px-4 py-2 text-left">Tier</th>
                 <th className="px-4 py-2 text-left">Stripe Monthly</th>
                 <th className="px-4 py-2 text-left">Stripe Yearly</th>
                 <th className="px-4 py-2 text-left">Stripe Product</th>
@@ -522,6 +549,7 @@ export default function PlansPage() {
                   <td className="px-4 py-2 font-semibold">{plan.name}</td>
                   <td className="px-4 py-2">£{(plan.price_monthly / 100).toFixed(2)}</td>
                   <td className="px-4 py-2">£{(plan.price_yearly / 100).toFixed(2)}</td>
+                  <td className="px-4 py-2">{plan.tier ?? '-'}</td>
                   <td className="px-4 py-2 text-xs">{plan.stripe_price_id_monthly || "-"}</td>
                   <td className="px-4 py-2 text-xs">{plan.stripe_price_id_yearly || "-"}</td>
                   <td className="px-4 py-2 text-xs">{plan.stripe_product_id || "-"}</td>

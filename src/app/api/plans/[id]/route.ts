@@ -19,7 +19,8 @@ export async function PUT(
       stripe_product_id, 
       description, 
       features, 
-      is_active 
+      is_active, 
+      tier
     } = body
 
     if (!name || !name.trim()) {
@@ -103,8 +104,9 @@ export async function PUT(
         description = $7,
         features = $8,
         is_active = $9,
+        tier = $10,
         updated_at = NOW()
-      WHERE id = $10
+      WHERE id = $11
       RETURNING *`,
       [
         name.trim(),
@@ -116,6 +118,7 @@ export async function PUT(
         description || null,
         JSON.stringify(features || []),
         is_active !== undefined ? is_active : true,
+        typeof tier === 'number' ? tier : null,
         id
       ]
     )

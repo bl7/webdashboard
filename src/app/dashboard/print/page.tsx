@@ -12,6 +12,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
+import useBillingData from "../profile/hooks/useBillingData"
 
 // Define Printer type locally to match PrinterContext
 interface Printer {
@@ -150,6 +151,12 @@ export default function LabelDemo() {
   // Add state for defrost search
   const [defrostSearch, setDefrostSearch] = useState("")
 
+  const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+  // Subscription status logic
+  const { subscription, loading: subLoading } = useBillingData(userId)
+  const [subStatusMsg, setSubStatusMsg] = useState<string | null>(null)
+  const [subBlocked, setSubBlocked] = useState(false)
+
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
     setFeedbackType(type)
@@ -159,9 +166,6 @@ export default function LabelDemo() {
       setFeedbackType("")
     }, 3000)
   }
-
-  const userId =
-    typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -276,6 +280,33 @@ export default function LabelDemo() {
       .finally(() => setIsLoading(false))
   }, [])
 
+  useEffect(() => {
+    if (!subscription) return
+    let msg = null
+    let blocked = false
+    const now = new Date()
+    let expired = false
+    if (subscription.status === "canceled") {
+      msg = "Your subscription is canceled. Printing is disabled."
+      blocked = true
+    } else if (subscription.status === "incomplete" || subscription.status === "unpaid") {
+      msg = "Your subscription is not active. Printing is disabled."
+      blocked = true
+    } else if (subscription.current_period_end) {
+      const end = new Date(subscription.current_period_end)
+      const daysLeft = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+      if (daysLeft < 0) {
+        msg = "Your subscription has expired. Printing is disabled."
+        blocked = true
+        expired = true
+      } else if (daysLeft <= 3) {
+        msg = `Your subscription will expire in ${daysLeft} day${daysLeft === 1 ? '' : 's'}. Please renew soon.`
+      }
+    }
+    setSubStatusMsg(msg)
+    setSubBlocked(blocked)
+  }, [subscription])
+
   const filteredIngredients = useMemo(
     () =>
       !searchTerm
@@ -367,6 +398,10 @@ export default function LabelDemo() {
   const clearPrintQueue = () => setPrintQueue([])
 
   const printLabels = async (): Promise<void> => {
+    if (subBlocked) {
+      showFeedback("Printing is disabled due to your subscription status.", "error")
+      return
+    }
     if (printQueue.length === 0) {
       showFeedback("No items in print queue", "error")
       return
@@ -468,6 +503,10 @@ export default function LabelDemo() {
 
   // Handler for "Use First"
   const handleUseFirstPrint = async (quantity: number = 1) => {
+    if (subBlocked) {
+      showFeedback("Printing is disabled due to your subscription status.", "error")
+      return
+    }
     if (printerLoading) {
       showFeedback("Checking printer status, please wait...", "error")
       return
@@ -548,6 +587,10 @@ export default function LabelDemo() {
 
   // Handler for "Defrost"
   const handleDefrostPrint = async (ingredient: IngredientItem) => {
+    if (subBlocked) {
+      showFeedback("Printing is disabled due to your subscription status.", "error")
+      return
+    }
     setShowDefrostModal(false)
     
     if (printerLoading) {
@@ -634,6 +677,11 @@ export default function LabelDemo() {
 
   return (
     <div className="space-y-6">
+      {subStatusMsg && (
+        <div className={`rounded-md p-4 mb-4 ${subBlocked ? 'bg-red-100 text-red-800 border border-red-300' : 'bg-yellow-50 text-yellow-900 border border-yellow-200'}`}>
+          {subStatusMsg}
+        </div>
+      )}
       <div className="mx-auto">
         {/* In-place loader for subsequent loads */}
         {isLoading && (ingredients.length > 0 || menuItems.length > 0) ? (
@@ -846,10 +894,12 @@ export default function LabelDemo() {
                   {/* Print Labels */}
                   <Button
                     onClick={printLabels}
-                    disabled={printQueue.length === 0}
+                    disabled={printQueue.length === 0 || subBlocked}
                     variant="default"
                     title={
-                      printQueue.length === 0
+                      subBlocked
+                        ? "Printing is disabled due to your subscription status."
+                        : printQueue.length === 0
                         ? "No items in print queue"
                         : "Print all labels in queue"
                     }
@@ -959,6 +1009,8 @@ export default function LabelDemo() {
                 variant="default"
                 aria-label="Print USE FIRST label"
                 tabIndex={0}
+                disabled={subBlocked}
+                title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
               >
                 Use First
               </Button>
@@ -968,6 +1020,8 @@ export default function LabelDemo() {
                 variant="default"
                 aria-label="Print Defrosted label"
                 tabIndex={0}
+                disabled={subBlocked}
+                title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
               >
                 Defrost
               </Button>

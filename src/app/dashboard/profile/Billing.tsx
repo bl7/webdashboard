@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button"
 import AppLoader from "@/components/AppLoader"
 import type { Profile } from "./hooks/useBillingData"
 import BillingAddress from "./billingcomponents/billingAddress"
-import { PLANS } from "./billingcomponents/planSelectionModal"
 import { getPlanNameFromPriceId } from '@/lib/formatPlanName'
+import { X, Loader2, AlertTriangle } from "lucide-react"
 
 // Full-width Trial/Status Banner
 function TrialBanner({ subscription }: { subscription: any }) {
@@ -48,6 +48,9 @@ const Billing: React.FC = () => {
     refreshProfile,
   } = useBillingData(userid)
   const [localProfile, setLocalProfile] = useState<Profile | null>(null)
+  const [cancelLoading, setCancelLoading] = useState(false)
+  const [cancelMessage, setCancelMessage] = useState<string | null>(null)
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false)
 
   useEffect(() => {
     setIsClient(true)
@@ -77,28 +80,26 @@ const Billing: React.FC = () => {
     }
   }
 
-  const handleUpdateSubscription = async (priceId: string | null) => {
+  const handleUpdateSubscription = async (planId: string | null, priceId: string | null) => {
     try {
-      console.log("Updating subscription with price_id:", priceId)
-
+      if (!planId || !priceId) throw new Error("Missing plan or price id")
+      console.log("Updating subscription with plan_id:", planId, "price_id:", priceId)
       const res = await fetch("/api/subscription_better/change-plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           user_id: userid,
-          new_plan_id: priceId,
+          plan_id: planId,
+          price_id: priceId,
         }),
       })
-
       if (!res.ok) {
         const error = await res.json()
         console.error("Subscription update error:", error)
         throw new Error(error.error || "Failed to update subscription")
       }
-
       const result = await res.json()
       console.log("Subscription updated successfully:", result)
-
       await refreshSubscription()
       setShowPlans(false)
     } catch (err) {
@@ -107,19 +108,27 @@ const Billing: React.FC = () => {
     }
   }
 
-  const handleCancelSubscription = async (immediate = false) => {
-    if (!userid) return
-    const res = await fetch("/api/subscription_better/cancel", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: userid, immediate }),
-    })
-    const data = await res.json()
-    if (res.ok) {
-      alert(data.message)
-      await refreshSubscription()
-    } else {
-      alert(data.error || "Failed to cancel subscription")
+  const handleCancelSubscription = async () => {
+    setCancelLoading(true)
+    setCancelMessage(null)
+    try {
+      const res = await fetch("/api/subscription_better/cancel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userid }),
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setCancelMessage(data.message || "Subscription cancelled.")
+        setTimeout(() => window.location.reload(), 1500)
+      } else {
+        setCancelMessage(data.error || "Failed to cancel subscription.")
+      }
+    } catch (err: any) {
+      setCancelMessage(err.message || "Failed to cancel subscription.")
+    } finally {
+      setCancelLoading(false)
+      setShowCancelConfirm(false)
     }
   }
 
@@ -211,18 +220,90 @@ const Billing: React.FC = () => {
           </div>
         </div>
 
-        {/* Cancel Subscription Buttons */}
-        {subscription && subscription.status !== "canceled" && (
-          <div className="flex flex-col md:flex-row gap-4 mt-6">
-            <Button variant="destructive" onClick={() => handleCancelSubscription(false)}>
-              Cancel Subscription (at period end)
+        {/* Scheduled Cancellation Banner */}
+        {subscription && subscription.cancel_at && subscription.status !== "canceled" && (
+          <div className="mt-8 w-full rounded-xl border-l-8 border-red-400 bg-red-50 p-6 text-red-900 shadow flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="inline-block rounded bg-red-400 px-3 py-1 text-sm font-bold text-white">CANCELLATION SCHEDULED</span>
+              <span className="font-semibold text-lg">Your subscription will be canceled on <span className="underline">{new Date(subscription.cancel_at).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</span>.</span>
+            </div>
+            <div className="text-base font-medium">
+              You will retain access until this date. No further renewals will occur after cancellation.
+            </div>
+          </div>
+        )}
+
+        {/* Cancel Subscription Section */}
+        {subscription && subscription.status !== "canceled" && !subscription.cancel_at && (
+          <div className="mt-10 flex flex-col items-center justify-center">
+            <Button
+              variant="outline"
+              onClick={() => setShowCancelConfirm(true)}
+              disabled={cancelLoading}
+              className="text-red-600 border-red-300 hover:bg-red-50 px-8 py-3 text-lg font-semibold"
+            >
+              {cancelLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Cancelling...
+                </>
+              ) : (
+                <>
+                  <X className="mr-2 h-5 w-5" />
+                  Cancel Subscription
+                </>
+              )}
             </Button>
-            <Button variant="destructive" onClick={() => handleCancelSubscription(true)}>
-              Cancel Immediately
-            </Button>
+            {cancelMessage && (
+              <div className="mt-3 text-sm text-green-600 bg-green-50 rounded px-3 py-1">
+                {cancelMessage}
+              </div>
+            )}
           </div>
         )}
       </div>
+
+      {/* Cancel Confirmation Modal */}
+      {showCancelConfirm && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-80">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                <AlertTriangle className="h-6 w-6 text-red-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Cancel Subscription
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period.
+              </p>
+              <div className="flex gap-3 justify-center">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowCancelConfirm(false)}
+                  disabled={cancelLoading}
+                >
+                  Keep Subscription
+                </Button>
+                <Button
+                  onClick={handleCancelSubscription}
+                  disabled={cancelLoading}
+                  className="bg-red-600 hover:bg-red-700 text-white"
+                >
+                  {cancelLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Cancelling...
+                    </>
+                  ) : (
+                    "Yes, Cancel"
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <BillingAddressModal
         profile={localProfile}

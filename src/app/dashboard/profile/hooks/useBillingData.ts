@@ -40,6 +40,7 @@ export interface Subscription {
   card_fingerprint?: string | null
   created_at?: string
   updated_at?: string
+  cancel_at?: string | null
 }
 
 interface UseBillingDataReturn {
