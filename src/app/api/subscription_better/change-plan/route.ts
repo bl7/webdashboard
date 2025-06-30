@@ -24,6 +24,21 @@ export async function POST(req: NextRequest) {
     const newInterval = newPrice.recurring?.interval
     // Determine if upgrade or downgrade/interval change
     const isUpgrade = (newPrice.unit_amount || 0) > (stripeSub.items.data[0]?.price?.unit_amount || 0)
+    const isTrialing = stripeSub.status === 'trialing' || (stripeSub.trial_end && Date.now() / 1000 < stripeSub.trial_end)
+
+    if (isTrialing) {
+      // User is on trial: change plan immediately, keep trial going
+      await stripe.subscriptions.update(sub.stripe_subscription_id, {
+        items: [{ id: stripeSub.items.data[0].id, price: new_price_id }],
+        trial_end: stripeSub.trial_end, // preserve trial
+        proration_behavior: "none",    // no proration during trial
+      })
+      await client.query(
+        `UPDATE subscription_better SET plan_id = $1, plan_name = $2, amount = $3, billing_interval = $4, updated_at = NOW(), pending_plan_change = NULL, pending_plan_change_effective = NULL WHERE user_id = $5`,
+        [new_plan_id, newPrice.nickname || new_price_id, (newPrice.unit_amount || 0) / 100, newInterval, user_id]
+      )
+      return NextResponse.json({ message: "Your plan has been changed. Your trial continues, and you will be billed for the new plan when your trial ends." })
+    }
     if (!isUpgrade || currentInterval !== newInterval) {
       // Schedule change at period end
       await client.query(
@@ -32,7 +47,7 @@ export async function POST(req: NextRequest) {
       )
       return NextResponse.json({ message: "Your plan change is scheduled for the end of your current billing period.", effective_date: new Date(stripeSub.current_period_end * 1000) })
     } else {
-      // Immediate upgrade
+      // Immediate upgrade (non-trial)
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
         items: [{ id: stripeSub.items.data[0].id, price: new_price_id }],
         proration_behavior: "create_prorations",

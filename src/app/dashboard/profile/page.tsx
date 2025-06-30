@@ -318,14 +318,6 @@ const ProfileDashboard = () => {
                 Save Changes
               </Button>
             </div>
-            
-            <div className="mt-4 flex items-center">
-              <span className="text-yellow-500">★ 5.0</span>
-              <span className="ml-1 text-xs text-muted-foreground">(1)</span>
-              <span className="ml-2 rounded bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                Sponsored
-              </span>
-            </div>
           </div>
 
           {/* Profile Form - Now only contains PIN and Password sections */}

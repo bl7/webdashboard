@@ -654,18 +654,30 @@ export default function PlanSelectionModal({
 
         {/* Plan Cards (hide only the exact current plan+interval) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {PLANS.flatMap(plan => [
-            { ...plan, interval: 'monthly', price: plan.monthly, price_id: plan.price_id_monthly },
-            { ...plan, interval: 'yearly', price: plan.yearly, price_id: plan.price_id_yearly },
-          ])
-            .filter(planVariant => {
-              // Hide only the exact current plan+interval by price_id and normalized interval
-              return !(
+          {(() => {
+            const allPlanVariants = PLANS.flatMap(plan => [
+              { ...plan, interval: 'monthly', price: plan.monthly, price_id: plan.price_id_monthly },
+              { ...plan, interval: 'yearly', price: plan.yearly, price_id: plan.price_id_yearly },
+            ]);
+            
+            console.log("🔍 All plan variants:", allPlanVariants.map(p => `${p.name} (${p.interval}) - ${p.price_id}`));
+            console.log("🔍 Current plan price ID:", currentPlanPriceId);
+            console.log("🔍 Current plan interval:", currentPlanInterval);
+            
+            const filteredVariants = allPlanVariants.filter(planVariant => {
+              const shouldHide = (
                 planVariant.price_id === currentPlanPriceId &&
                 normalizeInterval(planVariant.interval) === currentPlanInterval
               );
-            })
-            .map(planVariant => (
+              
+              console.log(`🔍 ${planVariant.name} (${planVariant.interval}): price_id=${planVariant.price_id}, shouldHide=${shouldHide}`);
+              
+              return !shouldHide;
+            });
+            
+            console.log("🔍 Filtered variants count:", filteredVariants.length);
+            
+            return filteredVariants.map(planVariant => (
               <div key={planVariant.id + '-' + planVariant.interval} className={clsx(
                 "rounded-xl border bg-white p-6 shadow flex flex-col justify-between",
                 selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "ring-2 ring-blue-500" : "",
@@ -687,7 +699,8 @@ export default function PlanSelectionModal({
                   {selectedPlanId === planVariant.id && billingPeriod === planVariant.interval ? "Selected" : planVariant.cta}
                 </Button>
               </div>
-            ))}
+            ))
+          })()}
         </div>
 
         {/* Billing period toggle and action buttons remain unchanged */}

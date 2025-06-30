@@ -93,29 +93,6 @@ export default function BillingAddressModal({ profile, open, onClose, onSave }: 
           )}
 
           <label className="block">
-            <span className="text-sm font-medium text-gray-700">Full Name</span>
-            <Input
-              name="name"
-              value={formData.name || ""}
-              onChange={handleChange}
-              className="mt-1"
-              required
-            />
-          </label>
-
-          <label className="block">
-            <span className="text-sm font-medium text-gray-700">Email</span>
-            <Input
-              name="email"
-              type="email"
-              value={formData.email || ""}
-              onChange={handleChange}
-              className="mt-1"
-              required
-            />
-          </label>
-
-          <label className="block">
             <span className="text-sm font-medium text-gray-700">Address Line 1</span>
             <Input
               name="address_line1"
