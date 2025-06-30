@@ -105,6 +105,13 @@ export default function MenuItemsDashboard() {
       return
     }
 
+    // Duplicate check (case-insensitive, trimmed)
+    const exists = menuItems.some(i => i.menuItemName.trim().toLowerCase() === newItem.menuItemName.trim().toLowerCase())
+    if (exists) {
+      toast.error("A menu item with this name already exists.")
+      return
+    }
+
     if (newItem.ingredientIDs.length === 0) {
       toast.error("At least one ingredient is required")
       return

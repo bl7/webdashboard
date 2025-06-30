@@ -245,17 +245,7 @@ const AnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
-      {/* Header */}
-      <header className="mb-10 flex flex-col items-center text-center">
-        <h1 className="mb-2 text-5xl font-extrabold text-primary drop-shadow-lg">
-          Analytics Dashboard
-        </h1>
-        <p className="mx-auto max-w-2xl text-lg font-medium text-gray-600">
-          Visualize your label printing activity, staff performance, and expiring items in real
-          time.
-        </p>
-      </header>
-      {/* Range Selector */}
+     
       <div className="mx-auto mb-6 flex max-w-6xl justify-end">
         <div className="inline-flex rounded-lg bg-white/70 shadow">
           {RANGE_OPTIONS.map((opt) => (

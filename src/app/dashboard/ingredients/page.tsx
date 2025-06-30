@@ -128,6 +128,13 @@ export default function IngredientsTable() {
       return
     }
 
+    // Duplicate check (case-insensitive, trimmed)
+    const exists = ingredients.some(i => i.ingredientName.trim().toLowerCase() === newIngredient.ingredientName.trim().toLowerCase())
+    if (exists) {
+      toast.error("An ingredient with this name already exists.")
+      return
+    }
+
     if (newIngredient.expiryDays <= 0) {
       toast.error("Expiry days must be greater than 0")
       return

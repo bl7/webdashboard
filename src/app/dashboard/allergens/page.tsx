@@ -20,7 +20,8 @@ import * as XLSX from "xlsx"
 import { useAllergens, type Allergen } from "@/hooks/useAllergens"
 import { allergenIconMap } from "../../../components/allergenicons"
 import allergenColorMap from "@/components/allergencolormap"
-import AppLoader from "@/components/AppLoader" // Use your loader if available
+import AppLoader from "@/components/AppLoader" 
+import { toast } from "sonner"
 
 function AllergensSkeleton() {
   return (
@@ -96,6 +97,13 @@ export default function AllergenDashboard() {
   const handleAddCustomAllergen = async () => {
     if (!newAllergenName.trim()) return
 
+    // Duplicate check (case-insensitive, trimmed)
+    const exists = allergens.some(a => a.name.trim().toLowerCase() === newAllergenName.trim().toLowerCase())
+    if (exists) {
+      toast.error("An allergen with this name already exists.")
+      return
+    }
+
     setIsOperationLoading(true)
     try {
       await addAllergen(newAllergenName.trim())
@@ -103,7 +111,7 @@ export default function AllergenDashboard() {
       setShowAddModal(false)
     } catch (error) {
       console.error("Failed to add allergen:", error)
-      alert("Failed to add allergen. Please try again.")
+      toast.error("Failed to add allergen. Please try again.")
     } finally {
       setIsOperationLoading(false)
     }
