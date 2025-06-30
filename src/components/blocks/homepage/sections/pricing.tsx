@@ -52,7 +52,7 @@ export const Pricing = () => {
 
         {/* Pricing Cards */}
         <div className="flex justify-center">
-          <div className="grid max-w-6xl gap-8 md:grid-cols-3">
+          <div className="grid max-w-6xl gap-8 md:grid-cols-3 justify-center items-center">
             {loading ? (
               <div className="col-span-3 py-12 text-center text-lg">Loading plans...</div>
             ) : plans.length === 0 ? (
@@ -100,7 +100,7 @@ export const Pricing = () => {
         <Link href="/plan" passHref>
           <Button
             size="lg"
-            className="bg-primary px-6 py-3 font-semibold text-white transition hover:bg-primary/90"
+            className="bg-primary px-6 py-3 font-semibold text-white transition hover:bg-primary/90 mt-10"
           >
             See Full List of Features
           </Button>
