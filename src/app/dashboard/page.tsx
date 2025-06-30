@@ -92,7 +92,7 @@ export default function DashboardPage() {
   ) {
     return (
       <div className="flex min-h-screen items-start justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-12">
-        <div className="w-full max-w-6xl">
+        <div className="w-full max-w-7xl">
           <DashboardSkeleton />
         </div>
       </div>
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-12">
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full max-w-7xl">
         {/* Hero Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -112,6 +112,9 @@ export default function DashboardPage() {
           <h1 className="text-6xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-blue-600 bg-clip-text text-transparent mb-4 drop-shadow-sm">
             Dashboard
           </h1>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            Welcome to your InstaLabel! Here you'll find an overview of your projects and stats.
+          </p>
         </motion.div>
 
         {/* Main Content */}
@@ -124,7 +127,7 @@ export default function DashboardPage() {
           {/* Stats Cards */}
           <div className={`grid transition-all duration-500 ease-in-out ${
             activeList ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3 gap-0'
-          }`}>
+          } w-full`}>
             {!activeList && cards.map((card, index) => {
               const style = CARD_STYLES[card.key]
               return (
@@ -138,9 +141,9 @@ export default function DashboardPage() {
                   onClick={() => setActiveList(card.key)}
                   disabled={card.loading}
                   className={`
-                    group relative p-8 text-left transition-all duration-300 ease-out
+                    group relative p-8 text-left transition-all duration-300 ease-out w-full
                     ${style.bg} ${style.hover} ${style.shadow}
-                    border-r border-white/30 last:border-r-0
+                    border-r border-white/30 last:border-r-0 md:border-r md:last:border-r-0
                     hover:shadow-xl hover:shadow-slate-200/50
                     disabled:cursor-not-allowed disabled:opacity-50
                   `}

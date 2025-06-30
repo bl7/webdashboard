@@ -219,11 +219,13 @@ export default function PrintSessionsPage() {
   }, [search, groupedSessions])
 
   function formatTimestamp(ts: string) {
-    return new Date(ts).toLocaleString()
+    // Use ISO string for SSR safety
+    return new Date(ts).toISOString().replace('T', ' ').slice(0, 19)
   }
 
   function formatPrintedAt(ts: string) {
-    return new Date(ts).toLocaleString()
+    // Use ISO string for SSR safety
+    return new Date(ts).toISOString().replace('T', ' ').slice(0, 19)
   }
 
   function getItemNames(session: GroupedPrintSession): string {
@@ -413,7 +415,7 @@ export default function PrintSessionsPage() {
                       {getItemNames(session)}
                     </div>
                   </TableCell>
-                  <TableCell>{getTotalQuantity(session)}</TableCell>
+                  <TableCell>{isNaN(getTotalQuantity(session)) ? 'N/A' : getTotalQuantity(session)}</TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
                       {[...new Set(session.items.map(item => item.details.labelType))].map((type) => (

@@ -83,7 +83,18 @@ export default function LabelRender({
   const shortPrinted = shortDate(item.printedOn || "")
   const shortExpiry = shortDate(expiry || item.expiryDate || "")
   const allergenNames = allergens.map((a) => a.toLowerCase())
-  const isAllergen = (ing: string) => allergenNames.some((a) => ing.toLowerCase().includes(a))
+
+  // Allergen detection logic
+  let ingredientAllergenNames: string[] = []
+  if (item.type === "ingredients" && Array.isArray(item.allergens)) {
+    // Use the ingredient's own allergens
+    ingredientAllergenNames = item.allergens.map((a: any) => a.allergenName?.toLowerCase() || a.name?.toLowerCase() || a.toLowerCase?.() || "").filter(Boolean)
+  } else {
+    // Use global allergen list for menu items
+    ingredientAllergenNames = allergenNames
+  }
+
+  const isAllergen = (ing: string) => ingredientAllergenNames.some((a) => ing.toLowerCase().includes(a))
   const ingredientList = (item.ingredients ?? []).filter(
     (ing): ing is string => typeof ing === "string" && ing.trim() !== ""
   )
@@ -346,6 +357,39 @@ export default function LabelRender({
           }}
         >
           {selectedInitial}
+        </div>
+      )}
+
+      {/* Allergens warning for 31mm and 40mm ingredient labels */}
+      {(labelHeight === "31mm" || labelHeight === "40mm") && item.type === "ingredients" && ingredientAllergenNames.length > 0 && (
+        <div
+          style={{
+            fontWeight: 900,
+            color: "#b91c1c", // red-700
+            fontSize: fontSize,
+            textAlign: "center",
+            marginTop: 2,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          CONTAINS ALLERGENS
+        </div>
+      )}
+      {/* Allergens warning and list for 80mm ingredient labels */}
+      {labelHeight === "80mm" && item.type === "ingredients" && ingredientAllergenNames.length > 0 && (
+        <div
+          style={{
+            fontWeight: 900,
+            color: "#b91c1c", // red-700
+            fontSize: fontSize,
+            textAlign: "center",
+            marginTop: 2,
+            letterSpacing: 1,
+            textTransform: "uppercase",
+          }}
+        >
+          CONTAINS ALLERGENS: {ingredientAllergenNames.join(", ")}
         </div>
       )}
     </div>
