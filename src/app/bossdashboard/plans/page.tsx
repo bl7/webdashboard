@@ -15,6 +15,7 @@ interface PlanFormData {
   features: string
   is_active: boolean
   tier: string
+  highlight?: boolean
 }
 
 interface FormErrors {
@@ -40,7 +41,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
     description: "",
     features: "",
     is_active: true,
-    tier: ""
+    tier: "",
+    highlight: false
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(false)
@@ -60,7 +62,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           description: plan.description || "",
           features: Array.isArray(plan.features) ? plan.features.join(", ") : "",
           is_active: plan.is_active ?? true,
-          tier: plan.tier !== undefined && plan.tier !== null ? String(plan.tier) : ""
+          tier: plan.tier !== undefined && plan.tier !== null ? String(plan.tier) : "",
+          highlight: !!plan.highlight
         })
       } else {
         setForm({
@@ -73,7 +76,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           description: "",
           features: "",
           is_active: true,
-          tier: ""
+          tier: "",
+          highlight: false
         })
       }
       setErrors({})
@@ -155,7 +159,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
         price_monthly: Math.round(Number(form.price_monthly) * 100),
         price_yearly: Math.round(Number(form.price_yearly) * 100),
         features: form.features.split(",").map(f => f.trim()).filter(Boolean),
-        tier: Number(form.tier)
+        tier: Number(form.tier),
+        highlight: !!form.highlight
       }
 
       const url = mode === "edit" ? `/api/plans/${plan.id}` : "/api/plans"
@@ -338,6 +343,16 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
               Active
             </label>
           </div>
+          <label className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="highlight"
+              checked={!!form.highlight}
+              onChange={handleChange}
+              className="form-checkbox h-4 w-4 text-yellow-500"
+            />
+            <span className="text-sm">Best Seller (highlight this plan)</span>
+          </label>
           {error && (
             <div className="flex items-center gap-2 rounded-md bg-red-50 p-3 text-red-700 dark:bg-red-900/20 dark:text-red-400">
               <AlertTriangle className="h-4 w-4" />

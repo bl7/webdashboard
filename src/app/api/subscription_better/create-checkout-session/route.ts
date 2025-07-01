@@ -48,6 +48,12 @@ export async function POST(req: NextRequest) {
       console.log('[CHECKOUT] Creating new customer:', { email, user_id });
       customer = await stripe.customers.create({ email, metadata: { user_id } })
     }
+    // Check if user has ever had a trial before
+    const trialCheck = await pool.query(
+      `SELECT 1 FROM subscription_better WHERE user_id = $1 AND trial_end IS NOT NULL LIMIT 1`,
+      [user_id]
+    );
+    const trialEligible = trialCheck.rows.length === 0;
     // Create checkout session with detailed metadata
     const sessionData = {
       customer: customer.id,
@@ -56,7 +62,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: price_id, quantity: 1 }],
       subscription_data: {
         metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
-        trial_period_days: 10,
+        ...(trialEligible ? { trial_period_days: 10 } : {}),
       },
       metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,

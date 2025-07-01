@@ -176,24 +176,28 @@ const Billing: React.FC = () => {
         {/* Top Row: Plan, Payment Method */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Current Plan Card (SubscriptionInfo) */}
-          {subscription && (
+          {subscription && subscription.status !== 'canceled' && (
             <SubscriptionInfo
-              subscription={{
-                ...subscription,
-                plan_name: getPlanNameFromPriceId(subscription.plan_id),
-              }}
+              subscription={subscription}
               onChangePlan={() => setShowPlans(true)}
             />
           )}
           {/* Plan Renewal Card */}
-          {subscription && (
+          {subscription && subscription.status !== 'canceled' && (
             <PlanRenewal
-              subscription={{
-                ...subscription,
-                plan_name: getPlanNameFromPriceId(subscription.plan_id),
-              }}
-              onChangePlan={() => setShowPlans(true)}
+              subscription={subscription}
+              onChangePlan={() => {}}
             />
+          )}
+          {/* New Plan Card for canceled subscriptions */}
+          {subscription && subscription.status === 'canceled' && (
+            <div className="relative flex flex-col justify-center items-center rounded-xl bg-gradient-to-r from-gray-200 to-gray-300 min-h-[12rem] w-full max-w-md p-4 text-gray-700 shadow-lg sm:min-h-[14rem] col-span-2">
+              <div className="text-lg font-bold mb-2">No Active Plan</div>
+              <div className="mb-4 text-sm">Your subscription is canceled. Choose a new plan to continue using InstaLabel.</div>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded" onClick={() => setShowPlans(true)}>
+                Choose Plan
+              </Button>
+            </div>
           )}
           {/* Payment Method Card */}
           <PaymentMethod subscription={subscription} />
@@ -275,7 +279,9 @@ const Billing: React.FC = () => {
                 Cancel Subscription
               </h3>
               <p className="text-gray-600 mb-6">
-                Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period.
+                {subscription?.status === "trialing"
+                  ? "Are you sure you want to cancel your free trial? You will lose access immediately."
+                  : "Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period."}
               </p>
               <div className="flex gap-3 justify-center">
                 <Button

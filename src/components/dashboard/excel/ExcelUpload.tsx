@@ -129,7 +129,7 @@ const ExcelUpload: React.FC = () => {
         const allergenNames = allergenStr
           .split(",")
           .map((a) => a.trim())
-          .filter((a) => a.length > 0)
+          .filter((a) => a.length > 0 && a.toLowerCase() !== 'none')
 
         allergenNames.forEach((a) => allergensSet.add(a))
 

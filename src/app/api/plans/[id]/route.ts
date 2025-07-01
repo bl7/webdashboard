@@ -20,7 +20,8 @@ export async function PUT(
       description, 
       features, 
       is_active, 
-      tier
+      tier,
+      highlight
     } = body
 
     if (!name || !name.trim()) {
@@ -105,8 +106,9 @@ export async function PUT(
         features = $8,
         is_active = $9,
         tier = $10,
+        highlight = $11,
         updated_at = NOW()
-      WHERE id = $11
+      WHERE id = $12
       RETURNING *`,
       [
         name.trim(),
@@ -119,6 +121,7 @@ export async function PUT(
         JSON.stringify(features || []),
         is_active !== undefined ? is_active : true,
         typeof tier === 'number' ? tier : null,
+        !!highlight,
         id
       ]
     )

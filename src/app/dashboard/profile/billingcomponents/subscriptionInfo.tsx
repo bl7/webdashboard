@@ -51,11 +51,10 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
         )}
       </div>
       <div>
-        <div className="mb-1 text-xs opacity-75">Your Current Plan</div>
-        <div className="flex items-baseline gap-1">
-          <div className="text-2xl font-bold">£{subscription.amount ? (subscription.amount / 100).toFixed(2) : "0.00"}</div>
-        </div>
-        <div className="mt-1 text-sm font-medium">{subscription.plan_name}</div>
+        <div className="mb-1 text-xs opacity-75">Your Plan</div>
+        <div className="mt-1 text-lg font-bold">{subscription.plan_name}</div>
+        <div className="mt-1 text-sm">Duration: {subscription.billing_interval ? subscription.billing_interval.charAt(0).toUpperCase() + subscription.billing_interval.slice(1) : 'N/A'}</div>
+        <div className="mt-1 text-sm">Price: £{subscription.amount ? (subscription.amount / 100).toFixed(2) : "0.00"}</div>
       </div>
       <Button
         variant="outline"

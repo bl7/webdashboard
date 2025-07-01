@@ -4,6 +4,14 @@ import { stripe } from "@/lib/stripe"
 import { sendMail } from "@/lib/mail"
 import { cancellationEmail } from "@/components/templates/subscriptionEmails"
 
+// Helper to get end of next full calendar month (in seconds)
+function getEndOfNextMonth() {
+  const now = new Date();
+  const firstOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const endOfNextMonth = new Date(firstOfNextMonth.getFullYear(), firstOfNextMonth.getMonth() + 1, 0, 23, 59, 59);
+  return Math.floor(endOfNextMonth.getTime() / 1000);
+}
+
 export async function POST(req: NextRequest) {
   const { user_id, immediate } = await req.json()
 
@@ -102,16 +110,14 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Non-trialing: cancel at period end
+    // Non-trialing: cancel at end of next full calendar month
     const now = Date.now() / 1000
+    const cancelAt = getEndOfNextMonth();
     if (interval === "month") {
-      const currentPeriodEnd = (stripeSub as any).current_period_end
-      const newCancelAt = currentPeriodEnd + 30 * 24 * 60 * 60
-
+      // Monthly: cancel at end of next month, no refund
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
-        cancel_at: newCancelAt,
-      })
-
+        cancel_at: cancelAt,
+      });
       await client.query(
         `UPDATE subscription_better
          SET cancel_at_period_end = true,
@@ -125,9 +131,8 @@ export async function POST(req: NextRequest) {
              refund_amount = NULL,
              updated_at = NOW()
          WHERE user_id = $1`,
-        [user_id, newCancelAt]
-      )
-
+        [user_id, cancelAt]
+      );
       await sendMail({
         to: userEmail,
         subject: "Subscription Cancellation",
@@ -135,34 +140,30 @@ export async function POST(req: NextRequest) {
           name: userEmail,
           planName: sub.plan_name || sub.plan_id || '',
           cancellationType: 'monthly',
-          endDate: new Date(newCancelAt * 1000).toLocaleDateString(),
+          endDate: new Date(cancelAt * 1000).toLocaleDateString(),
         }),
-      })
-
+      });
       return NextResponse.json({
         success: true,
-        message:
-          "Your subscription will be cancelled at the end of the next month. You have been charged for the final month as per our notice policy.",
-      })
-    } else if (interval === "year") {
-      const currentPeriodEnd = (stripeSub as any).current_period_end
-      const newCancelAt = currentPeriodEnd + 30 * 24 * 60 * 60
-
+        message: "Your subscription will be cancelled at the end of the next full calendar month. You have been charged for the final month as per our notice policy.",
+      });
+    }
+    if (interval === "year") {
+      // Annual: cancel at end of next month, refund 50% of unused time after that
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
-        cancel_at: newCancelAt,
-      })
-
-      const monthsLeft =
-        Math.max(0, (stripeSub as any).current_period_end - now) / (30 * 24 * 60 * 60) - 1
-      const refundAmount = Math.round((amount / 12) * monthsLeft * 0.5)
-      const refundDueAt = newCancelAt
-
+        cancel_at: cancelAt,
+      });
+      const annualPeriodEnd = (stripeSub as any).current_period_end;
+      const amount = item.price?.unit_amount || 0;
+      // Calculate months remaining after cancelAt
+      const monthsRemaining = (annualPeriodEnd - cancelAt) / (30 * 24 * 60 * 60);
+      const refundAmount = Math.round((amount / 12) * monthsRemaining * 0.5);
       await client.query(
         `UPDATE subscription_better
          SET cancel_at_period_end = true,
              cancel_at = to_timestamp($2),
-             refund_due_at = to_timestamp($3),
-             refund_amount = $4,
+             refund_due_at = to_timestamp($2),
+             refund_amount = $3,
              pending_plan_change = NULL,
              pending_price_id = NULL,
              pending_plan_interval = NULL,
@@ -170,9 +171,8 @@ export async function POST(req: NextRequest) {
              pending_plan_change_effective = NULL,
              updated_at = NOW()
          WHERE user_id = $1`,
-        [user_id, newCancelAt, refundDueAt, refundAmount]
-      )
-
+        [user_id, cancelAt, refundAmount]
+      );
       await sendMail({
         to: userEmail,
         subject: "Subscription Cancellation",
@@ -180,16 +180,14 @@ export async function POST(req: NextRequest) {
           name: userEmail,
           planName: sub.plan_name || sub.plan_id || '',
           cancellationType: 'annual',
-          endDate: new Date(newCancelAt * 1000).toLocaleDateString(),
-          refundInfo: { amount: refundAmount, date: new Date(refundDueAt * 1000).toLocaleDateString() },
+          endDate: new Date(cancelAt * 1000).toLocaleDateString(),
+          refundInfo: { amount: refundAmount, date: new Date(cancelAt * 1000).toLocaleDateString() },
         }),
-      })
-
+      });
       return NextResponse.json({
         success: true,
-        message:
-          "Your subscription will be cancelled at the end of the next month. You have been charged for the final month. After that, you will be refunded 50% of the remaining months.",
-      })
+        message: "Your subscription will be cancelled at the end of the next full calendar month. After that, you will be refunded 50% of the remaining unused annual period.",
+      });
     } else {
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
         cancel_at_period_end: true,

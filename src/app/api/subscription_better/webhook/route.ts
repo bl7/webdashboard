@@ -80,13 +80,15 @@ export async function POST(req: NextRequest) {
               trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency,
               cancel_at_period_end, pending_plan_change, pending_plan_change_effective,
               card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint,
-              created_at, updated_at, price_id, plan_interval
+              created_at, updated_at, price_id, plan_interval,
+              refund_due_at, refund_amount, pending_price_id, pending_plan_interval, pending_plan_name, cancel_at
             ) VALUES (
               $1, $2, $3, $4, $5, $6,
               to_timestamp($7), to_timestamp($8), to_timestamp($9), to_timestamp($10), $11, $12, $13,
               $14, $15, to_timestamp($16),
               $17, $18, $19, $20, $21, $22,
-              NOW(), NOW(), $23, $24
+              NOW(), NOW(), $23, $24,
+              to_timestamp($25), $26, $27, $28, $29, to_timestamp($30)
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, plan_name = $5, status = $6,
@@ -94,7 +96,8 @@ export async function POST(req: NextRequest) {
               billing_interval = $11, amount = $12, currency = $13, cancel_at_period_end = $14,
               pending_plan_change = $15, pending_plan_change_effective = to_timestamp($16),
               card_brand = $17, card_last4 = $18, card_exp_month = $19, card_exp_year = $20, card_country = $21, card_fingerprint = $22,
-              updated_at = NOW(), price_id = $23, plan_interval = $24`,
+              updated_at = NOW(), price_id = $23, plan_interval = $24,
+              refund_due_at = to_timestamp($25), refund_amount = $26, pending_price_id = $27, pending_plan_interval = $28, pending_plan_name = $29, cancel_at = to_timestamp($30)`,
             [
               user_id,
               sub.customer,
@@ -119,7 +122,13 @@ export async function POST(req: NextRequest) {
               card_country,
               card_fingerprint,
               price_id,
-              plan_interval
+              plan_interval,
+              null,
+              null,
+              null,
+              null,
+              null,
+              null
             ]
           )
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)

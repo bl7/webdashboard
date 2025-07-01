@@ -337,6 +337,7 @@ export default function PlanSelectionModal({
   }, [userid, selectedPlan, userEmail, plans, getSelectedPriceId])
 
   const getButtonLabel = () => {
+    if (subscriptionStatus === 'canceled') return 'Subscribe Now';
     if (changeType === "upgrade") return "Upgrade Now";
     if (changeType === "downgrade") return "Schedule Downgrade";
     if (changeType === "same") return "Choose Plan";
@@ -472,6 +473,7 @@ export default function PlanSelectionModal({
   const currentPlanInterval = normalizeInterval(subscriptionData?.billing_interval);
 
   const isCurrentPlan = (planVariant: any) => {
+    if (subscriptionStatus === 'canceled') return false;
     return (
       planVariant.price_id === currentPlanPriceId &&
       normalizeInterval(planVariant.interval) === currentPlanInterval
@@ -552,7 +554,7 @@ export default function PlanSelectionModal({
         aria-label={`Select ${planVariant.name} (${planVariant.interval})`}
       >
         {/* Upgrade/Downgrade Tag */}
-        {!showConfirm && planChangeType === 'upgrade' && (
+        {subscriptionStatus !== 'canceled' && !showConfirm && planChangeType === 'upgrade' && (
           <div className="absolute top-0 right-0 z-20 flex flex-col items-end">
             <div className="relative">
               <div className="bg-green-600 text-white font-bold text-xs px-3 py-1 rounded-bl-lg shadow-lg"
@@ -572,7 +574,7 @@ export default function PlanSelectionModal({
             </div>
           </div>
         )}
-        {!showConfirm && planChangeType === 'downgrade' && (
+        {subscriptionStatus !== 'canceled' && !showConfirm && planChangeType === 'downgrade' && (
           <div className="absolute top-0 right-0 z-20 flex flex-col items-end">
             <div className="relative">
               <div className="bg-orange-500 text-white font-bold text-xs px-3 py-1 rounded-bl-lg shadow-lg"
@@ -584,6 +586,27 @@ export default function PlanSelectionModal({
                 height: 0,
                 borderLeft: '12px solid transparent',
                 borderTop: '12px solid #f97316', // orange-500
+                position: 'absolute',
+                right: 0,
+                bottom: '-12px',
+                zIndex: 10
+              }} />
+            </div>
+          </div>
+        )}
+        {subscriptionStatus === 'canceled' && planVariant.highlight && (
+          <div className="absolute top-0 right-0 z-20 flex flex-col items-end">
+            <div className="relative">
+              <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white font-bold text-xs px-3 py-1 rounded-bl-lg shadow-lg flex items-center gap-1"
+                   style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', borderTopRightRadius: '0.5rem', borderBottomLeftRadius: '0.5rem' }}>
+                <Star size={14} className="inline-block mr-1" />
+                Best Seller
+              </div>
+              <div style={{
+                width: 0,
+                height: 0,
+                borderLeft: '12px solid transparent',
+                borderTop: '12px solid #f59e42', // orange-400
                 position: 'absolute',
                 right: 0,
                 bottom: '-12px',
@@ -766,7 +789,7 @@ const CurrentPlanSummary = () => {
 
         <div className="p-6">
           {/* Current Plan Summary */}
-          <CurrentPlanSummary />
+          {subscriptionStatus !== 'canceled' && <CurrentPlanSummary />}
 
           
 
@@ -852,9 +875,12 @@ const CurrentPlanSummary = () => {
                   tier: plan.tier,
                 }
               ]);
-              const filteredVariants = allPlanVariants.filter(planVariant => 
-                !isCurrentPlan(planVariant) && planVariant.interval === billingPeriod
-              );
+              let filteredVariants;
+              if (subscriptionStatus === 'canceled') {
+                filteredVariants = allPlanVariants.filter(planVariant => planVariant.interval === billingPeriod);
+              } else {
+                filteredVariants = allPlanVariants.filter(planVariant => !isCurrentPlan(planVariant) && planVariant.interval === billingPeriod);
+              }
               return filteredVariants.map(renderPlanCard);
             })()}
           </div>
@@ -880,7 +906,7 @@ const CurrentPlanSummary = () => {
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-end items-center gap-4 pt-6 border-t border-gray-200">
             {/* Cancel Subscription */}
             {subscriptionData && subscriptionStatus !== "canceled" && (
               <div className="flex items-center gap-4">
