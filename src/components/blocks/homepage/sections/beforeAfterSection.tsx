@@ -7,7 +7,7 @@ import Image, { StaticImageData } from "next/image"
 import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui"
-
+import Link from "next/link"
 interface BeforeAfterSliderProps {
   beforeImage: StaticImageData
   afterImage: StaticImageData
@@ -99,6 +99,7 @@ export const BeforeAfterSection = () => {
             viewport={{ once: true, amount: 0.6 }}
             variants={buttonVariant}
           >
+            <Link href='/uses'>
             <Button
               className="w-full bg-primary px-6 py-3 text-base text-primary-foreground hover:bg-primary/90"
               onClick={() => {
@@ -106,9 +107,10 @@ export const BeforeAfterSection = () => {
                 if (el) el.scrollIntoView({ behavior: "smooth" })
               }}
             >
-              See How It Works
+             Explore Labels
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            </Link>
           </motion.div>
         </div>
 

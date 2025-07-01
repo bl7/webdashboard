@@ -21,7 +21,7 @@ export const Pricing = () => {
 
   return (
     <section id="pricing" className="bg-muted/20 px-4 py-24 sm:px-6 md:px-12 lg:px-16">
-      <div className="container mx-auto max-w-6xl space-y-16 text-center">
+      <div className="container  mx-auto max-w-6xl space-y-16 text-center">
         {/* Heading */}
         <div className="mx-auto max-w-2xl space-y-6">
           <h2 className="font-accent text-3xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-4xl">
@@ -51,8 +51,8 @@ export const Pricing = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="flex justify-center">
-          <div className="grid max-w-6xl gap-8 md:grid-cols-3 justify-center items-center">
+        <div className="flex items-center justify-center">
+          <div className=" max-w-6xl gap-8 md:grid-cols-3 flex justify-center items-center">
             {loading ? (
               <div className="col-span-3 py-12 text-center text-lg">Loading plans...</div>
             ) : plans.length === 0 ? (

@@ -48,9 +48,9 @@ export const PricingGrid = () => {
       <div className="container space-y-16 px-4 text-center sm:px-6 md:px-12 lg:px-16">
         {/* Heading */}
         <div className="mx-auto max-w-3xl space-y-4">
-          <h2 className="text-4xl font-bold tracking-tight">Start Free, Scale as You Grow</h2>
+          <h2 className="text-4xl font-bold tracking-tight">Start Free</h2>
           <p className="text-lg text-muted-foreground">
-            Begin with 20 free weekly prints — upgrade anytime when you're ready to go all-in.
+            Get free trial with all our plans.
           </p>
 
           {/* Toggle */}

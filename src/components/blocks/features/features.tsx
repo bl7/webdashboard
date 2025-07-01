@@ -20,7 +20,17 @@ export const Features = () => {
         ></iframe>
       </div>
       <CoreFeaturesGrid />
+      <div className="flex justify-center my-8">
+        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+          Book a Free Demo
+        </a>
+      </div>
       <FeaturesGrid />
+      <div className="flex justify-center my-8">
+        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+          Book a Free Demo
+        </a>
+      </div>
       <WhyChooseUs />
 
     </>

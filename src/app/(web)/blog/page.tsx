@@ -225,7 +225,7 @@ export default function BlogPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Button size="lg" variant="secondary" asChild>
-              <Link href="/plan">
+              <Link href="/register">
                 Start Free Trial
               </Link>
             </Button>

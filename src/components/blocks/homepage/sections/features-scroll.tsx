@@ -33,12 +33,7 @@ export const TrustedBySection = () => {
           </div>
         </Marquee>
 
-        <Button
-          size="lg"
-          className="mt-10 bg-primary px-6 py-3 text-base text-white hover:bg-primary/90"
-        >
-          Get Started Today
-        </Button>
+       
       </div>
     </section>
   )

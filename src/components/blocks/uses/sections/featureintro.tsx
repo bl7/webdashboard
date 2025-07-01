@@ -21,7 +21,7 @@ export const FeatureIntro = () => {
           </div>
           <div className="w-full space-y-4 md:w-1/2">
             <h3 className="flex items-center gap-2 text-2xl font-semibold text-blue-700">
-              <span>📋</span> Natasha’s Law Labels
+              <span>📋</span> Natasha's Law Labels
             </h3>
             <p className="text-gray-700">
               Instantly print fully compliant allergen labels with key ingredients highlighted in{" "}
@@ -64,6 +64,11 @@ export const FeatureIntro = () => {
             </ul>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-12">
+        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+          Book a Free Demo
+        </a>
       </div>
     </section>
   )

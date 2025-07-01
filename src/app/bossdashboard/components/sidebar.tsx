@@ -18,6 +18,7 @@ import {
   Activity,
   ChevronLeft,
   ChevronRight,
+  
 } from "lucide-react"
 
 interface SidebarProps {
@@ -37,6 +38,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
     { name: "Analytics", href: "/bossdashboard/analytics", icon: BarChart3 },
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
+    { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: Activity },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
   ]
 

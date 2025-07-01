@@ -87,13 +87,13 @@ export const Header = () => {
           {/* CTA + Auth */}
           <div className="flex items-center gap-3">
             <Link
-              href="/book"
+              href="/register"
               className={cn(
                 buttonVariants({ variant: "default", size: "sm" }),
                 "h-9 rounded-full px-5 text-base"
               )}
             >
-              Book a Demo
+              Free Trial
             </Link>
 
             <Link

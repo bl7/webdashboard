@@ -5,7 +5,7 @@ import Image from "next/image"
 import { ClipboardCheck, Smartphone, Monitor, Printer } from "lucide-react"
 import { Button } from "@/components/ui"
 import { ArrowRight, StepForward } from "lucide-react"
-
+import Link from "next/link"
 export const Services = () => {
   return (
     <section id="features" className="px-4 py-24 sm:px-6 md:px-12 lg:px-16">
@@ -38,7 +38,7 @@ export const Services = () => {
                 {
                   icon: Smartphone,
                   title: "Works on Web & Sunmi",
-                  desc: "No special hardware required. We support what you already use.",
+                  desc: "If you have a label printer, you can use InstaLabel.",
                 },
               ].map(({ icon: Icon, title, desc }, idx) => (
                 <li key={idx} className="flex items-start space-x-4">
@@ -55,14 +55,18 @@ export const Services = () => {
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-4 pt-4">
+              <Link href='/features'>
               <Button size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
                 See full list of features
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              </Link>
+              <Link href='/bookdemo'>
               <Button variant="ghost" size="lg" className="border border-primary text-primary">
                 <StepForward className="mr-2 h-5 w-5" />
-                Choose your plan
+               Book Demo
               </Button>
+              </Link>
             </div>
           </div>
 

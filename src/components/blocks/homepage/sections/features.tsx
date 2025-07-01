@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { CheckCircle, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 import { motion } from "framer-motion"
-
+import Link from "next/link"
 const features = [
   "Automated expiry and allergen labeling",
   "Natasha's Law & EHO compliant, always up-to-date",
@@ -57,6 +57,7 @@ export const Feature = () => {
             viewport={{ once: true, amount: 0.6 }}
             variants={buttonVariant}
           >
+            <Link href="/bookdemo">
             <Button
               className="w-full bg-primary px-6 py-3 text-base text-primary-foreground hover:bg-primary/90"
               onClick={() => {
@@ -64,9 +65,10 @@ export const Feature = () => {
                 if (el) el.scrollIntoView({ behavior: "smooth" })
               }}
             >
-              See InstaLabel in Action
+              Book Demo
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            </Link>
           </motion.div>
         </div>
 

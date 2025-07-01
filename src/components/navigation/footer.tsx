@@ -32,12 +32,6 @@ export const Footer = () => {
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pt-6">
             <Link
-              href="/book-demo"
-              className="rounded-md bg-white px-6 py-3 font-semibold text-[#2C1B4B] transition hover:bg-white/90"
-            >
-              Book Your Free Demo
-            </Link>
-            <Link
               href="/pricing"
               className="rounded-md border border-white px-6 py-3 font-semibold transition hover:bg-white hover:text-[#2C1B4B]"
             >

@@ -12,7 +12,7 @@ export const FeaturesGridUses = () => {
             <div className="flex max-w-[180px] flex-col items-center space-y-2">
               <div className="text-4xl">🖱️</div>
               <p className="font-medium text-gray-800">1. Tap the label</p>
-              <p className="text-sm text-gray-600">Choose from Natasha’s, prep, use-by and more</p>
+              <p className="text-sm text-gray-600">Choose from Natasha's, prep, use-by and more</p>
             </div>
             <div className="flex max-w-[180px] flex-col items-center space-y-2">
               <div className="text-4xl">✏️</div>
@@ -36,13 +36,18 @@ export const FeaturesGridUses = () => {
           </h3>
           <div className="grid gap-6 text-lg text-gray-800 sm:grid-cols-2">
             <div>✅ No more handwriting labels</div>
-            <div>✅ Full Natasha’s Law compliance</div>
+            <div>✅ Full Natasha's Law compliance</div>
             <div>✅ Prints in under 3 seconds</div>
             <div>✅ Saves hours of prep every week</div>
             <div>✅ Runs in any browser — no app needed</div>
             <div>✅ Staff adoption in under 10 minutes</div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-12">
+        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+          Book a Free Demo
+        </a>
       </div>
     </section>
   )

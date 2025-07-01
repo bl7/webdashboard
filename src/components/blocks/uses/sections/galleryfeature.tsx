@@ -81,7 +81,7 @@ export const GalleryFeature = () => {
             <h3 className="text-3xl font-bold">Styled automatically</h3>
             <p className="text-lg text-gray-700">
               Bold. Italic. Underlined. InstaLabel does it all — instantly — for effortless
-              Natasha’s Law compliance.
+              Natasha's Law compliance.
             </p>
           </div>
           <div className="order-1 overflow-hidden rounded-xl shadow-lg md:order-2 md:w-1/2">
@@ -137,6 +137,11 @@ export const GalleryFeature = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="flex justify-center mt-12">
+        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+          Book a Free Demo
+        </a>
       </div>
     </section>
   )

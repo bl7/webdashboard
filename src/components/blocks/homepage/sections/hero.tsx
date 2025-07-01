@@ -6,7 +6,7 @@ import Image from "next/image"
 import React from "react"
 import instaLabel from "@/assets/images/instaLabel.png"
 import { motion } from "framer-motion"
-
+import Link from "next/link"
 export const Hero = () => {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16">
@@ -62,14 +62,19 @@ export const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-            <Button size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
-              Start Free Trial
+            <Button  size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
+              <Link href="/register">
+                Start Free Trial
+              </Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
+            <Link href="https://www.youtube.com/@brownDdude">
             <Button variant="ghost" size="lg" className="border border-primary text-primary">
-              <StepForward className="mr-2 h-5 w-5" />
-              Book Demo
+              
+                <StepForward className="mr-2 h-5 w-5" />
+                Watch Demo
             </Button>
+            </Link>
           </div>
 
           {/* Trust indicators */}
