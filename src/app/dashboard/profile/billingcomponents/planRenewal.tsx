@@ -22,7 +22,10 @@ export default function PlanRenewal({ subscription, onChangePlan }: Props) {
   const status = subscription.status || "active"
   const isFreeplan = planAmount === 0 || planName.toLowerCase().includes("free")
   const hasPendingChange = !!subscription.pending_plan_change && !!subscription.pending_plan_change_effective;
-  const pendingPlanName = hasPendingChange ? getPlanNameFromPriceId(subscription.pending_plan_change) : null;
+  const pendingPlanName = hasPendingChange
+    ? (subscription.pending_plan_name || getPlanNameFromPriceId(subscription.pending_plan_change))
+    : null;
+  const pendingPlanInterval = hasPendingChange ? subscription.pending_plan_interval : null;
   const currentPlanName = getPlanNameFromPriceId(subscription.plan_id);
   const pendingPlanEffective = hasPendingChange && subscription.pending_plan_change_effective ? new Date(subscription.pending_plan_change_effective) : null;
   const pendingDaysLeft = hasPendingChange && pendingPlanEffective ? Math.max(0, Math.ceil((pendingPlanEffective.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : null;
@@ -125,7 +128,12 @@ export default function PlanRenewal({ subscription, onChangePlan }: Props) {
           <div className="mt-2 rounded bg-yellow-200 p-2 text-yellow-900 font-semibold">
             <div>
               <span className="font-bold">Plan Change Scheduled</span><br />
-              <span>From <span className="font-bold">{currentPlanName}</span> to <span className="font-bold">{pendingPlanName}</span></span><br />
+              <span>
+                Your plan will change to <span className="font-bold">{pendingPlanName}</span>
+                {pendingPlanInterval && (
+                  <> (<span className="capitalize">{pendingPlanInterval}</span>)</>
+                )}.
+              </span><br />
               Takes effect on <span className="font-bold">{pendingPlanEffective?.toLocaleDateString()}</span>
               {pendingDaysLeft !== null && pendingDaysLeft > 0 ? ` (${pendingDaysLeft} day${pendingDaysLeft === 1 ? '' : 's'} left)` : ''}.
             </div>

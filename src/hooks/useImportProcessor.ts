@@ -130,27 +130,31 @@ export function useImportProcessor() {
     const allergenIdMap = new Map<string, string>()
     const ingredientIdMap = new Map<string, string>()
 
+    // --- Use local arrays for up-to-date lookups ---
+    let localAllergens: Allergen[] = [...allergens]
+    let localIngredients: Ingredient[] = [...ingredients]
+
     try {
       // ========== STEP 1: PRE-LOAD ALL EXISTING DATA ==========
       console.log("Pre-loading all existing data from database...")
 
       // Pre-load ALL existing allergens
-      for (const existingAllergen of allergens) {
+      for (const existingAllergen of localAllergens) {
         const key1 = existingAllergen.name.toLowerCase()
         const key2 = normalizeName(existingAllergen.name)
         allergenIdMap.set(key1, existingAllergen.id)
         allergenIdMap.set(key2, existingAllergen.id)
       }
-      console.log(`Pre-loaded ${allergens.length} existing allergens`)
+      console.log(`Pre-loaded ${localAllergens.length} existing allergens`)
 
       // Pre-load ALL existing ingredients
-      for (const existingIngredient of ingredients) {
+      for (const existingIngredient of localIngredients) {
         const key1 = existingIngredient.ingredientName.toLowerCase()
         const key2 = normalizeName(existingIngredient.ingredientName)
         ingredientIdMap.set(key1, existingIngredient.uuid)
         ingredientIdMap.set(key2, existingIngredient.uuid)
       }
-      console.log(`Pre-loaded ${ingredients.length} existing ingredients`)
+      console.log(`Pre-loaded ${localIngredients.length} existing ingredients`)
 
       // ========== STEP 2: COLLECT ALL REQUIRED ALLERGENS AND INGREDIENTS ==========
       console.log("Collecting all required allergens and ingredients...")
@@ -194,7 +198,7 @@ export function useImportProcessor() {
         if (!allergenName?.trim()) continue
 
         // Check if allergen exists in DB (using fuzzy matching)
-        const existingAllergen = findExistingByName(allergenName, allergens, (a) => a.name)
+        const existingAllergen = findExistingByName(allergenName, localAllergens, (a) => a.name)
 
         if (existingAllergen) {
           // EXISTS: Use existing ID, don't create
@@ -211,6 +215,9 @@ export function useImportProcessor() {
           // NEW: Create custom allergen
           console.log(`+ Creating new allergen: "${allergenName}"`)
           const newAllergen = await addAllergen(allergenName)
+
+          // --- Add to localAllergens for immediate lookup ---
+          localAllergens.push(newAllergen)
 
           const key1 = allergenName.toLowerCase()
           const key2 = normalizeName(allergenName)
@@ -231,7 +238,7 @@ export function useImportProcessor() {
         // Check if ingredient exists in DB (using fuzzy matching)
         const existingIngredient = findExistingByName(
           ingredientName,
-          ingredients,
+          localIngredients,
           (i) => i.ingredientName
         )
 
@@ -263,7 +270,7 @@ export function useImportProcessor() {
 
             if (!allergenId) {
               // Try fuzzy matching against existing allergens
-              const existingAllergen = findExistingByName(allergenName, allergens, (a) => a.name)
+              const existingAllergen = findExistingByName(allergenName, localAllergens, (a) => a.name)
               if (existingAllergen) {
                 allergenId = existingAllergen.id
                 allergenIdMap.set(allergenName.toLowerCase(), existingAllergen.id)
@@ -286,22 +293,32 @@ export function useImportProcessor() {
           })
 
           if (success) {
-            // Get the newly created ingredient ID
-            const newIngredient = findExistingByName(
+            // --- Add to localIngredients for immediate lookup ---
+            // addNewIngredient returns true/false, so we must construct the new Ingredient object
+            const newIngredient: Ingredient = {
+              uuid: ingredientName + '-' + Math.random().toString(36).slice(2), // fallback, ideally use real uuid
               ingredientName,
-              ingredients,
+              expiryDays: ingredientData.expiryDays,
+              allergens: [],
+            }
+            localIngredients.push(newIngredient)
+
+            // Get the newly created ingredient ID
+            const foundIngredient = findExistingByName(
+              ingredientName,
+              localIngredients,
               (i) => i.ingredientName
             )
-            if (newIngredient) {
+            if (foundIngredient) {
               const key1 = ingredientName.toLowerCase()
               const key2 = normalizeName(ingredientName)
-              ingredientIdMap.set(key1, newIngredient.uuid)
-              ingredientIdMap.set(key2, newIngredient.uuid)
+              ingredientIdMap.set(key1, foundIngredient.uuid)
+              ingredientIdMap.set(key2, foundIngredient.uuid)
               results.stats.ingredients.created++
               console.log(
-                `✓ Created ingredient: "${ingredientName}" (ID: ${newIngredient.uuid})`
+                `✓ Created ingredient: "${ingredientName}" (ID: ${foundIngredient.uuid})`
               )
-              results.newItems.ingredients.push({ name: ingredientName, id: newIngredient.uuid })
+              results.newItems.ingredients.push({ name: ingredientName, id: foundIngredient.uuid })
             }
           } else {
             results.warnings.push(`Failed to create ingredient: ${ingredientName}`)
@@ -346,7 +363,7 @@ export function useImportProcessor() {
             // Try fuzzy matching against existing ingredients
             const existingIngredient = findExistingByName(
               ingredientName,
-              ingredients,
+              localIngredients,
               (i) => i.ingredientName
             )
             if (existingIngredient) {

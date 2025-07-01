@@ -14,6 +14,7 @@ import type { Profile } from "./hooks/useBillingData"
 import BillingAddress from "./billingcomponents/billingAddress"
 import { getPlanNameFromPriceId } from '@/lib/formatPlanName'
 import { X, Loader2, AlertTriangle } from "lucide-react"
+import UpgradePlanModal from "./billingcomponents/UpgradePlanModal"
 
 // Full-width Trial/Status Banner
 function TrialBanner({ subscription }: { subscription: any }) {
@@ -51,6 +52,9 @@ const Billing: React.FC = () => {
   const [cancelLoading, setCancelLoading] = useState(false)
   const [cancelMessage, setCancelMessage] = useState<string | null>(null)
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+  const [reactivateLoading, setReactivateLoading] = useState(false)
+  const [reactivateError, setReactivateError] = useState<string | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -132,6 +136,50 @@ const Billing: React.FC = () => {
     }
   }
 
+  const handleReactivate = async () => {
+    setReactivateLoading(true)
+    setReactivateError(null)
+    try {
+      const res = await fetch("/api/subscription_better/reactivate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: userid }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || "Failed to reactivate subscription")
+      await refreshSubscription()
+    } catch (e: any) {
+      setReactivateError(e.message)
+    } finally {
+      setReactivateLoading(false)
+    }
+  }
+
+  // Helper to check for higher tier plans before opening modal
+  const handleChangePlan = async () => {
+    if (subscription && (subscription.cancel_at_period_end || subscription.cancel_at) && subscription.status !== 'canceled') {
+      // Cancellation scheduled: check for higher tier plans
+      try {
+        const res = await fetch('/api/plans/secure')
+        const plans = await res.json()
+        const currentPlan = plans.find((plan: any) => String(plan.id) === String(subscription.plan_id))
+        const currentTier = currentPlan ? currentPlan.tier : 0
+        const currentPrice = subscription.amount || 0
+        const upgradePlans = plans.filter((plan: any) => plan.tier > currentTier || (plan.tier === currentTier && plan.price_monthly > currentPrice))
+        if (upgradePlans.length > 0) {
+          setShowUpgradeModal(true)
+        } else {
+          await handleReactivate()
+        }
+      } catch (e) {
+        // fallback: just open modal if error
+        setShowUpgradeModal(true)
+      }
+    } else {
+      setShowPlans(true)
+    }
+  }
+
   // Loading state
   if (!isClient || loading) {
     return (
@@ -179,7 +227,7 @@ const Billing: React.FC = () => {
           {subscription && subscription.status !== 'canceled' && (
             <SubscriptionInfo
               subscription={subscription}
-              onChangePlan={() => setShowPlans(true)}
+              onChangePlan={handleChangePlan}
             />
           )}
           {/* Plan Renewal Card */}
@@ -203,6 +251,7 @@ const Billing: React.FC = () => {
           <PaymentMethod subscription={subscription} />
         </div>
 
+      
         {/* Invoices and Billing Address Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
           {/* Invoices List - 2/3 width */}
@@ -318,19 +367,30 @@ const Billing: React.FC = () => {
         onSave={handleSaveProfile}
       />
 
-      {showPlans && (
-        subscription ? (
-          <PlanSelectionModal
-            userid={userid}
-            currentPlan={getPlanNameFromPriceId(subscription.plan_id)}
-            currentBillingPeriod={subscription.billing_interval as 'monthly' | 'yearly'}
-            subscriptionStatus={subscription.status as any}
-            nextBillingDate={subscription.current_period_end ? String(subscription.current_period_end) : undefined}
-            subscriptionData={subscription}
-            onClose={() => setShowPlans(false)}
-            onUpdate={handleUpdateSubscription}
-          />
-        ) : null
+      {/* Plan Selection Modal */}
+      {showPlans && !((subscription && (subscription.cancel_at_period_end || subscription.cancel_at)) && subscription.status !== 'canceled') && (
+        <PlanSelectionModal
+          userid={userid}
+          currentPlan={subscription?.plan_id || ""}
+          currentBillingPeriod={subscription?.billing_interval as 'monthly' | 'yearly' || "monthly"}
+          subscriptionStatus={subscription?.status as any || "active"}
+          nextBillingDate={subscription?.current_period_end ? new Date(subscription.current_period_end).toISOString() : undefined}
+          subscriptionData={subscription}
+          onClose={() => setShowPlans(false)}
+          onUpdate={handleUpdateSubscription}
+        />
+      )}
+
+      {/* Upgrade Plan Modal */}
+      {showUpgradeModal && subscription && (
+        <UpgradePlanModal
+          open={showUpgradeModal}
+          onClose={() => setShowUpgradeModal(false)}
+          currentPlanTier={0}
+          currentPlanPrice={subscription.amount || 0}
+          userId={userid}
+          onUpgrade={refreshSubscription}
+        />
       )}
     </>
   )

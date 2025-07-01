@@ -32,6 +32,8 @@ export interface Subscription {
   cancel_at_period_end?: boolean | null
   pending_plan_change?: string | null
   pending_plan_change_effective?: string | null
+  pending_plan_interval?: string | null
+  pending_plan_name?: string | null
   card_brand?: string | null
   card_last4?: string | null
   card_exp_month?: number | null

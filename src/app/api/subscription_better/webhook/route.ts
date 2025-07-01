@@ -68,9 +68,10 @@ export async function POST(req: NextRequest) {
         const card_exp_year = card?.exp_year || null;
         const card_country = card?.country || null;
         const card_fingerprint = card?.fingerprint || null;
+        const cancel_at = sub.cancel_at || null;
         // Log all upsert fields
         console.log('[WEBHOOK] Upsert fields:', {
-          user_id, plan_id, price_id, plan_name, plan_interval, status, trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency, cancel_at_period_end, pending_plan_change, pending_plan_change_effective, card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint
+          user_id, plan_id, price_id, plan_name, plan_interval, status, trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency, cancel_at_period_end, pending_plan_change, pending_plan_change_effective, card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint, cancel_at
         });
         const client = await pool.connect()
         try {
@@ -128,7 +129,7 @@ export async function POST(req: NextRequest) {
               null,
               null,
               null,
-              null
+              cancel_at
             ]
           )
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)

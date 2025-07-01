@@ -77,7 +77,7 @@ export default function PlanSelectionModal({
   onClose,
   onUpdate,
 }: Props) {
-  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>(currentBillingPeriod)
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly')
   const [selectedPlan, setSelectedPlan] = useState<{ planId: string; interval: BillingPeriod } | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -153,8 +153,8 @@ export default function PlanSelectionModal({
   // Set selectedPlan to current plan and interval only if it is null when plans are loaded or modal opens
   useEffect(() => {
     if (!plans.length) return;
-    setSelectedPlan(prev => prev ?? { planId: String(currentPlan), interval: billingPeriod });
-  }, [plans, currentPlan, billingPeriod]);
+    setSelectedPlan(prev => prev ?? { planId: String(currentPlan), interval: 'monthly' });
+  }, [plans, currentPlan]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {

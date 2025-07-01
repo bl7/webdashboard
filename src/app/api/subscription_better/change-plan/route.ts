@@ -53,6 +53,21 @@ export async function POST(req: NextRequest) {
 
     console.log('[CHANGE-PLAN] user_id:', user_id, 'plan_id:', plan_id, 'price_id:', price_id)
 
+    // If cancellation is scheduled, only allow upgrades
+    if (sub.cancel_at_period_end || sub.cancel_at) {
+      if (!isUpgrade) {
+        return NextResponse.json({ error: "You cannot downgrade or change to a lower plan while cancellation is scheduled. Only upgrades are allowed." }, { status: 400 })
+      }
+      // If upgrade, clear cancellation in Stripe and DB
+      await stripe.subscriptions.update(sub.stripe_subscription_id, {
+        cancel_at: null, // Only clear cancel_at, do not send cancel_at_period_end
+      });
+      await client.query(
+        `UPDATE subscription_better SET cancel_at_period_end = false, cancel_at = NULL WHERE user_id = $1`,
+        [user_id]
+      );
+    }
+
     if (isTrialing) {
       // For any plan or billing change on trial: end trial, start new plan, charge now (immediate payment)
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
