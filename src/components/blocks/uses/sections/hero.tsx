@@ -1,4 +1,6 @@
 import React from "react"
+import Image from "next/image"
+
 
 export const LabelsHero = () => {
   return (
@@ -7,19 +9,43 @@ export const LabelsHero = () => {
         {/* Text Content */}
         <div className="flex flex-col items-start justify-center text-center md:text-left">
           <h1 className="max-w-4xl text-4xl font-bold md:text-5xl lg:text-6xl">
-            Natasha’s Law & Prep Labels Made Simple
+            Natasha's Law & Food-Prep Labels – Fast, Clear, Compliant.
           </h1>
           <p className="mt-4 max-w-xl text-lg text-muted-foreground">
-            Print compliant labels for allergens, ingredients, and expiry dates with ease — from
-            your web dashboard or directly on your Sunmi device. Keep your kitchen safe, efficient,
-            and inspection-ready without any hassle.
+            Print allergy-friendly ingredient, prep, cooked, and pre-packed‑for‑direct‑sale (PPDS) labels in seconds. Highlight 14 UK allergens in bold, stay inspection-ready, meet Natasha's Law, and build trust with clear, legible labelling.
           </p>
         </div>
 
-        {/* Placeholder for image or animation */}
-        <div className="relative mt-12 h-[300px] w-full max-w-md md:mt-0">
-          {/* You can replace this with actual image or animation */}
-          <div className="h-full w-full rounded-xl bg-muted" />
+        {/* Images Grid - Tedha Medha Style */}
+        <div className="relative mt-12 h-[400px] w-full max-w-md md:mt-0">
+          {/* Image 1 - Top left, slightly rotated */}
+          <div className="absolute left-0 top-0 h-24 w-32 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
+            <img 
+              src="/labels/label1.png" 
+              alt="Food prep label example"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          
+          {/* Image 2 - Top right, rotated other way */}
+          <div className="absolute right-0 top-8 h-28 w-36 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+            <img 
+              src="/labels/label2.png" 
+              alt="Allergen label example"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          
+          {/* Image 3 - Center left, tilted */}
+          <div className="absolute left-4 top-32 h-32 w-40 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+            <img 
+              src="/labels/label3.png" 
+              alt="PPDS compliant label"
+              className="h-full w-full object-cover"
+            />
+          </div>
+          
+         
         </div>
       </div>
 

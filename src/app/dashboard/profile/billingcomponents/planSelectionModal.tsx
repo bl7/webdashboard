@@ -192,13 +192,13 @@ export default function PlanSelectionModal({
     } else {
       const currentEffectiveMonthlyValue = getEffectiveMonthlyValue(currentPlanConfig, currentBillingPeriod)
       const selectedEffectiveMonthlyValue = getEffectiveMonthlyValue(selectedPlanConfig, billingPeriod)
-      if (selectedEffectiveMonthlyValue > currentEffectiveMonthlyValue) {
-        return "upgrade"
-      } else if (selectedEffectiveMonthlyValue < currentEffectiveMonthlyValue) {
-        return "downgrade"
-      } else {
+    if (selectedEffectiveMonthlyValue > currentEffectiveMonthlyValue) {
+      return "upgrade"
+    } else if (selectedEffectiveMonthlyValue < currentEffectiveMonthlyValue) {
+      return "downgrade"
+    } else {
         return "same"
-      }
+    }
     }
   }, [selectedPlan, billingPeriod, currentPlan, currentBillingPeriod, findPlan, subscriptionStatus])
 
@@ -446,9 +446,9 @@ export default function PlanSelectionModal({
       if (res.ok) {
         setCancelMessage(data.message || "Subscription cancelled.")
         setTimeout(() => window.location.reload(), 1500)
-      } else {
+    } else {
         setCancelMessage(data.error || "Failed to cancel subscription.")
-      }
+    }
     } catch (err: any) {
       setCancelMessage(err.message || "Failed to cancel subscription.")
     } finally {
@@ -771,11 +771,11 @@ const CurrentPlanSummary = () => {
           
 
           {/* Pending Change Banner */}
-          {hasPendingChange && (
+        {hasPendingChange && (
             <div className="mb-6 rounded-xl bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400 p-6">
               <div className="flex items-start gap-3">
                 <Clock className="h-5 w-5 text-yellow-500 mt-0.5 flex-shrink-0" />
-                <div>
+            <div>
                   <h4 className="font-semibold text-yellow-900 mb-1">Pending Plan Change</h4>
                   <p className="text-sm text-yellow-800">
                     You have a scheduled plan change to <strong>{pendingPlanName}</strong>
@@ -791,9 +791,9 @@ const CurrentPlanSummary = () => {
                     You cannot make additional changes until then.
                   </p>
                 </div>
-              </div>
             </div>
-          )}
+          </div>
+        )}
 
           {/* Billing Period Toggle */}
           <div className="mb-6 flex justify-center">
@@ -830,7 +830,7 @@ const CurrentPlanSummary = () => {
 
         {/* Plan Cards Grid */}
         <div className="flex flex-wrap justify-center gap-6 mb-8">
-            {(() => {
+          {(() => {
               // Sort by tier only
               const sorted = [...plans].sort((a, b) => a.tier - b.tier);
               // Generate plan variants for both intervals, using backend tier
@@ -875,7 +875,7 @@ const CurrentPlanSummary = () => {
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
                 <p className="text-green-800 font-medium">{backendMessage}</p>
-              </div>
+                </div>
             </div>
           )}
 
@@ -905,9 +905,9 @@ const CurrentPlanSummary = () => {
                 {cancelMessage && (
                   <div className="text-sm text-green-600 bg-green-50 rounded px-3 py-1">
                     {cancelMessage}
-                  </div>
-                )}
               </div>
+                )}
+        </div>
             )}
 
             {/* Main Action Buttons */}
@@ -919,7 +919,7 @@ const CurrentPlanSummary = () => {
                 className="px-8"
               >
                 Close
-              </Button>
+          </Button>
               <Button 
                 onClick={() => {
                   setConfirmMessage(changeMessage);
@@ -933,22 +933,22 @@ const CurrentPlanSummary = () => {
                   "bg-blue-600 hover:bg-blue-700"
                 )}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Processing...
-                  </>
-                ) : (
+              </>
+            ) : (
                   <>
                     {changeType === "upgrade" && <TrendingUp className="mr-2 h-4 w-4" />}
                     {changeType === "downgrade" && <TrendingDown className="mr-2 h-4 w-4" />}
                     {changeType === "same" && <CheckCircle2 className="mr-2 h-4 w-4" />}
                     {getButtonLabel()}
                   </>
-                )}
-              </Button>
-            </div>
-          </div>
+            )}
+          </Button>
+        </div>
+      </div>
         </div>
       </div>
 

@@ -48,11 +48,17 @@ export default function LabelRender({
     maxIngredientsToShow = 5
     showInitials = true
     showAllergens = true
-    showIngredients = true
+    showIngredients = false // Only show allergens by default
     showPrintedExpiry = true
     maxNameLen = 22
     maxIngLen = 16
     maxAllergenLen = 12
+    // If PPDS, show all ingredients and allergens, use very small font
+    if (item.labelType === "ppds") {
+      showIngredients = true
+      showAllergens = true
+      fontSize = 8; // Very small font for PPDS 40mm
+    }
   } else if (labelHeight === "80mm") {
     heightCm = 7.95 // 80mm - 0.5mm = 79.5mm = 7.95cm
     fontSize = 15
@@ -186,35 +192,6 @@ export default function LabelRender({
         margin: 0,
       }}
     >
-      {/* Watermark text for PPDS, all sizes - optimized for thermal printers */}
-      {isPPDS && (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            bottom: labelHeight === "31mm" ? 0.5 : 2,
-            transform: "translateX(-50%)",
-            opacity: 0.7, // Increased from 0.3 to 0.7 for better thermal printer visibility
-            pointerEvents: "none",
-            zIndex: 100,
-            fontSize: Math.max(fontSize - 2, 8), // Slightly larger font for better visibility
-            fontWeight: 700, // Increased from 600 to 700
-            color: "#333", // Darker color for better thermal printer contrast
-            textAlign: "center",
-            fontFamily: "monospace",
-            letterSpacing: 0.5,
-            // Removed textShadow and background for better thermal printer compatibility
-            padding: "1px 4px",
-            borderRadius: 2,
-            // Add border for better thermal printer visibility
-            border: "1px solid #666",
-            backgroundColor: "rgba(255,255,255,0.9)", // More opaque background
-          }}
-        >
-          instalabel.co
-        </div>
-      )}
-
       {/* Item Name */}
       <div
         style={{
@@ -247,7 +224,11 @@ export default function LabelRender({
             gap: 1,
           }}
         >
-          <span>Printed: {shortPrinted}</span>
+          <span>
+            Printed: {shortPrinted}
+            {item.labelType === 'prep' && ' (PREP)'}
+            {item.labelType === 'cook' && ' (COOK)'}
+          </span>
           <span>Expiry: {shortExpiry}</span>
         </div>
       )}
@@ -277,29 +258,12 @@ export default function LabelRender({
           }}
         >
           <span style={{ fontWeight: 700 }}>Ingredients:</span>
-          {shownIngredients.map((ing, idx) =>
-            isAllergen(ing) ? (
-              <span
-                key={ing + idx}
-                style={{
-                  fontWeight: 900,
-                  border: "1px solid black",
-                  padding: "0 2px",
-                  marginLeft: 2,
-                  marginRight: 2,
-                  fontSize: fontSize - 1,
-                  textTransform: "uppercase",
-                  letterSpacing: 0.5,
-                }}
-              >
-                *{fitText(ing, maxIngLen)}*
-              </span>
-            ) : (
-              <span key={ing + idx} style={{ marginLeft: 2, fontWeight: 500 }}>
-                {fitText(ing, maxIngLen)}
-              </span>
-            )
-          )}
+          {shownIngredients.map((ing, idx) => (
+            <span key={ing + idx} style={{ marginLeft: 2, fontWeight: isAllergen(ing) ? 900 : 500 }}>
+              {isAllergen(ing) ? `*${ing}*` : ing}
+              {idx < shownIngredients.length - 1 && ', '}
+            </span>
+          ))}
           {hiddenIngredients > 0 && (
             <span style={{ fontWeight: 700, marginLeft: 4 }}>+{hiddenIngredients} more</span>
           )}
@@ -318,20 +282,9 @@ export default function LabelRender({
         >
           Contains:
           {shownAllergens.map((a, idx) => (
-            <span
-              key={a + idx}
-              style={{
-                fontWeight: 900,
-                border: "1px solid black",
-                padding: "0 2px",
-                marginLeft: 2,
-                marginRight: 2,
-                fontSize: fontSize - 1,
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              *{fitText(a, maxAllergenLen)}*
+            <span key={a + idx} style={{ fontWeight: 900 }}>
+              *{a}*
+              {idx < shownAllergens.length - 1 && ', '}
             </span>
           ))}
           {hiddenAllergens > 0 && (

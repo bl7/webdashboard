@@ -112,16 +112,16 @@ const Billing: React.FC = () => {
     setCancelLoading(true)
     setCancelMessage(null)
     try {
-      const res = await fetch("/api/subscription_better/cancel", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+    const res = await fetch("/api/subscription_better/cancel", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: userid }),
-      })
-      const data = await res.json()
-      if (res.ok) {
+    })
+    const data = await res.json()
+    if (res.ok) {
         setCancelMessage(data.message || "Subscription cancelled.")
         setTimeout(() => window.location.reload(), 1500)
-      } else {
+    } else {
         setCancelMessage(data.error || "Failed to cancel subscription.")
       }
     } catch (err: any) {

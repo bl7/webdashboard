@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ message: "Your plan has been upgraded and is effective immediately. Proration and payment have been applied." });
     }
     // Downgrade or billing period change to shorter period (yearly → monthly): schedule for period end
-    await client.query(
+      await client.query(
       `UPDATE subscription_better SET 
         pending_plan_change = $1, 
         pending_price_id = $2,
