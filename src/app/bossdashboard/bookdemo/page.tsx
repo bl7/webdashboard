@@ -85,6 +85,9 @@ export default function BossBookDemoPage() {
                 <th className="p-2 text-left dark:text-gray-200">Name</th>
                 <th className="p-2 text-left dark:text-gray-200">Email</th>
                 <th className="p-2 text-left dark:text-gray-200">Company</th>
+                <th className="p-2 text-left dark:text-gray-200">Role</th>
+                <th className="p-2 text-left dark:text-gray-200">Source</th>
+                <th className="p-2 text-left dark:text-gray-200">Message</th>
                 <th className="p-2 text-left dark:text-gray-200">Date</th>
                 <th className="p-2 text-left dark:text-gray-200">Attended</th>
                 <th className="p-2 text-left dark:text-gray-200">Actions</th>
@@ -96,6 +99,9 @@ export default function BossBookDemoPage() {
                   <td className="p-2 dark:text-gray-100">{r.name}</td>
                   <td className="p-2 dark:text-gray-100">{r.email}</td>
                   <td className="p-2 dark:text-gray-100">{r.company}</td>
+                  <td className="p-2 dark:text-gray-100">{r.role || <span className='text-gray-400'>N/A</span>}</td>
+                  <td className="p-2 dark:text-gray-100">{r.source || <span className='text-gray-400'>N/A</span>}</td>
+                  <td className="p-2 dark:text-gray-100 max-w-xs whitespace-pre-line break-words">{r.message || <span className='text-gray-400'>N/A</span>}</td>
                   <td className="p-2 dark:text-gray-100">{new Date(r.created_at).toLocaleString()}</td>
                   <td className="p-2">
                     <button
@@ -118,7 +124,7 @@ export default function BossBookDemoPage() {
                 </tr>
               ))}
               {requests.length === 0 && (
-                <tr><td colSpan={6} className="p-4 text-center text-gray-500 dark:text-gray-400">No demo requests yet.</td></tr>
+                <tr><td colSpan={9} className="p-4 text-center text-gray-500 dark:text-gray-400">No demo requests yet.</td></tr>
               )}
             </tbody>
           </table>
