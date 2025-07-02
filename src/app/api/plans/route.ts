@@ -18,6 +18,7 @@ export async function GET() {
         is_active,
         tier,
         highlight,
+        include_device,
         created_at,
         updated_at
       FROM plans 
@@ -52,7 +53,8 @@ export async function POST(request: NextRequest) {
       features, 
       is_active, 
       tier,
-      highlight
+      highlight,
+      include_device
     } = body;
 
     if (!name || !name.trim()) {
@@ -124,8 +126,9 @@ export async function POST(request: NextRequest) {
         features,
         is_active,
         tier,
-        highlight
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        highlight,
+        include_device
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING *`,
       [
         name.trim(),
@@ -138,7 +141,8 @@ export async function POST(request: NextRequest) {
         JSON.stringify(features || []),
         is_active !== undefined ? is_active : true,
         typeof tier === 'number' ? tier : null,
-        !!highlight
+        !!highlight,
+        include_device !== undefined ? !!include_device : false
       ]
     );
 

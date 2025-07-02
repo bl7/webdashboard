@@ -1,4 +1,3 @@
-
 export const newSubscriptionEmail = ({
   name,
   planName,
@@ -331,4 +330,347 @@ export const formatCurrency = (amount: number, currency: string = 'gbp'): string
     style: 'currency',
     currency: currency.toUpperCase()
   }).format(amount / 100) // Convert from cents to pounds
-} 
+}
+
+export const expiringSoonEmail = ({
+  name,
+  planName,
+  expiryDate,
+  daysLeft
+}: {
+  name: string
+  planName: string
+  expiryDate: string
+  daysLeft: number
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Expiring Soon - InstaLabel</title>
+    <style>
+        body { font-family: 'Nunito', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ Subscription Expiring Soon</h1>
+            <p>Your InstaLabel subscription will expire in ${daysLeft} day${daysLeft === 1 ? '' : 's'}</p>
+        </div>
+        <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>This is a reminder that your <strong>${planName}</strong> subscription will expire on <strong>${expiryDate}</strong>.</p>
+            <p>To avoid any interruption in service, please ensure your payment method is up to date or renew your subscription before the expiry date.</p>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile" style="display:inline-block;background:#667eea;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;">Manage Subscription</a>
+            <p>If you have any questions, contact us at support@instalabel.co.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 InstaLabel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const renewalReminderEmail = ({
+  name,
+  planName,
+  renewalDate
+}: {
+  name: string
+  planName: string
+  renewalDate: string
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Renewal Reminder - InstaLabel</title>
+    <style>
+        body { font-family: 'Nunito', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔄 Subscription Renewal Reminder</h1>
+            <p>Your InstaLabel subscription will renew soon</p>
+        </div>
+        <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>This is a reminder that your <strong>${planName}</strong> subscription will renew automatically on <strong>${renewalDate}</strong>.</p>
+            <p>If you wish to make changes to your subscription or payment method, please do so before the renewal date.</p>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile" style="display:inline-block;background:#667eea;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;">Manage Subscription</a>
+            <p>If you have any questions, contact us at support@instalabel.co.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 InstaLabel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const renewalConfirmationEmail = ({
+  name,
+  planName,
+  renewalDate,
+  amount,
+  currency = 'gbp',
+  billingInterval
+}: {
+  name: string
+  planName: string
+  renewalDate: string
+  amount: number
+  currency?: string
+  billingInterval: 'month' | 'year'
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Renewed - InstaLabel</title>
+    <style>
+        body { font-family: 'Nunito', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Subscription Renewed</h1>
+            <p>Your InstaLabel subscription has been renewed</p>
+        </div>
+        <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>Your <strong>${planName}</strong> subscription has been successfully renewed on <strong>${renewalDate}</strong>.</p>
+            <p><strong>Billing:</strong> ${billingInterval === 'month' ? 'Monthly' : 'Annual'} (${currency.toUpperCase()} ${amount})</p>
+            <p>Thank you for continuing to use InstaLabel!</p>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile" style="display:inline-block;background:#667eea;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;">View Billing Details</a>
+            <p>If you have any questions, contact us at support@instalabel.co.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 InstaLabel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const paymentFailedEmail = ({
+  name,
+  planName,
+  dueDate
+}: {
+  name: string
+  planName: string
+  dueDate: string
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed - InstaLabel</title>
+    <style>
+        body { font-family: 'Nunito', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>❗ Payment Failed</h1>
+            <p>We couldn't process your payment</p>
+        </div>
+        <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>We were unable to process the payment for your <strong>${planName}</strong> subscription. Please update your payment method to avoid interruption of service.</p>
+            <p><strong>Due Date:</strong> ${dueDate}</p>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile" style="display:inline-block;background:#667eea;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;">Update Payment Method</a>
+            <p>If you have any questions, contact us at support@instalabel.co.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 InstaLabel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const trialEndingSoonEmail = ({
+  name,
+  planName,
+  trialEndDate,
+  daysLeft
+}: {
+  name: string
+  planName: string
+  trialEndDate: string
+  daysLeft: number
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trial Ending Soon - InstaLabel</title>
+    <style>
+        body { font-family: 'Nunito', Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #2196f3 0%, #00bcd4 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏳ Trial Ending Soon</h1>
+            <p>Your InstaLabel trial will end in ${daysLeft} day${daysLeft === 1 ? '' : 's'}</p>
+        </div>
+        <div class="content">
+            <h2>Hello ${name},</h2>
+            <p>This is a reminder that your trial for the <strong>${planName}</strong> plan will end on <strong>${trialEndDate}</strong>.</p>
+            <p>To continue using InstaLabel without interruption, please add a payment method or choose a subscription plan before your trial ends.</p>
+            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile" style="display:inline-block;background:#667eea;color:white;padding:12px 24px;text-decoration:none;border-radius:6px;margin:20px 0;">Manage Subscription</a>
+            <p>If you have any questions, contact us at support@instalabel.co.</p>
+        </div>
+        <div class="footer">
+            <p>© 2024 InstaLabel. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const labelOrderConfirmationEmail = ({
+  name,
+  email,
+  bundleCount,
+  labelCount,
+  amount,
+  shippingAddress,
+  orderId,
+}: {
+  name: string
+  email: string
+  bundleCount: number
+  labelCount: number
+  amount: number
+  shippingAddress: string
+  orderId: string | number
+}) => `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Label Order Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+    <h2 style="color: #764ba2;">🎉 Your Label Order is Confirmed!</h2>
+    <p>Hi ${name || email},</p>
+    <p>Thank you for your order. Your payment has been received and your labels will be shipped soon.</p>
+    <h3>Order Details</h3>
+    <ul>
+      <li><strong>Order #:</strong> ${orderId}</li>
+      <li><strong>Bundles:</strong> ${bundleCount}</li>
+      <li><strong>Labels:</strong> ${labelCount}</li>
+      <li><strong>Amount:</strong> $${(amount / 100).toFixed(2)}</li>
+      <li><strong>Shipping Address:</strong><br/>${shippingAddress.replace(/, /g, '<br/>')}</li>
+    </ul>
+    <p>If you have any questions, reply to this email or contact support@instalabel.co.</p>
+    <p style="color: #888; font-size: 13px;">Thank you for choosing InstaLabel!</p>
+  </div>
+</body>
+</html>`
+
+export const labelOrderShippedEmail = ({
+  name,
+  email,
+  bundleCount,
+  labelCount,
+  amount,
+  shippingAddress,
+  orderId,
+}: {
+  name: string
+  email: string
+  bundleCount: number
+  labelCount: number
+  amount: number
+  shippingAddress: string
+  orderId: string | number
+}) => `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Your Label Order Has Shipped!</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+    <h2 style="color: #764ba2;">🚚 Your Label Order Has Shipped!</h2>
+    <p>Hi ${name || email},</p>
+    <p>Your label order has been shipped and is on its way to you.</p>
+    <h3>Order Details</h3>
+    <ul>
+      <li><strong>Order #:</strong> ${orderId}</li>
+      <li><strong>Bundles:</strong> ${bundleCount}</li>
+      <li><strong>Labels:</strong> ${labelCount}</li>
+      <li><strong>Amount:</strong> $${(amount / 100).toFixed(2)}</li>
+      <li><strong>Shipping Address:</strong><br/>${shippingAddress.replace(/, /g, '<br/>')}</li>
+    </ul>
+    <p>If you have any questions, reply to this email or contact support@instalabel.co.</p>
+    <p style="color: #888; font-size: 13px;">Thank you for choosing InstaLabel!</p>
+  </div>
+</body>
+</html>`
+
+export const labelOrderAdminNotificationEmail = ({
+  name,
+  email,
+  bundleCount,
+  labelCount,
+  amount,
+  shippingAddress,
+  orderId,
+}: {
+  name: string
+  email: string
+  bundleCount: number
+  labelCount: number
+  amount: number
+  shippingAddress: string
+  orderId: string | number
+}) => `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Label Order Paid</title>
+</head>
+<body style="font-family: Arial, sans-serif; color: #333;">
+  <div style="max-width: 600px; margin: 0 auto; padding: 24px;">
+    <h2 style="color: #764ba2;">📦 New Label Order Paid</h2>
+    <p>A new label order has been paid. Please check the <a href="${process.env.NEXT_PUBLIC_APP_URL}/bossdashboard/orders">Boss Dashboard</a> for full details and to mark as shipped.</p>
+    <h3>Order Details</h3>
+    <ul>
+      <li><strong>Order #:</strong> ${orderId}</li>
+      <li><strong>User:</strong> ${name} (${email})</li>
+      <li><strong>Bundles:</strong> ${bundleCount}</li>
+      <li><strong>Labels:</strong> ${labelCount}</li>
+      <li><strong>Amount:</strong> $${(amount / 100).toFixed(2)}</li>
+      <li><strong>Shipping Address:</strong><br/>${shippingAddress.replace(/, /g, '<br/>')}</li>
+    </ul>
+    <p>Go to <a href="${process.env.NEXT_PUBLIC_APP_URL}/bossdashboard/orders">Boss Dashboard</a> to manage this order.</p>
+  </div>
+</body>
+</html>` 

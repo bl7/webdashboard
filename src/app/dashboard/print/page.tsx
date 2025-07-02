@@ -154,8 +154,9 @@ export default function LabelDemo() {
   const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
   // Subscription status logic
   const { subscription, loading: subLoading } = useBillingData(userId)
+  const subBlocked = !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
+  // Optionally, keep subStatusMsg for warnings about expiring subscriptions
   const [subStatusMsg, setSubStatusMsg] = useState<string | null>(null)
-  const [subBlocked, setSubBlocked] = useState(false)
 
   const showFeedback = (msg: string, type: "success" | "error" = "success") => {
     setFeedbackMsg(msg)
@@ -283,28 +284,17 @@ export default function LabelDemo() {
   useEffect(() => {
     if (!subscription) return
     let msg = null
-    let blocked = false
     const now = new Date()
-    let expired = false
-    if (subscription.status === "canceled") {
-      msg = "Your subscription is canceled. Printing is disabled."
-      blocked = true
-    } else if (subscription.status === "incomplete" || subscription.status === "unpaid") {
-      msg = "Your subscription is not active. Printing is disabled."
-      blocked = true
-    } else if (subscription.current_period_end) {
+    if (subscription.current_period_end) {
       const end = new Date(subscription.current_period_end)
       const daysLeft = Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
       if (daysLeft < 0) {
         msg = "Your subscription has expired. Printing is disabled."
-        blocked = true
-        expired = true
       } else if (daysLeft <= 3) {
         msg = `Your subscription will expire in ${daysLeft} day${daysLeft === 1 ? '' : 's'}. Please renew soon.`
       }
     }
     setSubStatusMsg(msg)
-    setSubBlocked(blocked)
   }, [subscription])
 
   const filteredIngredients = useMemo(
@@ -429,6 +419,7 @@ export default function LabelDemo() {
     }
 
     setIsLoading(true)
+    const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     let successCount = 0
     let failCount = 0
     const failItems: string[] = []
@@ -470,6 +461,7 @@ export default function LabelDemo() {
               initial: selectedInitial,
               labelHeight: labelHeight,
               printerUsed: printerSelection.printer || 'Debug Mode',
+              sessionId,
             });
 
             successCount++;
@@ -894,13 +886,15 @@ export default function LabelDemo() {
                   {/* Print Labels */}
                   <Button
                     onClick={printLabels}
-                    disabled={printQueue.length === 0 || subBlocked}
+                    disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0}
                     variant="default"
                     title={
                       subBlocked
                         ? "Printing is disabled due to your subscription status."
                         : printQueue.length === 0
                         ? "No items in print queue"
+                        : availablePrinters.length === 0
+                        ? "No printers available"
                         : "Print all labels in queue"
                     }
                   >

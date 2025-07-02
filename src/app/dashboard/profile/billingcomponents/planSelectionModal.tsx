@@ -93,6 +93,9 @@ export default function PlanSelectionModal({
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [activeTab, setActiveTab] = useState<'plans' | 'billing' | 'usage'>('plans')
   const [confirmMessage, setConfirmMessage] = useState<any>(null)
+  const [showCancelReasonForm, setShowCancelReasonForm] = useState(false)
+  const [cancelReason, setCancelReason] = useState("")
+  const [cancelReasonError, setCancelReasonError] = useState<string | null>(null)
 
   // Enhanced plan data structure for better display
   const planFeatureIcons = {
@@ -434,14 +437,14 @@ export default function PlanSelectionModal({
   }, [validateInputs, selectedPlan, billingPeriod, getSelectedPriceId, currentPlan, subscriptionStatus, userid, userEmail, onUpdate, changeType])
 
   // Enhanced cancel subscription with confirmation
-  const handleCancelSubscription = async () => {
+  const handleCancelSubscription = async (reason?: string) => {
     setCancelLoading(true)
     setCancelMessage(null)
     try {
       const res = await fetch("/api/subscription_better/cancel", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userid }),
+        body: JSON.stringify({ user_id: userid, reason }),
       })
       const data = await res.json()
       if (res.ok) {
@@ -919,21 +922,21 @@ const CurrentPlanSummary = () => {
                   {cancelLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cancelling...
+                      {subscriptionStatus === "trialing" ? "Cancelling..." : "Cancelling..."}
                     </>
                   ) : (
                     <>
                       <X className="mr-2 h-4 w-4" />
-                      Cancel Subscription
+                      {subscriptionStatus === "trialing" ? "Cancel Trial" : "Cancel Subscription"}
                     </>
                   )}
                 </Button>
                 {cancelMessage && (
                   <div className="text-sm text-green-600 bg-green-50 rounded px-3 py-1">
                     {cancelMessage}
-              </div>
+                  </div>
                 )}
-        </div>
+              </div>
             )}
 
             {/* Main Action Buttons */}
@@ -979,7 +982,7 @@ const CurrentPlanSummary = () => {
       </div>
 
       {/* Cancel Confirmation Modal */}
-      {showCancelConfirm && (
+      {showCancelConfirm && !showCancelReasonForm && (
         <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-80">
           <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
             <div className="text-center">
@@ -987,10 +990,12 @@ const CurrentPlanSummary = () => {
                 <AlertTriangle className="h-6 w-6 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Cancel Subscription
+                {subscriptionStatus === "trialing" ? "Cancel Trial" : "Cancel Subscription"}
               </h3>
               <p className="text-gray-600 mb-6">
-                Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period.
+                {subscriptionStatus === "trialing"
+                  ? "Are you sure you want to cancel your free trial? You will lose access immediately."
+                  : "Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period."}
               </p>
               <div className="flex gap-3 justify-center">
                 <Button
@@ -998,23 +1003,86 @@ const CurrentPlanSummary = () => {
                   onClick={() => setShowCancelConfirm(false)}
                   disabled={cancelLoading}
                 >
-                  Keep Subscription
+                  {subscriptionStatus === "trialing" ? "Keep Trial" : "Keep Subscription"}
                 </Button>
                 <Button
-                  onClick={handleCancelSubscription}
+                  onClick={() => { setShowCancelReasonForm(true); }}
                   disabled={cancelLoading}
                   className="bg-red-600 hover:bg-red-700"
                 >
                   {cancelLoading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cancelling...
+                      {subscriptionStatus === "trialing" ? "Cancelling..." : "Cancelling..."}
                     </>
                   ) : (
-                    "Yes, Cancel"
+                    subscriptionStatus === "trialing" ? "Yes, Cancel Trial" : "Yes, Cancel Subscription"
                   )}
                 </Button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Reason Form Modal */}
+      {showCancelConfirm && showCancelReasonForm && (
+        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-80">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
+            <div className="text-center">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                {subscriptionStatus === "trialing" ? "Cancel Trial" : "Cancel Subscription"}
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Please let us know why you are cancelling. Your feedback helps us improve our service.
+              </p>
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault()
+                  if (!cancelReason.trim()) {
+                    setCancelReasonError("Please provide a reason for cancellation.")
+                    return
+                  }
+                  setCancelReasonError(null)
+                  await handleCancelSubscription(cancelReason)
+                  setShowCancelReasonForm(false)
+                  setShowCancelConfirm(false)
+                }}
+                className="flex flex-col gap-4"
+              >
+                <textarea
+                  className="w-full min-h-[80px] border border-gray-300 rounded p-2"
+                  value={cancelReason}
+                  onChange={e => setCancelReason(e.target.value)}
+                  placeholder="Your reason for cancelling..."
+                  required
+                />
+                {cancelReasonError && <div className="text-red-600 text-sm">{cancelReasonError}</div>}
+                <div className="flex gap-3 justify-center">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={() => { setShowCancelReasonForm(false); setCancelReason(""); }}
+                    disabled={cancelLoading}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={cancelLoading}
+                    className="bg-red-600 hover:bg-red-700"
+                  >
+                    {cancelLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {subscriptionStatus === "trialing" ? "Cancelling..." : "Cancelling..."}
+                      </>
+                    ) : (
+                      subscriptionStatus === "trialing" ? "Submit & Cancel Trial" : "Submit & Cancel Subscription"
+                    )}
+                  </Button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

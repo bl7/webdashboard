@@ -13,7 +13,7 @@ function getEndOfNextMonth() {
 }
 
 export async function POST(req: NextRequest) {
-  const { user_id, immediate } = await req.json()
+  const { user_id, immediate, reason } = await req.json()
 
   if (!user_id) {
     return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
@@ -94,6 +94,11 @@ export async function POST(req: NextRequest) {
          WHERE user_id = $1`,
         [user_id]
       );
+      // Store cancellation reason
+      await client.query(
+        `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
+        [user_id, sub.stripe_subscription_id, reason || null]
+      );
       await sendMail({
         to: userEmail,
         subject: "Subscription Cancellation",
@@ -132,6 +137,11 @@ export async function POST(req: NextRequest) {
              updated_at = NOW()
          WHERE user_id = $1`,
         [user_id, cancelAt]
+      );
+      // Store cancellation reason
+      await client.query(
+        `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
+        [user_id, sub.stripe_subscription_id, reason || null]
       );
       await sendMail({
         to: userEmail,
@@ -172,6 +182,11 @@ export async function POST(req: NextRequest) {
              updated_at = NOW()
          WHERE user_id = $1`,
         [user_id, cancelAt, refundAmount]
+      );
+      // Store cancellation reason
+      await client.query(
+        `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
+        [user_id, sub.stripe_subscription_id, reason || null]
       );
       await sendMail({
         to: userEmail,
@@ -228,6 +243,47 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error(error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  } finally {
+    client.release()
+  }
+}
+
+export async function GET(req: NextRequest) {
+  const client = await pool.connect()
+  try {
+    const { searchParams } = new URL(req.url)
+    const search = searchParams.get('search') || ''
+    const page = parseInt(searchParams.get('page') || '1', 10)
+    const pageSize = parseInt(searchParams.get('pageSize') || '20', 10)
+    const offset = (page - 1) * pageSize
+
+    let whereClause = ''
+    let values: any[] = []
+    if (search) {
+      whereClause = `WHERE user_id ILIKE $1 OR subscription_id ILIKE $1 OR reason ILIKE $1`
+      values.push(`%${search}%`)
+    }
+
+    // Get total count
+    const countResult = await client.query(
+      `SELECT COUNT(*) FROM subscription_cancellations ${whereClause}`,
+      values
+    )
+    const total = parseInt(countResult.rows[0].count, 10)
+
+    // Get paginated results
+    let query = `SELECT id, user_id, subscription_id, reason, cancelled_at FROM subscription_cancellations ${whereClause} ORDER BY cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
+    values.push(pageSize, offset)
+    const { rows } = await client.query(query, values)
+
+    return NextResponse.json({
+      cancellations: rows,
+      total,
+      page,
+      pageSize
+    })
+  } catch (err) {
+    return NextResponse.json({ error: 'Failed to fetch cancellations' }, { status: 500 })
   } finally {
     client.release()
   }

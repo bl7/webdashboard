@@ -66,22 +66,6 @@ export default function Header({
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Search bar */}
-          <div className="relative hidden md:block">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <Search className={`h-5 w-5 ${darkMode ? "text-gray-400" : "text-gray-500"}`} />
-            </div>
-            <input
-              type="text"
-              placeholder="Search..."
-              className={`block w-80 rounded-lg border py-2 pl-10 pr-3 text-sm transition-all duration-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500 ${
-                darkMode
-                  ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400"
-                  : "border-gray-300 bg-white text-gray-900 placeholder-gray-500"
-              }`}
-            />
-          </div>
-
           {/* Dark mode toggle */}
           <Button
             variant="ghost"
@@ -94,19 +78,6 @@ export default function Header({
             }`}
           >
             {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-          </Button>
-
-          {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className={`h-9 w-9 p-0 ${
-              darkMode
-                ? "text-gray-400 hover:bg-gray-700 hover:text-white"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-            }`}
-          >
-            <Bell className="h-4 w-4" />
           </Button>
 
           {/* User menu */}
@@ -124,17 +95,6 @@ export default function Header({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>Admin Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                Profile
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout} className="text-red-600">
                 Logout
               </DropdownMenuItem>

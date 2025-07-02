@@ -198,13 +198,15 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
     <Tooltip.Provider>
       <div className="sticky top-0 z-20 h-screen shrink-0 overflow-y-auto">
         {/* Mobile Toggle Button */}
-        <button
-          onClick={toggleSidebar}
-          className="fixed left-4 top-4 z-50 h-10 w-10 rounded-md bg-[hsl(var(--primary))] text-white shadow-lg lg:hidden"
-          aria-label="Toggle Sidebar"
-        >
-          {sidebarMobile ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
-        </button>
+        <div className="fixed left-0 top-0 z-50 flex items-center h-16 w-full bg-transparent lg:hidden">
+          <button
+            onClick={toggleSidebar}
+            className="ml-4 flex h-10 w-10 items-center justify-center rounded-md bg-[hsl(var(--primary))] text-white shadow-lg"
+            aria-label="Toggle Sidebar"
+          >
+            {sidebarMobile ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
+          </button>
+        </div>
 
         {/* Desktop Toggle Button - positioned at sidebar edge */}
         <button
@@ -252,13 +254,15 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                 className="transition-opacity"
               />
             ) : (
-              <Image
-                src="/logo_sm_white.png"
-                alt="Small Logo"
-                width={64}
-                height={64}
-                className="transition-opacity"
-              />
+              <div className="w-full flex items-center justify-center">
+                <Image
+                  src="/logo_sm_white.png"
+                  alt="Small Logo"
+                  width={40}
+                  height={40}
+                  className="transition-opacity"
+                />
+              </div>
             )}
           </div>
 

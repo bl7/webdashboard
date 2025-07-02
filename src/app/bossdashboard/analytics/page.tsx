@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from "recharts"
-import { TrendingUp, Users, DollarSign, Activity, BarChart3, PieChart as PieChartIcon } from "lucide-react"
+import { TrendingUp, Users, DollarSign, Activity, BarChart3, PieChart as PieChartIcon, Truck, Package } from "lucide-react"
 
 const COLORS = ["#a259ff", "#f7b801", "#00c49a", "#ff6b6b", "#8884d8", "#82ca9d"]
 
@@ -15,6 +15,7 @@ export default function AnalyticsDashboard() {
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deviceData, setDeviceData] = useState<any[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +31,7 @@ export default function AnalyticsDashboard() {
       }
     }
     fetchData()
+    fetch('/api/devices').then(res => res.json()).then(data => setDeviceData(data.devices || []))
   }, [])
 
   if (loading) return <div className="p-8 text-center">Loading analytics...</div>
@@ -125,6 +127,62 @@ export default function AnalyticsDashboard() {
                 <Tooltip />
                 <Legend />
                 <Bar dataKey="value" fill="#a259ff" radius={[8, 8, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Device Analytics */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Device Status Pie Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><PieChartIcon className="h-5 w-5 text-primary" />Device Status Distribution</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={Object.entries(deviceData.reduce((acc: any, d: any) => { acc[d.status] = (acc[d.status] || 0) + 1; return acc }, {})).map(([name, value]) => ({ name, value }))}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  fill="#00c49a"
+                  label
+                >
+                  {Object.entries(deviceData.reduce((acc: any, d: any) => { acc[d.status] = (acc[d.status] || 0) + 1; return acc }, {})).map(([_, __], index) => (
+                    <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+        {/* Device Shipments Over Time Bar Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" />Device Shipments Over Time</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={250}>
+              <BarChart data={(() => {
+                // Group by shipped_at date
+                const shipments = deviceData.filter((d: any) => d.shipped_at).reduce((acc: any, d: any) => {
+                  const date = new Date(d.shipped_at).toLocaleDateString()
+                  acc[date] = (acc[date] || 0) + 1
+                  return acc
+                }, {})
+                return Object.entries(shipments).map(([name, value]) => ({ name, value }))
+              })()}>
+                <XAxis dataKey="name" stroke="#8884d8" />
+                <YAxis allowDecimals={false} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="value" fill="#00c49a" radius={[8, 8, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

@@ -16,6 +16,7 @@ interface PlanFormData {
   is_active: boolean
   tier: string
   highlight?: boolean
+  include_device?: boolean
 }
 
 interface FormErrors {
@@ -42,7 +43,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
     features: "",
     is_active: true,
     tier: "",
-    highlight: false
+    highlight: false,
+    include_device: false
   })
   const [errors, setErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(false)
@@ -63,7 +65,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           features: Array.isArray(plan.features) ? plan.features.join(", ") : "",
           is_active: plan.is_active ?? true,
           tier: plan.tier !== undefined && plan.tier !== null ? String(plan.tier) : "",
-          highlight: !!plan.highlight
+          highlight: !!plan.highlight,
+          include_device: !!plan.include_device
         })
       } else {
         setForm({
@@ -77,7 +80,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
           features: "",
           is_active: true,
           tier: "",
-          highlight: false
+          highlight: false,
+          include_device: false
         })
       }
       setErrors({})
@@ -160,7 +164,8 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
         price_yearly: Math.round(Number(form.price_yearly) * 100),
         features: form.features.split(",").map(f => f.trim()).filter(Boolean),
         tier: Number(form.tier),
-        highlight: !!form.highlight
+        highlight: !!form.highlight,
+        include_device: !!form.include_device
       }
 
       const url = mode === "edit" ? `/api/plans/${plan.id}` : "/api/plans"
@@ -341,6 +346,19 @@ function PlanModal({ open, onClose, onSuccess, isDarkMode, plan = null, mode = "
             />
             <label htmlFor="is_active" className={`text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}>
               Active
+            </label>
+          </div>
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="include_device"
+              checked={!!form.include_device}
+              onChange={handleChange}
+              id="include_device"
+              className="rounded"
+            />
+            <label htmlFor="include_device" className={`text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}>
+              Includes Device
             </label>
           </div>
           <label className="flex items-center gap-2">
@@ -554,6 +572,7 @@ export default function PlansPage() {
                 <th className="px-4 py-2 text-left">Stripe Product</th>
                 <th className="px-4 py-2 text-left">Description</th>
                 <th className="px-4 py-2 text-left">Features</th>
+                <th className="px-4 py-2 text-left">Includes Device</th>
                 <th className="px-4 py-2 text-left">Status</th>
                 <th className="px-4 py-2 text-left">Actions</th>
               </tr>
@@ -571,6 +590,17 @@ export default function PlansPage() {
                   <td className="px-4 py-2 text-xs max-w-xs truncate">{plan.description || "-"}</td>
                   <td className="px-4 py-2 text-xs max-w-xs truncate">
                     {Array.isArray(plan.features) ? plan.features.join(', ') : JSON.stringify(plan.features) || "-"}
+                  </td>
+                  <td className="px-4 py-2 text-center">
+                    {plan.include_device ? (
+                      <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                        Yes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-900/20 dark:text-gray-400">
+                        No
+                      </span>
+                    )}
                   </td>
                   <td className="px-4 py-2">
                     {plan.is_active ? (

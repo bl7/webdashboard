@@ -10,6 +10,7 @@ import { formatLabelForPrintImage } from "../print/labelFormatter"
 import { PrintQueueItem } from "@/types/print"
 import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
+import useBillingData from "../profile/hooks/useBillingData"
 
 interface PrintLog {
   id: number
@@ -28,6 +29,7 @@ interface PrintLog {
       uri: string
       state: string
     }
+    sessionId?: string
   }
   timestamp: string
 }
@@ -127,6 +129,11 @@ export default function PrintSessionsPage() {
     print,
   } = usePrinter()
 
+  // Subscription status
+  const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+  const { subscription, loading: subLoading } = useBillingData(userId)
+  const subBlocked = !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
+
   useEffect(() => {
     const id = localStorage.getItem("userid")
     if (!id) return
@@ -166,7 +173,7 @@ export default function PrintSessionsPage() {
     fetchPrintSessions()
   }, [])
 
-  // Group logs by print session (same timestamp within 5 seconds)
+  // Group logs by print session (use sessionId if present, else fallback)
   useEffect(() => {
     if (printLogs.length === 0) {
       setGroupedSessions([])
@@ -176,12 +183,7 @@ export default function PrintSessionsPage() {
     const grouped: { [key: string]: PrintLog[] } = {}
     
     printLogs.forEach(log => {
-      const timestamp = new Date(log.timestamp).getTime()
-      const printedAt = new Date(log.details.printedAt).getTime()
-      
-      // Group by timestamp (within 5 seconds) and printer
-      const sessionKey = `${timestamp}-${log.details.printerUsed?.name || 'unknown'}`
-      
+      const sessionKey = log.details.sessionId || `${new Date(log.timestamp).getTime()}-${log.details.printerUsed?.name || 'unknown'}`
       if (!grouped[sessionKey]) {
         grouped[sessionKey] = []
       }
@@ -446,8 +448,17 @@ export default function PrintSessionsPage() {
                     <Button
                       size="sm"
                       onClick={() => handlePrintSession(session)}
-                      disabled={printingStates[session.sessionId]}
+                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0}
                       className="h-8 px-3"
+                      title={
+                        subBlocked
+                          ? "Printing is disabled due to your subscription status."
+                          : availablePrinters.length === 0
+                          ? "No printers available"
+                          : printingStates[session.sessionId]
+                          ? "Printing in progress"
+                          : "Print all labels in this session"
+                      }
                     >
                       {printingStates[session.sessionId] ? (
                         <div className="flex items-center gap-2">

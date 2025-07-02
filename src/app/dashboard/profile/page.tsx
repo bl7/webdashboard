@@ -7,6 +7,7 @@ import { toast } from "sonner"
 import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import OrderLabelsTab from './OrderLabelsTab'
 
 const features = [
   "Device Provided",
@@ -54,7 +55,7 @@ const plans = [
 const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 const ProfileDashboard = () => {
-  const [activeTab, setActiveTab] = useState<"account" | "billing">("account")
+  const [activeTab, setActiveTab] = useState<'account' | 'billing' | 'labels'>('account')
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [companyName, setCompanyName] = useState("")
   const [userId, setUserId] = useState<string | null>(null)
@@ -232,25 +233,29 @@ const ProfileDashboard = () => {
 
   return (
     <div className="">
-      {/* --- Tabs section (unchanged) --- */}
+      {/* --- Tabs section (add Order Labels tab) --- */}
       <div className="mb-6 flex border-b">
-        {["account", "billing"].map((tab) => (
+        {[
+          { key: 'account', label: 'Account' },
+          { key: 'billing', label: 'Billing' },
+          { key: 'labels', label: 'Order Labels' },
+        ].map((tab) => (
           <button
-            key={tab}
-            onClick={() => setActiveTab(tab as "account" | "billing")}
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key as 'account' | 'billing' | 'labels')}
             className={cn(
-              "border-b-2 px-4 py-2 text-sm font-medium transition",
-              activeTab === tab
-                ? "border-primary text-primary"
-                : "border-transparent text-muted-foreground hover:text-primary"
+              'border-b-2 px-4 py-2 text-sm font-medium transition',
+              activeTab === tab.key
+                ? 'border-primary text-primary'
+                : 'border-transparent text-muted-foreground hover:text-primary'
             )}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab.label}
           </button>
         ))}
       </div>
 
-      {activeTab === "account" && (
+      {activeTab === 'account' && (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Profile Card */}
           <div className="flex flex-col items-center rounded-xl border bg-white p-6 shadow-sm">
@@ -443,8 +448,9 @@ const ProfileDashboard = () => {
         </div>
       )}
 
-      {/* Billing Tab stays unchanged */}
-      {activeTab === "billing" && userId && <Billing />}
+      {activeTab === 'billing' && userId && <Billing />}
+
+      {activeTab === 'labels' && <OrderLabelsTab />}
 
       {/* Avatar Modal */}
       {showModal && (

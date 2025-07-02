@@ -15,7 +15,10 @@ import {
   UserPlus,
   Settings,
   BarChart3,
-  PieChart
+  PieChart,
+  Truck,
+  Package,
+  FileText
 } from 'lucide-react'
 import { useDarkMode } from './context/DarkModeContext'
 
@@ -61,6 +64,9 @@ export default function BossDashboard() {
   const [showAddUserModal, setShowAddUserModal] = useState(false)
   const [showPlanModal, setShowPlanModal] = useState(false)
   const [editPlan, setEditPlan] = useState<any | null>(null)
+  const [pendingDevices, setPendingDevices] = useState<any[]>([])
+  const [recentDevices, setRecentDevices] = useState<any[]>([])
+  const [recentLabelOrders, setRecentLabelOrders] = useState<any[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -87,6 +93,33 @@ export default function BossDashboard() {
           throw new Error('Failed to fetch plans data')
         }
         const plansData = await plansResponse.json()
+        
+        // Fetch device and label order data
+        fetch('/api/devices').then(res => res.json()).then(data => {
+          setPendingDevices((data.devices || []).filter((d: any) => d.status === 'pending'))
+          setRecentDevices(
+            (data.devices || [])
+              .slice()
+              .sort((a: any, b: any) => {
+                const dateA = a.assigned_at ? new Date(a.assigned_at).getTime() : 0;
+                const dateB = b.assigned_at ? new Date(b.assigned_at).getTime() : 0;
+                return dateB - dateA;
+              })
+              .slice(0, 5)
+          )
+        })
+        fetch('/api/label-orders/all').then(res => res.json()).then(data => {
+          setRecentLabelOrders(
+            (data.orders || [])
+              .slice()
+              .sort((a: any, b: any) => {
+                const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+                const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+                return dateB - dateA;
+              })
+              .slice(0, 5)
+          )
+        })
         
         setAnalyticsData(analytics)
         setUsers(usersData)
@@ -278,6 +311,49 @@ export default function BossDashboard() {
               <p className="text-xs text-muted-foreground">
                 {analyticsData?.canceled || 0} canceled subscriptions
               </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* New Widgets */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          {/* Pending Device Shipments */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Device Shipments</CardTitle>
+              <Truck className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{pendingDevices.length}</div>
+              <p className="text-xs text-muted-foreground">Devices to ship</p>
+            </CardContent>
+          </Card>
+          {/* Recent Device Assignments */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Recent Device Assignments</CardTitle>
+              <Package className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <ul className="text-xs text-gray-900 dark:text-white space-y-1">
+                {recentDevices.map((d: any) => (
+                  <li key={d.id}>{d.user_email || d.user_id} - {d.device_type} ({d.status})</li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+          {/* Recent Label Orders */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Recent Label Orders</CardTitle>
+              <FileText className="h-5 w-5 text-primary" />
+            </CardHeader>
+            <CardContent>
+              <ul className="text-xs text-gray-900 dark:text-white space-y-1">
+                {recentLabelOrders.map((o: any) => (
+                  <li key={o.id}>{o.user_email || o.user_id} - {o.bundle_count} bundles ({o.status})</li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
         </div>

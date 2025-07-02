@@ -3,13 +3,23 @@ import pool from '@/lib/pg';
 
 export async function GET(req: NextRequest) {
   try {
+    const { searchParams } = new URL(req.url)
+    const dateFrom = searchParams.get('date_from')
+    const dateTo = searchParams.get('date_to')
+    let where = ''
+    let values: any[] = []
+    if (dateFrom && dateTo) {
+      where = 'WHERE s.created_at BETWEEN $1 AND $2'
+      values = [dateFrom, dateTo]
+    }
     const client = await pool.connect();
     // Join user_profiles and subscription_better
     const { rows } = await client.query(`
       SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
       FROM user_profiles u
       LEFT JOIN subscription_better s ON u.user_id::text = s.user_id::text
-    `);
+      ${where}
+    `, values);
     client.release();
     const subs = rows;
     // Aggregate metrics

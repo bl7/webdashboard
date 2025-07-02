@@ -21,7 +21,8 @@ export async function PUT(
       features, 
       is_active, 
       tier,
-      highlight
+      highlight,
+      include_device
     } = body
 
     if (!name || !name.trim()) {
@@ -107,8 +108,9 @@ export async function PUT(
         is_active = $9,
         tier = $10,
         highlight = $11,
+        include_device = $12,
         updated_at = NOW()
-      WHERE id = $12
+      WHERE id = $13
       RETURNING *`,
       [
         name.trim(),
@@ -122,6 +124,7 @@ export async function PUT(
         is_active !== undefined ? is_active : true,
         typeof tier === 'number' ? tier : null,
         !!highlight,
+        include_device !== undefined ? !!include_device : false,
         id
       ]
     )

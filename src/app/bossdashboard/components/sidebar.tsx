@@ -6,7 +6,6 @@ import Image from "next/image"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import { cn } from "@/lib/utils"
 import {
-  Shield,
   Home,
   Users,
   Settings,
@@ -15,10 +14,8 @@ import {
   User,
   Database,
   FileText,
-  Activity,
-  ChevronLeft,
-  ChevronRight,
-  
+  CalendarClock,
+  Tablet,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -35,10 +32,13 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
   const navigation = [
     { name: "Dashboard", href: "/bossdashboard", icon: Home },
     { name: "Users", href: "/bossdashboard/users", icon: Users },
+    { name: "Orders", href: "/bossdashboard/orders", icon: FileText },
     { name: "Analytics", href: "/bossdashboard/analytics", icon: BarChart3 },
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
-    { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: Activity },
+    { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
+    { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: CalendarClock },
+    { name: "Cancel Requests", href: "/bossdashboard/cancellations", icon: () => <span className="text-lg mr-3">👋</span> },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
   ]
 

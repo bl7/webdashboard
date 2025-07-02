@@ -49,9 +49,6 @@ const Billing: React.FC = () => {
     refreshProfile,
   } = useBillingData(userid)
   const [localProfile, setLocalProfile] = useState<Profile | null>(null)
-  const [cancelLoading, setCancelLoading] = useState(false)
-  const [cancelMessage, setCancelMessage] = useState<string | null>(null)
-  const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [showUpgradeModal, setShowUpgradeModal] = useState(false)
   const [reactivateLoading, setReactivateLoading] = useState(false)
   const [reactivateError, setReactivateError] = useState<string | null>(null)
@@ -109,30 +106,6 @@ const Billing: React.FC = () => {
     } catch (err) {
       console.error("Plan update failed:", err)
       alert(`Failed to update plan: ${err instanceof Error ? err.message : "Unknown error"}`)
-    }
-  }
-
-  const handleCancelSubscription = async () => {
-    setCancelLoading(true)
-    setCancelMessage(null)
-    try {
-    const res = await fetch("/api/subscription_better/cancel", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: userid }),
-    })
-    const data = await res.json()
-    if (res.ok) {
-        setCancelMessage(data.message || "Subscription cancelled.")
-        setTimeout(() => window.location.reload(), 1500)
-    } else {
-        setCancelMessage(data.error || "Failed to cancel subscription.")
-      }
-    } catch (err: any) {
-      setCancelMessage(err.message || "Failed to cancel subscription.")
-    } finally {
-      setCancelLoading(false)
-      setShowCancelConfirm(false)
     }
   }
 
@@ -285,80 +258,7 @@ const Billing: React.FC = () => {
             </div>
           </div>
         )}
-
-        {/* Cancel Subscription Section */}
-        {subscription && subscription.status !== "canceled" && !subscription.cancel_at && (
-          <div className="mt-10 flex flex-col items-center justify-center">
-            <Button
-              variant="outline"
-              onClick={() => setShowCancelConfirm(true)}
-              disabled={cancelLoading}
-              className="text-red-600 border-red-300 hover:bg-red-50 px-8 py-3 text-lg font-semibold"
-            >
-              {cancelLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Cancelling...
-                </>
-              ) : (
-                <>
-                  <X className="mr-2 h-5 w-5" />
-                  Cancel Subscription
-                </>
-              )}
-            </Button>
-            {cancelMessage && (
-              <div className="mt-3 text-sm text-green-600 bg-green-50 rounded px-3 py-1">
-                {cancelMessage}
-              </div>
-            )}
-          </div>
-        )}
       </div>
-
-      {/* Cancel Confirmation Modal */}
-      {showCancelConfirm && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center bg-black bg-opacity-80">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4 shadow-2xl">
-            <div className="text-center">
-              <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                <AlertTriangle className="h-6 w-6 text-red-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Cancel Subscription
-              </h3>
-              <p className="text-gray-600 mb-6">
-                {subscription?.status === "trialing"
-                  ? "Are you sure you want to cancel your free trial? You will lose access immediately."
-                  : "Are you sure you want to cancel your subscription? You'll lose access to all features at the end of your current billing period."}
-              </p>
-              <div className="flex gap-3 justify-center">
-                <Button
-                  variant="outline"
-                  onClick={() => setShowCancelConfirm(false)}
-                  disabled={cancelLoading}
-                >
-                  Keep Subscription
-                </Button>
-                <Button
-                  onClick={handleCancelSubscription}
-                  disabled={cancelLoading}
-                  className="bg-red-600 hover:bg-red-700 text-white"
-                >
-                  {cancelLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Cancelling...
-                    </>
-                  ) : (
-                    "Yes, Cancel"
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <BillingAddressModal
         profile={localProfile}
