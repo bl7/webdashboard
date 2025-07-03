@@ -39,8 +39,11 @@ export default function OrderLabelsTab() {
   const [customDays, setCustomDays] = useState<number | null>(null);
   const [days, setDays] = useState<number>(14);
 
-  // Example: estimate usage or get from props/state
-  const labelsPerDay = 80 // TODO: Replace with real usage data
+  // Pass labelsPerDay to AI suggestion hook
+  const [labelsPerDay, setLabelsPerDay] = useState<number>(80); // Default fallback
+  const [labelsPerDayLoading, setLabelsPerDayLoading] = useState<boolean>(true);
+  const [labelsPerDayError, setLabelsPerDayError] = useState<string | null>(null);
+
   // Calculate total rolls and labels for the AI
   const rollsPerBundle = LABELS_PER_BUNDLE;
   const labelsPerRoll = LABELS_PER_ROLL;
@@ -73,6 +76,42 @@ export default function OrderLabelsTab() {
           setEmail(p.email || '');
         })
         .catch(() => {});
+      // Fetch print logs and calculate average labels per day
+      setLabelsPerDayLoading(true);
+      setLabelsPerDayError(null);
+      fetch('/api/logs', {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.logs || !Array.isArray(data.logs)) throw new Error('No logs');
+          // Filter for print_label actions
+          const printLogs = data.logs.filter((log: any) => log.action === 'print_label');
+          if (printLogs.length === 0) {
+            setLabelsPerDay(0); // no data, set to 0
+            setLabelsPerDayLoading(false);
+            return;
+          }
+          // Aggregate by date
+          const usageByDate: Record<string, number> = {};
+          printLogs.forEach((log: any) => {
+            const date = new Date(log.timestamp).toISOString().split('T')[0];
+            const qty = Number(log.details?.quantity) || 1;
+            usageByDate[date] = (usageByDate[date] || 0) + qty;
+          });
+          // Get last 30 days
+          const allDates = Object.keys(usageByDate).sort();
+          const last30Dates = allDates.slice(-30);
+          const total = last30Dates.reduce((sum, date) => sum + usageByDate[date], 0);
+          const avg = last30Dates.length > 0 ? total / last30Dates.length : 0;
+          setLabelsPerDay(Math.round(avg));
+          setLabelsPerDayLoading(false);
+        })
+        .catch(err => {
+          setLabelsPerDay(0);
+          setLabelsPerDayLoading(false);
+          setLabelsPerDayError('Could not load usage data');
+        });
     }
   }, []);
 
@@ -236,6 +275,18 @@ export default function OrderLabelsTab() {
                   >
                     {aiLoading ? 'Getting AI Suggestion...' : 'Get AI Suggestion'}
                   </button>
+                </div>
+                {/* Show calculated average labels per day */}
+                <div className="mb-2 text-xs text-purple-700">
+                  {labelsPerDayLoading ? (
+                    <span>Loading your average label usage...</span>
+                  ) : labelsPerDayError ? (
+                    <span className="text-red-600">{labelsPerDayError}</span>
+                  ) : labelsPerDay === 0 ? (
+                    <span className="text-purple-700">You have not printed any labels yet. Need more data to analyze.</span>
+                  ) : (
+                    <span>Based on your history, you print <span className="font-bold">{labelsPerDay}</span> labels per day (avg, last 30 days).</span>
+                  )}
                 </div>
                 {/* AI Suggestion Box */}
                 {showAISuggestion && (
