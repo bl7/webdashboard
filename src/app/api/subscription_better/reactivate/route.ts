@@ -11,7 +11,12 @@ export async function POST(req: NextRequest) {
   try {
     const { rows } = await client.query("SELECT * FROM subscription_better WHERE user_id = $1", [user_id])
     const sub = rows[0]
-    if (!sub) return NextResponse.json({ error: "No subscription found" }, { status: 404 })
+    if (!sub) {
+      return NextResponse.json({ error: "Subscription not found" }, { status: 404 })
+    }
+    if (sub.status === 'canceled') {
+      return NextResponse.json({ error: "Subscription is already canceled and cannot be reactivated." }, { status: 400 })
+    }
     await stripe.subscriptions.update(sub.stripe_subscription_id, {
       cancel_at: null,
     })

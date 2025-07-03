@@ -31,6 +31,7 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
   const pendingDaysLeft = hasPendingChange && pendingPlanEffective ? Math.max(0, Math.ceil((pendingPlanEffective.getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : null;
 
   const isCancellationScheduled = (subscription.cancel_at_period_end || subscription.cancel_at) && subscription.status !== 'canceled';
+  const isCanceled = subscription.status === 'canceled';
 
   return (
     <div className="relative flex flex-col justify-between rounded-xl bg-gradient-to-r from-blue-700 to-blue-500 min-h-[12rem] w-full max-w-md p-4 text-white shadow-lg sm:min-h-[14rem]">
@@ -49,7 +50,7 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
         <div className="mt-1 text-lg"> £{subscription.amount ? (subscription.amount / 100).toFixed(2) : "0.00"}</div>
       </div>
       {/* Button: Change Plan or Reactivate */}
-      {isCancellationScheduled ? (
+      {!isCanceled && isCancellationScheduled ? (
         <Button
           variant="default"
           className="mt-2 self-start bg-green-600 hover:bg-green-700 text-white"
@@ -59,7 +60,7 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
         >
           Reactivate
         </Button>
-      ) : (
+      ) : !isCanceled ? (
         <Button
           variant="outline"
           className="mt-2 self-start border-white text-black transition-colors hover:bg-white hover:text-current"
@@ -69,7 +70,7 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
         >
           Change Plan
         </Button>
-      )}
+      ) : null}
     </div>
   )
 }

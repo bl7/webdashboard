@@ -159,14 +159,24 @@ export async function POST(req: NextRequest) {
       });
     }
     if (interval === "year") {
-      // Annual: cancel at end of next month, refund 50% of unused time after that
+      // Annual: cancel at end of next month, refund 50% of unused full months after that
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
         cancel_at: cancelAt,
       });
       const annualPeriodEnd = (stripeSub as any).current_period_end;
       const amount = item.price?.unit_amount || 0;
-      // Calculate months remaining after cancelAt
-      const monthsRemaining = (annualPeriodEnd - cancelAt) / (30 * 24 * 60 * 60);
+      // Calculate number of full months remaining after cancelAt
+      const cancelDate = new Date(cancelAt * 1000);
+      const periodEndDate = new Date(annualPeriodEnd * 1000);
+      let monthsRemaining = 0;
+      if (periodEndDate > cancelDate) {
+        monthsRemaining = (periodEndDate.getFullYear() - cancelDate.getFullYear()) * 12 + (periodEndDate.getMonth() - cancelDate.getMonth());
+        // If the periodEndDate day is greater than or equal to cancelDate day, count as a full month
+        if (periodEndDate.getDate() >= cancelDate.getDate()) {
+          monthsRemaining += 1;
+        }
+      }
+      if (monthsRemaining < 0) monthsRemaining = 0;
       const refundAmount = Math.round((amount / 12) * monthsRemaining * 0.5);
       await client.query(
         `UPDATE subscription_better
@@ -196,7 +206,7 @@ export async function POST(req: NextRequest) {
           planName: sub.plan_name || sub.plan_id || '',
           cancellationType: 'annual',
           endDate: new Date(cancelAt * 1000).toLocaleDateString(),
-          refundInfo: { amount: refundAmount, date: new Date(cancelAt * 1000).toLocaleDateString() },
+          refundInfo: { amount: parseFloat((refundAmount / 100).toFixed(2)), date: new Date(cancelAt * 1000).toLocaleDateString() },
         }),
       });
       return NextResponse.json({
@@ -260,19 +270,19 @@ export async function GET(req: NextRequest) {
     let whereClause = ''
     let values: any[] = []
     if (search) {
-      whereClause = `WHERE user_id ILIKE $1 OR subscription_id ILIKE $1 OR reason ILIKE $1`
+      whereClause = `WHERE c.user_id ILIKE $1 OR c.subscription_id ILIKE $1 OR c.reason ILIKE $1 OR p.email ILIKE $1`
       values.push(`%${search}%`)
     }
 
     // Get total count
     const countResult = await client.query(
-      `SELECT COUNT(*) FROM subscription_cancellations ${whereClause}`,
+      `SELECT COUNT(*) FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause ? whereClause.replace(/user_id/g, 'c.user_id').replace(/subscription_id/g, 'c.subscription_id').replace(/reason/g, 'c.reason') : ''}`,
       values
     )
     const total = parseInt(countResult.rows[0].count, 10)
 
-    // Get paginated results
-    let query = `SELECT id, user_id, subscription_id, reason, cancelled_at FROM subscription_cancellations ${whereClause} ORDER BY cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
+    // Get paginated results with user profile info
+    let query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause ? whereClause.replace(/user_id/g, 'c.user_id').replace(/subscription_id/g, 'c.subscription_id').replace(/reason/g, 'c.reason') : ''} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
     values.push(pageSize, offset)
     const { rows } = await client.query(query, values)
 

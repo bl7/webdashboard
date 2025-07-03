@@ -24,6 +24,7 @@ export async function POST(req: NextRequest) {
   const signature = req.headers.get("stripe-signature")
   if (!signature) return NextResponse.json({ error: "No signature" }, { status: 400 })
   let event: Stripe.Event
+  let client: any = null; // Declare client at the top for use throughout
   try {
     event = stripe.webhooks.constructEvent(body, signature, WEBHOOK_SECRET)
   } catch (err: any) {
@@ -48,21 +49,52 @@ export async function POST(req: NextRequest) {
           if (!customer.deleted) userEmail = (customer as any).email
         }
         if (!user_id) user_id = 'unknown-' + sub.customer
-        // Send new subscription email
+        // Determine if this is a true new subscription (first ever for user)
+        let isFirstSubscription = false;
+        try {
+          const client = await pool.connect();
+          const subCheck = await client.query(
+            `SELECT 1 FROM subscription_better WHERE user_id = $1 LIMIT 1`,
+            [user_id]
+          );
+          isFirstSubscription = subCheck.rows.length === 0;
+          client.release();
+        } catch (err) {
+          console.error('[WEBHOOK] DB error checking first subscription:', err);
+        }
+        // Send the right email
         if (userEmail) {
-          await sendMail({
-            to: userEmail,
-            subject: 'Welcome to InstaLabel! Your Subscription is Active',
-            body: newSubscriptionEmail({
-              name: userEmail,
-              planName: sub.metadata?.plan_name || (sub as any)['plan_id'] || '',
-              trialDays: sub.trial_end && sub.trial_start ? Math.round((sub.trial_end - sub.trial_start) / 86400) : 0,
-              trialEndDate: sub.trial_end ? new Date(sub.trial_end * 1000).toLocaleDateString() : '',
-              amount: sub.items.data[0]?.price?.unit_amount ? sub.items.data[0].price.unit_amount / 100 : 0,
-              currency: sub.items.data[0]?.price?.currency || 'gbp',
-              billingInterval: sub.items.data[0]?.price?.recurring?.interval === 'year' ? 'year' : 'month',
+          if (isFirstSubscription) {
+            await sendMail({
+              to: userEmail,
+              subject: 'Welcome to InstaLabel! Your Subscription is Active',
+              body: newSubscriptionEmail({
+                name: userEmail,
+                planName: sub.metadata?.plan_name || (sub as any)['plan_id'] || '',
+                trialDays: sub.trial_end && sub.trial_start ? Math.round((sub.trial_end - sub.trial_start) / 86400) : 0,
+                trialEndDate: sub.trial_end ? new Date(sub.trial_end * 1000).toLocaleDateString() : '',
+                amount: sub.items.data[0]?.price?.unit_amount ? sub.items.data[0].price.unit_amount / 100 : 0,
+                currency: sub.items.data[0]?.price?.currency || 'gbp',
+                billingInterval: sub.items.data[0]?.price?.recurring?.interval === 'year' ? 'year' : 'month',
+              })
             })
-          })
+          } else {
+            // Use planChangeEmail for upgrades/downgrades/billing changes
+            await sendMail({
+              to: userEmail,
+              subject: 'Your InstaLabel Subscription Plan Change',
+              body: planChangeEmail({
+                name: userEmail,
+                oldPlan: sub.metadata?.old_plan_name || '',
+                newPlan: sub.metadata?.plan_name || '',
+                changeType: sub.metadata?.plan_change_type as 'upgrade' | 'downgrade' | 'billing_change' || 'upgrade',
+                effectiveDate: sub.metadata?.plan_change_effective ? new Date(Number(sub.metadata.plan_change_effective) * 1000).toLocaleDateString() : '',
+                amount: sub.items.data[0]?.price?.unit_amount ? sub.items.data[0].price.unit_amount / 100 : 0,
+                currency: sub.items.data[0]?.price?.currency || 'gbp',
+                billingInterval: sub.items.data[0]?.price?.recurring?.interval === 'year' ? 'year' : 'month',
+              })
+            })
+          }
         }
         // Log the full Stripe subscription object for debugging
         console.log("[WEBHOOK] Stripe Subscription Object:", JSON.stringify(sub, null, 2));
@@ -104,7 +136,7 @@ export async function POST(req: NextRequest) {
         console.log('[WEBHOOK] Upsert fields:', {
           user_id, plan_id, price_id, plan_name, plan_interval, status, trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency, cancel_at_period_end, pending_plan_change, pending_plan_change_effective, card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint, cancel_at
         });
-        const client = await pool.connect()
+        client = await pool.connect()
         try {
           await client.query(
             `INSERT INTO subscription_better (
@@ -166,8 +198,6 @@ export async function POST(req: NextRequest) {
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error:", dbErr)
-        } finally {
-          client.release()
         }
         break
       }
@@ -187,21 +217,54 @@ export async function POST(req: NextRequest) {
         }
         if (!user_id) user_id = 'unknown-' + sub.customer
         // Plan change (upgrade/downgrade/billing change)
-        if (userEmail && sub.metadata?.plan_change_type) {
-          await sendMail({
-            to: userEmail,
-            subject: 'Your InstaLabel Subscription Plan Change',
-            body: planChangeEmail({
-              name: userEmail,
-              oldPlan: sub.metadata?.old_plan_name || '',
-              newPlan: sub.metadata?.plan_name || '',
-              changeType: sub.metadata?.plan_change_type as 'upgrade' | 'downgrade' | 'billing_change',
-              effectiveDate: sub.metadata?.plan_change_effective ? new Date(Number(sub.metadata.plan_change_effective) * 1000).toLocaleDateString() : '',
-              amount: sub.items.data[0]?.price?.unit_amount ? sub.items.data[0].price.unit_amount / 100 : 0,
-              currency: sub.items.data[0]?.price?.currency || 'gbp',
-              billingInterval: sub.items.data[0]?.price?.recurring?.interval === 'year' ? 'year' : 'month',
-            })
-          })
+        // --- NEW LOGIC: Detect scheduled plan change just took effect ---
+        if (!client) client = await pool.connect();
+        try {
+          const { rows: dbRows } = await client.query("SELECT * FROM subscription_better WHERE user_id = $1", [user_id]);
+          const dbSub = dbRows[0];
+          // If there was a pending plan change and now the plan_id matches pending_plan_change, it just took effect
+          if (
+            dbSub &&
+            dbSub.pending_plan_change &&
+            dbSub.plan_id === dbSub.pending_plan_change &&
+            dbSub.pending_plan_change_effective &&
+            Math.abs(new Date(dbSub.pending_plan_change_effective).getTime() - Date.now()) < 1000 * 60 * 60 * 24 // within 24h
+          ) {
+            // Set metadata on Stripe subscription for email clarity
+            await stripe.subscriptions.update(sub.id, {
+              metadata: {
+                ...sub.metadata,
+                plan_change_type: dbSub.pending_plan_change_type || 'downgrade',
+                old_plan_name: dbSub.plan_name || '',
+                plan_name: dbSub.pending_plan_name || '',
+                plan_change_effective: Math.floor(new Date(dbSub.pending_plan_change_effective).getTime() / 1000).toString(),
+              }
+            });
+            // Send plan change email
+            if (userEmail) {
+              await sendMail({
+                to: userEmail,
+                subject: 'Your InstaLabel Subscription Plan Change',
+                body: planChangeEmail({
+                  name: userEmail,
+                  oldPlan: dbSub.plan_name || '',
+                  newPlan: dbSub.pending_plan_name || '',
+                  changeType: dbSub.pending_plan_change_type || 'downgrade',
+                  effectiveDate: dbSub.pending_plan_change_effective ? new Date(dbSub.pending_plan_change_effective).toLocaleDateString() : '',
+                  amount: sub.items.data[0]?.price?.unit_amount ? sub.items.data[0].price.unit_amount / 100 : 0,
+                  currency: sub.items.data[0]?.price?.currency || 'gbp',
+                  billingInterval: sub.items.data[0]?.price?.recurring?.interval === 'year' ? 'year' : 'month',
+                })
+              })
+            }
+            // Clear pending plan change fields in DB
+            await client.query(
+              `UPDATE subscription_better SET pending_plan_change = NULL, pending_price_id = NULL, pending_plan_interval = NULL, pending_plan_name = NULL, pending_plan_change_effective = NULL, pending_plan_change_type = NULL WHERE user_id = $1`,
+              [user_id]
+            );
+          }
+        } catch (err) {
+          console.error('[WEBHOOK] Error handling scheduled plan change:', err);
         }
         // Expiring soon (about to finish in a week)
         if (userEmail && (sub as any)['current_period_end']) {
@@ -302,7 +365,7 @@ export async function POST(req: NextRequest) {
         console.log('[WEBHOOK] Upsert fields:', {
           user_id, plan_id, price_id, plan_name, plan_interval, status, trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency, cancel_at_period_end, pending_plan_change, pending_plan_change_effective, card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint, cancel_at
         });
-        const client = await pool.connect()
+        client = await pool.connect()
         try {
           await client.query(
             `INSERT INTO subscription_better (
@@ -364,8 +427,6 @@ export async function POST(req: NextRequest) {
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error:", dbErr)
-        } finally {
-          client.release()
         }
         break
       }
@@ -433,7 +494,7 @@ export async function POST(req: NextRequest) {
         console.log('[WEBHOOK] Upsert fields:', {
           user_id, plan_id, price_id, plan_name, plan_interval, status, trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency, cancel_at_period_end, pending_plan_change, pending_plan_change_effective, card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint, cancel_at
         });
-        const client = await pool.connect()
+        client = await pool.connect()
         try {
           await client.query(
             `INSERT INTO subscription_better (
@@ -495,8 +556,6 @@ export async function POST(req: NextRequest) {
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error:", dbErr)
-        } finally {
-          client.release()
         }
         break
       }
@@ -592,7 +651,7 @@ export async function POST(req: NextRequest) {
         const plan_name = sub.metadata?.plan_name || getPlanNameFromPriceId(price_id) || price_id || '';
         const plan_interval = sub.metadata?.plan_interval || sub.items.data[0]?.price?.recurring?.interval || null;
         console.log('[WEBHOOK] Upserting with plan_id:', plan_id, 'price_id:', price_id, 'plan_name:', plan_name, 'plan_interval:', plan_interval);
-        const client = await pool.connect()
+        client = await pool.connect()
         try {
           await client.query(
             `INSERT INTO subscription_better (
@@ -662,8 +721,6 @@ export async function POST(req: NextRequest) {
           // --- END DEVICE ASSIGNMENT ---
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error (checkout.session.completed):", dbErr)
-        } finally {
-          client.release()
         }
         break
       }
@@ -696,5 +753,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error("[WEBHOOK] Handler error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
+  } finally {
+    if (client) client.release()
   }
 } 

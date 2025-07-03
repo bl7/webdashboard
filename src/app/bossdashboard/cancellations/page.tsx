@@ -9,6 +9,8 @@ interface Cancellation {
   subscription_id: string | null
   reason: string
   cancelled_at: string
+  email?: string
+  company_name?: string
 }
 
 const PAGE_SIZE = 20
@@ -67,7 +69,7 @@ const CancellationsPage: React.FC = () => {
         <input
           type="text"
           className={`border rounded px-3 py-2 w-full sm:w-64 transition-colors duration-200 ${isDarkMode ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-400' : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'}`}
-          placeholder="Search by user, subscription, or reason..."
+          placeholder="Search by user, subscription, reason, or email..."
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -85,6 +87,8 @@ const CancellationsPage: React.FC = () => {
               <thead className={isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}>
                 <tr>
                   <th className="px-4 py-2 border-b">User ID</th>
+                  <th className="px-4 py-2 border-b">Email</th>
+                  <th className="px-4 py-2 border-b">Company</th>
                   <th className="px-4 py-2 border-b">Subscription ID</th>
                   <th className="px-4 py-2 border-b">Reason</th>
                   <th className="px-4 py-2 border-b">Cancelled At</th>
@@ -94,6 +98,8 @@ const CancellationsPage: React.FC = () => {
                 {cancellations.map((c) => (
                   <tr key={c.id} className={isDarkMode ? "border-b border-gray-700 hover:bg-gray-800" : "border-b hover:bg-gray-50"}>
                     <td className="px-4 py-2 font-mono text-xs">{c.user_id}</td>
+                    <td className="px-4 py-2 text-xs">{c.email || <span className="text-gray-400">N/A</span>}</td>
+                    <td className="px-4 py-2 text-xs">{c.company_name || <span className="text-gray-400">N/A</span>}</td>
                     <td className="px-4 py-2 font-mono text-xs">{c.subscription_id || "-"}</td>
                     <td className="px-4 py-2 whitespace-pre-line max-w-xs break-words">{c.reason}</td>
                     <td className="px-4 py-2 text-xs">{format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm")}</td>
@@ -101,7 +107,7 @@ const CancellationsPage: React.FC = () => {
                 ))}
                 {cancellations.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center py-8 text-gray-400">No cancellations found.</td>
+                    <td colSpan={6} className="text-center py-8 text-gray-400">No cancellations found.</td>
                   </tr>
                 )}
               </tbody>
