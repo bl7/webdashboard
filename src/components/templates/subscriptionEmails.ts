@@ -54,9 +54,9 @@ export const newSubscriptionEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -64,11 +64,13 @@ export const newSubscriptionEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -82,7 +84,7 @@ export const newSubscriptionEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -248,7 +250,7 @@ export const newSubscriptionEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Welcome to InstaLabel</h1>
                 <p>Your professional kitchen labeling solution</p>
             </div>
@@ -291,7 +293,7 @@ export const newSubscriptionEmail = ({
                     <li>Configure allergen management settings</li>
                     <li>Design and print your first professional labels</li>
                     <li>Train your team on the platform features</li>
-                </ul>
+            </ul>
             </div>
             
             <div class="support-section">
@@ -376,9 +378,9 @@ export const planChangeEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -386,11 +388,13 @@ export const planChangeEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -404,7 +408,7 @@ export const planChangeEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .change-summary { 
@@ -637,7 +641,7 @@ export const planChangeEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Subscription Updated</h1>
                 <p>Your plan change has been confirmed</p>
             </div>
@@ -698,14 +702,14 @@ export const planChangeEmail = ({
             </div>
             
             <div class="what-happens">
-                <h3>📊 What This Means</h3>
+            <h3>📊 What This Means</h3>
                 <ul class="what-happens-list">
-                    <li>Your subscription remains active throughout the transition</li>
+                <li>Your subscription remains active throughout the transition</li>
                     <li>All existing data and configurations are preserved</li>
                     <li>No service interruption during the plan change</li>
                     <li>Billing adjustments will be reflected in your next invoice</li>
                     <li>You can modify your plan again at any time</li>
-                </ul>
+            </ul>
             </div>
             
             <div class="support-section">
@@ -861,7 +865,7 @@ export const formatCurrency = (amount: number, currency: string = 'gbp'): string
     style: 'currency',
     currency: currency.toUpperCase()
   }).format(amount / 100) // Convert from cents to pounds
-}
+} 
 export const expiringSoonEmail = ({
   name,
   planName,
@@ -912,9 +916,9 @@ export const expiringSoonEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -922,11 +926,13 @@ export const expiringSoonEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -940,7 +946,7 @@ export const expiringSoonEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .expiry-warning { 
@@ -1128,7 +1134,7 @@ export const expiringSoonEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>⏰ Subscription Expiring Soon</h1>
                 <p>Time to renew your InstaLabel subscription</p>
             </div>
@@ -1260,9 +1266,9 @@ export const renewalReminderEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -1270,11 +1276,13 @@ export const renewalReminderEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -1288,7 +1296,7 @@ export const renewalReminderEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .renewal-highlight { 
@@ -1526,7 +1534,7 @@ export const renewalReminderEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>🔄 Subscription Renewal</h1>
                 <p>Your subscription will renew automatically</p>
             </div>
@@ -1670,9 +1678,9 @@ export const renewalConfirmationEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -1680,11 +1688,13 @@ export const renewalConfirmationEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -1698,7 +1708,7 @@ export const renewalConfirmationEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -1864,7 +1874,7 @@ export const renewalConfirmationEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Subscription Renewed</h1>
                 <p>Your InstaLabel subscription continues seamlessly</p>
             </div>
@@ -1982,9 +1992,9 @@ export const paymentFailedEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -1992,11 +2002,13 @@ export const paymentFailedEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -2010,7 +2022,7 @@ export const paymentFailedEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -2194,7 +2206,7 @@ export const paymentFailedEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Payment Issue</h1>
                 <p>Action required for your subscription</p>
             </div>
@@ -2322,9 +2334,9 @@ export const trialEndingSoonEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -2332,11 +2344,13 @@ export const trialEndingSoonEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -2350,7 +2364,7 @@ export const trialEndingSoonEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -2551,7 +2565,7 @@ export const trialEndingSoonEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Trial Ending Soon</h1>
                 <p>Don't miss out on continued access to InstaLabel</p>
             </div>
@@ -2685,9 +2699,9 @@ export const labelOrderConfirmationEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -2695,11 +2709,13 @@ export const labelOrderConfirmationEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -2713,7 +2729,7 @@ export const labelOrderConfirmationEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -2890,7 +2906,7 @@ export const labelOrderConfirmationEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Order Confirmed!</h1>
                 <p>Your premium labels are on their way</p>
             </div>
@@ -3017,9 +3033,9 @@ export const labelOrderShippedEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -3027,11 +3043,13 @@ export const labelOrderShippedEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .content { 
             padding: 40px 30px; 
@@ -3045,7 +3063,7 @@ export const labelOrderShippedEmail = ({
         .intro-text { 
             font-size: 16px; 
             margin-bottom: 32px; 
-            color: #555;
+            color: #333;
             line-height: 1.7;
         }
         .info-card { 
@@ -3292,9 +3310,9 @@ export const labelOrderShippedEmail = ({
     <div class="email-container">
         <div class="header">
             <div class="header-content">
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>Your Labels Have Shipped!</h1>
-                <p>Track your package and get ready to label</p>
+                <p>Your order is on its way. Track your package with Royal Mail using your address.</p>
             </div>
         </div>
         
@@ -3428,9 +3446,9 @@ export const labelOrderAdminNotificationEmail = ({
         }
         .header-content { position: relative; z-index: 1; }
         .logo { 
-            max-width: 200px; 
+            max-width: 120px; 
             height: auto; 
-            margin-bottom: 20px;
+            margin-bottom: 8px;
             filter: brightness(0) invert(1);
         }
         .header h1 { 
@@ -3438,11 +3456,13 @@ export const labelOrderAdminNotificationEmail = ({
             font-weight: 700; 
             margin-bottom: 8px;
             letter-spacing: -0.5px;
+            color: #fff;
         }
         .header p { 
             font-size: 16px; 
             opacity: 0.9;
             font-weight: 400;
+            color: #fff;
         }
         .urgent-badge {
             display: inline-block;
@@ -3699,7 +3719,7 @@ export const labelOrderAdminNotificationEmail = ({
         <div class="header">
             <div class="header-content">
                 <div class="urgent-badge">Action Required</div>
-                <img src="${process.env.NEXT_PUBLIC_APP_URL}/logo_long.png" alt="InstaLabel" class="logo">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
                 <h1>New Order Received</h1>
                 <p>Label order payment confirmed - process immediately</p>
             </div>

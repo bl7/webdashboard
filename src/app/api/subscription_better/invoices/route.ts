@@ -11,10 +11,10 @@ export async function GET(req: NextRequest) {
   try {
     let stripeCustomerIds: string[] = []
     if (user_id) {
-      const result = await client.query("SELECT stripe_customer_id FROM subscription_better WHERE user_id = $1", [user_id])
-      if (result.rowCount === 0 || !result.rows[0].stripe_customer_id) {
-        return NextResponse.json({ invoices: [] })
-      }
+    const result = await client.query("SELECT stripe_customer_id FROM subscription_better WHERE user_id = $1", [user_id])
+    if (result.rowCount === 0 || !result.rows[0].stripe_customer_id) {
+      return NextResponse.json({ invoices: [] })
+    }
       stripeCustomerIds = [result.rows[0].stripe_customer_id]
     } else {
       const result = await client.query("SELECT DISTINCT stripe_customer_id FROM subscription_better WHERE stripe_customer_id IS NOT NULL")
