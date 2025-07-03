@@ -101,19 +101,7 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="border-t border-white/10 py-6 text-center text-sm text-white/60">
-          <p>
-            &copy; {new Date().getFullYear()} InstaLabel. All Rights Reserved. Built by{" "}
-            <Link
-              href="https://www.nischaltimalsina.com.np"
-              className="text-white hover:underline"
-              target="_blank"
-            >
-              Nischal Timalsina
-            </Link>
-          </p>
-        </div>
+      
       </footer>
     </>
   )
