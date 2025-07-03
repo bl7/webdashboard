@@ -20,26 +20,35 @@ export const LabelsHero = () => {
         <div className="relative mt-8 sm:mt-12 h-80 sm:h-[500px] w-full max-w-lg md:mt-0">
           {/* Image 1 - Top left, slightly rotated */}
           <div className="absolute left-0 top-0 h-24 w-32 sm:h-36 sm:w-48 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
-            <img 
+            <Image 
               src="/labels/label1.png" 
               alt="Food prep label example"
+              width={192}
+              height={256}
               className="h-full w-full object-cover"
+              priority
             />
           </div>
           {/* Image 2 - Top right, rotated other way */}
           <div className="absolute right-0 top-6 sm:top-8 h-28 w-36 sm:h-40 sm:w-56 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
-            <img 
+            <Image 
               src="/labels/label2.png" 
               alt="Allergen label example"
+              width={224}
+              height={320}
               className="h-full w-full object-cover"
+              priority
             />
           </div>
           {/* Image 3 - Center left, tilted */}
           <div className="absolute left-2 sm:left-4 top-28 sm:top-40 h-28 w-36 sm:h-40 sm:w-56 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
-            <img 
+            <Image 
               src="/labels/label3.png" 
               alt="PPDS compliant label"
+              width={224}
+              height={320}
               className="h-full w-full object-cover"
+              priority
             />
           </div>
         </div>

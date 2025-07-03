@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Truck, CreditCard, RefreshCw, Download, MapPin, Phone, Mail, Calendar, CheckCircle, Clock, AlertCircle } from 'lucide-react';
+import { useLabelAISuggestion } from './hooks/useLabelAISuggestion'
 
-const LABELS_PER_BUNDLE = 5;
+const LABELS_PER_BUNDLE = 5; // 1 bundle = 5 rolls
+const LABELS_PER_ROLL = 500; // 1 roll = 500 labels
 const PRICE_PER_BUNDLE_CENTS = 1000; // $10 per bundle
 
 interface Order {
@@ -30,13 +32,34 @@ export default function OrderLabelsTab() {
   const [fetchingOrders, setFetchingOrders] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>('demo'); // fallback to 'demo' if not found
+
+  // Add duration options
+  const durationOptions = [7, 14, 30, 60];
+  const [customDays, setCustomDays] = useState<number | null>(null);
+  const [days, setDays] = useState<number>(14);
+
+  // Example: estimate usage or get from props/state
+  const labelsPerDay = 80 // TODO: Replace with real usage data
+  // Calculate total rolls and labels for the AI
+  const rollsPerBundle = LABELS_PER_BUNDLE;
+  const labelsPerRoll = LABELS_PER_ROLL;
+  // The AI should be told how many labels are in a roll (not a bundle)
+  const goal = 'Suggest how many rolls to order (1 bundle = 5 rolls, 1 roll = 500 labels)';
+  const { suggestion, loading: aiLoading, error: aiError, refetch } = useLabelAISuggestion({ usageData: { labelsPerDay, labelsPerRoll, days }, goal })
+  const [aiOrderQty, setAiOrderQty] = useState<number | null>(null)
+
+  // Calculate how long the current order will last
+  const totalRolls = bundleCount * LABELS_PER_BUNDLE;
+  const totalLabels = totalRolls * LABELS_PER_ROLL;
 
   // Fetch user profile and order history on mount
   useEffect(() => {
     fetchOrders();
-    const userId = localStorage?.getItem('userid');
-    if (userId) {
-      fetch(`/api/profile?user_id=${userId}`)
+    const storedId = localStorage?.getItem('userid');
+    if (storedId) setUserId(storedId);
+    if (storedId) {
+      fetch(`/api/profile?user_id=${storedId}`)
         .then(res => res.json())
         .then(data => {
           const p = data.profile || {};
@@ -52,6 +75,8 @@ export default function OrderLabelsTab() {
         .catch(() => {});
     }
   }, []);
+
+  const [showAISuggestion, setShowAISuggestion] = useState(false);
 
   const fetchOrders = (): void => {
     const token = localStorage?.getItem('token');
@@ -128,7 +153,7 @@ export default function OrderLabelsTab() {
       case 'shipped':
         return <CheckCircle className="w-4 h-4 text-green-600" />;
       case 'paid':
-        return <Clock className="w-4 h-4 text-blue-600" />;
+        return <Clock className="w-4 h-4 text-purple-600" />;
       default:
         return <AlertCircle className="w-4 h-4 text-gray-600" />;
     }
@@ -139,22 +164,21 @@ export default function OrderLabelsTab() {
       case 'shipped':
         return 'bg-green-50 text-green-700 border-green-200';
       case 'paid':
-        return 'bg-blue-50 text-blue-700 border-blue-200';
+        return 'bg-purple-50 text-purple-700 border-purple-200';
       default:
         return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
   const totalPrice = (bundleCount * PRICE_PER_BUNDLE_CENTS) / 100;
-  const totalLabels = bundleCount * LABELS_PER_BUNDLE;
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Package className="w-6 h-6 text-blue-600" />
+          <div className="p-2 bg-purple-100 rounded-lg">
+            <Package className="w-6 h-6 text-purple-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Label Orders</h1>
@@ -167,7 +191,7 @@ export default function OrderLabelsTab() {
         {/* Order Form */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4">
+            <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
               <h2 className="text-xl font-semibold text-white flex items-center">
                 <CreditCard className="w-5 h-5 mr-2" />
                 New Order
@@ -175,6 +199,62 @@ export default function OrderLabelsTab() {
             </div>
             
             <div className="p-6 space-y-6">
+              {/* Duration Picker and AI Suggestion */}
+              <div className="mb-6">
+                <label className="block text-sm font-semibold text-gray-900 mb-2">
+                  How long should this order last?
+                </label>
+                <div className="flex items-center gap-2 mb-2">
+                  {durationOptions.map(opt => (
+                    <button
+                      key={opt}
+                      type="button"
+                      className={`px-3 py-1 rounded-lg border text-sm font-medium ${days === opt ? 'bg-purple-500 text-white border-purple-500' : 'bg-white text-gray-700 border-gray-300'}`}
+                      onClick={() => { setDays(opt); setCustomDays(null); setShowAISuggestion(false); }}
+                    >
+                      {opt} days
+                    </button>
+                  ))}
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="Custom"
+                    value={customDays !== null ? customDays : ''}
+                    onChange={e => {
+                      const val = Number(e.target.value);
+                      setCustomDays(val);
+                      setDays(val);
+                      setShowAISuggestion(false);
+                    }}
+                    className="w-20 px-2 py-1 border rounded-lg text-sm"
+                  />
+                  <button
+                    type="button"
+                    className="ml-4 px-4 py-2 rounded-lg bg-purple-500 text-white font-semibold text-sm hover:bg-purple-600 transition"
+                    onClick={() => { refetch(); setShowAISuggestion(true); }}
+                    disabled={aiLoading}
+                  >
+                    {aiLoading ? 'Getting AI Suggestion...' : 'Get AI Suggestion'}
+                  </button>
+                </div>
+                {/* AI Suggestion Box */}
+                {showAISuggestion && (
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
+                    <div className="font-semibold text-purple-900 mb-1">AI Recommendation</div>
+                    <div className="text-xs text-purple-700 mb-2">AI considers your real usage patterns (weekends, trends, etc.)</div>
+                    {aiLoading ? (
+                      <div className="text-purple-600 animate-pulse">Loading AI suggestion...</div>
+                    ) : aiError ? (
+                      <div className="text-red-600">{aiError}</div>
+                    ) : suggestion ? (
+                      <div className="whitespace-pre-line text-purple-900">{suggestion}</div>
+                    ) : (
+                      <div className="text-gray-500">No suggestion yet.</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               {/* Bundle Selection */}
               <div className="bg-gray-50 rounded-lg p-4">
                 <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -187,14 +267,15 @@ export default function OrderLabelsTab() {
                       min={1}
                       value={bundleCount}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBundleCount(Number(e.target.value))}
-                      className="block w-24 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-center font-medium"
+                      className="block w-24 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-center font-medium"
                       style={{ MozAppearance: 'textfield' } as React.CSSProperties}
                       inputMode="numeric"
                     />
                   </div>
                   <div className="text-sm text-gray-600">
-                    <span className="font-medium">{totalLabels} labels total</span>
-                    <div className="text-xs text-gray-500">1 bundle = 5 labels</div>
+                    <span className="font-medium">{totalRolls} rolls</span>
+                    <span className="font-medium ml-2">({totalLabels} labels total)</span>
+                    <div className="text-xs text-gray-500">1 bundle = 5 rolls, 1 roll = 500 labels</div>
                   </div>
                 </div>
               </div>
@@ -214,7 +295,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={address1}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress1(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       required
                       placeholder="Street address"
                     />
@@ -227,7 +308,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={address2}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress2(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       placeholder="Apartment, suite, etc."
                     />
                   </div>
@@ -239,7 +320,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={city}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCity(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       required
                     />
                   </div>
@@ -251,7 +332,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={state}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setState(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                   <div>
@@ -262,7 +343,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={country}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCountry(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       required
                     />
                   </div>
@@ -274,7 +355,7 @@ export default function OrderLabelsTab() {
                       type="text"
                       value={postalCode}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPostalCode(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     />
                   </div>
                 </div>
@@ -295,7 +376,7 @@ export default function OrderLabelsTab() {
                       type="tel"
                       value={phone}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhone(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       placeholder="+1 (555) 000-0000"
                     />
                   </div>
@@ -307,7 +388,7 @@ export default function OrderLabelsTab() {
                       type="email"
                       value={email}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                       required
                       placeholder="you@example.com"
                     />
@@ -333,7 +414,7 @@ export default function OrderLabelsTab() {
               <button
                 type="button"
                 onClick={handleOrder}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow-sm hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-semibold py-3 px-4 rounded-lg shadow-sm hover:from-purple-700 hover:to-purple-800 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 disabled={loading}
               >
                 {loading ? (
@@ -372,15 +453,15 @@ export default function OrderLabelsTab() {
               <div className="border-t pt-3">
                 <div className="flex justify-between">
                   <span className="text-base font-semibold text-gray-900">Total</span>
-                  <span className="text-lg font-bold text-blue-600">${totalPrice.toFixed(2)}</span>
+                  <span className="text-lg font-bold text-purple-600">${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-blue-50 rounded-xl p-6 border border-blue-200">
-            <h4 className="font-semibold text-blue-900 mb-2">What you'll receive</h4>
-            <ul className="text-sm text-blue-800 space-y-1">
+          <div className="bg-purple-50 rounded-xl p-6 border border-purple-200">
+            <h4 className="font-semibold text-purple-900 mb-2">What you'll receive</h4>
+            <ul className="text-sm text-purple-800 space-y-1">
               <li>• High-quality shipping labels</li>
               <li>• Fast processing & shipping</li>
               <li>• Email confirmation & tracking</li>
@@ -401,7 +482,7 @@ export default function OrderLabelsTab() {
             <button
               type="button"
               onClick={fetchOrders}
-              className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+              className="inline-flex items-center px-3 py-1.5 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
               disabled={fetchingOrders}
             >
               <RefreshCw className={`w-4 h-4 mr-1 ${fetchingOrders ? 'animate-spin' : ''}`} />
@@ -487,7 +568,7 @@ export default function OrderLabelsTab() {
                         href={order.receipt_url} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                        className="inline-flex items-center text-purple-600 hover:text-purple-800 font-medium"
                       >
                         <Download className="w-4 h-4 mr-1" />
                         Download
