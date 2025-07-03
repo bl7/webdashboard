@@ -724,40 +724,40 @@ export default function LabelDemo() {
               {(activeTab === "ingredients"
                 ? (paginatedIngredients as IngredientItem[])
                 : (paginatedMenuItems as MenuItem[])
-              ).map((item, idx) => (
-                <div key={item.id} className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
-                  {activeTab === "ingredients" ? (
-                    <>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-gray-900 whitespace-normal break-words">{item.name}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500 mr-2">Expires: {item.expiryDate}</span>
-                        <Button
-                          onClick={() => addToPrintQueue(item, activeTab)}
-                          disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
-                          variant="default"
-                        >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="flex items-center gap-3 min-w-0">
-                        {/* Menu item rendering (keep as is, or add icons/badges if needed) */}
-                        <p className="font-semibold truncate text-gray-900">{item.name}</p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-gray-500 mr-2">Expires: {item.expiryDate}</span>
-                        <Button
-                          onClick={() => addToPrintQueue(item, activeTab)}
-                          disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
-                          variant="default"
-                        >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
+              ).map((item, idx) => {
+                return (
+                  <div key={item.id} className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
+                    {activeTab === "ingredients" ? (
+                      <>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-gray-900 whitespace-normal break-words">{item.name}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => addToPrintQueue(item, activeTab)}
+                            disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                            variant="default"
+                          >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-3 min-w-0">
+                          {/* Menu item rendering (keep as is, or add icons/badges if needed) */}
+                          <p className="font-semibold truncate text-gray-900">{item.name}</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            onClick={() => addToPrintQueue(item, activeTab)}
+                            disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                            variant="default"
+                          >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
               {/* Pagination */}
               <div className="flex items-center justify-center gap-2 mt-4">
                 <Button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} variant="outline" className="flex items-center gap-1"><ChevronLeftIcon className="h-4 w-4" /></Button>
