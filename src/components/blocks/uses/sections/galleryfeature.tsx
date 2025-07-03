@@ -1,11 +1,8 @@
 // components/RealWorldGallery.tsx
 import Image from "next/image"
-import A1 from "../../../../assets/images/athome.jpg"
 import A2 from "../../../../assets/images/kitchen.jpg"
 import A3 from "../../../../assets/images/value.jpeg"
 import A4 from "../../../../assets/images/before.png"
-import A5 from "../../../../assets/images/after.png"
-import A6 from "../../../../assets/images/alltime.jpeg"
 
 const allergens = [
   "Celery",
@@ -75,26 +72,6 @@ export const GalleryFeature = () => {
           </div>
         </div>
 
-        {/* Auto Styling Section */}
-        <div className="flex flex-col items-start gap-8 sm:gap-12 md:flex-row md:items-center">
-          <div className="order-2 md:order-1 md:w-1/2">
-            <h3 className="text-3xl font-bold">Styled automatically</h3>
-            <p className="text-lg text-gray-700">
-              Bold. Italic. Underlined. InstaLabel does it all — instantly — for effortless
-              Natasha's Law compliance.
-            </p>
-          </div>
-          <div className="order-1 overflow-hidden rounded-xl shadow-lg md:order-2 md:w-1/2">
-            <Image
-              src={A1}
-              alt="Styled allergens in ingredient list"
-              width={500}
-              height={350}
-              className="object-cover"
-            />
-          </div>
-        </div>
-
         {/* Real Kitchens Section */}
         <div className="text-center">
           <h3 className="mb-6 sm:mb-10 text-2xl sm:text-3xl font-bold">Designed for real kitchens</h3>
@@ -117,24 +94,9 @@ export const GalleryFeature = () => {
                 Print labels in 3 taps — phone, tablet, or laptop.
               </div>
             </div>
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A5} alt="Kitchen 4" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Crisp, clear allergen labels — every time.
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A6} alt="Kitchen 5" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Labels that survive fridge, freezer & steam.
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A1} alt="Kitchen 6" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Print labels in 3 taps — phone, tablet, or laptop.
-              </div>
-            </div>
+        
+           
+           
           </div>
         </div>
       </div>

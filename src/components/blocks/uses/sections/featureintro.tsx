@@ -1,74 +1,120 @@
 // components/UseCasesSection.tsx
 import Image from "next/image"
-import Natasha from "../../../../assets/images/athome.jpg"
-import PPDS from "../../../../assets/images/deliver.jpg"
+import Natasha from "../../../../assets/images/natashalaw.png"
+import PPDS from "../../../../assets/images/prepandfood.jpg"
+
 export const FeatureIntro = () => {
   return (
-    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-24">
-      <div className="mx-auto max-w-6xl space-y-20 sm:space-y-32">
-        {/* Section Title */}
-
-        {/* Block 1 – Natasha's Law */}
-        <div className="flex flex-col items-center gap-8 sm:gap-12 md:flex-row">
-          <div className="w-full md:w-1/2">
-            <Image
-              src={Natasha}
-              alt="Natasha's Law Label"
-              width={600}
-              height={400}
-              className="rounded-2xl border shadow-xl"
-            />
+    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(245,158,11,0.05),transparent_50%)]" />
+      
+      <div className="mx-auto max-w-6xl space-y-16 relative">
+        {/* Images Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Image 1 – Natasha's Law */}
+          <div className="group relative">
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
+            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20 group-hover:shadow-2xl transition-all duration-500">
+              <Image
+                src={Natasha}
+                alt="Natasha's Law Label"
+                width={600}
+                height={400}
+                className="rounded-xl w-full h-auto"
+              />
+            </div>
           </div>
-          <div className="w-full space-y-4 md:w-1/2">
-            <h3 className="flex items-center gap-2 text-2xl font-semibold text-blue-700">
-              <span>📋</span> Natasha's Law Labels
-            </h3>
-            <p className="text-gray-700">
-              Instantly print fully compliant allergen labels with key ingredients highlighted in{" "}
-              <strong>bold</strong>, <em>italic</em> or <u>underline</u>. Perfect for pre-packed
-              items, grab-and-go, and made-to-order food.
-            </p>
-            <ul className="list-inside list-disc space-y-1 pt-2 text-gray-800">
-              <li>Supports all 14 required allergens</li>
-              <li>Editable templates stored in the cloud</li>
-              <li>Mobile-friendly reprint from any device</li>
-              <li>No training needed — print in 3 taps</li>
-            </ul>
+
+          {/* Image 2 – Prep Labels */}
+          <div className="group relative">
+            <div className="absolute -inset-4 bg-gradient-to-r from-orange-600/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
+            <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20 group-hover:shadow-2xl transition-all duration-500">
+              <Image
+                src={PPDS}
+                alt="Prep Label Example"
+                width={600}
+                height={400}
+                className="rounded-xl w-full h-auto"
+              />
+            </div>
           </div>
         </div>
 
-        {/* Block 2 – Prep Labels */}
-        <div className="flex flex-col items-center gap-8 sm:gap-12 md:flex-row-reverse">
-          <div className="w-full md:w-1/2">
-            <Image
-              src={PPDS}
-              alt="Prep Label Example"
-              width={600}
-              height={400}
-              className="rounded-2xl border shadow-xl"
-            />
+        {/* Text Content Row */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          {/* Text 1 – Natasha's Law */}
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-full border border-blue-200">
+                <span className="text-2xl">📋</span>
+                <span className="text-sm font-medium text-blue-700 uppercase tracking-wider">Compliance Made Simple</span>
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 leading-tight">
+                Natasha's Law Labels
+              </h3>
+            </div>
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Instantly print fully compliant allergen labels with key ingredients highlighted in{" "}
+              <strong className="text-blue-600">bold</strong>, <em className="text-blue-600">italic</em> or{" "}
+              <u className="text-blue-600">underline</u>. Perfect for pre-packed items, grab-and-go, and made-to-order food.
+            </p>
+            <div className="grid grid-cols-1 gap-3 pt-4">
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Supports all 14 required allergens</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Editable templates stored in the cloud</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Mobile-friendly reprint from any device</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">No training needed — print in 3 taps</span>
+              </div>
+            </div>
           </div>
-          <div className="w-full space-y-4 md:w-1/2">
-            <h3 className="flex items-center gap-2 text-2xl font-semibold text-orange-600">
-              <span>🥡</span> Prep & Food Storage Labels
-            </h3>
-            <p className="text-gray-700">
+
+          {/* Text 2 – Prep Labels */}
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-3 bg-orange-50 px-4 py-2 rounded-full border border-orange-200">
+                <span className="text-2xl">🥡</span>
+                <span className="text-sm font-medium text-orange-700 uppercase tracking-wider">Kitchen Control</span>
+              </div>
+              <h3 className="text-3xl font-bold text-gray-900 leading-tight">
+                Prep & Food Storage Labels
+              </h3>
+            </div>
+            <p className="text-lg text-gray-600 leading-relaxed">
               Stay in control of food safety with fast, customisable labels for every stage — prep,
               defrost, use-by, and more. Designed to last in fridges, freezers, and busy kitchens.
             </p>
-            <ul className="list-inside list-disc space-y-1 pt-2 text-gray-800">
-              <li>Prebuilt formats: use-by, open, thawed</li>
-              <li>Durable labels: water, heat & freezer-safe</li>
-              <li>Smart reprint for daily use items</li>
-              <li>Helps meet HACCP & FSA requirements</li>
-            </ul>
+            <div className="grid grid-cols-1 gap-3 pt-4">
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Prebuilt formats: use-by, open, thawed</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Durable labels: water, heat & freezer-safe</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Smart reprint for daily use items</span>
+              </div>
+              <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
+                <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
+                <span className="text-gray-700 text-sm">Helps meet HACCP & FSA requirements</span>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex justify-center mt-8 sm:mt-12">
-        <a href="/bookdemo" className="btn-primary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
-          Book a Free Demo
-        </a>
       </div>
     </section>
   )
