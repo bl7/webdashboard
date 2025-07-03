@@ -17,9 +17,9 @@ export const LabelsHero = () => {
         </div>
 
         {/* Images Grid - Tedha Medha Style */}
-        <div className="relative mt-8 sm:mt-12 h-64 sm:h-[400px] w-full max-w-md md:mt-0">
+        <div className="relative mt-8 sm:mt-12 h-80 sm:h-[500px] w-full max-w-lg md:mt-0">
           {/* Image 1 - Top left, slightly rotated */}
-          <div className="absolute left-0 top-0 h-16 w-20 sm:h-24 sm:w-32 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-0 top-0 h-24 w-32 sm:h-36 sm:w-48 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label1.png" 
               alt="Food prep label example"
@@ -27,7 +27,7 @@ export const LabelsHero = () => {
             />
           </div>
           {/* Image 2 - Top right, rotated other way */}
-          <div className="absolute right-0 top-6 sm:top-8 h-20 w-24 sm:h-28 sm:w-36 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute right-0 top-6 sm:top-8 h-28 w-36 sm:h-40 sm:w-56 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label2.png" 
               alt="Allergen label example"
@@ -35,7 +35,7 @@ export const LabelsHero = () => {
             />
           </div>
           {/* Image 3 - Center left, tilted */}
-          <div className="absolute left-2 sm:left-4 top-20 sm:top-32 h-20 w-24 sm:h-32 sm:w-40 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-2 sm:left-4 top-28 sm:top-40 h-28 w-36 sm:h-40 sm:w-56 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label3.png" 
               alt="PPDS compliant label"

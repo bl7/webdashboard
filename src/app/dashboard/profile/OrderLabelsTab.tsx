@@ -65,12 +65,22 @@ export default function OrderLabelsTab() {
       .finally(() => setFetchingOrders(false));
   };
 
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const validatePhone = (phone: string) => phone === '' || /^\+?\d{7,15}$/.test(phone.replace(/[^\d+]/g, ''))
+
   const handleOrder = async () => {
     if (!address1 || !city || !country || !email) {
       setError('Please fill in all required fields');
       return;
     }
-    
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!validatePhone(phone)) {
+      setError('Please enter a valid phone number (digits only, 7-15 digits, optional +).');
+      return;
+    }
     setLoading(true);
     setError(null);
     setSuccess(null);

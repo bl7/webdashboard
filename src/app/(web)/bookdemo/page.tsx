@@ -23,10 +23,24 @@ export default function BookDemoPage() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const validatePhone = (phone: string) => phone === '' || /^\+?\d{7,15}$/.test(phone.replace(/[^\d+]/g, ''))
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setError('')
+    // Validation
+    if (!validateEmail(form.email)) {
+      setError('Please enter a valid email address.')
+      setLoading(false)
+      return
+    }
+    if (!validatePhone(form.phone)) {
+      setError('Please enter a valid phone number (digits only, 7-15 digits, optional +).')
+      setLoading(false)
+      return
+    }
     try {
       const res = await fetch('/api/bookdemo', {
         method: 'POST',
