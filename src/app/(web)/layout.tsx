@@ -6,7 +6,7 @@ export default function WebLayout({
   children: React.ReactNode
 }>) {
   return (
-    <main className="h-screen w-screen scroll-smooth">
+    <main className="min-h-screen overflow-x-hidden scroll-smooth">
       <Header />
       {children}
       <Footer />

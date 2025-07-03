@@ -4,12 +4,12 @@ import Natasha from "../../../../assets/images/athome.jpg"
 import PPDS from "../../../../assets/images/deliver.jpg"
 export const FeatureIntro = () => {
   return (
-    <section className="px-66 -mt-16 py-24">
-      <div className="mx-auto max-w-6xl space-y-32">
+    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-24">
+      <div className="mx-auto max-w-6xl space-y-20 sm:space-y-32">
         {/* Section Title */}
 
         {/* Block 1 – Natasha's Law */}
-        <div className="flex flex-col items-center gap-12 md:flex-row">
+        <div className="flex flex-col items-center gap-8 sm:gap-12 md:flex-row">
           <div className="w-full md:w-1/2">
             <Image
               src={Natasha}
@@ -38,7 +38,7 @@ export const FeatureIntro = () => {
         </div>
 
         {/* Block 2 – Prep Labels */}
-        <div className="flex flex-col items-center gap-12 md:flex-row-reverse">
+        <div className="flex flex-col items-center gap-8 sm:gap-12 md:flex-row-reverse">
           <div className="w-full md:w-1/2">
             <Image
               src={PPDS}
@@ -65,8 +65,8 @@ export const FeatureIntro = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center mt-12">
-        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+      <div className="flex justify-center mt-8 sm:mt-12">
+        <a href="/bookdemo" className="btn-primary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
           Book a Free Demo
         </a>
       </div>

@@ -70,12 +70,12 @@ const roles = [
 
 export const CoreFeaturesGrid = () => {
   return (
-    <section className="-mt-16 py-16">
-      <div className="container px-4 sm:px-6 md:px-12 lg:px-16">
-        <h2 className="mb-10 text-center text-3xl font-bold text-gray-900">
+    <section className="-mt-8 sm:-mt-16 py-8 sm:py-16">
+      <div className="container px-2 sm:px-4 md:px-12 lg:px-16">
+        <h2 className="mb-6 sm:mb-10 text-center text-2xl sm:text-3xl font-bold text-gray-900">
           Built for the Chaos of a Real Kitchen
         </h2>
-        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:gap-10 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={i}
@@ -93,9 +93,9 @@ export const CoreFeaturesGrid = () => {
           ))}
         </div>
 
-        <div className="mt-20">
-          <h3 className="mb-6 text-center text-xl font-semibold">Use Case Snapshots</h3>
-          <div className="grid gap-6 md:grid-cols-3">
+        <div className="mt-10 sm:mt-20">
+          <h3 className="mb-4 sm:mb-6 text-center text-lg sm:text-xl font-semibold">Use Case Snapshots</h3>
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
             {roles.map((r, i) => (
               <div key={i} className="rounded-xl bg-gray-100 p-5 text-center shadow-sm">
                 <div className="mb-2 text-3xl">{r.emoji}</div>

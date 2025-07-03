@@ -28,10 +28,10 @@ const customAllergens = ["Ginger", "Strawberry"]
 
 export const GalleryFeature = () => {
   return (
-    <section className="bg-white px-6">
-      <div className="mx-auto max-w-6xl space-y-24">
+    <section className="bg-white px-2 sm:px-6 py-12 sm:py-24">
+      <div className="mx-auto max-w-6xl space-y-16 sm:space-y-24">
         {/* Allergen Highlighting Section */}
-        <div className="flex flex-col items-start gap-12 md:flex-row md:items-center">
+        <div className="flex flex-col items-start gap-8 sm:gap-12 md:flex-row md:items-center">
           <div className="space-y-6 md:w-1/2">
             <h3 className="text-3xl font-bold">Allergens. Auto-highlighted.</h3>
             <p className="text-lg text-gray-700">
@@ -76,7 +76,7 @@ export const GalleryFeature = () => {
         </div>
 
         {/* Auto Styling Section */}
-        <div className="flex flex-col items-start gap-12 md:flex-row md:items-center">
+        <div className="flex flex-col items-start gap-8 sm:gap-12 md:flex-row md:items-center">
           <div className="order-2 md:order-1 md:w-1/2">
             <h3 className="text-3xl font-bold">Styled automatically</h3>
             <p className="text-lg text-gray-700">
@@ -97,8 +97,8 @@ export const GalleryFeature = () => {
 
         {/* Real Kitchens Section */}
         <div className="text-center">
-          <h3 className="mb-10 text-3xl font-bold">Designed for real kitchens</h3>
-          <div className="grid gap-8 md:grid-cols-3">
+          <h3 className="mb-6 sm:mb-10 text-2xl sm:text-3xl font-bold">Designed for real kitchens</h3>
+          <div className="grid gap-4 sm:gap-8 md:grid-cols-3">
             <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
               <Image src={A2} alt="Kitchen 1" width={400} height={320} className="object-cover" />
               <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
@@ -138,8 +138,8 @@ export const GalleryFeature = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center mt-12">
-        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+      <div className="flex justify-center mt-8 sm:mt-12">
+        <a href="/bookdemo" className="btn-primary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
           Book a Free Demo
         </a>
       </div>

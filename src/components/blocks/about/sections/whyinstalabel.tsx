@@ -3,14 +3,14 @@ import { Clock, ClipboardList, ShieldCheck } from "lucide-react"
 
 export const WhyInstaLabel = () => {
   return (
-    <section className="bg-white px-6 py-20">
+    <section className="bg-white px-2 sm:px-6 py-10 sm:py-20">
       <div className="mx-auto max-w-7xl text-center">
-        <h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">Why InstaLabel?</h2>
-        <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
+        <h2 className="text-2xl sm:text-4xl font-extrabold text-gray-900 sm:text-5xl">Why InstaLabel?</h2>
+        <p className="mx-auto mt-3 sm:mt-4 max-w-2xl sm:max-w-3xl text-base sm:text-lg text-gray-600">
           Born from real kitchen challenges, designed to simplify and secure your food operations.
         </p>
 
-        <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-3 sm:gap-8">
+        <div className="mt-8 sm:mt-16 grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-3">
           {/* Card 1 */}
           <div className="flex flex-col items-center text-center">
             <Clock size={48} className="mb-6 text-primary" />

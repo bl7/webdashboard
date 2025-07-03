@@ -97,26 +97,26 @@ export default function BlogPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="bg-white py-16">
-        <div className="container mx-auto px-4">
+      <section className="bg-white py-12 sm:py-16">
+        <div className="container mx-auto px-2 sm:px-4">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Kitchen Labeling Blog
             </h1>
-            <p className="text-xl text-gray-600 mb-8">
+            <p className="text-base sm:text-xl text-gray-600 mb-6 sm:mb-8">
               Expert insights on food safety, kitchen management, and restaurant technology
             </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button variant="outline" className="rounded-full">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">
                 Food Safety
               </Button>
-              <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">
                 Technology
               </Button>
-              <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">
                 Case Studies
               </Button>
-              <Button variant="outline" className="rounded-full">
+              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">
                 Best Practices
               </Button>
             </div>
@@ -125,40 +125,40 @@ export default function BlogPage() {
       </section>
 
       {/* Featured Posts */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Articles</h2>
-          <div className="grid md:grid-cols-2 gap-8">
+      <section className="py-12 sm:py-16">
+        <div className="container mx-auto px-2 sm:px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">Featured Articles</h2>
+          <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
             {featuredPosts.map((post) => (
               <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-medium text-primary">{post.category}</span>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <span className="text-xs sm:text-sm font-medium text-primary">{post.category}</span>
                     <span className="text-gray-400">•</span>
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Calendar className="h-4 w-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                      <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                       {new Date(post.date).toLocaleDateString()}
                     </div>
                   </div>
-                  <CardTitle className="text-xl font-bold text-gray-900 hover:text-primary transition-colors">
+                  <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 hover:text-primary transition-colors">
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-gray-600 mb-4">
+                  <CardDescription className="text-gray-600 mb-3 sm:mb-4">
                     {post.description}
                   </CardDescription>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Clock className="h-4 w-4" />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                      <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                       {post.readTime}
                     </div>
                     <Button variant="ghost" size="sm" asChild>
                       <Link href={`/blog/${post.slug}`}>
                         Read More
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -170,40 +170,40 @@ export default function BlogPage() {
       </section>
 
       {/* All Posts */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">All Articles</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="py-12 sm:py-16 bg-white">
+        <div className="container mx-auto px-2 sm:px-4">
+          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 sm:mb-8">All Articles</h2>
+          <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
             {regularPosts.map((post) => (
               <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                <CardHeader className="pb-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-sm font-medium text-primary">{post.category}</span>
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                    <span className="text-xs sm:text-sm font-medium text-primary">{post.category}</span>
                     <span className="text-gray-400">•</span>
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Calendar className="h-4 w-4" />
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                      <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
                       {new Date(post.date).toLocaleDateString()}
                     </div>
                   </div>
-                  <CardTitle className="text-lg font-bold text-gray-900 hover:text-primary transition-colors">
+                  <CardTitle className="text-base sm:text-lg font-bold text-gray-900 hover:text-primary transition-colors">
                     <Link href={`/blog/${post.slug}`}>
                       {post.title}
                     </Link>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-gray-600 mb-4 line-clamp-3">
+                  <CardDescription className="text-gray-600 mb-3 sm:mb-4 line-clamp-3">
                     {post.description}
                   </CardDescription>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1 text-sm text-gray-500">
-                      <Clock className="h-4 w-4" />
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex items-center gap-1 text-xs sm:text-sm text-gray-500">
+                      <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
                       {post.readTime}
                     </div>
                     <Button variant="ghost" size="sm" asChild>
                       <Link href={`/blog/${post.slug}`}>
                         Read More
-                        <ArrowRight className="ml-2 h-4 w-4" />
+                        <ArrowRight className="ml-1 sm:ml-2 h-3 w-3 sm:h-4 sm:w-4" />
                       </Link>
                     </Button>
                   </div>
@@ -214,29 +214,6 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-primary text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Transform Your Kitchen Labeling?
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Join hundreds of restaurants using InstaLabel to improve food safety and kitchen efficiency.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button size="lg" variant="secondary" asChild>
-              <Link href="/register">
-                Start Free Trial
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" asChild>
-              <Link href="/features">
-                View Features
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
     </div>
   )
 } 

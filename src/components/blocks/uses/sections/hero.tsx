@@ -4,48 +4,44 @@ import Image from "next/image"
 
 export const LabelsHero = () => {
   return (
-    <section className="relative overflow-visible px-4 py-24 sm:px-6 lg:px-16">
+    <section className="relative overflow-visible px-2 sm:px-4 py-12 sm:py-24 lg:px-16">
       <div className="container relative z-10 mx-auto flex flex-wrap-reverse items-center justify-center text-pretty md:flex-nowrap lg:justify-between">
         {/* Text Content */}
-        <div className="flex flex-col items-start justify-center text-center md:text-left">
-          <h1 className="max-w-4xl text-4xl font-bold md:text-5xl lg:text-6xl">
+        <div className="flex flex-col items-start justify-center text-center md:text-left w-full md:w-auto">
+          <h1 className="max-w-2xl sm:max-w-4xl text-2xl sm:text-4xl font-bold md:text-5xl lg:text-6xl">
             Natasha's Law & Food-Prep Labels – Fast, Clear, Compliant.
           </h1>
-          <p className="mt-4 max-w-xl text-lg text-muted-foreground">
+          <p className="mt-4 max-w-xl text-base sm:text-lg text-muted-foreground">
             Print allergy-friendly ingredient, prep, cooked, and pre-packed‑for‑direct‑sale (PPDS) labels in seconds. Highlight 14 UK allergens in bold, stay inspection-ready, meet Natasha's Law, and build trust with clear, legible labelling.
           </p>
         </div>
 
         {/* Images Grid - Tedha Medha Style */}
-        <div className="relative mt-12 h-[400px] w-full max-w-md md:mt-0">
+        <div className="relative mt-8 sm:mt-12 h-64 sm:h-[400px] w-full max-w-md md:mt-0">
           {/* Image 1 - Top left, slightly rotated */}
-          <div className="absolute left-0 top-0 h-24 w-32 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-0 top-0 h-16 w-20 sm:h-24 sm:w-32 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label1.png" 
               alt="Food prep label example"
               className="h-full w-full object-cover"
             />
           </div>
-          
           {/* Image 2 - Top right, rotated other way */}
-          <div className="absolute right-0 top-8 h-28 w-36 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute right-0 top-6 sm:top-8 h-20 w-24 sm:h-28 sm:w-36 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label2.png" 
               alt="Allergen label example"
               className="h-full w-full object-cover"
             />
           </div>
-          
           {/* Image 3 - Center left, tilted */}
-          <div className="absolute left-4 top-32 h-32 w-40 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-2 sm:left-4 top-20 sm:top-32 h-20 w-24 sm:h-32 sm:w-40 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <img 
               src="/labels/label3.png" 
               alt="PPDS compliant label"
               className="h-full w-full object-cover"
             />
           </div>
-          
-         
         </div>
       </div>
 

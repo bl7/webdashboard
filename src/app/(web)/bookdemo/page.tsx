@@ -52,29 +52,26 @@ export default function BookDemoPage() {
         <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-r from-purple-400/15 to-pink-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 py-12">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 py-8 sm:py-12">
+        <div className="grid gap-10 sm:gap-16 items-start lg:grid-cols-2">
           {/* Left Column - Hero Content */}
           <div className="space-y-8">
             <div className="space-y-6">
-            
-              
-              <h1 className="text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent leading-tight">
                 Experience the
                 <span className="block ">
                   Future of Kitchen
                 </span>
                 Labeling
               </h1>
-              
-              <p className="text-xl text-slate-600 leading-relaxed max-w-xl">
+              <p className="text-base sm:text-xl text-slate-600 leading-relaxed max-w-xl">
                 Transform your kitchen operations with our intelligent labeling platform. 
                 Book a personalized demo and see how InstaLabel can revolutionize your workflow.
               </p>
             </div>
 
             {/* Benefits Grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
                 { icon: Zap, title: "Instant Setup", desc: "Get started in minutes" },
                 { icon: Shield, title: "100% Compliant", desc: "Always regulation-ready" },
@@ -90,35 +87,35 @@ export default function BookDemoPage() {
             </div>
 
             {/* Social Proof */}
-            <div className="p-6 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl border border-emerald-200/50 shadow-lg">
-              <div className="flex items-center gap-3 mb-3">
+            <div className="p-4 sm:p-6 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl border border-emerald-200/50 shadow-lg">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: `${i * 0.2}s`}}></div>
                 ))}
-                <span className="text-emerald-700 font-semibold">Trusted by 500+ kitchens worldwide</span>
+                <span className="text-emerald-700 font-semibold text-xs sm:text-base">Trusted by 500+ kitchens worldwide</span>
               </div>
-              <p className="text-slate-700 italic">"InstaLabel transformed our kitchen operations. We're now 100% compliant and save 3 hours daily on labeling tasks."</p>
-              <p className="text-sm text-slate-600 mt-2">— Sarah Chen, Head Chef at Riverside Bistro</p>
+              <p className="text-slate-700 italic text-sm sm:text-base">"InstaLabel transformed our kitchen operations. We're now 100% compliant and save 3 hours daily on labeling tasks."</p>
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">
+                — Sarah Chen, Head Chef at Riverside Bistro</p>
             </div>
           </div>
 
           {/* Right Column - Form */}
-          <div className=" lg:sticky lg:top-8">
+          <div className="lg:sticky lg:top-8">
             {success ? (
-              <div className=" bg-gradient-to-r from-emerald-500 to-green-500 text-white p-8 rounded-3xl shadow-2xl text-center transform ">
-                <CheckCircle className="w-16 h-16 mx-auto mb-4" />
-                <h2 className="text-2xl font-bold mb-2">Demo Booked Successfully!</h2>
-                <p className="text-emerald-100">Thank you! Our team will reach out within 24 hours to schedule your personalized demo.</p>
+              <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white p-6 sm:p-8 rounded-3xl shadow-2xl text-center transform ">
+                <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4" />
+                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Demo Booked Successfully!</h2>
+                <p className="text-emerald-100 text-sm sm:text-base">Thank you! Our team will reach out within 24 hours to schedule your personalized demo.</p>
               </div>
             ) : (
               <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">
-                  <h2 className="text-2xl font-bold mb-2">Book Your Free Demo</h2>
-                  <p className="text-blue-100">Join hundreds of kitchens already using InstaLabel</p>
+                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-6 text-white">
+                  <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Book Your Free Demo</h2>
+                  <p className="text-blue-100 text-xs sm:text-base">Join hundreds of kitchens already using InstaLabel</p>
                 </div>
-                
-                <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                  <div className="grid grid-cols-2 gap-4">
+                <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-4 sm:space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="block text-sm font-semibold text-slate-700">Full Name *</label>
                       <input
@@ -156,7 +153,7 @@ export default function BookDemoPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="block text-sm font-semibold text-slate-700">Phone</label>
                       <input
@@ -191,7 +188,7 @@ export default function BookDemoPage() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label className="block text-sm font-semibold text-slate-700">Role</label>
                       <input
@@ -249,35 +246,15 @@ export default function BookDemoPage() {
                     />
                   </div>
 
-                  {error && (
-                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl">
-                      {error}
-                    </div>
-                  )}
+                  {error && <div className="text-red-500 text-xs sm:text-sm">{error}</div>}
 
                   <button
                     type="submit"
+                    className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-base sm:text-lg shadow-lg hover:bg-blue-700 transition disabled:opacity-60"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
                   >
-                    <span className="flex items-center justify-center gap-2">
-                      {loading ? (
-                        <>
-                          <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                          Booking Your Demo...
-                        </>
-                      ) : (
-                        <>
-                          Book My Free Demo
-                          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
-                        </>
-                      )}
-                    </span>
+                    {loading ? 'Booking...' : 'Book Demo'}
                   </button>
-
-                  <p className="text-xs text-slate-500 text-center">
-                    No commitment required • 30-minute personalized session • Available within 24 hours
-                  </p>
                 </form>
               </div>
             )}

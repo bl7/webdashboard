@@ -34,17 +34,17 @@ const features = [
 
 export const WhyChooseUs = () => {
   return (
-    <section className="bg-white py-24">
-      <div className="container space-y-12 px-4 text-center sm:px-6 md:px-12 lg:px-16">
-        <div className="mx-auto max-w-3xl space-y-4">
-          <h2 className="text-4xl font-bold tracking-tight">Why Choose InstaLabel?</h2>
-          <p className="text-lg text-muted-foreground">
+    <section className="bg-white py-8 sm:py-24">
+      <div className="container space-y-8 sm:space-y-12 px-2 sm:px-4 text-center sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto max-w-3xl space-y-2 sm:space-y-4">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">Why Choose InstaLabel?</h2>
+          <p className="text-base sm:text-lg text-muted-foreground">
             We've built our platform with the needs of real businesses in mind — fast, scalable, and
             beautifully simple.
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={i}
@@ -63,8 +63,8 @@ export const WhyChooseUs = () => {
           ))}
         </div>
       </div>
-      <div className="flex justify-center mt-12">
-        <a href="/bookdemo" className="btn-primary px-8 py-4 rounded-xl text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
+      <div className="flex justify-center mt-8 sm:mt-12">
+        <a href="/bookdemo" className="btn-primary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
           Book a Free Demo
         </a>
       </div>

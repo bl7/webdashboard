@@ -2,6 +2,7 @@
 import React, { useEffect, useState, useCallback } from "react"
 import { format } from "date-fns"
 import { useDarkMode } from "../context/DarkModeContext"
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 interface Cancellation {
   id: number
@@ -25,6 +26,8 @@ const CancellationsPage: React.FC = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [pageSize, setPageSize] = useState(PAGE_SIZE)
+  const [modalReason, setModalReason] = useState<string | null>(null)
+  const [modalCancellation, setModalCancellation] = useState<Cancellation | null>(null)
 
   // Debounce search input
   useEffect(() => {
@@ -101,7 +104,9 @@ const CancellationsPage: React.FC = () => {
                     <td className="px-4 py-2 text-xs">{c.email || <span className="text-gray-400">N/A</span>}</td>
                     <td className="px-4 py-2 text-xs">{c.company_name || <span className="text-gray-400">N/A</span>}</td>
                     <td className="px-4 py-2 font-mono text-xs">{c.subscription_id || "-"}</td>
-                    <td className="px-4 py-2 whitespace-pre-line max-w-xs break-words">{c.reason}</td>
+                    <td className="px-4 py-2 max-w-xs truncate cursor-pointer text-xs text-blue-600 hover:underline" title={c.reason} onClick={() => { setModalReason(c.reason); setModalCancellation(c); }}>
+                      {c.reason}
+                    </td>
                     <td className="px-4 py-2 text-xs">{format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm")}</td>
                   </tr>
                 ))}
@@ -113,6 +118,26 @@ const CancellationsPage: React.FC = () => {
               </tbody>
             </table>
           </div>
+          {/* Modal for full reason */}
+          <Dialog open={!!modalReason} onOpenChange={open => { if (!open) { setModalReason(null); setModalCancellation(null); } }}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Cancellation Details</DialogTitle>
+                <DialogDescription asChild>
+                  <div className="space-y-2 text-base text-foreground mt-2">
+                    {modalCancellation && (
+                      <>
+                        <div><span className="font-semibold">Email:</span> {modalCancellation.email || <span className="text-gray-400">N/A</span>}</div>
+                        <div><span className="font-semibold">Company:</span> {modalCancellation.company_name || <span className="text-gray-400">N/A</span>}</div>
+                        <div><span className="font-semibold">Created At:</span> {format(new Date(modalCancellation.cancelled_at), "yyyy-MM-dd HH:mm")}</div>
+                        <div><span className="font-semibold">Reason:</span> <span className="whitespace-pre-line">{modalCancellation.reason}</span></div>
+                      </>
+                    )}
+                  </div>
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
           {/* Pagination Controls */}
           <div className="flex items-center justify-between mt-6">
             <div className="text-sm text-gray-500">

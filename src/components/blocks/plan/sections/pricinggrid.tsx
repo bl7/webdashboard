@@ -44,17 +44,17 @@ export const PricingGrid = () => {
   }
 
   return (
-    <section id="pricing" className="bg-muted/20 py-24">
-      <div className="container space-y-16 px-4 text-center sm:px-6 md:px-12 lg:px-16">
+    <section id="pricing" className="bg-muted/20 py-8 sm:py-24">
+      <div className="container space-y-10 sm:space-y-16 px-2 sm:px-4 text-center sm:px-6 md:px-12 lg:px-16">
         {/* Heading */}
-        <div className="mx-auto max-w-3xl space-y-4">
-          <h2 className="text-4xl font-bold tracking-tight">Start Free</h2>
-          <p className="text-lg text-muted-foreground">
+        <div className="mx-auto max-w-3xl space-y-2 sm:space-y-4">
+          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">Start Free</h2>
+          <p className="text-base sm:text-lg text-muted-foreground">
             Get free trial with all our plans.
           </p>
 
           {/* Toggle */}
-          <div className="mt-6 inline-flex rounded-full bg-muted p-1">
+          <div className="mt-4 sm:mt-6 inline-flex rounded-full bg-muted p-1">
             {["monthly", "yearly"].map((type) => (
               <button
                 key={type}
@@ -73,7 +73,7 @@ export const PricingGrid = () => {
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-3">
           {plans.map((plan, index) => (
             <motion.div
               key={plan.id || index}
@@ -120,8 +120,8 @@ export const PricingGrid = () => {
         </div>
 
         {/* Comparison Table */}
-        <div className="overflow-x-auto rounded-xl border border-t border-muted bg-white pt-10 shadow-md">
-          <table className="min-w-full table-fixed text-left text-sm">
+        <div className="overflow-x-auto rounded-xl border border-t border-muted bg-white pt-6 sm:pt-10 shadow-md">
+          <table className="min-w-full table-fixed text-left text-xs sm:text-sm">
             <thead className="bg-primary/10">
               <tr>
                 <th className="w-1/3 p-4 font-semibold text-primary">Feature</th>

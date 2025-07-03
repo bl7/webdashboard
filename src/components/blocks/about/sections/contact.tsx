@@ -4,22 +4,22 @@ import { MapPin, Phone, Mail } from "lucide-react"
 
 export const Contact = () => {
   return (
-    <section id="contact" className="bg-white py-24">
-      <div className="container px-4 sm:px-6 md:px-12 lg:px-16">
-        <div className="lg:flex lg:gap-24">
+    <section id="contact" className="bg-white py-8 sm:py-24">
+      <div className="container px-2 sm:px-4 md:px-12 lg:px-16">
+        <div className="flex flex-col gap-12 lg:flex-row lg:gap-24">
           {/* Left Side: Info */}
           <div className="lg:w-1/2">
-            <h2 className="text-5xl font-bold leading-tight text-foreground">Contact Us</h2>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
+            <h2 className="text-3xl sm:text-5xl font-bold leading-tight text-foreground">Contact Us</h2>
+            <p className="mt-4 sm:mt-6 max-w-xl text-base sm:text-lg leading-relaxed text-muted-foreground">
               Tell us a little bit about who you are, and we'll tell you a whole lot more about who
               we are.
             </p>
 
-            <div className="mt-10">
-              <h3 className="mb-6 text-2xl font-semibold text-foreground">
+            <div className="mt-6 sm:mt-10">
+              <h3 className="mb-4 sm:mb-6 text-lg sm:text-2xl font-semibold text-foreground">
                 Talk to our team today
               </h3>
-              <div className="space-y-4 text-muted-foreground">
+              <div className="space-y-3 sm:space-y-4 text-muted-foreground">
                 <div className="flex items-start gap-3">
                   <span className="text-lg font-medium text-foreground">1.</span>
                   <p>Understanding how our product may fulfill your need</p>
@@ -35,9 +35,9 @@ export const Contact = () => {
               </div>
             </div>
 
-            <div className="mt-10">
-              <h3 className="mb-6 text-2xl font-semibold text-foreground">You can fins us here</h3>
-              <dl className="space-y-4">
+            <div className="mt-6 sm:mt-10">
+              <h3 className="mb-4 sm:mb-6 text-lg sm:text-2xl font-semibold text-foreground">You can find us here</h3>
+              <dl className="space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-4">
                   <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-accent">
                     <MapPin className="h-4 w-4 text-accent-foreground" />
@@ -71,8 +71,8 @@ export const Contact = () => {
             </div>
           </div>
           {/* Right Side: Form */}
-          <div className="mt-16 lg:mt-0 lg:w-1/2">
-            <div className="mt-6">
+          <div className="mt-8 sm:mt-16 lg:mt-0 lg:w-1/2">
+            <div className="mt-4 sm:mt-6">
               <ContactForm />
             </div>
           </div>
