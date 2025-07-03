@@ -2,6 +2,7 @@
 
 import React from "react"
 import { usePrinter } from "@/context/PrinterContext"
+import { ServerOff } from "lucide-react"
 
 export default function PrinterStatusBar() {
   const {
@@ -55,12 +56,13 @@ export default function PrinterStatusBar() {
         </div>
       ) : (
         <div className="flex items-center gap-4 text-red-600">
-          ❌ <span className="font-medium">Not connected</span>
+          <ServerOff className="h-5 w-5 text-red-500" />
+          <span className="font-medium">Server unavailable</span>
           <button
-            onClick={reconnect}
-            className="rounded bg-blue-500 px-3 py-1 text-xs text-white hover:bg-blue-600"
+            onClick={() => window.open('http://localhost:8080', '_blank', 'noopener,noreferrer')}
+            className="rounded bg-purple-600 px-3 py-1 text-xs text-white hover:bg-purple-700"
           >
-            Reconnect
+            Test
           </button>
         </div>
       )}

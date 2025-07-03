@@ -13,6 +13,8 @@ import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
 import useBillingData from "../profile/hooks/useBillingData"
+import { allergenIconMap, getAllergenIcon } from "@/components/allergenicons"
+import { Printer as PrinterIcon } from "lucide-react"
 
 // Define Printer type locally to match PrinterContext
 interface Printer {
@@ -668,452 +670,250 @@ export default function LabelDemo() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10 py-8 px-2 md:px-8 bg-gray-50 min-h-screen">
       {subStatusMsg && (
-        <div className={`rounded-md p-4 mb-4 ${subBlocked ? 'bg-red-100 text-red-800 border border-red-300' : 'bg-yellow-50 text-yellow-900 border border-yellow-200'}`}>
-          {subStatusMsg}
-        </div>
+        <div className={`rounded-xl p-4 mb-6 border-2 ${subBlocked ? 'bg-red-100 text-red-800 border-red-300' : 'bg-yellow-50 text-yellow-900 border-yellow-200'}`}> {subStatusMsg} </div>
       )}
-      <div className="mx-auto">
-        {/* In-place loader for subsequent loads */}
-        {isLoading && (ingredients.length > 0 || menuItems.length > 0) ? (
-          <div className="flex h-32 items-center justify-center">
-            <svg className="h-8 w-8 animate-spin text-purple-600" fill="none" viewBox="0 0 24 24">
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-            </svg>
-            <span className="ml-4 text-lg text-gray-500">Loading Print Label...</span>
-          </div>
-        ) : (
-          <>
-            <div className="flex gap-8">
-              {/* Left Section: Label Printer */}
-              <div className="w-1/2">
-                <h1 className="mb-4 text-2xl font-bold">Label Printer</h1>
-                <LabelHeightChooser
-                  selectedHeight={labelHeight}
-                  onHeightChange={(val) => setLabelHeight(val)}
-                  className="mb-4"
-                />
-              </div>
-
-              {/* Right Section: Initials and Settings */}
-              <div className="w-1/2">
-                {/* Printer Selection */}
-                <div className="mb-4">
-                  <label className="mb-1 block text-sm font-medium text-gray-700">
-                    Printer Selection
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-2 w-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                      <span className="text-xs text-gray-600">
-                        {isConnected ? 'Connected' : 'Disconnected'}
-                      </span>
-                    </div>
-                    {!isConnected && (
-                      <Button
-                        onClick={reconnect}
-                        size="sm"
-                        variant="outline"
-                        className="text-xs"
-                      >
-                        Reconnect
-                      </Button>
-                    )}
-                  </div>
-                  {availablePrinters.length > 0 ? (
-                    <select
-                      className="mt-2 w-full rounded border px-4 py-2"
-                      value={selectedPrinter?.name || ''}
-                      onChange={(e) => {
-                        const printer = availablePrinters.find(p => p.name === e.target.value)
-                        selectPrinter(printer || null)
-                      }}
-                    >
-                      <option value="">Select Printer</option>
-                      {availablePrinters.map((printer) => (
-                        <option key={printer.name} value={printer.name}>
-                          {printer.name} {printer.isDefault ? '(Default)' : ''}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <p className="mt-2 text-sm text-gray-500">
-                      {printerLoading ? 'Loading printers...' : 'No printers available'}
-                    </p>
-                  )}
-                  {printerError && (
-                    <p className="mt-1 text-xs text-red-600">{printerError}</p>
-                  )}
-                </div>
-
-                {useInitials && customInitials.length > 0 && (
-                  <div className="mb-4">
-                    <label className="mb-1 block text-sm font-medium text-gray-700">
-                      Select Initials
-                    </label>
-                    <select
-                      className="w-full rounded border px-4 py-2"
-                      value={selectedInitial}
-                      onChange={(e) => setSelectedInitial(e.target.value)}
-                    >
-                      <option value="">Select initials...</option>
-                      {customInitials.map((initial) => (
-                        <option key={initial} value={initial}>
-                          {initial}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+      <div className="flex flex-col md:flex-row gap-10">
+        {/* Left Section: Label Printer & List */}
+        <div className="flex-1 min-w-[340px]">
+          <div className="bg-white rounded-xl shadow-lg border p-6 mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl font-bold tracking-tight">Label Printer</h1>
+              {/* Printer Status Bar */}
+              <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-purple-200 bg-purple-50">
+                <PrinterIcon className={`h-5 w-5 ${isConnected ? 'text-green-500' : 'text-red-400'}`} />
+                <span className={`text-xs font-semibold ${isConnected ? 'text-green-700' : 'text-red-500'}`}>{isConnected ? 'Connected' : 'Disconnected'}</span>
+                {!isConnected && (
+                  <Button onClick={reconnect} size="sm" variant="outline" className="text-xs ml-2">Reconnect</Button>
                 )}
               </div>
             </div>
-
-            {/* Feedback Messages */}
-            {feedbackMsg && (
-              <div
-                className={`mb-4 rounded-md p-4 ${
-                  feedbackType === "success"
-                    ? "border border-green-200 bg-green-50 text-green-800"
-                    : "border border-red-200 bg-red-50 text-red-800"
-                }`}
-              >
-                {feedbackMsg}
-              </div>
-            )}
-
-            <div className="flex gap-8">
-              <div className="w-1/2">
-                <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
-                  <button
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                      activeTab === "ingredients"
-                        ? "bg-white text-purple-700 shadow"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
-                    onClick={() => setActiveTab("ingredients")}
-                  >
-                    Ingredients
-                  </button>
-                  <button
-                    className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
-                      activeTab === "menu"
-                        ? "bg-white text-purple-700 shadow"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
-                    onClick={() => setActiveTab("menu")}
-                  >
-                    Menu Items
-                  </button>
-                </div>
-
-                <div className="mb-4">
-                  <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="Search..."
-                    className="w-full rounded border px-4 py-2"
-                  />
-                </div>
-
-                {isLoading && <p>Loading...</p>}
-                {error && <p className="text-red-600">{error}</p>}
-
-                <div className="mb-6">
-                  {(activeTab === "ingredients" ? paginatedIngredients : paginatedMenuItems).map(
-                    (item) => (
-                      <div
-                        key={item.id}
-                        className="mb-2 flex items-center justify-between rounded border p-4"
-                      >
-                        <div>
-                          <p className="font-semibold">{item.name}</p>
-                          <p className="text-sm text-gray-500">Expires: {item.expiryDate}</p>
-                        </div>
-                        {/* Add to print queue */}
+            <LabelHeightChooser
+              selectedHeight={labelHeight}
+              onHeightChange={setLabelHeight}
+              className="mb-4"
+            />
+          </div>
+          <div className="bg-white rounded-xl shadow-lg border p-6">
+            {/* Tab Switcher */}
+            <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
+              <button
+                className={`rounded-full px-5 py-2 text-base font-medium transition-all ${activeTab === "ingredients" ? "bg-purple-600 text-white shadow" : "text-gray-500 hover:text-purple-700"}`}
+                onClick={() => setActiveTab("ingredients")}
+              >Ingredients</button>
+              <button
+                className={`rounded-full px-5 py-2 text-base font-medium transition-all ${activeTab === "menu" ? "bg-purple-600 text-white shadow" : "text-gray-500 hover:text-purple-700"}`}
+                onClick={() => setActiveTab("menu")}
+              >Menu Items</button>
+            </div>
+            {/* Search Bar */}
+            <div className="mb-6">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search ingredients or menu items..."
+                className="w-full rounded-lg border-2 border-purple-200 px-5 py-3 text-base focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+              />
+            </div>
+            {isLoading && <p>Loading...</p>}
+            {error && <p className="text-red-600">{error}</p>}
+            {/* Ingredient/Menu List */}
+            <div className="mb-8">
+              {(activeTab === "ingredients"
+                ? (paginatedIngredients as IngredientItem[])
+                : (paginatedMenuItems as MenuItem[])
+              ).map((item, idx) => (
+                <div key={item.id} className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
+                  {activeTab === "ingredients" ? (
+                    <>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-gray-900 whitespace-normal break-words">{item.name}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500 mr-2">Expires: {item.expiryDate}</span>
                         <Button
                           onClick={() => addToPrintQueue(item, activeTab)}
-                          disabled={printQueue.some(
-                            (q) => q.id === item.id && q.type === activeTab
-                          )}
+                          disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
                           variant="default"
-                        >
-                          {printQueue.some((q) => q.id === item.id && q.type === activeTab)
-                            ? "Added"
-                            : "Add"}
-                        </Button>
+                        >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
                       </div>
-                    )
-                  )}
-                </div>
-                {/* Pagination */}
-                <div className="flex items-center justify-center gap-2">
-                  <Button
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    disabled={page === 1}
-                    variant="outline"
-                    className="flex items-center gap-1"
-                  >
-                    <ChevronLeftIcon className="h-4 w-4" />
-                  </Button>
-
-                  <span className="min-w-[80px] text-center text-sm text-gray-700">
-                    {page} of {totalPages}
-                  </span>
-
-                  <Button
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    disabled={page === totalPages || totalPages === 0}
-                    variant="outline"
-                    className="flex items-center gap-1"
-                  >
-                    <ChevronRightIcon className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-              <div className="mb-8 max-h-[600px] w-1/2 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-                <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-6 pb-3 pt-6">
-                  <h2 className="text-2xl font-semibold text-gray-900">Print Queue</h2>
-                  {/* Print Labels */}
-                  <Button
-                    onClick={printLabels}
-                    disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0}
-                    variant="default"
-                    title={
-                      subBlocked
-                        ? "Printing is disabled due to your subscription status."
-                        : printQueue.length === 0
-                        ? "No items in print queue"
-                        : availablePrinters.length === 0
-                        ? "No printers available"
-                        : "Print all labels in queue"
-                    }
-                  >
-                    Print Labels
-                  </Button>
-                  {/* Clear Queue */}
-                  <Button
-                    onClick={clearPrintQueue}
-                    disabled={printQueue.length === 0}
-                    variant="secondary"
-                    aria-label="Clear print queue"
-                  >
-                    Clear Queue
-                  </Button>
-                </div>
-
-                <div className="px-6 pb-6 pt-2">
-                  {printQueue.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                      <svg
-                        className="mb-2 h-8 w-8"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2M9 17v-2a4 4 0 018 0v2M9 17a4 4 0 01-8 0v-2a4 4 0 018 0v2z"
-                        />
-                      </svg>
-                      <p className="italic">No items in print queue</p>
-                    </div>
+                    </>
                   ) : (
-                    printQueue.map((item) => (
-                      <div
-                        key={item.uid}
-                        className="mb-3 flex items-center gap-4 rounded-md border border-gray-300 bg-gray-50 px-4 py-3 transition-shadow hover:shadow-md"
-                      >
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate font-medium text-gray-800">{item.name}</p>
-                          <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
-                        </div>
-                        <input
-                          type="number"
-                          min={1}
-                          value={item.quantity}
-                          onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
-                          className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                        />
-                        {"labelType" in item && (
-                          <select
-                            value={item.labelType || "cook"}
-                            onChange={(e) =>
-                              updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")
-                            }
-                            className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
-                          >
-                            <option value="cook">Cook</option>
-                            <option value="prep">Prep</option>
-                            <option value="ppds">PPDS</option>
-                          </select>
-                        )}
-                        {/* Remove from queue */}
-                        <Button
-                          onClick={() => removeFromQueue(item.uid)}
-                          variant="outline"
-                          className="text-red-600 hover:bg-red-100"
-                          aria-label={`Remove ${item.name} from queue`}
-                        >
-                          Remove
-                        </Button>
+                    <>
+                      <div className="flex items-center gap-3 min-w-0">
+                        {/* Menu item rendering (keep as is, or add icons/badges if needed) */}
+                        <p className="font-semibold truncate text-gray-900">{item.name}</p>
                       </div>
-                    ))
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500 mr-2">Expires: {item.expiryDate}</span>
+                        <Button
+                          onClick={() => addToPrintQueue(item, activeTab)}
+                          disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                          variant="default"
+                        >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
+                      </div>
+                    </>
                   )}
                 </div>
+              ))}
+              {/* Pagination */}
+              <div className="flex items-center justify-center gap-2 mt-4">
+                <Button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} variant="outline" className="flex items-center gap-1"><ChevronLeftIcon className="h-4 w-4" /></Button>
+                <span className="min-w-[80px] text-center text-sm text-gray-700">{page} of {totalPages}</span>
+                <Button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages || totalPages === 0} variant="outline" className="flex items-center gap-1"><ChevronRightIcon className="h-4 w-4" /></Button>
               </div>
             </div>
-            {/* Label Preview with selected height */}
-            <LabelPreview
-              printQueue={printQueue}
-              ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
-              customExpiry={customExpiry}
-              onExpiryChange={handleExpiryChange}
-              useInitials={useInitials}
-              selectedInitial={selectedInitial}
-              labelHeight={labelHeight}
-            />
-
-            {/* Floating Action Buttons */}
-            <div
-              style={{
-                position: "fixed",
-                bottom: 32,
-                right: 32,
-                display: "flex",
-                flexDirection: "column",
-                gap: 16,
-                zIndex: 50,
-              }}
-            >
-              <Button
-                onClick={() => setShowUseFirstModal(true)}
-                className="rounded-full px-6 py-3 text-lg font-bold shadow-lg"
-                variant="default"
-                aria-label="Print USE FIRST label"
-                tabIndex={0}
-                disabled={subBlocked}
-                title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
-              >
-                Use First
-              </Button>
-              <Button
-                onClick={() => setShowDefrostModal(true)}
-                className="rounded-full px-6 py-3 text-lg font-bold shadow-lg"
-                variant="default"
-                aria-label="Print Defrosted label"
-                tabIndex={0}
-                disabled={subBlocked}
-                title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
-              >
-                Defrost
-              </Button>
+          </div>
+        </div>
+        {/* Right Section: Print Queue */}
+        <div className="flex-1 min-w-[340px]">
+          {/* Print Queue and Label Preview */}
+          <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
+              <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
+              <div className="flex gap-2">
+                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="default" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
+                <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="secondary" aria-label="Clear print queue">Clear Queue</Button>
+              </div>
             </div>
-
-            {/* Use First Quantity Modal */}
-            {showUseFirstModal && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
-                role="dialog"
-                aria-modal="true"
-              >
-                <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-                  <h2 className="mb-4 text-xl font-bold">How many USE FIRST labels?</h2>
-                  <div className="mb-4">
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
-                      Quantity
-                    </label>
-                    <input
-                      type="number"
-                      min="1"
-                      max="50"
-                      value={useFirstQuantity}
-                      onChange={(e) => setUseFirstQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                      className="w-full rounded border px-3 py-2"
-                      placeholder="Enter quantity..."
-                    />
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      className="flex-1"
-                      onClick={() => {
-                        handleUseFirstPrint(useFirstQuantity)
-                        setShowUseFirstModal(false)
-                      }}
-                    >
-                      Print {useFirstQuantity} Label{useFirstQuantity !== 1 ? 's' : ''}
-                    </Button>
-                    <Button
-                      className="flex-1"
-                      variant="secondary"
-                      onClick={() => setShowUseFirstModal(false)}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+            <div className="px-8 pb-8 pt-4">
+              {printQueue.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-16 text-gray-400">
+                  <svg className="mb-4 h-12 w-12 text-purple-200" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01" /></svg>
+                  <p className="italic text-lg text-gray-400">Your print queue is empty.<br />Add items to get started!</p>
                 </div>
-              </div>
-            )}
-
-            {/* Defrost Modal */}
-            {showDefrostModal && (
-              <div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
-                role="dialog"
-                aria-modal="true"
-              >
-                <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
-                  <h2 className="mb-4 text-xl font-bold">Select Item to Defrost</h2>
-                  
-                  <input
-                    type="text"
-                    value={defrostSearch}
-                    onChange={(e) => setDefrostSearch(e.target.value)}
-                    placeholder="Search ingredients..."
-                    className="mb-3 w-full rounded border px-3 py-2"
-                  />
-                  <ul className="mb-4 max-h-60 overflow-y-auto">
-                    {currentDefrostItems.map((item) => (
-                      <li key={item.id} className="mb-2">
-                        <Button
-                          className="w-full text-left"
-                          variant="ghost"
-                          onClick={() => handleDefrostPrint(item as IngredientItem)}
-                        >
-                          {item.name}
-                        </Button>
-                      </li>
-                    ))}
-                    {currentDefrostItems.length === 0 && (
-                      <li className="px-4 py-2 text-gray-400">
-                        No ingredients found.
-                      </li>
+              ) : (
+                printQueue.map((item) => (
+                  <div key={item.uid} className="mb-4 flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate font-semibold text-gray-900">{item.name}</p>
+                      <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
+                    </div>
+                    <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
+                    {"labelType" in item && (
+                      <select value={item.labelType || "cook"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                        <option value="cook">Cook</option>
+                        <option value="prep">Prep</option>
+                        <option value="ppds">PPDS</option>
+                      </select>
                     )}
-                  </ul>
-                  <Button
-                    className="mt-2 w-full"
-                    variant="secondary"
-                    onClick={() => setShowDefrostModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </div>
-            )}
-          </>
-        )}
+                    <Button onClick={() => removeFromQueue(item.uid)} variant="outline" className="text-red-600 hover:bg-red-100" aria-label={`Remove ${item.name} from queue`}>Remove</Button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          {/* Label Preview below the print queue */}
+          <LabelPreview
+            printQueue={printQueue}
+            ALLERGENS={allergens.map((a) => a.allergenName.toLowerCase())}
+            customExpiry={customExpiry}
+            onExpiryChange={handleExpiryChange}
+            useInitials={useInitials}
+            selectedInitial={selectedInitial}
+            labelHeight={labelHeight}
+          />
+        </div>
       </div>
+      {/* Floating Action Buttons: Use First & Defrost */}
+      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
+        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-purple-600 hover:bg-purple-700 text-white" variant="default" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+          USE FIRST
+        </Button>
+        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-blue-600 hover:bg-blue-700 text-white" variant="default" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+          DEFROST
+        </Button>
+      </div>
+      {/* Use First and Defrost modals remain unchanged */}
+      {showUseFirstModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-xl font-bold">How many USE FIRST labels?</h2>
+            <div className="mb-4">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Quantity
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="50"
+                value={useFirstQuantity}
+                onChange={(e) => setUseFirstQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                className="w-full rounded border px-3 py-2"
+                placeholder="Enter quantity..."
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                className="flex-1"
+                onClick={() => {
+                  handleUseFirstPrint(useFirstQuantity)
+                  setShowUseFirstModal(false)
+                }}
+              >
+                Print {useFirstQuantity} Label{useFirstQuantity !== 1 ? 's' : ''}
+              </Button>
+              <Button
+                className="flex-1"
+                variant="secondary"
+                onClick={() => setShowUseFirstModal(false)}
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+      {showDefrostModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+            <h2 className="mb-4 text-xl font-bold">Select Item to Defrost</h2>
+            
+            <input
+              type="text"
+              value={defrostSearch}
+              onChange={(e) => setDefrostSearch(e.target.value)}
+              placeholder="Search ingredients..."
+              className="mb-3 w-full rounded border px-3 py-2"
+            />
+            <ul className="mb-4 max-h-60 overflow-y-auto">
+              {currentDefrostItems.map((item) => (
+                <li key={item.id} className="mb-2">
+                  <Button
+                    className="w-full text-left"
+                    variant="ghost"
+                    onClick={() => handleDefrostPrint(item as IngredientItem)}
+                  >
+                    {item.name}
+                  </Button>
+                </li>
+              ))}
+              {currentDefrostItems.length === 0 && (
+                <li className="px-4 py-2 text-gray-400">
+                  No ingredients found.
+                </li>
+              )}
+            </ul>
+            <Button
+              className="mt-2 w-full"
+              variant="secondary"
+              onClick={() => setShowDefrostModal(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
