@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Package, Truck, CreditCard, RefreshCw, Download, MapPin, Phone, Mail, Calendar, CheckCircle, Clock, AlertCircle } from 'lucide-react';
 import { useLabelAISuggestion } from './hooks/useLabelAISuggestion'
 
-const LABELS_PER_BUNDLE = 5; // 1 bundle = 5 rolls
-const LABELS_PER_ROLL = 500; // 1 roll = 500 labels
-const PRICE_PER_BUNDLE_CENTS = 1000; // $10 per bundle
-
 interface Order {
   id: string | number;
   bundle_count: number;
@@ -15,6 +11,15 @@ interface Order {
   created_at?: string;
   shipped_at?: string;
   receipt_url?: string;
+}
+
+interface LabelProduct {
+  id: number;
+  name: string;
+  price?: number;
+  price_cents?: number;
+  rolls_per_bundle: number;
+  labels_per_roll: number;
 }
 
 export default function OrderLabelsTab() {
@@ -44,17 +49,22 @@ export default function OrderLabelsTab() {
   const [labelsPerDayLoading, setLabelsPerDayLoading] = useState<boolean>(true);
   const [labelsPerDayError, setLabelsPerDayError] = useState<string | null>(null);
 
-  // Calculate total rolls and labels for the AI
-  const rollsPerBundle = LABELS_PER_BUNDLE;
-  const labelsPerRoll = LABELS_PER_ROLL;
+  // Add state for selected label product
+  const [labelProducts, setLabelProducts] = useState<LabelProduct[]>([]);
+  const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+  const selectedProduct = labelProducts.find(p => p.id === selectedProductId) || labelProducts[0];
+  const rollsPerBundle = selectedProduct?.rolls_per_bundle || 1;
+  const labelsPerRoll = selectedProduct?.labels_per_roll || 1;
+  const priceCents = selectedProduct?.price_cents ?? 0;
   // The AI should be told how many labels are in a roll (not a bundle)
-  const goal = 'Suggest how many rolls to order (1 bundle = 5 rolls, 1 roll = 500 labels)';
+  const goal = 'Suggest how many rolls to order (1 bundle = ' + rollsPerBundle + ' rolls, 1 roll = ' + labelsPerRoll + ' labels)';
   const { suggestion, loading: aiLoading, error: aiError, refetch } = useLabelAISuggestion({ usageData: { labelsPerDay, labelsPerRoll, days }, goal })
   const [aiOrderQty, setAiOrderQty] = useState<number | null>(null)
 
-  // Calculate how long the current order will last
-  const totalRolls = bundleCount * LABELS_PER_BUNDLE;
-  const totalLabels = totalRolls * LABELS_PER_ROLL;
+  // Calculate total rolls and labels for the AI
+  const totalRolls = bundleCount * rollsPerBundle;
+  const totalLabels = totalRolls * labelsPerRoll;
+  const totalPrice = (bundleCount * priceCents) / 100;
 
   // Fetch user profile and order history on mount
   useEffect(() => {
@@ -115,6 +125,13 @@ export default function OrderLabelsTab() {
     }
   }, []);
 
+  useEffect(() => {
+    fetch('/api/label-products')
+      .then(res => res.json())
+      .then(data => setLabelProducts(Array.isArray(data) ? data.map(p => ({ ...p, price_cents: p.price_cents ?? p.price })) : []))
+      .catch(() => setLabelProducts([]));
+  }, []);
+
   const [showAISuggestion, setShowAISuggestion] = useState(false);
 
   const fetchOrders = (): void => {
@@ -171,7 +188,7 @@ export default function OrderLabelsTab() {
           'Content-Type': 'application/json',
           ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
-        body: JSON.stringify({ bundle_count: bundleCount, shipping_address: shippingAddress }),
+        body: JSON.stringify({ bundle_count: bundleCount, shipping_address: shippingAddress, label_product_id: selectedProductId ?? labelProducts[0]?.id }),
       });
       const data = await res.json();
       if (res.ok && data.url) {
@@ -208,8 +225,6 @@ export default function OrderLabelsTab() {
         return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
-
-  const totalPrice = (bundleCount * PRICE_PER_BUNDLE_CENTS) / 100;
 
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
@@ -306,28 +321,33 @@ export default function OrderLabelsTab() {
                 )}
               </div>
 
-              {/* Bundle Selection */}
-              <div className="bg-gray-50 rounded-lg p-4">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  Bundle Quantity
-                </label>
-                <div className="flex items-center space-x-4">
-                  <div className="relative">
-                    <input
-                      type="number"
-                      min={1}
-                      value={bundleCount}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBundleCount(Number(e.target.value))}
-                      className="block w-24 px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-center font-medium"
-                      style={{ MozAppearance: 'textfield' } as React.CSSProperties}
-                      inputMode="numeric"
-                    />
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    <span className="font-medium">{totalRolls} rolls</span>
-                    <span className="font-medium ml-2">({totalLabels} labels total)</span>
-                    <div className="text-xs text-gray-500">1 bundle = 5 rolls, 1 roll = 500 labels</div>
-                  </div>
+              {/* Product dropdown and bundle quantity side by side */}
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Label Product</label>
+                  <select
+                    value={selectedProductId ?? labelProducts[0]?.id}
+                    onChange={e => setSelectedProductId(Number(e.target.value))}
+                    className="block w-full px-3 py-2 border border-purple-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-sm font-medium bg-white text-gray-900"
+                  >
+                    {labelProducts.map(p => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} (£{((p.price_cents ?? 0) / 100).toFixed(2)})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex-1">
+                  <label className="block text-sm font-semibold text-gray-900 mb-2">Bundle Quantity</label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={bundleCount}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setBundleCount(Number(e.target.value))}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-center font-medium"
+                    style={{ MozAppearance: 'textfield' } as React.CSSProperties}
+                    inputMode="numeric"
+                  />
                 </div>
               </div>
 
@@ -484,8 +504,24 @@ export default function OrderLabelsTab() {
           </div>
         </div>
 
-        {/* Order Summary Sidebar */}
+        {/* Sidebar: label product cards above order summary */}
         <div className="space-y-6">
+          {labelProducts.length > 0 && (
+            <div className="mb-2">
+              <h2 className="text-md font-semibold text-purple-900 mb-2">Available Label Products</h2>
+              <div className="flex flex-col gap-3">
+                {labelProducts.map((p) => (
+                  <div key={p.id} className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm min-w-[180px] max-w-xs">
+                    <div className="font-bold text-purple-800 text-base mb-1">{p.name}</div>
+                    <div className="text-purple-700 text-sm mb-1">£{((p.price_cents ?? 0) / 100).toFixed(2)}</div>
+                    <div className="text-xs text-purple-600">{p.rolls_per_bundle} rolls/bundle</div>
+                    <div className="text-xs text-purple-600">{p.labels_per_roll} labels/roll</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {/* Order Summary Sidebar */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
             <div className="space-y-3">
@@ -499,7 +535,7 @@ export default function OrderLabelsTab() {
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-gray-600">Price per bundle</span>
-                <span className="font-medium">${(PRICE_PER_BUNDLE_CENTS / 100).toFixed(2)}</span>
+                <span className="font-medium">${(priceCents / 100).toFixed(2)}</span>
               </div>
               <div className="border-t pt-3">
                 <div className="flex justify-between">

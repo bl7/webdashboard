@@ -193,17 +193,14 @@ export const PricingGrid = () => {
               </div>
 
               {/* CTA Button */}
-              <button
-                className={cn(
-                  "w-full py-4 px-6 rounded-xl font-semibold text-sm transition-all duration-200 flex items-center justify-center gap-2 group-hover:gap-3",
-                  index === 1
-                    ? "bg-white text-purple-600 hover:bg-purple-50 shadow-lg"
-                    : "bg-purple-600 text-white hover:bg-purple-700 shadow-lg"
-                )}
-              >
-                {plan.price_monthly ? "Start Free Trial" : "Contact Sales"}
-                <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-              </button>
+              <a href="/register">
+                <button
+                  className="bg-primary px-8 py-4 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold rounded-xl w-full"
+                >
+                  {plan.price_monthly ? "Start Free Trial" : "Contact Sales"}
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </button>
+              </a>
 
               {/* Features Preview */}
               <div className="mt-6 pt-6 border-t border-slate-200/20">

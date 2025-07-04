@@ -12,9 +12,9 @@ export async function POST(req: NextRequest) {
     // Require authentication
     const { userUuid } = await verifyAuthToken(req);
     const body = await req.json();
-    const { bundle_count, shipping_address } = body;
-    if (!bundle_count || !shipping_address) {
-      return NextResponse.json({ error: 'Missing bundle_count or shipping_address' }, { status: 400 });
+    const { bundle_count, shipping_address, label_product_id } = body;
+    if (!bundle_count || !shipping_address || !label_product_id) {
+      return NextResponse.json({ error: 'Missing bundle_count, shipping_address, or label_product_id' }, { status: 400 });
     }
     if (bundle_count < 1) {
       return NextResponse.json({ error: 'Bundle count must be at least 1' }, { status: 400 });
@@ -28,17 +28,27 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User profile not found' }, { status: 404 });
     }
     const email = profileRes.rows[0].email;
+    // Fetch label product details
+    const productRes = await pool.query(
+      `SELECT * FROM label_products WHERE id = $1`,
+      [label_product_id]
+    );
+    if (productRes.rowCount === 0) {
+      return NextResponse.json({ error: 'Label product not found' }, { status: 404 });
+    }
+    const product = productRes.rows[0];
+    const rollsPerBundle = product.rolls_per_bundle;
+    const labelsPerRoll = product.labels_per_roll;
+    const priceCents = product.price_cents;
     // Calculate label count and amount
-    const LABELS_PER_BUNDLE = 5;
-    const PRICE_PER_BUNDLE_CENTS = 1000; // $10 per bundle, adjust as needed
-    const label_count = bundle_count * LABELS_PER_BUNDLE;
-    const amount_cents = bundle_count * PRICE_PER_BUNDLE_CENTS;
-    // Insert order with status 'pending'
+    const label_count = bundle_count * rollsPerBundle * labelsPerRoll;
+    const amount_cents = bundle_count * priceCents;
+    // Insert order with status 'pending' and label_product_id
     const orderRes = await pool.query(
-      `INSERT INTO label_orders (user_id, bundle_count, label_count, amount_cents, status, shipping_address)
-       VALUES ($1, $2, $3, $4, 'pending', $5)
+      `INSERT INTO label_orders (user_id, bundle_count, label_count, amount_cents, status, shipping_address, label_product_id)
+       VALUES ($1, $2, $3, $4, 'pending', $5, $6)
        RETURNING id`,
-      [userUuid, bundle_count, label_count, amount_cents, shipping_address]
+      [userUuid, bundle_count, label_count, amount_cents, shipping_address, label_product_id]
     );
     const orderId = orderRes.rows[0].id;
     // Find or create Stripe customer
@@ -65,7 +75,7 @@ export async function POST(req: NextRequest) {
               name: 'Label Bundle',
               description: `${bundle_count} bundle(s) of 5 labels each`,
             },
-            unit_amount: PRICE_PER_BUNDLE_CENTS,
+            unit_amount: priceCents,
           },
           quantity: bundle_count,
         },

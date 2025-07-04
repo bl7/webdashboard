@@ -33,6 +33,9 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
 
     if (user && user.email) {
       console.log('[SHIP] Sending shipped email to user:', { to: user.email, orderId: order.id });
+      // After fetching the order, fetch the product:
+      const productRes = await pool.query('SELECT * FROM label_products WHERE id = $1', [order.label_product_id]);
+      const product = productRes.rows[0];
       await sendMail({
         to: user.email,
         subject: 'Your Label Order Has Shipped!',
@@ -44,6 +47,10 @@ export async function POST(req: NextRequest, context: { params: Promise<{ id: st
           amount: order.amount_cents,
           shippingAddress: order.shipping_address,
           orderId: order.id,
+          productName: product.name,
+          productPriceCents: product.price_cents,
+          productRollsPerBundle: product.rolls_per_bundle,
+          productLabelsPerRoll: product.labels_per_roll,
         }),
       });
       console.log('[SHIP] Sent shipped email to user:', { to: user.email, orderId: order.id });

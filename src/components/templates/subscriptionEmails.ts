@@ -2651,6 +2651,10 @@ export const labelOrderConfirmationEmail = ({
   amount,
   shippingAddress,
   orderId,
+  productName,
+  productPriceCents,
+  productRollsPerBundle,
+  productLabelsPerRoll,
 }: {
   name: string
   email: string
@@ -2659,6 +2663,10 @@ export const labelOrderConfirmationEmail = ({
   amount: number
   shippingAddress: string
   orderId: string | number
+  productName: string
+  productPriceCents: number
+  productRollsPerBundle: number
+  productLabelsPerRoll: number
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2985,6 +2993,10 @@ export const labelOrderShippedEmail = ({
   amount,
   shippingAddress,
   orderId,
+  productName,
+  productPriceCents,
+  productRollsPerBundle,
+  productLabelsPerRoll,
 }: {
   name: string
   email: string
@@ -2993,6 +3005,10 @@ export const labelOrderShippedEmail = ({
   amount: number
   shippingAddress: string
   orderId: string | number
+  productName: string
+  productPriceCents: number
+  productRollsPerBundle: number
+  productLabelsPerRoll: number
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>

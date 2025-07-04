@@ -51,6 +51,7 @@ export function useMenuItems() {
 
     try {
       const res = await getAllMenuItems(token)
+      console.log('Raw menu items API response:', res)
       if (!res?.data) {
         setMenuItems([])
         return
@@ -94,6 +95,7 @@ export function useMenuItems() {
 
     setLoading(true)
     try {
+      console.log('Sending menu item payload:', menuItemData)
       const response = await addMenuItems(menuItemData, token)
       
       // Refresh the menu items list to get the updated data

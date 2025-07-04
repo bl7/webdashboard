@@ -17,10 +17,7 @@ export const Contact = () => {
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200 mb-6 hover:scale-105 transition-transform duration-300">
-            <span className="mr-2 animate-bounce">💬</span>
-            Let's Talk
-          </div>
+         
           <h2 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 bg-clip-text text-transparent mb-6 animate-fade-in">
             Get in Touch
           </h2>
@@ -33,62 +30,7 @@ export const Contact = () => {
         <div className="flex flex-col gap-16 lg:flex-row lg:gap-20">
           {/* Left Side: Info - Floating elements */}
           <div className="lg:w-1/2 space-y-12">
-            {/* Process Steps - Flowing design */}
-            <div className="relative">
-              <div className="flex items-center mb-8 group">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-2xl mr-6 transform group-hover:rotate-3 transition-all duration-300">
-                  <Users className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-purple-600 transition-colors duration-300">
-                  Talk to our team today
-                </h3>
-              </div>
-              
-              <div className="space-y-8 ml-4">
-                <div className="flex items-start gap-6 group transform hover:translate-x-2 transition-all duration-300">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white text-lg font-bold shadow-lg group-hover:scale-110 transition-all duration-300">
-                    1
-                  </div>
-                  <div className="pt-2">
-                    <p className="text-lg leading-relaxed text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
-                      Understanding how our product may fulfill your need
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6 group transform hover:translate-x-2 transition-all duration-300" style={{transitionDelay: '100ms'}}>
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white text-lg font-bold shadow-lg group-hover:scale-110 transition-all duration-300">
-                    2
-                  </div>
-                  <div className="pt-2">
-                    <p className="text-lg leading-relaxed text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
-                      Discover the capabilities and get answers to your questions
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-6 group transform hover:translate-x-2 transition-all duration-300" style={{transitionDelay: '200ms'}}>
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white text-lg font-bold shadow-lg group-hover:scale-110 transition-all duration-300">
-                    3
-                  </div>
-                  <div className="pt-2">
-                    <p className="text-lg leading-relaxed text-gray-700 group-hover:text-gray-900 transition-colors duration-300">
-                      Get a customized quote and implementation plan
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information - Floating cards */}
-            <div className="relative">
-              <div className="flex items-center mb-8 group">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-2xl mr-6 transform group-hover:rotate-3 transition-all duration-300">
-                  <MapPin className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-pink-600 transition-colors duration-300">
-                  You can find us here
-                </h3>
-              </div>
-              
+            <div className="relative">    
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ml-4">
                 <div className="group flex items-start gap-4 p-6 rounded-2xl transition-all duration-300 hover:bg-white/60 hover:backdrop-blur-sm hover:shadow-xl transform hover:-translate-y-1">
                   <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white transition-all duration-300 group-hover:scale-110 shadow-lg">
@@ -156,12 +98,8 @@ export const Contact = () => {
             <div className="relative">
               {/* Floating form header */}
               <div className="flex items-center mb-8 group">
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-2xl mr-6 transform group-hover:rotate-3 transition-all duration-300">
-                  <Mail className="h-8 w-8" />
-                </div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-                  Send us a message
-                </h3>
+              
+             
               </div>
               
               {/* Form with minimal styling */}

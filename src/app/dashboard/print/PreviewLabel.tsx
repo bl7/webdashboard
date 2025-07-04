@@ -12,6 +12,7 @@ interface LabelPreviewProps {
   selectedInitial?: string
   labelHeight?: LabelHeight
   maxIngredientsToFit?: number
+  allIngredients: Array<{ uuid: string; ingredientName: string; allergens: { allergenName: string }[] }>
 }
 
 const LabelPreview: React.FC<LabelPreviewProps> = ({
@@ -23,6 +24,7 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
   selectedInitial = "",
   labelHeight = "31mm",
   maxIngredientsToFit = 5,
+  allIngredients = [],
 }) => {
   return (
     <div className="mt-8">
@@ -48,6 +50,7 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                 allergens={ALLERGENS}
                 maxIngredients={maxIngredientsToFit}
                 labelHeight={labelHeight}
+                allIngredients={allIngredients}
               />
             </div>
           ))}

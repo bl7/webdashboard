@@ -12,7 +12,8 @@ export async function formatLabelForPrintImage(
   MAX_INGREDIENTS_TO_FIT: number = 5,
   useInitials: boolean = false,
   selectedInitial: string = "",
-  labelHeight: LabelHeight
+  labelHeight: LabelHeight,
+  allIngredients: Array<{ uuid: string; ingredientName: string; allergens: { allergenName: string }[] }> = []
 ): Promise<string> {
   console.log("🖼️ Starting image generation for:", item.name)
   
@@ -37,6 +38,7 @@ export async function formatLabelForPrintImage(
       allergens={ALLERGENS}
       maxIngredients={MAX_INGREDIENTS_TO_FIT}
       labelHeight={labelHeight}
+      allIngredients={allIngredients}
     />
   )
 

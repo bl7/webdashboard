@@ -151,6 +151,7 @@ export default function BossOrdersPage() {
           <thead className={`sticky top-0 z-10 ${isDarkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
             <tr>
               <th className="p-2 border">Order #</th>
+              <th className="p-2 border">Label Ordered</th>
               <th className="p-2 border">User</th>
               <th className="p-2 border">Email</th>
               <th className="p-2 border">Bundles</th>
@@ -181,6 +182,7 @@ export default function BossOrdersPage() {
               paginatedOrders.map(order => (
                 <tr key={order.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer">
                   <td className="p-2 border font-mono" onClick={() => { setSelectedOrder(order); setShowDetails(true); }}>{order.id}</td>
+                  <td className="p-2 border" onClick={() => { setSelectedOrder(order); setShowDetails(true); }}>{order.product_name || <span className="text-gray-400">N/A</span>}</td>
                   <td className="p-2 border" onClick={() => { setSelectedOrder(order); setShowDetails(true); }}>{order.full_name || <span className="text-gray-400">N/A</span>}</td>
                   <td className="p-2 border" onClick={() => { setSelectedOrder(order); setShowDetails(true); }}>{order.email || <span className="text-gray-400">N/A</span>}</td>
                   <td className="p-2 border text-center">{order.bundle_count}</td>
@@ -259,6 +261,9 @@ export default function BossOrdersPage() {
               <div><b>Ordered:</b> {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleString() : ""}</div>
               <div><b>Paid:</b> {selectedOrder.paid_at ? new Date(selectedOrder.paid_at).toLocaleString() : "-"}</div>
               <div><b>Shipped:</b> {selectedOrder.shipped_at ? new Date(selectedOrder.shipped_at).toLocaleString() : "-"}</div>
+              <div><b>Label Ordered:</b> {selectedOrder.product_name} (£{(selectedOrder.product_price_cents/100).toFixed(2)})</div>
+              <div><b>Rolls per bundle:</b> {selectedOrder.rolls_per_bundle}</div>
+              <div><b>Labels per roll:</b> {selectedOrder.labels_per_roll}</div>
               {selectedOrder.stripe_payment_intent_id && (
                 <div><b>Stripe Payment:</b> <a href={`https://dashboard.stripe.com/payments/${selectedOrder.stripe_payment_intent_id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">View in Stripe</a></div>
               )}

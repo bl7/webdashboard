@@ -90,6 +90,9 @@ const ExcelUpload: React.FC = () => {
         const ws = workbook.Sheets[wsname]
         const jsonData = XLSX.utils.sheet_to_json(ws, { defval: "" })
 
+        // Log the raw imported data for debugging
+        console.log('Imported Excel Data:', jsonData)
+
         if (!validateFileFormat(jsonData as Array<Record<string, any>>)) {
           setUploadError(
             "File format not recognized. Please ensure your file contains columns: menu_item_name, ingredient_name, shelf_life_days, allergens"
@@ -162,6 +165,8 @@ const ExcelUpload: React.FC = () => {
       )
 
       // Call the import processor hook to compare and prepare data
+      console.log('Parsed Ingredients:', parsedIngredients)
+      console.log('Parsed Menu Items:', parsedMenuItems)
       const result = await processImport(parsedAllergens, parsedIngredients, parsedMenuItems)
       setImportResult(result)
       setImportCompleted(true)

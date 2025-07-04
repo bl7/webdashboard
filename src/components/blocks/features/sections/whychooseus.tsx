@@ -64,8 +64,10 @@ export const WhyChooseUs = () => {
         </div>
       </div>
       <div className="flex justify-center mt-8 sm:mt-12">
-        <a href="/bookdemo" className="btn-primary w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-bold shadow-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition">
-          Book a Free Demo
+        <a href="/register">
+          <button className="bg-primary px-8 py-4 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold rounded-xl w-full sm:w-auto">
+            Start Free Trial
+          </button>
         </a>
       </div>
     </section>

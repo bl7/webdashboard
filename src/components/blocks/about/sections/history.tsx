@@ -128,10 +128,12 @@ export const History = () => {
 
           {/* Call to Action */}
           <div className="mt-16 text-center">
-            <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-3 text-white font-medium shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
-              <span className="mr-2">✨</span>
-              Ready to Transform Your Kitchen?
-            </div>
+            <a href="/register">
+              <button className="bg-primary px-8 py-4 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold rounded-xl">
+                <span className="mr-2">✨</span>
+                Ready to Transform Your Kitchen?
+              </button>
+            </a>
           </div>
         </div>
       </div>

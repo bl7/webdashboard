@@ -358,6 +358,7 @@ export default function LabelDemo() {
         : {
             ...base,
             ingredients: (item as MenuItem).ingredients,
+            allergens: (item as any).allergens, // Fix: set allergens for menu items
             labelType: "cook" as "cook",
           }
 
@@ -440,7 +441,8 @@ export default function LabelDemo() {
               5,
               useInitials,
               selectedInitial,
-              labelHeight
+              labelHeight,
+              ingredients.map(ing => ({ uuid: String(ing.id), ingredientName: ing.name, allergens: ing.allergens || [] }))
             );
 
             console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
@@ -770,6 +772,27 @@ export default function LabelDemo() {
         {/* Right Section: Print Queue */}
         <div className="flex-1 min-w-[340px]">
           {/* Print Queue and Label Preview */}
+          {/* At the top of the right section, show either the initials chooser or a message if useInitials is off */}
+          {(useInitials && customInitials.length > 0) ? (
+            <div className="mb-6 border rounded-xl bg-white px-6 py-4 flex items-center gap-4 shadow-sm">
+              <label htmlFor="initials-select" className="text-base font-semibold text-gray-800">Initials:</label>
+              <select
+                id="initials-select"
+                value={selectedInitial}
+                onChange={e => setSelectedInitial(e.target.value)}
+                className="rounded border px-3 py-2 text-base"
+              >
+                <option value="">--</option>
+                {customInitials.map((init, idx) => (
+                  <option key={init + idx} value={init}>{init}</option>
+                ))}
+              </select>
+            </div>
+          ) : (
+            <div className="mb-6 border rounded-xl bg-white px-6 py-4 flex items-center gap-4 shadow-sm">
+              <span className="text-base text-gray-700">To use initials, enable them in <b>Settings</b>.</span>
+            </div>
+          )}
           <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
             <div className="sticky top-0 z-10 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
@@ -786,20 +809,20 @@ export default function LabelDemo() {
                 </div>
               ) : (
                 printQueue.map((item) => (
-                  <div key={item.uid} className="mb-4 flex items-center gap-4 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-gray-900">{item.name}</p>
-                      <p className="mt-0.5 text-xs text-gray-500">Expires: {item.expiryDate}</p>
+                  <div key={item.uid} className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
+                    <div className="font-semibold text-gray-900 break-words whitespace-normal">{item.name}</div>
+                    <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
+                      {"labelType" in item && (
+                        <select value={item.labelType || "cook"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                          <option value="cook">Cook</option>
+                          <option value="prep">Prep</option>
+                          <option value="ppds">PPDS</option>
+                        </select>
+                      )}
+                      <Button onClick={() => removeFromQueue(item.uid)} variant="outline" className="bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 border-none shadow-none" aria-label={`Remove ${item.name} from queue`}>Remove</Button>
                     </div>
-                    <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
-                    {"labelType" in item && (
-                      <select value={item.labelType || "cook"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
-                        <option value="cook">Cook</option>
-                        <option value="prep">Prep</option>
-                        <option value="ppds">PPDS</option>
-                      </select>
-                    )}
-                    <Button onClick={() => removeFromQueue(item.uid)} variant="outline" className="text-red-600 hover:bg-red-100" aria-label={`Remove ${item.name} from queue`}>Remove</Button>
                   </div>
                 ))
               )}
@@ -814,6 +837,7 @@ export default function LabelDemo() {
             useInitials={useInitials}
             selectedInitial={selectedInitial}
             labelHeight={labelHeight}
+            allIngredients={ingredients.map(ing => ({ uuid: String(ing.id), ingredientName: ing.name, allergens: ing.allergens || [] }))}
           />
         </div>
       </div>

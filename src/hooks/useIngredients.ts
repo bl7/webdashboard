@@ -39,6 +39,7 @@ export function useIngredients() {
 
     try {
       const data = await getAllIngredients(token)
+      console.log('Raw ingredients API response:', data)
       setIngredients(Array.isArray(data) ? data : data.data)
     } catch (err: any) {
       console.error("Error fetching ingredients:", err)

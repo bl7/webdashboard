@@ -52,50 +52,15 @@ export function useImportProcessor() {
       .replace(/s$/, "") // eggs -> egg
   }
 
-  // Enhanced fuzzy matching for all entity types
+  // Exact (case-insensitive, trimmed) matching only
   const findExistingByName = <T extends { name?: string; ingredientName?: string; menuItemName?: string }>(
     searchName: string,
     items: T[],
     getNameFn: (item: T) => string
   ): T | undefined => {
-    if (!searchName?.trim()) return undefined
-
-    const normalizedSearch = normalizeName(searchName)
-
-    // 1. Exact normalized match first
-    const exactMatch = items.find((item) => normalizeName(getNameFn(item)) === normalizedSearch)
-    if (exactMatch) return exactMatch
-
-    // 2. Partial match for variations like "egg" vs "eggs"
-    const partialMatch = items.find((item) => {
-      const itemName = normalizeName(getNameFn(item))
-      return (
-        (itemName.includes(normalizedSearch) || normalizedSearch.includes(itemName)) &&
-        Math.abs(itemName.length - normalizedSearch.length) <= 2
-      )
-    })
-    if (partialMatch) return partialMatch
-
-    // 3. Word-based matching for compound names like "chicken patty" vs "patty"
-    const searchWords = normalizedSearch.split(" ")
-    const wordMatch = items.find((item) => {
-      const itemName = normalizeName(getNameFn(item))
-      const itemWords = itemName.split(" ")
-
-      // Check if any significant word matches
-      return searchWords.some(
-        (searchWord) =>
-          searchWord.length > 2 && // Ignore very short words
-          itemWords.some((itemWord) => itemWord === searchWord)
-      )
-    })
-    if (wordMatch) return wordMatch
-
-    // 4. Substring matching for cases like "marinara sauce" vs "sauce"
-    return items.find((item) => {
-      const itemName = normalizeName(getNameFn(item))
-      return itemName.includes(normalizedSearch) || normalizedSearch.includes(itemName)
-    })
+    if (!searchName?.trim()) return undefined;
+    const normalizedSearch = searchName.trim().toLowerCase();
+    return items.find((item) => getNameFn(item).trim().toLowerCase() === normalizedSearch);
   }
 
   // Main import processing function
@@ -293,32 +258,37 @@ export function useImportProcessor() {
           })
 
           if (success) {
-            // --- Add to localIngredients for immediate lookup ---
-            // addNewIngredient returns true/false, so we must construct the new Ingredient object
-            const newIngredient: Ingredient = {
-              uuid: ingredientName + '-' + Math.random().toString(36).slice(2), // fallback, ideally use real uuid
-              ingredientName,
-              expiryDays: ingredientData.expiryDays,
-              allergens: [],
-            }
-            localIngredients.push(newIngredient)
-
-            // Get the newly created ingredient ID
-            const foundIngredient = findExistingByName(
-              ingredientName,
-              localIngredients,
-              (i) => i.ingredientName
-            )
-            if (foundIngredient) {
+            // Fetch the real ingredient from the backend by name
+            try {
+              const token = localStorage.getItem("token")
+              if (token) {
+                const allIngredientsRes = await import("@/lib/api").then(m => m.getAllIngredients(token))
+                const realIngredient = Array.isArray(allIngredientsRes.data)
+                  ? allIngredientsRes.data.find((ing: any) => ing.ingredientName.trim().toLowerCase() === ingredientName.trim().toLowerCase())
+                  : null
+                if (realIngredient) {
               const key1 = ingredientName.toLowerCase()
               const key2 = normalizeName(ingredientName)
-              ingredientIdMap.set(key1, foundIngredient.uuid)
-              ingredientIdMap.set(key2, foundIngredient.uuid)
+                  ingredientIdMap.set(key1, realIngredient.uuid)
+                  ingredientIdMap.set(key2, realIngredient.uuid)
               results.stats.ingredients.created++
               console.log(
-                `✓ Created ingredient: "${ingredientName}" (ID: ${foundIngredient.uuid})`
+                    `✓ Created ingredient: "${ingredientName}" (ID: ${realIngredient.uuid})`
               )
-              results.newItems.ingredients.push({ name: ingredientName, id: foundIngredient.uuid })
+                  results.newItems.ingredients.push({ name: ingredientName, id: realIngredient.uuid })
+                  // Add to localIngredients for immediate lookup
+                  localIngredients.push({
+                    uuid: realIngredient.uuid,
+                    ingredientName: realIngredient.ingredientName,
+                    expiryDays: realIngredient.expiryDays,
+                    allergens: realIngredient.allergens || [],
+                  })
+                } else {
+                  console.warn(`Warning: Could not find real ingredient in DB after creation: ${ingredientName}`)
+                }
+              }
+            } catch (err) {
+              console.error('Error fetching real ingredient after creation:', err)
             }
           } else {
             results.warnings.push(`Failed to create ingredient: ${ingredientName}`)
