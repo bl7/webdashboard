@@ -581,6 +581,11 @@ export async function POST(req: NextRequest) {
               [orderId]
             );
             const order = orderRes.rows[0];
+            let product: any = {};
+            if (order && order.label_product_id) {
+              const productRes = await client.query('SELECT * FROM label_products WHERE id = $1', [order.label_product_id]);
+              product = productRes.rows[0] || {};
+            }
             if (order && order.email) {
               console.log('[WEBHOOK] Sending label order confirmation to user:', { to: order.email, orderId: order.id });
               await sendMail({
@@ -594,6 +599,10 @@ export async function POST(req: NextRequest) {
                   amount: order.amount_cents,
                   shippingAddress: order.shipping_address,
                   orderId: order.id,
+                  productName: product.name,
+                  productPriceCents: product.price_cents,
+                  productRollsPerBundle: product.rolls_per_bundle,
+                  productLabelsPerRoll: product.labels_per_roll,
                 }),
               });
               console.log('[WEBHOOK] Sent label order confirmation to user:', { to: order.email, orderId: order.id });
