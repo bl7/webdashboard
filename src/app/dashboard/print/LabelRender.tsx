@@ -583,7 +583,6 @@
 //   )
 // }
 
-// src/components/LabelRender.tsx
 import React from "react"
 import { PrintQueueItem } from "@/types/print"
 import { LabelHeight } from "./LabelHeightChooser"
@@ -774,7 +773,6 @@ export default function LabelRender({
     color: "white",
     padding: "2px 0",
     marginBottom: sectionSpacing - 1,
-    zIndex: 1,
     position: "relative" as const,
     fontSize: getNameFontSize(item.name, nameFontSize, labelHeight),
     fontWeight: 900,

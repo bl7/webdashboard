@@ -13,8 +13,6 @@ import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
 import useBillingData from "../profile/hooks/useBillingData"
-import { allergenIconMap, getAllergenIcon } from "@/components/allergenicons"
-import { Printer as PrinterIcon } from "lucide-react"
 
 // Define Printer type locally to match PrinterContext
 interface Printer {
@@ -682,14 +680,39 @@ export default function LabelDemo() {
           <div className="bg-white rounded-xl shadow-lg border p-6 mb-8">
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-bold tracking-tight">Label Printer</h1>
-              {/* Printer Status Bar */}
-              <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-purple-200 bg-purple-50">
-                <PrinterIcon className={`h-5 w-5 ${isConnected ? 'text-green-500' : 'text-red-400'}`} />
-                <span className={`text-xs font-semibold ${isConnected ? 'text-green-700' : 'text-red-500'}`}>{isConnected ? 'Connected' : 'Disconnected'}</span>
-                {!isConnected && (
-                  <Button onClick={reconnect} size="sm" variant="outline" className="text-xs ml-2">Reconnect</Button>
-                )}
-              </div>
+              {isConnected ? (
+                <div className="mb-4 p-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-sm">
+                  <div className="font-semibold text-purple-900 mb-2">Available Printers</div>
+                  {availablePrinters.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      <select
+                        value={selectedPrinter?.name || ''}
+                        onChange={e => {
+                          const printer = availablePrinters.find(p => p.name === e.target.value)
+                          selectPrinter(printer || null)
+                        }}
+                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                      >
+                        <option value="">Select Printer</option>
+                        {availablePrinters.map((printer) => (
+                          <option key={printer.name} value={printer.name}>
+                            {printer.name} {printer.isDefault ? '(Default)' : ''}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">
+                        {availablePrinters.length} printer(s) detected
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-gray-500">No printers detected</div>
+                  )}
+                </div>
+              ) : (
+                <div className="mb-4 p-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white shadow-sm text-red-700">
+                  No printers detected
+                </div>
+              )}
             </div>
             <LabelHeightChooser
               selectedHeight={labelHeight}
@@ -794,7 +817,7 @@ export default function LabelDemo() {
             </div>
           )}
           <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
-            <div className="sticky top-0 z-10 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
+            <div className="sticky top-0 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
                 <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="default" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>

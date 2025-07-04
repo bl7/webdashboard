@@ -36,7 +36,7 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 w-full border-b transition-all duration-300 ease-in-out",
+        "fixed top-0 left-0 right-0 z-50 w-full border-b transition-all duration-300 ease-in-out",
         isScrolled
           ? "border-gray-200/50 bg-white/95 shadow-lg backdrop-blur-lg"
           : "border-gray-200/30 bg-white/80 backdrop-blur-md"
