@@ -1,8 +1,10 @@
 import React from "react"
+import Image from "next/image"
+import deviceinhand from "@/assets/images/deviceinhand.png"
 
 export const AboutHero = () => {
   return (
-    <section className="relative overflow-visible px-2 sm:px-4 py-12 sm:py-24 lg:px-16">
+    <section className="relative overflow-visible px-2 sm:px-4 py-16 sm:px-6 lg:px-16">
       <div className="container relative z-10 mx-auto flex flex-wrap-reverse items-center justify-center text-pretty md:flex-nowrap lg:justify-between">
         {/* Text Content */}
         <div className="flex flex-col items-start justify-center text-center md:text-left w-full md:w-auto">
@@ -16,8 +18,15 @@ export const AboutHero = () => {
         </div>
 
         {/* Placeholder for image or animation */}
-        <div className="relative mt-8 sm:mt-12 h-48 sm:h-[300px] w-full max-w-md md:mt-0">
-          <div className="h-full w-full rounded-xl bg-muted" />
+        <div className="relative mt-8 sm:mt-12 h-64 sm:h-[420px] w-full max-w-lg md:mt-0">
+          <Image
+            src={deviceinhand}
+            alt="Device in hand preview"
+            fill
+            className="rounded-xl object-contain transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
+            priority
+            sizes="(max-width: 768px) 100vw, 560px"
+          />
         </div>
       </div>
 

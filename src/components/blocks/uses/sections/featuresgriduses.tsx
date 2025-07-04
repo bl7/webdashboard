@@ -3,13 +3,13 @@ import Image from "next/image"
 
 export const FeaturesGridUses = () => {
   return (
-    <section className="relative bg-white px-4 sm:px-6 py-20 sm:py-32">
+    <section className="relative bg-white px-4 sm:px-6 py-12 sm:py-16">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       
-      <div className="relative mx-auto max-w-7xl space-y-24 sm:space-y-32">
+      <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
         {/* Benefits Section */}
-        <div className="space-y-12">
+        <div className="space-y-8">
           <div className="text-center space-y-4">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
               Why kitchens choose InstaLabel

@@ -1,5 +1,4 @@
 export * from "./contact"
 export * from "./hero"
 export * from "./history"
-export * from "./values"
 export * from "./whyinstalabel"

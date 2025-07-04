@@ -4,7 +4,7 @@ import Image from "next/image"
 
 export const LabelsHero = () => {
   return (
-    <section className="relative overflow-visible px-2 sm:px-4 py-12 sm:py-24 lg:px-16">
+    <section className="relative overflow-visible px-2 sm:px-4 py-16 sm:px-6 lg:px-16 bg-white">
       <div className="container relative z-10 mx-auto flex flex-wrap-reverse items-center justify-center text-pretty md:flex-nowrap lg:justify-between">
         {/* Text Content */}
         <div className="flex flex-col items-start justify-center text-center md:text-left w-full md:w-auto">
@@ -58,6 +58,8 @@ export const LabelsHero = () => {
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
       <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
+      {/* Bottom fade overlay */}
+      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
     </section>
   )
 }

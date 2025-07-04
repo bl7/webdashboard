@@ -57,7 +57,7 @@ export const PricingGrid = () => {
   }
 
   return (
-    <section id="pricing" className="relative py-16 sm:py-24 bg-slate-50">
+    <section id="pricing" className="relative py-12 sm:py-16 bg-white">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-0 left-1/4 w-72 h-72 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>

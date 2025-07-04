@@ -1,6 +1,6 @@
 const Page = () => {
   return (
-    <section>
+    <section className="bg-white">
       <div className="prose prose-p:my-2 prose-h2:my-6 dark:prose-invert prose-a:text-blue-700 prose-a:no-underline hover:prose-a:text-blue-500 dark:prose-a:text-blue-300 dark:hover:prose-a:text-blue-500 max-w-none break-words text-base">
         <div className="flex w-full">
           <div className="w-full">

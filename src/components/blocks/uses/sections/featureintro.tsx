@@ -5,25 +5,27 @@ import PPDS from "../../../../assets/images/prepandfood.jpg"
 
 export const FeatureIntro = () => {
   return (
-    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-24 bg-gradient-to-br from-slate-50 via-white to-blue-50/30 relative overflow-hidden">
+    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-16 bg-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(245,158,11,0.05),transparent_50%)]" />
       
-      <div className="mx-auto max-w-6xl space-y-16 relative">
+      <div className="mx-auto max-w-6xl space-y-12 relative">
         {/* Images Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image 1 – Natasha's Law */}
           <div className="group relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
             <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20 group-hover:shadow-2xl transition-all duration-500">
-              <Image
-                src={Natasha}
-                alt="Natasha's Law Label"
-                width={600}
-                height={400}
-                className="rounded-xl w-full h-auto"
-              />
+              <div className="relative w-full aspect-[3/2] h-64 sm:h-80 lg:h-96">
+                <Image
+                  src={Natasha}
+                  alt="Natasha's Law Label"
+                  fill
+                  className="rounded-xl object-cover"
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                />
+              </div>
             </div>
           </div>
 
@@ -31,13 +33,15 @@ export const FeatureIntro = () => {
           <div className="group relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-orange-600/20 to-red-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
             <div className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-2 shadow-lg border border-white/20 group-hover:shadow-2xl transition-all duration-500">
-              <Image
-                src={PPDS}
-                alt="Prep Label Example"
-                width={600}
-                height={400}
-                className="rounded-xl w-full h-auto"
-              />
+              <div className="relative w-full aspect-[3/2] h-64 sm:h-80 lg:h-96">
+                <Image
+                  src={PPDS}
+                  alt="Prep Label Example"
+                  fill
+                  className="rounded-xl object-cover"
+                  sizes="(max-width: 1024px) 100vw, 600px"
+                />
+              </div>
             </div>
           </div>
         </div>

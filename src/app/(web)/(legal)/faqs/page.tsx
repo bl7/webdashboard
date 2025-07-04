@@ -40,7 +40,7 @@ const Page = () => {
   ]
 
   return (
-    <section>
+    <section className="bg-white">
       <h1 className="mb-3 text-5xl font-bold">Frequently Asked Questions</h1>
       <div className="max-w-3xl pt-6 text-base">
         {faqsList.map((item, index) => {

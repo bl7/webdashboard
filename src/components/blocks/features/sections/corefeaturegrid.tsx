@@ -70,9 +70,9 @@ const roles = [
 
 export const CoreFeaturesGrid = () => {
   return (
-    <section className="-mt-8 sm:-mt-16 py-8 sm:py-16">
+    <section className="-mt-8 sm:-mt-16 py-8 sm:py-12">
       <div className="container px-2 sm:px-4 md:px-12 lg:px-16">
-        <h2 className="mb-6 sm:mb-10 text-center text-2xl sm:text-3xl font-bold text-gray-900">
+        <h2 className="mb-6 sm:mb-8 text-center text-2xl sm:text-3xl font-bold text-gray-900">
           Built for the Chaos of a Real Kitchen
         </h2>
         <div className="grid gap-6 sm:gap-10 md:grid-cols-2 lg:grid-cols-3">
@@ -93,7 +93,7 @@ export const CoreFeaturesGrid = () => {
           ))}
         </div>
 
-        <div className="mt-10 sm:mt-20">
+        <div className="mt-8 sm:mt-12">
           <h3 className="mb-4 sm:mb-6 text-center text-lg sm:text-xl font-semibold">Use Case Snapshots</h3>
           <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
             {roles.map((r, i) => (
