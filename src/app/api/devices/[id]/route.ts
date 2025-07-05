@@ -3,10 +3,10 @@ import pool from "@/lib/pg"
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
     
     // Check if this is a status update or device details update

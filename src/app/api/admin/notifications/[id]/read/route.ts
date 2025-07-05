@@ -3,16 +3,16 @@ import pool from "@/lib/pg"
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     
     const result = await pool.query(`
       UPDATE admin_notifications 
-      SET read = true, updated_at = NOW()
+      SET read_at = NOW()
       WHERE id = $1
-      RETURNING *
+      RETURNING id
     `, [id])
     
     if (result.rows.length === 0) {
@@ -21,7 +21,7 @@ export async function PATCH(
     
     return NextResponse.json({ 
       success: true, 
-      notification: result.rows[0]
+      message: "Notification marked as read"
     })
     
   } catch (error: any) {
