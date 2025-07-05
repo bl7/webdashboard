@@ -51,6 +51,12 @@ export async function POST(req: NextRequest) {
       [userUuid, bundle_count, label_count, amount_cents, shipping_address, label_product_id]
     );
     const orderId = orderRes.rows[0].id;
+    
+    // Create admin notification for new order
+    await pool.query(
+      `SELECT notify_new_label_order($1, $2, $3, $4, $5, $6, $7)`,
+      [orderId, userUuid, bundle_count, label_count, amount_cents, label_product_id, shipping_address]
+    );
     // Find or create Stripe customer
     let customer;
     const customers = await stripe.customers.list({ limit: 100 });

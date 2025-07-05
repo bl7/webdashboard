@@ -1,182 +1,758 @@
 "use client"
-import React, { useEffect, useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Edit, Plus } from "lucide-react"
 
-const STATUS_LABELS: Record<string, string> = {
-  pending: "Pending",
-  shipped: "Shipped",
-  delivered: "Delivered",
-  return_requested: "Return Requested",
-  returned: "Returned",
-  lost: "Lost",
+import React, { useEffect, useState } from "react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { 
+  Package, 
+  Truck, 
+  CheckCircle, 
+  AlertTriangle, 
+  RotateCcw, 
+  Search,
+  Filter,
+  Download,
+  Mail,
+  Eye,
+  Edit,
+  Save,
+  X
+} from "lucide-react"
+
+interface Device {
+  id: number
+  user_id: string
+  plan_id: number
+  assigned_at: string
+  shipped_at: string | null
+  delivered_at: string | null
+  return_requested_at: string | null
+  returned_at: string | null
+  device_type: string | null
+  device_identifier: string | null
+  status: 'pending' | 'shipped' | 'delivered' | 'return_requested' | 'returned' | 'lost'
+  notes: string | null
+  created_at: string
+  updated_at: string
+  customer_name?: string
+  customer_email?: string
+  plan_name?: string
+  subscription_status?: string
 }
 
-function DeviceModal({ open, onClose, onSave, device }: any) {
-  const [form, setForm] = useState<any>(device || {})
-  useEffect(() => { setForm(device || {}) }, [device, open])
-  if (!open) return null
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="bg-white dark:bg-gray-900 rounded-lg p-6 w-full max-w-lg relative">
-        <h2 className="text-lg font-bold mb-4 dark:text-gray-100">{device ? "Edit Device" : "Assign Device"}</h2>
-        <form onSubmit={e => { e.preventDefault(); onSave(form) }} className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">User ID</label>
-            <input className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.user_id || ''} onChange={e => setForm((f: any) => ({ ...f, user_id: e.target.value }))} disabled={!!device} required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">Plan ID</label>
-            <input className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.plan_id || ''} onChange={e => setForm((f: any) => ({ ...f, plan_id: e.target.value }))} disabled={!!device} required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">Device Type</label>
-            <input className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.device_type || ''} onChange={e => setForm((f: any) => ({ ...f, device_type: e.target.value }))} required />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">Device Identifier (MAC/Serial)</label>
-            <input className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.device_identifier || ''} onChange={e => setForm((f: any) => ({ ...f, device_identifier: e.target.value }))} />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">Status</label>
-            <select className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.status || 'pending'} onChange={e => setForm((f: any) => ({ ...f, status: e.target.value }))}>
-              {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1 dark:text-gray-100">Notes</label>
-            <textarea className="w-full border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700" value={form.notes || ''} onChange={e => setForm((f: any) => ({ ...f, notes: e.target.value }))} />
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit">{device ? "Update" : "Assign"}</Button>
-          </div>
-        </form>
-      </div>
-    </div>
-  )
+interface DeviceStats {
+  total: number
+  pending: number
+  shipped: number
+  delivered: number
+  return_requested: number
+  returned: number
+  lost: number
 }
 
 export default function DevicesPage() {
-  const [devices, setDevices] = useState<any[]>([])
+  const [devices, setDevices] = useState<Device[]>([])
+  const [filteredDevices, setFilteredDevices] = useState<Device[]>([])
+  const [stats, setStats] = useState<DeviceStats>({
+    total: 0,
+    pending: 0,
+    shipped: 0,
+    delivered: 0,
+    return_requested: 0,
+    returned: 0,
+    lost: 0
+  })
   const [loading, setLoading] = useState(true)
-  const [modalOpen, setModalOpen] = useState(false)
-  const [selectedDevice, setSelectedDevice] = useState<any>(null)
-  const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState('')
-  const [page, setPage] = useState(1)
-  const pageSize = 10
+  const [searchTerm, setSearchTerm] = useState("")
+  const [statusFilter, setStatusFilter] = useState<string>("all")
+  const [updatingDevice, setUpdatingDevice] = useState<number | null>(null)
+  
+  // Confirmation modal state
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [pendingStatusChange, setPendingStatusChange] = useState<{
+    deviceId: number
+    newStatus: string
+    deviceName: string
+    currentStatus: string
+  } | null>(null)
+
+  // Device details modal state
+  const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const [selectedDevice, setSelectedDevice] = useState<Device | null>(null)
+  const [editingDevice, setEditingDevice] = useState<Partial<Device> | null>(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const [savingDevice, setSavingDevice] = useState(false)
+
+  useEffect(() => {
+    fetchDevices()
+  }, [])
+
+  useEffect(() => {
+    filterDevices()
+  }, [devices, searchTerm, statusFilter])
 
   const fetchDevices = async () => {
-    setLoading(true)
-    const res = await fetch("/api/devices")
-    const data = await res.json()
-    setDevices(data.devices || [])
-    setLoading(false)
-  }
-  useEffect(() => { fetchDevices() }, [])
-  const handleEdit = (device: any) => { setSelectedDevice(device); setModalOpen(true) }
-  const handleAdd = () => { setSelectedDevice(null); setModalOpen(true) }
-  const handleSave = async (form: any) => {
-    if (form.id) {
-      await fetch('/api/devices', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
-    } else {
-      await fetch('/api/devices', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+    try {
+      const response = await fetch("/api/devices", {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        console.log("Devices data received:", data)
+        console.log("First device details:", data.devices?.[0])
+        setDevices(data.devices || [])
+        calculateStats(data.devices || [])
+      } else {
+        console.error("Failed to fetch devices:", response.status, response.statusText)
+      }
+    } catch (error) {
+      console.error("Failed to fetch devices:", error)
+    } finally {
+      setLoading(false)
     }
-    setModalOpen(false)
-    fetchDevices()
   }
 
-  // Filtering and search
-  const filtered = devices.filter(device => {
-    const q = search.toLowerCase()
-    const matchesSearch =
-      !q ||
-      (device.user_email && device.user_email.toLowerCase().includes(q)) ||
-      (device.user_id && device.user_id.toLowerCase().includes(q)) ||
-      (device.plan_name && device.plan_name.toLowerCase().includes(q)) ||
-      (device.plan_id && device.plan_id.toString().includes(q)) ||
-      (device.device_type && device.device_type.toLowerCase().includes(q)) ||
-      (device.device_identifier && device.device_identifier.toLowerCase().includes(q))
-    const matchesStatus = !statusFilter || device.status === statusFilter
-    return matchesSearch && matchesStatus
-  })
-  const totalPages = Math.ceil(filtered.length / pageSize)
-  const paginated = filtered.slice((page - 1) * pageSize, page * pageSize)
+  const calculateStats = (deviceList: Device[]) => {
+    const stats = {
+      total: deviceList.length,
+      pending: deviceList.filter(d => d.status === 'pending').length,
+      shipped: deviceList.filter(d => d.status === 'shipped').length,
+      delivered: deviceList.filter(d => d.status === 'delivered').length,
+      return_requested: deviceList.filter(d => d.status === 'return_requested').length,
+      returned: deviceList.filter(d => d.status === 'returned').length,
+      lost: deviceList.filter(d => d.status === 'lost').length
+    }
+    setStats(stats)
+  }
 
-  return (
-    <div className="p-8 dark:bg-gray-900 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold dark:text-gray-100">Device Management</h1>
-        <Button onClick={handleAdd}><Plus className="w-4 h-4 mr-1" />Assign Device</Button>
-      </div>
-      <div className="flex flex-wrap gap-4 mb-4 items-end">
-        <input
-          className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-          placeholder="Search by user, plan, device, ..."
-          value={search}
-          onChange={e => { setSearch(e.target.value); setPage(1) }}
-        />
-        <select
-          className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
-          value={statusFilter}
-          onChange={e => { setStatusFilter(e.target.value); setPage(1) }}
-        >
-          <option value="">All Statuses</option>
-          {Object.keys(STATUS_LABELS).map(s => (
-            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-          ))}
-        </select>
-      </div>
-      {modalOpen && <DeviceModal open={modalOpen} onClose={() => setModalOpen(false)} onSave={handleSave} device={selectedDevice} />}
-      {loading ? <div className="dark:text-gray-100">Loading...</div> : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border text-sm dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700">
-            <thead className="bg-gray-100 dark:bg-gray-800">
-              <tr>
-                <th className="p-2 border dark:border-gray-700">User</th>
-                <th className="p-2 border dark:border-gray-700">Plan</th>
-                <th className="p-2 border dark:border-gray-700">Device Type</th>
-                <th className="p-2 border dark:border-gray-700">Identifier</th>
-                <th className="p-2 border dark:border-gray-700">Status</th>
-                <th className="p-2 border dark:border-gray-700">Assigned</th>
-                <th className="p-2 border dark:border-gray-700">Shipped</th>
-                <th className="p-2 border dark:border-gray-700">Delivered</th>
-                <th className="p-2 border dark:border-gray-700">Returned</th>
-                <th className="p-2 border dark:border-gray-700">Notes</th>
-                <th className="p-2 border dark:border-gray-700">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginated.map(device => (
-                <tr key={device.id} className="dark:hover:bg-gray-800">
-                  <td className="p-2 border dark:border-gray-700">{device.user_email || device.user_id}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.plan_name || device.plan_id}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.device_type}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.device_identifier}</td>
-                  <td className="p-2 border dark:border-gray-700">{STATUS_LABELS[device.status] || device.status}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.assigned_at ? new Date(device.assigned_at).toLocaleDateString() : '-'}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.shipped_at ? new Date(device.shipped_at).toLocaleDateString() : '-'}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.delivered_at ? new Date(device.delivered_at).toLocaleDateString() : '-'}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.returned_at ? new Date(device.returned_at).toLocaleDateString() : '-'}</td>
-                  <td className="p-2 border dark:border-gray-700">{device.notes || '-'}</td>
-                  <td className="p-2 border dark:border-gray-700">
-                    <Button size="sm" variant="outline" onClick={() => handleEdit(device)}><Edit className="w-4 h-4" /></Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* Pagination controls */}
-          <div className="flex justify-between items-center mt-4">
-            <span className="dark:text-gray-100">Page {page} of {totalPages || 1}</span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(p => Math.max(1, p - 1))}>Prev</Button>
-              <Button size="sm" variant="outline" disabled={page === totalPages || totalPages === 0} onClick={() => setPage(p => Math.min(totalPages, p + 1))}>Next</Button>
-            </div>
+  const filterDevices = () => {
+    let filtered = devices
+
+    // Filter by search term
+    if (searchTerm) {
+      filtered = filtered.filter(device =>
+        device.customer_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        device.customer_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        device.plan_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        device.device_identifier?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(device => device.status === statusFilter)
+    }
+
+    setFilteredDevices(filtered)
+  }
+
+  const updateDeviceStatus = async (deviceId: number, newStatus: string) => {
+    setUpdatingDevice(deviceId)
+    try {
+      const response = await fetch(`/api/devices/${deviceId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+
+      if (response.ok) {
+        await fetchDevices() // Refresh the data
+      } else {
+        console.error("Failed to update device status:", response.status, response.statusText)
+      }
+    } catch (error) {
+      console.error("Failed to update device status:", error)
+    } finally {
+      setUpdatingDevice(null)
+    }
+  }
+
+  const handleStatusChange = (deviceId: number, newStatus: string, deviceName: string, currentStatus: string) => {
+    setPendingStatusChange({
+      deviceId,
+      newStatus,
+      deviceName,
+      currentStatus
+    })
+    setShowConfirmModal(true)
+  }
+
+  const confirmStatusChange = async () => {
+    if (pendingStatusChange) {
+      await updateDeviceStatus(pendingStatusChange.deviceId, pendingStatusChange.newStatus)
+      setShowConfirmModal(false)
+      setPendingStatusChange(null)
+    }
+  }
+
+  const cancelStatusChange = () => {
+    setShowConfirmModal(false)
+    setPendingStatusChange(null)
+  }
+
+  const openDeviceDetails = (device: Device) => {
+    setSelectedDevice(device)
+    setEditingDevice({ ...device })
+    setIsEditing(false)
+    setShowDetailsModal(true)
+  }
+
+  const closeDeviceDetails = () => {
+    setShowDetailsModal(false)
+    setSelectedDevice(null)
+    setEditingDevice(null)
+    setIsEditing(false)
+  }
+
+  const startEditing = () => {
+    setIsEditing(true)
+  }
+
+  const cancelEditing = () => {
+    setEditingDevice(selectedDevice ? { ...selectedDevice } : null)
+    setIsEditing(false)
+  }
+
+  const saveDeviceDetails = async () => {
+    if (!editingDevice || !selectedDevice) return
+
+    setSavingDevice(true)
+    try {
+      const updateData = {
+        device_type: editingDevice.device_type,
+        device_identifier: editingDevice.device_identifier,
+        notes: editingDevice.notes
+      }
+      
+      console.log('Sending update data:', updateData)
+      console.log('Current editingDevice:', editingDevice)
+      
+      const response = await fetch(`/api/devices/${selectedDevice.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(updateData)
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Update response:', result)
+        
+        // Update the selected device with the response data
+        if (result.device) {
+          setSelectedDevice(result.device)
+        }
+        
+        await fetchDevices() // Refresh the data
+        setIsEditing(false)
+      } else {
+        const errorText = await response.text()
+        console.error("Failed to update device details:", response.status, response.statusText, errorText)
+      }
+    } catch (error) {
+      console.error("Failed to update device details:", error)
+    } finally {
+      setSavingDevice(false)
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      pending: { color: "bg-yellow-100 text-yellow-800", icon: Package },
+      shipped: { color: "bg-blue-100 text-blue-800", icon: Truck },
+      delivered: { color: "bg-green-100 text-green-800", icon: CheckCircle },
+      return_requested: { color: "bg-orange-100 text-orange-800", icon: AlertTriangle },
+      returned: { color: "bg-purple-100 text-purple-800", icon: RotateCcw },
+      lost: { color: "bg-red-100 text-red-800", icon: AlertTriangle }
+    }
+
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
+    const Icon = config.icon
+
+    return (
+      <Badge className={config.color}>
+        <Icon className="w-3 h-3 mr-1" />
+        {status.replace('_', ' ').toUpperCase()}
+      </Badge>
+    )
+  }
+
+  const getStatusOptions = (currentStatus: string) => {
+    const statusFlow = {
+      pending: ['shipped', 'return_requested'],
+      shipped: ['delivered', 'return_requested', 'pending'],
+      delivered: ['return_requested', 'shipped'],
+      return_requested: ['returned', 'lost', 'delivered'],
+      returned: ['pending', 'return_requested'],
+      lost: ['pending', 'return_requested']
+    }
+
+    return statusFlow[currentStatus as keyof typeof statusFlow] || []
+  }
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "N/A"
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    })
+  }
+
+  const formatDateTime = (dateString: string | null) => {
+    if (!dateString) return "N/A"
+    return new Date(dateString).toLocaleString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  const exportDevices = () => {
+    const csvContent = [
+      ['Device ID', 'Device Identifier', 'Customer Name', 'Customer Email', 'Plan', 'Status', 'Assigned Date', 'Shipped Date', 'Delivered Date', 'Return Requested', 'Returned Date', 'Notes'].join(','),
+      ...filteredDevices.map(device => [
+        device.id,
+        device.device_identifier || 'N/A',
+        device.customer_name || 'N/A',
+        device.customer_email || 'N/A',
+        device.plan_name || 'N/A',
+        device.status,
+        formatDate(device.assigned_at),
+        formatDate(device.shipped_at),
+        formatDate(device.delivered_at),
+        formatDate(device.return_requested_at),
+        formatDate(device.returned_at),
+        device.notes || ''
+      ].join(','))
+    ].join('\n')
+
+    const blob = new Blob([csvContent], { type: 'text/csv' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `devices-${new Date().toISOString().split('T')[0]}.csv`
+    a.click()
+    window.URL.revokeObjectURL(url)
+  }
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-6 max-w-7xl">
+        <div className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">Device Management</h1>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <Card key={i}>
+                <CardContent className="p-6">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
-      )}
+      </div>
+    )
+  }
+
+  return (
+    <div className="container mx-auto px-4 py-6 max-w-7xl">
+      <div className="space-y-6">
+        {/* Confirmation Modal */}
+        <Dialog open={showConfirmModal} onOpenChange={setShowConfirmModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Confirm Status Change</DialogTitle>
+              <DialogDescription>
+                Are you sure you want to change the status of device {pendingStatusChange?.deviceId} 
+                from <strong>{pendingStatusChange?.currentStatus.replace('_', ' ').toUpperCase()}</strong> 
+                to <strong>{pendingStatusChange?.newStatus.replace('_', ' ').toUpperCase()}</strong>?
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={cancelStatusChange}>
+                Cancel
+              </Button>
+              <Button onClick={confirmStatusChange} disabled={updatingDevice !== null}>
+                {updatingDevice === pendingStatusChange?.deviceId ? "Updating..." : "Confirm"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
+        {/* Device Details Modal */}
+        <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
+          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <div className="flex items-center justify-between">
+                <DialogTitle>Device Details</DialogTitle>
+                <div className="flex gap-2">
+                  {!isEditing ? (
+                    <Button variant="outline" size="sm" onClick={startEditing}>
+                      <Edit className="w-4 h-4 mr-2" />
+                      Edit
+                    </Button>
+                  ) : (
+                    <>
+                      <Button variant="outline" size="sm" onClick={cancelEditing}>
+                        <X className="w-4 h-4 mr-2" />
+                        Cancel
+                      </Button>
+                      <Button size="sm" onClick={saveDeviceDetails} disabled={savingDevice}>
+                        <Save className="w-4 h-4 mr-2" />
+                        {savingDevice ? "Saving..." : "Save"}
+                      </Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </DialogHeader>
+            
+            {selectedDevice && (
+              <div className="space-y-6">
+                {/* Basic Information */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Device ID</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        <span className="font-mono">{selectedDevice.id}</span>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Device Type</label>
+                      {isEditing ? (
+                        <Input
+                          value={editingDevice?.device_type || ''}
+                          onChange={(e) => setEditingDevice(prev => ({ ...prev, device_type: e.target.value }))}
+                          placeholder="e.g., Sunmi T2, Sunmi L2"
+                          className="mt-1"
+                        />
+                      ) : (
+                        <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                          {selectedDevice.device_type || 'Not specified'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Device Identifier</label>
+                      {isEditing ? (
+                        <Input
+                          value={editingDevice?.device_identifier || ''}
+                          onChange={(e) => setEditingDevice(prev => ({ ...prev, device_identifier: e.target.value }))}
+                          placeholder="e.g., SN123456789, MAC:AA:BB:CC:DD:EE:FF"
+                          className="mt-1"
+                        />
+                      ) : (
+                        <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                          {selectedDevice.device_identifier || 'Not specified'}
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                      <div className="mt-1">
+                        {getStatusBadge(selectedDevice.status)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Customer Name</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {selectedDevice.customer_name || 'N/A'}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Customer Email</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {selectedDevice.customer_email || 'N/A'}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Plan</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {selectedDevice.plan_name || 'N/A'}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Subscription Status</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {selectedDevice.subscription_status || 'N/A'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Timeline Information */}
+                <div>
+                  <h3 className="text-lg font-medium mb-4">Device Timeline</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Assigned At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.assigned_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Shipped At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.shipped_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Delivered At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.delivered_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Return Requested At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.return_requested_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Returned At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.returned_at)}
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Created At</label>
+                      <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border">
+                        {formatDateTime(selectedDevice.created_at)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Notes */}
+                <div>
+                  <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Notes</label>
+                  {isEditing ? (
+                    <Textarea
+                      value={editingDevice?.notes || ''}
+                      onChange={(e) => setEditingDevice(prev => ({ ...prev, notes: e.target.value }))}
+                      placeholder="Add any notes about this device..."
+                      className="mt-1"
+                      rows={4}
+                    />
+                  ) : (
+                    <div className="mt-1 p-2 bg-gray-50 dark:bg-gray-800 rounded border min-h-[100px]">
+                      {selectedDevice.notes || 'No notes added'}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold">Device Management</h1>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={exportDevices}>
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Total Devices</p>
+                  <p className="text-2xl font-bold">{stats.total}</p>
+                </div>
+                <Package className="w-8 h-8 text-gray-400" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Pending Shipment</p>
+                  <p className="text-2xl font-bold text-yellow-600">{stats.pending}</p>
+                </div>
+                <Package className="w-8 h-8 text-yellow-400" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">In Transit</p>
+                  <p className="text-2xl font-bold text-blue-600">{stats.shipped}</p>
+                </div>
+                <Truck className="w-8 h-8 text-blue-400" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-600">Return Required</p>
+                  <p className="text-2xl font-bold text-orange-600">{stats.return_requested}</p>
+                </div>
+                <AlertTriangle className="w-8 h-8 text-orange-400" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Filters */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                  <Input
+                    placeholder="Search by customer name, email, device ID, or device identifier..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              <div className="w-full sm:w-48">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Filter by status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="shipped">Shipped</SelectItem>
+                    <SelectItem value="delivered">Delivered</SelectItem>
+                    <SelectItem value="return_requested">Return Required</SelectItem>
+                    <SelectItem value="returned">Returned</SelectItem>
+                    <SelectItem value="lost">Lost</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Devices Table */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Device Inventory</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Device ID</TableHead>
+                    <TableHead>Device Identifier</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Plan</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Assigned</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredDevices.map((device) => (
+                    <TableRow key={device.id}>
+                      <TableCell className="font-mono">{device.id}</TableCell>
+                      <TableCell className="font-mono text-sm">
+                        {device.device_identifier || 'Not set'}
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{device.customer_name || 'N/A'}</div>
+                          <div className="text-sm text-gray-500">{device.customer_email || 'N/A'}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{device.plan_name || 'N/A'}</div>
+                          <div className="text-sm text-gray-500">
+                            {device.subscription_status || 'N/A'}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(device.status)}</TableCell>
+                      <TableCell>{formatDate(device.assigned_at)}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => openDeviceDetails(device)}
+                          >
+                            <Eye className="w-4 h-4 mr-1" />
+                            Details
+                          </Button>
+                          <Select
+                            value={device.status}
+                            onValueChange={(value) => handleStatusChange(device.id, value, device.customer_name || 'Unknown', device.status)}
+                            disabled={updatingDevice === device.id}
+                          >
+                            <SelectTrigger className="w-32">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {getStatusOptions(device.status).map((status) => (
+                                <SelectItem key={status} value={status}>
+                                  {status.replace('_', ' ').toUpperCase()}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+            
+            {filteredDevices.length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No devices found matching your criteria.
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 } 

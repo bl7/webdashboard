@@ -96,6 +96,85 @@ export async function POST(req: NextRequest) {
             })
           }
         }
+        
+        // --- ADMIN DEVICE NOTIFICATION ---
+        // Check if this plan includes devices and notify admin
+        const subscriptionPlanId = sub.metadata?.plan_id || null;
+        if (subscriptionPlanId) {
+          try {
+            const planResult = await pool.query(
+              "SELECT * FROM plans WHERE id = $1",
+              [subscriptionPlanId]
+            )
+            
+            if (planResult.rows.length > 0) {
+              const plan = planResult.rows[0]
+              
+              // If plan includes devices, notify admin
+              if (plan.devices_included && plan.devices_included > 0) {
+                // Get user details for admin notification
+                const userResult = await pool.query(
+                  "SELECT full_name, email FROM user_profiles WHERE user_id = $1",
+                  [user_id]
+                )
+                
+                const user = userResult.rows[0] || {}
+                const isUpgrade = !isFirstSubscription
+                
+                try {
+                  await sendMail({
+                    to: 'bib3krzl@gmail.com',
+                    subject: `${isUpgrade ? 'UPGRADE' : 'NEW SIGNUP'} - Device Required for ${plan.name}`,
+                    body: `
+                      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <h2 style="color: #4F46E5;">${isUpgrade ? 'Customer Upgrade' : 'New Customer Signup'}</h2>
+                        
+                        <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                          <h3 style="margin-top: 0;">Customer Details:</h3>
+                          <p><strong>Name:</strong> ${user.full_name || 'Not provided'}</p>
+                          <p><strong>Email:</strong> ${userEmail || 'Not provided'}</p>
+                          <p><strong>User ID:</strong> ${user_id}</p>
+                          <p><strong>Plan:</strong> ${plan.name}</p>
+                          <p><strong>Devices Required:</strong> ${plan.devices_included}</p>
+                          <p><strong>Subscription Type:</strong> ${isUpgrade ? 'Upgrade' : 'New Signup'}</p>
+                          <p><strong>Date:</strong> ${new Date().toLocaleDateString('en-GB')}</p>
+                        </div>
+                        
+                        <div style="background-color: #DBEAFE; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6;">
+                          <h3 style="margin-top: 0; color: #1E40AF;">Action Required:</h3>
+                          <p>This customer needs a device assigned to their account. Please:</p>
+                          <ol>
+                            <li>Check device inventory</li>
+                            <li>Assign device to user ${user_id}</li>
+                            <li>Update device status to 'pending'</li>
+                            <li>Ship device when ready</li>
+                          </ol>
+                        </div>
+                        
+                        <p><strong>Plan Details:</strong></p>
+                        <ul>
+                          <li>Plan ID: ${plan.id}</li>
+                          <li>Plan Name: ${plan.name}</li>
+                          <li>Devices Included: ${plan.devices_included}</li>
+                          <li>Monthly Price: £${plan.price_cents ? plan.price_cents / 100 : 'N/A'}</li>
+                        </ul>
+                        
+                        <p>You can manage this in the admin dashboard at: <a href="https://instalabel.co/bossdashboard/devices">Device Management</a></p>
+                        
+                        <p>Best regards,<br>InstaLabel System</p>
+                      </div>
+                    `
+                  })
+                  console.log(`[ADMIN NOTIFICATION] Device notification sent to bib3krzl@gmail.com for ${isUpgrade ? 'upgrade' : 'signup'} - user ${user_id}`)
+                } catch (adminEmailError) {
+                  console.error(`[ADMIN NOTIFICATION] Failed to send admin email for user ${user_id}:`, adminEmailError)
+                }
+              }
+            }
+          } catch (deviceError) {
+            console.error(`[ADMIN NOTIFICATION] Error checking device requirements for user ${user_id}:`, deviceError)
+          }
+        }
         // Log the full Stripe subscription object for debugging
         console.log("[WEBHOOK] Stripe Subscription Object:", JSON.stringify(sub, null, 2));
         console.log("[WEBHOOK] Event Type:", event.type);
@@ -196,6 +275,27 @@ export async function POST(req: NextRequest) {
             ]
           )
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)
+          
+          // --- DEVICE ASSIGNMENT LOGIC ---
+          if (plan_id) {
+            // Check if plan includes device
+            const planRes = await client.query('SELECT include_device FROM plans WHERE id = $1', [plan_id]);
+            if (planRes.rows[0]?.include_device) {
+              // Check if user already has a device for this plan
+              const existingDevice = await client.query('SELECT id FROM devices WHERE user_id = $1 AND plan_id = $2', [user_id, plan_id]);
+              if (existingDevice.rows.length === 0) {
+                await client.query(
+                  `INSERT INTO devices (user_id, plan_id, assigned_at, status, created_at, updated_at)
+                   VALUES ($1, $2, NOW(), 'pending', NOW(), NOW())`,
+                  [user_id, plan_id]
+                );
+                console.log(`[WEBHOOK] Device assignment created for user_id ${user_id}, plan_id ${plan_id}`);
+              } else {
+                console.log(`[WEBHOOK] Device already assigned for user_id ${user_id}, plan_id ${plan_id}`);
+              }
+            }
+          }
+          // --- END DEVICE ASSIGNMENT ---
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error:", dbErr)
         }
@@ -257,6 +357,161 @@ export async function POST(req: NextRequest) {
                 })
               })
             }
+            
+            // --- ADMIN DEVICE NOTIFICATION FOR UPGRADES ---
+            // Check if upgrade includes devices and notify admin
+            if (dbSub.pending_plan_change_type === 'upgrade' && dbSub.pending_plan_change) {
+              try {
+                const newPlanResult = await pool.query(
+                  "SELECT * FROM plans WHERE id = $1",
+                  [dbSub.pending_plan_change]
+                )
+                
+                if (newPlanResult.rows.length > 0) {
+                  const newPlan = newPlanResult.rows[0]
+                  
+                  // If new plan includes devices, notify admin
+                  if (newPlan.devices_included && newPlan.devices_included > 0) {
+                    // Get user details for admin notification
+                    const userResult = await pool.query(
+                      "SELECT full_name, email FROM user_profiles WHERE user_id = $1",
+                      [user_id]
+                    )
+                    
+                    const user = userResult.rows[0] || {}
+                    
+                    try {
+                      await sendMail({
+                        to: 'bib3krzl@gmail.com',
+                        subject: `UPGRADE - Device Required for ${newPlan.name}`,
+                        body: `
+                          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                            <h2 style="color: #10B981;">Customer Upgrade - Device Required</h2>
+                            
+                            <div style="background-color: #F3F4F6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                              <h3 style="margin-top: 0;">Customer Details:</h3>
+                              <p><strong>Name:</strong> ${user.full_name || 'Not provided'}</p>
+                              <p><strong>Email:</strong> ${userEmail || 'Not provided'}</p>
+                              <p><strong>User ID:</strong> ${user_id}</p>
+                              <p><strong>Old Plan:</strong> ${dbSub.plan_name || 'Unknown'}</p>
+                              <p><strong>New Plan:</strong> ${newPlan.name}</p>
+                              <p><strong>Devices Required:</strong> ${newPlan.devices_included}</p>
+                              <p><strong>Upgrade Date:</strong> ${new Date().toLocaleDateString('en-GB')}</p>
+                            </div>
+                            
+                            <div style="background-color: #DBEAFE; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3B82F6;">
+                              <h3 style="margin-top: 0; color: #1E40AF;">Action Required:</h3>
+                              <p>This customer upgraded to a plan that includes devices. Please:</p>
+                              <ol>
+                                <li>Check device inventory</li>
+                                <li>Assign device to user ${user_id}</li>
+                                <li>Update device status to 'pending'</li>
+                                <li>Ship device when ready</li>
+                              </ol>
+                            </div>
+                            
+                            <p><strong>Plan Details:</strong></p>
+                            <ul>
+                              <li>Plan ID: ${newPlan.id}</li>
+                              <li>Plan Name: ${newPlan.name}</li>
+                              <li>Devices Included: ${newPlan.devices_included}</li>
+                              <li>Monthly Price: £${newPlan.price_cents ? newPlan.price_cents / 100 : 'N/A'}</li>
+                            </ul>
+                            
+                            <p>You can manage this in the admin dashboard at: <a href="https://instalabel.co/bossdashboard/devices">Device Management</a></p>
+                            
+                            <p>Best regards,<br>InstaLabel System</p>
+                          </div>
+                        `
+                      })
+                      console.log(`[ADMIN NOTIFICATION] Upgrade device notification sent to bib3krzl@gmail.com for user ${user_id}`)
+                    } catch (adminEmailError) {
+                      console.error(`[ADMIN NOTIFICATION] Failed to send upgrade admin email for user ${user_id}:`, adminEmailError)
+                    }
+                  }
+                }
+              } catch (deviceError) {
+                console.error(`[ADMIN NOTIFICATION] Error checking upgrade device requirements for user ${user_id}:`, deviceError)
+              }
+            }
+            
+            // --- DEVICE RETURN LOGIC FOR DOWNGRADES ---
+            // Check if this is a downgrade that requires device return
+            if (dbSub.pending_plan_change_type === 'downgrade') {
+              try {
+                // Check if old plan had devices but new plan doesn't
+                const oldPlanResult = await pool.query(
+                  "SELECT * FROM plans WHERE id = $1",
+                  [dbSub.plan_id]
+                )
+                
+                const newPlanResult = await pool.query(
+                  "SELECT * FROM plans WHERE id = $1",
+                  [dbSub.pending_plan_change]
+                )
+                
+                if (oldPlanResult.rows.length > 0 && newPlanResult.rows.length > 0) {
+                  const oldPlan = oldPlanResult.rows[0]
+                  const newPlan = newPlanResult.rows[0]
+                  
+                  // If old plan had devices but new plan doesn't, mark devices for return
+                  if (oldPlan.devices_included && oldPlan.devices_included > 0 && 
+                      (!newPlan.devices_included || newPlan.devices_included === 0)) {
+                    
+                    await pool.query(`
+                      UPDATE devices 
+                      SET status = 'return_requested', 
+                          return_requested_at = NOW(),
+                          updated_at = NOW()
+                      WHERE user_id = $1 AND plan_id = $2 AND status IN ('delivered', 'shipped')
+                    `, [user_id, dbSub.plan_id])
+                    
+                    console.log(`[DEVICE RETURN] Marked devices for return for user ${user_id} due to plan downgrade`)
+                    
+                    // Send downgrade notification email
+                    if (userEmail) {
+                      try {
+                        await sendMail({
+                          to: userEmail,
+                          subject: 'Device Return Required - Plan Downgrade',
+                          body: `
+                            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                              <h2 style="color: #F59E0B;">Device Return Required</h2>
+                              
+                              <p>Hi ${userEmail},</p>
+                              
+                              <p>We noticed that you've downgraded your InstaLabel plan. Since your new plan doesn't include a device, we need to arrange for the return of your current device.</p>
+                              
+                              <div style="background-color: #FFFBEB; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #F59E0B;">
+                                <h3 style="margin-top: 0; color: #F59E0B;">Next Steps:</h3>
+                                <ol>
+                                  <li>Please package your InstaLabel device securely</li>
+                                  <li>Include all original accessories and cables</li>
+                                  <li>We'll send you a prepaid shipping label within 24 hours</li>
+                                  <li>Ship the device back to us within 7 days</li>
+                                </ol>
+                              </div>
+                              
+                              <p>Don't worry - you can still use InstaLabel with your new plan! You'll just need to print labels manually or use your own printer.</p>
+                              
+                              <p>If you have any questions, please contact our support team.</p>
+                              
+                              <p>Best regards,<br>The InstaLabel Team</p>
+                            </div>
+                          `
+                        })
+                        console.log(`[DEVICE RETURN] Downgrade notification email sent to ${userEmail}`)
+                      } catch (emailError) {
+                        console.error(`[DEVICE RETURN] Failed to send downgrade email to ${userEmail}:`, emailError)
+                      }
+                    }
+                  }
+                }
+              } catch (deviceError) {
+                console.error(`[DEVICE RETURN] Error handling device return for downgrade user ${user_id}:`, deviceError)
+              }
+            }
+            
             // Clear pending plan change fields in DB
             await client.query(
               `UPDATE subscription_better SET pending_plan_change = NULL, pending_price_id = NULL, pending_plan_interval = NULL, pending_plan_name = NULL, pending_plan_change_effective = NULL, pending_plan_change_type = NULL WHERE user_id = $1`,
@@ -458,6 +713,7 @@ export async function POST(req: NextRequest) {
             })
           })
         }
+        
         // Log the full Stripe subscription object for debugging
         console.log("[WEBHOOK] Stripe Subscription Object:", JSON.stringify(sub, null, 2));
         // Extract card info if available

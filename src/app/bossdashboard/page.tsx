@@ -337,7 +337,9 @@ export default function BossDashboard() {
             <CardContent>
               <ul className="text-xs text-gray-900 dark:text-white space-y-1">
                 {recentDevices.map((d: any) => (
-                  <li key={d.id}>{d.user_email || d.user_id} - {d.device_type} ({d.status})</li>
+                  <li key={d.id}>
+                    {d.customer_name || d.customer_email || 'Unknown User'} - {d.device_type || 'Sunmi Device'} ({d.status})
+                  </li>
                 ))}
               </ul>
             </CardContent>
@@ -351,7 +353,9 @@ export default function BossDashboard() {
             <CardContent>
               <ul className="text-xs text-gray-900 dark:text-white space-y-1">
                 {recentLabelOrders.map((o: any) => (
-                  <li key={o.id}>{o.user_email || o.user_id} - {o.bundle_count} bundles ({o.status})</li>
+                  <li key={o.id}>
+                    {o.email || o.full_name || 'Unknown User'} - {o.bundle_count} bundles ({o.status})
+                  </li>
                 ))}
               </ul>
             </CardContent>

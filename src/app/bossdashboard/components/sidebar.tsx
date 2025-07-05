@@ -17,6 +17,7 @@ import {
   CalendarClock,
   Tablet,
   Package,
+  Bell,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -38,6 +39,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
+    { name: "Notifications", href: "/bossdashboard/notifications", icon: Bell },
     { name: "Label Products", href: "/bossdashboard/label-products", icon: Package },
     { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: CalendarClock },
     { name: "Cancel Requests", href: "/bossdashboard/cancellations", icon: () => <span className="text-lg mr-3">👋</span> },

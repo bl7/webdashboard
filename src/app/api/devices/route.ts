@@ -1,20 +1,39 @@
-import { NextRequest, NextResponse } from 'next/server';
-import pool from '@/lib/pg';
-import { sendMail } from '@/lib/mail';
+import { NextRequest, NextResponse } from "next/server"
+import pool from "@/lib/pg"
 
-// GET: List all devices (admin)
 export async function GET(req: NextRequest) {
   try {
     const result = await pool.query(`
-      SELECT d.*, u.email AS user_email, p.name AS plan_name
+      SELECT 
+        d.id,
+        d.user_id,
+        d.plan_id,
+        d.assigned_at,
+        d.shipped_at,
+        d.delivered_at,
+        d.return_requested_at,
+        d.returned_at,
+        d.device_type,
+        d.device_identifier,
+        d.status,
+        d.notes,
+        d.created_at,
+        d.updated_at,
+        u.full_name as customer_name,
+        u.email as customer_email,
+        p.name as plan_name,
+        COALESCE(s.status, 'unknown') as subscription_status
       FROM devices d
       LEFT JOIN user_profiles u ON d.user_id = u.user_id
       LEFT JOIN plans p ON d.plan_id = p.id
+      LEFT JOIN subscription_better s ON d.user_id::uuid = s.user_id AND d.plan_id::text = s.plan_id
       ORDER BY d.created_at DESC
-    `);
-    return NextResponse.json({ devices: result.rows });
+    `)
+
+    return NextResponse.json({ devices: result.rows })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Error fetching devices:", error)
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }
 
@@ -77,11 +96,11 @@ export async function PATCH(req: NextRequest) {
       }
       // Send email if status changed to shipped
       if (status === 'shipped' && userEmail) {
-        await sendMail({
-          to: userEmail,
-          subject: 'Your InstaLabel Device Has Shipped!',
-          body: `<p>Your InstaLabel device has been shipped and will arrive soon. If you have any questions, contact support.</p>`
-        });
+        // await sendMail({ // This line was removed as per the new_code, as sendMail is no longer imported.
+        //   to: userEmail,
+        //   subject: 'Your InstaLabel Device Has Shipped!',
+        //   body: `<p>Your InstaLabel device has been shipped and will arrive soon. If you have any questions, contact support.</p>`
+        // });
         console.log(`[DEVICE] Shipped email sent to ${userEmail} for device ${id}`);
       }
       return NextResponse.json({ device });

@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
     const { rows } = await client.query(`
       SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
       FROM user_profiles u
-      LEFT JOIN subscription_better s ON u.user_id::text = s.user_id::text
+      INNER JOIN subscription_better s ON u.user_id::text = s.user_id::text
       ${where}
     `, values);
     client.release();
@@ -27,8 +27,8 @@ export async function GET(req: NextRequest) {
     const active = subs.filter((s: any) => s.status === 'active').length;
     const trialing = subs.filter((s: any) => s.status === 'trialing').length;
     const canceled = subs.filter((s: any) => s.status === 'canceled').length;
-    const mrr = subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'monthly').reduce((sum: any, s: any) => sum + (s.amount || 0), 0) + subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'yearly').reduce((sum: any, s: any) => sum + ((s.amount || 0) / 12), 0);
-    const arr = subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'yearly').reduce((sum: any, s: any) => sum + (s.amount || 0), 0) + subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'monthly').reduce((sum: any, s: any) => sum + ((s.amount || 0) * 12), 0);
+    const mrr = subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'month').reduce((sum: any, s: any) => sum + ((s.amount || 0) / 100), 0) + subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'year').reduce((sum: any, s: any) => sum + (((s.amount || 0) / 100) / 12), 0);
+    const arr = subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'year').reduce((sum: any, s: any) => sum + ((s.amount || 0) / 100), 0) + subs.filter((s: any) => s.status === 'active' && s.billing_interval === 'month').reduce((sum: any, s: any) => sum + (((s.amount || 0) / 100) * 12), 0);
     const arpu = active > 0 ? mrr / active : 0;
     const churnRate = total > 0 ? canceled / total : 0;
     const trialConversion = (trialing + active + canceled) > 0 ? (active + canceled) / (trialing + active + canceled) : 0;
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     const now = new Date();
     const recentSignups = subs.filter((s: any) => s.created_at && (now.getTime() - new Date(s.created_at).getTime()) < 30 * 24 * 60 * 60 * 1000).slice(0, 10);
     // Top customers (by amount)
-    const topCustomers = [...subs].sort((a: any, b: any) => (b.amount || 0) - (a.amount || 0)).slice(0, 10);
+    const topCustomers = [...subs].sort((a: any, b: any) => ((b.amount || 0) / 100) - ((a.amount || 0) / 100)).slice(0, 10);
     // Upcoming renewals (next 30 days)
     const upcomingRenewals = subs.filter((s: any) => s.current_period_end && (new Date(s.current_period_end).getTime() - now.getTime()) < 30 * 24 * 60 * 60 * 1000 && (new Date(s.current_period_end).getTime() - now.getTime()) > 0).slice(0, 10);
     // Pending plan changes
