@@ -4,6 +4,7 @@ import "./globals.css"
 import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
+import { PrintBridgeProvider } from "@/context/PrintBridgeContext"
 
 const base_font = Manrope({ subsets: ["latin"] })
 const accent_font = Oxygen({
@@ -145,7 +146,11 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="InstaLabel" />
       </head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
-        <AuthProvider> {children}</AuthProvider>
+        <AuthProvider>
+          <PrintBridgeProvider>
+            {children}
+          </PrintBridgeProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>
