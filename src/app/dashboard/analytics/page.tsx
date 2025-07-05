@@ -139,6 +139,7 @@ function processLogs(logs: any[], range: "week" | "month") {
 
   // Expiring soon count (simulate: count logs with expiryDate within 24h and not printed today)
   const nowDate = new Date()
+  
   const expiringSoon = Object.values(
     printLogs.reduce((acc: any, log: any) => {
       if (log.details.labelType === "ppds") return acc;
@@ -153,13 +154,35 @@ function processLogs(logs: any[], range: "week" | "month") {
     }, {})
   ).filter((log: any) => {
     if (log.details.labelType === "ppds") return false;
-    const expiryDate = new Date(log.details.expiryDate)
-    const printedAt = new Date(log.details.printedAt)
+    
+    // Defensive date parsing
+    let expiryDate: Date
+    let printedAt: Date
+    
+    try {
+      expiryDate = new Date(log.details.expiryDate)
+      if (isNaN(expiryDate.getTime())) {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+    
+    try {
+      printedAt = new Date(log.details.printedAt)
+      if (isNaN(printedAt.getTime())) {
+        return false
+      }
+    } catch (error) {
+      return false
+    }
+    
     const hoursLeft = (expiryDate.getTime() - nowDate.getTime()) / (1000 * 60 * 60)
     const isPrintedToday =
       printedAt.getFullYear() === nowDate.getFullYear() &&
       printedAt.getMonth() === nowDate.getMonth() &&
       printedAt.getDate() === nowDate.getDate()
+    
     return hoursLeft > 0 && hoursLeft <= 24 && !isPrintedToday
   }).length
 

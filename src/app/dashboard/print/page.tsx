@@ -473,6 +473,10 @@ export default function LabelDemo() {
               itemName: item.name,
               quantity: item.quantity || 1,
               printedAt: new Date().toISOString(),
+              expiryDate: item.expiryDate || calculateExpiryDate(
+                parseInt(expiryDays[item.labelType || "cooked"] || "") || 
+                getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds")
+              ),
               initial: selectedInitial,
               labelHeight: labelHeight,
               printerUsed: printerSelection.printer || 'Debug Mode',
@@ -582,6 +586,7 @@ export default function LabelDemo() {
         itemName: "USE FIRST",
         quantity: quantity,
         printedAt: new Date().toISOString(),
+        expiryDate: expiry.toISOString().split("T")[0],
         initial: selectedInitial,
         labelHeight: labelHeight,
         printerUsed: printerToUse.printer || 'Debug Mode',

@@ -80,8 +80,28 @@ export default function AboutToExpireList() {
         const result: ExpiringItem[] = []
 
         Object.values(latestLogsByItem).forEach((log) => {
-          const expiryDate = new Date(log.details.expiryDate)
-          const printedAt = new Date(log.details.printedAt)
+          // Defensive date parsing
+          let expiryDate: Date
+          let printedAt: Date
+          
+          try {
+            expiryDate = new Date(log.details.expiryDate)
+            if (isNaN(expiryDate.getTime())) {
+              return
+            }
+          } catch (error) {
+            return
+          }
+          
+          try {
+            printedAt = new Date(log.details.printedAt)
+            if (isNaN(printedAt.getTime())) {
+              return
+            }
+          } catch (error) {
+            return
+          }
+          
           const hoursLeft = (expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60)
           const isPrintedToday =
             printedAt.getFullYear() === now.getFullYear() &&

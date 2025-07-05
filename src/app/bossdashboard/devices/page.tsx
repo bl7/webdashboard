@@ -111,7 +111,7 @@ export default function DevicesPage() {
         const data = await response.json()
         console.log("Devices data received:", data)
         console.log("First device details:", data.devices?.[0])
-        setDevices(data.devices || [])
+    setDevices(data.devices || [])
         calculateStats(data.devices || [])
       } else {
         console.error("Failed to fetch devices:", response.status, response.statusText)
@@ -119,7 +119,7 @@ export default function DevicesPage() {
     } catch (error) {
       console.error("Failed to fetch devices:", error)
     } finally {
-      setLoading(false)
+    setLoading(false)
     }
   }
 
@@ -170,7 +170,7 @@ export default function DevicesPage() {
 
       if (response.ok) {
         await fetchDevices() // Refresh the data
-      } else {
+    } else {
         console.error("Failed to update device status:", response.status, response.statusText)
       }
     } catch (error) {
@@ -353,12 +353,12 @@ export default function DevicesPage() {
   }
 
   if (loading) {
-    return (
+  return (
       <div className="container mx-auto px-4 py-6 max-w-7xl">
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Device Management</h1>
-          </div>
+      </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[...Array(4)].map((_, i) => (
               <Card key={i}>
@@ -405,7 +405,7 @@ export default function DevicesPage() {
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>Device Details</DialogTitle>
-                <div className="flex gap-2">
+            <div className="flex gap-2">
                   {!isEditing ? (
                     <Button variant="outline" size="sm" onClick={startEditing}>
                       <Edit className="w-4 h-4 mr-2" />
@@ -570,7 +570,7 @@ export default function DevicesPage() {
                     </div>
                   )}
                 </div>
-              </div>
+            </div>
             )}
           </DialogContent>
         </Dialog>
@@ -750,8 +750,8 @@ export default function DevicesPage() {
             {filteredDevices.length === 0 && (
               <div className="text-center py-8 text-gray-500">
                 No devices found matching your criteria.
-              </div>
-            )}
+        </div>
+      )}
           </CardContent>
         </Card>
       </div>

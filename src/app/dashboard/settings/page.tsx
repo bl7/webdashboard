@@ -184,30 +184,66 @@ export default function Settings() {
   }
 
   return (
-    <Card className="w-full max-w-2xl">
-      <CardHeader>
-        <CardTitle className="text-xl font-semibold">Label Settings</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-10 p-6">
+    <div className="space-y-10 py-8 px-2 md:px-8 bg-gray-50 min-h-screen">
+      {/* Print Server Download Section */}
+      <div className="bg-white rounded-xl shadow-lg border p-6">
+        <h2 className="mb-4 text-xl font-semibold text-gray-900">InstaLabel Print Server</h2>
+        <p className="mb-6 text-gray-700">
+          To print labels from your browser, you need to install our InstaLabel Print Server on your computer. Download and install the version for your operating system:
+        </p>
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          <a 
+            href="https://yourdomain.com/downloads/instalabel-print-server-windows.exe" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition-colors"
+          >
+            <span role="img" aria-label="Windows">🪟</span> Download for Windows
+          </a>
+          <a 
+            href="https://yourdomain.com/downloads/instalabel-print-server-mac.dmg" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-semibold transition-colors"
+          >
+            <span role="img" aria-label="Mac">🍏</span> Download for Mac
+          </a>
+        </div>
+        <a 
+          href="/help/print-server-setup" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-purple-700 underline font-medium hover:text-purple-800"
+        >
+          Setup instructions
+        </a>
+      </div>
+
+      {/* Label Settings Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Expiry Days Settings */}
-        <section className="rounded-lg bg-muted/40 p-6">
-          <h2 className="mb-4 text-lg font-semibold">Label Type Expiry Settings (in days)</h2>
+        <div className="bg-white rounded-xl shadow-lg border p-6">
+          <h2 className="mb-6 text-xl font-semibold text-gray-900">Label Type Expiry Settings (in days)</h2>
           <div className="space-y-4">
             {labelTypes.map(({ label, key }) => (
               <div key={key} className="flex items-center justify-between gap-4">
-                <Label>{label}</Label>
+                <Label className="text-gray-700 font-medium">{label}</Label>
                 <Input
                   type="number"
                   placeholder="Days"
                   value={expiryDays[key] || ""}
                   onChange={(e) => handleChange(key, e.target.value)}
-                  className="w-32"
+                  className="w-32 border-gray-300 focus:border-purple-500 focus:ring-purple-200"
                   min={0}
                 />
               </div>
             ))}
           </div>
-          <Button onClick={handleSave} className="mt-6" disabled={isSaving}>
+          <Button 
+            onClick={handleSave} 
+            className="mt-6 bg-purple-600 hover:bg-purple-700" 
+            disabled={isSaving}
+          >
             {isSaving ? (
               <>
                 <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24">
@@ -230,47 +266,52 @@ export default function Settings() {
               </>
             )}
           </Button>
-        </section>
-
-        {/* Divider */}
-        <div className="border-t border-muted" />
+        </div>
 
         {/* Label Initials Section */}
-        <section className="rounded-lg bg-muted/40 p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Label Initials</h2>
-            <div className="flex items-center gap-2">
-              <Label>Use Initials</Label>
-              <Switch checked={useInitials} onCheckedChange={handleToggleUseInitials} />
+        <div className="bg-white rounded-xl shadow-lg border p-6">
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-900">Label Initials</h2>
+            <div className="flex items-center gap-3">
+              <Label className="text-gray-700 font-medium">Use Initials</Label>
+              <Switch 
+                checked={useInitials} 
+                onCheckedChange={handleToggleUseInitials}
+                className="data-[state=checked]:bg-purple-600"
+              />
             </div>
           </div>
           {useInitials && (
             <>
-              <div className="mb-4 flex items-center gap-4">
+              <div className="mb-6 flex items-center gap-4">
                 <Input
                   value={newInitial}
                   onChange={(e) => setNewInitial(e.target.value)}
                   placeholder="Enter Initial (e.g., CH)"
-                  className="w-40"
+                  className="flex-1 border-gray-300 focus:border-purple-500 focus:ring-purple-200"
                   maxLength={10}
                 />
-                <Button variant="outline" onClick={handleAddInitial}>
+                <Button 
+                  variant="outline" 
+                  onClick={handleAddInitial}
+                  className="border-purple-300 text-purple-700 hover:bg-purple-50"
+                >
                   <Plus className="mr-1 h-4 w-4" /> Add Initial
                 </Button>
               </div>
               {/* Display current initials */}
               <div className="flex flex-wrap gap-2">
                 {customInitials.length === 0 && (
-                  <span className="text-sm text-muted-foreground">No initials added yet.</span>
+                  <span className="text-sm text-gray-500">No initials added yet.</span>
                 )}
                 {customInitials.map((initial) => (
                   <span
                     key={initial}
-                    className="inline-flex items-center rounded-full border border-muted-foreground bg-white px-3 py-1 text-sm text-foreground shadow-sm transition hover:bg-red-50"
+                    className="inline-flex items-center rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-sm text-purple-800 shadow-sm transition hover:bg-red-50 hover:border-red-200"
                   >
                     {initial}
                     <X
-                      className="ml-2 h-4 w-4 cursor-pointer text-muted-foreground transition hover:text-red-500"
+                      className="ml-2 h-4 w-4 cursor-pointer text-purple-600 transition hover:text-red-500"
                       onClick={() => handleRemoveInitial(initial)}
                     />
                   </span>
@@ -278,24 +319,26 @@ export default function Settings() {
               </div>
             </>
           )}
-        </section>
+        </div>
+      </div>
 
-        {/* Feedback message */}
-        {feedbackMsg && (
-          <div
-            className={`mt-4 flex items-center gap-2 rounded-md px-4 py-2 text-sm font-medium ${
-              feedbackType === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-            }`}
-          >
-            {feedbackType === "success" ? (
-              <CheckCircle2 className="h-4 w-4" />
-            ) : (
-              <AlertTriangle className="h-4 w-4" />
-            )}
-            {feedbackMsg}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {/* Feedback message */}
+      {feedbackMsg && (
+        <div
+          className={`flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium ${
+            feedbackType === "success" 
+              ? "bg-green-100 text-green-800 border border-green-200" 
+              : "bg-red-100 text-red-800 border border-red-200"
+          }`}
+        >
+          {feedbackType === "success" ? (
+            <CheckCircle2 className="h-4 w-4" />
+          ) : (
+            <AlertTriangle className="h-4 w-4" />
+          )}
+          {feedbackMsg}
+        </div>
+      )}
+    </div>
   )
 }

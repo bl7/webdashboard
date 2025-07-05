@@ -1071,10 +1071,10 @@ export default function LabelRender({
     <div style={baseStyle}>
       <div style={{
         ...headerStyle,
-        fontSize: nameFontSize,
-        fontWeight: 900,
-        letterSpacing: 1,
-        textTransform: "uppercase",
+          fontSize: nameFontSize,
+          fontWeight: 900,
+          letterSpacing: 1,
+          textTransform: "uppercase",
         fontFamily: "monospace",
       }}>
         {item.name}
@@ -1083,12 +1083,12 @@ export default function LabelRender({
       {/* Dates */}
       {!isPPDS && (
         <div style={{
-          fontSize: fontSize - 1,
-          marginBottom: sectionSpacing,
-          fontWeight: 700,
-          display: "flex",
-          flexDirection: "column",
-          gap: 1,
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
           fontFamily: "monospace",
         }}>
           <span>
@@ -1102,10 +1102,10 @@ export default function LabelRender({
       
       {isPPDS && (
         <div style={{
-          fontSize: fontSize - 1,
-          marginBottom: sectionSpacing,
-          fontWeight: 700,
-          textAlign: "center",
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            textAlign: "center",
           fontFamily: "monospace",
         }}>
           Best Before: {shortExpiry}
@@ -1115,12 +1115,12 @@ export default function LabelRender({
       {/* Ingredients */}
       {shownIngredients.length > 0 && (
         <div style={{
-          fontSize: fontSize - 1,
-          marginBottom: sectionSpacing,
-          display: "flex",
-          flexWrap: "wrap",
-          alignItems: "center",
-          gap: 2,
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            display: "flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            gap: 2,
           fontFamily: "monospace",
         }}>
           <span style={{ fontWeight: 700 }}>Ingredients:</span>
@@ -1142,10 +1142,10 @@ export default function LabelRender({
       {/* Allergens */}
       {shownAllergens.length > 0 && (
         <div style={{
-          fontSize: fontSize - 1,
-          marginBottom: sectionSpacing,
-          fontWeight: 700,
-          textTransform: "uppercase",
+            fontSize: fontSize - 1,
+            marginBottom: sectionSpacing,
+            fontWeight: 700,
+            textTransform: "uppercase",
           fontFamily: "monospace",
         }}>
           Contains:
@@ -1164,13 +1164,13 @@ export default function LabelRender({
       {/* Allergen warnings */}
       {(labelHeight === "31mm" || labelHeight === "40mm") && item.type === "ingredients" && itemAllergenNames.length > 0 && (
         <div style={{
-          fontWeight: 900,
+            fontWeight: 900,
           color: "black",
-          fontSize: fontSize,
-          textAlign: "center",
-          marginTop: 2,
-          letterSpacing: 1,
-          textTransform: "uppercase",
+            fontSize: fontSize,
+            textAlign: "center",
+            marginTop: 2,
+            letterSpacing: 1,
+            textTransform: "uppercase",
           fontFamily: "monospace",
         }}>
           CONTAINS ALLERGENS
@@ -1179,13 +1179,13 @@ export default function LabelRender({
       
       {labelHeight === "80mm" && item.type === "ingredients" && itemAllergenNames.length > 0 && (
         <div style={{
-          fontWeight: 900,
+            fontWeight: 900,
           color: "black",
-          fontSize: fontSize,
-          textAlign: "center",
-          marginTop: 2,
-          letterSpacing: 1,
-          textTransform: "uppercase",
+            fontSize: fontSize,
+            textAlign: "center",
+            marginTop: 2,
+            letterSpacing: 1,
+            textTransform: "uppercase",
           fontFamily: "monospace",
         }}>
           CONTAINS ALLERGENS: {itemAllergenNames.map(a => a.toUpperCase()).join(", ")}
