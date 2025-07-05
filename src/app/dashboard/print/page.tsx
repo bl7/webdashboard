@@ -459,29 +459,11 @@ export default function LabelDemo() {
 
             console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
 
-            // When sending print request, add pixel dimensions for Windows
-            // Add this before calling print(imageDataUrl)
-            let printOptions = undefined;
-            if (osType === 'windows') {
-              const widthPx = 448; // 56mm at 203DPI
-              let heightPx = 248; // default 31mm
-              if (labelHeight === '40mm') {
-                heightPx = 320;
-              } else if (labelHeight === '80mm') {
-                heightPx = 640;
-              }
-              printOptions = { widthPx, heightPx };
-            }
-            // Pass printOptions as the third argument if on Windows
+            // Revert to sending the same print request for all OSes
             if (isConnected) {
-              if (osType === 'windows') {
-                await print(imageDataUrl, undefined, printOptions);
-              } else {
-                await print(imageDataUrl);
-              }
-              console.log(`✅ Printed ${item.name} successfully`)
+              await print(imageDataUrl);
             } else {
-              console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
+              console.log('🖨️ DEBUG: Would print image data:', imageDataUrl.substring(0, 100) + '...');
             }
 
             // Log the print action

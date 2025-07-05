@@ -154,34 +154,33 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      console.log("🖨️ Sending print job...")
-      console.log("🖨️ Original image data length:", imageData.length)
-      console.log("🖨️ Original image data starts with:", imageData.substring(0, 50))
-      console.log("🖨️ Using printer:", targetPrinter.name)
-      
-      // Remove data URL prefix if present
-      const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
-      
-      console.log("🖨️ Clean image data length:", cleanImageData.length)
-      console.log("🖨️ Clean image data starts with:", cleanImageData.substring(0, 50))
-      
-      if (!cleanImageData || cleanImageData.length < 100) {
-        throw new Error("Invalid or empty image data")
-      }
-      
-      const printJob: any = {
-        type: 'print',
-        images: [cleanImageData],
-        selectedPrinter: targetPrinter.name
-      }
-      if (options && (options.widthPx || options.heightPx)) {
-        if (options.widthPx) printJob.widthPx = options.widthPx;
-        if (options.heightPx) printJob.heightPx = options.heightPx;
+      // OS detection
+      let osType = 'other';
+      if (typeof window !== 'undefined') {
+        const platform = window.navigator.platform.toLowerCase();
+        if (platform.includes('mac')) osType = 'mac';
+        else if (platform.includes('win')) osType = 'windows';
       }
 
-      console.log("🖨️ Sending print job with", printJob.images.length, "images")
+      // Remove data URL prefix if present
+      const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
+
+      let printJob: any;
+      if (osType === 'windows') {
+        printJob = {
+          base64Image: cleanImageData,
+          printerName: targetPrinter.name
+        };
+      } else {
+        printJob = {
+          type: 'print',
+          images: [cleanImageData],
+          selectedPrinter: targetPrinter.name
+        };
+      }
+
       wsRef.current.send(JSON.stringify(printJob))
-      console.log("✅ Print job sent successfully")
+      console.log("✅ Print job sent successfully", printJob)
     } catch (err: any) {
       console.error("❌ Print job failed:", err)
       throw new Error(err.message || "Failed to send print job")
