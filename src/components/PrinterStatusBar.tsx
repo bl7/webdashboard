@@ -15,7 +15,7 @@ export default function PrinterStatusBar() {
 
   return (
     <div
-      className="fixed left-0 top-0 flex h-12 w-full items-center justify-end border-b border-gray-200 bg-white px-6 text-sm shadow-sm dark:border-gray-700 dark:bg-gray-900"
+      className="fixed left-0 top-0 flex h-12 w-full items-center justify-end border-b border-gray-200 bg-white px-6 text-sm shadow-sm"
       style={{ paddingLeft: "var(--sidebar-width, 240px)", zIndex: 1 }}
     >
       {isConnected ? (

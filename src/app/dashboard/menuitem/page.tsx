@@ -295,7 +295,7 @@ export default function MenuItemsDashboard() {
                       {item.allergens.map((allergen) => (
                         <span
                           key={allergen.uuid}
-                          className="inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800 dark:bg-red-600/20 dark:text-red-300"
+                          className="inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-800"
                         >
                           {allergen.allergenName}
                         </span>
@@ -463,13 +463,13 @@ export default function MenuItemsDashboard() {
                     {getSelectedIngredients(newItem.ingredientIDs).map((ingredient) => (
                       <div
                         key={ingredient.uuid}
-                        className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm dark:bg-blue-900/30"
+                        className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm"
                       >
                         <span>{ingredient.ingredientName}</span>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-4 w-4 p-0 hover:bg-blue-200 dark:hover:bg-blue-800"
+                          className="h-4 w-4 p-0 hover:bg-blue-200"
                           onClick={() => handleRemoveIngredient(ingredient.uuid)}
                         >
                           <X className="h-3 w-3" />
@@ -517,8 +517,8 @@ export default function MenuItemsDashboard() {
 
             <div>
               <Label>Ingredients</Label>
-              <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-950/50">
-                <Label className="mb-3 block text-sm font-medium text-green-800 dark:text-green-300">
+              <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+                <Label className="mb-3 block text-sm font-medium text-green-800">
                   Current Ingredients ({editItem.ingredientIDs.length})
                 </Label>
                 {editItem.ingredientIDs.length === 0 ? (
@@ -530,13 +530,13 @@ export default function MenuItemsDashboard() {
                     {getSelectedIngredients(editItem.ingredientIDs).map((ingredient) => (
                       <div
                         key={ingredient.uuid}
-                        className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                        className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
                       >
                         <span>{ingredient.ingredientName}</span>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-4 w-4 p-0 hover:bg-green-200 dark:hover:bg-green-800"
+                          className="h-4 w-4 p-0 hover:bg-green-200"
                           onClick={() => handleRemoveIngredient(ingredient.uuid, true)}
                         >
                           <X className="h-3 w-3" />

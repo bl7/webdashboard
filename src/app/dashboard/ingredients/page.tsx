@@ -503,8 +503,8 @@ export default function IngredientsTable() {
                   ) : (
                     <div className="space-y-4">
                       {/* Current Allergens Display */}
-                      <div className="rounded-lg border border-orange-200 bg-orange-50 p-4 dark:border-orange-800 dark:bg-orange-950/50">
-                        <Label className="mb-3 block text-sm font-medium text-orange-800 dark:text-orange-300">
+                              <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+          <Label className="mb-3 block text-sm font-medium text-orange-800">
                           Current Allergens ({editSelectedAllergens.length})
                         </Label>
                         {editSelectedAllergens.length === 0 ? (
@@ -516,7 +516,7 @@ export default function IngredientsTable() {
                             {getEditSelectedAllergenDetails().map((allergen) => (
                               <div
                                 key={allergen.id}
-                                className="flex items-center gap-2 rounded-md bg-orange-100 px-3 py-2 text-sm shadow-sm dark:bg-orange-900/30"
+                                className="flex items-center gap-2 rounded-md bg-orange-100 px-3 py-2 text-sm shadow-sm"
                               >
                                 <div className="flex flex-col">
                                   <span className="font-medium">{allergen.name}</span>
@@ -529,7 +529,7 @@ export default function IngredientsTable() {
                                 <Button
                                   size="icon"
                                   variant="ghost"
-                                  className="h-5 w-5 rounded-full hover:bg-orange-200 dark:hover:bg-orange-800"
+                                  className="h-5 w-5 rounded-full hover:bg-orange-200"
                                   onClick={() => handleRemoveEditAllergen(allergen.id)}
                                   title={`Remove ${allergen.name}`}
                                   disabled={loading}
@@ -543,8 +543,8 @@ export default function IngredientsTable() {
                       </div>
 
                       {/* Add More Allergens Section */}
-                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950/50">
-                        <Label className="mb-3 block text-sm font-medium text-blue-800 dark:text-blue-300">
+                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                        <Label className="mb-3 block text-sm font-medium text-blue-800">
                           Add More Allergens
                         </Label>
                         <DropdownMenu>

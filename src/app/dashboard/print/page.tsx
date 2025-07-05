@@ -691,7 +691,7 @@ export default function LabelDemo() {
                           const printer = availablePrinters.find(p => p.name === e.target.value)
                           selectPrinter(printer || null)
                         }}
-                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
                       >
                         <option value="">Select Printer</option>
                         {availablePrinters.map((printer) => (
@@ -700,7 +700,7 @@ export default function LabelDemo() {
                           </option>
                         ))}
                       </select>
-                      <div className="text-xs text-gray-700 dark:text-gray-300 mt-1">
+                      <div className="text-xs text-gray-700 mt-1">
                         {availablePrinters.length} printer(s) detected
                       </div>
                     </div>
