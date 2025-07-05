@@ -20,7 +20,7 @@ interface PrintLog {
     itemId: string
     itemName: string
     quantity: number
-    labelType: "cook" | "prep" | "ppds"
+    labelType: "cooked" | "prep" | "ppds"
     printedAt: string
     initial?: string
     labelHeight?: LabelHeight
@@ -422,7 +422,7 @@ export default function PrintSessionsPage() {
                     <div className="flex flex-wrap gap-1">
                       {[...new Set(session.items.map(item => item.details.labelType))].map((type) => (
                         <span key={type} className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                          type === 'cook' ? 'bg-red-100 text-red-800' :
+                          type === 'cooked' ? 'bg-red-100 text-red-800' :
                           type === 'prep' ? 'bg-blue-100 text-blue-800' :
                           'bg-green-100 text-green-800'
                         }`}>

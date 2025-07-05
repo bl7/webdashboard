@@ -32,9 +32,9 @@ function calculateExpiryDate(days: number): string {
   return today.toISOString().split("T")[0]
 }
 
-function getDefaultExpiryDays(type: "cook" | "prep" | "ppds"): number {
+function getDefaultExpiryDays(type: "cooked" | "prep" | "ppds"): number {
   switch (type) {
-    case "cook":
+    case "cooked":
       return 1
     case "prep":
       return 3
@@ -266,7 +266,7 @@ export default function LabelDemo() {
                 name,
                 printedOn: new Date().toISOString().split("T")[0],
                 expiryDate: calculateExpiryDate(
-                  parseInt(expiryDays["cook"] || "") || getDefaultExpiryDays("cook")
+                  parseInt(expiryDays["cooked"] || "") || getDefaultExpiryDays("cooked")
                 ),
                 ingredients:
                   item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [],
@@ -357,7 +357,7 @@ export default function LabelDemo() {
             ...base,
             ingredients: (item as MenuItem).ingredients,
             allergens: (item as any).allergens, // Fix: set allergens for menu items
-            labelType: "cook" as "cook",
+            labelType: "cooked" as "cooked",
           }
 
     setPrintQueue((prev) => [...prev, newItem])
@@ -368,7 +368,7 @@ export default function LabelDemo() {
       prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
     )
 
-  const updateLabelType = (uid: string, labelType: "cook" | "prep" | "ppds") =>
+  const updateLabelType = (uid: string, labelType: "cooked" | "prep" | "ppds") =>
     setPrintQueue((prev) =>
       prev.map((q) =>
         q.uid === uid
@@ -838,8 +838,8 @@ export default function LabelDemo() {
                     <div className="flex items-center gap-2 mt-1">
                       <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
                       {"labelType" in item && (
-                        <select value={item.labelType || "cook"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cook" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
-                          <option value="cook">Cook</option>
+                        <select value={item.labelType || "cooked"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cooked" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
+                          <option value="cooked">Cook</option>
                           <option value="prep">Prep</option>
                           <option value="ppds">PPDS</option>
                         </select>

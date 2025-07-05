@@ -831,7 +831,7 @@ export default function LabelRender({
   }
 
   // --- COOK/PREP Menu Labels ---
-  if ((item.labelType === "cook" || item.labelType === "prep") && item.type === "menu") {
+  if ((item.labelType === "cooked" || item.labelType === "prep") && item.type === "menu") {
     const containsLine = allergenicIngredients.map((ing, idx) => (
       <span key={ing + idx} style={{ fontWeight: 600, fontFamily: 'inherit' }}>
         {capitalize(ing)}
@@ -971,7 +971,7 @@ export default function LabelRender({
   }
 
   // --- Ingredient Labels ---
-  if (item.type === "ingredients" && (!item.labelType || item.labelType === "cook" || item.labelType === "prep")) {
+  if (item.type === "ingredients" && (!item.labelType || item.labelType === "cooked" || item.labelType === "prep")) {
     return (
       <div style={baseStyle}>
         <div style={headerStyle}>
@@ -1018,7 +1018,7 @@ export default function LabelRender({
         {(labelHeight === "31mm" || labelHeight === "40mm") && itemAllergenNames.length > 0 && (
           <div style={{
             fontWeight: 900,
-            color: "#b91c1c",
+            color: "black",
             fontSize: fontSize,
             textAlign: "center",
             marginTop: 2,
@@ -1033,7 +1033,7 @@ export default function LabelRender({
         {labelHeight === "80mm" && itemAllergenNames.length > 0 && (
           <div style={{
             fontWeight: 900,
-            color: "#b91c1c",
+            color: "black",
             fontSize: fontSize,
             textAlign: "center",
             marginTop: 2,
@@ -1087,7 +1087,7 @@ export default function LabelRender({
           <span>
             Printed: {shortPrinted}
             {item.labelType === 'prep' && ' (PREP)'}
-            {item.labelType === 'cook' && ' (COOK)'}
+            {item.labelType === 'cooked' && ' (COOK)'}
           </span>
           <span>Expires: {shortExpiry}</span>
         </div>
@@ -1158,7 +1158,7 @@ export default function LabelRender({
       {(labelHeight === "31mm" || labelHeight === "40mm") && item.type === "ingredients" && itemAllergenNames.length > 0 && (
         <div style={{
           fontWeight: 900,
-          color: "#b91c1c",
+          color: "black",
           fontSize: fontSize,
           textAlign: "center",
           marginTop: 2,
@@ -1173,7 +1173,7 @@ export default function LabelRender({
       {labelHeight === "80mm" && item.type === "ingredients" && itemAllergenNames.length > 0 && (
         <div style={{
           fontWeight: 900,
-          color: "#b91c1c",
+          color: "black",
           fontSize: fontSize,
           textAlign: "center",
           marginTop: 2,
