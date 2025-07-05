@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, useRef } from "react"
+import { usePrintBridge } from "../hooks/usePrintBridge"
 
 interface Printer {
   name: string
@@ -28,114 +29,34 @@ interface PrinterContextType {
 const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
 
 export function PrinterProvider({ children }: { children: React.ReactNode }) {
-  const [isConnected, setIsConnected] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [printers, setPrinters] = useState<Printer[]>([])
-  const [defaultPrinter, setDefaultPrinter] = useState<Printer | null>(null)
   const [selectedPrinter, setSelectedPrinter] = useState<Printer | null>(null)
-  const wsRef = useRef<WebSocket | null>(null)
+  
+  // Use the PrintBridge hook for WebSocket connection
+  const {
+    isConnected,
+    printers,
+    defaultPrinter,
+    loading,
+    error,
+    sendPrintJob,
+    connect: printBridgeConnect,
+    disconnect: printBridgeDisconnect,
+    reconnect: printBridgeReconnect
+  } = usePrintBridge()
 
   const connect = async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      // console.log("🔌 Connecting to WebSocket printer service...")
-      
-      // Close existing connection if any
-      if (wsRef.current) {
-        wsRef.current.close()
-      }
-
-      // Create new WebSocket connection
-      const ws = new WebSocket('ws://localhost:8080')
-      wsRef.current = ws
-
-      // Set up event handlers
-      ws.onopen = () => {
-        // console.log("✅ WebSocket printer connection established")
-        setIsConnected(true)
-        setError(null)
-        setLoading(false)
-      }
-
-      ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          // console.log("📨 Received message from printer service:", data)
-          
-          // Handle different message types
-          if (data.type === 'status') {
-            // Update printer status
-            if (data.printers) {
-              setPrinters(data.printers)
-              // Set default printer if available
-              if (data.defaultPrinter) {
-                setDefaultPrinter(data.defaultPrinter)
-                // Auto-select default printer if no printer is currently selected
-                if (!selectedPrinter) {
-                  setSelectedPrinter(data.defaultPrinter)
-                }
-              }
-            }
-          } else if (data.type === 'error') {
-            setError(data.message || 'Printer service error')
-          } else if (data.type === 'print_success') {
-            console.log("✅ Print job completed successfully")
-          } else if (data.type === 'print_error') {
-            setError(data.message || 'Print job failed')
-          }
-        } catch (err) {
-          console.error("Failed to parse WebSocket message:", err)
-        }
-      }
-
-      ws.onerror = (error) => {
-        // console.error("❌ WebSocket printer connection error:", error)
-        setError("Failed to connect to printer service")
-        setIsConnected(false)
-        setLoading(false)
-      }
-
-      ws.onclose = (event) => {
-        // console.log("🔌 WebSocket printer connection closed:", event.code, event.reason)
-        setIsConnected(false)
-        setLoading(false)
-        
-        // Auto-reconnect if not manually closed
-        if (event.code !== 1000) {
-          setTimeout(() => {
-            // console.log("🔄 Attempting to reconnect to printer service...")
-            connect()
-          }, 3000)
-        }
-      }
-
-    } catch (err: any) {
-      console.error("❌ Printer connection error:", err)
-      setError(err.message || "Failed to connect to printer service")
-      setIsConnected(false)
-      setLoading(false)
-    }
+    console.log("🔌 Connecting to PrintBridge server...")
+    printBridgeConnect()
   }
 
   const disconnect = async () => {
-    try {
-      // console.log("🔌 Disconnecting from printer service...")
-      if (wsRef.current) {
-        wsRef.current.close(1000, "Manual disconnect")
-        wsRef.current = null
-      }
-      setIsConnected(false)
-      setError(null)
-    } catch (err: any) {
-      console.error("Failed to disconnect:", err)
-    }
+    console.log("🔌 Disconnecting from PrintBridge server...")
+    printBridgeDisconnect()
   }
 
   const reconnect = async () => {
-    await disconnect()
-    await connect()
+    console.log("🔄 Reconnecting to PrintBridge server...")
+    printBridgeReconnect()
   }
 
   const selectPrinter = (printer: Printer | null) => {
@@ -143,7 +64,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
   }
 
   const print = async (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number }) => {
-    if (!isConnected || !wsRef.current) {
+    if (!isConnected) {
       throw new Error("Printer not connected. Please connect first.")
     }
 
@@ -154,51 +75,29 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      // OS detection
-      let osType = 'other';
-      if (typeof window !== 'undefined') {
-        const platform = window.navigator.platform.toLowerCase();
-        if (platform.includes('mac')) osType = 'mac';
-        else if (platform.includes('win')) osType = 'windows';
-      }
-
       // Remove data URL prefix if present
       const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
 
-      let printJob: any;
-      if (osType === 'windows') {
-        printJob = {
-          base64Image: cleanImageData,
-          printerName: targetPrinter.name
-        };
+      // Send print job using PrintBridge
+      const success = sendPrintJob(cleanImageData, targetPrinter.name)
+      
+      if (success) {
+        console.log("✅ Print job sent successfully via PrintBridge", { printer: targetPrinter.name })
       } else {
-        printJob = {
-          type: 'print',
-          images: [cleanImageData],
-          selectedPrinter: targetPrinter.name
-        };
+        throw new Error("Failed to send print job via PrintBridge")
       }
-
-      wsRef.current.send(JSON.stringify(printJob))
-      console.log("✅ Print job sent successfully", printJob)
     } catch (err: any) {
       console.error("❌ Print job failed:", err)
       throw new Error(err.message || "Failed to send print job")
     }
   }
 
+  // Auto-select default printer if no printer is currently selected
   useEffect(() => {
-    // Auto-connect on mount
-    console.log("🖨️ Printer context initialized - connecting to WebSocket service")
-    connect()
-
-    // Cleanup on unmount
-    return () => {
-      if (wsRef.current) {
-        wsRef.current.close()
-      }
+    if (defaultPrinter && !selectedPrinter) {
+      setSelectedPrinter(defaultPrinter)
     }
-  }, [])
+  }, [defaultPrinter, selectedPrinter])
 
   const value: PrinterContextType = {
     isConnected,
@@ -221,10 +120,10 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function usePrinter() {
+export const usePrinter = () => {
   const context = useContext(PrinterContext)
   if (context === undefined) {
-    throw new Error("usePrinter must be used within a PrinterProvider")
+    throw new Error('usePrinter must be used within a PrinterProvider')
   }
   return context
 } 
