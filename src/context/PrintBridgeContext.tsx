@@ -19,6 +19,7 @@ interface PrintBridgeContextType {
   lastPrintResult: any;
   loading: boolean;
   error: string | null;
+  osType: 'mac' | 'windows' | 'other';
   sendPrintJob: (base64Image: string, printerName?: string) => boolean;
   connect: () => void;
   disconnect: () => void;

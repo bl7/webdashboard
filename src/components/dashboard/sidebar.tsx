@@ -29,12 +29,12 @@ const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
   { label: "Analytics", icon: <FaChartPie />, href: "/dashboard/analytics" },
   { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
-  { label: "PrintBridge Test", icon: <FaPrint />, href: "/dashboard/printbridge-test" },
-  { label: "Allergens", icon: <GiShrimp />, href: "/dashboard/allergens" },
-  { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
-  { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
-  { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
+  { label: "PrintBridge Test", icon: <FaPrint />, href: "/dashboard/printbridge-test" },
+  { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
+  { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
+  { label: "Allergens", icon: <GiShrimp />, href: "/dashboard/allergens" },
+  { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
@@ -76,7 +76,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const filteredNavItems = isAdmin
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label", "PrintBridge Test"].includes(i.label))
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label", "Print Sessions", "PrintBridge Test"].includes(i.label))
   const isExpanded = sidebarOpen || sidebarMobile
 
   // Load initial data from localStorage

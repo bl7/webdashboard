@@ -20,7 +20,35 @@ export default function PrinterStatusBar() {
     loading: printBridgeLoading,
     error: printBridgeError,
     reconnect: printBridgeReconnect,
+    osType,
   } = usePrintBridgeContext()
+
+  const getConnectionInfo = () => {
+    if (osType === 'mac') {
+      return {
+        isConnected: printerConnected,
+        printerCount: availablePrinters.length,
+        error: null,
+        reconnect: printerReconnect
+      };
+    } else if (osType === 'windows') {
+      return {
+        isConnected: printBridgeConnected,
+        printerCount: printBridgePrinters.length,
+        error: printBridgeError,
+        reconnect: printBridgeReconnect
+      };
+    } else {
+      return {
+        isConnected: printerConnected,
+        printerCount: availablePrinters.length,
+        error: null,
+        reconnect: printerReconnect
+      };
+    }
+  };
+
+  const connectionInfo = getConnectionInfo();
 
   return (
     <div
@@ -28,43 +56,33 @@ export default function PrinterStatusBar() {
       style={{ paddingLeft: "var(--sidebar-width, 240px)", zIndex: 1 }}
     >
       <div className="flex items-center gap-4">
-        {/* PrintBridge Status */}
+        {/* Simple Connection Status */}
         <div className="flex items-center gap-2">
-          {printBridgeConnected ? (
+          {connectionInfo.isConnected ? (
             <div className="flex items-center gap-2 text-green-600">
               <Wifi className="h-4 w-4 text-green-500" />
-              <span className="font-medium">PrintBridge Connected</span>
-              <span className="text-xs text-gray-500">({printBridgePrinters.length} printers)</span>
+              <span className="font-medium">Server Connected</span>
+              <span className="text-xs text-gray-500">({connectionInfo.printerCount} printers)</span>
             </div>
           ) : (
             <div className="flex items-center gap-2 text-red-600">
               <WifiOff className="h-4 w-4 text-red-500" />
-              <span className="font-medium">PrintBridge Disconnected</span>
-              {printBridgeError && (
-                <span className="text-xs text-red-500">({printBridgeError})</span>
+              <span className="font-medium">Server Disconnected</span>
+              {connectionInfo.error && (
+                <span className="text-xs text-red-500">({connectionInfo.error})</span>
               )}
             </div>
           )}
         </div>
 
-        {/* Legacy Printer Status */}
-        {printerConnected ? (
-          <div className="flex items-center gap-2 text-green-600">
-            <CheckCircle className="h-4 w-4 text-green-500" />
-            <span className="font-medium">Printer System Ready</span>
-            <span className="text-xs text-gray-500">({availablePrinters.length} printers)</span>
-          </div>
-        ) : (
-          <div className="flex items-center gap-4 text-red-600">
-            <ServerOff className="h-4 w-4 text-red-500" />
-            <span className="font-medium">Printer System Unavailable</span>
-            <button
-              onClick={() => window.open('http://localhost:8080', '_blank', 'noopener,noreferrer')}
-              className="rounded bg-purple-600 px-3 py-1 text-xs text-white hover:bg-purple-700"
-            >
-              Test Server
-            </button>
-          </div>
+        {/* Test Server Button for Disconnected State */}
+        {!connectionInfo.isConnected && (
+          <button
+            onClick={() => window.open(`http://localhost:8080`, '_blank', 'noopener,noreferrer')}
+            className="rounded bg-purple-600 px-3 py-1 text-xs text-white hover:bg-purple-700"
+          >
+            Test Connection
+          </button>
         )}
       </div>
     </div>

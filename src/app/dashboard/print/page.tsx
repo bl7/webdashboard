@@ -692,6 +692,32 @@ export default function LabelDemo() {
       {subStatusMsg && (
         <div className={`rounded-xl p-4 mb-6 border-2 ${subBlocked ? 'bg-red-100 text-red-800 border-red-300' : 'bg-yellow-50 text-yellow-900 border-yellow-200'}`}> {subStatusMsg} </div>
       )}
+      
+      {/* Server Download Notice - Show when printer is not connected */}
+      {!isConnected && (
+        <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+          <div className="flex items-start gap-3">
+            <div className="text-purple-600 mt-0.5">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h4 className="text-sm font-medium text-purple-800 mb-1">Need the printer server?</h4>
+              <p className="text-sm text-purple-700 mb-2">
+                If you don't have the printer server installed, you can download it from the Settings page.
+              </p>
+              <a 
+                href="/dashboard/settings" 
+                className="inline-flex items-center px-3 py-1 bg-purple-600 text-white text-sm font-medium rounded hover:bg-purple-700 transition-colors"
+              >
+                Go to Settings →
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="flex flex-col md:flex-row gap-10">
         {/* Left Section: Label Printer & List */}
         <div className="flex-1 min-w-[340px]">

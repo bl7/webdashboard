@@ -29,8 +29,34 @@ export const usePrintBridge = () => {
   const [lastPrintResult, setLastPrintResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+
+  // Detect OS on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const platform = window.navigator.platform.toLowerCase();
+      if (platform.includes('mac')) {
+        setOsType('mac');
+      } else if (platform.includes('win')) {
+        setOsType('windows');
+      } else {
+        setOsType('other');
+      }
+      console.log('🖥️ OS detected:', osType);
+    }
+  }, []);
+
+  const getWebSocketUrl = () => {
+    // Mac users connect to ws://localhost:8080 (legacy endpoint)
+    // Windows users connect to ws://localhost:8080/ws (PrintBridge endpoint)
+    if (osType === 'mac') {
+      return 'ws://localhost:8080';
+    } else {
+      return 'ws://localhost:8080/ws';
+    }
+  };
 
   const connect = () => {
     try {
@@ -42,11 +68,14 @@ export const usePrintBridge = () => {
         wsRef.current.close();
       }
 
-      const ws = new WebSocket('ws://localhost:8080/ws');
+      const wsUrl = getWebSocketUrl();
+      console.log(`🔌 Connecting to ${osType} endpoint: ${wsUrl}`);
+      
+      const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log('✅ Connected to PrintBridge server');
+        console.log(`✅ Connected to ${osType} server at ${wsUrl}`);
         setIsConnected(true);
         setError(null);
         setLoading(false);
@@ -55,11 +84,25 @@ export const usePrintBridge = () => {
       ws.onmessage = (event) => {
         try {
           const data: PrintBridgeMessage = JSON.parse(event.data);
-          console.log('📨 Received from PrintBridge:', data);
+          console.log(`📨 Received from ${osType} server:`, data);
 
-          if (data.type === 'connection') {
+          if (data.type === 'connection' || data.type === 'status') {
+            // Handle both PrintBridge and legacy server responses
+            let printerNames: string[] = [];
+            
+            if (data.printers && Array.isArray(data.printers)) {
+              // PrintBridge format: array of printer names
+              printerNames = data.printers;
+            } else if (data.status && typeof data.status === 'object' && 'printers' in data.status) {
+              // Legacy format: nested printers object
+              const statusPrinters = (data.status as any).printers;
+              if (Array.isArray(statusPrinters)) {
+                printerNames = statusPrinters.map((p: any) => p.name || p);
+              }
+            }
+
             // Convert printer names to PrintBridgePrinter objects
-            const printerObjects: PrintBridgePrinter[] = (data.printers || []).map((name, index) => ({
+            const printerObjects: PrintBridgePrinter[] = printerNames.map((name, index) => ({
               name,
               systemName: name,
               driverName: name,
@@ -77,24 +120,24 @@ export const usePrintBridge = () => {
               setDefaultPrinter(printerObjects[0]);
             }
             
-            console.log('🖨️ Printers discovered:', printerObjects);
+            console.log(`🖨️ Printers discovered on ${osType}:`, printerObjects);
           }
 
           if (data.success !== undefined) {
             setLastPrintResult(data);
-            console.log('🖨️ Print job result:', data);
+            console.log(`🖨️ Print job result on ${osType}:`, data);
           }
 
           if (data.type === 'error') {
-            setError(data.message || 'PrintBridge error');
+            setError(data.message || `${osType} server error`);
           }
         } catch (error) {
-          console.error('❌ Error parsing PrintBridge message:', error);
+          console.error(`❌ Error parsing ${osType} server message:`, error);
         }
       };
 
       ws.onclose = () => {
-        console.log('🔌 Disconnected from PrintBridge');
+        console.log(`🔌 Disconnected from ${osType} server`);
         setIsConnected(false);
         setPrinters([]);
         setDefaultPrinter(null);
@@ -105,15 +148,15 @@ export const usePrintBridge = () => {
       };
 
       ws.onerror = (error) => {
-        console.error('❌ PrintBridge WebSocket error:', error);
+        console.error(`❌ ${osType} WebSocket error:`, error);
         setIsConnected(false);
-        setError('Failed to connect to PrintBridge server');
+        setError(`Failed to connect to ${osType} server`);
         setLoading(false);
       };
     } catch (error) {
-      console.error('❌ PrintBridge connection error:', error);
+      console.error(`❌ ${osType} connection error:`, error);
       setIsConnected(false);
-      setError('Failed to connect to PrintBridge server');
+      setError(`Failed to connect to ${osType} server`);
       setLoading(false);
     }
   };
@@ -129,17 +172,29 @@ export const usePrintBridge = () => {
 
   const sendPrintJob = (base64Image: string, printerName?: string) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-      console.log('🖨️ Sending print job to PrintBridge...');
+      console.log(`🖨️ Sending print job to ${osType} server...`);
       
       // Remove data URL prefix if present
       const cleanImageData = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
       
-      // Send the base64 image data directly
-      wsRef.current.send(cleanImageData);
+      // Send different payload formats based on OS
+      if (osType === 'windows') {
+        // PrintBridge format: send base64 image directly
+        wsRef.current.send(cleanImageData);
+      } else {
+        // Legacy format: send JSON with printer info
+        const printJob = {
+          type: 'print',
+          images: [cleanImageData],
+          selectedPrinter: printerName
+        };
+        wsRef.current.send(JSON.stringify(printJob));
+      }
+      
       return true;
     } else {
-      console.error('❌ PrintBridge WebSocket not connected');
-      setError('PrintBridge not connected');
+      console.error(`❌ ${osType} WebSocket not connected`);
+      setError(`${osType} server not connected`);
       return false;
     }
   };
@@ -150,9 +205,12 @@ export const usePrintBridge = () => {
   };
 
   useEffect(() => {
-    connect();
+    // Only connect after OS is detected
+    if (osType !== 'other') {
+      connect();
+    }
     return () => disconnect();
-  }, []);
+  }, [osType]);
 
   return {
     isConnected,
@@ -161,6 +219,7 @@ export const usePrintBridge = () => {
     lastPrintResult,
     loading,
     error,
+    osType,
     sendPrintJob,
     connect,
     disconnect,
