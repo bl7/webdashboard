@@ -28,8 +28,12 @@ export const DarkModeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Save to localStorage whenever darkMode changes
   useEffect(() => {
     localStorage.setItem("bossDarkMode", JSON.stringify(darkMode))
-    // Only apply dark mode to boss dashboard elements, not globally
-    // Remove the global document class manipulation
+    // Update document class for global dark mode
+    if (darkMode) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
   }, [darkMode])
 
   const toggleDarkMode = () => {

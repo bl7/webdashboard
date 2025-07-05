@@ -232,16 +232,6 @@ export default function BossDashboard() {
               Manage your SaaS business and monitor performance
             </p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline">
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </Button>
-            <Button onClick={() => handleQuickLink('users', 'add')}>
-              <UserPlus className="h-4 w-4 mr-2" />
-              Add User
-            </Button>
-          </div>
         </div>
 
         {/* Key Metrics */}
@@ -318,7 +308,7 @@ export default function BossDashboard() {
         {/* New Widgets */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {/* Pending Device Shipments */}
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Device Shipments</CardTitle>
               <Truck className="h-5 w-5 text-primary" />
@@ -329,7 +319,7 @@ export default function BossDashboard() {
             </CardContent>
           </Card>
           {/* Recent Device Assignments */}
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Recent Device Assignments</CardTitle>
               <Package className="h-5 w-5 text-primary" />
@@ -345,7 +335,7 @@ export default function BossDashboard() {
             </CardContent>
           </Card>
           {/* Recent Label Orders */}
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Recent Label Orders</CardTitle>
               <FileText className="h-5 w-5 text-primary" />

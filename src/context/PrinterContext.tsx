@@ -21,7 +21,7 @@ interface PrinterContextType {
   connect: () => Promise<void>
   disconnect: () => Promise<void>
   reconnect: () => Promise<void>
-  print: (imageData: string, printer?: Printer) => Promise<void>
+  print: (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number }) => Promise<void>
   selectPrinter: (printer: Printer | null) => void
 }
 
@@ -142,7 +142,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     setSelectedPrinter(printer)
   }
 
-  const print = async (imageData: string, printer?: Printer) => {
+  const print = async (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number }) => {
     if (!isConnected || !wsRef.current) {
       throw new Error("Printer not connected. Please connect first.")
     }
@@ -169,10 +169,14 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
         throw new Error("Invalid or empty image data")
       }
       
-      const printJob = {
+      const printJob: any = {
         type: 'print',
         images: [cleanImageData],
         selectedPrinter: targetPrinter.name
+      }
+      if (options && (options.widthPx || options.heightPx)) {
+        if (options.widthPx) printJob.widthPx = options.widthPx;
+        if (options.heightPx) printJob.heightPx = options.heightPx;
       }
 
       console.log("🖨️ Sending print job with", printJob.images.length, "images")

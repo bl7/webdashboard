@@ -108,13 +108,6 @@ export default function UsersPage() {
           <h1 className="mb-2 text-2xl font-bold">Users Management</h1>
           <p className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Manage your users and their subscriptions</p>
         </div>
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="inline-flex items-center space-x-2 rounded-lg bg-purple-600 px-4 py-2 text-white transition-colors hover:bg-purple-700"
-        >
-          <Plus className="h-5 w-5" />
-          <span>Add User</span>
-        </button>
       </div>
 
       {/* Search and Filters */}

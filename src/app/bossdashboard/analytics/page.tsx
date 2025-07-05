@@ -8,10 +8,12 @@ import {
 } from "@/components/ui/card"
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Legend } from "recharts"
 import { TrendingUp, Users, DollarSign, Activity, BarChart3, PieChart as PieChartIcon, Truck, Package } from "lucide-react"
+import { useDarkMode } from "../context/DarkModeContext"
 
 const COLORS = ["#a259ff", "#f7b801", "#00c49a", "#ff6b6b", "#8884d8", "#82ca9d"]
 
 export default function AnalyticsDashboard() {
+  const { isDarkMode } = useDarkMode()
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -43,7 +45,7 @@ export default function AnalyticsDashboard() {
       <h1 className="text-3xl font-bold mb-6">Analytics Dashboard</h1>
       {/* Metric Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Users</CardTitle>
             <Users className="h-5 w-5 text-primary" />
@@ -53,7 +55,7 @@ export default function AnalyticsDashboard() {
             <p className="text-xs text-muted-foreground">{data.active} active</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Monthly Revenue</CardTitle>
             <TrendingUp className="h-5 w-5 text-primary" />
@@ -63,7 +65,7 @@ export default function AnalyticsDashboard() {
             <p className="text-xs text-muted-foreground">£{data.arr?.toLocaleString()} annually</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">ARPU</CardTitle>
             <DollarSign className="h-5 w-5 text-primary" />
@@ -73,7 +75,7 @@ export default function AnalyticsDashboard() {
             <p className="text-xs text-muted-foreground">Avg. revenue per user</p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">Churn Rate</CardTitle>
             <Activity className="h-5 w-5 text-primary" />
@@ -88,7 +90,7 @@ export default function AnalyticsDashboard() {
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Plan Distribution Pie Chart */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><PieChartIcon className="h-5 w-5 text-primary" />Plan Distribution</CardTitle>
           </CardHeader>
@@ -115,7 +117,7 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
         {/* Status Distribution Bar Chart */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" />Status Distribution</CardTitle>
           </CardHeader>
@@ -136,7 +138,7 @@ export default function AnalyticsDashboard() {
       {/* Device Analytics */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Device Status Pie Chart */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><PieChartIcon className="h-5 w-5 text-primary" />Device Status Distribution</CardTitle>
           </CardHeader>
@@ -163,7 +165,7 @@ export default function AnalyticsDashboard() {
           </CardContent>
         </Card>
         {/* Device Shipments Over Time Bar Chart */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2"><BarChart3 className="h-5 w-5 text-primary" />Device Shipments Over Time</CardTitle>
           </CardHeader>
@@ -191,7 +193,7 @@ export default function AnalyticsDashboard() {
 
       {/* Recent Signups & Top Customers */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle>Recent Signups</CardTitle>
           </CardHeader>
@@ -206,7 +208,7 @@ export default function AnalyticsDashboard() {
             </ul>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle>Top Customers</CardTitle>
           </CardHeader>

@@ -663,7 +663,33 @@ export default function LabelRender({
 
   const config = labelConfig[labelHeight]
   const { heightCm, fontSize, nameFontSize, sectionSpacing, padding } = config
-  
+
+  // --- 1mm (0.1cm) padding for all labels ---
+  const PADDING_CM = 0.1
+  const LABEL_WIDTH_CM = 5.6
+  const labelWidthCm = LABEL_WIDTH_CM - 2 * PADDING_CM
+  const labelHeightCm = heightCm - 2 * PADDING_CM
+
+  // --- Common styling ---
+  const baseStyle = {
+    width: `${labelWidthCm}cm`,
+    height: `${labelHeightCm}cm`,
+    padding: `${PADDING_CM}cm`,
+    backgroundColor: "white",
+    fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
+    fontWeight: 500,
+    fontSize,
+    display: "flex",
+    flexDirection: "column" as const,
+    boxSizing: "border-box" as const,
+    border: "2px solid black",
+    borderRadius: 6,
+    position: "relative" as const,
+    overflow: "visible" as const,
+    margin: 0,
+    letterSpacing: 0,
+  }
+
   // --- Utility functions ---
   const shortDate = (date: string) => {
     try {
@@ -748,25 +774,6 @@ export default function LabelRender({
   }
 
   // --- Common styling ---
-  const baseStyle = {
-    width: "5.6cm",
-    height: `${heightCm}cm`,
-    padding,
-    backgroundColor: "white",
-    fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
-    fontWeight: 500,
-    fontSize,
-    display: "flex",
-    flexDirection: "column" as const,
-    boxSizing: "border-box" as const,
-    border: "2px solid black",
-    borderRadius: 6,
-    position: "relative" as const,
-    overflow: "visible" as const,
-    margin: 0,
-    letterSpacing: 0,
-  }
-
   const headerStyle = {
     textAlign: "center" as const,
     backgroundColor: "black",

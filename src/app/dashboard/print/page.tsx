@@ -151,6 +151,20 @@ export default function LabelDemo() {
   // Add state for defrost search
   const [defrostSearch, setDefrostSearch] = useState("")
 
+  // OS detection
+  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const platform = window.navigator.platform.toLowerCase();
+      if (platform.includes('mac')) setOsType('mac');
+      else if (platform.includes('win')) setOsType('windows');
+      else setOsType('other');
+    }
+  }, []);
+  useEffect(() => {
+    console.log('[Label Print] Detected OS:', osType);
+  }, [osType]);
+
   const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
   // Subscription status logic
   const { subscription, loading: subLoading } = useBillingData(userId)
@@ -445,9 +459,26 @@ export default function LabelDemo() {
 
             console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
 
-            // Print using WebSocket (if connected) or just log for debug
+            // When sending print request, add pixel dimensions for Windows
+            // Add this before calling print(imageDataUrl)
+            let printOptions = undefined;
+            if (osType === 'windows') {
+              const widthPx = 448; // 56mm at 203DPI
+              let heightPx = 248; // default 31mm
+              if (labelHeight === '40mm') {
+                heightPx = 320;
+              } else if (labelHeight === '80mm') {
+                heightPx = 640;
+              }
+              printOptions = { widthPx, heightPx };
+            }
+            // Pass printOptions as the third argument if on Windows
             if (isConnected) {
-              await print(imageDataUrl);
+              if (osType === 'windows') {
+                await print(imageDataUrl, undefined, printOptions);
+              } else {
+                await print(imageDataUrl);
+              }
               console.log(`✅ Printed ${item.name} successfully`)
             } else {
               console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")

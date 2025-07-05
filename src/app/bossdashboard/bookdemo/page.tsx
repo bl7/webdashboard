@@ -1,6 +1,8 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Card, CardContent } from '@/components/ui/card';
+import { useDarkMode } from '../context/DarkModeContext';
 
 interface BookDemoRequest {
   id: number
@@ -16,6 +18,7 @@ interface BookDemoRequest {
 }
 
 export default function BossBookDemoPage() {
+  const { isDarkMode } = useDarkMode();
   const [requests, setRequests] = useState<BookDemoRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -115,127 +118,129 @@ export default function BossBookDemoPage() {
       ) : error ? (
         <div className="text-red-600 dark:text-red-400">{error}</div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full border bg-white dark:bg-gray-900 rounded shadow dark:border-gray-700">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-gray-800">
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Name</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Email</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Company</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Role</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Source</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Message</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Date</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Attended</th>
-                <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {requests.map(r => (
-                <tr key={r.id} className={r.attended ? 'bg-green-50 dark:bg-green-900' : 'dark:bg-gray-950'}>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[120px]">{r.name}</td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[160px]">{r.email}</td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[120px]">{r.company}</td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.role || <span className='text-gray-400'>N/A</span>}</td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.source || <span className='text-gray-400'>N/A</span>}</td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[180px] cursor-pointer text-blue-600 hover:underline" title={r.message} onClick={() => setModalRequest(r)}>
-                    {r.message || <span className='text-gray-400'>N/A</span>}
-                  </td>
-                  <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[140px]">{new Date(r.created_at).toLocaleString()}</td>
-                  <td className="p-2">
-                    <button
-                      className={`px-3 py-1 rounded text-xs ${r.attended ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200'}`}
-                      onClick={() => handleToggleAttended(r.id, !!r.attended, r)}
-                      disabled={updatingId === r.id}
-                    >
-                      {updatingId === r.id ? '...' : r.attended ? 'Reschedule' : 'Mark Attended'}
-                    </button>
-                  </td>
-                  <td className="p-2">
-                    <button
-                      className="text-red-600 hover:underline dark:text-red-400 text-xs"
-                      onClick={() => handleDelete(r.id)}
-                      disabled={deletingId === r.id}
-                    >
-                      {deletingId === r.id ? 'Deleting...' : 'Delete'}
-                    </button>
-                  </td>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
+          <CardContent className="overflow-x-auto p-0">
+            <table className={isDarkMode ? 'min-w-full border bg-gray-800 rounded shadow border-gray-700' : 'min-w-full border bg-white rounded shadow border-gray-200'}>
+              <thead>
+                <tr className={isDarkMode ? 'bg-gray-800' : 'bg-gray-100'}>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Name</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Email</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Company</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Role</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Source</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Message</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Date</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Attended</th>
+                  <th className="p-2 text-left text-xs font-semibold dark:text-gray-200 whitespace-nowrap">Actions</th>
                 </tr>
-              ))}
-              {requests.length === 0 && (
-                <tr><td colSpan={9} className="p-4 text-center text-gray-500 dark:text-gray-400">No demo requests yet.</td></tr>
-              )}
-            </tbody>
-          </table>
-          {/* Modal for full request details */}
-          <Dialog open={!!modalRequest} onOpenChange={open => !open && setModalRequest(null)}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Demo Request Details</DialogTitle>
-                <DialogDescription asChild>
-                  <div className="space-y-2 text-base text-foreground mt-2">
-                    {modalRequest && (
-                      <>
-                        <div><span className="font-semibold">Name:</span> {modalRequest.name}</div>
-                        <div><span className="font-semibold">Email:</span> {modalRequest.email}</div>
-                        <div><span className="font-semibold">Company:</span> {modalRequest.company}</div>
-                        <div><span className="font-semibold">Role:</span> {modalRequest.role || <span className='text-gray-400'>N/A</span>}</div>
-                        <div><span className="font-semibold">Source:</span> {modalRequest.source || <span className='text-gray-400'>N/A</span>}</div>
-                        <div><span className="font-semibold">Message:</span> <span className="whitespace-pre-line">{modalRequest.message || <span className='text-gray-400'>N/A</span>}</span></div>
-                        <div><span className="font-semibold">Date:</span> {new Date(modalRequest.created_at).toLocaleString()}</div>
-                        <div><span className="font-semibold">Attended:</span> {modalRequest.attended ? 'Yes' : 'No'}</div>
-                      </>
-                    )}
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
-          {/* Attended status dialog */}
-          <Dialog open={!!attendDialog} onOpenChange={open => { if (!open) setAttendDialog(null) }}>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{attendDialog?.reschedule ? 'Reschedule Demo' : 'Mark as Attended & Optionally Send Email'}</DialogTitle>
-                <DialogDescription asChild>
-                  <div className="space-y-2 text-base text-foreground mt-2">
-                    <div>
-                      <span className="font-semibold">Name:</span> {attendDialog?.request.name}
+              </thead>
+              <tbody>
+                {requests.map(r => (
+                  <tr key={r.id} className={r.attended ? (isDarkMode ? 'bg-green-800' : 'bg-green-50') : (isDarkMode ? 'bg-gray-800' : '')}>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[120px]">{r.name}</td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[160px]">{r.email}</td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[120px]">{r.company}</td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.role || <span className='text-gray-400'>N/A</span>}</td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.source || <span className='text-gray-400'>N/A</span>}</td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[180px] cursor-pointer text-blue-600 hover:underline" title={r.message} onClick={() => setModalRequest(r)}>
+                      {r.message || <span className='text-gray-400'>N/A</span>}
+                    </td>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[140px]">{new Date(r.created_at).toLocaleString()}</td>
+                    <td className="p-2">
+                      <button
+                        className={`px-3 py-1 rounded text-xs ${r.attended ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 dark:bg-gray-800 dark:text-gray-200'}`}
+                        onClick={() => handleToggleAttended(r.id, !!r.attended, r)}
+                        disabled={updatingId === r.id}
+                      >
+                        {updatingId === r.id ? '...' : r.attended ? 'Reschedule' : 'Mark Attended'}
+                      </button>
+                    </td>
+                    <td className="p-2">
+                      <button
+                        className="text-red-600 hover:underline dark:text-red-400 text-xs"
+                        onClick={() => handleDelete(r.id)}
+                        disabled={deletingId === r.id}
+                      >
+                        {deletingId === r.id ? 'Deleting...' : 'Delete'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {requests.length === 0 && (
+                  <tr><td colSpan={9} className="p-4 text-center text-gray-500 dark:text-gray-400">No demo requests yet.</td></tr>
+                )}
+              </tbody>
+            </table>
+            {/* Modal for full request details */}
+            <Dialog open={!!modalRequest} onOpenChange={open => !open && setModalRequest(null)}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Demo Request Details</DialogTitle>
+                  <DialogDescription asChild>
+                    <div className="space-y-2 text-base text-foreground mt-2">
+                      {modalRequest && (
+                        <>
+                          <div><span className="font-semibold">Name:</span> {modalRequest.name}</div>
+                          <div><span className="font-semibold">Email:</span> {modalRequest.email}</div>
+                          <div><span className="font-semibold">Company:</span> {modalRequest.company}</div>
+                          <div><span className="font-semibold">Role:</span> {modalRequest.role || <span className='text-gray-400'>N/A</span>}</div>
+                          <div><span className="font-semibold">Source:</span> {modalRequest.source || <span className='text-gray-400'>N/A</span>}</div>
+                          <div><span className="font-semibold">Message:</span> <span className="whitespace-pre-line">{modalRequest.message || <span className='text-gray-400'>N/A</span>}</span></div>
+                          <div><span className="font-semibold">Date:</span> {new Date(modalRequest.created_at).toLocaleString()}</div>
+                          <div><span className="font-semibold">Attended:</span> {modalRequest.attended ? 'Yes' : 'No'}</div>
+                        </>
+                      )}
                     </div>
-                    <div>
-                      <span className="font-semibold">Email:</span> {attendDialog?.request.email}
-                    </div>
-                    <div>
-                      <span className="font-semibold">Company:</span> {attendDialog?.request.company}
-                    </div>
-                    {attendDialog?.reschedule ? (
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
+            {/* Attended status dialog */}
+            <Dialog open={!!attendDialog} onOpenChange={open => { if (!open) setAttendDialog(null) }}>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>{attendDialog?.reschedule ? 'Reschedule Demo' : 'Mark as Attended & Optionally Send Email'}</DialogTitle>
+                  <DialogDescription asChild>
+                    <div className="space-y-2 text-base text-foreground mt-2">
                       <div>
-                        <label className="font-semibold">Rescheduled Demo Time: </label>
-                        <input type="datetime-local" className="border rounded px-2 py-1 ml-2" value={demoTime} onChange={e => setDemoTime(e.target.value)} required />
+                        <span className="font-semibold">Name:</span> {attendDialog?.request.name}
                       </div>
-                    ) : (
-                      <>
-                        <div className="flex items-center mt-2">
-                          <input type="checkbox" id="sendEmail" checked={sendEmail} onChange={e => setSendEmail(e.target.checked)} className="mr-2" />
-                          <label htmlFor="sendEmail">Send thank you/demo scheduled email</label>
+                      <div>
+                        <span className="font-semibold">Email:</span> {attendDialog?.request.email}
+                      </div>
+                      <div>
+                        <span className="font-semibold">Company:</span> {attendDialog?.request.company}
+                      </div>
+                      {attendDialog?.reschedule ? (
+                        <div>
+                          <label className="font-semibold">Rescheduled Demo Time: </label>
+                          <input type="datetime-local" className="border rounded px-2 py-1 ml-2" value={demoTime} onChange={e => setDemoTime(e.target.value)} required />
                         </div>
-                        {sendEmail && (
-                          <div>
-                            <label className="font-semibold">Demo Time: </label>
-                            <input type="datetime-local" className="border rounded px-2 py-1 ml-2" value={demoTime} onChange={e => setDemoTime(e.target.value)} required={sendEmail} />
+                      ) : (
+                        <>
+                          <div className="flex items-center mt-2">
+                            <input type="checkbox" id="sendEmail" checked={sendEmail} onChange={e => setSendEmail(e.target.checked)} className="mr-2" />
+                            <label htmlFor="sendEmail">Send thank you/demo scheduled email</label>
                           </div>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <button className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300" onClick={() => setAttendDialog(null)} disabled={sendingEmail}>Cancel</button>
-                <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" onClick={handleAttendDialogConfirm} disabled={sendingEmail || ((attendDialog?.reschedule || sendEmail) && !demoTime)}>{sendingEmail ? 'Processing...' : (attendDialog?.reschedule ? 'Reschedule & Send Email' : sendEmail ? 'Confirm & Send Email' : 'Confirm')}</button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
+                          {sendEmail && (
+                            <div>
+                              <label className="font-semibold">Demo Time: </label>
+                              <input type="datetime-local" className="border rounded px-2 py-1 ml-2" value={demoTime} onChange={e => setDemoTime(e.target.value)} required={sendEmail} />
+                            </div>
+                          )}
+                        </>
+                      )}
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <button className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300" onClick={() => setAttendDialog(null)} disabled={sendingEmail}>Cancel</button>
+                  <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" onClick={handleAttendDialogConfirm} disabled={sendingEmail || ((attendDialog?.reschedule || sendEmail) && !demoTime)}>{sendingEmail ? 'Processing...' : (attendDialog?.reschedule ? 'Reschedule & Send Email' : sendEmail ? 'Confirm & Send Email' : 'Confirm')}</button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
       )}
     </div>
   )

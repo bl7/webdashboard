@@ -24,6 +24,7 @@ import {
   Save,
   X
 } from "lucide-react"
+import { useDarkMode } from "../context/DarkModeContext"
 
 interface Device {
   id: number
@@ -57,6 +58,7 @@ interface DeviceStats {
 }
 
 export default function DevicesPage() {
+  const { isDarkMode } = useDarkMode()
   const [devices, setDevices] = useState<Device[]>([])
   const [filteredDevices, setFilteredDevices] = useState<Device[]>([])
   const [stats, setStats] = useState<DeviceStats>({
@@ -585,7 +587,7 @@ export default function DevicesPage() {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -597,7 +599,7 @@ export default function DevicesPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -609,7 +611,7 @@ export default function DevicesPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -621,7 +623,7 @@ export default function DevicesPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -635,7 +637,7 @@ export default function DevicesPage() {
         </div>
 
         {/* Filters */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardContent className="p-6">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="flex-1">
@@ -670,7 +672,7 @@ export default function DevicesPage() {
         </Card>
 
         {/* Devices Table */}
-        <Card>
+        <Card className={isDarkMode ? 'bg-gray-800 border-gray-700' : ''}>
           <CardHeader>
             <CardTitle>Device Inventory</CardTitle>
           </CardHeader>
