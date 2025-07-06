@@ -278,11 +278,17 @@ export const PrintBridgeIntegration: React.FC = () => {
               className="w-full p-2 border border-purple-300 rounded text-sm bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             >
               <option value="">Select a printer...</option>
-              {connectionInfo.printers.map((printer) => (
-                <option key={printer.name} value={printer.name}>
-                  {printer.name} {printer.isDefault ? '(Default)' : ''}
-                </option>
-              ))}
+              {connectionInfo.printers.map((printer) => {
+                if (typeof printer !== 'object' || !printer.name) {
+                  console.error('Invalid printer object in connectionInfo.printers:', printer)
+                  return null;
+                }
+                return (
+                  <option key={printer.name} value={printer.name}>
+                    {printer.name} {printer.isDefault ? '(Default)' : ''}
+                  </option>
+                )
+              })}
             </select>
             <div className="text-xs text-purple-600">
               {connectionInfo.printers.length} printer(s) detected

@@ -187,31 +187,6 @@ export const PricingGrid = () => {
             ))}
           </div>
         </div>
-
-        {/* Enhanced Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="text-center mt-20"
-        >
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 text-white shadow-2xl">
-            <h3 className="text-3xl font-black mb-4">
-              Ready to transform your kitchen?
-            </h3>
-            <p className="text-purple-100 mb-8 max-w-2xl mx-auto text-lg leading-relaxed">
-              Join 1,500+ UK businesses using InstaLabel for HACCP-compliant labeling. 
-              Start your free trial today—no credit card required.
-            </p>
-            <Link href="/register">
-              <Button className="bg-white text-purple-600 px-8 py-4 text-lg font-semibold rounded-xl hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl">
-                Start Free Trial
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
       </div>
     </section>
   )

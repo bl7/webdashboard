@@ -733,16 +733,25 @@ export default function LabelDemo() {
                         value={selectedPrinter?.name || ''}
                         onChange={e => {
                           const printer = availablePrinters.find(p => p.name === e.target.value)
+                          if (typeof printer !== 'undefined' && typeof printer !== 'object') {
+                            console.error('Printer select: expected a printer object, got:', printer)
+                          }
                           selectPrinter(printer || null)
                         }}
                         className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
                       >
                         <option value="">Select Printer</option>
-                        {availablePrinters.map((printer) => (
-                          <option key={printer.name} value={printer.name}>
-                            {printer.name} {printer.isDefault ? '(Default)' : ''}
-                          </option>
-                        ))}
+                        {availablePrinters.map((printer) => {
+                          if (typeof printer !== 'object' || !printer.name) {
+                            console.error('Invalid printer object in availablePrinters:', printer)
+                            return null;
+                          }
+                          return (
+                            <option key={printer.name} value={printer.name}>
+                              {printer.name} {printer.isDefault ? '(Default)' : ''}
+                            </option>
+                          )
+                        })}
                       </select>
                       <div className="text-xs text-gray-700 mt-1">
                         {availablePrinters.length} printer(s) detected

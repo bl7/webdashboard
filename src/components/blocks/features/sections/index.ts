@@ -1,6 +1,4 @@
 export * from "./corefeaturegrid"
 export * from "./featuresgrid"
 export * from "./featureshero"
-export * from "./featurestabs"
 export * from "./whychooseus"
-export * from "./ImportFeatureSection"

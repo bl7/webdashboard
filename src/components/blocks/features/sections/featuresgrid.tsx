@@ -1,67 +1,53 @@
 "use client"
 
-import { CheckCircle } from "lucide-react"
-import Image from "next/image"
+import { Zap, ShieldCheck, BarChart3, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
 
+const pillars = [
+  {
+    icon: <Zap className="h-8 w-8 text-purple-600" />, 
+    title: "Instant Setup",
+    description: "Plug in and print in minutes. No IT support or drivers required."
+  },
+  {
+    icon: <ShieldCheck className="h-8 w-8 text-green-600" />, 
+    title: "Compliant by Design",
+    description: "Natasha’s Law, HACCP, and EHO compliance built in."
+  },
+  {
+    icon: <BarChart3 className="h-8 w-8 text-pink-600" />, 
+    title: "Real-Time Analytics",
+    description: "Track label usage, staff activity, and expiry alerts live."
+  },
+]
+
+
+
 export const FeaturesGrid = () => {
-  const features = [
-    "Plug & play label printing",
-    "Local bridge makes printing through the web fast and reliable",
-    "Sunmi gives you the portability to print anywhere",
-    "Web dashboard for control & analytics",
-  ]
-
   return (
-    <section className="bg-white py-8 sm:py-24">
-      <div className="container grid items-center gap-8 sm:gap-12 px-2 sm:px-4 md:grid-cols-2 md:px-12 lg:px-16">
-        {/* Text Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4">
-            Everything you need, nothing you don't
-          </h2>
-          <p className="max-w-xl text-xl text-gray-600 mb-6">
-            InstaLabel is built for speed and simplicity. Print directly from the web or sunmi device, monitor
-            usage, and choose the right hardware for your business.
-          </p>
-
-          <ul className="space-y-4 text-base text-gray-700">
-            {features.map((feature, i) => (
-              <motion.li 
-                key={i} 
-                className="flex items-start gap-3"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <CheckCircle className="mt-1 h-5 w-5 text-green-600" />
-                <span>{feature}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
-
-        {/* Image / Illustration */}
-        <motion.div 
-          className="relative aspect-video w-full rounded-xl bg-muted shadow-sm mt-6 md:mt-0"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <Image
-            src="/dashboard.png"
-            alt="Feature overview"
-            fill
-            className="rounded-xl object-cover"
-          />
-        </motion.div>
+    <section className="bg-white py-16 sm:py-24">
+      <div className="container mx-auto px-4">
+        <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4 text-center">
+          Why Kitchens Switch to InstaLabel
+        </h2>
+        <p className="max-w-2xl mx-auto text-xl text-gray-600 mb-12 text-center">
+          The only labeling platform built for real kitchens, not just IT departments.
+        </p>
+        <div className="grid gap-10 sm:grid-cols-3 max-w-5xl mx-auto mb-12">
+          {pillars.map((item, i) => (
+            <motion.div
+              key={i}
+              className="rounded-2xl border bg-gray-50 p-8 shadow-sm flex flex-col items-center text-center h-full"
+              whileHover={{ scale: 1.04 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="mb-4 flex items-center justify-center">{item.icon}</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-gray-600 text-base">{item.description}</p>
+            </motion.div>
+          ))}
+        </div>
+       
       </div>
     </section>
   )

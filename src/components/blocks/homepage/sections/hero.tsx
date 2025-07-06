@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui"
-import { ArrowRight, Wifi, Download, Smartphone, BarChart3, Zap, Shield, Users } from "lucide-react"
+import { ArrowRight, Combine, Download, Smartphone, BarChart3, Zap, Shield, Users } from "lucide-react"
 import Image from "next/image"
 import React from "react"
 import instaLabel from "@/assets/images/instaLabel.png"
@@ -58,8 +58,7 @@ export const Hero = () => {
           className="w-full max-w-2xl space-y-8 text-center md:text-left"
         >
           <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 text-sm font-semibold text-purple-800 ring-1 ring-purple-200 shadow-sm">
-            <Wifi className="mr-2 h-4 w-4" />
-            🚀 #1 Kitchen Labeling System in the UK
+          👌 One of the Best Kitchen Labeling Systems in the UK
           </div>
 
           <div className="space-y-4">
@@ -76,7 +75,7 @@ export const Hero = () => {
           </div>
 
           <p className="max-w-xl text-lg text-gray-600 sm:text-xl leading-relaxed">
-            Join 500+ restaurants using InstaLabel to eliminate handwritten labels, 
+          The future of food labeling is here, use instalable to eliminate handwritten labels, 
             ensure HACCP compliance, and boost kitchen efficiency. Print seamlessly from 
             web dashboard or Sunmi devices with real-time analytics.
           </p>
@@ -106,20 +105,12 @@ export const Hero = () => {
           {/* Enhanced Social proof */}
           <div className="space-y-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
             <div className="flex items-center gap-2">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="w-8 h-8 bg-purple-200 rounded-full border-2 border-white flex items-center justify-center">
-                    <Users className="h-4 w-4 text-purple-600" />
-                  </div>
-                ))}
-              </div>
-              <p className="text-sm font-medium text-gray-700">
-                Trusted by 500+ restaurants
-              </p>
+             
+            
             </div>
             <p className="text-sm italic text-gray-600">
               "We used to handwrite 50+ labels daily. Now we just tap and print with the bridge app." 
-              <span className="font-semibold text-purple-600"> – Head Chef, Manchester</span>
+              <span className="font-semibold text-purple-600"> – Head Chef, Noodle Bar, Bournemouth</span>
             </p>
           </div>
 
@@ -133,7 +124,7 @@ export const Hero = () => {
             </Button>
             <Link href="/printbridge">
               <Button variant="outline" size="lg" >
-                <Wifi className="mr-2 h-5 w-5" />
+                <Combine className="mr-2 h-5 w-5" />
                 Learn About PrintBridge
               </Button>
             </Link>
