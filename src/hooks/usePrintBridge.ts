@@ -170,19 +170,23 @@ export const usePrintBridge = () => {
     }
   };
 
-  const sendPrintJob = (base64Image: string, printerName?: string) => {
+  const sendPrintJob = (base64Image: string, printerName?: string, labelWidthMm: number = 56, labelHeightMm: number = 31) => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       console.log(`🖨️ Sending print job to ${osType} server...`);
       
-      // Remove data URL prefix if present
+      // Remove data URL prefix if present for legacy/mac, but keep full data URL for Windows
       const cleanImageData = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
       
-      // Send different payload formats based on OS
       if (osType === 'windows') {
-        // PrintBridge format: send base64 image directly
-        wsRef.current.send(cleanImageData);
+        // Send JSON with label dimensions and full data URL
+        const payload = {
+          labelWidth: labelWidthMm, // in mm
+          labelHeight: labelHeightMm, // in mm
+          image: base64Image // full data URL
+        };
+        wsRef.current.send(JSON.stringify(payload));
       } else {
-        // Legacy format: send JSON with printer info
+        // Legacy format: send JSON with printer info and base64 only
         const printJob = {
           type: 'print',
           images: [cleanImageData],

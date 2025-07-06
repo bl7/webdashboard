@@ -625,9 +625,9 @@ export default function LabelRender({
       maxAllergenLen: 10,
       maxIngredientsToShow: 2,
       expiresFontSize: 10,
-      metaFontSize: 6.5,
-      containsFontSize: 7.5,
-      ppdsFontSize: 7,
+      metaFontSize: 8.5, // Increased from 6.5 (+2px)
+      containsFontSize: 9.5, // Increased from 7.5 (+2px)
+      ppdsFontSize: 9, // Increased from 7 (+2px)
     },
     "40mm": {
       heightCm: 3.95,
@@ -640,9 +640,9 @@ export default function LabelRender({
       maxAllergenLen: 12,
       maxIngredientsToShow: 5,
       expiresFontSize: 12,
-      metaFontSize: 7.5,
-      containsFontSize: 8.5,
-      ppdsFontSize: 7.5,
+      metaFontSize: 9.5, // Increased from 7.5 (+2px)
+      containsFontSize: 10.5, // Increased from 8.5 (+2px)
+      ppdsFontSize: 9.5, // Increased from 7.5 (+2px)
     },
     "80mm": {
       heightCm: 7.95,
@@ -655,9 +655,9 @@ export default function LabelRender({
       maxAllergenLen: 18,
       maxIngredientsToShow: 12,
       expiresFontSize: 16, // Reduced from 18 to fit on one line
-      metaFontSize: 11,
-      containsFontSize: 13,
-      ppdsFontSize: 12,
+      metaFontSize: 13, // Increased from 11 (+2px)
+      containsFontSize: 15, // Increased from 13 (+2px)
+      ppdsFontSize: 14, // Increased from 12 (+2px)
     },
   }
 

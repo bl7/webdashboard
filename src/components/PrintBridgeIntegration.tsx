@@ -7,15 +7,12 @@ import Link from 'next/link';
 
 type LabelHeight = "31mm" | "40mm" | "80mm";
 
-function getPrinterName(printer: any) {
-  if (!printer) return 'Unknown Printer';
+function getPrinterName(printer: any): string {
+  if (!printer) return '';
+  if (typeof printer === 'string') return printer;
+  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
   if (typeof printer.name === 'string') return printer.name;
-  if (typeof printer.name === 'object') {
-    if (printer.name.displayName) return printer.name.displayName;
-    if (printer.name.label) return printer.name.label;
-    return JSON.stringify(printer.name);
-  }
-  return String(printer.name);
+  return '';
 }
 
 export const PrintBridgeIntegration: React.FC = () => {
@@ -61,7 +58,7 @@ export const PrintBridgeIntegration: React.FC = () => {
         reconnect: printerReconnect,
         sendPrint: (imageData: string, printerName?: string) => {
           if (printerName) {
-            const printer = availablePrinters.find(p => p.name === printerName);
+            const printer = availablePrinters.find(p => getPrinterName(p) === printerName);
             return legacyPrint(imageData, printer);
           }
           return legacyPrint(imageData);
@@ -87,7 +84,7 @@ export const PrintBridgeIntegration: React.FC = () => {
         reconnect: printerReconnect,
         sendPrint: (imageData: string, printerName?: string) => {
           if (printerName) {
-            const printer = availablePrinters.find(p => p.name === printerName);
+            const printer = availablePrinters.find(p => getPrinterName(p) === printerName);
             return legacyPrint(imageData, printer);
           }
           return legacyPrint(imageData);
@@ -234,10 +231,7 @@ export const PrintBridgeIntegration: React.FC = () => {
 
   // When sending a print job, find the printer object by matching printer.name.name or printer.name to selectedPrinterName
   const getSelectedPrinter = () => {
-    return connectionInfo.printers.find((p: any) =>
-      (typeof p.name === 'object' && p.name.name === selectedPrinterName) ||
-      (typeof p.name === 'string' && p.name === selectedPrinterName)
-    );
+    return connectionInfo.printers.find((p: any) => getPrinterName(p) === selectedPrinterName);
   };
 
   return (
@@ -303,14 +297,10 @@ export const PrintBridgeIntegration: React.FC = () => {
             >
               <option value="">Select a printer...</option>
               {connectionInfo.printers.map((printer: any) => {
-                const printerName = typeof printer.name === 'object' && typeof printer.name.name === 'string'
-                  ? printer.name.name
-                  : typeof printer.name === 'string'
-                    ? printer.name
-                    : 'Unknown Printer';
+                const printerName = getPrinterName(printer);
                 return (
                   <option key={printerName} value={printerName}>
-                    {printerName} {printer.isDefault ? '(Default)' : ''}
+                    {printerName}
                   </option>
                 );
               })}

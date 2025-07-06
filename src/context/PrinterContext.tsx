@@ -22,7 +22,7 @@ interface PrinterContextType {
   connect: () => Promise<void>
   disconnect: () => Promise<void>
   reconnect: () => Promise<void>
-  print: (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number }) => Promise<void>
+  print: (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number, labelHeight?: "31mm" | "40mm" | "80mm" }) => Promise<void>
   selectPrinter: (printer: Printer | null) => void
 }
 
@@ -63,7 +63,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     setSelectedPrinter(printer)
   }
 
-  const print = async (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number }) => {
+  const print = async (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number, labelHeight?: "31mm" | "40mm" | "80mm" }) => {
     if (!isConnected) {
       throw new Error("Printer not connected. Please connect first.")
     }
@@ -74,12 +74,19 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
       throw new Error("No printer selected. Please select a printer first.")
     }
 
+    // Map labelHeight string to mm
+    let labelHeightMm = 31;
+    if (options && options.labelHeight) {
+      if (options.labelHeight === "40mm") labelHeightMm = 40;
+      else if (options.labelHeight === "80mm") labelHeightMm = 80;
+    }
+
     try {
       // Remove data URL prefix if present
       const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
 
       // Send print job using PrintBridge
-      const success = sendPrintJob(cleanImageData, targetPrinter.name)
+      const success = sendPrintJob(imageData, targetPrinter.name, 56, labelHeightMm)
       
       if (success) {
         console.log("✅ Print job sent successfully via PrintBridge", { printer: targetPrinter.name })

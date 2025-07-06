@@ -26,6 +26,7 @@ interface Printer {
 
 function getPrinterName(printer: any): string {
   if (!printer) return '';
+  if (typeof printer === 'string') return printer;
   if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
   if (typeof printer.name === 'string') return printer.name;
   return '';
@@ -471,7 +472,7 @@ export default function LabelDemo() {
 
             // Revert to sending the same print request for all OSes
             if (isConnected) {
-              await print(imageDataUrl);
+              await print(imageDataUrl, undefined, { labelHeight });
             } else {
               console.log('🖨️ DEBUG: Would print image data:', imageDataUrl.substring(0, 100) + '...');
             }
@@ -579,7 +580,7 @@ export default function LabelDemo() {
         
         // Print using WebSocket (if connected) or just log for debug
         if (isConnected) {
-          await print(imageDataUrl)
+          await print(imageDataUrl, undefined, { labelHeight });
           console.log(`✅ Printed USE FIRST label ${i + 1}/${quantity}`)
         } else {
           console.log(`🖨️ DEBUG: Would print USE FIRST label ${i + 1}/${quantity}:`, imageDataUrl.substring(0, 100) + "...")
@@ -664,8 +665,7 @@ export default function LabelDemo() {
       
       // Print using WebSocket (if connected) or just log for debug
       if (isConnected) {
-        await print(imageDataUrl)
-        showFeedback("Printed defrosted label", "success")
+        await print(imageDataUrl, undefined, { labelHeight });
       } else {
         console.log("🖨️ DEBUG: Would print defrost label:", imageDataUrl.substring(0, 100) + "...")
         showFeedback("DEBUG: Would print defrosted label (printer not connected)", "success")
@@ -745,21 +745,14 @@ export default function LabelDemo() {
                           value={selectedPrinterName}
                           onChange={e => {
                             setSelectedPrinterName(e.target.value);
-                            const printer = availablePrinters.find((p: any) =>
-                              (typeof p.name === 'object' && p.name.name === e.target.value) ||
-                              (typeof p.name === 'string' && p.name === e.target.value)
-                            );
+                            const printer = availablePrinters.find((p: any) => getPrinterName(p) === e.target.value);
                             selectPrinter(printer || null);
                           }}
                           className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
                         >
                           <option value="">Select Printer</option>
                           {availablePrinters.map((printer: any) => {
-                            const printerName = typeof printer.name === 'object' && typeof printer.name.name === 'string'
-                              ? printer.name.name
-                              : typeof printer.name === 'string'
-                                ? printer.name
-                                : 'Unknown Printer';
+                            const printerName = getPrinterName(printer);
                             return (
                               <option key={printerName} value={printerName}>
                                 {printerName} {printer.isDefault ? '(Default)' : ''}
