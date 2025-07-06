@@ -231,7 +231,7 @@ export default function PlanSelectionStep({
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="inline-flex items-center gap-3 mb-4">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600"></div>
             <span className="text-lg text-gray-600">Loading plans...</span>
           </div>
           <p className="text-gray-500">We're fetching the latest pricing information for you.</p>
@@ -344,9 +344,9 @@ export default function PlanSelectionStep({
                     key={plan.id}
                     className={`relative bg-white rounded-2xl border transition-all duration-200 cursor-pointer hover:shadow-lg flex flex-col ${
                       plan.highlight
-                        ? "border-blue-200 shadow-lg ring-1 ring-blue-100"
+                        ? "border-purple-200 shadow-lg ring-1 ring-blue-100"
                         : "border-gray-200 hover:border-gray-300"
-                    } ${isSelected ? "ring-2 ring-blue-500 border-blue-500" : ""}`}
+                    } ${isSelected ? "ring-2 ring-blue-500 border-purple-500" : ""}`}
                     style={{ minHeight: '600px', maxWidth: '400px' }}
                     tabIndex={0}
                     role="button"
@@ -362,7 +362,7 @@ export default function PlanSelectionStep({
                   >
                     {plan.highlight && (
                       <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                        <span className="bg-blue-600 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-sm whitespace-nowrap">
+                        <span className="bg-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-medium shadow-sm whitespace-nowrap">
                           {plan.badge || "Most Popular"}
                         </span>
                       </div>
@@ -406,7 +406,7 @@ export default function PlanSelectionStep({
                         disabled={isLoading || isPlanProcessing}
                         className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
                           plan.highlight
-                            ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500"
+                            ? "bg-purple-600 text-white hover:bg-purple-700 focus:ring-blue-500"
                             : "bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-500"
                         } ${(isLoading || isPlanProcessing) ? "opacity-50 cursor-not-allowed" : ""}`}
                       >
@@ -458,7 +458,7 @@ export default function PlanSelectionStep({
               No setup fees
             </span>
             <span className="hidden sm:inline text-gray-300">•</span>
-            <a href="/contact" className="text-blue-600 hover:text-blue-700 font-medium transition-colors">
+            <a href="/contact" className="text-purple-600 hover:text-purple-700 font-medium transition-colors">
               Need help choosing?
             </a>
           </div>

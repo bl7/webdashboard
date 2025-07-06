@@ -1,10 +1,10 @@
 import React from "react"
-import { LabelsHero, FeatureIntro, FeaturesGridUses, GalleryFeature } from "./sections"
+import { UsesHero, FeatureIntro, FeaturesGridUses, GalleryFeature } from "./sections"
 
 export const Uses = () => {
   return (
     <>
-      <LabelsHero />
+      <UsesHero />
       <FeatureIntro />
       <GalleryFeature />
       <FeaturesGridUses />

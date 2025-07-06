@@ -19,7 +19,7 @@ function statusBadge(status: string) {
     case "shipped":
       return <Badge className="bg-green-600 text-white">Shipped</Badge>;
     case "paid":
-      return <Badge className="bg-blue-600 text-white">Paid</Badge>;
+      return <Badge className="bg-purple-600 text-white">Paid</Badge>;
     case "pending":
     default:
       return <Badge className="bg-gray-400 text-white">Pending</Badge>;
@@ -265,7 +265,7 @@ export default function BossOrdersPage() {
               <div><b>Rolls per bundle:</b> {selectedOrder.rolls_per_bundle}</div>
               <div><b>Labels per roll:</b> {selectedOrder.labels_per_roll}</div>
               {selectedOrder.stripe_payment_intent_id && (
-                <div><b>Stripe Payment:</b> <a href={`https://dashboard.stripe.com/payments/${selectedOrder.stripe_payment_intent_id}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">View in Stripe</a></div>
+                <div><b>Stripe Payment:</b> <a href={`https://dashboard.stripe.com/payments/${selectedOrder.stripe_payment_intent_id}`} target="_blank" rel="noopener noreferrer" className="text-purple-500 underline">View in Stripe</a></div>
               )}
             </div>
           )}

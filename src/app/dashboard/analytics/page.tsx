@@ -278,7 +278,7 @@ const AnalyticsDashboard: React.FC = () => {
               className={`rounded-lg px-4 py-2 font-medium transition ${
                 range === opt.value
                   ? "bg-purple-500 text-white shadow"
-                  : "text-purple-700 hover:bg-blue-100"
+                  : "text-purple-700 hover:bg-purple-100"
               }`}
               onClick={() => setRange(opt.value as "week" | "month")}
             >
@@ -316,8 +316,8 @@ const AnalyticsDashboard: React.FC = () => {
       <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
         <Card className="border-0 bg-white/70 shadow-xl backdrop-blur-md">
           <CardHeader className="rounded-t-lg bg-gradient-to-r from-blue-100 to-indigo-100">
-            <CardTitle className="flex items-center gap-2 text-lg font-bold text-blue-700">
-              <CalendarDays className="h-5 w-5 text-blue-500" />
+            <CardTitle className="flex items-center gap-2 text-lg font-bold text-purple-700">
+              <CalendarDays className="h-5 w-5 text-purple-500" />
               Labels Printed Each Day
             </CardTitle>
           </CardHeader>
@@ -399,7 +399,7 @@ function AnalyticsSkeleton() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
       {/* Header Skeleton */}
       <div className="mb-10 flex flex-col items-center text-center">
-        <div className="mb-2 h-10 w-64 rounded bg-blue-100/60" />
+        <div className="mb-2 h-10 w-64 rounded bg-purple-100/60" />
         <div className="mx-auto mb-2 h-6 w-80 rounded bg-gray-200/60" />
       </div>
       {/* Metric Cards Skeleton */}
@@ -409,9 +409,9 @@ function AnalyticsSkeleton() {
             key={i}
             className="flex flex-col rounded-2xl border-0 bg-white/70 p-6 shadow-lg backdrop-blur-md"
           >
-            <div className="mb-4 h-6 w-1/3 rounded bg-blue-100/60" />
-            <div className="mb-2 h-10 w-1/2 rounded bg-blue-200/60" />
-            <div className="h-4 w-1/3 rounded bg-blue-100/40" />
+            <div className="mb-4 h-6 w-1/3 rounded bg-purple-100/60" />
+            <div className="mb-2 h-10 w-1/2 rounded bg-purple-200/60" />
+            <div className="h-4 w-1/3 rounded bg-purple-100/40" />
           </div>
         ))}
       </section>

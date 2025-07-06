@@ -229,8 +229,8 @@ export default function NotificationsPage() {
   const getTypeBadge = (type: string) => {
     const badgeConfig = {
       new_signup: { color: "bg-green-100 text-green-800", label: "New Signup" },
-      upgrade: { color: "bg-blue-100 text-blue-800", label: "Upgrade" },
-      device_shipped: { color: "bg-blue-100 text-blue-800", label: "Device Shipped" },
+      upgrade: { color: "bg-purple-100 text-blue-800", label: "Upgrade" },
+      device_shipped: { color: "bg-purple-100 text-blue-800", label: "Device Shipped" },
       device_delivered: { color: "bg-green-100 text-green-800", label: "Device Delivered" },
       device_return_requested: { color: "bg-orange-100 text-orange-800", label: "Return Requested" },
       device_returned: { color: "bg-purple-100 text-purple-800", label: "Device Returned" },
@@ -240,7 +240,7 @@ export default function NotificationsPage() {
       plan_renewal: { color: "bg-green-100 text-green-800", label: "Plan Renewed" },
       label_order_placed: { color: "bg-gray-100 text-gray-800", label: "Label Order Placed" },
       label_order_paid: { color: "bg-green-100 text-green-800", label: "Label Order Paid" },
-      label_order_shipped: { color: "bg-blue-100 text-blue-800", label: "Label Order Shipped" },
+      label_order_shipped: { color: "bg-purple-100 text-blue-800", label: "Label Order Shipped" },
       label_order_delivered: { color: "bg-green-100 text-green-800", label: "Label Order Delivered" },
       label_order_cancelled: { color: "bg-red-100 text-red-800", label: "Label Order Cancelled" }
     }
@@ -316,7 +316,7 @@ export default function NotificationsPage() {
                       <div className="space-y-4">
                         {/* Customer Information */}
                         {(selectedNotification.data.customer_name || selectedNotification.data.email) && (
-                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-blue-900/20" : "bg-blue-50"}`}>
+                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-blue-900/20" : "bg-purple-50"}`}>
                             <h4 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Customer Information</h4>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               {selectedNotification.data.customer_name && (
@@ -514,9 +514,9 @@ export default function NotificationsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Upgrades</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.upgrade}</p>
+                  <p className="text-2xl font-bold text-purple-600">{stats.upgrade}</p>
                 </div>
-                <AlertTriangle className="w-8 h-8 text-blue-400" />
+                <AlertTriangle className="w-8 h-8 text-purple-400" />
               </div>
             </CardContent>
           </Card>
@@ -628,7 +628,7 @@ export default function NotificationsPage() {
                   {filteredNotifications.map((notification) => (
                     <TableRow 
                       key={notification.id} 
-                      className={`${!notification.read ? (isDarkMode ? 'bg-blue-900/20' : 'bg-blue-50') : ''} ${isDarkMode ? 'border-gray-700' : ''}`}
+                      className={`${!notification.read ? (isDarkMode ? 'bg-blue-900/20' : 'bg-purple-50') : ''} ${isDarkMode ? 'border-gray-700' : ''}`}
                     >
                       <TableCell>
                         <div className="flex items-center gap-2">
@@ -644,7 +644,7 @@ export default function NotificationsPage() {
                       <TableCell className={isDarkMode ? "text-gray-300" : ""}>{formatDate(notification.timestamp)}</TableCell>
                       <TableCell>
                         {notification.read ? (
-                          <Badge variant="secondary">Read</Badge>
+                          <Badge variant="outline">Read</Badge>
                         ) : (
                           <Badge className="bg-red-100 text-red-800">Unread</Badge>
                         )}

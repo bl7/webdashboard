@@ -1,5 +1,8 @@
+"use client"
+
 import { CheckCircle } from "lucide-react"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 export const FeaturesGrid = () => {
   const features = [
@@ -13,7 +16,12 @@ export const FeaturesGrid = () => {
     <section className="bg-white py-8 sm:py-24">
       <div className="container grid items-center gap-8 sm:gap-12 px-2 sm:px-4 md:grid-cols-2 md:px-12 lg:px-16">
         {/* Text Content */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
           <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-primary">
             Everything you need, nothing you don't
           </h2>
@@ -24,23 +32,36 @@ export const FeaturesGrid = () => {
 
           <ul className="mt-6 sm:mt-8 space-y-3 sm:space-y-4 text-muted-foreground">
             {features.map((feature, i) => (
-              <li key={i} className="flex items-start gap-3">
+              <motion.li 
+                key={i} 
+                className="flex items-start gap-3"
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+              >
                 <CheckCircle className="mt-1 h-5 w-5 text-green-600" />
                 <span>{feature}</span>
-              </li>
+              </motion.li>
             ))}
           </ul>
-        </div>
+        </motion.div>
 
         {/* Image / Illustration */}
-        <div className="relative aspect-video w-full rounded-xl bg-muted shadow-sm mt-6 md:mt-0">
+        <motion.div 
+          className="relative aspect-video w-full rounded-xl bg-muted shadow-sm mt-6 md:mt-0"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+        >
           <Image
             src="/dashboard.png"
             alt="Feature overview"
             fill
             className="rounded-xl object-cover"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   )

@@ -117,11 +117,11 @@ export default function AdminNotifications() {
       case 'new_signup':
         return <Users className="w-5 h-5 text-green-600" />
       case 'upgrade':
-        return <CheckCircle className="w-5 h-5 text-blue-600" />
+        return <CheckCircle className="w-5 h-5 text-purple-600" />
       case 'cancellation':
         return <AlertTriangle className="w-5 h-5 text-red-600" />
       case 'device_shipped':
-        return <Truck className="w-5 h-5 text-blue-600" />
+        return <Truck className="w-5 h-5 text-purple-600" />
       case 'device_returned':
         return <RotateCcw className="w-5 h-5 text-purple-600" />
       case 'payment_failed':
@@ -134,9 +134,9 @@ export default function AdminNotifications() {
   const getNotificationBadge = (type: string) => {
     const badgeConfig = {
       new_signup: "bg-green-100 text-green-800",
-      upgrade: "bg-blue-100 text-blue-800",
+      upgrade: "bg-purple-100 text-blue-800",
       cancellation: "bg-red-100 text-red-800",
-      device_shipped: "bg-blue-100 text-blue-800",
+      device_shipped: "bg-purple-100 text-blue-800",
       device_returned: "bg-purple-100 text-purple-800",
       payment_failed: "bg-red-100 text-red-800"
     }
@@ -211,7 +211,7 @@ export default function AdminNotifications() {
               className={`flex items-start gap-3 p-3 rounded-lg border transition-colors ${
                 notification.read 
                   ? 'bg-gray-50 border-gray-200' 
-                  : 'bg-blue-50 border-blue-200'
+                  : 'bg-purple-50 border-purple-200'
               }`}
             >
               <div className="flex-shrink-0 mt-1">

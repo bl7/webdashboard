@@ -15,8 +15,8 @@ export const HowToUploadSteps = () => (
         <p className="text-gray-600 text-sm">Get our ready-to-use Excel/CSV template to ensure your data is formatted perfectly.</p>
       </div>
       <div className="flex flex-col items-center">
-        <div className="bg-blue-100 p-4 rounded-full mb-4">
-          <FaEdit className="h-8 w-8 text-blue-600" />
+        <div className="bg-purple-100 p-4 rounded-full mb-4">
+          <FaEdit className="h-8 w-8 text-purple-600" />
         </div>
         <h3 className="font-semibold text-lg mb-1">2. Fill in Your Data</h3>
         <p className="text-gray-600 text-sm">Add your menu items, ingredients, and allergens to the template. Save your changes.</p>

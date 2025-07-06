@@ -104,7 +104,7 @@ const CancellationsPage: React.FC = () => {
                     <td className="px-4 py-2 text-xs">{c.email || <span className="text-gray-400">N/A</span>}</td>
                     <td className="px-4 py-2 text-xs">{c.company_name || <span className="text-gray-400">N/A</span>}</td>
                     <td className="px-4 py-2 font-mono text-xs">{c.subscription_id || "-"}</td>
-                    <td className="px-4 py-2 max-w-xs truncate cursor-pointer text-xs text-blue-600 hover:underline" title={c.reason} onClick={() => { setModalReason(c.reason); setModalCancellation(c); }}>
+                    <td className="px-4 py-2 max-w-xs truncate cursor-pointer text-xs text-purple-600 hover:underline" title={c.reason} onClick={() => { setModalReason(c.reason); setModalCancellation(c); }}>
                       {c.reason}
                     </td>
                     <td className="px-4 py-2 text-xs">{format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm")}</td>

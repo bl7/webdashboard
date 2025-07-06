@@ -126,7 +126,7 @@ export default function Header({
   const getTypeBadge = (type: string) => {
     const badgeConfig: Record<string, { color: string, label: string }> = {
       new_signup: { color: "bg-green-100 text-green-800", label: "New Signup" },
-      upgrade: { color: "bg-blue-100 text-blue-800", label: "Upgrade" },
+      upgrade: { color: "bg-purple-100 text-blue-800", label: "Upgrade" },
       device_shipped: { color: "bg-purple-100 text-purple-800", label: "Device Shipped" },
       device_delivered: { color: "bg-green-100 text-green-800", label: "Device Delivered" },
       device_return_requested: { color: "bg-orange-100 text-orange-800", label: "Return Requested" },
@@ -137,7 +137,7 @@ export default function Header({
       plan_renewal: { color: "bg-green-100 text-green-800", label: "Plan Renewed" },
       label_order_placed: { color: "bg-gray-100 text-gray-800", label: "Label Order Placed" },
       label_order_paid: { color: "bg-green-100 text-green-800", label: "Label Order Paid" },
-      label_order_shipped: { color: "bg-blue-100 text-blue-800", label: "Label Order Shipped" },
+      label_order_shipped: { color: "bg-purple-100 text-blue-800", label: "Label Order Shipped" },
       label_order_delivered: { color: "bg-green-100 text-green-800", label: "Label Order Delivered" },
       label_order_cancelled: { color: "bg-red-100 text-red-800", label: "Label Order Cancelled" }
     }
@@ -246,7 +246,7 @@ export default function Header({
                 <DropdownMenuLabel className="flex items-center justify-between">
                   <span>Notifications</span>
                   {notifications.length > 0 && (
-                    <Badge variant="secondary" className="text-xs">
+                    <Badge variant="outline" className="text-xs">
                       {notifications.length} unread
                     </Badge>
                   )}
@@ -307,7 +307,7 @@ export default function Header({
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
-                      className="text-center text-sm text-blue-600 hover:text-blue-700"
+                      className="text-center text-sm text-purple-600 hover:text-purple-700"
                       onClick={() => router.push('/bossdashboard/notifications')}
                     >
                       View all notifications

@@ -48,9 +48,9 @@ export const FeatureIntro = () => {
           {/* Text 1 – Natasha's Law */}
           <div className="space-y-6">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-3 bg-blue-50 px-4 py-2 rounded-full border border-blue-200">
+              <div className="inline-flex items-center gap-3 bg-purple-50 px-4 py-2 rounded-full border border-purple-200">
                 <span className="text-2xl">📋</span>
-                <span className="text-sm font-medium text-blue-700 uppercase tracking-wider">Compliance Made Simple</span>
+                <span className="text-sm font-medium text-purple-700 uppercase tracking-wider">Compliance Made Simple</span>
               </div>
               <h3 className="text-3xl font-bold text-gray-900 leading-tight">
                 Natasha's Law Labels
@@ -58,24 +58,24 @@ export const FeatureIntro = () => {
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">
               Instantly print fully compliant allergen labels with key ingredients highlighted in{" "}
-              <strong className="text-blue-600">bold</strong>, <em className="text-blue-600">italic</em> or{" "}
-              <u className="text-blue-600">underline</u>. Perfect for pre-packed items, grab-and-go, and made-to-order food.
+              <strong className="text-purple-600">bold</strong>, <em className="text-purple-600">italic</em> or{" "}
+              <u className="text-purple-600">underline</u>. Perfect for pre-packed items, grab-and-go, and made-to-order food.
             </p>
             <div className="grid grid-cols-1 gap-3 pt-4">
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
-                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
                 <span className="text-gray-700 text-sm">Supports all 14 required allergens</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
-                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
                 <span className="text-gray-700 text-sm">Editable templates stored in the cloud</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
-                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
                 <span className="text-gray-700 text-sm">Mobile-friendly reprint from any device</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
-                <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0" />
+                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
                 <span className="text-gray-700 text-sm">No training needed — print in 3 taps</span>
               </div>
             </div>

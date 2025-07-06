@@ -142,7 +142,7 @@ export default function BossBookDemoPage() {
                     <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[120px]">{r.company}</td>
                     <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.role || <span className='text-gray-400'>N/A</span>}</td>
                     <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[100px]">{r.source || <span className='text-gray-400'>N/A</span>}</td>
-                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[180px] cursor-pointer text-blue-600 hover:underline" title={r.message} onClick={() => setModalRequest(r)}>
+                    <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[180px] cursor-pointer text-purple-600 hover:underline" title={r.message} onClick={() => setModalRequest(r)}>
                       {r.message || <span className='text-gray-400'>N/A</span>}
                     </td>
                     <td className="p-2 text-xs dark:text-gray-100 whitespace-nowrap overflow-hidden truncate max-w-[140px]">{new Date(r.created_at).toLocaleString()}</td>
@@ -235,7 +235,7 @@ export default function BossBookDemoPage() {
                 </DialogHeader>
                 <DialogFooter>
                   <button className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300" onClick={() => setAttendDialog(null)} disabled={sendingEmail}>Cancel</button>
-                  <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700" onClick={handleAttendDialogConfirm} disabled={sendingEmail || ((attendDialog?.reschedule || sendEmail) && !demoTime)}>{sendingEmail ? 'Processing...' : (attendDialog?.reschedule ? 'Reschedule & Send Email' : sendEmail ? 'Confirm & Send Email' : 'Confirm')}</button>
+                  <button className="px-4 py-2 rounded bg-purple-600 text-white hover:bg-purple-700" onClick={handleAttendDialogConfirm} disabled={sendingEmail || ((attendDialog?.reschedule || sendEmail) && !demoTime)}>{sendingEmail ? 'Processing...' : (attendDialog?.reschedule ? 'Reschedule & Send Email' : sendEmail ? 'Confirm & Send Email' : 'Confirm')}</button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>

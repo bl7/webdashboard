@@ -593,7 +593,7 @@ export default function PlansPage() {
                   </td>
                   <td className="px-4 py-2 text-center">
                     {plan.include_device ? (
-                      <span className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-blue-400">
+                      <span className="inline-flex items-center rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/20 dark:text-purple-400">
                         Yes
                       </span>
                     ) : (

@@ -540,8 +540,8 @@ export default function PlanSelectionModal({
         className={clsx(
           "relative rounded-2xl border-2 bg-white p-6 shadow-lg transition-all duration-300 cursor-pointer group",
           isSelected 
-            ? "ring-4 ring-blue-600 border-blue-600 bg-blue-50 shadow-2xl" 
-            : "hover:border-blue-400 hover:shadow-xl border-gray-200",
+            ? "ring-4 ring-blue-600 border-purple-600 bg-purple-50 shadow-2xl" 
+            : "hover:border-purple-400 hover:shadow-xl border-gray-200",
           hasPendingChange ? "opacity-50 pointer-events-none" : "",
           planVariant.highlight ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50" : ""
         )}
@@ -633,7 +633,7 @@ export default function PlanSelectionModal({
           <div className={clsx(
             "px-3 py-1 rounded-full text-xs font-medium",
             planVariant.interval === 'monthly' 
-              ? "bg-blue-100 text-blue-700" 
+              ? "bg-purple-100 text-purple-700" 
               : "bg-green-100 text-green-700"
           )}>
             {planVariant.interval === 'monthly' ? 'Monthly' : 'Yearly'}
@@ -682,7 +682,7 @@ export default function PlanSelectionModal({
 
         {/* Selection Indicator */}
         {isSelected && (
-          <div className="absolute top-4 right-4 bg-blue-500 text-white rounded-full p-1">
+          <div className="absolute top-4 right-4 bg-purple-500 text-white rounded-full p-1">
             <CheckCircle2 size={16} />
           </div>
         )}
@@ -697,7 +697,7 @@ const CurrentPlanSummary = () => {
 
   const statusConfig = {
     active: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    trialing: "bg-blue-50 text-blue-700 border-blue-200", 
+    trialing: "bg-purple-50 text-purple-700 border-purple-200", 
     past_due: "bg-red-50 text-red-700 border-red-200",
     canceled: "bg-gray-50 text-gray-700 border-gray-200",
     incomplete: "bg-amber-50 text-amber-700 border-amber-200"
@@ -706,10 +706,10 @@ const CurrentPlanSummary = () => {
   const currentStatus = statusConfig[subscriptionStatus as keyof typeof statusConfig] || statusConfig.active;
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200 p-4 mb-4">
+    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-purple-200 p-4 mb-4">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
-          <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+          <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
           <span className="text-sm font-medium text-blue-900">Your Current Plan</span>
         </div>
         <div className={`px-2 py-1 rounded-full text-xs font-medium border ${currentStatus}`}>
@@ -753,7 +753,7 @@ const CurrentPlanSummary = () => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
         <div className="bg-white rounded-lg p-8 text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-purple-500" />
           <p className="text-lg font-medium">Loading plans...</p>
         </div>
       </div>
@@ -959,7 +959,7 @@ const CurrentPlanSummary = () => {
                   "px-8 min-w-[140px]",
                   changeType === "upgrade" ? "bg-green-600 hover:bg-green-700" :
                   changeType === "downgrade" ? "bg-orange-600 hover:bg-orange-700" :
-                  "bg-blue-600 hover:bg-blue-700"
+                  "bg-purple-600 hover:bg-purple-700"
                 )}
               >
             {loading ? (
@@ -1100,7 +1100,7 @@ const CurrentPlanSummary = () => {
                   confirmMessage.type === "warning" ? "text-yellow-500" :
                   confirmMessage.type === "success" ? "text-green-500" :
                   confirmMessage.type === "info" ? "text-orange-500" :
-                  "text-blue-500"
+                  "text-purple-500"
                 )
               })}
               <div>
@@ -1144,7 +1144,7 @@ const CurrentPlanSummary = () => {
                 className={clsx(
                   changeType === "upgrade" ? "bg-green-600 hover:bg-green-700" :
                   changeType === "downgrade" ? "bg-orange-600 hover:bg-orange-700" :
-                  "bg-blue-600 hover:bg-blue-700",
+                  "bg-purple-600 hover:bg-purple-700",
                   "text-white"
                 )}
               >

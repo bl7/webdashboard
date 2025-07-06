@@ -350,17 +350,17 @@ const ExcelUpload: React.FC = () => {
                       <Upload className="h-10 w-10 text-white" />
                     </div>
                     <h1 className="mb-2 text-3xl font-bold text-white">Menu Import</h1>
-                    <p className="text-lg text-blue-100">
+                    <p className="text-lg text-purple-100">
                       2 clicks and your entire menu is imported
                     </p>
                   </div>
 
                   <div className="p-8">
                     <div className="text-center">
-                      <div className="border-3 group transform rounded-2xl border-dashed border-gray-300 transition-all duration-300 hover:scale-[1.02] hover:border-blue-400">
+                      <div className="border-3 group transform rounded-2xl border-dashed border-gray-300 transition-all duration-300 hover:scale-[1.02] hover:border-purple-400">
                         <div className="flex flex-col items-center space-y-4">
-                          <div className="transform rounded-full bg-blue-50 p-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-blue-100">
-                            <FileText className="h-8 w-8 text-blue-600" />
+                          <div className="transform rounded-full bg-purple-50 p-4 transition-all duration-300 group-hover:scale-110 group-hover:bg-purple-100">
+                            <FileText className="h-8 w-8 text-purple-600" />
                           </div>
                           <div>
                             <h3 className="mb-2 text-xl font-semibold text-gray-800">
@@ -386,7 +386,7 @@ const ExcelUpload: React.FC = () => {
                             <span>Don't have a file ready? </span>
                             <button
                               onClick={downloadTemplate}
-                              className="inline-flex items-center font-medium text-blue-600 underline decoration-2 underline-offset-2 transition-colors duration-200 hover:text-blue-700"
+                              className="inline-flex items-center font-medium text-purple-600 underline decoration-2 underline-offset-2 transition-colors duration-200 hover:text-purple-700"
                             >
                               <Download className="mr-1 h-4 w-4" />
                               Download Template
@@ -404,15 +404,15 @@ const ExcelUpload: React.FC = () => {
                     </div>
 
                     {processing && (
-                      <div className="animate-[fadeIn_0.5s_ease-out] rounded-xl border border-blue-200 bg-blue-50 p-4">
+                      <div className="animate-[fadeIn_0.5s_ease-out] rounded-xl border border-purple-200 bg-purple-50 p-4">
                         <div className="flex items-center space-x-3">
-                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
-                          <p className="text-sm font-medium text-blue-700">
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-600 border-t-transparent"></div>
+                          <p className="text-sm font-medium text-purple-700">
                             {isImporting ? "Importing data to database..." : "Processing import, please wait..."}
                           </p>
                         </div>
                         {isImporting && (
-                          <div className="mt-2 text-xs text-blue-600">
+                          <div className="mt-2 text-xs text-purple-600">
                             Creating allergens, ingredients, and menu items...
                           </div>
                         )}
@@ -435,7 +435,7 @@ const ExcelUpload: React.FC = () => {
                       <Upload className="h-6 w-6 text-white" />
                     </div>
                     <h2 className="mb-1 text-xl font-bold text-white">Menu Import</h2>
-                    <p className="text-sm text-blue-100">2 clicks and you can start printing</p>
+                    <p className="text-sm text-purple-100">2 clicks and you can start printing</p>
                   </div>
 
                   <div className="flex flex-1 flex-col space-y-6 p-6">
@@ -472,7 +472,7 @@ const ExcelUpload: React.FC = () => {
                           </Button>
                         )}
 
-                        <label className="inline-flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-blue-100 px-4 py-3 font-medium text-blue-700 transition-all duration-200 hover:scale-[1.02] hover:bg-blue-200">
+                        <label className="inline-flex w-full transform cursor-pointer items-center justify-center rounded-lg bg-purple-100 px-4 py-3 font-medium text-purple-700 transition-all duration-200 hover:scale-[1.02] hover:bg-purple-200">
                           <Upload className="mr-2 h-4 w-4" />
                           Change File
                           <input
@@ -501,10 +501,10 @@ const ExcelUpload: React.FC = () => {
                     </div>
 
                     {processing && (
-                      <div className="animate-[fadeIn_0.5s_ease-out] rounded-xl border border-blue-200 bg-blue-50 p-4">
+                      <div className="animate-[fadeIn_0.5s_ease-out] rounded-xl border border-purple-200 bg-purple-50 p-4">
                         <div className="flex items-center space-x-3">
-                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent"></div>
-                          <p className="text-sm font-medium text-blue-700">Processing...</p>
+                          <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-600 border-t-transparent"></div>
+                          <p className="text-sm font-medium text-purple-700">Processing...</p>
                         </div>
                       </div>
                     )}
@@ -545,7 +545,7 @@ const ExcelUpload: React.FC = () => {
                         {isImporting ? (
                           <div className="flex h-full items-center justify-center">
                             <div className="text-center">
-                              <div className="mb-4 h-16 w-16 animate-spin rounded-full border-4 border-blue-600 border-t-transparent mx-auto"></div>
+                              <div className="mb-4 h-16 w-16 animate-spin rounded-full border-4 border-purple-600 border-t-transparent mx-auto"></div>
                               <h3 className="text-lg font-semibold text-gray-800 mb-2">Importing Data</h3>
                               <p className="text-gray-600">
                                 Creating allergens, ingredients, and menu items...
@@ -638,7 +638,7 @@ const ExcelUpload: React.FC = () => {
                                       {/* Existing Items Section */}
                                       {(existingItems.allergens.length > 0 || existingItems.ingredients.length > 0 || existingItems.menuItems.length > 0) && (
                                         <div className="space-y-3">
-                                          <h4 className="font-semibold text-sm text-blue-600 flex items-center gap-2">
+                                          <h4 className="font-semibold text-sm text-purple-600 flex items-center gap-2">
                                             <CheckCircle className="h-4 w-4" />
                                             Existing Items Found & Reused
                                           </h4>
@@ -648,7 +648,7 @@ const ExcelUpload: React.FC = () => {
                                               <h5 className="text-xs font-medium text-gray-600">Allergens ({existingItems.allergens.length})</h5>
                                               <div className="grid grid-cols-2 gap-1">
                                                 {existingItems.allergens.map((allergen: { name: string; id: string }, index: number) => (
-                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                  <div key={index} className="text-xs bg-purple-50 text-purple-700 p-2 rounded">
                                                     ✓ {allergen.name}
                                                   </div>
                                                 ))}
@@ -661,7 +661,7 @@ const ExcelUpload: React.FC = () => {
                                               <h5 className="text-xs font-medium text-gray-600">Ingredients ({existingItems.ingredients.length})</h5>
                                               <div className="grid grid-cols-2 gap-1">
                                                 {existingItems.ingredients.map((ingredient: { name: string; id: string }, index: number) => (
-                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                  <div key={index} className="text-xs bg-purple-50 text-purple-700 p-2 rounded">
                                                     ✓ {ingredient.name}
                                                   </div>
                                                 ))}
@@ -674,7 +674,7 @@ const ExcelUpload: React.FC = () => {
                                               <h5 className="text-xs font-medium text-gray-600">Menu Items ({existingItems.menuItems.length})</h5>
                                               <div className="grid grid-cols-1 gap-1">
                                                 {existingItems.menuItems.map((menuItem: { name: string; id: string }, index: number) => (
-                                                  <div key={index} className="text-xs bg-blue-50 text-blue-700 p-2 rounded">
+                                                  <div key={index} className="text-xs bg-purple-50 text-purple-700 p-2 rounded">
                                                     ✓ {menuItem.name} (skipped - already exists)
                                                   </div>
                                                 ))}

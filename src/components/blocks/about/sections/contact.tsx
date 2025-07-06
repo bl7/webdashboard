@@ -9,7 +9,7 @@ export const Contact = () => {
       <div className="absolute inset-0 -z-10">
         <div className="absolute left-1/4 top-1/4 h-72 w-72 rounded-full bg-purple-200/20 blur-3xl animate-pulse" />
         <div className="absolute right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-pink-200/20 blur-3xl animate-pulse" style={{animationDelay: '1s'}} />
-        <div className="absolute left-3/4 top-1/2 h-64 w-64 rounded-full bg-blue-200/20 blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
+        <div className="absolute left-3/4 top-1/2 h-64 w-64 rounded-full bg-purple-200/20 blur-3xl animate-pulse" style={{animationDelay: '2s'}} />
         <div className="absolute left-1/2 top-10 h-32 w-32 rounded-full bg-green-200/30 blur-2xl" />
         <div className="absolute right-10 top-3/4 h-48 w-48 rounded-full bg-yellow-200/20 blur-3xl" />
       </div>

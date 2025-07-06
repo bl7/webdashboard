@@ -158,7 +158,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
                   ref={(el) => {
                     inputRefs.current[idx] = el
                   }}
-                  className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-blue-600 focus:outline-none"
+                  className="h-12 w-12 rounded border border-gray-300 text-center text-2xl focus:border-purple-600 focus:outline-none"
                   inputMode="numeric"
                 />
               ))}
@@ -167,7 +167,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
             <div className="mb-4 text-center">
               <button
                 onClick={() => setShowPin((prev) => !prev)}
-                className="text-sm text-blue-600 hover:underline"
+                className="text-sm text-purple-600 hover:underline"
               >
                 {showPin ? "Hide PIN" : "Show PIN"}
               </button>
@@ -185,7 +185,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
               <button
                 onClick={handlePinSubmit}
                 disabled={isSubmitting}
-                className="rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                className="rounded bg-purple-600 px-4 py-2 font-semibold text-white hover:bg-purple-700 disabled:opacity-50"
               >
                 {isSubmitting ? "Saving..." : "Next"}
               </button>
@@ -218,7 +218,7 @@ function ProgressBar({ step, steps }: { step: number; steps: string[] }) {
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-semibold ${
                 index + 1 <= step
-                  ? "bg-blue-600 text-white"
+                  ? "bg-purple-600 text-white"
                   : "bg-gray-200 text-gray-600"
               }`}
             >
@@ -226,7 +226,7 @@ function ProgressBar({ step, steps }: { step: number; steps: string[] }) {
             </div>
             <span
               className={`ml-2 text-sm font-medium ${
-                index + 1 <= step ? "text-blue-600" : "text-gray-500"
+                index + 1 <= step ? "text-purple-600" : "text-gray-500"
               }`}
             >
               {stepName}
@@ -234,7 +234,7 @@ function ProgressBar({ step, steps }: { step: number; steps: string[] }) {
             {index < steps.length - 1 && (
               <div
                 className={`mx-4 h-0.5 w-8 ${
-                  index + 1 < step ? "bg-blue-600" : "bg-gray-200"
+                  index + 1 < step ? "bg-purple-600" : "bg-gray-200"
                 }`}
               />
             )}

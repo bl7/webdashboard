@@ -83,8 +83,8 @@ export const UpgradePlanModal: React.FC<UpgradePlanModalProps> = ({ open, onClos
         className={clsx(
           "relative rounded-2xl border-2 bg-white p-6 shadow-lg transition-all duration-300 cursor-pointer group",
           isSelected 
-            ? "ring-4 ring-blue-600 border-blue-600 bg-blue-50 shadow-2xl" 
-            : "hover:border-blue-400 hover:shadow-xl border-gray-200",
+            ? "ring-4 ring-blue-600 border-purple-600 bg-purple-50 shadow-2xl" 
+            : "hover:border-purple-400 hover:shadow-xl border-gray-200",
           plan.highlight ? "border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50" : ""
         )}
         onClick={() => setSelectedPlan(plan)}
@@ -124,7 +124,7 @@ export const UpgradePlanModal: React.FC<UpgradePlanModalProps> = ({ open, onClos
               </div>
             )}
           </div>
-          <div className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+          <div className="px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
             Monthly
           </div>
         </div>
@@ -156,7 +156,7 @@ export const UpgradePlanModal: React.FC<UpgradePlanModalProps> = ({ open, onClos
           </div>
         )}
         {isSelected && (
-          <div className="absolute top-4 right-4 bg-blue-500 text-white rounded-full p-1">
+          <div className="absolute top-4 right-4 bg-purple-500 text-white rounded-full p-1">
             <CheckCircle2 size={16} />
           </div>
         )}

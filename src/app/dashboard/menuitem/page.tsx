@@ -463,13 +463,13 @@ export default function MenuItemsDashboard() {
                     {getSelectedIngredients(newItem.ingredientIDs).map((ingredient) => (
                       <div
                         key={ingredient.uuid}
-                        className="flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm"
+                        className="flex items-center gap-1 rounded-full bg-purple-100 px-3 py-1 text-sm"
                       >
                         <span>{ingredient.ingredientName}</span>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-4 w-4 p-0 hover:bg-blue-200"
+                          className="h-4 w-4 p-0 hover:bg-purple-200"
                           onClick={() => handleRemoveIngredient(ingredient.uuid)}
                         >
                           <X className="h-3 w-3" />

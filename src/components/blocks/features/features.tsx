@@ -7,11 +7,9 @@ export const Features = () => {
     <>
       <FeaturesHero />
       <HowToUploadSteps />
-    
       <CoreFeaturesGrid />
       <FeaturesGrid />
       <WhyChooseUs />
-
     </>
   )
 }

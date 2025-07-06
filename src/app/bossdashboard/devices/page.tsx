@@ -273,7 +273,7 @@ export default function DevicesPage() {
   const getStatusBadge = (status: string) => {
     const statusConfig = {
       pending: { color: "bg-yellow-100 text-yellow-800", icon: Package },
-      shipped: { color: "bg-blue-100 text-blue-800", icon: Truck },
+      shipped: { color: "bg-purple-100 text-blue-800", icon: Truck },
       delivered: { color: "bg-green-100 text-green-800", icon: CheckCircle },
       return_requested: { color: "bg-orange-100 text-orange-800", icon: AlertTriangle },
       returned: { color: "bg-purple-100 text-purple-800", icon: RotateCcw },
@@ -616,9 +616,9 @@ export default function DevicesPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-600">In Transit</p>
-                  <p className="text-2xl font-bold text-blue-600">{stats.shipped}</p>
+                  <p className="text-2xl font-bold text-purple-600">{stats.shipped}</p>
                 </div>
-                <Truck className="w-8 h-8 text-blue-400" />
+                <Truck className="w-8 h-8 text-purple-400" />
               </div>
             </CardContent>
           </Card>

@@ -32,10 +32,10 @@ const CARD_STYLES = {
   },
   menuItems: {
     bg: "bg-gradient-to-br from-blue-50 to-blue-100",
-    border: "border-blue-300",
+    border: "border-purple-300",
     shadow: "shadow-blue-100",
-    text: "text-blue-700",
-    accent: "bg-blue-500",
+    text: "text-purple-700",
+    accent: "bg-purple-500",
     hover: "hover:from-blue-100 hover:to-blue-150",
     icon: "📋"
   },

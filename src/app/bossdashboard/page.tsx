@@ -155,7 +155,7 @@ export default function BossDashboard() {
       case 'active':
         return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
       case 'trialing':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return 'bg-purple-100 text-blue-800 dark:bg-blue-900 dark:text-purple-200'
       case 'canceled':
         return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
       case 'past_due':
@@ -169,7 +169,7 @@ export default function BossDashboard() {
     switch (planName?.toLowerCase()) {
       case 'basic':
       case 'basic plan':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+        return 'bg-purple-100 text-blue-800 dark:bg-blue-900 dark:text-purple-200'
       case 'pro':
       case 'pro kitchen':
       case 'pro_kitchen':
@@ -375,7 +375,7 @@ export default function BossDashboard() {
                       <div key={index} className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <div className={`w-3 h-3 rounded-full ${
-                            index === 0 ? 'bg-blue-500' : 
+                            index === 0 ? 'bg-purple-500' : 
                             index === 1 ? 'bg-purple-500' : 'bg-orange-500'
                           }`}></div>
                           <span className="text-sm font-medium text-gray-900 dark:text-white">
@@ -406,7 +406,7 @@ export default function BossDashboard() {
                         <div className="flex items-center gap-2">
                           <div className={`w-3 h-3 rounded-full ${
                             status.name === 'active' ? 'bg-green-500' :
-                            status.name === 'trialing' ? 'bg-blue-500' :
+                            status.name === 'trialing' ? 'bg-purple-500' :
                             status.name === 'canceled' ? 'bg-red-500' : 'bg-gray-500'
                           }`}></div>
                           <span className="text-sm font-medium text-gray-900 dark:text-white capitalize">

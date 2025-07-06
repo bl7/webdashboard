@@ -116,7 +116,7 @@ export default function BossesPage() {
                     </>
                   ) : (
                     <>
-                      <button className="bg-blue-600 text-white px-2 py-1 rounded" onClick={() => handleEdit(b)}>Edit</button>
+                      <button className="bg-purple-600 text-white px-2 py-1 rounded" onClick={() => handleEdit(b)}>Edit</button>
                       <button className="bg-red-600 text-white px-2 py-1 rounded" onClick={() => handleDelete(b.id)}>Delete</button>
                     </>
                   )}

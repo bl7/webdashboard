@@ -25,7 +25,7 @@ const Page: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Info className="h-5 w-5 text-blue-600" />
+            <Info className="h-5 w-5 text-purple-600" />
             How to Use the Upload Feature
           </CardTitle>
         </CardHeader>

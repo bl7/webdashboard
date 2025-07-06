@@ -168,7 +168,7 @@ export default function ProfileDetailsStep({
                   onClick={() => handleAvatarSelect(num)}
                   className={cn(
                     "h-16 w-16 cursor-pointer rounded-full border-2 transition hover:scale-105",
-                    profileData.avatar === num ? "border-blue-600" : "border-gray-300"
+                    profileData.avatar === num ? "border-purple-600" : "border-gray-300"
                   )}
                 />
               ))}

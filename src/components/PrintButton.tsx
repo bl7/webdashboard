@@ -271,7 +271,7 @@ export const PrintButton: React.FC = () => {
       <button 
         onClick={handlePrint}
         disabled={!connectionInfo.isConnected || connectionInfo.loading || !selectedPrinter}
-        className="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+        className="w-full bg-purple-600 text-white py-2 px-4 rounded hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
       >
         {connectionInfo.loading ? 'Connecting...' : 'Print Test Label'}
       </button>

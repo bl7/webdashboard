@@ -10,6 +10,7 @@ import Image from "next/image"
 const navItems = [
   { label: "Uses", href: "/uses" },
   { label: "Features", href: "/features" },
+  { label: "PrintBridge", href: "/printbridge" },
   { label: "Plan", href: "/plan" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/about#contact" },
@@ -75,8 +76,8 @@ export const Header = () => {
                 className={cn(
                   "transition-colors duration-200",
                   isActive(item.href)
-                    ? "border-b-2 border-primary font-semibold text-primary"
-                    : "text-gray-700 hover:text-primary"
+                    ? "border-b-2 border-purple-600 font-semibold text-purple-600"
+                    : "text-gray-700 hover:text-purple-600"
                 )}
               >
                 {item.label}
@@ -90,7 +91,7 @@ export const Header = () => {
               href="/register"
               className={cn(
                 buttonVariants({ variant: "default", size: "sm" }),
-                "h-9 rounded-full px-5 text-base"
+                "h-9 rounded-full px-5 text-base bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
               )}
             >
               Free Trial
@@ -100,7 +101,7 @@ export const Header = () => {
               href="/login"
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
-                "h-9 rounded-full px-4 text-base"
+                "h-9 rounded-full px-4 text-base hover:text-purple-600 hover:bg-purple-50 transition-all duration-300"
               )}
             >
               Sign In
@@ -124,7 +125,7 @@ export const Header = () => {
               className={cn(
                 "transition-colors duration-200",
                 "duration-300 animate-in fade-in slide-in-from-bottom-2",
-                isActive(item.href) ? "font-semibold text-primary" : "hover:text-primary"
+                isActive(item.href) ? "font-semibold text-purple-600" : "hover:text-purple-600"
               )}
               style={{ animationDelay: `${index * 50}ms` }}
             >

@@ -20,7 +20,7 @@ export const ImportFeatureSection = () => {
               <span>See exactly which items are new, which are reused, and which are skipped</span>
             </li>
             <li className="flex items-start gap-3">
-              <FaSearch className="mt-1 h-5 w-5 text-blue-500" />
+              <FaSearch className="mt-1 h-5 w-5 text-purple-500" />
               <span>Automatic duplicate detection and data validation</span>
             </li>
             <li className="flex items-start gap-3">

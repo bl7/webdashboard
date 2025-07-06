@@ -865,7 +865,7 @@ export default function LabelDemo() {
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
                 <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="default" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
-                <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="secondary" aria-label="Clear print queue">Clear Queue</Button>
+                <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
               </div>
             </div>
             <div className="px-8 pb-8 pt-4">
@@ -913,7 +913,7 @@ export default function LabelDemo() {
         <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-purple-600 hover:bg-purple-700 text-white" variant="default" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           USE FIRST
         </Button>
-        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-blue-600 hover:bg-blue-700 text-white" variant="default" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-purple-600 hover:bg-purple-700 text-white" variant="default" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           DEFROST
         </Button>
       </div>
@@ -952,7 +952,7 @@ export default function LabelDemo() {
               </Button>
               <Button
                 className="flex-1"
-                variant="secondary"
+                variant="outline"
                 onClick={() => setShowUseFirstModal(false)}
               >
                 Cancel
@@ -997,7 +997,7 @@ export default function LabelDemo() {
             </ul>
             <Button
               className="mt-2 w-full"
-              variant="secondary"
+              variant="outline"
               onClick={() => setShowDefrostModal(false)}
             >
               Cancel

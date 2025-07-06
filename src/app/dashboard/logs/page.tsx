@@ -423,7 +423,7 @@ export default function PrintSessionsPage() {
                       {[...new Set(session.items.map(item => item.details.labelType))].map((type) => (
                         <span key={type} className={`rounded-full px-2 py-1 text-xs font-semibold ${
                           type === 'cooked' ? 'bg-red-100 text-red-800' :
-                          type === 'prep' ? 'bg-blue-100 text-blue-800' :
+                          type === 'prep' ? 'bg-purple-100 text-blue-800' :
                           'bg-green-100 text-green-800'
                         }`}>
                           {type.toUpperCase()}

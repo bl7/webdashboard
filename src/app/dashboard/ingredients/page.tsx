@@ -413,7 +413,7 @@ export default function IngredientsTable() {
                       {getSelectedAllergenNames().map((name, index) => (
                         <Badge
                           key={selectedAllergens[index]}
-                          variant="secondary"
+                          variant="outline"
                           className="text-xs"
                         >
                           {name}
@@ -543,7 +543,7 @@ export default function IngredientsTable() {
                       </div>
 
                       {/* Add More Allergens Section */}
-                      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
+                      <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
                         <Label className="mb-3 block text-sm font-medium text-blue-800">
                           Add More Allergens
                         </Label>

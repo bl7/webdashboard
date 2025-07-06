@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useEffect, useState, useRef } from "react"
-import { Check, X } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import Billing from "./Billing"
@@ -268,7 +267,7 @@ const ProfileDashboard = () => {
               />
               <Button
                 type="button"
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 onClick={() => setShowModal(true)}
                 className="absolute bottom-0 left-0 right-0 rounded-none rounded-b-full bg-black/60 py-1 text-xs text-white"
@@ -440,7 +439,7 @@ const ProfileDashboard = () => {
                     />
                   </div>
                 </div>
-                <Button disabled className="mt-6" variant="secondary">
+                <Button disabled className="mt-6" variant="outline">
                   Change Password
                 </Button>
               </div>
@@ -475,7 +474,7 @@ const ProfileDashboard = () => {
                 />
               ))}
             </div>
-            <Button onClick={() => setShowModal(false)} variant="secondary" className="mt-6 w-full">
+            <Button onClick={() => setShowModal(false)} variant="outline" className="mt-6 w-full">
               Cancel
             </Button>
           </div>

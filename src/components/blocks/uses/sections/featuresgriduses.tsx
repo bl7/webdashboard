@@ -1,5 +1,8 @@
+"use client"
+
 // components/RealWorldSection.tsx
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 export const FeaturesGridUses = () => {
   return (
@@ -10,14 +13,20 @@ export const FeaturesGridUses = () => {
       <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
         {/* Benefits Section */}
         <div className="space-y-8">
-          <div className="text-center space-y-4">
+          <motion.div 
+            className="text-center space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
               Why kitchens choose InstaLabel
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Streamline your food labeling process with enterprise-grade efficiency
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
             {[
@@ -76,7 +85,14 @@ export const FeaturesGridUses = () => {
                 description: "Eliminate handwriting errors with consistent, professional labels"
               }
             ].map((benefit, index) => (
-              <div key={index} className="group">
+              <motion.div 
+                key={index} 
+                className="group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
                 <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
                   <div className="flex items-start space-x-4">
                     <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
@@ -92,21 +108,27 @@ export const FeaturesGridUses = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
 
         {/* How It Works Section */}
         <div className="space-y-12">
-          <div className="text-center space-y-4">
+          <motion.div 
+            className="text-center space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+          >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
               How it works
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Three streamlined steps to professional food labeling
             </p>
-          </div>
+          </motion.div>
 
           <div className="relative max-w-5xl mx-auto">
             {/* Connection lines for desktop */}
@@ -153,7 +175,14 @@ export const FeaturesGridUses = () => {
                   )
                 }
               ].map((step, index) => (
-                <div key={index} className="relative">
+                <motion.div 
+                  key={index} 
+                  className="relative"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                >
                   <div className="bg-white border border-gray-200 rounded-xl p-8 text-center hover:border-purple-200 hover:shadow-lg transition-all duration-200">
                     {/* Step number */}
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full font-bold text-lg mb-6">
@@ -173,7 +202,7 @@ export const FeaturesGridUses = () => {
                       {step.description}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

@@ -215,7 +215,7 @@ const Billing: React.FC = () => {
             <div className="relative flex flex-col justify-center items-center rounded-xl bg-gradient-to-r from-gray-200 to-gray-300 min-h-[12rem] w-full max-w-md p-4 text-gray-700 shadow-lg sm:min-h-[14rem] col-span-2">
               <div className="text-lg font-bold mb-2">No Active Plan</div>
               <div className="mb-4 text-sm">Your subscription is canceled. Choose a new plan to continue using InstaLabel.</div>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded" onClick={() => setShowPlans(true)}>
+              <Button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded" onClick={() => setShowPlans(true)}>
                 Choose Plan
               </Button>
             </div>

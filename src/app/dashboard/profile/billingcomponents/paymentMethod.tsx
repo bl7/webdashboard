@@ -30,7 +30,7 @@ export default function PaymentMethod({ subscription }: Props) {
       <div className="mb-6 flex items-center">
         <div className="mr-4 flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-blue-900">
           {/* Placeholder for icon or emblem */}
-          <svg className="h-8 w-8 text-blue-300" fill="currentColor" viewBox="0 0 24 24">
+          <svg className="h-8 w-8 text-purple-300" fill="currentColor" viewBox="0 0 24 24">
             <circle cx="12" cy="12" r="10" />
           </svg>
         </div>

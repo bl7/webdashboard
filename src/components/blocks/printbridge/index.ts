@@ -1,0 +1,5 @@
+export { PrintBridgePage } from "./printbridge"
+export { PrintBridgeHero } from "./sections/PrintBridgeHero"
+export { PrintBridgeFeatures } from "./sections/PrintBridgeFeatures"
+export { PrintBridgeHowItWorks } from "./sections/PrintBridgeHowItWorks"
+export { PrintBridgeBenefits } from "./sections/PrintBridgeBenefits" 

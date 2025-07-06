@@ -68,7 +68,7 @@ const DataTable: React.FC<DataTableProps> = ({ data }) => {
       return (
         <div className="flex flex-wrap gap-1">
           {allergens.map((allergen: string, index: number) => (
-            <Badge key={index} variant="secondary" className="text-xs">
+            <Badge key={index} variant="outline" className="text-xs">
               {allergen}
             </Badge>
           ))}

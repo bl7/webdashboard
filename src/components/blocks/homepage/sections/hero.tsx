@@ -1,85 +1,158 @@
 "use client"
 
 import { Button } from "@/components/ui"
-import { ArrowRight, StepForward } from "lucide-react"
+import { ArrowRight, Wifi, Download, Smartphone, BarChart3, Zap, Shield, Users } from "lucide-react"
 import Image from "next/image"
 import React from "react"
 import instaLabel from "@/assets/images/instaLabel.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
+
 export const Hero = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-white py-16">
-      {/* Background blobs (standardized) */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
+    <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16 mt-16">
+      {/* Enhanced Background blobs */}
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-20 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-20 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-20 blur-3xl" />
+      <div className="absolute right-[20%] top-[60%] isolate -z-10 h-64 w-64 rounded-full bg-purple-400 opacity-15 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
-        {/* Product Image */}
+        {/* Product Image with enhanced styling */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="w-full max-w-[380px] sm:max-w-[480px] md:max-w-[500px] lg:max-w-[600px]"
         >
-          <Image
-            src={instaLabel}
-            alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
-            className="w-full object-contain transition duration-300 hover:-rotate-3 hover:scale-105"
-            priority
-          />
+          <div className="relative">
+            <Image
+              src={instaLabel}
+              alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
+              className="w-full object-contain transition duration-300 hover:-rotate-2 hover:scale-105"
+              priority
+            />
+            {/* Floating elements around the image */}
+            <motion.div
+              animate={{ y: [-10, 10, -10] }}
+              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -top-4 -right-4 bg-white rounded-full p-3 shadow-lg border border-purple-200"
+            >
+              <Zap className="h-6 w-6 text-purple-600" />
+            </motion.div>
+            <motion.div
+              animate={{ y: [10, -10, 10] }}
+              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              className="absolute -bottom-4 -left-4 bg-white rounded-full p-3 shadow-lg border border-purple-200"
+            >
+              <Shield className="h-6 w-6 text-green-600" />
+            </motion.div>
+          </div>
         </motion.div>
 
-        {/* Hero Text + CTA */}
+        {/* Enhanced Hero Text + CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="w-full max-w-2xl space-y-6 text-center md:text-left"
+          className="w-full max-w-2xl space-y-8 text-center md:text-left"
         >
-          <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-            <span className="text-primary">Professional Kitchen Labeling System</span>
-            <br className="hidden md:block" />
-            <span className="">Food Safety Labels & Expiry Tracking</span>
-          </h1>
+          <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 text-sm font-semibold text-purple-800 ring-1 ring-purple-200 shadow-sm">
+            <Wifi className="mr-2 h-4 w-4" />
+            🚀 #1 Kitchen Labeling System in the UK
+          </div>
 
-          <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-            InstaLabel: The #1 kitchen labeling system for restaurants, cafes, and food businesses. Print HACCP-compliant food safety labels, allergen warnings, expiry dates, and prep labels instantly with thermal printers. No training needed.
-          </p>
-
-          {/* Social proof */}
-          <div className="space-y-2">
-            <p className="text-sm italic text-gray-500 md:text-base">
-              "We used to handwrite 50+ labels daily. Now we just tap and print." – Head Chef, Manchester
-            </p>
-            <p className="text-xs text-gray-400">
-              Trusted by 500+ restaurants • HACCP Compliant • Thermal Printer Compatible
+          <div className="space-y-4">
+            <h1 className="font-accent text-5xl font-black leading-tight tracking-tight text-gray-900 sm:text-6xl lg:text-7xl">
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Revolutionize
+              </span>
+              <br className="hidden md:block" />
+              <span className="text-gray-900">Your Kitchen</span>
+            </h1>
+            <p className="text-2xl font-bold text-purple-600">
+              Professional Labeling • Smart Analytics • Zero Hassle
             </p>
           </div>
 
-          {/* CTA Buttons */}
+          <p className="max-w-xl text-lg text-gray-600 sm:text-xl leading-relaxed">
+            Join 500+ restaurants using InstaLabel to eliminate handwritten labels, 
+            ensure HACCP compliance, and boost kitchen efficiency. Print seamlessly from 
+            web dashboard or Sunmi devices with real-time analytics.
+          </p>
+
+          {/* Enhanced Key Benefits */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div className="flex items-center justify-center gap-3 text-sm font-medium text-gray-700 md:justify-start bg-white/50 rounded-lg p-3 border border-purple-100">
+              <div className="bg-purple-100 p-2 rounded-full">
+                <Download className="h-4 w-4 text-purple-600" />
+              </div>
+              <span>Web Dashboard</span>
+            </div>
+            <div className="flex items-center justify-center gap-3 text-sm font-medium text-gray-700 md:justify-start bg-white/50 rounded-lg p-3 border border-purple-100">
+              <div className="bg-purple-100 p-2 rounded-full">
+                <Smartphone className="h-4 w-4 text-purple-600" />
+              </div>
+              <span>Sunmi Devices</span>
+            </div>
+            <div className="flex items-center justify-center gap-3 text-sm font-medium text-gray-700 md:justify-start bg-white/50 rounded-lg p-3 border border-purple-100">
+              <div className="bg-purple-100 p-2 rounded-full">
+                <BarChart3 className="h-4 w-4 text-purple-600" />
+              </div>
+              <span>Real-time Analytics</span>
+            </div>
+          </div>
+
+          {/* Enhanced Social proof */}
+          <div className="space-y-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-200">
+            <div className="flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="w-8 h-8 bg-purple-200 rounded-full border-2 border-white flex items-center justify-center">
+                    <Users className="h-4 w-4 text-purple-600" />
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm font-medium text-gray-700">
+                Trusted by 500+ restaurants
+              </p>
+            </div>
+            <p className="text-sm italic text-gray-600">
+              "We used to handwrite 50+ labels daily. Now we just tap and print with the bridge app." 
+              <span className="font-semibold text-purple-600"> – Head Chef, Manchester</span>
+            </p>
+          </div>
+
+          {/* Enhanced CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-            <Button  size="lg" className="bg-primary px-6 py-3 text-white hover:bg-primary/90">
+            <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-white hover:from-purple-700 hover:to-pink-700 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
               <Link href="/register">
                 Start Free Trial
               </Link>
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Link href="https://www.youtube.com/@brownDdude">
-            <Button variant="ghost" size="lg" className="border border-primary text-primary">
-              
-                <StepForward className="mr-2 h-5 w-5" />
-                Watch Demo
-            </Button>
+            <Link href="/printbridge">
+              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-6 py-4 text-lg font-semibold">
+                <Wifi className="mr-2 h-5 w-5" />
+                Learn About PrintBridge
+              </Button>
             </Link>
           </div>
 
-          {/* Trust indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
-            <span>✓ Free 14-day trial</span>
-            <span>✓ No credit card required</span>
-            <span>✓ Setup in 5 minutes</span>
+          {/* Enhanced Trust indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-sm text-gray-600 md:justify-start">
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              Free 14-day trial
+            </span>
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              No credit card required
+            </span>
+            <span className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              Local bridge app included
+            </span>
           </div>
         </motion.div>
       </div>

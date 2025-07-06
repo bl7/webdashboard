@@ -1,280 +1,253 @@
-'use client'
-import React, { useState } from 'react'
-import { CheckCircle, Users, Shield, BarChart3, Zap, ArrowRight, Sparkles } from 'lucide-react'
+"use client"
 
-const initialState = {
-  name: '',
-  email: '',
-  phone: '',
-  company: '',
-  role: '',
-  message: '',
-  source: '',
-}
+import React from "react"
+import { Calendar, ArrowRight, Smartphone, BarChart3, Video, Clock } from "lucide-react"
+import { Button } from "@/components/ui"
+import Link from "next/link"
+import { motion } from "framer-motion"
 
 export default function BookDemoPage() {
-  const [form, setForm] = useState(initialState)
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(false)
-  const [error, setError] = useState('')
-  const [focusedField, setFocusedField] = useState('')
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
-
-  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  const validatePhone = (phone: string) => phone === '' || /^\+?\d{7,15}$/.test(phone.replace(/[^\d+]/g, ''))
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setLoading(true)
-    setError('')
-    // Validation
-    if (!validateEmail(form.email)) {
-      setError('Please enter a valid email address.')
-      setLoading(false)
-      return
-    }
-    if (!validatePhone(form.phone)) {
-      setError('Please enter a valid phone number (digits only, 7-15 digits, optional +).')
-      setLoading(false)
-      return
-    }
-    try {
-      const res = await fetch('/api/bookdemo', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
-      if (!res.ok) throw new Error((await res.json()).error || 'Failed to submit')
-      setSuccess(true)
-      setForm(initialState)
-    }  catch (err) {
-      setError((err as any).message || 'Failed to submit')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-emerald-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-gradient-to-r from-purple-400/15 to-pink-400/15 rounded-full blur-3xl animate-pulse delay-500"></div>
-      </div>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16">
+        {/* Background blobs (standardized) */}
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 py-8 sm:py-12">
-        <div className="grid gap-10 sm:gap-16 items-start lg:grid-cols-2">
-          {/* Left Column - Hero Content */}
-          <div className="space-y-8">
-            <div className="space-y-6">
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-transparent leading-tight">
-                Experience the
-                <span className="block ">
-                  Future of Kitchen
-                </span>
-                Labeling
-              </h1>
-              <p className="text-base sm:text-xl text-slate-600 leading-relaxed max-w-xl">
-                Transform your kitchen operations with our intelligent labeling platform. 
-                Book a personalized demo and see how InstaLabel can revolutionize your workflow.
-              </p>
+        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
+          {/* Hero Content */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="w-full max-w-2xl space-y-6 text-center md:text-left"
+          >
+            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+              <Calendar className="mr-2 h-4 w-4" />
+              See InstaLabel in Action
             </div>
 
-            {/* Benefits Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                { icon: Zap, title: "Instant Setup", desc: "Get started in minutes" },
-                { icon: Shield, title: "100% Compliant", desc: "Always regulation-ready" },
-                { icon: BarChart3, title: "Real-time Analytics", desc: "Track everything live" },
-                { icon: Users, title: "Team Collaboration", desc: "Built for modern teams" }
-              ].map((benefit, i) => (
-                <div key={i} className="group p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <benefit.icon className="w-8 h-8 text-blue-600 mb-2 group-hover:scale-110 transition-transform duration-300" />
-                  <h3 className="font-semibold text-slate-800 mb-1">{benefit.title}</h3>
-                  <p className="text-sm text-slate-600">{benefit.desc}</p>
+            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
+              <span className="text-purple-600">Book Your</span>
+              <br className="hidden md:block" />
+              <span className="">Free Demo.</span>
+            </h1>
+
+            <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
+              See how InstaLabel can transform your kitchen operations. Get a personalized demo 
+              showing web dashboard printing, Sunmi device compatibility, real-time analytics, 
+              and our local bridge app in action.
+            </p>
+
+            {/* Key Benefits */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
+                <Video className="h-4 w-4 text-purple-600" />
+                <span>Live Demo</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
+                <Smartphone className="h-4 w-4 text-purple-600" />
+                <span>Sunmi Devices</span>
+              </div>
+              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
+                <BarChart3 className="h-4 w-4 text-purple-600" />
+                <span>Analytics Demo</span>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
+              <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+                <Link href="#demo-form">
+                  Book Demo Now
+                </Link>
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Link href="/features">
+                <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+                  Explore Features
+                </Button>
+              </Link>
+            </div>
+
+            {/* Trust indicators */}
+            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
+              <span>✓ 30-minute demo</span>
+              <span>✓ No sales pressure</span>
+              <span>✓ Free consultation</span>
+            </div>
+          </motion.div>
+
+          {/* Visual Representation - Demo Setup */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="w-full max-w-[500px]"
+          >
+            <div className="relative">
+              {/* Demo Elements */}
+              <div className="space-y-4">
+                {/* Video Call */}
+                <div className="bg-white rounded-lg shadow-lg p-4 border border-gray-200">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                      <Video className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900">Live Demo</h4>
+                      <p className="text-sm text-gray-600">Screen sharing session</p>
+                    </div>
+                  </div>
+                  <div className="bg-gray-100 rounded h-24 flex items-center justify-center">
+                    <span className="text-xs text-gray-500">Your kitchen setup</span>
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Social Proof */}
-            <div className="p-4 sm:p-6 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl border border-emerald-200/50 shadow-lg">
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <div key={i} className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" style={{animationDelay: `${i * 0.2}s`}}></div>
-                ))}
-                <span className="text-emerald-700 font-semibold text-xs sm:text-base">Trusted by 500+ kitchens worldwide</span>
-              </div>
-              <p className="text-slate-700 italic text-sm sm:text-base">"InstaLabel transformed our kitchen operations. We're now 100% compliant and save 3 hours daily on labeling tasks."</p>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-2">
-                — Sarah Chen, Head Chef at Riverside Bistro</p>
-            </div>
-          </div>
-
-          {/* Right Column - Form */}
-          <div className="lg:sticky lg:top-8">
-            {success ? (
-              <div className="bg-gradient-to-r from-emerald-500 to-green-500 text-white p-6 sm:p-8 rounded-3xl shadow-2xl text-center transform ">
-                <CheckCircle className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4" />
-                <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Demo Booked Successfully!</h2>
-                <p className="text-emerald-100 text-sm sm:text-base">Thank you! Our team will reach out within 24 hours to schedule your personalized demo.</p>
-              </div>
-            ) : (
-              <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-6 text-white">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Book Your Free Demo</h2>
-                  <p className="text-blue-100 text-xs sm:text-base">Join hundreds of kitchens already using InstaLabel</p>
+                {/* Demo Features */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-200">
+                    <Clock className="h-6 w-6 text-purple-600 mx-auto mb-1" />
+                    <p className="text-xs font-medium text-gray-700">30 min session</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-200">
+                    <Smartphone className="h-6 w-6 text-purple-600 mx-auto mb-1" />
+                    <p className="text-xs font-medium text-gray-700">Device setup</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-200">
+                    <BarChart3 className="h-6 w-6 text-purple-600 mx-auto mb-1" />
+                    <p className="text-xs font-medium text-gray-700">Analytics walkthrough</p>
+                  </div>
+                  <div className="bg-white rounded-lg p-3 text-center shadow-sm border border-gray-200">
+                    <Calendar className="h-6 w-6 text-purple-600 mx-auto mb-1" />
+                    <p className="text-xs font-medium text-gray-700">Q&A included</p>
+                  </div>
                 </div>
-                <form onSubmit={handleSubmit} className="p-4 sm:p-8 space-y-4 sm:space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Full Name *</label>
-                      <input
-                        name="name"
-                        required
-                        value={form.name}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('name')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'name' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                        placeholder="Enter your name"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Email *</label>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('email')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'email' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Phone</label>
-                      <input
-                        name="phone"
-                        value={form.phone}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('phone')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'phone' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                        placeholder="(555) 123-4567"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Company</label>
-                      <input
-                        name="company"
-                        value={form.company}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('company')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'company' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                        placeholder="Your restaurant"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Role</label>
-                      <input
-                        name="role"
-                        value={form.role}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('role')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'role' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                        placeholder="Head Chef, Manager..."
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">How did you hear about us?</label>
-                      <select
-                        name="source"
-                        value={form.source}
-                        onChange={handleChange}
-                        onFocus={() => setFocusedField('source')}
-                        onBlur={() => setFocusedField('')}
-                        className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none ${
-                          focusedField === 'source' 
-                            ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-                            : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                      >
-                        <option value="">Select source...</option>
-                        <option value="google">Google Search</option>
-                        <option value="referral">Referral</option>
-                        <option value="social">Social Media</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="block text-sm font-semibold text-slate-700">Tell us about your needs</label>
-                    <textarea
-                      name="message"
-                      value={form.message}
-                      onChange={handleChange}
-                      onFocus={() => setFocusedField('message')}
-                      onBlur={() => setFocusedField('')}
-                      rows={4}
-                      className={`w-full px-4 py-3 border-2 rounded-xl transition-all duration-300 focus:outline-none resize-none ${
-                        focusedField === 'message' 
-                          ? 'border-blue-500 bg-blue-50 shadow-lg' 
-                          : 'border-slate-200 hover:border-slate-300'
-                      }`}
-                      placeholder="What specific challenges are you facing with kitchen labeling? How many covers do you serve daily?"
-                    />
-                  </div>
-
-                  {error && <div className="text-red-500 text-xs sm:text-sm">{error}</div>}
-
-                  <button
-                    type="submit"
-                    className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-base sm:text-lg shadow-lg hover:bg-blue-700 transition disabled:opacity-60"
-                    disabled={loading}
-                  >
-                    {loading ? 'Booking...' : 'Book Demo'}
-                  </button>
-                </form>
               </div>
-            )}
+            </div>
+          </motion.div>
+        </div>
+        {/* Bottom fade overlay */}
+        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
+      </section>
+
+      {/* Demo Form Section */}
+      <section id="demo-form" className="py-16 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
+          <div className="max-w-2xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Ready to See InstaLabel in Action?</h2>
+              <p className="text-gray-600">Fill out the form below and we'll schedule your personalized demo.</p>
+            </div>
+
+            <form className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="business" className="block text-sm font-medium text-gray-700 mb-2">
+                  Business Name *
+                </label>
+                <input
+                  type="text"
+                  id="business"
+                  name="business"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="kitchenSize" className="block text-sm font-medium text-gray-700 mb-2">
+                  Kitchen Size *
+                </label>
+                <select
+                  id="kitchenSize"
+                  name="kitchenSize"
+                  required
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                >
+                  <option value="">Select kitchen size</option>
+                  <option value="small">Small (1-10 staff)</option>
+                  <option value="medium">Medium (11-25 staff)</option>
+                  <option value="large">Large (26+ staff)</option>
+                </select>
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                  Additional Information
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  rows={4}
+                  placeholder="Tell us about your current labeling setup and any specific needs..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                ></textarea>
+              </div>
+
+              <div className="text-center">
+                <Button type="submit" size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+                  Book My Demo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </form>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

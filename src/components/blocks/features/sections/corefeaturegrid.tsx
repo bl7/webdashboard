@@ -30,7 +30,7 @@ const features = [
     outcome: "Built for chefs, not tech people.",
   },
   {
-    icon: <FaMobileAlt className="h-6 w-6 text-blue-500" />,
+    icon: <FaMobileAlt className="h-6 w-6 text-purple-500" />,
     title: "Manage Anywhere.",
     solution: "Update labels & ingredients from your phone or dashboard.",
     outcome: "Stay in control, even when off-site.",

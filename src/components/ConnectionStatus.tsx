@@ -43,8 +43,8 @@ export const ConnectionStatus: React.FC = () => {
 
   if (connectionInfo.loading) {
     return (
-      <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-        <Loader2 className="h-4 w-4 animate-spin text-blue-600" />
+      <div className="flex items-center gap-2 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+        <Loader2 className="h-4 w-4 animate-spin text-purple-600" />
         <span className="text-sm text-blue-800">Connecting to printer...</span>
       </div>
     );

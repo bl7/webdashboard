@@ -40,7 +40,7 @@ export default function LoginPage() {
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+        <div className="h-12 w-12 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
       </div>
     )
   }
