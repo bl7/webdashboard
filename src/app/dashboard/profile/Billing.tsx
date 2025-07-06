@@ -169,7 +169,7 @@ const Billing: React.FC = () => {
         <div className="text-center">
           <div className="mb-4 text-lg text-red-500">⚠️ Error loading billing data</div>
           <p className="mb-4 text-gray-600">{error}</p>
-          <Button onClick={() => window.location.reload()} variant="default">
+          <Button onClick={() => window.location.reload()} variant="purple">
             Retry
           </Button>
         </div>

@@ -550,7 +550,7 @@ const ReportsPage: React.FC = () => {
         {TABS.map(tab => (
           <Button
             key={tab.key}
-            variant={activeTab === tab.key ? "default" : "outline"}
+            variant={activeTab === tab.key ? "purple" : "outline"}
             className="flex items-center gap-2"
             onClick={() => setActiveTab(tab.key)}
           >

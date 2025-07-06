@@ -805,7 +805,7 @@ export default function LabelDemo() {
                           <Button
                             onClick={() => addToPrintQueue(item, activeTab)}
                             disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
-                            variant="default"
+                            variant="purple"
                           >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
                         </div>
                       </>
@@ -819,7 +819,7 @@ export default function LabelDemo() {
                           <Button
                             onClick={() => addToPrintQueue(item, activeTab)}
                             disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
-                            variant="default"
+                            variant="purple"
                           >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
                         </div>
                       </>
@@ -864,7 +864,7 @@ export default function LabelDemo() {
             <div className="sticky top-0 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="default" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
+                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="purple" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
                 <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
               </div>
             </div>
@@ -910,10 +910,10 @@ export default function LabelDemo() {
       </div>
       {/* Floating Action Buttons: Use First & Defrost */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
-        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-purple-600 hover:bg-purple-700 text-white" variant="default" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl" variant="purple" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           USE FIRST
         </Button>
-        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-purple-600 hover:bg-purple-700 text-white" variant="default" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl" variant="accent" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           DEFROST
         </Button>
       </div>
@@ -943,6 +943,7 @@ export default function LabelDemo() {
             <div className="flex gap-2">
               <Button
                 className="flex-1"
+                variant="purple"
                 onClick={() => {
                   handleUseFirstPrint(useFirstQuantity)
                   setShowUseFirstModal(false)

@@ -38,7 +38,7 @@ export const History = () => {
         <div className="mx-auto max-w-4xl">
           {/* Header */}
           <div className="text-center mb-12 sm:mb-16">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 bg-clip-text text-transparent mb-6">
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-6">
               From Kitchen Chaos to Labeling Clarity
             </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mx-auto" />
@@ -70,7 +70,7 @@ export const History = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 text-white text-lg mb-4">
                       🎯
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       We knew kitchens needed a better way to track what's fresh, what's safe, and what's
                       compliant. So we built it — not with flashy tech jargon, but with real kitchen problems in
                       mind. InstaLabel began as a tool for auto-calculating expiry dates and printing clear,
@@ -85,7 +85,7 @@ export const History = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white text-lg mb-4">
                       ⚙️
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       We added allergen tracking. Prep times. Use-by info. A manager dashboard. All the things
                       that turn chaos into calm — without adding extra steps. No steep learning curves. No long
                       onboarding. Just a tool that helps food teams get it right the first time.
@@ -101,7 +101,7 @@ export const History = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-white text-lg mb-4">
                       🏪
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       Today, InstaLabel is trusted in hundreds of commercial kitchens across the UK — from
                       independent cafés to growing chains — helping them reduce food waste, pass EHO
                       inspections, and protect customers with confidence. It's simple, fast, and made to blend
@@ -116,7 +116,7 @@ export const History = () => {
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 text-white text-lg mb-4">
                       🚀
                     </div>
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-gray-600 text-sm leading-relaxed">
                       And this is just the beginning. We're building the future of kitchen labeling — one clean,
                       clear label at a time.
                     </p>

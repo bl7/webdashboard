@@ -16,12 +16,13 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
-          `border-2 border-[${accent}] text-[${accent}] bg-white hover:bg-[${accent}] hover:text-white`,
+          "border-2 border-purple-600 text-purple-600 bg-white hover:bg-purple-600 hover:text-white dark:bg-gray-900 dark:text-purple-300 dark:border-purple-400 dark:hover:bg-purple-600 dark:hover:text-white",
         ghost:
-          `text-[${accent}] bg-transparent hover:bg-[${accent}] hover:text-white`,
-        accent: `bg-[${accent}] text-white hover:bg-orange-700`,
-        accentGhost: `text-[${accent}] bg-transparent hover:bg-[${accent}] hover:text-white`,
+          "text-purple-600 bg-transparent hover:bg-purple-50 hover:text-purple-700 dark:text-purple-200 dark:hover:bg-purple-800 dark:hover:text-white",
+        accent: "bg-orange-500 text-white hover:bg-orange-600",
+        accentGhost: "text-orange-500 bg-transparent hover:bg-orange-500 hover:text-white",
         link: "text-primary underline-offset-4 hover:underline",
+        purple: "bg-purple-600 text-white hover:bg-purple-700 focus:ring-2 focus:ring-purple-400 focus:ring-offset-2",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -35,11 +35,11 @@ export const PrintBridgeBenefits = () => {
   ]
 
   return (
-    <section className="relative bg-white px-4 sm:px-6 py-12 sm:py-16">
+    <section className="relative bg-white px-2 sm:px-6 py-8 sm:py-12">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       
-      <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
+      <div className="relative mx-auto max-w-7xl space-y-12 sm:space-y-20">
         {/* Header */}
         <div className="text-center space-y-4">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
@@ -51,7 +51,7 @@ export const PrintBridgeBenefits = () => {
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
+        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {benefits.map((benefit, index) => (
             <motion.div
               key={index}
@@ -79,7 +79,7 @@ export const PrintBridgeBenefits = () => {
 
         {/* CTA Section */}
         <div className="text-center">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-200">
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 border border-purple-200">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Ready to Experience Seamless Printing?
             </h3>
@@ -94,11 +94,9 @@ export const PrintBridgeBenefits = () => {
                 </Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                Download PrintBridge
-              </Button>
             </div>
             <div className="mt-4 text-sm text-gray-500">
+              Sign up to get free access to PrintBridge.<br />
               ✓ 14-day free trial • ✓ No credit card required • ✓ Setup in 2 minutes
             </div>
           </div>

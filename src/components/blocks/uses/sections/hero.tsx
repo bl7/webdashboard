@@ -64,8 +64,8 @@ export const UsesHero = () => {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Link href="/features">
-              <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                Explore Features
+              <Button variant="outline" size="lg">
+                Explore Uses
               </Button>
             </Link>
           </div>

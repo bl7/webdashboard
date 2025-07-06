@@ -22,15 +22,15 @@ export const FeaturesGrid = () => {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-primary">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4">
             Everything you need, nothing you don't
           </h2>
-          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-muted-foreground">
+          <p className="max-w-xl text-xl text-gray-600 mb-6">
             InstaLabel is built for speed and simplicity. Print directly from the web or sunmi device, monitor
             usage, and choose the right hardware for your business.
           </p>
 
-          <ul className="mt-6 sm:mt-8 space-y-3 sm:space-y-4 text-muted-foreground">
+          <ul className="space-y-4 text-base text-gray-700">
             {features.map((feature, i) => (
               <motion.li 
                 key={i} 

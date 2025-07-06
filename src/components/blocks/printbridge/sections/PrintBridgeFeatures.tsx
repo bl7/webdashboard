@@ -45,10 +45,10 @@ export const PrintBridgeFeatures = () => {
   ]
 
   return (
-    <section className="relative bg-gray-50 px-4 sm:px-6 py-16 sm:py-24">
+    <section className="relative bg-gray-50 px-2 sm:px-6 py-10 sm:py-16">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="text-center space-y-4 mb-16">
+        <div className="text-center space-y-4 mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             PrintBridge Features
           </h2>
@@ -58,7 +58,7 @@ export const PrintBridgeFeatures = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
           {features.map((feature, index) => (
             <motion.div
               key={index}
@@ -88,8 +88,8 @@ export const PrintBridgeFeatures = () => {
         </div>
 
         {/* Technical Specs */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <div className="bg-white border border-gray-200 rounded-xl p-8">
+        <div className="mt-10 sm:mt-16 max-w-4xl mx-auto">
+          <div className="bg-white border border-gray-200 rounded-xl p-6 sm:p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
               Technical Specifications
             </h3>

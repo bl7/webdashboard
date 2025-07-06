@@ -14,7 +14,7 @@ export const PrintBridgeHero = () => {
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-10 blur-3xl" />
       <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-10 blur-3xl" />
 
-      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
+      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-10 sm:gap-16 md:flex-row">
         {/* Hero Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -62,9 +62,8 @@ export const PrintBridgeHero = () => {
               </Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-              <Download className="mr-2 h-4 w-4" />
-              Download PrintBridge
+            <Button variant="outline" size="lg">
+              Learn More
             </Button>
           </div>
 
@@ -81,7 +80,7 @@ export const PrintBridgeHero = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="w-full max-w-[500px]"
+          className="w-full max-w-xs sm:max-w-md md:max-w-[500px] mx-auto"
         >
           <div className="relative">
             {/* Web Dashboard Mockup */}

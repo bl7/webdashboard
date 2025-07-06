@@ -18,10 +18,10 @@ export const Contact = () => {
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
          
-          <h2 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight bg-gradient-to-r from-gray-900 via-purple-900 to-pink-900 bg-clip-text text-transparent mb-6 animate-fade-in">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-6">
             Get in Touch
           </h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Tell us a little bit about who you are, and we'll tell you a whole lot more about who
             we are.
           </p>
@@ -79,14 +79,14 @@ export const Contact = () => {
               <div className="flex items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-green-50 to-green-100 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 group">
                 <CheckCircle className="h-8 w-8 text-green-500 group-hover:scale-110 transition-transform duration-300" />
                 <div>
-                  <div className="text-lg font-bold text-gray-900">500+ Kitchens</div>
+                  <div className="text-lg font-semibold text-gray-900">500+ Kitchens</div>
                   <div className="text-sm text-gray-600">Trust InstaLabel</div>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-purple-100 shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 group">
                 <CheckCircle className="h-8 w-8 text-purple-500 group-hover:scale-110 transition-transform duration-300" />
                 <div>
-                  <div className="text-lg font-bold text-gray-900">EHO Compliant</div>
+                  <div className="text-lg font-semibold text-gray-900">EHO Compliant</div>
                   <div className="text-sm text-gray-600">Certified Solution</div>
                 </div>
               </div>

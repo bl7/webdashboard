@@ -64,7 +64,7 @@ export const FeaturesHero = () => {
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Link href="/printbridge">
-              <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
+              <Button variant="outline" size="lg">
                 <Wifi className="mr-2 h-4 w-4" />
                 Learn About PrintBridge
               </Button>

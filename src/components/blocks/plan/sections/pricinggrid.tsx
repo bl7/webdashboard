@@ -75,10 +75,8 @@ export const PricingGrid = () => {
               Start Free Trial
             </div>
             
-            <h2 className="text-4xl font-black leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Simple, Transparent
-              </span>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+              <span>Simple, Transparent</span>
               <br />
               <span className="text-gray-900">Pricing</span>
             </h2>
@@ -119,122 +117,72 @@ export const PricingGrid = () => {
         </div>
 
         {/* Enhanced Pricing Cards */}
-        <div className="flex justify-center">
-          <div className="grid gap-8 lg:grid-cols-3 max-w-6xl">
+        <div className="flex items-center justify-center">
+          <div className="max-w-6xl gap-8 md:grid-cols-3 flex justify-center items-center">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.id || index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
+                transition={{ delay: index * 0.2 }}
                 viewport={{ once: true }}
                 className={cn(
-                  "relative group rounded-2xl p-8 transition-all duration-300 hover:scale-105 hover:shadow-2xl",
+                  "relative flex flex-col rounded-2xl border bg-white p-8 text-left shadow-lg transition-all hover:shadow-2xl hover:-translate-y-2",
                   index === 1
-                    ? "bg-gradient-to-br from-purple-600 to-pink-600 text-white shadow-2xl border-2 border-purple-200"
-                    : "bg-white border border-gray-200 shadow-lg hover:border-purple-300"
+                    ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 ring-2 ring-purple-200 scale-105"
+                    : "border-gray-200 hover:border-purple-300"
                 )}
               >
-                {/* Popular Badge */}
                 {index === 1 && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                      <Star className="mr-1 h-4 w-4 inline" />
+                    <span className="inline-flex items-center rounded-full bg-gradient-to-r from-orange-500 to-red-500 px-4 py-2 text-sm font-bold text-white shadow-lg">
+                      <Star className="mr-1 h-4 w-4" />
                       Most Popular
-                    </div>
+                    </span>
                   </div>
                 )}
 
-                {/* Plan Header */}
-                <div className="text-center mb-8">
-                  <div className={cn(
-                    "inline-flex items-center justify-center w-16 h-16 rounded-full mb-4",
-                    index === 1 ? "bg-white/20" : "bg-gradient-to-r from-purple-100 to-pink-100"
-                  )}>
-                    <div className={cn(
-                      "flex items-center justify-center",
-                      index === 1 ? "text-white" : "text-purple-600"
-                    )}>
-                      {getIcon(index)}
-                    </div>
-                  </div>
-                  
-                  <h3 className={cn(
-                    "text-2xl font-bold mb-2",
-                    index === 1 ? "text-white" : "text-gray-900"
-                  )}>
-                    {plan.name}
-                  </h3>
-                  
-                  <p className={cn(
-                    "text-sm mb-4",
-                    index === 1 ? "text-white/80" : "text-gray-600"
-                  )}>
-                    {plan.description}
-                  </p>
-
-                  {/* Price */}
-                  <div className="mb-6">
-                    <div className={cn(
-                      "text-4xl font-black",
-                      index === 1 ? "text-white" : "text-gray-900"
-                    )}>
+                <div className="mb-6">
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                  <p className="text-gray-600 mb-4">{plan.description}</p>
+                  <div className="mb-4">
+                    <span className="text-4xl font-black text-gray-900">
                       {billingCycle === "monthly"
                         ? plan.price_monthly
                           ? `£${(plan.price_monthly / 100).toFixed(2)}`
-                          : "Custom"
+                          : "Contact us"
                         : plan.price_yearly
                           ? `£${(plan.price_yearly / 100).toFixed(2)}`
-                          : "Custom"}
-                    </div>
-                    <div className={cn(
-                      "text-sm",
-                      index === 1 ? "text-white/80" : "text-gray-500"
-                    )}>
-                      {billingCycle === "monthly" ? "per month" : "per year"}
-                    </div>
+                          : "Custom Pricing"}
+                    </span>
+                    <span className="text-gray-600 ml-2">
+                      {billingCycle === "monthly" ? "/mo" : "/yr"}
+                    </span>
                   </div>
                 </div>
 
-                {/* Enhanced CTA Button */}
-                <Link href="/register" className="block">
+                {/* Features list - from API */}
+                <div className="space-y-3 mb-8">
+                  {Array.isArray(plan.features) && plan.features.map((feature: string, i: number) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Check className="h-5 w-5 text-green-600" />
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <Link href="/register" className="mt-auto">
                   <Button
                     className={cn(
-                      "w-full py-4 text-lg font-semibold transition-all duration-300 shadow-lg hover:shadow-xl",
+                      "w-full py-3 font-semibold transition-all duration-300",
                       index === 1
-                        ? "bg-white text-purple-600 hover:bg-gray-50"
-                        : "bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl"
+                        : "bg-gray-900 text-white hover:bg-gray-800"
                     )}
                   >
-                    {plan.price_monthly ? "Start Free Trial" : "Contact Sales"}
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                    {index === 1 ? "Start Free Trial" : "Get Started"}
                   </Button>
                 </Link>
-
-                {/* Enhanced Features Preview */}
-                <div className="mt-8 pt-6 border-t border-gray-200/20">
-                  <p className={cn(
-                    "text-xs font-semibold mb-4 uppercase tracking-wide",
-                    index === 1 ? "text-white/80" : "text-gray-500"
-                  )}>
-                    Key Features:
-                  </p>
-                  <div className="space-y-3">
-                    {features.slice(0, 4).map((feature, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm">
-                        <Check className={cn(
-                          "w-4 h-4 flex-shrink-0",
-                          index === 1 ? "text-white" : "text-purple-500"
-                        )} />
-                        <span className={cn(
-                          index === 1 ? "text-white/90" : "text-gray-600"
-                        )}>
-                          {feature}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </motion.div>
             ))}
           </div>

@@ -119,24 +119,14 @@ export const Pricing = () => {
                     </div>
                   </div>
 
-                  {/* Features list */}
+                  {/* Features list - from API */}
                   <div className="space-y-3 mb-8">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-gray-700">Web Dashboard Printing</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-gray-700">Sunmi Device Support</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-gray-700">Real-time Analytics</span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                      <span className="text-gray-700">Local Bridge App</span>
-                    </div>
+                    {Array.isArray(plan.features) && plan.features.map((feature: string, i: number) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
                   </div>
 
                   <Link href="/register" className="mt-auto">

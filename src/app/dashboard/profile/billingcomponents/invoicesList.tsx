@@ -86,7 +86,7 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
         <Button
           onClick={downloadSelected}
           disabled={selectedIds.size === 0}
-          variant="default"
+          variant="purple"
           className="px-3 py-1 text-sm"
         >
           Download Selected

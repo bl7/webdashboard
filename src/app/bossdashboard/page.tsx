@@ -211,6 +211,7 @@ export default function BossDashboard() {
           <Button 
             onClick={() => window.location.reload()} 
             className="mt-4"
+            variant="purple"
           >
             Retry
           </Button>

@@ -33,10 +33,10 @@ export const PrintBridgeHowItWorks = () => {
   ]
 
   return (
-    <section className="relative bg-white px-4 sm:px-6 py-16 sm:py-24">
+    <section className="relative bg-white px-2 sm:px-6 py-10 sm:py-16">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="text-center space-y-4 mb-16">
+        <div className="text-center space-y-4 mb-10 sm:mb-16">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             How PrintBridge Works
           </h2>
@@ -46,7 +46,7 @@ export const PrintBridgeHowItWorks = () => {
         </div>
 
         {/* Steps */}
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
+        <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-6xl mx-auto">
           {steps.map((step, index) => (
             <motion.div
               key={index}
@@ -85,7 +85,7 @@ export const PrintBridgeHowItWorks = () => {
         </div>
 
         {/* Benefits Summary */}
-        <div className="mt-16 text-center">
+        <div className="mt-10 sm:mt-16 text-center">
           <div className="inline-flex items-center gap-6 p-6 rounded-lg bg-purple-50 border border-purple-200">
             <div className="flex items-center gap-2 text-sm text-purple-700">
               <CheckCircle className="h-4 w-4" />

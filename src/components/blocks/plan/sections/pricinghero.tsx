@@ -63,11 +63,9 @@ export const PricingHero = () => {
               </Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Link href="/features">
-              <Button variant="outline" size="lg" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                Compare Features
-              </Button>
-            </Link>
+            <Button variant="outline" size="lg">
+              See All Plans
+            </Button>
           </div>
 
           {/* Trust indicators */}

@@ -4,47 +4,86 @@ import React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Package, Printer, CreditCard } from "lucide-react"
 import { FaLinkedin, FaFacebook, FaXTwitter, FaInstagram } from "react-icons/fa6"
 
 // CTA + Footer
 export const Footer = () => {
   return (
     <>
-      {/* Enhanced CTA Section */}
-      <section className="bg-gradient-to-br from-purple-900 via-purple-800 to-pink-900 px-6 py-24 text-white">
-        <div className="container mx-auto max-w-5xl space-y-8 text-center">
-          <h2 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-            <span className="bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-              Ready to simplify
-            </span>
-            <br />
-            <span className="text-white">your kitchen labeling?</span>
-          </h2>
-          <p className="mx-auto max-w-2xl text-xl text-white/90 leading-relaxed">
-            EHO-compliant labels. Natasha's Law ready. No training required. Works with your
-            existing Epson printer and Sunmi devices.
-          </p>
+      {/* Redesigned CTA Section with lighter purple and label ordering feature */}
+      <section className="bg-gradient-to-br from-purple-100 via-purple-50 to-pink-50 px-6 py-24 text-gray-900 relative overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 25% 25%, purple 1px, transparent 1px)`,
+            backgroundSize: '60px 60px'
+          }}></div>
+        </div>
+        
+        <div className="container mx-auto max-w-6xl space-y-12 text-center relative z-10">
+          <div className="space-y-8">
+            <h2 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+              <span className="bg-gradient-to-r from-purple-700 to-pink-600 bg-clip-text text-transparent">
+                Ready to simplify
+              </span>
+              <br />
+              <span className="text-gray-900">your kitchen labeling?</span>
+            </h2>
+            <p className="mx-auto max-w-2xl text-xl text-gray-700 leading-relaxed">
+              EHO-compliant labels. Natasha's Law ready. No training required. Works with your
+              existing Epson printer and Sunmi devices.
+            </p>
+          </div>
+
+          {/* Label Ordering Feature Highlight */}
+          <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-purple-200/50 shadow-xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+              <div className="space-y-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto">
+                  <Package className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Order Labels Directly</h3>
+                <p className="text-gray-600">Order professional labels right from your dashboard with just a few clicks</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto">
+                  <Printer className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Print Instantly</h3>
+                <p className="text-gray-600">Print labels immediately or save for later - your choice</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl flex items-center justify-center mx-auto">
+                  <CreditCard className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900">Secure Payment</h3>
+                <p className="text-gray-600">Safe, encrypted payments with instant order confirmation</p>
+              </div>
+            </div>
+          </div>
 
           {/* Enhanced testimonial */}
-          <blockquote className="mx-auto max-w-xl italic text-white/80 text-lg">
+          <blockquote className="mx-auto max-w-xl italic text-gray-700 text-lg bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-purple-200/50">
             "InstaLabel changed the way our kitchen runs. We're more compliant, more efficient, and
             wasting less."
             <br />
-            <span className="font-semibold not-italic text-white">– Head Chef, Local Deli Group</span>
+            <span className="font-semibold not-italic text-gray-900">– Head Chef, Local Deli Group</span>
           </blockquote>
 
           {/* Enhanced CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pt-8">
             <Link href="/register">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="/bookdemo">
-              <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-purple-900 px-8 py-4 text-lg font-semibold transition-all duration-300">
-                Book Demo
+              <Button variant="outline" size="lg" className="px-8 py-4 text-lg font-semibold border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 transition-all duration-300 hover:scale-105">
+                Contact Us
               </Button>
             </Link>
           </div>
@@ -52,62 +91,73 @@ export const Footer = () => {
       </section>
 
       {/* Enhanced Footer Section */}
-      <footer className="bg-black pt-20 text-white">
-        <div className="container grid grid-cols-1 gap-12 px-6 pb-12 md:grid-cols-4">
+      <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-24 text-white">
+        <div className="container grid grid-cols-1 gap-16 px-6 pb-16 md:grid-cols-4">
           {/* Logo + Description */}
-          <div className="space-y-4">
-            <Image src="/long_longwhite.png" width={180} height={40} alt="instalabel logo" />
-            <p className="text-sm text-white/80 leading-relaxed">
+          <div className="space-y-6">
+            <div className="relative">
+              <Image src="/long_longwhite.png" width={200} height={44} alt="instalabel logo" className="drop-shadow-lg" />
+            </div>
+            <p className="text-base text-white/80 leading-relaxed max-w-sm">
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
               one app. Print from web dashboard or Sunmi devices with real-time analytics.
             </p>
           </div>
 
           {/* Learn Links */}
-          <div>
-            <p className="mb-4 font-bold text-lg">Learn</p>
-            <nav className="flex flex-col gap-3 text-sm text-white/80">
-              <Link href="/" className="hover:text-purple-300 transition-colors duration-200">Home</Link>
-              <Link href="/features" className="hover:text-purple-300 transition-colors duration-200">Features</Link>
-              <Link href="/plan" className="hover:text-purple-300 transition-colors duration-200">Pricing</Link>
-              <Link href="/faqs" className="hover:text-purple-300 transition-colors duration-200">FAQs</Link>
-              <Link href="/blog" className="hover:text-purple-300 transition-colors duration-200">Blogs</Link>
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Learn</h3>
+            <nav className="flex flex-col gap-4 text-base text-white/80">
+              <Link href="/" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Home</Link>
+              <Link href="/features" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Features</Link>
+              <Link href="/plan" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Pricing</Link>
+              <Link href="/faqs" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">FAQs</Link>
+              <Link href="/blog" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Blogs</Link>
             </nav>
           </div>
 
           {/* Legal Links */}
-          <div>
-            <p className="mb-4 font-bold text-lg">Legal</p>
-            <nav className="flex flex-col gap-3 text-sm text-white/80">
-              <Link href="/privacy-policy" className="hover:text-purple-300 transition-colors duration-200">Privacy Policy</Link>
-              <Link href="/cookie-policy" className="hover:text-purple-300 transition-colors duration-200">Cookie Policy</Link>
-              <Link href="/terms" className="hover:text-purple-300 transition-colors duration-200">Terms of Service</Link>
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Legal</h3>
+            <nav className="flex flex-col gap-4 text-base text-white/80">
+              <Link href="/privacy-policy" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Privacy Policy</Link>
+              <Link href="/cookie-policy" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Cookie Policy</Link>
+              <Link href="/terms" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Terms of Service</Link>
             </nav>
           </div>
 
           {/* Contact + Socials */}
-          <div className="space-y-6">
-            <p className="font-bold text-lg">Contact</p>
-            <div className="space-y-2 text-sm text-white/80">
-              <p>Bournemouth, England</p>
-              <Link href="mailto:contact@instalabel.co" className="hover:text-purple-300 transition-colors duration-200">contact@instalabel.co</Link>
-              <Link href="tel:+447405924790" className="hover:text-purple-300 transition-colors duration-200">+44 7405 924790</Link>
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Contact</h3>
+              <div className="space-y-3 text-base text-white/80">
+                <p className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
+                  Bournemouth, England
+                </p>
+                <Link href="mailto:contact@instalabel.co" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1 block">
+                  contact@instalabel.co
+                </Link>
+                <Link href="tel:+447405924790" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1 block">
+                  +44 7405 924790
+                </Link>
+              </div>
             </div>
 
-            <div>
-              <p className="mb-3 font-bold text-lg">Follow Us</p>
-              <div className="flex gap-4">
-                <Link href="#" className="hover:text-sky-400 transition-colors duration-200">
-                  <FaXTwitter className="h-6 w-6" />
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Follow Us</h3>
+              <div className="flex gap-5">
+                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
+                  <FaXTwitter className="h-5 w-5 text-white group-hover:text-sky-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="hover:text-pink-400 transition-colors duration-200">
-                  <FaInstagram className="h-6 w-6" />
+                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
+                  <FaInstagram className="h-5 w-5 text-white group-hover:text-pink-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="hover:text-purple-500 transition-colors duration-200">
-                  <FaFacebook className="h-6 w-6" />
+                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
+                  <FaFacebook className="h-5 w-5 text-white group-hover:text-blue-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="hover:text-sky-500 transition-colors duration-200">
-                  <FaLinkedin className="h-6 w-6" />
+                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
+                  <FaLinkedin className="h-5 w-5 text-white group-hover:text-blue-500 transition-colors duration-300" />
                 </Link>
               </div>
             </div>
@@ -115,7 +165,7 @@ export const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-gray-800 mt-12 py-6">
+        <div className="border-t border-purple-700/50 mt-16 py-8">
           <div className="container px-6 text-center text-sm text-white/60">
             <p>&copy; 2024 InstaLabel. All rights reserved.</p>
           </div>

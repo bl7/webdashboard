@@ -132,7 +132,7 @@ export const Hero = () => {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Link href="/printbridge">
-              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-6 py-4 text-lg font-semibold">
+              <Button variant="outline" size="lg" >
                 <Wifi className="mr-2 h-5 w-5" />
                 Learn About PrintBridge
               </Button>

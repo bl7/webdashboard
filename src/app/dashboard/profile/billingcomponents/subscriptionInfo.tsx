@@ -52,7 +52,7 @@ export default function SubscriptionInfo({ subscription, onChangePlan }: Props) 
       {/* Button: Change Plan or Reactivate */}
       {!isCanceled && isCancellationScheduled ? (
         <Button
-          variant="default"
+          variant="purple"
           className="mt-2 self-start bg-green-600 hover:bg-green-700 text-white"
           onClick={onChangePlan}
           disabled={hasPendingChange}
