@@ -72,33 +72,6 @@ export const GalleryFeature = () => {
           </div>
         </div>
 
-        {/* Real Kitchens Section */}
-        <div className="text-center">
-          <h3 className="mb-6 sm:mb-10 text-2xl sm:text-3xl font-bold">Designed for real kitchens</h3>
-          <div className="grid gap-4 sm:gap-8 md:grid-cols-3">
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A2} alt="Kitchen 1" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Crisp, clear allergen labels — every time.
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A3} alt="Kitchen 2" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Labels that survive fridge, freezer & steam.
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-xl shadow-lg transition-transform duration-300 hover:scale-105">
-              <Image src={A4} alt="Kitchen 3" width={400} height={320} className="object-cover" />
-              <div className="bg-gray-100 p-4 text-sm font-semibold text-gray-800">
-                Print labels in 3 taps — phone, tablet, or laptop.
-              </div>
-            </div>
-        
-           
-           
-          </div>
-        </div>
       </div>
       <div className="flex justify-center mt-8 sm:mt-12">
         <a href="/register">
