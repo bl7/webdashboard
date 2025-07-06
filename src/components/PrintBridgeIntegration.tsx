@@ -7,6 +7,17 @@ import Link from 'next/link';
 
 type LabelHeight = "31mm" | "40mm" | "80mm";
 
+function getPrinterName(printer: any) {
+  if (!printer) return 'Unknown Printer';
+  if (typeof printer.name === 'string') return printer.name;
+  if (typeof printer.name === 'object') {
+    if (printer.name.displayName) return printer.name.displayName;
+    if (printer.name.label) return printer.name.label;
+    return JSON.stringify(printer.name);
+  }
+  return String(printer.name);
+}
+
 export const PrintBridgeIntegration: React.FC = () => {
   const { 
     isConnected: printBridgeConnected, 
@@ -29,7 +40,7 @@ export const PrintBridgeIntegration: React.FC = () => {
     reconnect: printerReconnect,
   } = usePrinter();
   
-  const [selectedPrinter, setSelectedPrinter] = useState<string>('');
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>('');
   const [labelHeight, setLabelHeight] = useState<LabelHeight>("31mm");
   const [printStatus, setPrintStatus] = useState<string>('');
   const [mounted, setMounted] = useState(false);
@@ -150,7 +161,7 @@ export const PrintBridgeIntegration: React.FC = () => {
     ctx.font = '16px Arial, sans-serif';
     ctx.fillText('Printer Test Successful', width / 2, 200);
     ctx.fillText('Connection: ' + (connectionInfo.isConnected ? 'Connected' : 'Disconnected'), width / 2, 230);
-    ctx.fillText('Printer: ' + (selectedPrinter || connectionInfo.defaultPrinter?.name || 'Default'), width / 2, 260);
+    ctx.fillText('Printer: ' + (selectedPrinterName || connectionInfo.defaultPrinter?.name || 'Default'), width / 2, 260);
     ctx.fillText('Label Size: ' + labelHeight, width / 2, 290);
     
     // Footer
@@ -172,7 +183,7 @@ export const PrintBridgeIntegration: React.FC = () => {
     }
 
     // Use selected printer or default printer
-    const printerToUse = selectedPrinter || connectionInfo.defaultPrinter?.name;
+    const printerToUse = selectedPrinterName || connectionInfo.defaultPrinter?.name;
     
     if (!printerToUse) {
       setPrintStatus('❌ No printer selected');
@@ -211,10 +222,23 @@ export const PrintBridgeIntegration: React.FC = () => {
 
   // Auto-select default printer if available and no printer is selected
   React.useEffect(() => {
-    if (connectionInfo.defaultPrinter && !selectedPrinter) {
-      setSelectedPrinter(connectionInfo.defaultPrinter.name);
+    const defaultPrinter: any = connectionInfo.defaultPrinter;
+    if (defaultPrinter && !selectedPrinterName) {
+      if (typeof defaultPrinter.name === 'object' && typeof defaultPrinter.name.name === 'string') {
+        setSelectedPrinterName(defaultPrinter.name.name);
+      } else if (typeof defaultPrinter.name === 'string') {
+        setSelectedPrinterName(defaultPrinter.name);
+      }
     }
-  }, [connectionInfo.defaultPrinter, selectedPrinter]);
+  }, [connectionInfo.defaultPrinter, selectedPrinterName]);
+
+  // When sending a print job, find the printer object by matching printer.name.name or printer.name to selectedPrinterName
+  const getSelectedPrinter = () => {
+    return connectionInfo.printers.find((p: any) =>
+      (typeof p.name === 'object' && p.name.name === selectedPrinterName) ||
+      (typeof p.name === 'string' && p.name === selectedPrinterName)
+    );
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-lg border p-6">
@@ -273,21 +297,22 @@ export const PrintBridgeIntegration: React.FC = () => {
               Select Printer:
             </label>
             <select
-              value={selectedPrinter}
-              onChange={(e) => setSelectedPrinter(e.target.value)}
+              value={selectedPrinterName}
+              onChange={e => setSelectedPrinterName(e.target.value)}
               className="w-full p-2 border border-purple-300 rounded text-sm bg-white focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
             >
               <option value="">Select a printer...</option>
-              {connectionInfo.printers.map((printer) => {
-                if (typeof printer !== 'object' || !printer.name) {
-                  console.error('Invalid printer object in connectionInfo.printers:', printer)
-                  return null;
-                }
+              {connectionInfo.printers.map((printer: any) => {
+                const printerName = typeof printer.name === 'object' && typeof printer.name.name === 'string'
+                  ? printer.name.name
+                  : typeof printer.name === 'string'
+                    ? printer.name
+                    : 'Unknown Printer';
                 return (
-                  <option key={printer.name} value={printer.name}>
-                    {printer.name} {printer.isDefault ? '(Default)' : ''}
+                  <option key={printerName} value={printerName}>
+                    {printerName} {printer.isDefault ? '(Default)' : ''}
                   </option>
-                )
+                );
               })}
             </select>
             <div className="text-xs text-purple-600">
@@ -379,7 +404,7 @@ export const PrintBridgeIntegration: React.FC = () => {
       <div className="flex gap-3">
         <Button 
           onClick={handlePrint}
-          disabled={!connectionInfo.isConnected || connectionInfo.loading || !selectedPrinter}
+          disabled={!connectionInfo.isConnected || connectionInfo.loading || !selectedPrinterName}
           className="flex-1 bg-purple-600 hover:bg-purple-700 text-white disabled:bg-gray-400"
         >
           {connectionInfo.loading ? 'Connecting...' : 'Print Test Label'}
@@ -403,8 +428,16 @@ export const PrintBridgeIntegration: React.FC = () => {
           <div>Connection Status: {connectionInfo.isConnected ? 'Connected' : 'Disconnected'}</div>
           <div>Loading: {connectionInfo.loading ? 'Yes' : 'No'}</div>
           <div>Available Printers: {connectionInfo.printers.length}</div>
-          <div>Default Printer: {connectionInfo.defaultPrinter?.name || 'None'}</div>
-          <div>Selected Printer: {selectedPrinter || 'None'}</div>
+          <div>Default Printer: {
+            connectionInfo.defaultPrinter
+              ? (typeof (connectionInfo.defaultPrinter as any).name === 'object' && typeof (connectionInfo.defaultPrinter as any).name.name === 'string'
+                  ? (connectionInfo.defaultPrinter as any).name.name
+                  : typeof (connectionInfo.defaultPrinter as any).name === 'string'
+                    ? (connectionInfo.defaultPrinter as any).name
+                    : 'Unknown Printer')
+              : 'None'
+          }</div>
+          <div>Selected Printer: {selectedPrinterName || 'None'}</div>
           <div>Label Height: {labelHeight}</div>
         </div>
       </div>

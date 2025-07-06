@@ -24,6 +24,13 @@ interface Printer {
   isDefault: boolean
 }
 
+function getPrinterName(printer: any): string {
+  if (!printer) return '';
+  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
+  if (typeof printer.name === 'string') return printer.name;
+  return '';
+}
+
 const itemsPerPage = 5
 
 function calculateExpiryDate(days: number): string {
@@ -77,13 +84,15 @@ function getBestAvailablePrinter(
   });
 
   // Ensure we have a valid array
-  const validPrinters = (availablePrinters || []).filter(printer => 
-    printer && 
-    printer.name &&
-    printer.name.trim() !== "" && 
-    printer.name !== "Fallback_Printer" &&
-    !printer.name.toLowerCase().includes('fallback')
-  );
+  const validPrinters = (availablePrinters || []).filter(printer => {
+    const name = getPrinterName(printer);
+    return (
+      name &&
+      name.trim() !== "" &&
+      name !== "Fallback_Printer" &&
+      !name.toLowerCase().includes('fallback')
+    );
+  });
 
   console.log("🖨️ Valid printers after filtering:", validPrinters.map(p => p.name));
 
@@ -114,6 +123,7 @@ function getBestAvailablePrinter(
 }
 
 export default function LabelDemo() {
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>('');
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
@@ -725,42 +735,47 @@ export default function LabelDemo() {
             <div className="flex items-center justify-between mb-6">
               <h1 className="text-2xl font-bold tracking-tight">Label Printer</h1>
               {isConnected ? (
-                <div className="mb-4 p-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-sm">
-                  <div className="font-semibold text-purple-900 mb-2">Available Printers</div>
-                  {availablePrinters.length > 0 ? (
-                    <div className="flex flex-col gap-2">
-                      <select
-                        value={selectedPrinter?.name || ''}
-                        onChange={e => {
-                          const printer = availablePrinters.find(p => p.name === e.target.value)
-                          if (typeof printer !== 'undefined' && typeof printer !== 'object') {
-                            console.error('Printer select: expected a printer object, got:', printer)
-                          }
-                          selectPrinter(printer || null)
-                        }}
-                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
-                      >
-                        <option value="">Select Printer</option>
-                        {availablePrinters.map((printer) => {
-                          if (typeof printer !== 'object' || !printer.name) {
-                            console.error('Invalid printer object in availablePrinters:', printer)
-                            return null;
-                          }
-                          return (
-                            <option key={printer.name} value={printer.name}>
-                              {printer.name} {printer.isDefault ? '(Default)' : ''}
-                            </option>
-                          )
-                        })}
-                      </select>
-                      <div className="text-xs text-gray-700 mt-1">
-                        {availablePrinters.length} printer(s) detected
+                <>
+                  {console.log('Available printers:', availablePrinters)}
+                  <div className="mb-4 p-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-sm">
+                    <div className="font-semibold text-purple-900 mb-2">Available Printers</div>
+                    {availablePrinters.length > 0 ? (
+                      <div className="flex flex-col gap-2">
+                        <select
+                          value={selectedPrinterName}
+                          onChange={e => {
+                            setSelectedPrinterName(e.target.value);
+                            const printer = availablePrinters.find((p: any) =>
+                              (typeof p.name === 'object' && p.name.name === e.target.value) ||
+                              (typeof p.name === 'string' && p.name === e.target.value)
+                            );
+                            selectPrinter(printer || null);
+                          }}
+                          className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
+                        >
+                          <option value="">Select Printer</option>
+                          {availablePrinters.map((printer: any) => {
+                            const printerName = typeof printer.name === 'object' && typeof printer.name.name === 'string'
+                              ? printer.name.name
+                              : typeof printer.name === 'string'
+                                ? printer.name
+                                : 'Unknown Printer';
+                            return (
+                              <option key={printerName} value={printerName}>
+                                {printerName} {printer.isDefault ? '(Default)' : ''}
+                              </option>
+                            );
+                          })}
+                        </select>
+                        <div className="text-xs text-gray-700 mt-1">
+                          {availablePrinters.length} printer(s) detected
+                        </div>
                       </div>
-                    </div>
-                  ) : (
-                    <div className="text-xs text-gray-500">No printers detected</div>
-                  )}
-                </div>
+                    ) : (
+                      <div className="text-xs text-gray-500">No printers detected</div>
+                    )}
+                  </div>
+                </>
               ) : (
                 <div className="mb-4 p-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white shadow-sm text-red-700">
                   No printers detected
