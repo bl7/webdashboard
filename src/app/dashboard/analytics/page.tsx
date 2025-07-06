@@ -241,15 +241,15 @@ function processLabelOrders(orders: any[], range: "week" | "month") {
     return createdAtTime >= startOfRangeTime && createdAtTime <= nowTime
   })
 
-  // Count total labels ordered in the range
-  const totalLabelsOrdered = rangeOrders.reduce(
-    (sum: number, order: any) => sum + (order.label_count || 0),
+  // Count total rolls ordered in the range
+  const totalRollsOrdered = rangeOrders.reduce(
+    (sum: number, order: any) => sum + (order.bundle_count || 0),
     0
   )
 
-  // Count total bundles ordered in the range
-  const totalBundlesOrdered = rangeOrders.reduce(
-    (sum: number, order: any) => sum + (order.bundle_count || 0),
+  // Count total labels ordered in the range (for reference)
+  const totalLabelsOrdered = rangeOrders.reduce(
+    (sum: number, order: any) => sum + (order.label_count || 0),
     0
   )
 
@@ -262,7 +262,7 @@ function processLabelOrders(orders: any[], range: "week" | "month") {
 
   return {
     totalLabelsOrdered,
-    totalBundlesOrdered,
+    totalRollsOrdered,
     ordersByStatus,
     orderCount: rangeOrders.length
   }
@@ -334,7 +334,7 @@ const AnalyticsDashboard: React.FC = () => {
 
   const {
     totalLabelsOrdered,
-    totalBundlesOrdered,
+    totalRollsOrdered,
     ordersByStatus,
     orderCount,
   } = processLabelOrders(labelOrdersData.orders, range)
@@ -385,7 +385,7 @@ const AnalyticsDashboard: React.FC = () => {
         <MetricCard
           icon={ICONS[4]}
           title="Labels Ordered"
-          value={totalLabelsOrdered}
+          value={`${totalRollsOrdered} rolls`}
           subtitle={`${orderCount} orders`}
           gradient={GRADIENTS[4]}
         />
