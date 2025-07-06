@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
+import BridgeDownload from "@/components/BridgeDownload"
 
 const labelTypes = [
   { label: "Cooked", key: "cooked" },
@@ -191,22 +192,8 @@ export default function Settings() {
           To print labels from your browser, you need to install our InstaLabel Print Server on your computer. Download and install the version for your operating system:
         </p>
         <div className="flex flex-col md:flex-row gap-4 mb-4">
-          <a 
-            href="https://www.youtube.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition-colors"
-          >
-            <span role="img" aria-label="Windows">🪟</span> Download for Windows
-          </a>
-          <a 
-            href="https://www.youtube.com" 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-semibold transition-colors"
-          >
-            <span role="img" aria-label="Mac">🍏</span> Download for Mac
-          </a>
+          <BridgeDownload platform="windows" />
+          <BridgeDownload platform="mac" />
         </div>
         <a 
           href="/help/print-server-setup" 

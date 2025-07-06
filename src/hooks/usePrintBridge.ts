@@ -178,11 +178,12 @@ export const usePrintBridge = () => {
       const cleanImageData = base64Image.includes(',') ? base64Image.split(',')[1] : base64Image;
       
       if (osType === 'windows') {
-        // Send JSON with label dimensions and full data URL
+        // Send JSON with label dimensions, full data URL, and selected printer
         const payload = {
           labelWidth: labelWidthMm, // in mm
           labelHeight: labelHeightMm, // in mm
-          image: base64Image // full data URL
+          image: base64Image, // full data URL
+          selectedPrinter: printerName || undefined
         };
         wsRef.current.send(JSON.stringify(payload));
       } else {
