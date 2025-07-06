@@ -1,11 +1,15 @@
 "use client"
-import { useState } from "react"
+import React, { useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
+import { AlertTriangle, Clock, ChevronDown, ChevronUp } from "lucide-react"
 
 import AppLoader from "@/components/AppLoader"
 import { useAllergens } from "@/hooks/useAllergens"
 import { useIngredients } from "@/hooks/useIngredients"
 import { useMenuItems } from "@/hooks/useMenuItem"
+import NextToExpireList from "./analytics/NextToExpireList"
+import AboutToExpireList from "./analytics/AboutToExpireList"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const CARD_STYLES = {
   allergens: {
@@ -102,7 +106,26 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-12">
       <div className="mx-auto w-full max-w-7xl">
-       
+        
+        {/* Expiration Metrics Cards */}
+        <motion.section 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="mb-8"
+        >
+          <AboutToExpireList />
+        </motion.section>
+
+        {/* Next To Expire Section */}
+        <motion.section 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="mb-8"
+        >
+          <NextToExpireList />
+        </motion.section>
 
         {/* Main Content */}
         <motion.section 
@@ -264,26 +287,51 @@ export default function DashboardPage() {
 
 function DashboardSkeleton() {
   return (
-    <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-      <div className="text-center py-12 px-8">
-        <div className="h-12 bg-gradient-to-r from-slate-200 to-slate-300 rounded-lg mb-4 animate-pulse"></div>
-        <div className="h-6 bg-slate-200 rounded-lg mb-12 max-w-md mx-auto animate-pulse"></div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="p-8 border-r border-white/30 last:border-r-0">
-            <div className="space-y-4">
-              <div className="flex justify-between items-start">
-                <div className="w-8 h-8 bg-slate-200 rounded-full animate-pulse"></div>
-                <div className="w-3 h-3 bg-slate-200 rounded-full animate-pulse"></div>
+    <div className="space-y-8">
+      {/* Expiration Metrics Skeleton */}
+      <div className="mb-8">
+        <div className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-slate-200 rounded-xl animate-pulse"></div>
+                <div>
+                  <div className="h-5 w-32 bg-slate-200 rounded animate-pulse mb-1"></div>
+                  <div className="h-4 w-24 bg-slate-200 rounded animate-pulse"></div>
+                </div>
               </div>
-              <div className="h-6 bg-slate-200 rounded animate-pulse w-3/4"></div>
-              <div className="h-10 bg-slate-200 rounded animate-pulse w-1/2"></div>
-              <div className="h-4 bg-slate-200 rounded animate-pulse w-full"></div>
+              <div className="text-right">
+                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse mb-1"></div>
+                <div className="h-4 w-12 bg-slate-200 rounded animate-pulse"></div>
+              </div>
             </div>
+            <div className="h-4 w-48 bg-slate-200 rounded animate-pulse"></div>
           </div>
-        ))}
+        </div>
+      </div>
+
+      {/* Main Content Skeleton */}
+      <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+        <div className="text-center py-12 px-8">
+          <div className="h-12 bg-gradient-to-r from-slate-200 to-slate-300 rounded-lg mb-4 animate-pulse"></div>
+          <div className="h-6 bg-slate-200 rounded-lg mb-12 max-w-md mx-auto animate-pulse"></div>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="p-8 border-r border-white/30 last:border-r-0">
+              <div className="space-y-4">
+                <div className="flex justify-between items-start">
+                  <div className="w-8 h-8 bg-slate-200 rounded-full animate-pulse"></div>
+                  <div className="w-3 h-3 bg-slate-200 rounded-full animate-pulse"></div>
+                </div>
+                <div className="h-6 bg-slate-200 rounded animate-pulse w-3/4"></div>
+                <div className="h-10 bg-slate-200 rounded animate-pulse w-1/2"></div>
+                <div className="h-4 bg-slate-200 rounded animate-pulse w-full"></div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )

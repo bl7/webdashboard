@@ -5,6 +5,7 @@ import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Printer, Users, CalendarDays, AlertTriangle } from "lucide-react"
 import AboutToExpireList from "./AboutToExpireList"
+import NextToExpireList from "./NextToExpireList"
 import {
   LineChart,
   Line,
@@ -309,17 +310,6 @@ const AnalyticsDashboard: React.FC = () => {
           subtitle="Labels/Day"
           gradient={GRADIENTS[2]}
         />
-        <MetricCard
-          icon={ICONS[3]}
-          title="Expiring Soon"
-          value={expiringSoon}
-          subtitle="Next 24h"
-          gradient={GRADIENTS[3]}
-        />
-      </section>
-      {/* Expiring Items */}
-      <section className="mx-auto mb-10 w-full max-w-6xl">
-        <AboutToExpireList />
       </section>
 
       {/* Charts */}
@@ -424,14 +414,6 @@ function AnalyticsSkeleton() {
             <div className="h-4 w-1/3 rounded bg-blue-100/40" />
           </div>
         ))}
-      </section>
-      {/* AboutToExpireList Skeleton */}
-      <section className="mx-auto mb-10 w-full max-w-6xl">
-        <div className="rounded-2xl bg-orange-100/40 p-6 shadow-md backdrop-blur-md">
-          <div className="mb-4 h-6 w-1/4 rounded bg-orange-200/60" />
-          <div className="mb-2 h-4 w-1/2 rounded bg-orange-100/60" />
-          <div className="h-4 w-1/3 rounded bg-orange-100/40" />
-        </div>
       </section>
       {/* Charts Skeleton */}
       <section className="mx-auto mb-10 grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">

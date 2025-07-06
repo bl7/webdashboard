@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { AlertTriangle, ChevronDown, ChevronUp } from "lucide-react"
+import { Clock, ChevronDown, ChevronUp } from "lucide-react"
 
-type ExpiringItem = { name: string; type: string; expiresAt: string }
+type ExpiringItem = { name: string; type: string; expiresAt: string; hoursLeft: number }
 
 type PrintLog = {
   details: {
@@ -17,19 +17,19 @@ type PrintLog = {
   action: string
 }
 
-function AboutToExpireSkeleton() {
+function NextToExpireSkeleton() {
   return (
-    <Card className="w-full border-0 bg-gradient-to-br from-red-50 to-orange-50 shadow-lg">
-      <CardHeader className="border-b border-red-100 bg-gradient-to-r from-red-100 to-orange-100">
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-red-800">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
-          About to Expire (Next 24h)
+    <Card className="w-full border-0 bg-gradient-to-br from-amber-50 to-yellow-50 shadow-lg">
+      <CardHeader className="border-b border-amber-100 bg-gradient-to-r from-amber-100 to-yellow-100">
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-amber-800">
+          <Clock className="h-5 w-5 text-amber-600" />
+          Next to Expire (After 24h)
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <ul className="space-y-2">
           {[1, 2, 3].map((i) => (
-            <li key={i} className="h-6 w-2/3 animate-pulse rounded bg-red-100/60" />
+            <li key={i} className="h-6 w-2/3 animate-pulse rounded bg-amber-100/60" />
           ))}
         </ul>
       </CardContent>
@@ -37,10 +37,10 @@ function AboutToExpireSkeleton() {
   )
 }
 
-export default function AboutToExpireList() {
-  const [aboutToExpire, setAboutToExpire] = useState<ExpiringItem[]>([])
+export default function NextToExpireList() {
+  const [nextToExpire, setNextToExpire] = useState<ExpiringItem[]>([])
   const [loading, setLoading] = useState(true)
-  const [expanded, setExpanded] = useState(true)
+  const [expanded, setExpanded] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,8 +111,8 @@ export default function AboutToExpireList() {
           // Filter out 'ppds' label type
           if (log.details.labelType === "ppds") return
 
-          // Include items that expire within 24 hours, including defrost labels printed today
-          if (hoursLeft > 0 && hoursLeft <= 24) {
+          // Include items that expire after 24 hours but within the next 7 days
+          if (hoursLeft > 24 && hoursLeft <= 168) { // 168 hours = 7 days
             // For defrost labels, always include them regardless of when they were printed
             // For other labels, exclude if printed today (unless they're defrost)
             if (log.details.labelType === "defrost" || !isPrintedToday) {
@@ -120,12 +120,17 @@ export default function AboutToExpireList() {
                 name: log.details.itemName,
                 type: log.details.labelType,
                 expiresAt: expiryDate.toLocaleString(),
+                hoursLeft: Math.round(hoursLeft)
               })
             }
           }
         })
 
-        setAboutToExpire(result.filter(item => item.type !== "ppds"))
+        // Sort by hours left (soonest first)
+        result.sort((a, b) => a.hoursLeft - b.hoursLeft)
+
+        // Take only the top 10 items
+        setNextToExpire(result.slice(0, 10))
       } catch (error) {
         console.error("Failed to fetch logs:", error)
       } finally {
@@ -135,23 +140,30 @@ export default function AboutToExpireList() {
     fetchData()
   }, [])
 
+  const formatTimeLeft = (hours: number) => {
+    if (hours < 48) {
+      return `${hours}h`
+    } else {
+      const days = Math.floor(hours / 24)
+      const remainingHours = hours % 24
+      return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days}d`
+    }
+  }
+
   return (
-    <Card className="w-full border-0 bg-gradient-to-br from-red-50 to-orange-50 shadow-lg">
+    <Card className="w-full border-0 bg-gradient-to-br from-amber-50 to-yellow-50 shadow-lg">
       <CardHeader
-        className="cursor-pointer select-none border-b border-red-100 bg-gradient-to-r from-red-100 to-orange-100"
+        className="cursor-pointer select-none border-b border-amber-100 bg-gradient-to-r from-amber-100 to-yellow-100"
         onClick={() => setExpanded((prev) => !prev)}
       >
-        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-red-800">
-          <AlertTriangle className="h-5 w-5 text-red-600" />
-          About to Expire (Next 24h)
-          <span className="ml-auto flex items-center gap-2">
-            <span className="text-sm font-medium text-red-600">
-              {loading ? "..." : `${aboutToExpire.length} items`}
-            </span>
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold text-amber-800">
+          <Clock className="h-5 w-5 text-amber-600" />
+          Next to Expire (After 24h)
+          <span className="ml-auto flex items-center">
             {expanded ? (
-              <ChevronUp className="h-5 w-5 text-red-600" />
+              <ChevronUp className="h-5 w-5 text-amber-600" />
             ) : (
-              <ChevronDown className="h-5 w-5 text-red-600" />
+              <ChevronDown className="h-5 w-5 text-amber-600" />
             )}
           </span>
         </CardTitle>
@@ -159,22 +171,22 @@ export default function AboutToExpireList() {
       {expanded && (
         <CardContent className="w-full pt-6">
           {loading ? (
-            <AboutToExpireSkeleton />
-          ) : aboutToExpire.length === 0 ? (
-            <div className="text-gray-500">No ingredients or menu items are about to expire.</div>
+            <NextToExpireSkeleton />
+          ) : nextToExpire.length === 0 ? (
+            <div className="text-gray-500">No ingredients or menu items expiring in the next week.</div>
           ) : (
             <ul className="w-full space-y-2">
-              {aboutToExpire.map((item, idx) => (
+              {nextToExpire.map((item, idx) => (
                 <li
                   key={idx}
-                  className="flex items-center gap-2 border-b border-orange-100 pb-2 text-red-900"
+                  className="flex items-center gap-2 border-b border-yellow-100 pb-2 text-amber-900"
                 >
                   <span className="font-semibold">{item.name}</span>
-                  <span className="rounded bg-orange-100 px-2 py-0.5 font-mono text-xs text-orange-700">
+                  <span className="rounded bg-yellow-100 px-2 py-0.5 font-mono text-xs text-yellow-700">
                     {item.type}
                   </span>
-                  <span className="ml-auto font-medium text-red-600">
-                    Expires at: {item.expiresAt}
+                  <span className="ml-auto font-medium text-amber-600">
+                    {formatTimeLeft(item.hoursLeft)} left
                   </span>
                 </li>
               ))}
@@ -184,4 +196,4 @@ export default function AboutToExpireList() {
       )}
     </Card>
   )
-}
+} 

@@ -13,7 +13,7 @@ const accent_font = Oxygen({
 
 export const metadata: Metadata = {
   title: { default: "instaLabel", template: "%s - instaLabel" },
-  metadataBase: new URL("https://instalabeldemo.vercel.app/"),
+  metadataBase: new URL("https://instalabelco"),
   description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
   icons: {
     icon: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://instalabeldemo.vercel.app/",
+    url: "https://instalabel.co",
     title: "instaLabel",
     description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
     siteName: "instaLabel",
