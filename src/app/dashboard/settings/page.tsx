@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Switch } from "@/components/ui/switch"
 import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
 
@@ -193,7 +192,7 @@ export default function Settings() {
         </p>
         <div className="flex flex-col md:flex-row gap-4 mb-4">
           <a 
-            href="https://yourdomain.com/downloads/instalabel-print-server-windows.exe" 
+            href="https://www.youtube.com" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="inline-flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold transition-colors"
@@ -201,7 +200,7 @@ export default function Settings() {
             <span role="img" aria-label="Windows">🪟</span> Download for Windows
           </a>
           <a 
-            href="https://yourdomain.com/downloads/instalabel-print-server-mac.dmg" 
+            href="https://www.youtube.com" 
             target="_blank" 
             rel="noopener noreferrer" 
             className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 font-semibold transition-colors"
