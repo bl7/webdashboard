@@ -3,7 +3,7 @@
 import React, { useState } from "react"
 import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Printer, Users, CalendarDays, AlertTriangle } from "lucide-react"
+import { Printer, Users, CalendarDays, AlertTriangle, Package } from "lucide-react"
 import AboutToExpireList from "./AboutToExpireList"
 import NextToExpireList from "./NextToExpireList"
 import {
@@ -29,12 +29,14 @@ const GRADIENTS = [
   "from-green-400 to-emerald-500",
   "from-purple-500 to-pink-500",
   "from-orange-400 to-red-500",
+  "from-teal-500 to-cyan-500",
 ]
 const ICONS = [
   <Printer className="h-7 w-7 text-white drop-shadow" />,
   <Users className="h-7 w-7 text-white drop-shadow" />,
   <CalendarDays className="h-7 w-7 text-white drop-shadow" />,
   <AlertTriangle className="h-7 w-7 text-white drop-shadow" />,
+  <Package className="h-7 w-7 text-white drop-shadow" />,
 ]
 
 const fetcher = async (url: string) => {
@@ -52,6 +54,24 @@ const fetcher = async (url: string) => {
   } catch (error) {
     console.error("Failed to fetch logs:", error)
     return { logs: [] }
+  }
+}
+
+const labelOrdersFetcher = async (url: string) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  if (!token) return { orders: [] }
+  
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    return res.json()
+  } catch (error) {
+    console.error("Failed to fetch label orders:", error)
+    return { orders: [] }
   }
 }
 
@@ -204,6 +224,50 @@ function processLogs(logs: any[], range: "week" | "month") {
   }
 }
 
+function processLabelOrders(orders: any[], range: "week" | "month") {
+  const now = new Date()
+  let startOfRange = new Date(now)
+  if (range === "week") {
+    startOfRange.setDate(now.getDate() - now.getDay())
+  } else {
+    startOfRange.setDate(1)
+  }
+  startOfRange.setHours(0, 0, 0, 0)
+  const nowTime = now.getTime()
+  const startOfRangeTime = startOfRange.getTime()
+
+  const rangeOrders = (orders || []).filter((order: any) => {
+    const createdAtTime = new Date(order.created_at).getTime()
+    return createdAtTime >= startOfRangeTime && createdAtTime <= nowTime
+  })
+
+  // Count total labels ordered in the range
+  const totalLabelsOrdered = rangeOrders.reduce(
+    (sum: number, order: any) => sum + (order.label_count || 0),
+    0
+  )
+
+  // Count total bundles ordered in the range
+  const totalBundlesOrdered = rangeOrders.reduce(
+    (sum: number, order: any) => sum + (order.bundle_count || 0),
+    0
+  )
+
+  // Count orders by status
+  const ordersByStatus = rangeOrders.reduce((acc: any, order: any) => {
+    const status = order.status || 'unknown'
+    acc[status] = (acc[status] || 0) + 1
+    return acc
+  }, {})
+
+  return {
+    totalLabelsOrdered,
+    totalBundlesOrdered,
+    ordersByStatus,
+    orderCount: rangeOrders.length
+  }
+}
+
 const PIE_COLORS = ["#6366f1", "#10b981", "#f59e42", "#a78bfa", "#f43f5e", "#fbbf24"]
 
 const MetricCard = ({
@@ -245,8 +309,9 @@ const MetricCard = ({
 const AnalyticsDashboard: React.FC = () => {
   const [range, setRange] = useState<"week" | "month">("week")
   const { data, isLoading } = useSWR("/api/logs", fetcher, { suspense: false })
+  const { data: labelOrdersData, isLoading: labelOrdersLoading } = useSWR("/api/label-orders", labelOrdersFetcher, { suspense: false })
 
-  if (isLoading || !data) {
+  if (isLoading || labelOrdersLoading || !data || !labelOrdersData) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100">
         <AnalyticsSkeleton />
@@ -266,6 +331,13 @@ const AnalyticsDashboard: React.FC = () => {
     dailyAvg,
     expiringSoon,
   } = processLogs(data.logs, range)
+
+  const {
+    totalLabelsOrdered,
+    totalBundlesOrdered,
+    ordersByStatus,
+    orderCount,
+  } = processLabelOrders(labelOrdersData.orders, range)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
@@ -309,6 +381,13 @@ const AnalyticsDashboard: React.FC = () => {
           value={dailyAvg.toFixed(1)}
           subtitle="Labels/Day"
           gradient={GRADIENTS[2]}
+        />
+        <MetricCard
+          icon={ICONS[4]}
+          title="Labels Ordered"
+          value={totalLabelsOrdered}
+          subtitle={`${orderCount} orders`}
+          gradient={GRADIENTS[4]}
         />
       </section>
 
