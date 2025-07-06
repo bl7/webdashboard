@@ -927,10 +927,10 @@ export default function LabelDemo() {
       </div>
       {/* Floating Action Buttons: Use First & Defrost */}
       <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
-        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl" variant="purple" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           USE FIRST
         </Button>
-        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl" variant="accent" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
           DEFROST
         </Button>
       </div>
