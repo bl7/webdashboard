@@ -4,10 +4,9 @@ import Image from "next/image"
 export const FeaturesGrid = () => {
   const features = [
     "Plug & play label printing",
-    "No app installs required",
-    "Supports Epson & Sunmi devices",
+    "Local bridge makes printing through the web fast and reliable",
+    "Sunmi gives you the portability to print anywhere",
     "Web dashboard for control & analytics",
-    "20 free prints per week on Free Plan",
   ]
 
   return (
@@ -19,7 +18,7 @@ export const FeaturesGrid = () => {
             Everything you need, nothing you don't
           </h2>
           <p className="mt-3 sm:mt-4 text-base sm:text-lg text-muted-foreground">
-            InstaLabel is built for speed and simplicity. Print directly from the web, monitor
+            InstaLabel is built for speed and simplicity. Print directly from the web or sunmi device, monitor
             usage, and choose the right hardware for your business.
           </p>
 

@@ -6,12 +6,12 @@ export const Homepage = () => {
   return (
     <>
       <Hero />
-      <Feature />
       <TrustedBySection />
+      <Feature />
       <BeforeAfterSection />
-      <Services />
       <Pricing />
       <BulkImportFeatureSection />
+      <Services />
     </>
   )
 }

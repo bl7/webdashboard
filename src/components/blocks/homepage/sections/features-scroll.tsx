@@ -13,27 +13,31 @@ const foodBusinesses = [
 
 export const TrustedBySection = () => {
   return (
-    <section className="bg-gray-50 px-4 py-12 sm:px-6 md:px-12 lg:px-16">
+    <section className="bg-gray-20 px-4 py-12 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto text-center">
-        <h3 className="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl">Who We Serve</h3>
+      
         <p className="mx-auto mb-8 max-w-xl text-base text-muted-foreground sm:text-lg md:text-xl">
           From cloud kitchens to national brands, InstaLabel makes food safety easy.
         </p>
 
-        <Marquee speed={30} pauseOnHover>
-          <div className="flex items-center gap-20 overflow-hidden px-10">
-            {foodBusinesses.map(({ name, logo }) => (
-              <img
-                key={name}
-                src={logo}
-                alt={`${name} logo`}
-                className="h-28 max-h-28 w-auto cursor-pointer object-contain grayscale transition duration-300 ease-in-out hover:scale-110 hover:grayscale-0"
-              />
-            ))}
-          </div>
-        </Marquee>
-
-       
+        <div className="relative">
+          <div className="absolute left-0 top-0 w-8 h-full bg-gradient-to-r from-gray-50 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 w-8 h-full bg-gradient-to-l from-gray-50 to-transparent z-10 pointer-events-none"></div>
+          
+          <Marquee speed={30} pauseOnHover>
+            <div className="flex items-center gap-16 overflow-hidden px-10">
+              {foodBusinesses.map(({ name, logo }) => (
+                <div key={name} className="group">
+                  <img
+                    src={logo}
+                    alt={`${name} logo`}
+                    className="h-20 max-h-20 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:grayscale-0"
+                  />
+                </div>
+              ))}
+            </div>
+          </Marquee>
+        </div>
       </div>
     </section>
   )

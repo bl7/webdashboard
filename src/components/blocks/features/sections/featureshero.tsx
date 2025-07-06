@@ -2,7 +2,7 @@
 
 import React from "react"
 import Image from "next/image"
-
+import FeatureImage from "@/assets/images/featurehero.png"
 export const FeaturesHero = () => {
   return (
     <section className="relative overflow-visible px-4 py-16 sm:px-6 lg:px-16 bg-white">
@@ -19,9 +19,9 @@ export const FeaturesHero = () => {
         </div>
 
         {/* Image */}
-        <div className="relative mt-12 h-[300px] w-full max-w-md md:mt-0">
+        <div className="relative mt-12 h-[450px] w-full max-w-md md:mt-0">
           <Image
-            src="/dashboard.png"
+            src={FeatureImage}
             alt="Dashboard screenshot"
             fill
             style={{ objectFit: "contain" }}
@@ -31,12 +31,6 @@ export const FeaturesHero = () => {
         </div>
       </div>
 
-      {/* Background blobs */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
-      {/* Bottom fade overlay */}
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
-    </section>
+     </section>
   )
 }

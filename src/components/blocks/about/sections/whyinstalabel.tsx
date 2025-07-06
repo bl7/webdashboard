@@ -3,94 +3,87 @@ import { Clock, ClipboardList, ShieldCheck } from "lucide-react"
 
 export const WhyInstaLabel = () => {
   return (
-    <section className="bg-gradient-to-br from-gray-50 via-white to-purple-50/20 px-2 sm:px-6 py-12 sm:py-24">
-      <div className="mx-auto max-w-7xl">
+    <section className="relative bg-white px-4 sm:px-6 py-12 sm:py-16">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      
+      <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-20">
-         
-          <h2 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 mb-6">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             Why InstaLabel?
           </h2>
-          <p className="mx-auto max-w-3xl text-lg sm:text-xl text-gray-600 leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Born from real kitchen challenges, designed to simplify and secure your food operations.
           </p>
         </div>
 
         {/* Benefits Grid */}
-        <div className="grid grid-cols-1 gap-8 sm:gap-12 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
           {/* Card 1 - Save Time */}
-          <div className="group relative">
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-500 hover:bg-white/80 hover:backdrop-blur-sm hover:shadow-xl transform hover:-translate-y-2">
-              {/* Icon with gradient background */}
-              <div className="relative mb-8">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 rounded-full blur-xl scale-150"></div>
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 text-white shadow-2xl transform group-hover:rotate-3 transition-all duration-300">
-                  <Clock size={40} />
+          <div className="group">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                  <Clock className="w-6 h-6" />
                 </div>
               </div>
               
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Save Time & Reduce Waste
               </h3>
-              <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 Automate ingredient labeling and expiry tracking, streamlining kitchen workflows and
                 cutting down waste.
               </p>
               
-              {/* Floating stat */}
-              <div className="mt-6 inline-flex items-center rounded-full bg-blue-50 px-4 py-2 text-sm font-semibold text-blue-700 ring-1 ring-blue-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
                 50+ labels saved daily
               </div>
             </div>
           </div>
 
           {/* Card 2 - Compliance */}
-          <div className="group relative">
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-500 hover:bg-white/80 hover:backdrop-blur-sm hover:shadow-xl transform hover:-translate-y-2">
-              {/* Icon with gradient background */}
-              <div className="relative mb-8">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-full blur-xl scale-150"></div>
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 text-white shadow-2xl transform group-hover:rotate-3 transition-all duration-300">
-                  <ClipboardList size={40} />
+          <div className="group">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                  <ClipboardList className="w-6 h-6" />
                 </div>
               </div>
               
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-600 transition-colors duration-300">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Simplify Compliance
               </h3>
-              <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 Ensure accurate allergen and ingredient information with easy-to-use smart labels that
                 meet safety standards.
               </p>
               
-              {/* Floating stat */}
-              <div className="mt-6 inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
                 HACCP & EHO Compliant
               </div>
             </div>
           </div>
 
           {/* Card 3 - Food Safety */}
-          <div className="group relative">
-            <div className="flex flex-col items-center text-center p-8 rounded-2xl transition-all duration-500 hover:bg-white/80 hover:backdrop-blur-sm hover:shadow-xl transform hover:-translate-y-2">
-              {/* Icon with gradient background */}
-              <div className="relative mb-8">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-full blur-xl scale-150"></div>
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 text-white shadow-2xl transform group-hover:rotate-3 transition-all duration-300">
-                  <ShieldCheck size={40} />
+          <div className="group">
+            <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                  <ShieldCheck className="w-6 h-6" />
                 </div>
               </div>
               
-              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-600 transition-colors duration-300">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
                 Boost Food Safety
               </h3>
-              <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+              <p className="text-gray-600 text-sm leading-relaxed mb-4">
                 Minimize risks in your kitchen with reliable tracking that protects your customers and
                 your reputation.
               </p>
               
-              {/* Floating stat */}
-              <div className="mt-6 inline-flex items-center rounded-full bg-green-50 px-4 py-2 text-sm font-semibold text-green-700 ring-1 ring-green-200 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
                 500+ Kitchens Trust Us
               </div>
             </div>
@@ -98,8 +91,8 @@ export const WhyInstaLabel = () => {
         </div>
 
         {/* Bottom CTA/Trust Section */}
-        <div className="mt-12 sm:mt-16 text-center">
-          <div className="inline-flex items-center gap-6 p-6 rounded-2xl bg-gradient-to-r from-gray-50 to-white shadow-lg">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-6 p-6 rounded-lg bg-white border border-gray-200 shadow-sm">
             <div className="text-sm text-gray-600">
               <span className="font-semibold text-gray-900">Trusted by 500+ restaurants</span> • 
               <span className="ml-1">HACCP Compliant</span> • 

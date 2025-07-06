@@ -50,23 +50,7 @@ const features = [
   
 ]
 
-const roles = [
-  {
-    emoji: "👨‍🍳",
-    role: "For Head Chefs",
-    line: "Print labels in the middle of rush hour.",
-  },
-  {
-    emoji: "📦",
-    role: "For Porters",
-    line: "Know what to use first — every time.",
-  },
-  {
-    emoji: "🧾",
-    role: "For Managers",
-    line: "No compliance gaps. Full audit trail.",
-  },
-]
+
 
 export const CoreFeaturesGrid = () => {
   return (
@@ -93,18 +77,7 @@ export const CoreFeaturesGrid = () => {
           ))}
         </div>
 
-        <div className="mt-8 sm:mt-12">
-          <h3 className="mb-4 sm:mb-6 text-center text-lg sm:text-xl font-semibold">Use Case Snapshots</h3>
-          <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
-            {roles.map((r, i) => (
-              <div key={i} className="rounded-xl bg-gray-100 p-5 text-center shadow-sm">
-                <div className="mb-2 text-3xl">{r.emoji}</div>
-                <h4 className="text-md font-bold">{r.role}</h4>
-                <p className="mt-1 text-sm italic text-gray-600">{r.line}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+       
       </div>
     </section>
   )

@@ -4,7 +4,7 @@ import Image from "next/image"
 
 export const LabelsHero = () => {
   return (
-    <section className="relative overflow-visible px-2 sm:px-4 py-16 sm:px-6 lg:px-16 bg-white">
+    <section className="relative overflow-hidden px-2 sm:px-4 py-16 sm:px-6 lg:px-16">
       <div className="container relative z-10 mx-auto flex flex-wrap-reverse items-center justify-center text-pretty md:flex-nowrap lg:justify-between">
         {/* Text Content */}
         <div className="flex flex-col items-start justify-center text-center md:text-left w-full md:w-auto">
@@ -19,7 +19,7 @@ export const LabelsHero = () => {
         {/* Images Grid - Tedha Medha Style */}
         <div className="relative mt-8 sm:mt-12 h-80 sm:h-[500px] w-full max-w-lg md:mt-0">
           {/* Image 1 - Top left, slightly rotated */}
-          <div className="absolute left-0 top-0 h-24 w-32 sm:h-36 sm:w-48 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-0 top-0 my-10 h-24 w-32 sm:h-36 sm:w-48 -rotate-12 transform overflow-hidden rounded-lg shadow-lg">
             <Image 
               src="/labels/label1.png" 
               alt="Food prep label example"
@@ -30,7 +30,7 @@ export const LabelsHero = () => {
             />
           </div>
           {/* Image 2 - Top right, rotated other way */}
-          <div className="absolute right-0 top-6 sm:top-8 h-28 w-36 sm:h-40 sm:w-56 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute right-0 top-6  sm:top-8 h-28 w-36 sm:h-40 sm:w-56 rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <Image 
               src="/labels/label2.png" 
               alt="Allergen label example"
@@ -41,7 +41,7 @@ export const LabelsHero = () => {
             />
           </div>
           {/* Image 3 - Center left, tilted */}
-          <div className="absolute left-2 sm:left-4 top-28 sm:top-40 h-28 w-36 sm:h-40 sm:w-56 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
+          <div className="absolute left-2 sm:left-4 top-28 mt-20 sm:top-40 h-28 w-36 sm:h-40 sm:w-56 -rotate-6 transform overflow-hidden rounded-lg shadow-lg">
             <Image 
               src="/labels/label3.png" 
               alt="PPDS compliant label"
@@ -54,12 +54,6 @@ export const LabelsHero = () => {
         </div>
       </div>
 
-      {/* Background blobs (overflow into next section) */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
-      {/* Bottom fade overlay */}
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
     </section>
   )
 }

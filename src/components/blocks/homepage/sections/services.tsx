@@ -10,12 +10,14 @@ import FeatureImage from "@/assets/images/feature.png"
 
 export const Services = () => {
   return (
-    <section id="features" className="px-4 py-24 sm:px-6 md:px-12 lg:px-16 bg-gray-50/50">
-      {/* Subtle Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50/50"></div>
+    <section id="features" className="relative px-4 py-24 sm:px-6 md:px-12 lg:px-16 ">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      
+    
 
-      <div className="container mx-auto max-w-6xl">
-        <div className="flex flex-col-reverse items-center gap-16 md:flex-row md:items-start">
+      <div className="relative container mx-auto max-w-6xl">
+        <div className="flex flex-col-reverse items-center gap-16 md:flex-row md:items-center">
           {/* Left Content */}
           <div className="w-full max-w-2xl space-y-8">
             <div className="space-y-4">
@@ -90,16 +92,51 @@ export const Services = () => {
             </div>
           </div>
 
-          {/* Right Image */}
-          <div className="flex justify-center md:w-1/2">
-            <div className="relative h-[600px] w-[450px] drop-shadow-2xl md:h-[450px] md:w-[350px]">
-              <Image
-                src={FeatureImage}
-                alt="Sunmi device in kitchen"
-                fill
-                style={{ objectFit: "contain" }}
-                priority
-              />
+          {/* Right Image - Enhanced with better visual flow */}
+          <div className="flex justify-center md:w-1/2 lg:w-2/5">
+            <div className="relative w-full max-w-md lg:max-w-lg">
+              {/* Animated gradient background */}
+              <div className="absolute -inset-8 bg-gradient-to-br from-primary/15 via-blue-100/60 to-purple-100/60 rounded-3xl blur-2xl animate-pulse"></div>
+              
+              {/* Main image container with better depth */}
+              <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-100 transform hover:scale-105 transition-transform duration-300">
+                {/* Kitchen environment overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent z-10"></div>
+                
+                <div className="aspect-[3/4] relative">
+                  <Image
+                    src={FeatureImage}
+                    alt="Professional kitchen staff using InstaLabel system - showing instant label printing and food safety compliance"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 40vw"
+                  />
+                </div>
+                
+                {/* Subtle brand overlay */}
+                <div className="absolute bottom-4 left-4 right-4 z-20">
+                  <div className="bg-white/90 backdrop-blur-sm rounded-lg p-3 shadow-lg">
+                    <div className="flex items-center gap-2 text-sm text-gray-700">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="font-medium">Live Kitchen Demo</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Enhanced floating elements with better positioning */}
+              <div className="absolute -top-4 -right-4 w-14 h-14 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center shadow-xl border-2 border-white transform hover:scale-110 transition-transform duration-200">
+                <Printer className="w-7 h-7 text-green-600" />
+              </div>
+              <div className="absolute -bottom-4 -left-4 w-14 h-14 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center shadow-xl border-2 border-white transform hover:scale-110 transition-transform duration-200">
+                <ClipboardCheck className="w-7 h-7 text-blue-600" />
+              </div>
+              
+              {/* Additional floating badge */}
+              <div className="absolute top-1/2 -left-6 w-12 h-12 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center shadow-lg border-2 border-white transform -translate-y-1/2 hover:scale-110 transition-transform duration-200">
+                <Monitor className="w-6 h-6 text-purple-600" />
+              </div>
             </div>
           </div>
         </div>

@@ -5,12 +5,9 @@ import PPDS from "../../../../assets/images/prepandfood.jpg"
 
 export const FeatureIntro = () => {
   return (
-    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-16 bg-white relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.05),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(245,158,11,0.05),transparent_50%)]" />
-      
-      <div className="mx-auto max-w-6xl space-y-12 relative">
+    <section className="px-2 sm:px-6 -mt-8 sm:-mt-16 py-12 sm:py-16  relative overflow-hidden">
+    <div className="pointer-events-none absolute top-0 left-0 w-full h-48 z-0" style={{background: 'linear-gradient(to bottom, #fff 0%, #fff 50%, rgba(255,255,255,0) 100%)'}} />
+    <div className="mx-auto max-w-6xl space-y-12 relative">
         {/* Images Row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           {/* Image 1 – Natasha's Law */}

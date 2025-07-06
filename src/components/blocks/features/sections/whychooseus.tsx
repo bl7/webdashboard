@@ -5,28 +5,28 @@ import { motion } from "framer-motion"
 
 const features = [
   {
-    icon: <Zap className="h-6 w-6 text-primary" />,
+    icon: <Zap className="h-6 w-6 text-purple-600" />,
     title: "Fast Setup",
     description:
       "Get started in minutes with our plug-and-play system. No technical skills required.",
   },
   {
-    icon: <ShieldCheck className="h-6 w-6 text-primary" />,
+    icon: <ShieldCheck className="h-6 w-6 text-purple-600" />,
     title: "Reliable & Secure",
     description: "Built with reliability and security in mind, for uninterrupted label printing.",
   },
   {
-    icon: <Layers3 className="h-6 w-6 text-primary" />,
+    icon: <Layers3 className="h-6 w-6 text-purple-600" />,
     title: "Scalable Infrastructure",
     description: "Whether you're a small business or a large chain, our platform grows with you.",
   },
   {
-    icon: <Lightbulb className="h-6 w-6 text-primary" />,
+    icon: <Lightbulb className="h-6 w-6 text-purple-600" />,
     title: "Smart Dashboard",
     description: "Track usage, manage devices, and monitor performance with ease.",
   },
   {
-    icon: <SmilePlus className="h-6 w-6 text-primary" />,
+    icon: <SmilePlus className="h-6 w-6 text-purple-600" />,
     title: "Friendly Support",
     description: "Need help? Our support team is here for you — quick, helpful, and human.",
   },
@@ -34,17 +34,22 @@ const features = [
 
 export const WhyChooseUs = () => {
   return (
-    <section className="bg-white py-8 sm:py-24">
-      <div className="container space-y-8 sm:space-y-12 px-2 sm:px-4 text-center sm:px-6 md:px-12 lg:px-16">
-        <div className="mx-auto max-w-3xl space-y-2 sm:space-y-4">
-          <h2 className="text-2xl sm:text-4xl font-bold tracking-tight">Why Choose InstaLabel?</h2>
-          <p className="text-base sm:text-lg text-muted-foreground">
+    <section className="relative bg-white px-4 sm:px-6 py-12 sm:py-16">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      
+      <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
+        <div className="text-center space-y-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+            Why Choose InstaLabel?
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             We've built our platform with the needs of real businesses in mind — fast, scalable, and
             beautifully simple.
           </p>
         </div>
 
-        <div className="grid gap-4 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
           {features.map((feature, i) => (
             <motion.div
               key={i}
@@ -52,23 +57,28 @@ export const WhyChooseUs = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="rounded-xl border bg-muted/10 p-6 text-left shadow-sm transition hover:shadow-md"
+              className="group"
             >
-              <div className="mb-4 flex w-fit items-center justify-center rounded-full bg-muted p-3">
-                {feature.icon}
+              <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                    {feature.icon}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-lg font-semibold">{feature.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{feature.description}</p>
             </motion.div>
           ))}
         </div>
-      </div>
-      <div className="flex justify-center mt-8 sm:mt-12">
-        <a href="/register">
-          <button className="bg-primary px-8 py-4 text-white hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all duration-200 text-base font-semibold rounded-xl w-full sm:w-auto">
-            Start Free Trial
-          </button>
-        </a>
+
+     
       </div>
     </section>
   )

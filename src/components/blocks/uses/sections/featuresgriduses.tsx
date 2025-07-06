@@ -77,9 +77,9 @@ export const FeaturesGridUses = () => {
               }
             ].map((benefit, index) => (
               <div key={index} className="group">
-                <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-blue-200 hover:shadow-md transition-all duration-200">
+                <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 group-hover:bg-blue-100 transition-colors duration-200">
+                    <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
                       {benefit.icon}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -154,9 +154,9 @@ export const FeaturesGridUses = () => {
                 }
               ].map((step, index) => (
                 <div key={index} className="relative">
-                  <div className="bg-white border border-gray-200 rounded-xl p-8 text-center hover:border-blue-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-white border border-gray-200 rounded-xl p-8 text-center hover:border-purple-200 hover:shadow-lg transition-all duration-200">
                     {/* Step number */}
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-full font-bold text-lg mb-6">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full font-bold text-lg mb-6">
                       {step.step}
                     </div>
                     
