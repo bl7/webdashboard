@@ -34,7 +34,7 @@ const NAV_ITEMS = [
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
   { label: "Allergens", icon: <GiShrimp />, href: "/dashboard/allergens" },
-  { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
+  // { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
@@ -76,7 +76,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const filteredNavItems = isAdmin
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label", "Print Sessions", "PrintBridge Test"].includes(i.label))
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label));
   const isExpanded = sidebarOpen || sidebarMobile
 
   // Load initial data from localStorage

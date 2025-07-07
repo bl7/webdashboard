@@ -91,23 +91,23 @@ export const Footer = () => {
       </section>
 
       {/* Enhanced Footer Section */}
-      <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-24 text-white">
-        <div className="container grid grid-cols-1 gap-16 px-6 pb-16 md:grid-cols-4">
+      <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-10 text-white text-sm">
+        <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-4">
           {/* Logo + Description */}
-          <div className="space-y-6">
+          <div className="space-y-3">
             <div className="relative">
-              <Image src="/long_longwhite.png" width={200} height={44} alt="instalabel logo" className="drop-shadow-lg" />
+              <Image src="/long_longwhite.png" width={140} height={30} alt="instalabel logo" className="drop-shadow-lg" />
             </div>
-            <p className="text-base text-white/80 leading-relaxed max-w-sm">
+            <p className="text-xs text-white/70 leading-snug max-w-xs">
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
               one app. Print from web dashboard or Sunmi devices with real-time analytics.
             </p>
           </div>
 
           {/* Learn Links */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Learn</h3>
-            <nav className="flex flex-col gap-4 text-base text-white/80">
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Learn</h3>
+            <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link href="/" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Home</Link>
               <Link href="/features" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Features</Link>
               <Link href="/plan" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Pricing</Link>
@@ -117,9 +117,9 @@ export const Footer = () => {
           </div>
 
           {/* Legal Links */}
-          <div className="space-y-6">
-            <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Legal</h3>
-            <nav className="flex flex-col gap-4 text-base text-white/80">
+          <div className="space-y-3">
+            <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Legal</h3>
+            <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link href="/privacy-policy" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Privacy Policy</Link>
               <Link href="/cookie-policy" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Cookie Policy</Link>
               <Link href="/terms" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Terms of Service</Link>
@@ -127,10 +127,10 @@ export const Footer = () => {
           </div>
 
           {/* Contact + Socials */}
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Contact</h3>
-              <div className="space-y-3 text-base text-white/80">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Contact</h3>
+              <div className="space-y-1 text-xs text-white/80">
                 <p className="flex items-center gap-2">
                   <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
                   Bournemouth, England
@@ -144,20 +144,20 @@ export const Footer = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
-              <h3 className="text-xl font-bold text-white border-b border-purple-400/30 pb-2">Follow Us</h3>
-              <div className="flex gap-5">
-                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
-                  <FaXTwitter className="h-5 w-5 text-white group-hover:text-sky-400 transition-colors duration-300" />
+            <div className="space-y-2">
+              <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Follow Us</h3>
+              <div className="flex gap-3">
+                <Link href="#" className="group p-2 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-105">
+                  <FaXTwitter className="h-4 w-4 text-white group-hover:text-sky-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
-                  <FaInstagram className="h-5 w-5 text-white group-hover:text-pink-400 transition-colors duration-300" />
+                <Link href="#" className="group p-2 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-105">
+                  <FaInstagram className="h-4 w-4 text-white group-hover:text-pink-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
-                  <FaFacebook className="h-5 w-5 text-white group-hover:text-blue-400 transition-colors duration-300" />
+                <Link href="#" className="group p-2 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-105">
+                  <FaFacebook className="h-4 w-4 text-white group-hover:text-blue-400 transition-colors duration-300" />
                 </Link>
-                <Link href="#" className="group p-3 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-110">
-                  <FaLinkedin className="h-5 w-5 text-white group-hover:text-blue-500 transition-colors duration-300" />
+                <Link href="#" className="group p-2 rounded-full bg-purple-800/50 hover:bg-purple-700 transition-all duration-300 hover:scale-105">
+                  <FaLinkedin className="h-4 w-4 text-white group-hover:text-blue-500 transition-colors duration-300" />
                 </Link>
               </div>
             </div>
@@ -165,8 +165,8 @@ export const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="border-t border-purple-700/50 mt-16 py-8">
-          <div className="container px-6 text-center text-sm text-white/60">
+        <div className="border-t border-purple-700/50 mt-6 py-3">
+          <div className="container px-4 text-center text-xs text-white/50">
             <p>&copy; 2024 InstaLabel. All rights reserved.</p>
           </div>
         </div>
