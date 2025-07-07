@@ -50,68 +50,67 @@ export const FeatureIntro = () => {
             <div className="space-y-3">
               <div className="inline-flex items-center gap-3 bg-purple-50 px-4 py-2 rounded-full border border-purple-200">
                 <span className="text-2xl">📋</span>
-                <span className="text-sm font-medium text-purple-700 uppercase tracking-wider">Compliance Made Simple</span>
+                <span className="text-sm font-medium text-purple-700 uppercase tracking-wider">Regulatory Compliance</span>
               </div>
               <h3 className="text-3xl font-bold text-gray-900 leading-tight">
-                Natasha's Law Labels
+                Natasha's Law Compliance
               </h3>
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Instantly print fully compliant allergen labels with key ingredients highlighted in{" "}
-              <strong className="text-purple-600">bold</strong>, <em className="text-purple-600">italic</em> or{" "}
-              <u className="text-purple-600">underline</u>. Perfect for pre-packed items, grab-and-go, and made-to-order food.
+              Stay ahead of food safety regulations with automated allergen tracking and compliant labeling. 
+              InstaLabel ensures your kitchen meets all Natasha's Law requirements without the complexity.
             </p>
             <div className="grid grid-cols-1 gap-3 pt-4">
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Supports all 14 required allergens</span>
+                <span className="text-gray-700 text-sm">Automatic allergen detection from ingredient database</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Editable templates stored in the cloud</span>
+                <span className="text-gray-700 text-sm">Real-time compliance monitoring and reporting</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Mobile-friendly reprint from any device</span>
+                <span className="text-gray-700 text-sm">Audit-ready documentation for EHO inspections</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">No training needed — print in 3 taps</span>
+                <span className="text-gray-700 text-sm">Future-proof against evolving food safety regulations</span>
               </div>
             </div>
           </div>
 
-          {/* Text 2 – Prep Labels */}
+          {/* Text 2 – HACCP & Food Safety */}
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-3 bg-orange-50 px-4 py-2 rounded-full border border-orange-200">
-                <span className="text-2xl">🥡</span>
-                <span className="text-sm font-medium text-orange-700 uppercase tracking-wider">Kitchen Control</span>
+                <span className="text-2xl">🛡️</span>
+                <span className="text-sm font-medium text-orange-700 uppercase tracking-wider">Food Safety</span>
               </div>
               <h3 className="text-3xl font-bold text-gray-900 leading-tight">
-                Prep & Food Storage Labels
+                HACCP & Food Safety Management
               </h3>
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Stay in control of food safety with fast, customisable labels for every stage — prep,
-              defrost, use-by, and more. Designed to last in fridges, freezers, and busy kitchens.
+              Transform your kitchen's food safety practices with intelligent labeling that tracks every stage 
+              of food preparation, from receiving to service, ensuring complete traceability.
             </p>
             <div className="grid grid-cols-1 gap-3 pt-4">
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Prebuilt formats: use-by, open, thawed</span>
+                <span className="text-gray-700 text-sm">Complete food traceability from prep to plate</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Durable labels: water, heat & freezer-safe</span>
+                <span className="text-gray-700 text-sm">Automated expiry date management and alerts</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Smart reprint for daily use items</span>
+                <span className="text-gray-700 text-sm">Digital HACCP records for compliance audits</span>
               </div>
               <div className="flex items-center gap-3 bg-white/60 backdrop-blur-sm rounded-lg p-3 border border-gray-100">
                 <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700 text-sm">Helps meet HACCP & FSA requirements</span>
+                <span className="text-gray-700 text-sm">Reduce food waste with smart expiry tracking</span>
               </div>
             </div>
           </div>

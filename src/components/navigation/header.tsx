@@ -48,18 +48,19 @@ export const Header = () => {
         <Link
           href="/"
           className={cn(
-            "flex items-center transition-all duration-300 ease-out",
+            "flex items-center h-full transition-all duration-300 ease-out", 
             "hover:scale-105 active:scale-95"
           )}
         >
-          <div className="relative overflow-hidden rounded-xl p-0.5 sm:p-1">
+          <div className="relative flex items-center  h-full overflow-hidden rounded-xl p-1 sm:p-2"> 
             <Image
-              src="/logo_long.png"
+              src="/logo_long.svg"
               alt="InstaLabel"
-              width={90}
-              height={24}
+              width={140}
+              height={38}
               priority
               className="transition-all duration-300 hover:brightness-110 drop-shadow-sm"
+              style={{ display: 'block', margin: '0 auto' }} // ensure image is centered in container
             />
             <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out hover:translate-x-full" />
           </div>
