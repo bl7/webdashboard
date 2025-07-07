@@ -895,9 +895,8 @@ export default function LabelDemo() {
                 printQueue.filter(item => item.name && item.name.trim() !== "").map((item) => (
                   <div key={item.uid} className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
                     <div className="font-semibold text-gray-900 break-words whitespace-normal">
-                      {item.name || <span className="text-red-500">[No Name]</span>}
+                      {item.name}
                     </div>
-                    <pre className="text-xs text-gray-400">{JSON.stringify(item, null, 2)}</pre>
                     <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
                     <div className="flex items-center gap-2 mt-1">
                       <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
