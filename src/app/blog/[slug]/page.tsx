@@ -22,10 +22,6 @@ interface BlogPostMeta {
   image?: string
 }
 
-interface BlogPageProps {
-  params: { slug: string }
-}
-
 export async function generateStaticParams() {
   const dir = path.join(process.cwd(), "src/content/blog");
   const files = await fs.readdir(dir);
@@ -39,8 +35,9 @@ export async function generateStaticParams() {
   return slugs;
 }
 
-export async function generateMetadata({ params }: BlogPageProps): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
   if (!post) return {}
   const url = `https://instalabel.co/blog/${post.meta.slug}`
   const image = post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined
@@ -107,8 +104,9 @@ function extractHeadings(markdown: string): { text: string; id: string; level: n
   return headings
 }
 
-export default async function BlogPostPage({ params }: BlogPageProps) {
-  const post = await getPostBySlug(params.slug)
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
   if (!post) return notFound()
   const processedContent = await remark().use(html).process(post.content)
   const contentHtml = processedContent.toString()
