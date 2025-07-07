@@ -6,8 +6,9 @@ export const Uses = () => {
     <>
       <UsesHero />
       <FeatureIntro />
-      <GalleryFeature />
       <PPDSLabelShowcaseSection />
+
+      <GalleryFeature />
       <FeaturesGridUses />
     </>
   )

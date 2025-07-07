@@ -9,10 +9,10 @@ export const Homepage = () => {
       <Hero />
       <TrustedBySection />
       <Feature />
+      <PPDSLabelHomepageSection />
       <BeforeAfterSection />
       <Pricing />
       <BulkImportFeatureSection />
-      <PPDSLabelHomepageSection />
       <Services />
     </>
   )

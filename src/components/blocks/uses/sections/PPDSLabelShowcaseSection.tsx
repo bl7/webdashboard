@@ -1,7 +1,6 @@
 import React from "react"
-import LabelRender from "@/app/dashboard/print/LabelRender"
+import { PPDSLabelRenderer } from "@/app/dashboard/ppds/page"
 
-// Sample data for the showcase
 const sampleItem = {
   uid: "demo-ppds-1",
   id: "1",
@@ -20,7 +19,8 @@ const allIngredients = [
   { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [ { allergenName: "Milk" } ] },
   { uuid: "a5", ingredientName: "Croutons", allergens: [ { allergenName: "Wheat" } ] },
 ]
-const allergens = ["Egg", "Milk", "Wheat", "Fish"]
+const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
+const businessName = "InstaLabel Ltd"
 
 export const PPDSLabelShowcaseSection = () => (
   <section className="relative bg-white px-4 sm:px-6 py-16 border-t border-b border-purple-100">
@@ -43,14 +43,12 @@ export const PPDSLabelShowcaseSection = () => (
         </ul>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="bg-white rounded-xl shadow-xl border border-purple-100 p-4">
-          <LabelRender
-            item={sampleItem as any}
-            expiry={sampleItem.expiryDate}
-            useInitials={false}
-            selectedInitial={""}
-            allergens={allergens}
-            labelHeight="80mm"
+        {/* 60mm x 80mm at 96dpi: 60mm = ~227px, 80mm = ~303px */}
+        <div style={{ width: 227, height: 303, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <PPDSLabelRenderer
+            item={sampleItem}
+            storageInfo={storageInfo}
+            businessName={businessName}
             allIngredients={allIngredients}
           />
         </div>

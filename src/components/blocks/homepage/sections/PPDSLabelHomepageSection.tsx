@@ -1,5 +1,5 @@
 import React from "react"
-import LabelRender from "@/app/dashboard/print/LabelRender"
+import { PPDSLabelRenderer } from "@/app/dashboard/ppds/page"
 
 const sampleItem = {
   uid: "demo-ppds-1",
@@ -19,7 +19,8 @@ const allIngredients = [
   { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [ { allergenName: "Milk" } ] },
   { uuid: "a5", ingredientName: "Croutons", allergens: [ { allergenName: "Wheat" } ] },
 ]
-const allergens = ["Egg", "Milk", "Wheat", "Fish"]
+const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
+const businessName = "InstaLabel Ltd"
 
 export const PPDSLabelHomepageSection = () => (
   <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50 py-24 px-4 sm:px-6 md:px-12 lg:px-16">
@@ -36,14 +37,12 @@ export const PPDSLabelHomepageSection = () => (
         </p>
       </div>
       <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="bg-gradient-to-br from-purple-100 to-pink-100 rounded-2xl shadow-2xl border border-purple-200 p-6">
-          <LabelRender
-            item={sampleItem as any}
-            expiry={sampleItem.expiryDate}
-            useInitials={false}
-            selectedInitial={""}
-            allergens={allergens}
-            labelHeight="80mm"
+        {/* 60mm x 80mm at 96dpi: 60mm = ~227px, 80mm = ~303px */}
+        <div style={{ width: 227, height: 303, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <PPDSLabelRenderer
+            item={sampleItem}
+            storageInfo={storageInfo}
+            businessName={businessName}
             allIngredients={allIngredients}
           />
         </div>
