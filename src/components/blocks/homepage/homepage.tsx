@@ -1,6 +1,7 @@
 import React from "react"
 import { Feature, Hero, TrustedBySection, Services, Pricing, BeforeAfterSection } from "."
 import { BulkImportFeatureSection } from "./sections/BulkImportFeatureSection"
+import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
 
 export const Homepage = () => {
   return (
@@ -11,6 +12,7 @@ export const Homepage = () => {
       <BeforeAfterSection />
       <Pricing />
       <BulkImportFeatureSection />
+      <PPDSLabelHomepageSection />
       <Services />
     </>
   )
