@@ -79,6 +79,15 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
     : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label));
   const isExpanded = sidebarOpen || sidebarMobile
 
+  // Insert PPDS link for admins only after 'Print Label'
+  const navItemsWithPPDS = isAdmin
+    ? [
+        ...NAV_ITEMS.slice(0, 3),
+        { label: "PPDS", icon: <FaPrint />, href: "/dashboard/ppds" },
+        ...NAV_ITEMS.slice(3),
+      ]
+    : filteredNavItems;
+
   // Load initial data from localStorage
   useEffect(() => {
     if (!mounted) return
@@ -269,7 +278,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
           {/* Make only the nav scrollable */}
           <nav className="flex flex-grow flex-col space-y-1 overflow-y-auto">
-            {filteredNavItems.map(({ label, icon, href }) => (
+            {navItemsWithPPDS.map(({ label, icon, href }) => (
               <Tooltip.Root key={label} delayDuration={100}>
                 <Tooltip.Trigger asChild>
                   <Link
