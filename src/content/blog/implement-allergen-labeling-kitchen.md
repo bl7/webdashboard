@@ -1,50 +1,48 @@
 ---
-title: "How to Implement Allergen Labeling in Your Kitchen"
-description: "Step-by-step guide to creating an effective allergen labeling system that protects your customers and your business."
-date: "2024-12-16"
+title: "Staff Training and Customer Communication for Allergen Labeling"
+description: "Practical checklists and templates to help your team stay allergen-aware and keep your customers informed."
+date: "2024-12-17"
 category: "Allergen Management"
-readTime: "7 min read"
+readTime: "5 min read"
 author: "InstaLabel Team"
 slug: "implement-allergen-labeling-kitchen"
 featured: false
 image: "/public/labels/label1.png"
 ---
 
-# How to Implement Allergen Labeling in Your Kitchen
+# Staff Training and Customer Communication for Allergen Labeling
 
-Allergen labeling is critical for customer safety and regulatory compliance. Here’s how to set up an effective system:
+Effective allergen labeling is a team effort. Here are practical tools to help your staff stay informed and your customers feel confident.
 
-## 1. Identify Common Allergens
+---
 
-- Milk
-- Eggs
-- Fish
-- Shellfish
-- Tree nuts
-- Peanuts
-- Wheat
-- Soybeans
+## Staff Training Checklist: Allergen Awareness and Labeling
 
-## 2. Audit Your Menu
+- [ ] Understand the 8 major allergens and any custom allergens in your kitchen  
+- [ ] Identify allergenic ingredients and potential cross-contamination points  
+- [ ] Follow proper hygiene and prep procedures to avoid allergen cross-contact  
+- [ ] Use InstaLabel’s system to check allergen data and print accurate labels  
+- [ ] Verify labels for prep, cook, and PPDS items before use  
+- [ ] Confidently respond to customer allergen questions  
+- [ ] Attend regular refresher training sessions to stay updated  
 
-Review every menu item for potential allergens and cross-contamination risks.
+---
 
-## 3. Label Ingredients Clearly
+## Customer-Facing Allergen Information Sheet (Sample)
 
-Use clear, standardized labels for all ingredients and prepared foods.
+**Your Safety is Our Priority: Allergen Information**
 
-## 4. Train Your Staff
+We take allergen management seriously to protect you and your loved ones. Please note:
 
-Educate staff on allergen risks and labeling procedures.
+- We track and label common allergens including milk, eggs, fish, shellfish, tree nuts, peanuts, wheat (gluten), and soybeans.  
+- Please inform our staff of any allergies or dietary restrictions before ordering.  
+- We take precautions to minimize cross-contamination but cannot guarantee a completely allergen-free environment.  
+- For detailed allergen information on menu items, please scan the QR code on your table or ask a team member.
 
-## 5. Communicate with Customers
+Thank you for trusting us with your health and safety!
 
-Make allergen information available on menus and upon request.
-
-## 6. Review and Update Regularly
-
-Periodically review your allergen labeling process to ensure ongoing compliance.
+---
 
 ## Conclusion
 
-A proactive allergen labeling system protects your customers and your reputation. 
+Regular staff training combined with clear customer communication strengthens your allergen labeling program and builds trust. Use these tools alongside InstaLabel to protect your customers and keep your kitchen compliant.

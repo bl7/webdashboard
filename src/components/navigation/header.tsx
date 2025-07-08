@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui"
 import Image from "next/image"
 import { Menu as MenuIcon, X as CloseIcon } from "lucide-react"
+import { MobileMenu } from "@/components/navigation/mobile-menu"
 
 const navItems = [
   { label: "Uses", href: "/uses" },
@@ -118,50 +119,12 @@ export const Header = () => {
         </button>
       </div>
       {/* Mobile Drawer */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex">
-          <div className="w-4/5 max-w-xs bg-white h-full shadow-xl p-6 flex flex-col gap-6 animate-in slide-in-from-left-8">
-            <div className="flex items-center justify-between mb-4">
-              <span className="font-bold text-lg text-purple-700">Menu</span>
-              <button onClick={() => setMobileOpen(false)} aria-label="Close menu">
-                <CloseIcon className="h-7 w-7 text-purple-700" />
-              </button>
-            </div>
-            <nav className="flex flex-col gap-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    "text-lg font-semibold transition-all duration-200 hover:text-purple-600",
-                    isActive(item.href) ? "text-purple-700" : "text-gray-700"
-                  )}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="flex flex-col gap-2 mt-8">
-              <Link
-                href="/register"
-                className="rounded-full px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold shadow hover:from-purple-700 hover:to-pink-700 text-center"
-                onClick={() => setMobileOpen(false)}
-              >
-                Free Trial
-              </Link>
-              <Link
-                href="/login"
-                className="rounded-full px-4 py-2 border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-800 text-center font-semibold"
-                onClick={() => setMobileOpen(false)}
-              >
-                Sign In
-              </Link>
-            </div>
-          </div>
-          <div className="flex-1" onClick={() => setMobileOpen(false)} />
-        </div>
-      )}
+      <MobileMenu
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        navItems={navItems}
+        isActive={isActive}
+      />
     </header>
   )
 }
