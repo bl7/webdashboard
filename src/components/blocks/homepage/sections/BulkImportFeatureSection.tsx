@@ -25,7 +25,7 @@ export const BulkImportFeatureSection = () => {
             
             <div className="flex items-center justify-center gap-3 mb-6">
               <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-4 rounded-xl">
-                <FaFileImport className="h-8 w-8 text-purple-600" />
+                <LuZap className="h-8 w-8 text-purple-600" />
               </div>
               <h3 className="text-3xl font-black text-gray-900 sm:text-4xl">
                 <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
@@ -53,7 +53,7 @@ export const BulkImportFeatureSection = () => {
             <div className="bg-white rounded-xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
               <div className="flex items-center gap-3 mb-3">
                 <div className="bg-blue-100 p-2 rounded-lg">
-                  <FaFileImport className="h-5 w-5 text-blue-600" />
+                  <LuZap className="h-5 w-5 text-blue-600" />
                 </div>
                 <h4 className="text-lg font-bold text-gray-900">1. Upload Your Data</h4>
               </div>
