@@ -21,10 +21,10 @@ export const FeaturesGridUses = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-              Enterprise-grade kitchen management
+            Enterprise-Ready Labelling for Modern Kitchens
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Advanced features that transform your kitchen operations beyond basic labeling
+            Go beyond basic printing with tools built for speed, traceability, and food safety compliance.
             </p>
           </motion.div>
 
@@ -32,57 +32,45 @@ export const FeaturesGridUses = () => {
             {[
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
+                  <span className="text-2xl">⚡</span>
                 ),
-                title: "Real-time Analytics",
-                description: "Track label usage, identify trends, and optimize kitchen efficiency with detailed insights"
+                title: "Instant Label Generation",
+                description: "Print prep, cook, PPDS, use-first, defrost, and custom labels in seconds — no popups, no file downloads, just click and print."
               },
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <span className="text-2xl">📊</span>
                 ),
-                title: "Smart Inventory Management",
-                description: "Automatically track ingredient usage and predict when you'll need to reorder supplies"
+                title: "Label Usage Analytics",
+                description: "Track who printed what, when, and how much. Monitor staff activity, weekly/monthly label usage, and keep an eye on label stock levels."
               },
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
+                  <span className="text-2xl">🧠</span>
                 ),
-                title: "Lightning Fast Workflow",
-                description: "Reduce prep time by 60% with instant label generation and streamlined processes"
+                title: "Allergen Intelligence",
+                description: "Highlight allergens automatically from your ingredient data — fully supports Natasha’s Law and reduces costly mistakes."
               },
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
+                  <span className="text-2xl">🗃️</span>
                 ),
-                title: "Multi-location Support",
-                description: "Manage multiple kitchens from a single dashboard with role-based access control"
+                title: "Label History & Logs",
+                description: "Every label is recorded — when it was printed, by whom, and for what item. Essential for audits and internal tracking."
               },
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
+                  <span className="text-2xl">🖨️</span>
                 ),
-                title: "Digital Documentation",
-                description: "Create audit trails and maintain digital records for all food safety compliance"
+                title: "Universal Printer Support",
+                description: "Works out of the box with any USB label printer or Sunmi device — no locked-in hardware or special drivers required."
               },
               {
                 icon: (
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
+                  <span className="text-2xl">🧾</span>
                 ),
-                title: "AI-Powered Insights",
-                description: "Get intelligent recommendations for menu optimization and waste reduction"
+                title: "Flexible Expiry Handling",
+                description: "Automatically calculate expiry dates from prep/cook time — or override them manually when needed, giving your team full control."
               }
             ].map((benefit, index) => (
               <motion.div 
@@ -123,56 +111,33 @@ export const FeaturesGridUses = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-              Seamless integrations
+              Built for Frictionless Printing
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Works with your existing kitchen technology and workflows
+              No clunky drivers. No popups. Just click and print — exactly how kitchen tech should feel.
             </p>
           </motion.div>
 
           <div className="relative max-w-5xl mx-auto">
-            {/* Connection lines for desktop */}
-            <div className="hidden md:block absolute top-24 left-1/2 transform -translate-x-1/2 w-full max-w-3xl">
-              <div className="flex justify-between items-center">
-                <div className="w-8 h-8"></div>
-                <div className="flex-1 h-0.5 bg-gray-200 mx-8"></div>
-                <div className="w-8 h-8"></div>
-                <div className="flex-1 h-0.5 bg-gray-200 mx-8"></div>
-                <div className="w-8 h-8"></div>
-              </div>
-            </div>
-
             <div className="grid gap-8 md:grid-cols-3">
               {[
                 {
                   step: "01",
-                  title: "POS Systems",
-                  description: "Integrate with your existing point-of-sale system for seamless menu management",
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                    </svg>
-                  )
+                  title: "Local Print Bridge for USB Printers",
+                  description: "Our lightweight server connects your browser directly to any USB label printer. No drivers, no dialogs — just fast, reliable printing.",
+                  icon: <span className="text-3xl">🔗</span>
                 },
                 {
                   step: "02",
-                  title: "Inventory Software",
-                  description: "Sync with inventory management systems for real-time stock tracking",
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                    </svg>
-                  )
+                  title: "Native Sunmi App Support",
+                  description: "Using a Sunmi handheld? You're already set. InstaLabel prints directly from the browser — no bridge, no setup required.",
+                  icon: <span className="text-3xl">📱</span>
                 },
                 {
                   step: "03",
-                  title: "Kitchen Displays",
-                  description: "Connect to KDS systems and digital displays for real-time kitchen communication",
-                  icon: (
-                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  )
+                  title: "Cross-Platform Simplicity",
+                  description: "Whether you're using Windows or Mac, InstaLabel works with the printers you already have. Set it up once and print labels from any modern browser or Sunmi device.",
+                  icon: <span className="text-3xl">💻</span>
                 }
               ].map((step, index) => (
                 <motion.div 
@@ -183,22 +148,20 @@ export const FeaturesGridUses = () => {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="bg-white border border-gray-200 rounded-xl p-8 text-center hover:border-purple-200 hover:shadow-lg transition-all duration-200">
+                  <div className="bg-white border border-gray-200 rounded-xl p-8 text-center hover:border-purple-200 hover:shadow-lg transition-all duration-200 h-full flex flex-col">
                     {/* Step number */}
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full font-bold text-lg mb-6">
                       {step.step}
                     </div>
-                    
                     {/* Icon */}
                     <div className="flex justify-center mb-4 text-gray-600">
                       {step.icon}
                     </div>
-                    
                     {/* Content */}
                     <h3 className="text-xl font-semibold text-gray-900 mb-4">
                       {step.title}
                     </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
+                    <p className="text-gray-600 text-base leading-relaxed">
                       {step.description}
                     </p>
                   </div>

@@ -62,7 +62,7 @@ export const Hero = () => {
           </div>
 
           <div className="space-y-2 sm:space-y-4">
-            <h1 className="font-accent text-3xl sm:text-5xl font-black leading-tight tracking-tight text-gray-900">
+            <h1 className="font-accent text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-gray-900">
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Revolutionize
               </span>

@@ -269,7 +269,7 @@ export const BeforeAfterSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="text-5xl font-black leading-tight tracking-tight text-gray-900 sm:text-6xl lg:text-7xl"
+                className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-gray-900"
               >
                 <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Label Smarter.

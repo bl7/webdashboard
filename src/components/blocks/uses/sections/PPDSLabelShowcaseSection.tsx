@@ -1,6 +1,6 @@
 import React from "react"
 import { PPDSLabelRenderer } from "@/app/dashboard/ppds/page"
-
+import { LabelShowcase } from "./LabelShowcase"
 const sampleItem = {
   uid: "demo-ppds-1",
   id: "1",
@@ -55,5 +55,6 @@ export const PPDSLabelShowcaseSection = () => (
         <div className="text-xs text-gray-400 mt-2">Example: Chicken Caesar Salad (PPDS)</div>
       </div>
     </div>
+    <LabelShowcase/>
   </section>
 ) 

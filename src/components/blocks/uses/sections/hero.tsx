@@ -5,7 +5,6 @@ import { Target, ArrowRight, Smartphone, BarChart3, ChefHat, Clock, Shield } fro
 import { Button } from "@/components/ui"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import LabelShowcase from "./LabelShowcase"
 
 export const UsesHero = () => {
   return (
@@ -161,8 +160,6 @@ export const UsesHero = () => {
         <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
       </section>
       
-      {/* Label Showcase Section */}
-      <LabelShowcase />
     </>
   )
 }

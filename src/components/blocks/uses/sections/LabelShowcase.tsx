@@ -4,20 +4,32 @@ import React from "react"
 import { motion } from "framer-motion"
 import LabelRender from "@/app/dashboard/print/LabelRender"
 
-const LabelShowcase = () => {
-  return (
-    <section className="relative bg-gray-50 px-2 sm:px-6 py-10 sm:py-16">
-      <div className="mx-auto max-w-7xl">
-        {/* Header */}
-        <div className="text-center space-y-4 mb-10 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-            See Your Labels in Action
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            These are the actual labels your kitchen will print. Professional, compliant, and ready for any thermal printer.
-          </p>
-        </div>
+export const LabelShowcase = () => {
+  // Defrost label sample data
+  const defrostSampleItem = {
+    uid: "defrost-1",
+    id: "defrost-1",
+    type: "menu" as const,
+    name: "Frozen Cod Fillet",
+    quantity: 1,
+    ingredients: ["Cod Fillet", "Water", "Salt"],
+    allergens: [
+      { uuid: 6, allergenName: "Fish", category: "Seafood", status: "Active" as const, addedAt: "", isCustom: false },
+    ],
+    printedOn: "2024-07-01T12:00:00Z",
+    expiryDate: "2024-07-02T12:00:00Z",
+    labelType: "prep" as const,
+  };
+  const defrostAllIngredients = [
+    { uuid: "b1", ingredientName: "Cod Fillet", allergens: [{ allergenName: "Fish" }] },
+    { uuid: "b2", ingredientName: "Water", allergens: [] },
+    { uuid: "b3", ingredientName: "Salt", allergens: [] },
+  ];
 
+  return (
+    <section className="relative  px-2 sm:px-6 py-10 sm:py-16">
+      <div className="mx-auto max-w-7xl">
+       
         <div className="grid lg:grid-cols-2 gap-8 items-start max-w-6xl mx-auto">
           {/* Left: Labels Display */}
           <motion.div
@@ -62,7 +74,7 @@ const LabelShowcase = () => {
                 </div>
               </motion.div>
 
-              {/* Prep Label */}
+              {/* Prep Label (restored) */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -80,7 +92,7 @@ const LabelShowcase = () => {
                       quantity: 1,
                       ingredients: ["Carrots", "Broccoli", "Celery", "Peppers"],
                       allergens: [
-                        { uuid: 3, allergenName: "Celery", category: "Vegetable", status: "Active", addedAt: "", isCustom: false },
+                        { uuid: 3, allergenName: "Celery", category: "Vegetable", status: "Active" as const, addedAt: "", isCustom: false },
                       ],
                       printedOn: "2024-07-01T09:00:00Z",
                       expiryDate: "2024-07-01T18:00:00Z",
@@ -148,7 +160,7 @@ const LabelShowcase = () => {
                 </div>
               </motion.div>
 
-              {/* PPDS Label */}
+              {/* Defrost Label (replaces PPDS) */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -158,38 +170,17 @@ const LabelShowcase = () => {
               >
                 <div className="relative">
                   <LabelRender
-                    item={{
-                      uid: "4",
-                      id: "4",
-                      type: "menu",
-                      name: "Vegan Mayo",
-                      quantity: 1,
-                      ingredients: ["Soy Oil", "Aquafaba", "Lemon Juice", "Mustard", "Salt", "Sugar"],
-                      allergens: [
-                        { uuid: 4, allergenName: "Soy", category: "Legume", status: "Active", addedAt: "", isCustom: false },
-                        { uuid: 5, allergenName: "Mustard", category: "Spice", status: "Active", addedAt: "", isCustom: false },
-                      ],
-                      printedOn: "2024-07-01T08:00:00Z",
-                      expiryDate: "2024-07-10T08:00:00Z",
-                      labelType: "ppds",
-                    }}
-                    expiry="2024-07-10T08:00:00Z"
+                    item={defrostSampleItem}
+                    expiry={defrostSampleItem.expiryDate}
                     useInitials={true}
-                    selectedInitial="BR"
-                    allergens={["Soy", "Mustard"]}
+                    selectedInitial="DF"
+                    allergens={["Fish"]}
                     labelHeight="40mm"
-                    allIngredients={[
-                      { uuid: "10", ingredientName: "Soy Oil", allergens: [{ allergenName: "Soy" }] },
-                      { uuid: "11", ingredientName: "Aquafaba", allergens: [] },
-                      { uuid: "12", ingredientName: "Lemon Juice", allergens: [] },
-                      { uuid: "13", ingredientName: "Mustard", allergens: [{ allergenName: "Mustard" }] },
-                      { uuid: "14", ingredientName: "Salt", allergens: [] },
-                      { uuid: "15", ingredientName: "Sugar", allergens: [] },
-                    ]}
+                    allIngredients={defrostAllIngredients}
                   />
                 </div>
                 <div className="text-center mt-2">
-                  <span className="text-xs font-medium text-gray-600 group-hover:text-purple-600 transition-colors">PPDS Label</span>
+                  <span className="text-xs font-medium text-gray-600 group-hover:text-cyan-600 transition-colors">Defrost Label</span>
                 </div>
               </motion.div>
             </div>
@@ -245,7 +236,8 @@ const LabelShowcase = () => {
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-purple-200 hover:shadow-md transition-all duration-200 group">
+              {/* Prep Labels description (restored) */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-green-200 hover:shadow-md transition-all duration-200 group">
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center text-green-600 group-hover:bg-green-100 transition-colors duration-200">
                     <span className="text-lg">🥬</span>
@@ -277,17 +269,18 @@ const LabelShowcase = () => {
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-purple-200 hover:shadow-md transition-all duration-200 group">
+              {/* Defrost Labels description (replaces PPDS) */}
+              <div className="bg-white border border-gray-200 rounded-lg p-4 hover:border-cyan-200 hover:shadow-md transition-all duration-200 group">
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
-                    <span className="text-lg">🏷️</span>
+                  <div className="flex-shrink-0 w-10 h-10 bg-cyan-50 rounded-lg flex items-center justify-center text-cyan-600 group-hover:bg-cyan-100 transition-colors duration-200">
+                    <span className="text-lg">❄️</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                      PPDS Labels
+                      Defrost Labels
                     </h3>
                     <p className="text-gray-600 text-sm leading-relaxed">
-                      Full ingredient lists with allergen warnings for pre-packaged direct sale items.
+                      Track defrost dates, times, and staff for frozen foods. Ensure food safety and compliance with clear, automated defrost labeling.
                     </p>
                   </div>
                 </div>
@@ -299,5 +292,3 @@ const LabelShowcase = () => {
     </section>
   )
 }
-
-export default LabelShowcase 
