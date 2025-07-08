@@ -219,39 +219,36 @@ export const BeforeAfterSection = () => {
   const features = [
     {
       icon: CheckCircle2,
-      title: "Instant Compliance",
-      description: "Meet food safety standards automatically"
+      title: "Zero Manual Errors",
+      description: "Automatic date calculations prevent mistakes"
     },
-    {
-      icon: Clock,
-      title: "Time-Saving",
-      description: "Reduce prep time by 60%"
-    },
+   
     {
       icon: Shield,
-      title: "Food Safety",
-      description: "Prevent waste and contamination"
+      title: "Full Compliance",
+      description: "Natasha's Law & EHO standards met automatically"
     }
   ]
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/40 to-white px-4 py-32 text-foreground">
+    <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/40 to-white px-4 py-16 text-foreground">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-purple-200/20 blur-3xl"></div>
         <div className="absolute right-1/4 bottom-1/4 h-48 w-48 rounded-full bg-pink-200/20 blur-3xl"></div>
       </div>
 
-      <div className="relative mx-auto max-w-7xl">
-        <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
-          {/* Enhanced Text Content */}
+      <div className="relative mx-auto max-w-6xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          {/* Left: Text Content */}
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
             className="space-y-10"
           >
+            {/* Enhanced Text Content */}
             <div className="space-y-6">
               <motion.div 
                 initial={{ opacity: 0, y: 20 }}
@@ -261,7 +258,7 @@ export const BeforeAfterSection = () => {
                 className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 text-sm font-bold text-purple-800 ring-1 ring-purple-200 shadow-sm"
               >
                 <Zap className="mr-2 h-4 w-4" />
-                Transform Your Kitchen
+                The Kitchen Transformation
               </motion.div>
               
               <motion.h2 
@@ -269,15 +266,12 @@ export const BeforeAfterSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
                 viewport={{ once: true }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-gray-900"
-              >
+                className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
                 <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Label Smarter.
+                  From Chaos to
                 </span>
                 <br />
-                <span className="text-gray-900">Track Better.</span>
-                <br />
-                <span className="text-gray-900">Cook Safer.</span>
+                <span className="text-gray-900">Kitchen Control</span>
               </motion.h2>
             </div>
             
@@ -289,13 +283,13 @@ export const BeforeAfterSection = () => {
               className="space-y-6"
             >
               <p className="text-xl leading-relaxed text-gray-600">
-                Gone are the days of unreadable labels and forgotten prep dates. With InstaLabel, your
-                kitchen runs cleaner, safer, and smoother—no more chaos in the cold room.
+                See the difference: handwritten labels with crossed-out dates vs. professional, 
+                compliant labels printed in seconds. No more illegible handwriting, no more 
+                forgotten allergen warnings, no more compliance risks.
               </p>
               <p className="text-lg leading-relaxed text-gray-600">
-                Boost efficiency without the admin headaches. InstaLabel printers take the stress out of
-                food labeling, so your staff can focus on what matters: delivering great food and
-                service.
+                InstaLabel transforms your kitchen from a labeling nightmare into a streamlined 
+                operation where every label is perfect, every time.
               </p>
             </motion.div>
 
@@ -305,7 +299,7 @@ export const BeforeAfterSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               viewport={{ once: true }}
-              className="grid grid-cols-1 gap-4 sm:grid-cols-3"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
             >
               {features.map((feature, index) => (
                 <motion.div
@@ -334,27 +328,35 @@ export const BeforeAfterSection = () => {
               viewport={{ once: true, amount: 0.6 }}
               variants={buttonVariant}
             >
-              <Link href='/uses'>
+              <Link href='/bookdemo'>
                 <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white hover:from-purple-700 hover:to-pink-700 shadow-xl hover:shadow-2xl transition-all duration-300 sm:w-auto">
-                  Explore Labels
+                  Book Demo
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
             </motion.div>
           </motion.div>
-
-          {/* Enhanced Slider */}
+          {/* Right: Before/After Slider */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="relative"
+            className="w-full"
           >
-            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-2xl"></div>
-            <div className="relative">
-              <BeforeAfterSlider beforeImage={beforeImage} afterImage={afterImage} />
-            </div>
+            {/* Enhanced Slider */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-2xl"></div>
+              <div className="relative">
+                <BeforeAfterSlider beforeImage={beforeImage} afterImage={afterImage} />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>

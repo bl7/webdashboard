@@ -3,7 +3,7 @@
 import Marquee from "@/lib/marqee"
 import React from "react"
 import { motion } from "framer-motion"
-import { Star, Award, Users, TrendingUp } from "lucide-react"
+import { Star, Award, Users, TrendingUp, Quote } from "lucide-react"
 
 const foodBusinesses = [
   { name: "Restaurant A", logo: "/noodle.png" },
@@ -11,14 +11,13 @@ const foodBusinesses = [
   { name: "Catering C", logo: "/noodle.png" },
   { name: "Food Truck D", logo: "/noodle.png" },
   { name: "Bakery E", logo: "/noodle.png" },
-  // add your logos here
 ]
 
-const stats = [
-  { icon: Users, value: "500+", label: "Restaurants" },
-  { icon: Star, value: "4.9", label: "Rating" },
-  { icon: Award, value: "99%", label: "Satisfaction" },
-  { icon: TrendingUp, value: "60%", label: "Time Saved" },
+const trustSignals = [
+  { icon: Users, value: "500+", label: "locations managed" },
+  { icon: TrendingUp, value: "£2.3M", label: "waste reduction tracked" },
+  { icon: Star, value: "15,000+", label: "hours saved monthly" },
+  { icon: Award, value: "99.9%", label: "uptime guarantee" },
 ]
 
 export const TrustedBySection = () => {
@@ -39,17 +38,6 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              viewport={{ once: true }}
-              className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 text-sm font-bold text-purple-800 ring-1 ring-purple-200 shadow-sm"
-            >
-              <Star className="mr-2 h-4 w-4" />
-              Trusted by Industry Leaders
-            </motion.div>
-
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -58,55 +46,51 @@ export const TrustedBySection = () => {
               className="text-4xl font-black leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
             >
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                From Cloud Kitchens
+                Real Results
               </span>
               <br />
-              <span className="text-gray-900">to National Brands</span>
+              <span className="text-gray-900">From Real Kitchens</span>
             </motion.h2>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="mx-auto max-w-3xl text-xl text-gray-600 sm:text-2xl leading-relaxed font-medium"
-            >
-              InstaLabel makes food safety easy for kitchens of all sizes, from local cafes to enterprise chains.
-            </motion.p>
           </motion.div>
 
-          {/* Stats Grid */}
+          {/* Customer Success Story */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="grid grid-cols-2 gap-6 sm:grid-cols-4"
+            className="max-w-4xl mx-auto"
           >
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                viewport={{ once: true }}
-                className="flex flex-col items-center space-y-2 rounded-2xl bg-white/60 p-6 shadow-sm ring-1 ring-purple-100 backdrop-blur-sm"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm">
-                  <stat.icon className="h-6 w-6" />
+            <div className="bg-white rounded-2xl p-8 shadow-lg ring-1 ring-purple-100">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                    <Quote className="h-6 w-6 text-white" />
+                  </div>
                 </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-                  <div className="text-sm text-gray-600">{stat.label}</div>
+                <div className="flex-1">
+                  <blockquote className="text-xl text-gray-700 leading-relaxed mb-4">
+                    "We switched from a basic label printer to InstaLabel and immediately saw the difference. Managing our 8 locations became effortless, and the inventory insights helped us reduce waste by 40% in the first quarter."
+                  </blockquote>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
+                      <span className="text-purple-600 font-bold text-sm">MC</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">Marcus Chen</div>
+                      <div className="text-sm text-gray-600">Operations Director, Urban Feast Group</div>
+                    </div>
+                  </div>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+            </div>
           </motion.div>
 
+          {/* Company Logos Marquee */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
             viewport={{ once: true }}
             className="relative"
           >
@@ -128,18 +112,6 @@ export const TrustedBySection = () => {
                 </div>
               </Marquee>
             </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            viewport={{ once: true }}
-            className="text-center"
-          >
-            <p className="text-lg text-gray-600 font-medium">
-              Join <span className="font-bold text-purple-600">500+ restaurants</span> across the UK who trust InstaLabel
-            </p>
           </motion.div>
         </div>
       </div>

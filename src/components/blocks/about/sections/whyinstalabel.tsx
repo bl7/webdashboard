@@ -1,5 +1,7 @@
+'use client'
 import React from "react"
 import { Clock, ClipboardList, ShieldCheck } from "lucide-react"
+import { motion } from "framer-motion"
 
 export const WhyInstaLabel = () => {
   return (
@@ -8,18 +10,30 @@ export const WhyInstaLabel = () => {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
       
       <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
-        {/* Header */}
-        <div className="text-center space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
+          {/* Header */}
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             Why InstaLabel?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Born from real kitchen challenges, designed to simplify and secure your food operations.
           </p>
-        </div>
+        </motion.div>
 
-        {/* Benefits Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="grid gap-6 sm:grid-cols-2 max-w-5xl mx-auto"
+        >
+          {/* Benefits Grid */}
           {/* Card 1 - Save Time */}
           <div className="group">
             <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200 text-center">
@@ -88,7 +102,7 @@ export const WhyInstaLabel = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Bottom CTA/Trust Section */}
         <div className="text-center">

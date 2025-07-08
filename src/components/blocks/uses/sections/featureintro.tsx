@@ -1,7 +1,9 @@
+'use client'
 // components/UseCasesSection.tsx
 import Image from "next/image"
 import Natasha from "../../../../assets/images/natashalaw.png"
 import PPDS from "../../../../assets/images/prepandfood.jpg"
+import { motion } from "framer-motion"
 
 export const FeatureIntro = () => {
   return (
@@ -9,7 +11,13 @@ export const FeatureIntro = () => {
     <div className="pointer-events-none absolute top-0 left-0 w-full h-48 z-0" style={{background: 'linear-gradient(to bottom, #fff 0%, #fff 50%, rgba(255,255,255,0) 100%)'}} />
     <div className="mx-auto max-w-6xl space-y-12 relative">
         {/* Images Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12"
+        >
           {/* Image 1 – Natasha's Law */}
           <div className="group relative">
             <div className="absolute -inset-4 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-700" />
@@ -41,10 +49,16 @@ export const FeatureIntro = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Text Content Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12"
+        >
           {/* Text 1 – Natasha's Law */}
           <div className="space-y-6">
             <div className="space-y-3">
@@ -114,7 +128,7 @@ export const FeatureIntro = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

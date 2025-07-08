@@ -1,152 +1,89 @@
-"use client"
+'use client'
 
-import React, { useEffect, useRef, useState } from "react"
-import { CheckCircle, ArrowRight, Zap, Shield, Users, Clock } from "lucide-react"
-import { Button } from "@/components/ui"
+import React from "react"
 import { motion } from "framer-motion"
-import Link from "next/link"
-
-const features = [
-  {
-    icon: Shield,
-    title: "Natasha's Law & EHO Compliant",
-    description: "Always up-to-date with latest food safety regulations"
-  },
-  {
-    icon: Zap,
-    title: "Automated Expiry & Allergen Labeling",
-    description: "Smart labeling that prevents food waste and protects customers"
-  },
-  {
-    icon: Users,
-    title: "Multi-Location Management",
-    description: "Cloud-based system works across all your restaurant locations"
-  },
-  {
-    icon: Clock,
-    title: "Touchscreen Device Ready",
-    description: "Rugged, hygienic, and incredibly easy to use in busy kitchens"
-  }
-]
-
-const buttonVariant = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { delay: 0.6, duration: 0.4 } },
-}
 
 export const Feature = () => {
-  const textRef = useRef<HTMLDivElement>(null)
-  const [videoHeight, setVideoHeight] = useState(0)
-
-  useEffect(() => {
-    function updateHeight() {
-      if (textRef.current) {
-        setVideoHeight(textRef.current.clientHeight)
-      }
-    }
-    updateHeight()
-    window.addEventListener("resize", updateHeight)
-    return () => window.removeEventListener("resize", updateHeight)
-  }, [])
-
   return (
-    <section className="-mt-16 px-4 py-24 text-foreground sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-white via-purple-50/30 to-white">
-      <div className="container mx-auto grid grid-cols-1 items-center gap-16 md:grid-cols-2">
-        {/* Enhanced Left Content Block */}
-        <div ref={textRef} className="space-y-8">
-          <div className="space-y-4">
-            <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
-              <Zap className="mr-2 h-4 w-4" />
-              All-In-One Solution
-            </div>
-            
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-gray-900">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Transform
-              </span>
-              <br />
-              <span className="text-gray-900">Your Kitchen</span>
-            </h2>
-            
-            <p className="text-xl leading-relaxed text-gray-600">
-              Trusted by 1,500+ UK businesses for effortless compliance, 
-              expiry tracking, and kitchen efficiency.
-            </p>
-          </div>
-
-          {/* Enhanced Features List */}
-          <div className="space-y-6">
-            {features.map((feature, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                viewport={{ once: true }}
-                className="flex items-start gap-4 p-4 bg-white/50 rounded-xl border border-purple-100 hover:bg-white/80 transition-all duration-300 hover:shadow-md"
-              >
-                <div className="bg-gradient-to-r from-purple-100 to-pink-100 p-3 rounded-full flex-shrink-0">
-                  <feature.icon className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-1">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Enhanced CTA */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.6 }}
-            variants={buttonVariant}
-            className="pt-4"
-          >
-            <Link href="/bookdemo">
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl transition-all duration-300">
-                Book Your Free Demo
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <p className="text-center text-sm text-gray-500 mt-3">
-              See InstaLabel in action • 30-minute demo • No pressure
-            </p>
-          </motion.div>
-        </div>
-
-        {/* Enhanced Video Block */}
-        <div
-          className="flex w-full justify-center lg:w-full"
-          style={{ height: videoHeight, minHeight: 400 }}
+    <section className="-mt-10 px-4 py-16 text-foreground sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-white via-purple-50/30 to-white">
+      <div className="container mx-auto max-w-6xl">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center space-y-4 mb-12"
         >
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight">
+            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Why Smart Kitchens Choose
+            </span>
+            <br />
+            <span className="text-gray-900">InstaLabel Over Basic Label Printers</span>
+          </h2>
+        </motion.div>
+
+        {/* Comparison Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12"
+        >
+          {/* Basic Label Printers */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.1 }}
             viewport={{ once: true }}
-            className="relative w-full overflow-hidden rounded-2xl border-2 border-purple-200 shadow-2xl"
-            style={{ height: "100%" }}
+            className="bg-white rounded-2xl p-8 border-2 border-gray-200 shadow-lg"
           >
-            {/* Video overlay with branding */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10 pointer-events-none" />
-            <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
-              <p className="text-sm font-semibold text-purple-600">Live Demo</p>
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                <span className="text-3xl">🖨️</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Basic Label Printers</h3>
+              <p className="text-gray-600">Outdated tools that hold back modern kitchens</p>
             </div>
-            
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="h-full w-full object-cover"
-            >
-              <source src="/printing.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            <ul className="space-y-3 text-base">
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>Manual handwriting or basic templates</li>
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>No allergen warnings</li>
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>No expiry date intelligence</li>
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>No prep logs or print history</li>
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>Not compliant with Natasha's Law</li>
+              <li className="flex items-start gap-3"><span className="text-xl">❌</span>Can't print from mobile devices</li>
+            </ul>
           </motion.div>
-        </div>
+
+          {/* InstaLabel Smart System */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-8 border-2 border-purple-200 shadow-lg"
+          >
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mb-4">
+                <span className="text-3xl">✅</span>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">InstaLabel Smart Labelling System</h3>
+              <p className="text-gray-600">Built for modern food businesses that value speed, compliance, and accuracy</p>
+            </div>
+            <ul className="space-y-3 text-base">
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Compliant label templates for prep, cook, PPDS, and more</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Auto-calculated expiry dates for full traceability</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Allergen highlighting built-in</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Works with USB & portable Sunmi printers</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Print logs for traceability & audits</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Override expiry logic when needed</li>
+              <li className="flex items-start gap-3"><span className="text-xl">✅</span>Blazing fast PNG-to-label conversion — no drivers, no dialog boxes</li>
+            </ul>
+          </motion.div>
+        </motion.div>
+
       </div>
     </section>
   )

@@ -1,6 +1,8 @@
+'use client'
 import React from "react"
 import { PPDSLabelRenderer } from "@/app/dashboard/ppds/page"
 import { LabelShowcase } from "./LabelShowcase"
+import { motion } from "framer-motion"
 const sampleItem = {
   uid: "demo-ppds-1",
   id: "1",
@@ -25,7 +27,13 @@ const businessName = "InstaLabel Ltd"
 export const PPDSLabelShowcaseSection = () => (
   <section className="relative bg-white px-4 sm:px-6 py-16 border-t border-b border-purple-100">
     <div className="relative mx-auto max-w-5xl flex flex-col md:flex-row items-center gap-12 md:gap-20">
-      <div className="flex-1 space-y-6">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="flex-1 space-y-6"
+      >
         <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
           <span role="img" aria-label="label">🏷️</span> Natasha's Law / PPDS Labels
         </div>
@@ -41,8 +49,14 @@ export const PPDSLabelShowcaseSection = () => (
           <li>Business name and traceability info</li>
           <li>80mm label layout for maximum clarity</li>
         </ul>
-      </div>
-      <div className="flex-1 flex flex-col items-center justify-center">
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        viewport={{ once: true }}
+        className="flex-1 flex flex-col items-center justify-center"
+      >
         {/* 60mm x 80mm at 96dpi: 60mm = ~227px, 80mm = ~303px */}
         <div style={{ width: 227, height: 303, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <PPDSLabelRenderer
@@ -53,7 +67,7 @@ export const PPDSLabelShowcaseSection = () => (
           />
         </div>
         <div className="text-xs text-gray-400 mt-2">Example: Chicken Caesar Salad (PPDS)</div>
-      </div>
+      </motion.div>
     </div>
     <LabelShowcase/>
   </section>

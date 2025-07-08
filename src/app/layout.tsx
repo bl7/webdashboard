@@ -4,6 +4,7 @@ import "./globals.css"
 import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
+import Head from 'next/head'
 
 const base_font = Manrope({ subsets: ["latin"] })
 const accent_font = Oxygen({
@@ -131,19 +132,11 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <meta name="theme-color" content="#7C3AED" />
-        <meta name="msapplication-TileColor" content="#7C3AED" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="InstaLabel" />
-      </head>
+      <Head>
+        <title>Smart Kitchen Labeling System | Cloud-Based Food Safety Labels | InstaLabel</title>
+        <meta name="description" content="Next-generation kitchen labeling system with cloud management, multi-location sync, and smart inventory tracking. More advanced than traditional label printers. Free trial." />
+        <meta name="keywords" content="smart kitchen labeling system, cloud food labeling, multi-location kitchen management, advanced food safety labels, digital kitchen labeling, restaurant tech solutions" />
+      </Head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
         <AuthProvider>
           {children}

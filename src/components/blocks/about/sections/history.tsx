@@ -1,6 +1,9 @@
+'use client'
+
 import React from "react"
 import care from "@/assets/images/kitchen.jpg"
 import Image from "next/image"
+import { motion } from "framer-motion"
 
 export const History = () => {
   return (
@@ -13,7 +16,13 @@ export const History = () => {
 
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {/* Hero Image Section */}
-        <div className="relative mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="relative mb-12 sm:mb-16"
+        >
           <div className="relative overflow-hidden rounded-2xl shadow-2xl">
             <div className="h-64 sm:h-[32rem] w-full">
               <Image 
@@ -32,10 +41,16 @@ export const History = () => {
               Born in Real Kitchens
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Content Section */}
-        <div className="mx-auto max-w-4xl">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="mx-auto max-w-4xl"
+        >
           {/* Header */}
           <div className="text-center mb-12 sm:mb-16">
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-6">
@@ -135,7 +150,7 @@ export const History = () => {
               </button>
             </a>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

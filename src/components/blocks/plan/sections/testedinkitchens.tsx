@@ -1,5 +1,6 @@
 "use client"
 import React from "react"
+import { motion } from "framer-motion"
 
 export const TestedInKitchens = () => {
   return (
@@ -9,7 +10,13 @@ export const TestedInKitchens = () => {
       
       <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
         {/* Heading */}
-        <div className="text-center space-y-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center space-y-4"
+        >
           <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
             <span className="mr-2">🧪</span>
             Kitchen Tested & Chef Approved
@@ -22,10 +29,16 @@ export const TestedInKitchens = () => {
             fridges. Every feature was refined with real chef feedback to make label printing
             faster, simpler, and compliant.
           </p>
-        </div>
+        </motion.div>
 
         {/* Enhanced Features Grid */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          viewport={{ once: true }}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto"
+        >
           {/* Feature 1 */}
           <div className="group">
             <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
@@ -82,10 +95,16 @@ export const TestedInKitchens = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats or Trust Indicators */}
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 text-center max-w-4xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="grid grid-cols-2 gap-8 sm:grid-cols-4 text-center max-w-4xl mx-auto"
+        >
           <div className="space-y-2">
             <div className="text-3xl sm:text-4xl font-bold text-purple-600">500+</div>
             <div className="text-sm font-medium text-gray-600 uppercase tracking-wider">UK Kitchens</div>
@@ -102,7 +121,7 @@ export const TestedInKitchens = () => {
             <div className="text-3xl sm:text-4xl font-bold text-purple-600">24/7</div>
             <div className="text-sm font-medium text-gray-600 uppercase tracking-wider">Always Ready</div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   )

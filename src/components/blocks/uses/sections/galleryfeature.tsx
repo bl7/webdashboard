@@ -1,8 +1,10 @@
+'use client'
 // components/RealWorldGallery.tsx
 import Image from "next/image"
 import A2 from "../../../../assets/images/kitchen.jpg"
 import A3 from "../../../../assets/images/value.jpeg"
 import A4 from "../../../../assets/images/before.png"
+import { motion } from "framer-motion"
 
 const allergens = [
   "Celery",
@@ -28,7 +30,13 @@ export const GalleryFeature = () => {
     <section className="bg-white px-2 sm:px-6 py-12 sm:py-24">
       <div className="mx-auto max-w-6xl space-y-16 sm:space-y-24">
         {/* Advanced Customization Section */}
-        <div className="flex flex-col items-start gap-8 sm:gap-12 md:flex-row md:items-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="flex flex-col items-start gap-8 sm:gap-12 md:flex-row md:items-center"
+        >
           <div className="space-y-6 md:w-1/2">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-3 bg-purple-50 px-4 py-2 rounded-full border border-purple-200">
@@ -98,7 +106,7 @@ export const GalleryFeature = () => {
               className="object-cover"
             />
           </div>
-        </div>
+        </motion.div>
 
       </div>
     

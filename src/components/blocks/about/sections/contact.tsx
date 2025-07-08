@@ -1,6 +1,8 @@
+'use client'
 import React from "react"
 import { ContactForm } from "./form"
 import { MapPin, Phone, Mail, Clock, Users, CheckCircle } from "lucide-react"
+import { motion } from "framer-motion"
 
 export const Contact = () => {
   return (
@@ -16,7 +18,13 @@ export const Contact = () => {
 
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header Section */}
-        <div className="text-center mb-12 sm:mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className="text-center mb-12 sm:mb-16"
+        >
          
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-6">
             Get in Touch
@@ -25,11 +33,17 @@ export const Contact = () => {
             Tell us a little bit about who you are, and we'll tell you a whole lot more about who
             we are.
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col gap-16 lg:flex-row lg:gap-20">
           {/* Left Side: Info - Floating elements */}
-          <div className="lg:w-1/2 space-y-12">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="lg:w-1/2 space-y-12"
+          >
             <div className="relative">    
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 ml-4">
                 <div className="group flex items-start gap-4 p-6 rounded-2xl transition-all duration-300 hover:bg-white/60 hover:backdrop-blur-sm hover:shadow-xl transform hover:-translate-y-1">
@@ -91,10 +105,16 @@ export const Contact = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Right Side: Form - Floating design */}
-          <div className="lg:w-1/2">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="lg:w-1/2"
+          >
             <div className="relative">
               {/* Floating form header */}
               <div className="flex items-center mb-8 group">
@@ -107,7 +127,7 @@ export const Contact = () => {
                 <ContactForm />
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
