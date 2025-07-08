@@ -127,7 +127,7 @@ export const Footer = () => {
           </div>
 
           {/* Contact + Socials */}
-          <div className="space-y-4">
+            <div className="space-y-4">
             <div className="space-y-2">
               <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Contact</h3>
               <div className="space-y-1 text-xs text-white/80">

@@ -131,8 +131,6 @@ function PPDSLabelRenderer({ item, storageInfo, businessName, allIngredients }: 
   )
 }
 
-export { PPDSLabelRenderer }
-
 export default function PPDSPage() {
   const [menuItems, setMenuItems] = useState<any[]>([])
   const [printQueue, setPrintQueue] = useState<any[]>([])
