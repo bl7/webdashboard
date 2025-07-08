@@ -9,22 +9,22 @@ const ctas = [
   {
     icon: <Rocket className="h-8 w-8 text-purple-600" />,
     title: "Start Free Trial",
-    desc: "Try InstaLabel with PrintBridge included. No credit card required.",
+    desc: "Try InstaLabel with Zentra PrintBridge included. No credit card required.",
     button: "Start Free Trial",
     href: "/register"
   },
   {
     icon: <BadgeCheck className="h-8 w-8 text-green-600" />,
-    title: "Enable PrintBridge",
-    desc: "Already using InstaLabel? Download the app right from your dashboard.",
-    button: "Enable Now",
+    title: "Enable Zentra PrintBridge",
+    desc: "Already using InstaLabel? Download Zentra from your dashboard to enable PrintBridge.",
+    button: "Enable Zentra",
     href: "/login"
   },
  
   {
     icon: <Phone className="h-8 w-8 text-pink-600" />,
     title: "Talk to Sales",
-    desc: "Having problem integrating Zentra PrintBridge? Our team is here to help.",
+    desc: "Having trouble integrating Zentra PrintBridge? Our team is here to help.",
     button: "Contact Sales",
     href: "/about#contact"
   }

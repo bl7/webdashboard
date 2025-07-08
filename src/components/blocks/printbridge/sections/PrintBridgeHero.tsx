@@ -26,7 +26,7 @@ export const PrintBridgeHero = () => {
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
               <Wifi className="mr-2 h-4 w-4" />
-              Local Bridge Technology
+              PrintBridge, powered by Zentra
             </div>
           </motion.div>
 
@@ -42,8 +42,7 @@ export const PrintBridgeHero = () => {
           {/* 3. Subheadline: 'Zentra eliminates browser print dialog frustration' as a <p> below the headline */}
           <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              PrintBridge is our lightweight local bridge app that connects your web dashboard directly to your thermal printers. 
-              No complex network setup, no cloud dependencies - just instant, reliable printing for your kitchen labels.
+              PrintBridge is InstaLabel’s seamless local printing solution, powered by Zentra—our lightweight bridge app for Windows and Mac. Zentra connects your web dashboard directly to your thermal printers. No complex network setup, no cloud dependencies—just instant, reliable printing for your kitchen labels.
             </p>
           </motion.div>
 

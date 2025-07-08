@@ -8,14 +8,14 @@ export const PrintBridgeHowItWorks = () => {
   const steps = [
     {
       icon: <Download className="h-8 w-8" />,
-      title: "Download PrintBridge",
-      description: "Download our lightweight local bridge app to your computer or server. It's a small, secure application that runs in the background.",
+      title: "Download Zentra",
+      description: "Download Zentra, our lightweight local bridge app, to your computer or server. It's a small, secure application that runs in the background and powers PrintBridge.",
       color: "purple"
     },
     {
       icon: <Wifi className="h-8 w-8" />,
       title: "Connect to Printer",
-      description: "PrintBridge automatically detects and connects to your thermal printers. No complex network configuration required - it just works.",
+      description: "Zentra automatically detects and connects to your thermal printers. No complex network configuration required—it just works.",
       color: "purple"
     },
     {
@@ -27,7 +27,7 @@ export const PrintBridgeHowItWorks = () => {
     {
       icon: <Printer className="h-8 w-8" />,
       title: "Print Instantly",
-      description: "When you click print, PrintBridge receives the command and sends it directly to your thermal printer. Labels print in seconds.",
+      description: "When you click print, Zentra receives the command and sends it directly to your thermal printer. Labels print in seconds—this is the PrintBridge experience.",
       color: "purple"
     }
   ]
@@ -39,13 +39,13 @@ export const PrintBridgeHowItWorks = () => {
         <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} viewport={{ once: true }}>
           <div className="text-center space-y-2 mb-6">
             <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200 mb-1">
-              Meet Zentra
+              PrintBridge, powered by Zentra
             </div>
             <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-gray-900">
-              The Print Bridge That Changes Everything
+              The Local Print Solution That Changes Everything
             </h2>
             <div className="text-base text-gray-600 max-w-2xl mx-auto">
-              Our Node.js (macOS) and .NET (Windows) apps connect your web dashboard to any USB printer, bypassing browser limitations entirely. WebSocket bridge, USB auto-discovery, silent printing—trusted by 500+ kitchens, printing 1000s of labels daily.
+              Zentra (our Node.js for macOS and .NET for Windows app) connects your web dashboard to any USB printer, bypassing browser limitations entirely. WebSocket bridge, USB auto-discovery, silent printing—trusted by 500+ kitchens, printing 1000s of labels daily.
             </div>
           </div>
         </motion.div>
