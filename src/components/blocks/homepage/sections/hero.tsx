@@ -10,7 +10,7 @@ import Link from "next/link"
 
 export const Hero = () => {
   return (
-    <section className="relative flex flex-col md:flex-row min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16 mt-4 sm:mt-8 md:mt-12 md:py-0" style={{ minHeight: '100vh' }}>
+    <section className="relative flex flex-col-reverse md:flex-row min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16 mt-4 sm:mt-8 md:mt-12 md:py-0" style={{ minHeight: '100vh' }}>
       {/* Enhanced Background blobs */}
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-20 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-20 blur-3xl" />

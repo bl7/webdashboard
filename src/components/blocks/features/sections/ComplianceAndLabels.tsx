@@ -38,19 +38,25 @@ const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of open
 const businessName = "InstaLabel Ltd"
 
 const samplePrep = {
-  uid: "prep-demo",
-  id: "prep-demo",
-  type: "ingredients" as const,
-  name: "Egg Mayo (Prep)",
+  uid: "2",
+  id: "2",
+  type: "menu" as const,
+  name: "Mixed Vegetables",
   quantity: 1,
-  printedOn: "2024-06-01",
-  expiryDate: "2024-06-02",
+  ingredients: ["Carrots", "Broccoli", "Celery", "Peppers"],
   allergens: [
-    { allergenName: "Egg", uuid: 1, category: "main", status: "Active" as const, addedAt: "2024-06-01", isCustom: false, severity: "high" },
-    { allergenName: "Mustard", uuid: 2, category: "main", status: "Active" as const, addedAt: "2024-06-01", isCustom: false, severity: "medium" },
+    { uuid: 3, allergenName: "Celery", category: "Vegetable", status: "Active" as const, addedAt: "", isCustom: false },
   ],
+  printedOn: "2024-07-01T09:00:00Z",
+  expiryDate: "2024-07-01T18:00:00Z",
   labelType: "prep" as const,
 }
+const samplePrepAllIngredients = [
+  { uuid: "6", ingredientName: "Carrots", allergens: [] },
+  { uuid: "7", ingredientName: "Broccoli", allergens: [] },
+  { uuid: "8", ingredientName: "Celery", allergens: [{ allergenName: "Celery" }] },
+  { uuid: "9", ingredientName: "Peppers", allergens: [] },
+]
 
 export const ComplianceAndLabels = () => {
   const [open, setOpen] = useState(false)
@@ -76,12 +82,11 @@ export const ComplianceAndLabels = () => {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200 mb-4">
-            Compliance & Label Types
+          <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200 mb-1">
+            Stay Compliant, Print with Confidence
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight text-center">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">Stay Compliant</span>
-            <span className="text-gray-900">, Print with Confidence</span>
+            Stay Compliant, Print with Confidence
           </h2>
           <p className="max-w-2xl mx-auto text-lg text-gray-700 mt-4 text-center font-medium">
             InstaLabel makes it easy to stay compliant with Natasha’s Law and EHO requirements—no more guesswork or handwritten mistakes. See exactly what your labels will look like, and how we keep you inspection-ready.
@@ -142,12 +147,11 @@ export const ComplianceAndLabels = () => {
                       <LabelRender
                         item={samplePrep}
                         expiry={samplePrep.expiryDate}
-                        useInitials={false}
-                        selectedInitial={""}
-                        allergens={["egg", "mustard"]}
-                        maxIngredients={5}
-                        labelHeight={"31mm"}
-                        allIngredients={[]}
+                        useInitials={true}
+                        selectedInitial="NG"
+                        allergens={["Celery"]}
+                        labelHeight={"40mm"}
+                        allIngredients={samplePrepAllIngredients}
                       />
                     </div>
                   </motion.div>

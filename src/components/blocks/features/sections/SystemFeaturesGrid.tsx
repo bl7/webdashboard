@@ -2,7 +2,8 @@
 import React from "react"
 import { Printer, Wifi, Smartphone, Barcode, Flashlight, Shield, Cloud, CheckCircle, Settings, Repeat, Users, ShieldCheck, Zap } from "lucide-react"
 import { motion } from "framer-motion"
-
+import Image from "next/image"
+import HardwareImage from "@/assets/images/plandevices.png"
 const hardwareFeatures = [
   { icon: <Printer className="h-7 w-7 text-purple-600" />, title: "Integrated Printer", description: "Prints directly onto thermal labels—no ink or cartridges needed." },
   { icon: <Wifi className="h-7 w-7 text-blue-600" />, title: "Remote Connectivity", description: "WiFi and 4G SIM support for use anywhere—ideal for events and outdoor catering." },
@@ -35,8 +36,9 @@ const SystemFeaturesGrid = () => (
         className="space-y-8 flex flex-col h-full bg-white/80 border border-purple-100 rounded-2xl shadow p-8"
       >
         <div className="flex flex-col items-center mb-2">
-          <img src="/assets/images/plandevices.png" alt="Hardware device" className="rounded-xl shadow-lg max-w-xs w-full mb-4" />
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 text-center">The Hardware</h2>
+          <Image src={HardwareImage} width={100} height={100}  alt="Hardware device" className="rounded-xl shadow-lg max-w-xs w-full mb-4" />
+        
         </div>
         <ul className="space-y-5">
           {hardwareFeatures.map((item, i) => (
@@ -59,8 +61,9 @@ const SystemFeaturesGrid = () => (
         className="space-y-8 flex flex-col h-full bg-white/80 border border-purple-100 rounded-2xl shadow p-8"
       >
         <div className="flex flex-col items-center mb-2">
-          <img src="/assets/images/plandevices.png" alt="Software screenshot" className="rounded-xl shadow-lg max-w-xs w-full mb-4" />
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 text-center">The Software</h2>
+          <Image src="/webdashboard/print.png" alt="Software Screenshot" width={350} height={400} />
+
         </div>
         <ul className="space-y-5">
           {softwareFeatures.map((item, i) => (
@@ -75,9 +78,7 @@ const SystemFeaturesGrid = () => (
         </ul>
       </motion.div>
     </div>
-    <div className="max-w-5xl mx-auto mt-8 px-4 text-center text-base text-gray-700">
-      Print from any USB label printer, or use our portable Sunmi device which runs InstaLabel natively and prints directly from the device itself.
-    </div>
+   
   </section>
 )
 
