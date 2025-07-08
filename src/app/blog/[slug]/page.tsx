@@ -190,23 +190,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 <li className="truncate text-gray-700 font-semibold" aria-current="page">{post.meta.title}</li>
               </ol>
             </nav>
-            {/* Table of Contents */}
-            {/* TOC hidden for now
-          {headings.length > 2 && (
-            <nav className="mb-8" aria-label="Table of contents">
-              <div className="font-bold text-gray-800 mb-2">Table of Contents</div>
-              <ul className="space-y-1 text-sm text-purple-700">
-                {headings.map(h => (
-                  <li key={h.id} className={h.level > 2 ? "ml-4" : ""}>
-                    <a href={`#${h.id}`} className="hover:underline">
-                      {h.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          )}
-          */}
+         
             <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2 text-xs text-gray-500">
                 <span className="inline-flex items-center gap-1 text-primary font-medium">

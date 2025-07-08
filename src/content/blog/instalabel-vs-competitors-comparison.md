@@ -5,7 +5,7 @@ date: "2024-12-18"
 category: "Product Comparison"
 readTime: "6 min read"
 author: "InstaLabel Team"
-slug: "instalabel-vs-labli-comparison"
+slug: "instalabel-vs-competitors-comparison"
 featured: true
 image: "/public/labels/label2.png"
 ---
