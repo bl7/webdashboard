@@ -233,6 +233,8 @@ export default function PPDSPage() {
         ...item,
         uid: `menu-${item.id}-${Date.now()}`,
         quantity: 1,
+        // Only include serializable fields
+        // Do NOT include any printer/device object
       },
     ])
   }
@@ -280,9 +282,10 @@ export default function PPDSPage() {
           // Render PPDSLabelRenderer into container
           import("react-dom/client").then(({ createRoot }) => {
             const root = createRoot(container);
+            // Only pass serializable item data
             root.render(
               <PPDSLabelRenderer
-                item={item}
+                item={{ ...item }}
                 storageInfo={storageInfo}
                 businessName={businessName}
                 allIngredients={allIngredients}
