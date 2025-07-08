@@ -23,6 +23,7 @@ function AdminLayoutInner({ children, title = "Dashboard" }: LayoutProps) {
   // Check authentication on mount
   useEffect(() => {
     const token = localStorage.getItem("bossToken")
+    console.log("[DEBUG] bossToken:", token)
     if (!token) {
       router.push("/boss/login")
       return

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from '@/lib/auth';
 
 export async function GET(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req);
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     const { searchParams } = new URL(req.url)
     const read = searchParams.get('read')
     const limit = searchParams.get('limit')

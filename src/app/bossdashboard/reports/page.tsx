@@ -112,7 +112,10 @@ const ReportsPage: React.FC = () => {
         break
     }
     if (!url) return
-    fetch(url)
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    fetch(url, {
+      headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+    })
       .then(res => res.json())
       .then(setData)
       .catch(() => setError("Failed to fetch data"))
@@ -122,14 +125,20 @@ const ReportsPage: React.FC = () => {
   useEffect(() => {
     if (activeTab === 'devices') {
       setLoading(true)
-      fetch('/api/devices')
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      fetch('/api/devices', {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
         .then(res => res.json())
         .then(data => setDeviceData(data.devices || []))
         .catch(() => setError('Failed to fetch devices'))
         .finally(() => setLoading(false))
     } else if (activeTab === 'label_orders') {
       setLoading(true)
-      fetch('/api/label-orders/all')
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      fetch('/api/label-orders/all', {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
         .then(res => res.json())
         .then(data => setLabelOrderData(data.orders || []))
         .catch(() => setError('Failed to fetch label orders'))

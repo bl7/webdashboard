@@ -1,12 +1,65 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import { Calendar, ArrowRight, Smartphone, BarChart3, Video, Clock } from "lucide-react"
 import { Button } from "@/components/ui"
 import Link from "next/link"
 import { motion } from "framer-motion"
 
 export default function BookDemoPage() {
+  const [status, setStatus] = useState<null | 'success' | 'error'>(null)
+  const [message, setMessage] = useState<string>("")
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setStatus(null)
+    setMessage("")
+    setLoading(true)
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const firstName = formData.get("firstName")?.toString().trim() || ""
+    const lastName = formData.get("lastName")?.toString().trim() || ""
+    const email = formData.get("email")?.toString().trim() || ""
+    const phone = formData.get("phone")?.toString().trim() || ""
+    const company = formData.get("business")?.toString().trim() || ""
+    const role = formData.get("kitchenSize")?.toString().trim() || ""
+    const messageField = formData.get("message")?.toString().trim() || ""
+    if (!firstName || !lastName || !email || !company || !role) {
+      setStatus('error')
+      setMessage('Please fill in all required fields.')
+      setLoading(false)
+      return
+    }
+    try {
+      const res = await fetch('/api/bookdemo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${firstName} ${lastName}`,
+          email,
+          phone,
+          company,
+          role,
+          message: messageField,
+          source: 'web',
+        })
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to submit demo request.')
+      }
+      setStatus('success')
+      setMessage('Thank you! Your demo request has been received. We will contact you soon.')
+      form.reset()
+    } catch (err: any) {
+      setStatus('error')
+      setMessage(err.message || 'Failed to submit demo request.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -140,7 +193,7 @@ export default function BookDemoPage() {
               <p className="text-gray-600">Fill out the form below and we'll schedule your personalized demo.</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -237,11 +290,13 @@ export default function BookDemoPage() {
               </div>
 
               <div className="text-center">
-                <Button type="submit" size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
-                  Book My Demo
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                <Button type="submit" size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700" disabled={loading}>
+                  {loading ? 'Submitting...' : (<><span>Book My Demo</span><ArrowRight className="ml-2 h-4 w-4" /></>)}
                 </Button>
               </div>
+              {status && (
+                <div className={`mt-6 rounded-lg p-4 text-base font-medium ${status === 'success' ? 'bg-green-50 text-green-800 border border-green-200' : 'bg-red-50 text-red-800 border border-red-200'}`}>{message}</div>
+              )}
             </form>
           </div>
         </div>

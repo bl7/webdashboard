@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/pg';
+import { verifyAuthToken } from '@/lib/auth';
 
 // GET: List all label products
 export async function GET(req: NextRequest) {
@@ -14,6 +15,10 @@ export async function GET(req: NextRequest) {
 // POST: Create a new label product
 export async function POST(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req);
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     const data = await req.json();
     const { name, price_cents, rolls_per_bundle, labels_per_roll } = data;
     if (
@@ -38,6 +43,10 @@ export async function POST(req: NextRequest) {
 // PUT: Update a label product (expects id in body)
 export async function PUT(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req);
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     const data = await req.json();
     const { id, name, price_cents, rolls_per_bundle, labels_per_roll } = data;
     if (
@@ -63,6 +72,10 @@ export async function PUT(req: NextRequest) {
 // DELETE: Delete a label product (expects id in body)
 export async function DELETE(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req);
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
     const data = await req.json();
     const { id } = data;
     await db.query('DELETE FROM label_products WHERE id = $1', [id]);

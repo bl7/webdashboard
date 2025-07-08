@@ -35,23 +35,27 @@ export function getTokenFromHeader(req: NextRequest) {
 }
 
 export async function verifyAuthToken(req: NextRequest) {
-  const token = getTokenFromHeader(req)
+  const token = getTokenFromHeader(req) || getTokenFromCookie(req)
   if (!token) {
     throw new Error("Unauthorized: No token provided")
   }
-  
+
   const payload = await verifyToken(token)
   if (!payload) {
     throw new Error("Unauthorized: Invalid token")
   }
-  
-  // Extract uuid from payload (prioritize uuid over id)
+
+  // Boss token: role: 'boss'
+  // User token: no role or role !== 'boss'
+  let role: 'boss' | 'user' = 'user'
+  if (payload.role === 'boss') role = 'boss'
+
   const userUuid = payload.uuid || payload.id
   if (!userUuid) {
     throw new Error("Unauthorized: No user identifier found in token")
   }
-  
-  return { payload, userUuid }
+
+  return { payload, userUuid, role }
 }
 
 export function requireAuth(req: NextRequest) {

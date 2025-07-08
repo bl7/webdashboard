@@ -3,6 +3,7 @@ import pool from "@/lib/pg"
 import { stripe } from "@/lib/stripe"
 import { sendMail } from "@/lib/mail"
 import { cancellationEmail } from "@/components/templates/subscriptionEmails"
+import { verifyAuthToken } from '@/lib/auth';
 
 // Helper to get end of next full calendar month (in seconds)
 function getEndOfNextMonth() {
@@ -259,6 +260,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET(req: NextRequest) {
+  const { role } = await verifyAuthToken(req);
+  if (role !== 'boss') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const client = await pool.connect()
   try {
     const { searchParams } = new URL(req.url)

@@ -440,7 +440,10 @@ export default function PlansPage() {
   const fetchPlans = async () => {
     setLoading(true)
     try {
-      const res = await fetch("/api/plans")
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const res = await fetch("/api/plans", {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
       if (!res.ok) throw new Error("Failed to fetch plans")
       const data = await res.json()
       setPlans(data)
@@ -474,8 +477,10 @@ export default function PlansPage() {
     if (!selectedPlan) return
     setDeleteLoading(true)
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const res = await fetch(`/api/plans/${selectedPlan.id}`, {
         method: "DELETE",
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
       if (!res.ok) throw new Error("Failed to delete plan")
       await fetchPlans()

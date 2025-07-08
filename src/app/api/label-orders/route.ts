@@ -110,13 +110,20 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    // Require authentication
-    const { userUuid } = await verifyAuthToken(req);
-    const result = await pool.query(
-      `SELECT id, user_id, bundle_count, label_count, amount_cents, status, stripe_payment_intent_id, shipping_address, created_at, paid_at, shipped_at
-       FROM label_orders WHERE user_id = $1 ORDER BY created_at DESC`,
-      [userUuid]
-    );
+    const { userUuid, role } = await verifyAuthToken(req);
+    let result;
+    if (role === 'boss') {
+      result = await pool.query(
+        `SELECT id, user_id, bundle_count, label_count, amount_cents, status, stripe_payment_intent_id, shipping_address, created_at, paid_at, shipped_at
+         FROM label_orders ORDER BY created_at DESC`
+      );
+    } else {
+      result = await pool.query(
+        `SELECT id, user_id, bundle_count, label_count, amount_cents, status, stripe_payment_intent_id, shipping_address, created_at, paid_at, shipped_at
+         FROM label_orders WHERE user_id = $1 ORDER BY created_at DESC`,
+        [userUuid]
+      );
+    }
     const orders = result.rows;
     console.log('[LABEL ORDERS] Raw orders:', orders);
     // For each paid order, fetch the Stripe receipt_url

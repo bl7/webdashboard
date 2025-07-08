@@ -93,7 +93,10 @@ export default function NotificationsPage() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('/api/admin-notifications')
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const response = await fetch('/api/admin-notifications', {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
       if (response.ok) {
         const data = await response.json()
         setNotifications(data.notifications)
@@ -168,8 +171,10 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationId: number) => {
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch(`/api/admin-notifications/${notificationId}/read`, {
-        method: 'PATCH'
+        method: 'PATCH',
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data
@@ -181,8 +186,10 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch('/api/admin-notifications/mark-all-read', {
-        method: 'PATCH'
+        method: 'PATCH',
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data
@@ -194,8 +201,10 @@ export default function NotificationsPage() {
 
   const deleteNotification = async (notificationId: number) => {
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch(`/api/admin-notifications/${notificationId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data

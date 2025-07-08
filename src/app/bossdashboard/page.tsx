@@ -74,28 +74,37 @@ export default function BossDashboard() {
         setLoading(true)
         
         // Fetch analytics data
-        const analyticsResponse = await fetch('/api/subscription_better/analytics')
+        const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null
+        const analyticsResponse = await fetch('/api/subscription_better/analytics', {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        })
         if (!analyticsResponse.ok) {
           throw new Error('Failed to fetch analytics data')
         }
         const analytics = await analyticsResponse.json()
         
         // Fetch users data
-        const usersResponse = await fetch('/api/subscription_better/users')
+        const usersResponse = await fetch('/api/subscription_better/users', {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        })
         if (!usersResponse.ok) {
           throw new Error('Failed to fetch users data')
         }
         const usersData = await usersResponse.json()
         
         // Fetch plans data
-        const plansResponse = await fetch('/api/plans')
+        const plansResponse = await fetch('/api/plans', {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        })
         if (!plansResponse.ok) {
           throw new Error('Failed to fetch plans data')
         }
         const plansData = await plansResponse.json()
         
         // Fetch device and label order data
-        fetch('/api/devices').then(res => res.json()).then(data => {
+        fetch('/api/devices', {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        }).then(res => res.json()).then(data => {
           setPendingDevices((data.devices || []).filter((d: any) => d.status === 'pending'))
           setRecentDevices(
             (data.devices || [])
@@ -108,7 +117,9 @@ export default function BossDashboard() {
               .slice(0, 5)
           )
         })
-        fetch('/api/label-orders/all').then(res => res.json()).then(data => {
+        fetch('/api/label-orders/all', {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        }).then(res => res.json()).then(data => {
           setRecentLabelOrders(
             (data.orders || [])
               .slice()

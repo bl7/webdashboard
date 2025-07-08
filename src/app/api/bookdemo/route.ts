@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import  pool  from '@/lib/pg'
+import { verifyAuthToken } from '@/lib/auth'
 
 
 export async function POST(req: NextRequest) {
@@ -19,9 +20,12 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
-  // await requireBossAuth(req)
+export async function GET(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req)
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     const result = await pool.query('SELECT * FROM book_demo_requests ORDER BY created_at DESC')
     return NextResponse.json(result.rows)
   } catch (err) {

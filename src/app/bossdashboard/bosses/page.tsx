@@ -17,7 +17,10 @@ export default function BossesPage() {
 
   const fetchBosses = async () => {
     setLoading(true);
-    const res = await fetch("/api/bosses");
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const res = await fetch("/api/bosses", {
+      headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+    });
     const data = await res.json();
     setBosses(Array.isArray(data) ? data : []);
     setLoading(false);
@@ -25,9 +28,10 @@ export default function BossesPage() {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
     await fetch("/api/bosses", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
     setForm({ username: "", email: "", password: "" });
@@ -42,9 +46,10 @@ export default function BossesPage() {
   const handleEditSave = async (id: number) => {
     const payload: any = { id, username: editForm.username, email: editForm.email };
     if (editForm.password) payload.password = editForm.password;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
     await fetch(`/api/bosses`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
     setEditId(null);
@@ -53,9 +58,10 @@ export default function BossesPage() {
 
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this boss?")) return;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
     await fetch(`/api/bosses`, {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
     fetchBosses();

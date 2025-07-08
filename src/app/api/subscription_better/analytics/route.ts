@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/pg';
+import { verifyAuthToken } from '@/lib/auth'
 
 export async function GET(req: NextRequest) {
   try {
+    const { userUuid, role } = await verifyAuthToken(req)
     const { searchParams } = new URL(req.url)
     const dateFrom = searchParams.get('date_from')
     const dateTo = searchParams.get('date_to')
@@ -13,13 +15,30 @@ export async function GET(req: NextRequest) {
       values = [dateFrom, dateTo]
     }
     const client = await pool.connect();
-    // Join user_profiles and subscription_better
-    const { rows } = await client.query(`
-      SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
-      FROM user_profiles u
-      INNER JOIN subscription_better s ON u.user_id::text = s.user_id::text
-      ${where}
-    `, values);
+    let rows
+    if (role === 'boss') {
+      // Boss: all subscriptions
+      const result = await client.query(`
+        SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
+        FROM user_profiles u
+        INNER JOIN subscription_better s ON u.user_id::text = s.user_id::text
+        ${where}
+      `, values);
+      rows = result.rows
+    } else if (role === 'user') {
+      // User: only their own subscription
+      const result = await client.query(`
+        SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status, s.billing_interval, s.amount, s.current_period_end, s.trial_end, s.pending_plan_change, s.pending_plan_change_effective, s.created_at
+        FROM user_profiles u
+        INNER JOIN subscription_better s ON u.user_id::text = s.user_id::text
+        WHERE u.user_id = $1
+        ${where ? 'AND ' + where.replace('WHERE ', '') : ''}
+      `, [userUuid, ...values]);
+      rows = result.rows
+    } else {
+      client.release();
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     client.release();
     const subs = rows;
     // Aggregate metrics

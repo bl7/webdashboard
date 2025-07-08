@@ -34,7 +34,10 @@ export default function BossBookDemoPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch('/api/bookdemo')
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const res = await fetch('/api/bookdemo', {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
       if (!res.ok) throw new Error('Failed to fetch requests')
       setRequests(await res.json())
     } catch (err: any) {
@@ -58,9 +61,10 @@ export default function BossBookDemoPage() {
     if (!attended) {
       setUpdatingId(id)
       try {
+        const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
         const res = await fetch(`/api/bookdemo/${id}`, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
+          headers: bossToken ? { 'Content-Type': 'application/json', 'Authorization': `Bearer ${bossToken}` } : { 'Content-Type': 'application/json' },
           body: JSON.stringify({ attended: true }),
         })
         if (!res.ok) throw new Error('Failed to update')
@@ -100,7 +104,11 @@ export default function BossBookDemoPage() {
     if (!window.confirm('Delete this request?')) return
     setDeletingId(id)
     try {
-      const res = await fetch(`/api/bookdemo/${id}`, { method: 'DELETE' })
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const res = await fetch(`/api/bookdemo/${id}`, {
+        method: 'DELETE',
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
       if (!res.ok) throw new Error('Failed to delete')
       setRequests(requests => requests.filter(r => r.id !== id))
     } catch (err) {

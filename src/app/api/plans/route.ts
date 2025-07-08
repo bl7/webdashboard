@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/pg';
+import { verifyAuthToken } from '@/lib/auth'
 
 // GET: List all plans
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req)
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
     const result = await pool.query(`
       SELECT 
         id,
@@ -37,9 +42,13 @@ export async function GET() {
 }
 
 // POST: Add a new plan
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const body = await request.json();
+    const { role } = await verifyAuthToken(req)
+    if (role !== 'boss') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const body = await req.json();
     
     // Validation
     const { 

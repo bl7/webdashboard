@@ -101,10 +101,9 @@ export default function DevicesPage() {
 
   const fetchDevices = async () => {
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch("/api/devices", {
-        headers: {
-          "Content-Type": "application/json"
-        }
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' }
       })
 
       if (response.ok) {
@@ -160,11 +159,10 @@ export default function DevicesPage() {
   const updateDeviceStatus = async (deviceId: number, newStatus: string) => {
     setUpdatingDevice(deviceId)
     try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch(`/api/devices/${deviceId}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
       })
 
@@ -240,11 +238,10 @@ export default function DevicesPage() {
       console.log('Sending update data:', updateData)
       console.log('Current editingDevice:', editingDevice)
       
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
       const response = await fetch(`/api/devices/${selectedDevice.id}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}`, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateData)
       })
 

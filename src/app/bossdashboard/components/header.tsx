@@ -62,7 +62,10 @@ export default function Header({
   const fetchUnreadNotifications = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin-notifications?read=false&limit=10')
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const response = await fetch('/api/admin-notifications?read=false&limit=10', {
+        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      })
       if (response.ok) {
         const data = await response.json()
         const newNotifications = data.notifications || []

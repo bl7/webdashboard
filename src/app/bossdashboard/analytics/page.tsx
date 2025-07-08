@@ -23,7 +23,10 @@ export default function AnalyticsDashboard() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        const res = await fetch("/api/subscription_better/analytics")
+        const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null
+        const res = await fetch("/api/subscription_better/analytics", {
+          headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        })
         const json = await res.json()
         setData(json)
       } catch (e: any) {

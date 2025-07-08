@@ -126,7 +126,9 @@ export default function OrderLabelsTab() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/label-products')
+    fetch('/api/label-products', {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
+    })
       .then(res => res.json())
       .then(data => setLabelProducts(Array.isArray(data) ? data.map(p => ({ ...p, price_cents: p.price_cents ?? p.price })) : []))
       .catch(() => setLabelProducts([]));
