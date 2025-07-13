@@ -65,6 +65,8 @@ export default function MenuItemsDashboard() {
     ingredientIDs: [],
   })
   const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null)
+  const [ingredientSearch, setIngredientSearch] = useState("");
+  const [editIngredientSearch, setEditIngredientSearch] = useState("");
 
   const { 
     menuItems, 
@@ -438,19 +440,29 @@ export default function MenuItemsDashboard() {
                 <DropdownMenuContent className="w-full">
                   <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {getAvailableIngredients(newItem.ingredientIDs).length === 0 ? (
+                  <Input
+                    placeholder="Search ingredients..."
+                    value={ingredientSearch}
+                    onChange={e => setIngredientSearch(e.target.value)}
+                    className="mb-2 w-full px-2 py-1 text-sm"
+                  />
+                  {getAvailableIngredients(newItem.ingredientIDs)
+                    .filter(ing => ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())).length === 0 ? (
                     <div className="px-2 py-1 text-sm text-muted-foreground">
                       No more ingredients available
                     </div>
                   ) : (
-                    getAvailableIngredients(newItem.ingredientIDs).map((ingredient) => (
-                      <DropdownMenuItem
-                        key={ingredient.uuid}
-                        onClick={() => handleAddIngredient(ingredient.uuid)}
-                      >
-                        {ingredient.ingredientName}
-                      </DropdownMenuItem>
-                    ))
+                    getAvailableIngredients(newItem.ingredientIDs)
+                      .filter(ing => ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase()))
+                      .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
+                      .map((ingredient) => (
+                        <DropdownMenuItem
+                          key={ingredient.uuid}
+                          onClick={() => handleAddIngredient(ingredient.uuid)}
+                        >
+                          {ingredient.ingredientName}
+                        </DropdownMenuItem>
+                      ))
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -563,19 +575,29 @@ export default function MenuItemsDashboard() {
                 <DropdownMenuContent className="w-full">
                   <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {getAvailableIngredients(editItem.ingredientIDs).length === 0 ? (
+                  <Input
+                    placeholder="Search ingredients..."
+                    value={editIngredientSearch}
+                    onChange={e => setEditIngredientSearch(e.target.value)}
+                    className="mb-2 w-full px-2 py-1 text-sm"
+                  />
+                  {getAvailableIngredients(editItem.ingredientIDs)
+                    .filter(ing => ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase())).length === 0 ? (
                     <div className="px-2 py-2 text-center text-sm text-muted-foreground">
                       No more ingredients available
                     </div>
                   ) : (
-                    getAvailableIngredients(editItem.ingredientIDs).map((ingredient) => (
-                      <DropdownMenuItem
-                        key={ingredient.uuid}
-                        onClick={() => handleAddIngredient(ingredient.uuid, true)}
-                      >
-                        {ingredient.ingredientName}
-                      </DropdownMenuItem>
-                    ))
+                    getAvailableIngredients(editItem.ingredientIDs)
+                      .filter(ing => ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase()))
+                      .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
+                      .map((ingredient) => (
+                        <DropdownMenuItem
+                          key={ingredient.uuid}
+                          onClick={() => handleAddIngredient(ingredient.uuid, true)}
+                        >
+                          {ingredient.ingredientName}
+                        </DropdownMenuItem>
+                      ))
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>

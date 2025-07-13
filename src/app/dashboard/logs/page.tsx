@@ -118,6 +118,7 @@ export default function PrintSessionsPage() {
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
 
   // Printer context
   const {
@@ -125,6 +126,7 @@ export default function PrintSessionsPage() {
     printers: availablePrinters,
     defaultPrinter,
     selectedPrinter,
+    selectPrinter,
     loading: printerLoading,
     print,
   } = usePrinter()
@@ -256,8 +258,12 @@ export default function PrintSessionsPage() {
         console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
       }
 
+      // Use selected printer from dropdown
+      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterName || p.systemName === selectedPrinterName)) || selectedPrinter || defaultPrinter;
+      if (printerToUse) selectPrinter(printerToUse);
+
       // Get the best available printer using our helper function
-      const printerSelection = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+      const printerSelection = getBestAvailablePrinter(printerToUse, defaultPrinter, availablePrinters)
       
       if (!printerSelection.printer) {
         console.warn("⚠️ No printer available, but allowing print for debug purposes")
@@ -303,6 +309,13 @@ export default function PrintSessionsPage() {
           )
 
           console.log(`🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl.length}`)
+
+          if (!imageDataUrl) {
+            failCount++;
+            failItems.push(log.details.itemName);
+            console.error(`❌ Print error for item ${log.details.itemName}: imageDataUrl is undefined`);
+            continue;
+          }
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
@@ -373,6 +386,32 @@ export default function PrintSessionsPage() {
           <FileDown className="mr-2 h-4 w-4" /> Export Data
         </Button>
       </div>
+      {/* Printer Dropdown */}
+      <div className="mb-4 flex items-center gap-4">
+        <label className="font-medium">Select Printer:</label>
+        <select
+          className="rounded border px-2 py-1"
+          value={selectedPrinterName}
+          onChange={e => {
+            setSelectedPrinterName(e.target.value);
+            const printer = availablePrinters.find((p: any) => (p.name === e.target.value || p.systemName === e.target.value));
+            if (printer) selectPrinter(printer);
+          }}
+        >
+          <option value="">{availablePrinters.length === 0 ? "No printers detected" : "Select a printer"}</option>
+          {availablePrinters.map((printer: any) => {
+            const printerName = printer.name;
+            return (
+              <option key={printer.systemName || printerName} value={printerName}>
+                {printerName} {printer.isDefault ? '(Default)' : ''}
+              </option>
+            );
+          })}
+        </select>
+        <span className="text-xs text-gray-700 mt-1">
+          {availablePrinters.length} printer(s) detected
+        </span>
+      </div>
 
       <div className="grid grid-cols-1 gap-4">
         <div className="my-6 rounded-xl border bg-card p-6 shadow">
@@ -433,7 +472,11 @@ export default function PrintSessionsPage() {
                   </TableCell>
                   <TableCell>{formatPrintedAt(session.printedAt)}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {session.printerUsed?.name || "Unknown"}
+                    {typeof session.printerUsed === 'string'
+                      ? session.printerUsed
+                      : session.printerUsed && typeof session.printerUsed.name === 'string'
+                        ? session.printerUsed.name
+                        : 'Unknown'}
                   </TableCell>
                   <TableCell>
                     {session.initial ? (

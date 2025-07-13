@@ -89,6 +89,8 @@ export default function IngredientsTable() {
   const [editSelectedAllergens, setEditSelectedAllergens] = useState<string[]>([])
   const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
   const [editAllergenDropdownOpen, setEditAllergenDropdownOpen] = useState(false)
+  const [allergenSearch, setAllergenSearch] = useState("");
+  const [editAllergenSearch, setEditAllergenSearch] = useState("");
 
   // Use the ingredients hook
   const {
@@ -373,6 +375,12 @@ export default function IngredientsTable() {
                     <DropdownMenuContent className="w-80" align="start">
                       <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
                       <DropdownMenuSeparator />
+                      <Input
+                        placeholder="Search allergens..."
+                        value={allergenSearch}
+                        onChange={e => setAllergenSearch(e.target.value)}
+                        className="mb-2 w-full px-2 py-1 text-sm"
+                      />
                       {allergensError ? (
                         <div className="px-2 py-1 text-sm text-red-500">
                           Error loading allergens: {allergensError}
@@ -385,23 +393,26 @@ export default function IngredientsTable() {
                         </div>
                       ) : (
                         <div className="max-h-60 overflow-y-auto">
-                          {allergens.map((allergen) => (
-                            <DropdownMenuCheckboxItem
-                              key={allergen.id}
-                              checked={selectedAllergens.includes(allergen.id)}
-                              onCheckedChange={() => handleAllergenToggle(allergen.id)}
-                              className="flex items-center space-x-2 px-2 py-2"
-                            >
-                              <div className="flex flex-col">
-                                <span className="font-medium">{allergen.name}</span>
-                                {allergen.category && (
-                                  <span className="text-xs text-muted-foreground">
-                                    {allergen.category}
-                                  </span>
-                                )}
-                              </div>
-                            </DropdownMenuCheckboxItem>
-                          ))}
+                          {allergens
+                            .filter(a => a.name.toLowerCase().includes(allergenSearch.toLowerCase()))
+                            .sort((a, b) => a.name.localeCompare(b.name))
+                            .map((allergen) => (
+                              <DropdownMenuCheckboxItem
+                                key={allergen.id}
+                                checked={selectedAllergens.includes(allergen.id)}
+                                onCheckedChange={() => handleAllergenToggle(allergen.id)}
+                                className="flex items-center space-x-2 px-2 py-2"
+                              >
+                                <div className="flex flex-col">
+                                  <span className="font-medium">{allergen.name}</span>
+                                  {allergen.category && (
+                                    <span className="text-xs text-muted-foreground">
+                                      {allergen.category}
+                                    </span>
+                                  )}
+                                </div>
+                              </DropdownMenuCheckboxItem>
+                            ))}
                         </div>
                       )}
                     </DropdownMenuContent>
@@ -563,28 +574,37 @@ export default function IngredientsTable() {
                           <DropdownMenuContent className="max-h-48 w-full overflow-y-auto">
                             <DropdownMenuLabel>Available Allergens</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            {getAvailableAllergens().length === 0 ? (
+                            <Input
+                              placeholder="Search allergens..."
+                              value={editAllergenSearch}
+                              onChange={e => setEditAllergenSearch(e.target.value)}
+                              className="mb-2 w-full px-2 py-1 text-sm"
+                            />
+                            {getAvailableAllergens().filter(a => a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())).length === 0 ? (
                               <div className="px-2 py-2 text-center text-sm text-muted-foreground">
                                 No more allergens available
                               </div>
                             ) : (
-                              getAvailableAllergens().map((allergen) => (
-                                <DropdownMenuItem
-                                  key={allergen.id}
-                                  onClick={() => handleAddEditAllergen(allergen.id)}
-                                  className="cursor-pointer"
-                                >
-                                  <Plus className="mr-2 h-4 w-4" />
-                                  <div className="flex flex-col">
-                                    <span className="font-medium">{allergen.name}</span>
-                                    {allergen.category && (
-                                      <span className="text-xs text-muted-foreground">
-                                        {allergen.category}
-                                      </span>
-                                    )}
-                                  </div>
-                                </DropdownMenuItem>
-                              ))
+                              getAvailableAllergens()
+                                .filter(a => a.name.toLowerCase().includes(editAllergenSearch.toLowerCase()))
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((allergen) => (
+                                  <DropdownMenuItem
+                                    key={allergen.id}
+                                    onClick={() => handleAddEditAllergen(allergen.id)}
+                                    className="cursor-pointer"
+                                  >
+                                    <Plus className="mr-2 h-4 w-4" />
+                                    <div className="flex flex-col">
+                                      <span className="font-medium">{allergen.name}</span>
+                                      {allergen.category && (
+                                        <span className="text-xs text-muted-foreground">
+                                          {allergen.category}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </DropdownMenuItem>
+                                ))
                             )}
                           </DropdownMenuContent>
                         </DropdownMenu>
