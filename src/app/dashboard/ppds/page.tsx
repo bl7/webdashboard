@@ -52,6 +52,21 @@ export default function PPDSPage() {
   const { printers, selectedPrinter, selectPrinter, print, isConnected } = usePrinter()
   const { profile } = useAuth()
   const businessName = profile?.company_name || "InstaLabel Ltd"
+  const [selectedPrinterSystemName, setSelectedPrinterSystemName] = useState<string>("");
+  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
+
+  // Sync selected printer with available printers
+  useEffect(() => {
+    if (printers.length === 0) {
+      setSelectedPrinterSystemName("");
+      return;
+    }
+    // If selected printer is not in the list, reset
+    if (!printers.find(p => p.systemName === selectedPrinterSystemName)) {
+      setSelectedPrinterSystemName(printers[0].systemName);
+      selectPrinter(printers[0]);
+    }
+  }, [printers]);
 
   // Fetch menu items
   useEffect(() => {
@@ -110,6 +125,18 @@ export default function PPDSPage() {
       })
       .catch(() => setExpiryDays(2))
   }, [])
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const platform = window.navigator.platform.toLowerCase();
+      if (platform.includes('mac')) setOsType('mac');
+      else if (platform.includes('win')) setOsType('windows');
+      else setOsType('other');
+    }
+  }, []);
+  useEffect(() => {
+    console.log('[PPDS Print] Detected OS:', osType);
+  }, [osType]);
 
   function calculateExpiryDate(days: number) {
     const d = new Date()
@@ -237,10 +264,11 @@ export default function PPDSPage() {
             <label className="block mb-2 font-medium">Select Printer:</label>
             <select
               className="w-full rounded border px-2 py-1"
-              value={selectedPrinter?.systemName || ''}
+              value={selectedPrinterSystemName}
               onChange={e => {
-                const printer = printers.find(p => p.systemName === e.target.value)
-                if (printer) selectPrinter(printer)
+                setSelectedPrinterSystemName(e.target.value);
+                const printer = printers.find(p => p.systemName === e.target.value);
+                if (printer) selectPrinter(printer);
               }}
             >
               <option value="">Select a printer</option>
@@ -248,6 +276,10 @@ export default function PPDSPage() {
                 <option key={printer.systemName} value={printer.systemName}>{printer.name}</option>
               ))}
             </select>
+            {printers.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
+            {printers.length > 0 && !printers.find(p => p.systemName === selectedPrinterSystemName) && (
+              <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
+            )}
             {!isConnected && <div className="text-xs text-red-600 mt-2">Printer not connected</div>}
           </div>
           {/* Menu Items List */}
@@ -308,7 +340,7 @@ export default function PPDSPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={handlePrint} disabled={printQueue.length === 0 || printers.length === 0} variant="purple">Print Labels</Button>
+                <Button onClick={handlePrint} disabled={printQueue.length === 0 || printers.length === 0 || !printers.find(p => p.systemName === selectedPrinterSystemName)} variant="purple">Print Labels</Button>
                 <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
               </div>
             </div>

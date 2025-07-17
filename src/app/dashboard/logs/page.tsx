@@ -118,7 +118,8 @@ export default function PrintSessionsPage() {
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
-  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
+  const [selectedPrinterSystemName, setSelectedPrinterSystemName] = useState<string>("");
+  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
 
   // Printer context
   const {
@@ -130,6 +131,19 @@ export default function PrintSessionsPage() {
     loading: printerLoading,
     print,
   } = usePrinter()
+
+  // Sync selected printer with available printers
+  useEffect(() => {
+    if (availablePrinters.length === 0) {
+      setSelectedPrinterSystemName("");
+      return;
+    }
+    // If selected printer is not in the list, reset
+    if (!availablePrinters.find(p => p.systemName === selectedPrinterSystemName)) {
+      setSelectedPrinterSystemName(availablePrinters[0].systemName);
+      selectPrinter(availablePrinters[0]);
+    }
+  }, [availablePrinters]);
 
   // Subscription status
   const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
@@ -222,6 +236,18 @@ export default function PrintSessionsPage() {
     setFilteredSessions(filtered)
   }, [search, groupedSessions])
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const platform = window.navigator.platform.toLowerCase();
+      if (platform.includes('mac')) setOsType('mac');
+      else if (platform.includes('win')) setOsType('windows');
+      else setOsType('other');
+    }
+  }, []);
+  useEffect(() => {
+    console.log('[Print Sessions] Detected OS:', osType);
+  }, [osType]);
+
   function formatTimestamp(ts: string) {
     // Use ISO string for SSR safety
     return new Date(ts).toISOString().replace('T', ' ').slice(0, 19)
@@ -259,7 +285,7 @@ export default function PrintSessionsPage() {
       }
 
       // Use selected printer from dropdown
-      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterName || p.systemName === selectedPrinterName)) || selectedPrinter || defaultPrinter;
+      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterSystemName || p.systemName === selectedPrinterSystemName)) || selectedPrinter || defaultPrinter;
       if (printerToUse) selectPrinter(printerToUse);
 
       // Get the best available printer using our helper function
@@ -391,23 +417,22 @@ export default function PrintSessionsPage() {
         <label className="font-medium">Select Printer:</label>
         <select
           className="rounded border px-2 py-1"
-          value={selectedPrinterName}
+          value={selectedPrinterSystemName}
           onChange={e => {
-            setSelectedPrinterName(e.target.value);
-            const printer = availablePrinters.find((p: any) => (p.name === e.target.value || p.systemName === e.target.value));
+            setSelectedPrinterSystemName(e.target.value);
+            const printer = availablePrinters.find(p => p.systemName === e.target.value);
             if (printer) selectPrinter(printer);
           }}
         >
           <option value="">{availablePrinters.length === 0 ? "No printers detected" : "Select a printer"}</option>
-          {availablePrinters.map((printer: any) => {
-            const printerName = printer.name;
-            return (
-              <option key={printer.systemName || printerName} value={printerName}>
-                {printerName} {printer.isDefault ? '(Default)' : ''}
-              </option>
-            );
-          })}
+          {availablePrinters.map((printer: any) => (
+            <option key={printer.systemName} value={printer.systemName}>{printer.name} {printer.isDefault ? '(Default)' : ''}</option>
+          ))}
         </select>
+        {availablePrinters.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
+        {availablePrinters.length > 0 && !availablePrinters.find(p => p.systemName === selectedPrinterSystemName) && (
+          <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
+        )}
         <span className="text-xs text-gray-700 mt-1">
           {availablePrinters.length} printer(s) detected
         </span>
@@ -491,13 +516,15 @@ export default function PrintSessionsPage() {
                     <Button
                       size="sm"
                       onClick={() => handlePrintSession(session)}
-                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0}
+                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => p.systemName === selectedPrinterSystemName)}
                       className="h-8 px-3"
                       title={
                         subBlocked
                           ? "Printing is disabled due to your subscription status."
                           : availablePrinters.length === 0
                           ? "No printers available"
+                          : !availablePrinters.find(p => p.systemName === selectedPrinterSystemName)
+                          ? "No valid printer selected"
                           : printingStates[session.sessionId]
                           ? "Printing in progress"
                           : "Print all labels in this session"
