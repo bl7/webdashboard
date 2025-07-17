@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { verifyAuthToken } from "@/lib/auth"
 
+// CORS helper
+function withCORS(res: Response | NextResponse) {
+  res.headers.set("Access-Control-Allow-Origin", "*");
+  res.headers.set("Access-Control-Allow-Methods", "GET,PUT,OPTIONS");
+  res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res;
+}
+
+export async function OPTIONS(req: NextRequest) {
+  return withCORS(new Response(null, { status: 204 }));
+}
+
 export async function GET(req: NextRequest) {
   try {
     // Verify JWT token and get user UUID
@@ -12,15 +24,15 @@ export async function GET(req: NextRequest) {
       pool.query("SELECT initial FROM label_initial_items WHERE user_id = $1", [userUuid]),
     ])
 
-    return NextResponse.json({
+    return withCORS(NextResponse.json({
       use_initials: settingsResult.rows[0]?.use_initials ?? true,
       initials: initialsResult.rows.map((r: { initial: string }) => r.initial),
-    })
+    }))
   } catch (error: any) {
     if (error.message.includes("Unauthorized")) {
-      return NextResponse.json({ error: error.message }, { status: 401 })
+      return withCORS(NextResponse.json({ error: error.message }, { status: 401 }))
     }
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
+    return withCORS(NextResponse.json({ error: "Internal Server Error" }, { status: 500 }))
   }
 }
 
@@ -63,7 +75,7 @@ export async function PUT(req: NextRequest) {
       }
 
       await client.query("COMMIT")
-      return NextResponse.json({ success: true })
+      return withCORS(NextResponse.json({ success: true }))
     } catch (err) {
       await client.query("ROLLBACK")
       throw err
@@ -73,6 +85,6 @@ export async function PUT(req: NextRequest) {
   } catch (error: unknown) {
     let message = "Internal Server Error"
     if (error instanceof Error) message = error.message
-    return NextResponse.json({ error: message }, { status: 500 })
+    return withCORS(NextResponse.json({ error: message }, { status: 500 }))
   }
 }

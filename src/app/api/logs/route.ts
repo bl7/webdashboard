@@ -3,6 +3,18 @@ import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { verifyAuthToken } from "@/lib/auth"
 
+// CORS helper
+function withCORS(res: Response | NextResponse) {
+  res.headers.set("Access-Control-Allow-Origin", "*");
+  res.headers.set("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  res.headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  return res;
+}
+
+export async function OPTIONS(req: NextRequest) {
+  return withCORS(new Response(null, { status: 204 }));
+}
+
 // CREATE log
 export async function POST(req: NextRequest) {
   try {
@@ -27,7 +39,7 @@ export async function POST(req: NextRequest) {
     )
 
     console.log("Inserted log:", result.rows[0])
-    return NextResponse.json({ log: result.rows[0] }, { status: 201 })
+    return withCORS(NextResponse.json({ log: result.rows[0] }, { status: 201 }))
   } catch (error: any) {
     console.error("POST /api/logs error:", error)
     
@@ -66,7 +78,7 @@ export async function GET(req: NextRequest) {
       ...row,
       details: typeof row.details === "string" ? JSON.parse(row.details) : row.details,
     }))
-    return NextResponse.json({ logs }, { status: 200 })
+    return withCORS(NextResponse.json({ logs }, { status: 200 }))
   } catch (error: any) {
     console.error("Error fetching logs in GET /api/logs:", error)
     
@@ -105,7 +117,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: "Log not found or not owned by user" }, { status: 404 })
     }
 
-    return NextResponse.json({ log: result.rows[0] }, { status: 200 })
+    return withCORS(NextResponse.json({ log: result.rows[0] }, { status: 200 }))
   } catch (err) {
     console.error("PUT /api/logs error:", err)
     return NextResponse.json({ error: "Failed to update log" }, { status: 500 })
@@ -130,7 +142,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Log not found or not owned by user" }, { status: 404 })
     }
 
-    return NextResponse.json({ deleted: result.rows[0] }, { status: 200 })
+    return withCORS(NextResponse.json({ deleted: result.rows[0] }, { status: 200 }))
   } catch (err) {
     console.error("DELETE /api/logs error:", err)
     return NextResponse.json({ error: "Failed to delete log" }, { status: 500 })
