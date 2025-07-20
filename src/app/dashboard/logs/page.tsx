@@ -110,6 +110,15 @@ function PrintSessionsSkeleton() {
   )
 }
 
+// Helper to get printer name
+function getPrinterName(printer: any): string {
+  if (!printer) return '';
+  if (typeof printer === 'string') return printer;
+  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
+  if (typeof printer.name === 'string') return printer.name;
+  return '';
+}
+
 export default function PrintSessionsPage() {
   const [printLogs, setPrintLogs] = useState<PrintLog[]>([])
   const [groupedSessions, setGroupedSessions] = useState<GroupedPrintSession[]>([])
@@ -118,7 +127,7 @@ export default function PrintSessionsPage() {
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
-  const [selectedPrinterSystemName, setSelectedPrinterSystemName] = useState<string>("");
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
   const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
 
   // Printer context
@@ -131,19 +140,6 @@ export default function PrintSessionsPage() {
     loading: printerLoading,
     print,
   } = usePrinter()
-
-  // Sync selected printer with available printers
-  useEffect(() => {
-    if (availablePrinters.length === 0) {
-      setSelectedPrinterSystemName("");
-      return;
-    }
-    // If selected printer is not in the list, reset
-    if (!availablePrinters.find(p => p.systemName === selectedPrinterSystemName)) {
-      setSelectedPrinterSystemName(availablePrinters[0].systemName);
-      selectPrinter(availablePrinters[0]);
-    }
-  }, [availablePrinters]);
 
   // Subscription status
   const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
@@ -285,7 +281,7 @@ export default function PrintSessionsPage() {
       }
 
       // Use selected printer from dropdown
-      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterSystemName || p.systemName === selectedPrinterSystemName)) || selectedPrinter || defaultPrinter;
+      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterName || p.systemName === selectedPrinterName)) || selectedPrinter || defaultPrinter;
       if (printerToUse) selectPrinter(printerToUse);
 
       // Get the best available printer using our helper function
@@ -412,30 +408,31 @@ export default function PrintSessionsPage() {
           <FileDown className="mr-2 h-4 w-4" /> Export Data
         </Button>
       </div>
-      {/* Printer Dropdown */}
-      <div className="mb-4 flex items-center gap-4">
-        <label className="font-medium">Select Printer:</label>
+      {/* Printer Chooser */}
+      <div className="mb-4">
+        <label className="block mb-2 font-medium">Select Printer:</label>
         <select
-          className="rounded border px-2 py-1"
-          value={selectedPrinterSystemName}
+          className="w-full rounded border px-2 py-1"
+          value={selectedPrinterName}
           onChange={e => {
-            setSelectedPrinterSystemName(e.target.value);
-            const printer = availablePrinters.find(p => p.systemName === e.target.value);
+            setSelectedPrinterName(e.target.value);
+            const printer = availablePrinters.find(p => getPrinterName(p) === e.target.value);
             if (printer) selectPrinter(printer);
           }}
         >
-          <option value="">{availablePrinters.length === 0 ? "No printers detected" : "Select a printer"}</option>
-          {availablePrinters.map((printer: any) => (
-            <option key={printer.systemName} value={printer.systemName}>{printer.name} {printer.isDefault ? '(Default)' : ''}</option>
-          ))}
+          <option value="">Select a printer</option>
+          {availablePrinters.map((printer) => {
+            const printerName = getPrinterName(printer);
+            return (
+              <option key={printerName} value={printerName}>{printerName}</option>
+            );
+          })}
         </select>
         {availablePrinters.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
-        {availablePrinters.length > 0 && !availablePrinters.find(p => p.systemName === selectedPrinterSystemName) && (
+        {availablePrinters.length > 0 && !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName) && (
           <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
         )}
-        <span className="text-xs text-gray-700 mt-1">
-          {availablePrinters.length} printer(s) detected
-        </span>
+        {!isConnected && <div className="text-xs text-red-600 mt-2">Printer not connected</div>}
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -516,14 +513,14 @@ export default function PrintSessionsPage() {
                     <Button
                       size="sm"
                       onClick={() => handlePrintSession(session)}
-                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => p.systemName === selectedPrinterSystemName)}
+                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)}
                       className="h-8 px-3"
                       title={
                         subBlocked
                           ? "Printing is disabled due to your subscription status."
                           : availablePrinters.length === 0
                           ? "No printers available"
-                          : !availablePrinters.find(p => p.systemName === selectedPrinterSystemName)
+                          : !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)
                           ? "No valid printer selected"
                           : printingStates[session.sessionId]
                           ? "Printing in progress"
