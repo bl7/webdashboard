@@ -15,14 +15,14 @@ export function PPDSLabelRenderer({ item, storageInfo, businessName, allIngredie
       width: '60mm',
       height: '80mm',
       boxSizing: 'border-box',
-      padding: '3mm',
+      padding: 0, // Remove all padding
+      margin: 0, // Remove all margin
       background: 'white',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
       color: '#000',
       border: '1px solid #000',
-      margin: '0 auto',
       justifyContent: 'flex-start',
     }}>
       {/* Product Title */}

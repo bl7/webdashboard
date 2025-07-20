@@ -124,6 +124,7 @@ function getBestAvailablePrinter(
 }
 
 export default function LabelDemo() {
+  // Unify printer selection logic: use selectedPrinterName and getPrinterName
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>('');
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
@@ -429,9 +430,9 @@ export default function LabelDemo() {
     }
 
     console.log("🖨️ Starting print process for", printQueue.length, "items")
-    
-    // Get the best available printer using our helper function
-    const printerSelection = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    // Find printer by name
+    const selectedPrinterObj = availablePrinters.find(p => getPrinterName(p) === selectedPrinterName) || availablePrinters[0];
+    const printerSelection = getBestAvailablePrinter(selectedPrinterObj, defaultPrinter, availablePrinters)
     
     if (!isConnected) {
       console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
@@ -881,7 +882,7 @@ export default function LabelDemo() {
             <div className="sticky top-0 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0} variant="purple" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
+                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)} variant="purple" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
                 <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
               </div>
             </div>

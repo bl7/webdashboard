@@ -52,21 +52,82 @@ export default function PPDSPage() {
   const { printers, selectedPrinter, selectPrinter, print, isConnected } = usePrinter()
   const { profile } = useAuth()
   const businessName = profile?.company_name || "InstaLabel Ltd"
-  const [selectedPrinterSystemName, setSelectedPrinterSystemName] = useState<string>("");
+  // Replace selectedPrinterSystemName with selectedPrinterName
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
   const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
 
-  // Sync selected printer with available printers
-  useEffect(() => {
-    if (printers.length === 0) {
-      setSelectedPrinterSystemName("");
+  // Print logic (now real PNG generation and print)
+  async function handlePrint() {
+    if (printQueue.length === 0) {
+      alert("No items in print queue");
       return;
     }
-    // If selected printer is not in the list, reset
-    if (!printers.find(p => p.systemName === selectedPrinterSystemName)) {
-      setSelectedPrinterSystemName(printers[0].systemName);
-      selectPrinter(printers[0]);
+    if (!isConnected) {
+      alert("Printer not connected");
+      return;
     }
-  }, [printers]);
+    // Find printer by name
+    const selectedPrinterObj = printers.find(p => getPrinterName(p) === selectedPrinterName) || printers[0];
+    const printerSelection = getBestAvailablePrinter(selectedPrinterObj, printers[0], printers);
+    if (!printerSelection.printer) {
+      alert("No valid printer available");
+      return;
+    }
+    let successCount = 0;
+    let failCount = 0;
+    for (const item of printQueue) {
+      for (let i = 0; i < item.quantity; i++) {
+        try {
+          // Render label to PNG using html-to-image
+          const container = document.createElement("div");
+          container.style.position = "absolute";
+          container.style.top = "0";
+          container.style.left = "0";
+          container.style.width = "60mm";
+          container.style.height = "80mm";
+          container.style.backgroundColor = "white";
+          container.style.zIndex = "-1";
+          container.style.visibility = "hidden";
+          document.body.appendChild(container);
+          // Render PPDSLabelRenderer into container
+          import("react-dom/client").then(({ createRoot }) => {
+            const root = createRoot(container);
+            // Only pass serializable item data
+            root.render(
+              <PPDSLabelRenderer
+                item={{ ...item }}
+                storageInfo={storageInfo}
+                businessName={businessName}
+                allIngredients={allIngredients}
+              />
+            );
+            setTimeout(async () => {
+              container.style.visibility = "visible";
+              const imageDataUrl = await toPng(container, {
+                cacheBust: true,
+                width: container.offsetWidth,
+                height: container.offsetHeight,
+                style: {
+                  transform: 'scale(1)',
+                  transformOrigin: 'top left'
+                }
+              });
+              root.unmount();
+              container.remove();
+              await print(imageDataUrl, undefined, { labelHeight: "80mm" });
+              successCount++;
+              if (successCount + failCount === printQueue.reduce((sum, q) => sum + q.quantity, 0)) {
+                setPrintQueue([]);
+              }
+            }, 300);
+          });
+        } catch (err) {
+          failCount++;
+          console.error("Print error for item", item.name, err);
+        }
+      }
+    }
+  }
 
   // Fetch menu items
   useEffect(() => {
@@ -182,77 +243,6 @@ export default function PPDSPage() {
     setPrintQueue([])
   }
 
-  // Print logic (now real PNG generation and print)
-  async function handlePrint() {
-    if (printQueue.length === 0) {
-      alert("No items in print queue");
-      return;
-    }
-    if (!isConnected) {
-      alert("Printer not connected");
-      return;
-    }
-    const printerSelection = getBestAvailablePrinter(selectedPrinter, printers[0], printers);
-    if (!printerSelection.printer) {
-      alert("No valid printer available");
-      return;
-    }
-    let successCount = 0;
-    let failCount = 0;
-    for (const item of printQueue) {
-      for (let i = 0; i < item.quantity; i++) {
-        try {
-          // Render label to PNG using html-to-image
-          const container = document.createElement("div");
-          container.style.position = "absolute";
-          container.style.top = "0";
-          container.style.left = "0";
-          container.style.width = "60mm";
-          container.style.height = "80mm";
-          container.style.backgroundColor = "white";
-          container.style.zIndex = "-1";
-          container.style.visibility = "hidden";
-          document.body.appendChild(container);
-          // Render PPDSLabelRenderer into container
-          import("react-dom/client").then(({ createRoot }) => {
-            const root = createRoot(container);
-            // Only pass serializable item data
-            root.render(
-              <PPDSLabelRenderer
-                item={{ ...item }}
-                storageInfo={storageInfo}
-                businessName={businessName}
-                allIngredients={allIngredients}
-              />
-            );
-            setTimeout(async () => {
-              container.style.visibility = "visible";
-              const imageDataUrl = await toPng(container, {
-                cacheBust: true,
-                width: container.offsetWidth,
-                height: container.offsetHeight,
-                style: {
-                  transform: 'scale(1)',
-                  transformOrigin: 'top left'
-                }
-              });
-              root.unmount();
-              container.remove();
-              await print(imageDataUrl, undefined, { labelHeight: "80mm" });
-              successCount++;
-              if (successCount + failCount === printQueue.reduce((sum, q) => sum + q.quantity, 0)) {
-                setPrintQueue([]);
-              }
-            }, 300);
-          });
-        } catch (err) {
-          failCount++;
-          console.error("Print error for item", item.name, err);
-        }
-      }
-    }
-  }
-
   return (
     <div className="space-y-10 py-8 px-2 md:px-8 bg-gray-50 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">PPDS Labels</h1>
@@ -264,20 +254,23 @@ export default function PPDSPage() {
             <label className="block mb-2 font-medium">Select Printer:</label>
             <select
               className="w-full rounded border px-2 py-1"
-              value={selectedPrinterSystemName}
+              value={selectedPrinterName}
               onChange={e => {
-                setSelectedPrinterSystemName(e.target.value);
-                const printer = printers.find(p => p.systemName === e.target.value);
+                setSelectedPrinterName(e.target.value);
+                const printer = printers.find(p => getPrinterName(p) === e.target.value);
                 if (printer) selectPrinter(printer);
               }}
             >
               <option value="">Select a printer</option>
-              {printers.map((printer) => (
-                <option key={printer.systemName} value={printer.systemName}>{printer.name}</option>
-              ))}
+              {printers.map((printer) => {
+                const printerName = getPrinterName(printer);
+                return (
+                  <option key={printerName} value={printerName}>{printerName}</option>
+                );
+              })}
             </select>
             {printers.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
-            {printers.length > 0 && !printers.find(p => p.systemName === selectedPrinterSystemName) && (
+            {printers.length > 0 && !printers.find(p => getPrinterName(p) === selectedPrinterName) && (
               <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
             )}
             {!isConnected && <div className="text-xs text-red-600 mt-2">Printer not connected</div>}
@@ -340,7 +333,7 @@ export default function PPDSPage() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={handlePrint} disabled={printQueue.length === 0 || printers.length === 0 || !printers.find(p => p.systemName === selectedPrinterSystemName)} variant="purple">Print Labels</Button>
+                <Button onClick={handlePrint} disabled={printQueue.length === 0 || printers.length === 0 || !printers.find(p => getPrinterName(p) === selectedPrinterName)} variant="purple">Print Labels</Button>
                 <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
               </div>
             </div>

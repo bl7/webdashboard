@@ -619,7 +619,7 @@ export default function LabelRender({
       fontSize: 12,
       nameFontSize: 15,
       sectionSpacing: 2,
-      padding: 2,
+      padding: 0, // Remove padding
       maxNameLen: 18,
       maxIngLen: 12,
       maxAllergenLen: 10,
@@ -634,7 +634,7 @@ export default function LabelRender({
       fontSize: 13,
       nameFontSize: 18,
       sectionSpacing: 4,
-      padding: 4,
+      padding: 0, // Remove padding
       maxNameLen: 22,
       maxIngLen: 16,
       maxAllergenLen: 12,
@@ -649,7 +649,7 @@ export default function LabelRender({
       fontSize: 15,
       nameFontSize: 22,
       sectionSpacing: 8,
-      padding: 6,
+      padding: 0, // Remove padding
       maxNameLen: 32,
       maxIngLen: 22,
       maxAllergenLen: 18,
@@ -664,17 +664,16 @@ export default function LabelRender({
   const config = labelConfig[labelHeight]
   const { heightCm, fontSize, nameFontSize, sectionSpacing, padding } = config
 
-  // --- 1mm (0.1cm) padding for all labels ---
-  const PADDING_CM = 0.1
+  // --- No padding for edge-to-edge ---
   const LABEL_WIDTH_CM = 5.6
-  const labelWidthCm = LABEL_WIDTH_CM - 2 * PADDING_CM
-  const labelHeightCm = heightCm - 2 * PADDING_CM
+  const labelWidthCm = LABEL_WIDTH_CM
+  const labelHeightCm = heightCm
 
   // --- Common styling ---
   const baseStyle = {
     width: `${labelWidthCm}cm`,
     height: `${labelHeightCm}cm`,
-    padding: `${PADDING_CM}cm`,
+    padding: 0, // Remove all padding
     backgroundColor: "white",
     fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
     fontWeight: 500,
@@ -686,7 +685,7 @@ export default function LabelRender({
     borderRadius: 6,
     position: "relative" as const,
     overflow: "visible" as const,
-    margin: 0,
+    margin: 0, // Remove all margin
     letterSpacing: 0,
   }
 
