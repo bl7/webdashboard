@@ -2,70 +2,68 @@
 import React from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui"
 
-const Page = () => {
-  const [value, setValue] = React.useState("1")
-  const faqsList = [
-    {
-      q: "What is InstaLabel ?",
-      a: "InstaLabel  is a company that provides online learning platforms and educational resources. We offer a variety of courses on different subjects, taught by experienced instructors.",
-    },
-    {
-      q: "Who can use InstaLabel ?",
-      a: "InstaLabel  is designed for anyone who wants to learn something new. Our courses are suitable for students of all ages and backgrounds, from beginners to professionals looking to expand their skillset.",
-    },
-    {
-      q: "Are there free courses available?",
-      a: "Yes, InstaLabel  offers a selection of free courses. You can also find free learning materials like articles, tutorials, and videos on our platform.",
-    },
-    {
-      q: "What are the benefits of taking a paid course on InstaLabel ?",
-      a: "Paid courses on InstaLabel  typically offer more in-depth content, interactive exercises, personalized feedback from instructors, and certifications upon completion.",
-    },
-    {
-      q: "How do I enroll in a course?",
-      a: "To enroll in a course, simply create an account on InstaLabel  and browse our course catalog. Once you find a course you're interested in, click on the enroll button and follow the instructions.",
-    },
-    {
-      q: "What payment methods do you accept?",
-      a: "InstaLabel  accepts a variety of payment methods, including credit cards, debit cards, and some popular online payment options. The specific options available may vary depending on your location.",
-    },
-    {
-      q: "What is your refund policy?",
-      a: "InstaLabel  offers a refund policy for certain courses within a specified timeframe (e.g., 30 days) of enrollment. Please refer to the specific course description for details on the refund policy.",
-    },
-    {
-      q: "How do I contact InstaLabel  for support?",
-      a: "You can contact InstaLabel  for support by email at support@InstaLabel.com. We also have a Help Center on our website with answers to frequently asked questions and troubleshooting guides.",
-    },
-  ]
-
+export default function FAQPage() {
   return (
-    <section className="bg-white">
-      <h1 className="mb-3 text-5xl font-bold">Frequently Asked Questions</h1>
-      <div className="max-w-3xl pt-6 text-base">
-        {faqsList.map((item, index) => {
-          return (
-            <Accordion
-              key={item.q}
-              type="single"
-              defaultValue={"1"}
-              value={value}
-              collapsible
-              className="w-full"
-              onValueChange={setValue}
-            >
-              <AccordionItem value={`${index + 1}`}>
-                <AccordionTrigger className="text-base">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-lg text-muted-foreground">
-                  {item.a}
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          )
-        })}
+    <main className="max-w-2xl mx-auto py-12 px-4">
+      <h1 className="text-3xl font-bold mb-8">Frequently Asked Questions</h1>
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ What is InstaLabel?</h2>
+          <p>
+            InstaLabel is a professional kitchen labeling system designed for restaurants, cafés, food trucks, and catering businesses. It lets you print food safety labels—prep, cook, use‑first, PPDS—instantly from any device without handwriting, fully compliant with regulations like Natasha&rsquo;s Law.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ Who benefits most from InstaLabel?</h2>
+          <p>
+            Food operations of all sizes benefit—especially those with busy prep areas, high staff turnover, or needing airtight compliance. Ideal for multi‑location kitchens striving to reduce waste and errors.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ How does InstaLabel ensure compliance?</h2>
+          <p>
+            All labels include auto-calculated prep dates and expiry, highlight allergens (Natasha&rsquo;s Law), and use FDA/EHO-approved templates. The system generates complete print logs for easy audits.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ Which label types are supported?</h2>
+          <ul className="list-disc ml-6">
+            <li>Prep, Cook, Use-First, and PPDS labels</li>
+            <li>Custom templates available</li>
+            <li>Each includes ingredients, allergen alerts, prep/expiry dates, and storage instructions</li>
+          </ul>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ What equipment do I need?</h2>
+          <p>
+            Just any USB thermal label printer—or Sunmi Android devices for mobile printing. No special hardware required.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ How fast is setup and printing?</h2>
+          <p>
+            You can get started in minutes: upload your menu or ingredient list, plug in your printer, select the label type, and print—no drivers or plugins needed.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ Can I override expiry dates?</h2>
+          <p>
+            Yes—InstaLabel lets you adjust or override expiry logic when needed, while keeping full logging for traceability.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ What results can I expect?</h2>
+          <p>
+            Restaurants save about 15+ hours per week, reduce waste by 30%, and avoid compliance fines—all typically paying back in the first month.
+          </p>
+        </div>
+        <div>
+          <h2 className="text-xl font-semibold mb-2">❓ Is there a trial available?</h2>
+          <p>
+            Yes! Try InstaLabel free for 14 days—no credit card required—with full access to features and existing printer support.
+          </p>
+        </div>
       </div>
-    </section>
+    </main>
   )
 }
-
-export default Page

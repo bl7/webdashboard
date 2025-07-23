@@ -9,115 +9,33 @@ const Page = () => {
         </div>
         <article>
           <p>
-            InstaLabel Pvt. Ltd. (&quot;InstaLabel&quot;, &quot;we&quot;, &quot;us&quot;, or
-            &quot;our&quot;) respects your privacy and is committed to protecting your personal
-            information. This Cookie Policy explains how we use cookies and similar technologies on
-            our website located at{" "}
-            <a href="https://www.InstaLabel.com">https://www.InstaLabel.com</a> (the
-            &quot;Website&quot;), mobile application (the &quot;App&quot;), and all associated
-            services (collectively, the &quot;Platform&quot;).
+            InstaLabel Pvt. Ltd. ("InstaLabel", "we", "us", or "our") uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website (<a href="https://www.InstaLabel.com">https://www.InstaLabel.com</a>).
           </p>
-
           <h2>1. What are Cookies?</h2>
-
           <p>
-            Cookies are small data files that are stored on your device (computer, smartphone,
-            tablet, etc.) when you visit a website. They typically include an anonymous unique
-            identifier and allow a website to remember your preferences and actions (e.g., login,
-            language selection, font size) over a period of time.
+            Cookies are small data files stored on your device when you visit a website. They help us remember your preferences, keep you logged in, and analyze how you use our service.
           </p>
-
-          <h2>2. What types of Cookies do we use?</h2>
-
-          <p>
-            We use a variety of cookies on the Platform for different purposes. Here are the main
-            types:
-          </p>
-
+          <h2>2. What Cookies Do We Use?</h2>
           <ul>
-            <li>
-              <strong>Essential Cookies:</strong> These cookies are strictly necessary for the
-              operation of the Platform. They enable you to navigate and use features such as
-              accessing secure areas of the Platform and remembering your login details. Without
-              these cookies, we cannot provide certain services.
-            </li>
-            <li>
-              <strong>Performance Cookies:</strong> These cookies collect information about how you
-              use the Platform, such as which pages you visit and any errors you encounter. This
-              information helps us improve the performance of the Platform and your user experience.
-            </li>
-            <li>
-              <strong>Functionality Cookies:</strong> These cookies allow the Platform to remember
-              your choices (e.g., language preference, region) and provide you with a more
-              personalized experience.
-            </li>
-            <li>
-              <strong>Analytics Cookies:</strong> These cookies collect information about your use
-              of the Platform and third-party websites, which is used to analyze website traffic and
-              user behavior. This information helps us understand user trends and improve our
-              overall marketing and advertising strategies.
-            </li>
+            <li><strong>Essential Cookies:</strong> Required for core site functionality, such as authentication and security.</li>
+            <li><strong>Analytics Cookies:</strong> We use Google Analytics to understand how users interact with our site and improve our product. Google Analytics may set its own cookies. <a href="https://policies.google.com/technologies/cookies" target="_blank" rel="noopener">Learn more</a>.</li>
+            <li><strong>Preference Cookies:</strong> Remember your settings and preferences (e.g., language, login state).</li>
           </ul>
-
           <h2>3. Third-Party Cookies</h2>
-
           <p>
-            We may also allow certain third-party companies to set cookies on the Platform. These
-            third parties may use their own cookies to collect information about your online
-            activities, both on and off the Platform, over time. We do not control the use of these
-            third-party cookies and you should refer to the privacy policies of these third parties
-            for more information about how they use cookies.
+            Some third-party services (such as embedded videos or analytics) may set their own cookies. We do not control these cookies. Please refer to the privacy policies of those providers for more information.
           </p>
-
-          <h2>4. How to Manage Cookies</h2>
-
+          <h2>4. Cookie Consent and Management</h2>
           <p>
-            You can manage your cookie preferences through your web browser settings. Most browsers
-            allow you to block cookies altogether, delete existing cookies, or be notified before a
-            cookie is set. Here are links to resources where you can learn more about cookie
-            management for popular browsers:
+            By using our website, you consent to our use of cookies as described in this policy. You can manage or delete cookies in your browser settings. Most browsers allow you to block cookies, delete existing cookies, or be notified before a cookie is set. Blocking some cookies may affect your experience.
           </p>
-
-          <ul>
-            <li>
-              <a href="https://support.google.com/accounts/answer/61416?hl=en&co=GENIE.Platform%3DDesktop">
-                Google Chrome
-              </a>
-            </li>
-            <li>
-              <a href="https://support.mozilla.org/en/products/firefox/protect-your-privacy/cookies">
-                Mozilla Firefox
-              </a>
-            </li>
-            <li>
-              <a href="https://support.apple.com/en-us/105082">Apple Safari</a>
-            </li>
-            <li>
-              <a href="https://support.microsoft.com/en-au/topic/adjust-privacy-settings-in-microsoft-edge-600ee799-081c-4ab7-b6c2-d8a9baeda3c4">
-                Microsoft Edge
-              </a>
-            </li>
-          </ul>
-
-          <h2>5. Your Consent</h2>
-
+          <h2>5. Changes to This Policy</h2>
           <p>
-            By using the Platform, you consent to our use of cookies as described in this Cookie
-            Policy.
+            We may update this Cookie Policy from time to time. We will post any changes on this page and update the date below.
           </p>
-
-          <h2>6. Changes to this Cookie Policy</h2>
-
+          <h2>6. Contact Us</h2>
           <p>
-            We may update this Cookie Policy from time to time to reflect changes in our practices
-            or comply with legal requirements. We will post the revised Cookie Policy on the
-            Platform and notify you by email (if you have provided us with your email address).
-          </p>
-
-          <h2>7. Contact Us</h2>
-          <p>
-            If you have any questions about this Cookie Policy, please contact us at
-            <a href="mailto:support@InstaLabel.com"> support@InstaLabel.com</a>.
+            If you have questions about our Cookie Policy, contact us at <a href="mailto:support@InstaLabel.com">support@InstaLabel.com</a>.
           </p>
         </article>
         <div className="py-8 text-sm text-muted-foreground"> As of March 25th, 2024</div>
