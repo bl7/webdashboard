@@ -72,6 +72,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }),
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
+
+        // Check if any of the responses indicate authentication failure
+        if (profileRes.status === 401 || subscriptionRes.status === 401 || adminRes.status === 401) {
+          // Token is expired or invalid, redirect to login
+          localStorage.clear()
+          router.push("/login")
+          return
+        }
+
         if (!profileRes.ok) throw new Error("Failed to fetch profile")
         if (!subscriptionRes.ok) throw new Error("Failed to fetch subscription")
         if (!adminRes.ok) throw new Error("Failed to fetch admin access")

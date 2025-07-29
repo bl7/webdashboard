@@ -130,6 +130,14 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
 
+        // Check if any of the responses indicate authentication failure
+        if (profileRes.status === 401 || subRes.status === 401 || adminRes.status === 401) {
+          // Token is expired or invalid, redirect to login
+          localStorage.clear()
+          router.push("/login")
+          return
+        }
+
         if (!profileRes.ok || !subRes.ok || !adminRes.ok) throw new Error("Failed to load data")
 
         const { profile } = await profileRes.json()

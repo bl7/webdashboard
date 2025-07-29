@@ -19,15 +19,14 @@ const faqsList = [
     q: "Which label types are supported?",
     a: (
       <ul className="list-disc ml-6">
-        <li>Prep, Cook, Use-First, and PPDS labels</li>
-        <li>Custom templates available</li>
+        <li>Prep, Cook, Use-First, Defrost, and PPDS labels</li>
         <li>Each includes ingredients, allergen alerts, prep/expiry dates, and storage instructions</li>
       </ul>
     )
   },
   {
     q: "What equipment do I need?",
-    a: "Just any USB thermal label printer—or Sunmi Android devices for mobile printing. No special hardware required."
+    a: "Just any USB thermal label printer for web printing—or Sunmi Android devices for mobile printing. No special hardware required."
   },
   {
     q: "How fast is setup and printing?",
