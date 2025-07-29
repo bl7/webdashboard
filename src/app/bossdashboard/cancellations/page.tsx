@@ -46,15 +46,26 @@ const CancellationsPage: React.FC = () => {
       pageSize: String(pageSize),
     })
     if (search) params.append("search", search)
-    fetch(`/api/subscription_better/cancel?${params.toString()}`)
-      .then(res => res.json())
+    
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    fetch(`/api/subscription_better/cancel?${params.toString()}`, {
+      headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+    })
+      .then(async res => {
+        if (!res.ok) {
+          const errorData = await res.json().catch(() => ({}))
+          throw new Error(errorData.error || `HTTP ${res.status}: ${res.statusText}`)
+        }
+        return res.json()
+      })
       .then(data => {
         setCancellations(data.cancellations || [])
         setTotal(data.total || 0)
         setLoading(false)
       })
       .catch(err => {
-        setError("Failed to load cancellations")
+        console.error('Cancellations fetch error:', err)
+        setError(`Failed to load cancellations: ${err.message}`)
         setLoading(false)
       })
   }, [search, page, pageSize])

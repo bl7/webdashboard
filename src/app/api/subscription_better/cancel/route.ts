@@ -281,13 +281,13 @@ export async function GET(req: NextRequest) {
 
     // Get total count
     const countResult = await client.query(
-      `SELECT COUNT(*) FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause ? whereClause.replace(/user_id/g, 'c.user_id').replace(/subscription_id/g, 'c.subscription_id').replace(/reason/g, 'c.reason') : ''}`,
+      `SELECT COUNT(*) FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause}`,
       values
     )
     const total = parseInt(countResult.rows[0].count, 10)
 
     // Get paginated results with user profile info
-    let query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause ? whereClause.replace(/user_id/g, 'c.user_id').replace(/subscription_id/g, 'c.subscription_id').replace(/reason/g, 'c.reason') : ''} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
+    let query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
     values.push(pageSize, offset)
     const { rows } = await client.query(query, values)
 
@@ -297,8 +297,9 @@ export async function GET(req: NextRequest) {
       page,
       pageSize
     })
-  } catch (err) {
-    return NextResponse.json({ error: 'Failed to fetch cancellations' }, { status: 500 })
+  } catch (err: any) {
+    console.error('Cancellations API error:', err)
+    return NextResponse.json({ error: err.message || 'Failed to fetch cancellations' }, { status: 500 })
   } finally {
     client.release()
   }
