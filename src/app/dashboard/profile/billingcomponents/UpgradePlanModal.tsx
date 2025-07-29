@@ -185,7 +185,7 @@ export const UpgradePlanModal: React.FC<UpgradePlanModalProps> = ({ open, onClos
         ) : upgradePlans.length === 0 ? (
           <div className="text-gray-700">No upgrade options available.</div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             {upgradePlans.map(plan => renderPlanCard(plan))}
           </div>
         )}

@@ -411,38 +411,6 @@ const ProfileDashboard = () => {
                   <Button onClick={handleChangePin}>Change PIN</Button>
                 </div>
               </div>
-
-              {/* Password Section */}
-              <div className="mt-10 border-t border-gray-200 pt-6">
-                <h3 className="text-md mb-5 font-semibold text-gray-900">Password</h3>
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
-                      Current Password
-                    </label>
-                    <Input
-                      type="password"
-                      placeholder="********"
-                      className="cursor-not-allowed"
-                      disabled
-                    />
-                  </div>
-                  <div>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
-                      New Password
-                    </label>
-                    <Input
-                      type="password"
-                      placeholder="New Password"
-                      className="cursor-not-allowed"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <Button disabled className="mt-6" variant="outline">
-                  Change Password
-                </Button>
-              </div>
             </div>
           </div>
         </div>

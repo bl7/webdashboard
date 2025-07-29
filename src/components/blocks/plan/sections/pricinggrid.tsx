@@ -117,8 +117,8 @@ export const PricingGrid = () => {
         </div>
 
         {/* Enhanced Pricing Cards */}
-        <div className="flex items-center justify-center">
-          <div className="max-w-6xl gap-8 md:grid-cols-3 flex justify-center items-center">
+        <div className="flex justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl">
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.id || index}

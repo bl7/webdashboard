@@ -33,7 +33,7 @@ export const FeaturesGrid = () => {
         <p className="max-w-2xl mx-auto text-xl text-gray-600 mb-12 text-center">
           The only labeling platform built for real kitchens, not just IT departments.
         </p>
-        <div className="grid gap-10 sm:grid-cols-3 max-w-5xl mx-auto mb-12">
+        <div className="grid gap-6 sm:gap-10 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto mb-12">
           {pillars.map((item, i) => (
             <motion.div
               key={i}

@@ -183,7 +183,7 @@ const WhatWeDoShowcase = () => {
             />
           </motion.div>
         </div>
-        {/* Label Types Row - all on one line, PPDS last, animated, consistent height */}
+        {/* Label Types Row - responsive grid */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -191,33 +191,31 @@ const WhatWeDoShowcase = () => {
           viewport={{ once: true }}
           className="mt-8 w-full"
         >
-          <div className="flex flex-row flex-nowrap justify-center gap-6 w-full">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 w-full max-w-6xl mx-auto">
             {labelGrid.slice(1, 4).map((item, i) => (
-              <div key={i} className="flex flex-col items-center justify-end h-full min-w-[240px]">
-                <div className="mb-2 font-semibold text-gray-900 text-base text-center">{item.label}</div>
-                <div className="flex items-center justify-center min-h-[140px] h-[140px]">
+              <div key={i} className="flex flex-col items-center justify-end h-full">
+                <div className="mb-2 font-semibold text-gray-900 text-sm sm:text-base text-center">{item.label}</div>
+                <div className="flex items-center justify-center min-h-[120px] sm:min-h-[140px] h-[120px] sm:h-[140px] w-full">
                   {item.preview}
                 </div>
               </div>
             ))}
             {/* PPDS label preview last, match height */}
-            <div className="flex flex-col items-center justify-end h-full min-w-[240px]">
-              <div className="mb-2 font-semibold text-gray-900 text-base text-center">{labelGrid[0].label}</div>
-              <div className="flex items-center justify-center min-h-[140px] h-[140px]">
+            <div className="flex flex-col items-center justify-end h-full">
+              <div className="mb-2 font-semibold text-gray-900 text-sm sm:text-base text-center">{labelGrid[0].label}</div>
+              <div className="flex items-center justify-center min-h-[120px] sm:min-h-[140px] h-[120px] sm:h-[140px] w-full">
                 {labelGrid[0].preview}
               </div>
             </div>
           </div>
-          {/* CTA Buttons Row - below labels, left-aligned with first label */}
+          {/* CTA Buttons Row - responsive */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="flex flex-row gap-4 mt-8"
-            style={{ marginLeft: 0 }}
+            className="flex flex-col sm:flex-row gap-4 mt-8 justify-center sm:justify-start"
           >
-            <div style={{ width: '240px' }} />
            
           </motion.div>
         </motion.div>

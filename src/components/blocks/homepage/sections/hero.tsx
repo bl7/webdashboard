@@ -67,7 +67,7 @@ export const Hero = () => {
             From PPDS to prep — get compliant labels in seconds, not hours.
           </div>
           {/* Key Benefits (Visual with Icons) */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 py-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-2 py-1">
             <div className="flex items-start gap-2">
               <span className="text-lg">🧾</span>
               <div>

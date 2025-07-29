@@ -117,7 +117,7 @@ export const ComplianceAndLabels = () => {
             <div className="flex flex-col gap-6 items-center">
               <div className="w-full flex flex-col items-center">
                 <h4 className="text-lg font-semibold text-gray-800 mb-2">Label Examples</h4>
-                <div className="flex flex-row gap-8 items-start">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center sm:items-start">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
@@ -170,11 +170,11 @@ export const ComplianceAndLabels = () => {
         className="max-w-5xl mx-auto mt-20 px-4"
       >
         <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center">Web Interface Screenshots</h3>
-        <div className="flex gap-6 overflow-x-auto pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           {screenshots.map((img, idx) => (
             <motion.button
               key={img.src}
-              className="min-w-[320px] max-w-xs flex-shrink-0 focus:outline-none"
+              className="w-full focus:outline-none"
               onClick={() => openModal(idx)}
               aria-label={`Open screenshot: ${img.label}`}
               initial={{ opacity: 0, y: 20 }}

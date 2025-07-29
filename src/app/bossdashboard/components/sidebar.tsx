@@ -18,6 +18,7 @@ import {
   Tablet,
   Package,
   Bell,
+  List,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -44,6 +45,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
     { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: CalendarClock },
     { name: "Cancel Requests", href: "/bossdashboard/cancellations", icon: () => <span className="text-lg mr-3">👋</span> },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
+    { name: "Waitlist", href: "/bossdashboard/waitlist", icon: List },
   ]
 
   const isActive = (href: string) => {

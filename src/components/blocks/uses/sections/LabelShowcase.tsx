@@ -40,7 +40,7 @@ export const LabelShowcase = () => {
             className="space-y-6"
           >
             {/* Labels Grid */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Ingredient Label */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
