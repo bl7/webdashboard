@@ -113,6 +113,7 @@ export const Footer = () => {
               <Link href="/plan" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Pricing</Link>
               <Link href="/faqs" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">FAQs</Link>
               <Link href="/blog" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Blogs</Link>
+              <Link href="/allergen-compliance" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Allergen Compliance</Link>
             </nav>
           </div>
 

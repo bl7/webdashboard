@@ -1,0 +1,8 @@
+export { AllergenCompliancePage } from "./allergen-compliance"
+export { AllergenComplianceHero } from "./sections/AllergenComplianceHero"
+export { AllergenComplianceProblem } from "./sections/AllergenComplianceProblem"
+export { AllergenComplianceSolution } from "./sections/AllergenComplianceSolution"
+export { AllergenComplianceSocialProof } from "./sections/AllergenComplianceSocialProof"
+export { AllergenComplianceUrgency } from "./sections/AllergenComplianceUrgency"
+export { AllergenComplianceBonus } from "./sections/AllergenComplianceBonus"
+export { AllergenComplianceCTA } from "./sections/AllergenComplianceCTA" 
