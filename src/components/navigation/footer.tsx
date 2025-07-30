@@ -82,7 +82,7 @@ export const Footer = () => {
               </Button>
             </Link>
             <Link href="/bookdemo">
-              <Button variant="outline" size="lg" className="px-8 py-4 text-lg font-semibold border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:border-purple-400 transition-all duration-300 hover:scale-105">
+              <Button variant="outline" size="lg" className="px-8 py-4 text-lg font-semibold border-2 border-purple-300 text-purple-700 hover:bg-purple-50 hover:text-purple-800 hover:border-purple-400 transition-all duration-300 hover:scale-105">
                 Contact Us
               </Button>
             </Link>

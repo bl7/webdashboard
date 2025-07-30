@@ -206,7 +206,7 @@ export const Services = () => {
             </Button>
           </Link>
           <Link href='/register'>
-            <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-8 py-4 text-lg font-semibold transition-all duration-300">
+            <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:text-purple-800 px-8 py-4 text-lg font-semibold transition-all duration-300">
               Start Trial
             </Button>
           </Link>

@@ -30,8 +30,8 @@ export const SquareIntegration = () => {
             The Only Labeling Solution That Speaks Square
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Stop wasting hours on manual menu entry. InstaLabel is the only food labeling solution 
-            with native Square POS integration. Import your menu, export your labels — all automatically.
+            The only food labeling solution with <strong>native Square POS integration</strong>. 
+            Smart bidirectional sync with AI-powered allergen detection, safe create-only mode, and real-time menu updates — all automatically.
           </p>
         </motion.div>
 
@@ -64,8 +64,8 @@ export const SquareIntegration = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">2</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Auto Import</h3>
-              <p className="text-gray-600">Your menu items, ingredients, and allergens sync automatically.</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Smart Import</h3>
+              <p className="text-gray-600">AI extracts ingredients from modifiers & allergens from descriptions automatically.</p>
             </motion.div>
 
             <motion.div
@@ -77,8 +77,8 @@ export const SquareIntegration = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-white font-bold text-xl">3</span>
               </div>
-                             <h3 className="text-xl font-bold text-gray-900 mb-3">Export Menu</h3>
-               <p className="text-gray-600">Send your compliant menu setup back to Square with perfect structure.</p>
+                             <h3 className="text-xl font-bold text-gray-900 mb-3">Safe Export</h3>
+               <p className="text-gray-600">Create-only mode prevents data corruption while syncing compliant menus.</p>
             </motion.div>
           </div>
 
@@ -179,15 +179,15 @@ export const SquareIntegration = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <strong>Zero manual data entry</strong> required
+                  <strong>AI-powered ingredient extraction</strong> from modifiers
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <strong>Real-time sync</strong> with menu changes
+                  <strong>Smart allergen detection</strong> from descriptions
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">✓</span>
-                  <strong>Automatic updates</strong> across platforms
+                  <strong>Safe create-only mode</strong> prevents corruption
                 </li>
               </ul>
             </motion.div>
@@ -206,19 +206,66 @@ export const SquareIntegration = () => {
                   </li>
                   <li className="flex items-start">
                     <span className="text-purple-500 mr-2">✓</span>
-                    <strong>Perfect allergen detection</strong> for menu
+                    <strong>Bidirectional sync</strong> with Square POS
                   </li>
                   <li className="flex items-start">
                     <span className="text-purple-500 mr-2">✓</span>
-                    <strong>Structured menu data</strong> for Square
+                    <strong>Real-time menu updates</strong> with perfect structure
                   </li>
                   <li className="flex items-start">
                     <span className="text-purple-500 mr-2">✓</span>
-                    <strong>Audit-ready menu system</strong>
+                    <strong>Audit-ready menu system</strong> with full traceability
                   </li>
                 </ul>
             </motion.div>
           </div>
+
+          {/* Advanced Features */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 border border-blue-200 mb-16"
+          >
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Advanced Square Integration Features</h3>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Built for production kitchens with enterprise-grade reliability and smart automation
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Shield className="h-6 w-6 text-blue-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Safe Sync Mode</h4>
+                <p className="text-sm text-gray-600">
+                  Create-only mode prevents data corruption. Only adds new items, never updates existing ones.
+                </p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Zap className="h-6 w-6 text-green-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Smart Ingredient Extraction</h4>
+                <p className="text-sm text-gray-600">
+                  AI extracts ingredients from Square modifiers and allergens from descriptions automatically.
+                </p>
+              </div>
+              
+              <div className="text-center p-4">
+                <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Database className="h-6 w-6 text-purple-600" />
+                </div>
+                <h4 className="font-semibold text-gray-900 mb-2">Bidirectional Sync</h4>
+                <p className="text-sm text-gray-600">
+                  Import from Square, export back to Square. Real-time updates with perfect data structure.
+                </p>
+              </div>
+            </div>
+          </motion.div>
 
           {/* CTA */}
           <motion.div

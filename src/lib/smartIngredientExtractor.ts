@@ -11,95 +11,94 @@ interface IngredientContext {
   category: 'protein' | 'vegetable' | 'grain' | 'dairy' | 'spice' | 'liquid' | 'other'
   commonAllergens: string[]
   falsePositives: string[]
+  expiryDays?: number // Add expiry days to ingredient context
 }
 
-// Smart ingredient database with context
+// Smart ingredient database with context and expiry days
 const INGREDIENT_DATABASE: Record<string, IngredientContext> = {
-  // Proteins
-  'chicken': { name: 'chicken', category: 'protein', commonAllergens: [], falsePositives: [] },
-  'beef': { name: 'beef', category: 'protein', commonAllergens: [], falsePositives: [] },
-  'lamb': { name: 'lamb', category: 'protein', commonAllergens: [], falsePositives: [] },
-  'pork': { name: 'pork', category: 'protein', commonAllergens: [], falsePositives: [] },
-  'fish': { name: 'fish', category: 'protein', commonAllergens: ['fish'], falsePositives: [] },
-  'salmon': { name: 'salmon', category: 'protein', commonAllergens: ['fish'], falsePositives: [] },
-  'tuna': { name: 'tuna', category: 'protein', commonAllergens: ['fish'], falsePositives: [] },
-  'shrimp': { name: 'shrimp', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [] },
-  'prawn': { name: 'prawn', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [] },
-  'crab': { name: 'crab', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [] },
-  'lobster': { name: 'lobster', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [] },
-  'egg': { name: 'egg', category: 'protein', commonAllergens: ['eggs'], falsePositives: [] },
-  'eggs': { name: 'eggs', category: 'protein', commonAllergens: ['eggs'], falsePositives: [] },
+  // Proteins - shorter expiry for safety
+  'chicken': { name: 'chicken', category: 'protein', commonAllergens: [], falsePositives: [], expiryDays: 3 },
+  'beef': { name: 'beef', category: 'protein', commonAllergens: [], falsePositives: [], expiryDays: 3 },
+  'lamb': { name: 'lamb', category: 'protein', commonAllergens: [], falsePositives: [], expiryDays: 3 },
+  'pork': { name: 'pork', category: 'protein', commonAllergens: [], falsePositives: [], expiryDays: 3 },
+  'fish': { name: 'fish', category: 'protein', commonAllergens: ['fish'], falsePositives: [], expiryDays: 2 },
+  'salmon': { name: 'salmon', category: 'protein', commonAllergens: ['fish'], falsePositives: [], expiryDays: 2 },
+  'tuna': { name: 'tuna', category: 'protein', commonAllergens: ['fish'], falsePositives: [], expiryDays: 2 },
+  'shrimp': { name: 'shrimp', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [], expiryDays: 2 },
+  'prawn': { name: 'prawn', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [], expiryDays: 2 },
+  'crab': { name: 'crab', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [], expiryDays: 2 },
+  'lobster': { name: 'lobster', category: 'protein', commonAllergens: ['crustaceans'], falsePositives: [], expiryDays: 2 },
+  'egg': { name: 'egg', category: 'protein', commonAllergens: ['eggs'], falsePositives: [], expiryDays: 5 },
+  'eggs': { name: 'eggs', category: 'protein', commonAllergens: ['eggs'], falsePositives: [], expiryDays: 5 },
 
-  // Dairy
-  'milk': { name: 'milk', category: 'dairy', commonAllergens: ['milk'], falsePositives: ['coconut milk', 'almond milk', 'soy milk'] },
-  'cheese': { name: 'cheese', category: 'dairy', commonAllergens: ['milk'], falsePositives: [] },
-  'butter': { name: 'butter', category: 'dairy', commonAllergens: ['milk'], falsePositives: [] },
-  'cream': { name: 'cream', category: 'dairy', commonAllergens: ['milk'], falsePositives: [] },
-  'yogurt': { name: 'yogurt', category: 'dairy', commonAllergens: ['milk'], falsePositives: [] },
-  'parmesan': { name: 'parmesan', category: 'dairy', commonAllergens: ['milk'], falsePositives: [] },
+  // Dairy - medium expiry
+  'milk': { name: 'milk', category: 'dairy', commonAllergens: ['milk'], falsePositives: ['coconut milk', 'almond milk', 'soy milk'], expiryDays: 5 },
+  'cheese': { name: 'cheese', category: 'dairy', commonAllergens: ['milk'], falsePositives: [], expiryDays: 7 },
+  'butter': { name: 'butter', category: 'dairy', commonAllergens: ['milk'], falsePositives: [], expiryDays: 7 },
+  'cream': { name: 'cream', category: 'dairy', commonAllergens: ['milk'], falsePositives: [], expiryDays: 5 },
+  'yogurt': { name: 'yogurt', category: 'dairy', commonAllergens: ['milk'], falsePositives: [], expiryDays: 7 },
+  'parmesan': { name: 'parmesan', category: 'dairy', commonAllergens: ['milk'], falsePositives: [], expiryDays: 7 },
 
-  // Grains
-  'wheat': { name: 'wheat', category: 'grain', commonAllergens: ['gluten'], falsePositives: [] },
-  'flour': { name: 'flour', category: 'grain', commonAllergens: ['gluten'], falsePositives: ['almond flour', 'coconut flour'] },
-  'bread': { name: 'bread', category: 'grain', commonAllergens: ['gluten'], falsePositives: [] },
-  'pasta': { name: 'pasta', category: 'grain', commonAllergens: ['gluten'], falsePositives: [] },
-  'rice': { name: 'rice', category: 'grain', commonAllergens: [], falsePositives: [] },
-  'noodles': { name: 'noodles', category: 'grain', commonAllergens: ['gluten'], falsePositives: [] },
+  // Grains - longer expiry
+  'wheat': { name: 'wheat', category: 'grain', commonAllergens: ['gluten'], falsePositives: [], expiryDays: 14 },
+  'flour': { name: 'flour', category: 'grain', commonAllergens: ['gluten'], falsePositives: ['almond flour', 'coconut flour'], expiryDays: 14 },
+  'bread': { name: 'bread', category: 'grain', commonAllergens: ['gluten'], falsePositives: [], expiryDays: 7 },
+  'pasta': { name: 'pasta', category: 'grain', commonAllergens: ['gluten'], falsePositives: [], expiryDays: 7 },
+  'rice': { name: 'rice', category: 'grain', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'noodles': { name: 'noodles', category: 'grain', commonAllergens: ['gluten'], falsePositives: [], expiryDays: 7 },
 
-  // Nuts
-  'almond': { name: 'almond', category: 'other', commonAllergens: ['nuts'], falsePositives: [] },
-  'walnut': { name: 'walnut', category: 'other', commonAllergens: ['nuts'], falsePositives: [] },
-  'cashew': { name: 'cashew', category: 'other', commonAllergens: ['nuts'], falsePositives: [] },
-  'peanut': { name: 'peanut', category: 'other', commonAllergens: ['peanuts'], falsePositives: [] },
-  'peanuts': { name: 'peanuts', category: 'other', commonAllergens: ['peanuts'], falsePositives: [] },
+  // Nuts - longer expiry
+  'almond': { name: 'almond', category: 'other', commonAllergens: ['nuts'], falsePositives: [], expiryDays: 30 },
+  'walnut': { name: 'walnut', category: 'other', commonAllergens: ['nuts'], falsePositives: [], expiryDays: 30 },
+  'cashew': { name: 'cashew', category: 'other', commonAllergens: ['nuts'], falsePositives: [], expiryDays: 30 },
+  'peanut': { name: 'peanut', category: 'other', commonAllergens: ['peanuts'], falsePositives: [], expiryDays: 30 },
+  'peanuts': { name: 'peanuts', category: 'other', commonAllergens: ['peanuts'], falsePositives: [], expiryDays: 30 },
 
-  // Vegetables
-  'onion': { name: 'onion', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'garlic': { name: 'garlic', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'tomato': { name: 'tomato', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'carrot': { name: 'carrot', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'potato': { name: 'potato', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'celery': { name: 'celery', category: 'vegetable', commonAllergens: ['celery'], falsePositives: [] },
-  'lettuce': { name: 'lettuce', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'spinach': { name: 'spinach', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'cucumber': { name: 'cucumber', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'bell pepper': { name: 'bell pepper', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'mushroom': { name: 'mushroom', category: 'vegetable', commonAllergens: [], falsePositives: [] },
+  // Vegetables - medium expiry
+  'onion': { name: 'onion', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'garlic': { name: 'garlic', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'tomato': { name: 'tomato', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 5 },
+  'carrot': { name: 'carrot', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'potato': { name: 'potato', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'celery': { name: 'celery', category: 'vegetable', commonAllergens: ['celery'], falsePositives: [], expiryDays: 5 },
+  'lettuce': { name: 'lettuce', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 5 },
+  'spinach': { name: 'spinach', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 5 },
+  'cucumber': { name: 'cucumber', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 5 },
+  'bell pepper': { name: 'bell pepper', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'mushroom': { name: 'mushroom', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 5 },
 
-  // Liquids
-  'coconut milk': { name: 'coconut milk', category: 'liquid', commonAllergens: [], falsePositives: ['milk'] },
-  'almond milk': { name: 'almond milk', category: 'liquid', commonAllergens: ['nuts'], falsePositives: ['milk'] },
-  'soy milk': { name: 'soy milk', category: 'liquid', commonAllergens: ['soy'], falsePositives: ['milk'] },
-  'oil': { name: 'oil', category: 'liquid', commonAllergens: [], falsePositives: [] },
-  'olive oil': { name: 'olive oil', category: 'liquid', commonAllergens: [], falsePositives: [] },
-  'vegetable oil': { name: 'vegetable oil', category: 'liquid', commonAllergens: [], falsePositives: [] },
+  // Liquids - medium expiry
+  'coconut milk': { name: 'coconut milk', category: 'liquid', commonAllergens: [], falsePositives: ['milk'], expiryDays: 7 },
+  'almond milk': { name: 'almond milk', category: 'liquid', commonAllergens: ['nuts'], falsePositives: ['milk'], expiryDays: 7 },
+  'soy milk': { name: 'soy milk', category: 'liquid', commonAllergens: ['soy'], falsePositives: ['milk'], expiryDays: 7 },
+  'oil': { name: 'oil', category: 'liquid', commonAllergens: [], falsePositives: [], expiryDays: 30 },
+  'olive oil': { name: 'olive oil', category: 'liquid', commonAllergens: [], falsePositives: [], expiryDays: 30 },
+  'vegetable oil': { name: 'vegetable oil', category: 'liquid', commonAllergens: [], falsePositives: [], expiryDays: 30 },
 
-  // Spices and seasonings
-  'salt': { name: 'salt', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'pepper': { name: 'pepper', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'curry powder': { name: 'curry powder', category: 'spice', commonAllergens: ['mustard'], falsePositives: [] },
-  'cumin': { name: 'cumin', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'paprika': { name: 'paprika', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'oregano': { name: 'oregano', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'basil': { name: 'basil', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'thyme': { name: 'thyme', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'rosemary': { name: 'rosemary', category: 'spice', commonAllergens: [], falsePositives: [] },
-  'mustard': { name: 'mustard', category: 'spice', commonAllergens: ['mustard'], falsePositives: [] },
-  'sesame': { name: 'sesame', category: 'spice', commonAllergens: ['sesame'], falsePositives: [] },
-  'tahini': { name: 'tahini', category: 'spice', commonAllergens: ['sesame'], falsePositives: [] },
+  // Spices and seasonings - long expiry
+  'salt': { name: 'salt', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 365 },
+  'pepper': { name: 'pepper', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 365 },
+  'curry powder': { name: 'curry powder', category: 'spice', commonAllergens: ['mustard'], falsePositives: [], expiryDays: 180 },
+  'cumin': { name: 'cumin', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'paprika': { name: 'paprika', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'oregano': { name: 'oregano', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'basil': { name: 'basil', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'thyme': { name: 'thyme', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'rosemary': { name: 'rosemary', category: 'spice', commonAllergens: [], falsePositives: [], expiryDays: 180 },
+  'mustard': { name: 'mustard', category: 'spice', commonAllergens: ['mustard'], falsePositives: [], expiryDays: 180 },
+  'sesame': { name: 'sesame', category: 'spice', commonAllergens: ['sesame'], falsePositives: [], expiryDays: 180 },
+  'tahini': { name: 'tahini', category: 'spice', commonAllergens: ['sesame'], falsePositives: [], expiryDays: 180 },
 
   // Other common ingredients
-  'sugar': { name: 'sugar', category: 'other', commonAllergens: [], falsePositives: [] },
-  'honey': { name: 'honey', category: 'other', commonAllergens: [], falsePositives: [] },
-  'vinegar': { name: 'vinegar', category: 'other', commonAllergens: [], falsePositives: [] },
-  'lemon': { name: 'lemon', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'lime': { name: 'lime', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'ginger': { name: 'ginger', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'chili': { name: 'chili', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'coconut': { name: 'coconut', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'lentil': { name: 'lentil', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'bean': { name: 'bean', category: 'vegetable', commonAllergens: [], falsePositives: [] },
-  'chickpea': { name: 'chickpea', category: 'vegetable', commonAllergens: [], falsePositives: [] },
+  'sugar': { name: 'sugar', category: 'other', commonAllergens: [], falsePositives: [], expiryDays: 365 },
+  'honey': { name: 'honey', category: 'other', commonAllergens: [], falsePositives: [], expiryDays: 365 },
+  'vinegar': { name: 'vinegar', category: 'other', commonAllergens: [], falsePositives: [], expiryDays: 365 },
+  'lemon': { name: 'lemon', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'lime': { name: 'lime', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'ginger': { name: 'ginger', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'chili': { name: 'chili', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'coconut': { name: 'coconut', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
+  'lentil': { name: 'lentil', category: 'vegetable', commonAllergens: [], falsePositives: [], expiryDays: 7 },
 }
 
 // Cooking methods that are NOT ingredients
@@ -275,4 +274,80 @@ function isFalsePositive(keyword: string, description: string): boolean {
   if (!patterns) return false
 
   return patterns.some(pattern => description.includes(pattern))
+} 
+
+// Smart expiry date calculation based on ingredient type
+export function calculateSmartExpiryDays(ingredientName: string): number {
+  const normalizedName = normalizeName(ingredientName)
+  const ingredientInfo = INGREDIENT_DATABASE[normalizedName]
+  
+  if (ingredientInfo?.expiryDays) {
+    return ingredientInfo.expiryDays
+  }
+  
+  // Fallback logic based on ingredient category or name patterns
+  const lowerName = ingredientName.toLowerCase()
+  
+  // Protein patterns - shorter expiry for safety
+  if (lowerName.includes('chicken') || lowerName.includes('beef') || lowerName.includes('lamb') || 
+      lowerName.includes('pork') || lowerName.includes('meat') || lowerName.includes('steak')) {
+    return 3
+  }
+  
+  // Fish/seafood patterns - shortest expiry
+  if (lowerName.includes('fish') || lowerName.includes('salmon') || lowerName.includes('tuna') ||
+      lowerName.includes('shrimp') || lowerName.includes('prawn') || lowerName.includes('crab') ||
+      lowerName.includes('lobster') || lowerName.includes('seafood')) {
+    return 2
+  }
+  
+  // Dairy patterns - medium expiry
+  if (lowerName.includes('milk') || lowerName.includes('cheese') || lowerName.includes('cream') ||
+      lowerName.includes('yogurt') || lowerName.includes('butter') || lowerName.includes('dairy')) {
+    return 7
+  }
+  
+  // Grain patterns - longer expiry
+  if (lowerName.includes('bread') || lowerName.includes('pasta') || lowerName.includes('rice') ||
+      lowerName.includes('noodles') || lowerName.includes('flour') || lowerName.includes('wheat')) {
+    return 7
+  }
+  
+  // Vegetable patterns - medium expiry
+  if (lowerName.includes('lettuce') || lowerName.includes('spinach') || lowerName.includes('cucumber') ||
+      lowerName.includes('tomato') || lowerName.includes('celery') || lowerName.includes('mushroom')) {
+    return 5
+  }
+  
+  // Spice/seasoning patterns - long expiry
+  if (lowerName.includes('salt') || lowerName.includes('pepper') || lowerName.includes('spice') ||
+      lowerName.includes('herb') || lowerName.includes('powder') || lowerName.includes('seasoning')) {
+    return 180
+  }
+  
+  // Oil patterns - long expiry
+  if (lowerName.includes('oil')) {
+    return 30
+  }
+  
+  // Default expiry for unknown ingredients
+  return 7
+}
+
+// Enhanced extraction function that includes smart expiry calculation
+export function extractIngredientsAndAllergensWithExpiry(description: string): ExtractedData & { expiryDays: number } {
+  const extracted = extractIngredientsAndAllergensSmart(description)
+  
+  // Calculate smart expiry based on the most perishable ingredient
+  let maxExpiryDays = 7 // Default
+  
+  if (extracted.ingredients.length > 0) {
+    const expiryDays = extracted.ingredients.map(ingredient => calculateSmartExpiryDays(ingredient))
+    maxExpiryDays = Math.min(...expiryDays) // Use shortest expiry for safety
+  }
+  
+  return {
+    ...extracted,
+    expiryDays: maxExpiryDays
+  }
 } 

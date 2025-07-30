@@ -90,7 +90,7 @@ export const Pricing = () => {
                   "rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300",
                   billingCycle === type
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md"
-                    : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+                    : "text-gray-600 hover:text-purple-800 hover:bg-purple-50"
                 )}
               >
                 {type === "monthly" ? "Monthly Billing" : "Yearly Billing (Save 20%)"}
@@ -207,7 +207,7 @@ export const Pricing = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-8 py-4 text-lg font-semibold transition-all duration-300"
+                className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:text-purple-800 px-8 py-4 text-lg font-semibold transition-all duration-300"
               >
                 Start Trial
               </Button>

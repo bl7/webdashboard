@@ -102,7 +102,7 @@ export const PricingGrid = () => {
                   "relative px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300",
                   billingCycle === type
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+                    : "text-gray-600 hover:text-purple-800 hover:bg-purple-50"
                 )}
               >
                 {type === "monthly" ? "Monthly" : "Yearly"}

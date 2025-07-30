@@ -200,31 +200,59 @@ export class SquareDataTransformer {
     const description = squareItem.item_data?.description || ''
     const customAttributes = squareItem.item_data?.custom_attribute_values || {}
     
+    // Use our smart extraction system
+    const { extractIngredientsAndAllergensWithExpiry } = require('./src/lib/smartIngredientExtractor')
+    
+    // Extract ingredients and allergens using smart system
+    const extracted = extractIngredientsAndAllergensWithExpiry(description)
+    
     const ingredients: Array<{ name: string; expiryDays?: number }> = []
     const allergens: Array<{ name: string; category?: string; severity?: string }> = []
     
-    // Extract ingredients from description
-    const extractedIngredients = this.extractIngredientsFromText(description)
-    ingredients.push(...extractedIngredients)
-
-    // Extract allergens from description and ingredients
-    const allText = description.toLowerCase()
-    const detectedAllergens = this.detectAllergens(allText)
-    allergens.push(...detectedAllergens)
+    // Convert extracted ingredients to our format
+    for (const ingredientName of extracted.ingredients) {
+      ingredients.push({
+        name: ingredientName,
+        expiryDays: extracted.expiryDays // Use the smart calculated expiry
+      })
+    }
+    
+    // Convert extracted allergens to our format
+    for (const allergenName of extracted.allergens) {
+      allergens.push({
+        name: allergenName.charAt(0).toUpperCase() + allergenName.slice(1),
+        category: this.getAllergenCategory(allergenName),
+        severity: this.getAllergenSeverity(allergenName)
+      })
+    }
 
     // Check custom attributes for additional info
     for (const [key, value] of Object.entries(customAttributes)) {
       if (typeof value === 'string') {
         const attrText = value.toLowerCase()
         
-        // Check for allergen information in custom attributes
-        const attrAllergens = this.detectAllergens(attrText)
-        allergens.push(...attrAllergens)
-
-        // Check for ingredient information
-        if (key.toLowerCase().includes('ingredient') || key.toLowerCase().includes('contains')) {
-          const attrIngredients = this.extractIngredientsFromText(value)
-          ingredients.push(...attrIngredients)
+        // Use smart extraction for custom attributes too
+        const attrExtracted = extractIngredientsAndAllergensWithExpiry(value)
+        
+        // Add additional ingredients from custom attributes
+        for (const ingredientName of attrExtracted.ingredients) {
+          if (!ingredients.some(ing => ing.name.toLowerCase() === ingredientName.toLowerCase())) {
+            ingredients.push({
+              name: ingredientName,
+              expiryDays: attrExtracted.expiryDays
+            })
+          }
+        }
+        
+        // Add additional allergens from custom attributes
+        for (const allergenName of attrExtracted.allergens) {
+          if (!allergens.some(all => all.name.toLowerCase() === allergenName.toLowerCase())) {
+            allergens.push({
+              name: allergenName.charAt(0).toUpperCase() + allergenName.slice(1),
+              category: this.getAllergenCategory(allergenName),
+              severity: this.getAllergenSeverity(allergenName)
+            })
+          }
         }
       }
     }
@@ -303,35 +331,9 @@ export class SquareDataTransformer {
    * Estimate expiry days based on ingredient type
    */
   private estimateExpiryDays(ingredient: string): number {
-    const lowerIngredient = ingredient.toLowerCase()
-    
-    // Fresh produce
-    if (['lettuce', 'spinach', 'arugula', 'watercress', 'herbs'].some(term => lowerIngredient.includes(term))) {
-      return 3
-    }
-    
-    // Dairy products
-    if (['milk', 'cream', 'yogurt', 'cheese'].some(term => lowerIngredient.includes(term))) {
-      return 7
-    }
-    
-    // Meat products
-    if (['chicken', 'beef', 'pork', 'lamb', 'turkey'].some(term => lowerIngredient.includes(term))) {
-      return 2
-    }
-    
-    // Fish
-    if (['fish', 'salmon', 'tuna', 'cod', 'haddock'].some(term => lowerIngredient.includes(term))) {
-      return 1
-    }
-    
-    // Dry goods
-    if (['rice', 'pasta', 'flour', 'sugar', 'salt'].some(term => lowerIngredient.includes(term))) {
-      return 365
-    }
-    
-    // Default
-    return 7
+    // Import and use the smart expiry calculation from our enhanced system
+    const { calculateSmartExpiryDays } = require('./src/lib/smartIngredientExtractor')
+    return calculateSmartExpiryDays(ingredient)
   }
 
   /**

@@ -128,7 +128,7 @@ export const BulkImportFeatureSection = () => {
             </Link>
             
             <Link href="/features">
-              <Button variant="outline" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 px-6 py-3 text-lg font-semibold transition-all duration-300">
+              <Button variant="outline" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:text-purple-800 px-6 py-3 text-lg font-semibold transition-all duration-300">
                 View All Features
               </Button>
             </Link>

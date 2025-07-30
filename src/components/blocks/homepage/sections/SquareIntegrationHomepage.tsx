@@ -36,8 +36,8 @@ export const SquareIntegrationHomepage = () => {
             </h2>
             
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Stop manually entering menu items. InstaLabel is the only food labeling solution 
-              with native Square POS integration. Import your menu, export your labels — all automatically.
+              The only food labeling solution with <strong>native Square POS integration</strong>. 
+              Smart bidirectional sync with allergen detection, safe create-only mode, and real-time menu updates — all automatically.
             </p>
           </motion.div>
 
@@ -90,19 +90,19 @@ export const SquareIntegrationHomepage = () => {
               <ul className="space-y-3 text-green-700">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  Automatic sync in under 5 minutes
+                  <strong>Smart bidirectional sync</strong> in under 5 minutes
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  Perfect allergen detection every time
+                  <strong>AI-powered allergen detection</strong> from descriptions
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  Real-time bidirectional sync
+                  <strong>Safe create-only mode</strong> prevents data corruption
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  Professional ingredient structure
+                  <strong>Real-time menu updates</strong> with perfect structure
                 </li>
               </ul>
             </motion.div>
@@ -123,7 +123,7 @@ export const SquareIntegrationHomepage = () => {
             </Link>
             
             <Link href="/bookdemo">
-              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 font-semibold transition-all duration-300">
+              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:text-purple-800 font-semibold transition-all duration-300">
                 Book Demo
               </Button>
             </Link>

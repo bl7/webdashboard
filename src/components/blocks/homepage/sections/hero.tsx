@@ -113,8 +113,8 @@ export const Hero = () => {
             <div className="flex items-start gap-2">
               <span className="text-lg">🔄</span>
               <div>
-                <div className="font-bold text-gray-900 text-sm">Square POS Integration</div>
-                <div className="text-xs text-gray-600">Sync menu items and ingredients with Square — import and export seamlessly.</div>
+                <div className="font-bold text-gray-900 text-sm">Smart Square Integration</div>
+                <div className="text-xs text-gray-600">Bidirectional sync with smart allergen detection & safe create-only mode.</div>
               </div>
             </div>
           </div>
@@ -127,7 +127,7 @@ export const Hero = () => {
               </Button>
             </Link>
             <Link href="/register">
-              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-50 font-semibold transition-all duration-300">
+              <Button variant="outline" size="lg" className="border-2 border-purple-200 text-purple-700 hover:bg-purple-600 hover:text-white hover:border-purple-600 font-semibold transition-all duration-300">
                 Start Trial
               </Button>
             </Link>
