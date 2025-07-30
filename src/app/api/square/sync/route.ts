@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/pg'
 import { verifyAuthToken } from '@/lib/auth'
 import { addCustomAllergen, addIngredient, addMenuItems, getAllCustomAllergens, getAllIngredients, getAllMenuItems } from '@/lib/api'
+import { extractIngredientsAndAllergensSmart } from '@/lib/smartIngredientExtractor'
 
 // Normalize name function (same as upload process)
 function normalizeName(name: string): string {
@@ -36,13 +37,31 @@ function findExistingMenuItem(searchName: string, menuItems: any[]): any | undef
 
 interface SquareItem {
   id: string
-  type: 'ITEM' | 'ITEM_VARIATION' | 'CATEGORY'
+  type: 'ITEM' | 'ITEM_VARIATION' | 'CATEGORY' | 'MODIFIER' | 'MODIFIER_LIST'
   item_data?: {
     name: string
     description?: string
     category_id?: string
     variations?: any[]
     custom_attribute_values?: Record<string, any>
+    modifier_list_info?: Array<{
+      modifier_list_id: string
+      enabled: boolean
+    }>
+  }
+  modifier_list_data?: {
+    name: string
+    description?: string
+    selection_type?: string
+    modifiers?: Array<{
+      type: 'MODIFIER'
+      id: string
+      modifier_data?: {
+        name: string
+        description?: string
+        custom_attribute_values?: Record<string, any>
+      }
+    }>
   }
 }
 
@@ -224,24 +243,52 @@ export async function POST(req: NextRequest) {
     
     // Process each Square item to collect requirements
     for (const squareItem of squareItems) {
-      if (squareItem.type !== 'ITEM') continue
-
-      const itemName = squareItem.item_data?.name || 'Unknown Item'
-      const description = squareItem.item_data?.description || ''
-      const { ingredients, allergens } = extractIngredientsAndAllergens(description)
-      
-      // Add allergens to required set
-      allergens.forEach(allergen => allRequiredAllergens.add(allergen))
-      
-      // Add ingredients with default values
-      ingredients.forEach(ingredientName => {
-        if (!allRequiredIngredients.has(ingredientName)) {
-          allRequiredIngredients.set(ingredientName, {
-            expiryDays: 7, // Default expiry days
-            allergenNames: [] // Will be populated based on ingredient name matching
-          })
+      if (squareItem.type === 'MODIFIER_LIST') {
+        // PRIORITY 1: Extract ingredients from MODIFIER_LIST objects (structured data)
+        const modifierListName = squareItem.modifier_list_data?.name || ''
+        
+        // Check if this is an ingredient modifier list (starts with "Ingredients - ")
+        if (modifierListName.startsWith('Ingredients - ')) {
+          const ingredientName = modifierListName.replace('Ingredients - ', '')
+          console.log(`🔍 Found ingredient modifier list: "${ingredientName}"`)
+          
+          if (!allRequiredIngredients.has(ingredientName)) {
+            allRequiredIngredients.set(ingredientName, {
+              expiryDays: 7, // Default expiry days
+              allergenNames: [] // Will be populated based on ingredient name matching
+            })
+          }
+          
+          // Extract allergens from the modifier list description
+          const description = squareItem.modifier_list_data?.description || ''
+          const { allergens } = extractIngredientsAndAllergensSmart(description)
+          allergens.forEach(allergen => allRequiredAllergens.add(allergen))
         }
-      })
+      } else if (squareItem.type === 'ITEM') {
+        // PRIORITY 2: Extract from item descriptions only if no structured data available
+        const itemName = squareItem.item_data?.name || 'Unknown Item'
+        const description = squareItem.item_data?.description || ''
+        
+        // Only extract from description if no linked modifier lists
+        if (!squareItem.item_data?.modifier_list_info || squareItem.item_data.modifier_list_info.length === 0) {
+          const { ingredients, allergens, confidence } = extractIngredientsAndAllergensSmart(description)
+          
+          // Add allergens to required set
+          allergens.forEach(allergen => allRequiredAllergens.add(allergen))
+          
+          // Add ingredients with default values
+          ingredients.forEach(ingredientName => {
+            if (!allRequiredIngredients.has(ingredientName)) {
+              allRequiredIngredients.set(ingredientName, {
+                expiryDays: 7, // Default expiry days
+                allergenNames: [] // Will be populated based on ingredient name matching
+              })
+            }
+          })
+        } else {
+          console.log(`📋 Item "${itemName}" has linked modifier lists - skipping description extraction`)
+        }
+      }
     }
     
     // Resolve allergen-ingredient relationships based on name matching
@@ -368,15 +415,15 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // ========== STEP 5: PROCESS MENU ITEMS ==========
-    console.log("Processing menu items...")
+      // ========== STEP 5: PROCESS MENU ITEMS ==========
+  console.log("Processing menu items...")
 
-    for (const squareItem of squareItems) {
-      if (squareItem.type !== 'ITEM') continue
+  for (const squareItem of squareItems) {
+    if (squareItem.type !== 'ITEM') continue
 
-      const itemName = squareItem.item_data?.name || 'Unknown Item'
-      const description = squareItem.item_data?.description || ''
-      const { ingredients, allergens } = extractIngredientsAndAllergens(description)
+    const itemName = squareItem.item_data?.name || 'Unknown Item'
+    const description = squareItem.item_data?.description || ''
+    const { ingredients, allergens, confidence } = extractIngredientsAndAllergensSmart(description)
 
       try {
         const syncResult = await processSquareItem(squareItem, token, allergenIdMap, ingredientIdMap, menuItemIdMap, localAllergens, localIngredients, localMenuItems, result)
@@ -442,7 +489,7 @@ export async function POST(req: NextRequest) {
 
 async function fetchSquareCatalog(accessToken: string, locationId?: string): Promise<SquareItem[]> {
   const params = new URLSearchParams({
-    types: 'ITEM,ITEM_VARIATION,CATEGORY'
+    types: 'ITEM,ITEM_VARIATION,CATEGORY,MODIFIER,MODIFIER_LIST'
   })
   
   if (locationId) {
@@ -490,19 +537,73 @@ async function processSquareItem(
     return { created: false }
   }
   
-  // ========== STEP 2: EXTRACT INGREDIENTS AND ALLERGENS ==========
+  // ========== STEP 2: EXTRACT INGREDIENTS FROM STRUCTURED MODIFIER DATA ==========
   const description = squareItem.item_data?.description || ''
-  const { ingredients, allergens } = extractIngredientsAndAllergens(description)
+  const linkedIngredients: string[] = []
+  const linkedAllergens: string[] = []
   
-  // ========== STEP 3: RESOLVE INGREDIENT IDs ==========
+  // Extract ingredients from linked modifier lists (Square's structured approach)
+  if (squareItem.item_data?.modifier_list_info) {
+    console.log(`  🔗 Found ${squareItem.item_data.modifier_list_info.length} linked modifier lists`)
+    
+    // For each linked modifier list, we need to find the corresponding ingredient
+    // This would require a second pass through the catalog to find the modifier list details
+    // For now, we'll rely on the description extraction as fallback
+  }
+  
+  // Only use description extraction as fallback if no structured data is available
+  let allIngredients: string[] = []
+  let allAllergens: string[] = []
+  
+  if (linkedIngredients.length > 0) {
+    // Use structured modifier data (preferred)
+    allIngredients = linkedIngredients
+    allAllergens = linkedAllergens
+    console.log(`  📋 Using structured modifier data: ${allIngredients.join(", ")}`)
+  } else {
+    // Fallback to description extraction (less reliable)
+    const { ingredients: descriptionIngredients, allergens: descriptionAllergens } = extractIngredientsAndAllergensSmart(description)
+    allIngredients = descriptionIngredients
+    allAllergens = descriptionAllergens
+    console.log(`  📝 Using description extraction (fallback): ${allIngredients.join(", ")}`)
+  }
+  
+  console.log(`Processing "${itemName}":`)
+  console.log(`  Description: "${description}"`)
+  console.log(`  Ingredients: ${allIngredients.join(", ")}`)
+  console.log(`  Allergens: ${allAllergens.join(", ")}`)
+  
+  // Skip items with no ingredients (either structured or extracted)
+  if (allIngredients.length === 0) {
+    console.log(`⚠ Skipping "${itemName}" - no ingredients found`)
+    result.stats.menuItems.skipped++
+    result.warnings.push(`No ingredients found for menu item "${itemName}"`)
+    return { created: false }
+  }
+  
+  // ========== STEP 3: PROCESS ALLERGENS AND CREATE INGREDIENTS ==========
   const resolvedIngredientIds: string[] = []
   const foundIngredients: string[] = []
+  const createdIngredients: string[] = []
 
-  for (const ingredientName of ingredients) {
+  // First, resolve allergen IDs for the extracted allergens
+  const allergenIds: string[] = []
+  for (const allergenName of allAllergens) {
+    const allergenId = await createOrGetAllergen(allergenName, token)
+    if (allergenId) {
+      allergenIds.push(allergenId)
+      console.log(`  ✓ Resolved allergen: ${allergenName}`)
+    } else {
+      console.log(`  ⚠ Could not resolve allergen: ${allergenName}`)
+    }
+  }
+
+  // Process each ingredient
+  for (const ingredientName of allIngredients) {
     if (!ingredientName?.trim()) continue
 
     // Try direct lookup first
-    let ingredientId =
+    let ingredientId: string | undefined =
       ingredientIdMap.get(ingredientName.toLowerCase()) ||
       ingredientIdMap.get(normalizeName(ingredientName))
 
@@ -513,6 +614,20 @@ async function processSquareItem(
         ingredientId = existingIngredient.uuid
         ingredientIdMap.set(ingredientName.toLowerCase(), existingIngredient.uuid)
         ingredientIdMap.set(normalizeName(ingredientName), existingIngredient.uuid)
+        console.log(`  ✓ Found existing ingredient: ${ingredientName}`)
+      }
+    }
+
+    if (!ingredientId) {
+      // Create new ingredient with allergen associations
+      console.log(`  + Creating new ingredient: ${ingredientName}`)
+      const newIngredientId = await createOrGetIngredient(ingredientName, allergenIds, token)
+      if (newIngredientId) {
+        ingredientId = newIngredientId
+        ingredientIdMap.set(ingredientName.toLowerCase(), ingredientId)
+        ingredientIdMap.set(normalizeName(ingredientName), ingredientId)
+        createdIngredients.push(ingredientName)
+        console.log(`  ✓ Created ingredient: ${ingredientName}`)
       }
     }
 
@@ -520,7 +635,7 @@ async function processSquareItem(
       resolvedIngredientIds.push(ingredientId)
       foundIngredients.push(ingredientName)
     } else {
-      console.error(`Error: Could not find ingredient "${ingredientName}" for menu item "${itemName}"`)
+      console.log(`  ⚠ Could not create/find ingredient: ${ingredientName}`)
       result.warnings.push(`Could not resolve ingredient "${ingredientName}" for menu item "${itemName}"`)
     }
   }
@@ -554,103 +669,64 @@ async function processSquareItem(
   return { created }
 }
 
-function extractIngredientsAndAllergens(description: string): { ingredients: string[], allergens: string[] } {
-  const ingredients: string[] = []
-  const allergens: string[] = []
-  
-  // Standard allergen mapping (like upload process)
-  const allergenKeywords = {
-    'gluten': ['wheat', 'barley', 'rye', 'oats', 'flour', 'bread', 'pasta'],
-    'milk': ['milk', 'dairy', 'cheese', 'cream', 'butter', 'yogurt', 'coconut milk'],
-    'eggs': ['egg', 'mayonnaise', 'custard'],
-    'fish': ['fish', 'salmon', 'tuna', 'cod', 'fish sauce'],
-    'peanuts': ['peanut', 'groundnut'],
-    'soy': ['soy', 'soya', 'tofu'],
-    'nuts': ['almond', 'walnut', 'cashew', 'pistachio', 'nuts', 'nut'],
-    'celery': ['celery'],
-    'mustard': ['mustard'],
-    'sesame': ['sesame', 'tahini'],
-    'sulphites': ['sulphite', 'sulfite'],
-    'lupin': ['lupin'],
-    'molluscs': ['mollusc', 'mussel', 'oyster'],
-    'crustaceans': ['shrimp', 'prawn', 'crab', 'lobster']
-  }
 
-  const lowerDescription = description.toLowerCase()
-  
-  // Extract allergens (like upload process)
-  for (const [allergen, keywords] of Object.entries(allergenKeywords)) {
-    for (const keyword of keywords) {
-      if (lowerDescription.includes(keyword)) {
-        allergens.push(allergen)
-        break
-      }
-    }
-  }
-
-  // Extract ingredients (improved pattern matching)
-  const ingredientPatterns = [
-    /ingredients?:\s*([^\.]+)/i,
-    /contains?:\s*([^\.]+)/i,
-    /made with:\s*([^\.]+)/i,
-    /with\s+([^\.]+)/i,
-    /([^\.]+)\s+curry/i,
-    /curry\s+([^\.]+)/i
-  ]
-
-  for (const pattern of ingredientPatterns) {
-    const match = description.match(pattern)
-    if (match) {
-      const ingredientList = match[1].split(/[,\s]+/).map(item => item.trim()).filter(item => item.length > 2)
-      ingredients.push(...ingredientList)
-      break
-    }
-  }
-
-  // If no ingredients found with patterns, extract meaningful words
-  if (ingredients.length === 0) {
-    const words = description.toLowerCase().split(/\s+/)
-    const commonIngredients = [
-      'curry', 'nuts', 'ox', 'mad', 'sauted', 'boiled', 'rice', 'chicken', 'beef', 'lamb', 'fish',
-      'vegetables', 'onion', 'garlic', 'ginger', 'tomato', 'potato', 'carrot', 'peas', 'beans',
-      'coconut', 'lemongrass', 'chili', 'peppers', 'turmeric', 'coriander', 'cumin', 'brown', 'sugar', 'lime'
-    ]
-    
-    for (const word of words) {
-      if (commonIngredients.includes(word) && word.length > 2) {
-        ingredients.push(word)
-      }
-    }
-  }
-
-  return { ingredients, allergens }
-}
 
 async function createOrGetAllergen(allergenName: string, token: string): Promise<string | null> {
   try {
-    const result = await addCustomAllergen(allergenName, token)
-    return result.data?.uuid || result.data?.id || null
-  } catch (error: any) {
-    // If allergen already exists, try to get it from the database
-    if (error.message.includes('already exists') || error.message.includes('duplicate')) {
-      const existingResult = await pool.query(
-        'SELECT uuid FROM custom_allergens WHERE LOWER(allergen_name) = LOWER($1) AND user_id = (SELECT user_id FROM user_profiles WHERE user_id = $2)',
-        [allergenName, token]
-      )
-      if (existingResult.rows.length > 0) {
-        return existingResult.rows[0].uuid
-      }
+    // Only use standard allergens - don't create custom ones
+    const standardAllergens = [
+      'gluten', 'milk', 'eggs', 'fish', 'peanuts', 'soy', 'nuts', 
+      'celery', 'mustard', 'sesame', 'sulphites', 'lupin', 'molluscs', 'crustaceans'
+    ]
+    
+    if (!standardAllergens.includes(allergenName.toLowerCase())) {
+      console.log(`Skipping non-standard allergen: ${allergenName}`)
+      return null
     }
+    
+    // Check if standard allergen exists in the system
+    const existingResult = await pool.query(
+      'SELECT uuid FROM allergens WHERE LOWER(allergen_name) = LOWER($1)',
+      [allergenName]
+    )
+    
+    if (existingResult.rows.length > 0) {
+      return existingResult.rows[0].uuid
+    }
+    
+    // If not found in standard allergens, try custom allergens as fallback
+    const customResult = await pool.query(
+      'SELECT uuid FROM custom_allergens WHERE LOWER(allergen_name) = LOWER($1) AND user_id = $2',
+      [allergenName, token]
+    )
+    
+    if (customResult.rows.length > 0) {
+      return customResult.rows[0].uuid
+    }
+    
+    return null
+  } catch (error: any) {
+    console.error(`Error getting allergen ${allergenName}:`, error)
     return null
   }
 }
 
 async function createOrGetIngredient(ingredientName: string, allergenIds: string[], token: string): Promise<string | null> {
   try {
+    // Clean up ingredient name
+    const cleanIngredientName = ingredientName.trim().toLowerCase()
+    
+    // Skip if ingredient name is too short or generic
+    if (cleanIngredientName.length < 3 || 
+        ['and', 'or', 'the', 'a', 'an', 'with', 'made', 'contains', 'ingredients'].includes(cleanIngredientName)) {
+      console.log(`Skipping generic ingredient: ${ingredientName}`)
+      return null
+    }
+    
     const result = await addIngredient({
-      ingredientName,
+      ingredientName: ingredientName.trim(),
       expiryDays: 7, // Default 7 days expiry
-      allergenIDs: allergenIds
+      allergenIDs: allergenIds.filter(id => id !== null) // Filter out null allergen IDs
     }, token)
     
     return result.data?.uuid || result.data?.id || null

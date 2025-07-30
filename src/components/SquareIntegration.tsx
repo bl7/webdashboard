@@ -40,7 +40,9 @@ import {
   Clock,
   Database,
   RotateCcw,
-  Eye
+  Eye,
+  Download,
+  Upload
 } from 'lucide-react'
 
 // Square Logo SVG Component
@@ -111,6 +113,8 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
   const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'completed' | 'failed'>('idle')
   const [syncPreview, setSyncPreview] = useState<any>(null)
   const [showPreview, setShowPreview] = useState(false)
+  const [syncDirection, setSyncDirection] = useState<'from-square' | 'to-square'>('from-square')
+  const [isSyncingDirection, setIsSyncingDirection] = useState(false)
 
   useEffect(() => {
     loadSquareStatus()
@@ -260,71 +264,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
     }
   }
 
-  const syncNow = async () => {
-    if (!selectedLocation) {
-      toast.error('Please select a location first')
-      return
-    }
 
-    setIsSyncing(true)
-    setSyncStatus('syncing')
-    setSyncProgress(0)
-    
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) throw new Error('No authentication token')
-
-      // Simulate progress updates
-      const progressInterval = setInterval(() => {
-        setSyncProgress(prev => {
-          if (prev >= 90) return prev
-          return prev + Math.random() * 10
-        })
-      }, 500)
-
-      const response = await fetch('/api/square/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          user_id: userId,
-          location_id: selectedLocation
-        })
-      })
-
-      clearInterval(progressInterval)
-      setSyncProgress(100)
-
-      if (response.ok) {
-        const result = await response.json()
-        setSyncResults(result)
-        setSyncStatus('completed')
-        toast.success(`Sync completed! ${result.itemsCreated} items created`)
-        
-        if (onSyncComplete) {
-          onSyncComplete(result)
-        }
-        
-        loadSquareStatus()
-      } else {
-        const error = await response.json()
-        setSyncStatus('failed')
-        toast.error(error.error || 'Sync failed')
-      }
-    } catch (error) {
-      console.error('Sync error:', error)
-      setSyncStatus('failed')
-      toast.error('Sync failed')
-    } finally {
-      setIsSyncing(false)
-      setTimeout(() => {
-        setSyncProgress(0)
-        setSyncStatus('idle')
-      }, 2000)
-    }
-  }
 
   const updateSyncSettings = async (settings: Partial<SquareStatus>) => {
     try {
@@ -353,6 +293,84 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
     } catch (error) {
       console.error('Settings update error:', error)
       toast.error('Failed to update settings')
+    }
+  }
+
+  const handleSync = async (direction: 'from-square' | 'to-square') => {
+    setIsSyncingDirection(true)
+    setSyncDirection(direction)
+    
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        toast.error('Authentication required')
+        return
+      }
+
+      let result: any = null
+
+      if (direction === 'from-square') {
+        toast.info('Syncing from Square...')
+        
+        const response = await fetch('/api/square/sync', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            location_id: selectedLocation
+          })
+        })
+
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.error || 'Failed to sync from Square')
+        }
+
+        result = await response.json()
+      }
+
+      if (direction === 'to-square') {
+        toast.info('Syncing to Square...')
+        
+        const response = await fetch('/api/square/sync-to-square', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            location_id: selectedLocation,
+            syncOptions: {
+              syncAllergens: true,
+              syncIngredients: true,
+              syncMenuItems: true
+            }
+          })
+        })
+
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.error || 'Failed to sync to Square')
+        }
+
+        result = await response.json()
+      }
+
+      setSyncResults(result)
+
+      if (result?.success) {
+        toast.success(`${direction === 'from-square' ? 'Import' : 'Export'} completed successfully! Created ${result.itemsCreated} items.`)
+      } else {
+        toast.error(`${direction === 'from-square' ? 'Import' : 'Export'} completed with ${result?.itemsFailed || 0} errors.`)
+      }
+
+    } catch (error: any) {
+      console.error('Bidirectional sync error:', error)
+      toast.error(error.message || 'Sync failed')
+    } finally {
+      setIsSyncingDirection(false)
     }
   }
 
@@ -507,33 +525,60 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="flex gap-2 mt-6">
-                  <Button
-                    onClick={previewSync}
-                    disabled={!selectedLocation}
-                    variant="outline"
-                    className="flex items-center gap-2"
-                  >
-                    <Eye className="h-4 w-4" />
-                    Preview
-                  </Button>
-                  <Button
-                    onClick={syncNow}
-                    disabled={isSyncing || !selectedLocation}
-                    className="flex items-center gap-2"
-                  >
-                    {isSyncing ? (
-                      <>
-                        <RefreshCw className="h-4 w-4 animate-spin mr-2" />
-                        Syncing...
-                      </>
-                    ) : (
-                      <>
-                        <SquareLogo />
-                        Sync Now
-                      </>
-                    )}
-                  </Button>
+                {/* Sync Controls */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <Label>Sync Direction</Label>
+                      <Select value={syncDirection} onValueChange={(value: 'from-square' | 'to-square') => setSyncDirection(value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select sync direction" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="from-square">
+                            <div className="flex items-center gap-2">
+                              <Download className="h-4 w-4" />
+                              Import from Square
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="to-square">
+                            <div className="flex items-center gap-2">
+                              <Upload className="h-4 w-4" />
+                              Export to Square
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="flex gap-2 mt-6">
+                      <Button
+                        onClick={previewSync}
+                        disabled={!selectedLocation || syncDirection === 'to-square'}
+                        variant="outline"
+                        className="flex items-center gap-2"
+                      >
+                        <Eye className="h-4 w-4" />
+                        Preview
+                      </Button>
+                      <Button
+                        onClick={() => handleSync(syncDirection)}
+                        disabled={isSyncingDirection || !selectedLocation}
+                        className="flex items-center gap-2"
+                      >
+                        {isSyncingDirection ? (
+                          <>
+                            <RefreshCw className="h-4 w-4 animate-spin mr-2" />
+                            {syncDirection === 'from-square' ? 'Importing...' : 'Exporting...'}
+                          </>
+                        ) : (
+                          <>
+                            <SquareLogo />
+                            {syncDirection === 'from-square' ? 'Import from Square' : 'Export to Square'}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -541,7 +586,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
               {syncStatus === 'syncing' && (
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Syncing data from Square...</span>
+                    <span>{syncDirection === 'from-square' ? 'Importing data from Square...' : 'Exporting data to Square...'}</span>
                     <span>{Math.round(syncProgress)}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
@@ -557,13 +602,13 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
               {syncStatus === 'completed' && (
                 <div className="flex items-center gap-2 text-green-600">
                   <CheckCircle className="h-4 w-4" />
-                  <span>Sync completed successfully!</span>
+                  <span>{syncDirection === 'from-square' ? 'Import completed successfully!' : 'Export completed successfully!'}</span>
                 </div>
               )}
               {syncStatus === 'failed' && (
                 <div className="flex items-center gap-2 text-red-600">
                   <XCircle className="h-4 w-4" />
-                  <span>Sync failed. Please try again.</span>
+                  <span>{syncDirection === 'from-square' ? 'Import failed. Please try again.' : 'Export failed. Please try again.'}</span>
                 </div>
               )}
             </div>
@@ -692,6 +737,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
                 <ExternalLink className="h-4 w-4" />
                 Square Developer
               </Button>
+
             </div>
           )}
         </CardContent>
@@ -768,15 +814,17 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
                 </Button>
                 <Button onClick={() => {
                   setShowPreview(false)
-                  syncNow()
+                  handleSync('from-square')
                 }}>
-                  Proceed with Sync
+                  Proceed with Import
                 </Button>
               </div>
             </div>
           )}
         </DialogContent>
       </Dialog>
+
+
     </div>
   )
 } 

@@ -110,6 +110,13 @@ export const Hero = () => {
                 <div className="text-xs text-gray-600">Print logs, override expiry dates, and queue up multiple labels — all in one dashboard.</div>
               </div>
             </div>
+            <div className="flex items-start gap-2">
+              <span className="text-lg">🔄</span>
+              <div>
+                <div className="font-bold text-gray-900 text-sm">Square POS Integration</div>
+                <div className="text-xs text-gray-600">Sync menu items and ingredients with Square — import and export seamlessly.</div>
+              </div>
+            </div>
           </div>
           {/* CTAs */}
           <div className="flex flex-wrap items-center gap-3 pt-2 justify-center md:justify-start mt-2">
