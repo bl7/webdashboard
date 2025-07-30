@@ -159,7 +159,10 @@ export default function NextToExpireList() {
         <CardTitle className="flex items-center gap-2 text-lg font-semibold text-amber-800">
           <Clock className="h-5 w-5 text-amber-600" />
           Next to Expire (After 24h)
-          <span className="ml-auto flex items-center">
+          <span className="ml-auto flex items-center gap-2">
+            <span className="text-sm font-medium text-amber-600">
+              {loading ? "..." : `${nextToExpire.length} items`}
+            </span>
             {expanded ? (
               <ChevronUp className="h-5 w-5 text-amber-600" />
             ) : (

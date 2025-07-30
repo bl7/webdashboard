@@ -10,6 +10,9 @@ import { useMenuItems } from "@/hooks/useMenuItem"
 import NextToExpireList from "./analytics/NextToExpireList"
 import AboutToExpireList from "./analytics/AboutToExpireList"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import SalesPrepSuggestions from "@/components/dashboard/SalesPrepSuggestions"
+import LowStockAlerts from "@/components/dashboard/LowStockAlerts"
+import PopularItemsDashboard from "@/components/dashboard/PopularItemsDashboard"
 
 const CARD_STYLES = {
   allergens: {
@@ -125,6 +128,20 @@ export default function DashboardPage() {
           className="mb-8"
         >
           <NextToExpireList />
+        </motion.section>
+
+        {/* Square Integration Dashboard */}
+        <motion.section 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="mb-8 space-y-6"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <SalesPrepSuggestions />
+            <LowStockAlerts />
+          </div>
+          <PopularItemsDashboard />
         </motion.section>
 
         {/* Main Content */}
