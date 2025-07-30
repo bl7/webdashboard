@@ -5,12 +5,22 @@ import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
 import Head from 'next/head'
+import { PerformanceOptimizer } from "@/components/PerformanceOptimizer"
 
-const base_font = Manrope({ subsets: ["latin"] })
+const base_font = Manrope({ 
+  subsets: ["latin"],
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
+})
+
 const accent_font = Oxygen({
   subsets: ["latin"],
   weight: ["300", "400", "700"],
   variable: "--font-accent",
+  display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 })
 
 export const metadata: Metadata = {
@@ -136,8 +146,13 @@ export default function RootLayout({
         <title>Smart Kitchen Labeling System | Cloud-Based Food Safety Labels | InstaLabel</title>
         <meta name="description" content="Next-generation kitchen labeling system with cloud management, multi-location sync, and smart inventory tracking. More advanced than traditional label printers. Free trial." />
         <meta name="keywords" content="smart kitchen labeling system, cloud food labeling, multi-location kitchen management, advanced food safety labels, digital kitchen labeling, restaurant tech solutions" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </Head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
+        <PerformanceOptimizer />
         <AuthProvider>
           {children}
         </AuthProvider>
