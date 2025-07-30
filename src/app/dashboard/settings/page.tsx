@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
 import BridgeDownload from "@/components/BridgeDownload"
+import SquareIntegration from "@/components/SquareIntegration"
 
 const labelTypes = [
   { label: "Cooked", key: "cooked" },
@@ -305,6 +306,14 @@ export default function Settings() {
               </div>
             </>
           )}
+        </div>
+
+        {/* Square Integration Section - Full Width */}
+        <div className="bg-white rounded-xl shadow-lg border p-6 col-span-full">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Integrations</h2>
+          <SquareIntegration userId={userId} onSyncComplete={(result) => {
+            showFeedback(`Square sync completed! ${result.itemsCreated} items created`, "success")
+          }} />
         </div>
       </div>
 
