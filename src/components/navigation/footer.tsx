@@ -108,12 +108,10 @@ export const Footer = () => {
           <div className="space-y-3">
             <h3 className="text-base font-semibold text-white border-b border-purple-400/30 pb-1">Learn</h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
-              <Link href="/" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Home</Link>
-              <Link href="/features" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Features</Link>
-              <Link href="/plan" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Pricing</Link>
               <Link href="/faqs" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">FAQs</Link>
               <Link href="/blog" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Blogs</Link>
               <Link href="/allergen-compliance" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Allergen Compliance</Link>
+              <Link href="/allergen-guide" className="hover:text-purple-300 transition-all duration-300 hover:translate-x-1">Allergen Guide</Link>
             </nav>
           </div>
 

@@ -1,0 +1,6 @@
+export { AllergenGuidePage } from "./allergen-guide"
+export { AllergenGuideHero } from "./sections/AllergenGuideHero"
+export { AllergenGuideList } from "./sections/AllergenGuideList"
+export { AllergenGuideCompliance } from "./sections/AllergenGuideCompliance"
+export { AllergenGuideCrossContamination } from "./sections/AllergenGuideCrossContamination"
+export { AllergenGuideCTA } from "./sections/AllergenGuideCTA" 

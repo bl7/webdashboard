@@ -6,6 +6,8 @@ import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
 import Head from 'next/head'
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer"
+import { Analytics } from "@/components/Analytics"
+import { PerformanceMonitor } from "@/components/PerformanceMonitor"
 
 const base_font = Manrope({ 
   subsets: ["latin"],
@@ -140,6 +142,51 @@ export default function RootLayout({
     }
   }
 
+  const localBusinessData = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "InstaLabel",
+    "description": "Professional kitchen labeling system for restaurants and food businesses",
+    "url": "https://instalabel.co",
+    "telephone": "+44-20-1234-5678",
+    "email": "hello@instalabel.co",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "GB",
+      "addressLocality": "London",
+      "addressRegion": "England"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": "51.5074",
+      "longitude": "-0.1278"
+    },
+    "openingHours": "Mo-Fr 09:00-17:00",
+    "priceRange": "££",
+    "areaServed": {
+      "@type": "Country",
+      "name": "United Kingdom"
+    },
+    "serviceArea": {
+      "@type": "Country",
+      "name": "United Kingdom"
+    },
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Kitchen Labeling Solutions",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Kitchen Labeling System",
+            "description": "Professional kitchen labeling system for restaurants"
+          }
+        }
+      ]
+    }
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
@@ -152,7 +199,17 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       </Head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessData) }}
+        />
         <PerformanceOptimizer />
+        <Analytics />
+        <PerformanceMonitor />
         <AuthProvider>
           {children}
         </AuthProvider>
