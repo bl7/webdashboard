@@ -15,14 +15,15 @@ export function PPDSLabelRenderer({ item, storageInfo, businessName, allIngredie
       width: '60mm',
       height: '80mm',
       boxSizing: 'border-box',
-      padding: 0, // Remove all padding
+      padding: '1mm', // Add a little padding inside the border
       margin: 0, // Remove all margin
       background: 'white',
       display: 'flex',
       flexDirection: 'column',
       fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
       color: '#000',
-      border: '1px solid #000',
+      border: '2px solid #000', // Thicker border to match LabelRender
+      borderRadius: 6, // Rounded corners to match LabelRender
       justifyContent: 'flex-start',
     }}>
       {/* Product Title */}
