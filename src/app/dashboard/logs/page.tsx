@@ -3,7 +3,14 @@
 import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { FileDown, Printer } from "lucide-react"
 import * as XLSX from "xlsx"
 import { formatLabelForPrintImage } from "../print/labelFormatter"
@@ -67,35 +74,40 @@ function getBestAvailablePrinter(
   console.log("🖨️ Printer Selection Debug:", {
     selectedPrinter: selectedPrinter?.name,
     defaultPrinter: defaultPrinter?.name,
-    availablePrinters: availablePrinters?.slice(0, 5).map(p => p.name),
-    availableCount: availablePrinters?.length || 0
-  });
+    availablePrinters: availablePrinters?.slice(0, 5).map((p) => p.name),
+    availableCount: availablePrinters?.length || 0,
+  })
 
-  const validPrinters = (availablePrinters || []).filter(printer => 
-    printer && 
-    printer.name &&
-    printer.name.trim() !== "" && 
-    printer.name !== "Fallback_Printer" &&
-    !printer.name.toLowerCase().includes('fallback')
-  );
+  const validPrinters = (availablePrinters || []).filter(
+    (printer) =>
+      printer &&
+      printer.name &&
+      printer.name.trim() !== "" &&
+      printer.name !== "Fallback_Printer" &&
+      !printer.name.toLowerCase().includes("fallback")
+  )
 
-  if (selectedPrinter && 
-      selectedPrinter.name !== "Fallback_Printer" && 
-      validPrinters.some(p => p.name === selectedPrinter.name)) {
-    return { printer: selectedPrinter, reason: "Selected printer available" };
+  if (
+    selectedPrinter &&
+    selectedPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === selectedPrinter.name)
+  ) {
+    return { printer: selectedPrinter, reason: "Selected printer available" }
   }
-  
-  if (defaultPrinter && 
-      defaultPrinter.name !== "Fallback_Printer" && 
-      validPrinters.some(p => p.name === defaultPrinter.name)) {
-    return { printer: defaultPrinter, reason: "Default printer available" };
+
+  if (
+    defaultPrinter &&
+    defaultPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === defaultPrinter.name)
+  ) {
+    return { printer: defaultPrinter, reason: "Default printer available" }
   }
-  
+
   if (validPrinters.length > 0) {
-    return { printer: validPrinters[0], reason: "First available printer" };
+    return { printer: validPrinters[0], reason: "First available printer" }
   }
-  
-  return { printer: null, reason: "No valid printers available" };
+
+  return { printer: null, reason: "No valid printers available" }
 }
 
 function PrintSessionsSkeleton() {
@@ -112,11 +124,12 @@ function PrintSessionsSkeleton() {
 
 // Helper to get printer name
 function getPrinterName(printer: any): string {
-  if (!printer) return '';
-  if (typeof printer === 'string') return printer;
-  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
-  if (typeof printer.name === 'string') return printer.name;
-  return '';
+  if (!printer) return ""
+  if (typeof printer === "string") return printer
+  if (typeof printer.name === "object" && typeof printer.name.name === "string")
+    return printer.name.name
+  if (typeof printer.name === "string") return printer.name
+  return ""
 }
 
 export default function PrintSessionsPage() {
@@ -127,8 +140,8 @@ export default function PrintSessionsPage() {
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
-  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
-  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
+  const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
 
   // Printer context
   const {
@@ -142,9 +155,11 @@ export default function PrintSessionsPage() {
   } = usePrinter()
 
   // Subscription status
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
   const { subscription, loading: subLoading } = useBillingData(userId)
-  const subBlocked = !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
+  const subBlocked =
+    !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
 
   useEffect(() => {
     const id = localStorage.getItem("userid")
@@ -163,16 +178,16 @@ export default function PrintSessionsPage() {
 
         const res = await fetch(`/api/logs`, {
           headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
         })
         if (!res.ok) {
           const errData = await res.json()
           throw new Error(errData.error || "Failed to fetch print sessions")
         }
         const data = await res.json()
-        
+
         // Filter only print_label actions
         const printLabelLogs = (data.logs || []).filter((log: any) => log.action === "print_label")
         setPrintLogs(printLabelLogs)
@@ -193,9 +208,11 @@ export default function PrintSessionsPage() {
     }
 
     const grouped: { [key: string]: PrintLog[] } = {}
-    
-    printLogs.forEach(log => {
-      const sessionKey = log.details.sessionId || `${new Date(log.timestamp).getTime()}-${log.details.printerUsed?.name || 'unknown'}`
+
+    printLogs.forEach((log) => {
+      const sessionKey =
+        log.details.sessionId ||
+        `${new Date(log.timestamp).getTime()}-${log.details.printerUsed?.name || "unknown"}`
       if (!grouped[sessionKey]) {
         grouped[sessionKey] = []
       }
@@ -212,50 +229,48 @@ export default function PrintSessionsPage() {
         items: logs,
         printerUsed: firstLog.details.printerUsed,
         initial: firstLog.details.initial,
-        labelHeight: firstLog.details.labelHeight
+        labelHeight: firstLog.details.labelHeight,
       }
     })
 
     // Sort by timestamp (newest first)
     sessions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-    
+
     setGroupedSessions(sessions)
   }, [printLogs])
 
   useEffect(() => {
-    const filtered = groupedSessions.filter(
-      (session) => {
-        const itemNames = session.items.map(item => item.details.itemName).join(' ')
-        return itemNames.toLowerCase().includes(search.toLowerCase())
-      }
-    )
+    const filtered = groupedSessions.filter((session) => {
+      const itemNames = session.items.map((item) => item.details.itemName).join(" ")
+      return itemNames.toLowerCase().includes(search.toLowerCase())
+    })
     setFilteredSessions(filtered)
   }, [search, groupedSessions])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const platform = window.navigator.platform.toLowerCase();
-      if (platform.includes('mac')) setOsType('mac');
-      else if (platform.includes('win')) setOsType('windows');
-      else setOsType('other');
+    if (typeof window !== "undefined") {
+      const platform = window.navigator.platform.toLowerCase()
+      if (platform.includes("mac")) setOsType("mac")
+      else if (platform.includes("win")) setOsType("windows")
+      else setOsType("other")
     }
-  }, []);
+  }, [])
   useEffect(() => {
-    console.log('[Print Sessions] Detected OS:', osType);
-  }, [osType]);
+    console.log("[Print Sessions] Detected OS:", osType)
+  }, [osType])
 
   function formatTimestamp(ts: string) {
     // Use ISO string for SSR safety
-    return new Date(ts).toISOString().replace('T', ' ').slice(0, 19)
+    return new Date(ts).toISOString().replace("T", " ").slice(0, 19)
   }
 
   function formatPrintedAt(ts: string) {
     // Use ISO string for SSR safety
-    return new Date(ts).toISOString().replace('T', ' ').slice(0, 19)
+    return new Date(ts).toISOString().replace("T", " ").slice(0, 19)
   }
 
   function getItemNames(session: GroupedPrintSession): string {
-    return session.items.map(item => item.details.itemName).join(', ')
+    return session.items.map((item) => item.details.itemName).join(", ")
   }
 
   function getTotalQuantity(session: GroupedPrintSession): number {
@@ -263,30 +278,39 @@ export default function PrintSessionsPage() {
   }
 
   function getLabelTypes(session: GroupedPrintSession): string {
-    const types = [...new Set(session.items.map(item => item.details.labelType))]
-    return types.map(type => type.toUpperCase()).join(', ')
+    const types = [...new Set(session.items.map((item) => item.details.labelType))]
+    return types.map((type) => type.toUpperCase()).join(", ")
   }
 
   async function handlePrintSession(session: GroupedPrintSession) {
     const sessionId = session.sessionId
-    setPrintingStates(prev => ({ ...prev, [sessionId]: true }))
-    
+    setPrintingStates((prev) => ({ ...prev, [sessionId]: true }))
+
     try {
       if (printerLoading) {
         throw new Error("Checking printer status, please wait...")
       }
-      
+
       if (!isConnected) {
         console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
       }
 
       // Use selected printer from dropdown
-      const printerToUse = availablePrinters.find((p: any) => (p.name === selectedPrinterName || p.systemName === selectedPrinterName)) || selectedPrinter || defaultPrinter;
-      if (printerToUse) selectPrinter(printerToUse);
+      const printerToUse =
+        availablePrinters.find(
+          (p: any) => p.name === selectedPrinterName || p.systemName === selectedPrinterName
+        ) ||
+        selectedPrinter ||
+        defaultPrinter
+      if (printerToUse) selectPrinter(printerToUse)
 
       // Get the best available printer using our helper function
-      const printerSelection = getBestAvailablePrinter(printerToUse, defaultPrinter, availablePrinters)
-      
+      const printerSelection = getBestAvailablePrinter(
+        printerToUse,
+        defaultPrinter,
+        availablePrinters
+      )
+
       if (!printerSelection.printer) {
         console.warn("⚠️ No printer available, but allowing print for debug purposes")
       }
@@ -294,7 +318,7 @@ export default function PrintSessionsPage() {
       // Get allergens from localStorage or use empty array
       const allergens = JSON.parse(localStorage.getItem("allergens") || "[]")
       const allergenNames = allergens.map((a: any) => a.allergenName?.toLowerCase() || "")
-      
+
       let successCount = 0
       let failCount = 0
       const failItems: string[] = []
@@ -310,14 +334,14 @@ export default function PrintSessionsPage() {
             name: log.details.itemName,
             quantity: log.details.quantity,
             printedOn: log.details.printedAt,
-            expiryDate: new Date().toISOString().split('T')[0], // Default expiry
+            expiryDate: new Date().toISOString().split("T")[0], // Default expiry
             labelType: log.details.labelType,
             ingredients: [], // We don't have ingredients in logs
-            allergens: [] // We don't have allergens in logs
+            allergens: [], // We don't have allergens in logs
           }
 
-          // Use the label height from the log or default to 31mm
-          const labelHeight = log.details.labelHeight || "31mm"
+          // Use the label height from the log or default to 40mm
+          const labelHeight = log.details.labelHeight || "40mm"
 
           // Generate the label image
           const imageDataUrl = await formatLabelForPrintImage(
@@ -330,57 +354,61 @@ export default function PrintSessionsPage() {
             labelHeight
           )
 
-          console.log(`🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl.length}`)
+          console.log(
+            `🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl.length}`
+          )
 
           if (!imageDataUrl) {
-            failCount++;
-            failItems.push(log.details.itemName);
-            console.error(`❌ Print error for item ${log.details.itemName}: imageDataUrl is undefined`);
-            continue;
+            failCount++
+            failItems.push(log.details.itemName)
+            console.error(
+              `❌ Print error for item ${log.details.itemName}: imageDataUrl is undefined`
+            )
+            continue
           }
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
-            await print(imageDataUrl);
+            await print(imageDataUrl)
             console.log(`✅ Printed ${log.details.itemName} successfully`)
           } else {
             console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
           }
 
-          successCount++;
+          successCount++
         } catch (error) {
-          failCount++;
-          failItems.push(log.details.itemName);
-          console.error(`❌ Print error for item ${log.details.itemName}:`, error);
+          failCount++
+          failItems.push(log.details.itemName)
+          console.error(`❌ Print error for item ${log.details.itemName}:`, error)
         }
       }
 
       if (failCount === 0) {
-        const message = isConnected 
+        const message = isConnected
           ? `Successfully reprinted ${successCount} labels using ${printerSelection.printer?.name}`
-          : `DEBUG: Would reprint ${successCount} labels (printer not connected)`;
-        alert(message);
+          : `DEBUG: Would reprint ${successCount} labels (printer not connected)`
+        alert(message)
       } else {
-        alert(`Reprinted ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`);
+        alert(`Reprinted ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`)
       }
     } catch (error) {
       console.error("Failed to print session:", error)
       alert(`Print failed: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
-      setPrintingStates(prev => ({ ...prev, [sessionId]: false }))
+      setPrintingStates((prev) => ({ ...prev, [sessionId]: false }))
     }
   }
 
   function exportToXLSX() {
     const dataForExport = filteredSessions.map((session) => ({
       "Session ID": session.sessionId,
-      "Items": getItemNames(session),
+      Items: getItemNames(session),
       "Total Quantity": getTotalQuantity(session),
       "Label Types": getLabelTypes(session),
       "Printed At": formatPrintedAt(session.printedAt),
       "Logged At": formatTimestamp(session.timestamp),
       "Printer Used": session.printerUsed?.name || "Unknown",
-      "Initial": session.initial || "None",
+      Initial: session.initial || "None",
     }))
 
     const worksheet = XLSX.utils.json_to_sheet(dataForExport)
@@ -410,29 +438,36 @@ export default function PrintSessionsPage() {
       </div>
       {/* Printer Chooser */}
       <div className="mb-4">
-        <label className="block mb-2 font-medium">Select Printer:</label>
+        <label className="mb-2 block font-medium">Select Printer:</label>
         <select
           className="w-full rounded border px-2 py-1"
           value={selectedPrinterName}
-          onChange={e => {
-            setSelectedPrinterName(e.target.value);
-            const printer = availablePrinters.find(p => getPrinterName(p) === e.target.value);
-            if (printer) selectPrinter(printer);
+          onChange={(e) => {
+            setSelectedPrinterName(e.target.value)
+            const printer = availablePrinters.find((p) => getPrinterName(p) === e.target.value)
+            if (printer) selectPrinter(printer)
           }}
         >
           <option value="">Select a printer</option>
           {availablePrinters.map((printer) => {
-            const printerName = getPrinterName(printer);
+            const printerName = getPrinterName(printer)
             return (
-              <option key={printerName} value={printerName}>{printerName}</option>
-            );
+              <option key={printerName} value={printerName}>
+                {printerName}
+              </option>
+            )
           })}
         </select>
-        {availablePrinters.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
-        {availablePrinters.length > 0 && !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName) && (
-          <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
+        {availablePrinters.length === 0 && (
+          <div className="mt-2 text-xs text-red-600">No printers detected</div>
         )}
-        {!isConnected && <div className="text-xs text-red-600 mt-2">Printer not connected</div>}
+        {availablePrinters.length > 0 &&
+          !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) && (
+            <div className="mt-2 text-xs text-red-600">
+              Selected printer is not available. Please select another.
+            </div>
+          )}
+        {!isConnected && <div className="mt-2 text-xs text-red-600">Printer not connected</div>}
       </div>
 
       <div className="grid grid-cols-1 gap-4">
@@ -455,7 +490,9 @@ export default function PrintSessionsPage() {
         </div>
 
         {/* In-place loader for subsequent loads */}
-        {loading && printLogs.length > 0 && <div className="p-6 text-center">Loading print sessions...</div>}
+        {loading && printLogs.length > 0 && (
+          <div className="p-6 text-center">Loading print sessions...</div>
+        )}
         {error && <p className="p-6 text-red-600">Error: {error}</p>}
         {!loading && !error && (
           <Table>
@@ -473,58 +510,74 @@ export default function PrintSessionsPage() {
             <TableBody>
               {paginatedSessions.map((session) => (
                 <TableRow key={session.sessionId}>
-                  <TableCell className="font-medium max-w-xs">
+                  <TableCell className="max-w-xs font-medium">
                     <div className="truncate" title={getItemNames(session)}>
                       {getItemNames(session)}
                     </div>
                   </TableCell>
-                  <TableCell>{isNaN(getTotalQuantity(session)) ? 'N/A' : getTotalQuantity(session)}</TableCell>
+                  <TableCell>
+                    {isNaN(getTotalQuantity(session)) ? "N/A" : getTotalQuantity(session)}
+                  </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {[...new Set(session.items.map(item => item.details.labelType))].map((type) => (
-                        <span key={type} className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                          type === 'cooked' ? 'bg-red-100 text-red-800' :
-                          type === 'prep' ? 'bg-purple-100 text-blue-800' :
-                          'bg-green-100 text-green-800'
-                        }`}>
-                          {type.toUpperCase()}
-                        </span>
-                      ))}
+                      {[...new Set(session.items.map((item) => item.details.labelType))].map(
+                        (type) => (
+                          <span
+                            key={type}
+                            className={`rounded-full px-2 py-1 text-xs font-semibold ${
+                              type === "cooked"
+                                ? "bg-red-100 text-red-800"
+                                : type === "prep"
+                                  ? "bg-purple-100 text-blue-800"
+                                  : "bg-green-100 text-green-800"
+                            }`}
+                          >
+                            {type.toUpperCase()}
+                          </span>
+                        )
+                      )}
                     </div>
                   </TableCell>
                   <TableCell>{formatPrintedAt(session.printedAt)}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {typeof session.printerUsed === 'string'
+                    {typeof session.printerUsed === "string"
                       ? session.printerUsed
-                      : session.printerUsed && typeof session.printerUsed.name === 'string'
+                      : session.printerUsed && typeof session.printerUsed.name === "string"
                         ? session.printerUsed.name
-                        : 'Unknown'}
+                        : "Unknown"}
                   </TableCell>
                   <TableCell>
                     {session.initial ? (
-                      <span className="rounded border px-2 py-1 text-xs font-mono">
+                      <span className="rounded border px-2 py-1 font-mono text-xs">
                         {session.initial}
                       </span>
                     ) : (
-                      <span className="text-muted-foreground text-xs">None</span>
+                      <span className="text-xs text-muted-foreground">None</span>
                     )}
                   </TableCell>
                   <TableCell>
                     <Button
                       size="sm"
                       onClick={() => handlePrintSession(session)}
-                      disabled={printingStates[session.sessionId] || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)}
+                      disabled={
+                        printingStates[session.sessionId] ||
+                        subBlocked ||
+                        availablePrinters.length === 0 ||
+                        !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                      }
                       className="h-8 px-3"
                       title={
                         subBlocked
                           ? "Printing is disabled due to your subscription status."
                           : availablePrinters.length === 0
-                          ? "No printers available"
-                          : !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)
-                          ? "No valid printer selected"
-                          : printingStates[session.sessionId]
-                          ? "Printing in progress"
-                          : "Print all labels in this session"
+                            ? "No printers available"
+                            : !availablePrinters.find(
+                                  (p) => getPrinterName(p) === selectedPrinterName
+                                )
+                              ? "No valid printer selected"
+                              : printingStates[session.sessionId]
+                                ? "Printing in progress"
+                                : "Print all labels in this session"
                       }
                     >
                       {printingStates[session.sessionId] ? (

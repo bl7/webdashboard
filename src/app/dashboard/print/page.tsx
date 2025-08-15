@@ -7,7 +7,7 @@ import { getAllMenuItems, getAllIngredients } from "@/lib/api"
 import { Allergen } from "@/types/allergen"
 import LabelPreview from "./PreviewLabel"
 import { formatLabelForPrintImage } from "./labelFormatter"
-import LabelHeightChooser, { LabelHeight } from "./LabelHeightChooser"
+import { LabelHeight } from "./LabelHeightChooser"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
@@ -25,11 +25,12 @@ interface Printer {
 }
 
 function getPrinterName(printer: any): string {
-  if (!printer) return '';
-  if (typeof printer === 'string') return printer;
-  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
-  if (typeof printer.name === 'string') return printer.name;
-  return '';
+  if (!printer) return ""
+  if (typeof printer === "string") return printer
+  if (typeof printer.name === "object" && typeof printer.name.name === "string")
+    return printer.name.name
+  if (typeof printer.name === "string") return printer.name
+  return ""
 }
 
 const itemsPerPage = 5
@@ -80,52 +81,59 @@ function getBestAvailablePrinter(
   console.log("🖨️ Printer Selection Debug:", {
     selectedPrinter: selectedPrinter?.name,
     defaultPrinter: defaultPrinter?.name,
-    availablePrinters: availablePrinters?.slice(0, 5).map(p => p.name), // Limit log spam
-    availableCount: availablePrinters?.length || 0
-  });
+    availablePrinters: availablePrinters?.slice(0, 5).map((p) => p.name), // Limit log spam
+    availableCount: availablePrinters?.length || 0,
+  })
 
   // Ensure we have a valid array
-  const validPrinters = (availablePrinters || []).filter(printer => {
-    const name = getPrinterName(printer);
+  const validPrinters = (availablePrinters || []).filter((printer) => {
+    const name = getPrinterName(printer)
     return (
       name &&
       name.trim() !== "" &&
       name !== "Fallback_Printer" &&
-      !name.toLowerCase().includes('fallback')
-    );
-  });
+      !name.toLowerCase().includes("fallback")
+    )
+  })
 
-  console.log("🖨️ Valid printers after filtering:", validPrinters.map(p => p.name));
+  console.log(
+    "🖨️ Valid printers after filtering:",
+    validPrinters.map((p) => p.name)
+  )
 
   // First priority: selected printer (if it exists in valid printers)
-  if (selectedPrinter && 
-      selectedPrinter.name !== "Fallback_Printer" && 
-      validPrinters.some(p => p.name === selectedPrinter.name)) {
-    console.log("🖨️ ✅ Using selected printer:", selectedPrinter.name);
-    return { printer: selectedPrinter, reason: "Selected printer available" };
+  if (
+    selectedPrinter &&
+    selectedPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === selectedPrinter.name)
+  ) {
+    console.log("🖨️ ✅ Using selected printer:", selectedPrinter.name)
+    return { printer: selectedPrinter, reason: "Selected printer available" }
   }
-  
+
   // Second priority: default printer (if it exists in valid printers)
-  if (defaultPrinter && 
-      defaultPrinter.name !== "Fallback_Printer" && 
-      validPrinters.some(p => p.name === defaultPrinter.name)) {
-    console.log("🖨️ ✅ Using default printer:", defaultPrinter.name);
-    return { printer: defaultPrinter, reason: "Default printer available" };
+  if (
+    defaultPrinter &&
+    defaultPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === defaultPrinter.name)
+  ) {
+    console.log("🖨️ ✅ Using default printer:", defaultPrinter.name)
+    return { printer: defaultPrinter, reason: "Default printer available" }
   }
-  
+
   // Third priority: first available valid printer
   if (validPrinters.length > 0) {
-    console.log("🖨️ ✅ Using first available printer:", validPrinters[0].name);
-    return { printer: validPrinters[0], reason: "First available printer" };
+    console.log("🖨️ ✅ Using first available printer:", validPrinters[0].name)
+    return { printer: validPrinters[0], reason: "First available printer" }
   }
-  
-  console.log("🖨️ ❌ No valid printers found");
-  return { printer: null, reason: "No valid printers available" };
+
+  console.log("🖨️ ❌ No valid printers found")
+  return { printer: null, reason: "No valid printers available" }
 }
 
 export default function LabelDemo() {
   // Unify printer selection logic: use selectedPrinterName and getPrinterName
-  const [selectedPrinterName, setSelectedPrinterName] = useState<string>('');
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
@@ -164,23 +172,25 @@ export default function LabelDemo() {
   const [defrostSearch, setDefrostSearch] = useState("")
 
   // OS detection
-  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
+  const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const platform = window.navigator.platform.toLowerCase();
-      if (platform.includes('mac')) setOsType('mac');
-      else if (platform.includes('win')) setOsType('windows');
-      else setOsType('other');
+    if (typeof window !== "undefined") {
+      const platform = window.navigator.platform.toLowerCase()
+      if (platform.includes("mac")) setOsType("mac")
+      else if (platform.includes("win")) setOsType("windows")
+      else setOsType("other")
     }
-  }, []);
+  }, [])
   useEffect(() => {
-    console.log('[Label Print] Detected OS:', osType);
-  }, [osType]);
+    console.log("[Label Print] Detected OS:", osType)
+  }, [osType])
 
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
+  const userId =
+    typeof window !== "undefined" ? localStorage.getItem("userid") || "test-user" : "test-user"
   // Subscription status logic
   const { subscription, loading: subLoading } = useBillingData(userId)
-  const subBlocked = !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
+  const subBlocked =
+    !subscription || (subscription.status !== "active" && subscription.status !== "trialing")
   // Optionally, keep subStatusMsg for warnings about expiring subscriptions
   const [subStatusMsg, setSubStatusMsg] = useState<string | null>(null)
 
@@ -206,15 +216,15 @@ export default function LabelDemo() {
         const [settingsRes, initialsRes] = await Promise.all([
           fetch(`/api/label-settings`, {
             headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            }
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }),
           fetch(`/api/label-initials`, {
             headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            }
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }),
         ])
 
@@ -317,7 +327,7 @@ export default function LabelDemo() {
       if (daysLeft < 0) {
         msg = "Your subscription has expired. Printing is disabled."
       } else if (daysLeft <= 3) {
-        msg = `Your subscription will expire in ${daysLeft} day${daysLeft === 1 ? '' : 's'}. Please renew soon.`
+        msg = `Your subscription will expire in ${daysLeft} day${daysLeft === 1 ? "" : "s"}. Please renew soon.`
       }
     }
     setSubStatusMsg(msg)
@@ -431,9 +441,15 @@ export default function LabelDemo() {
 
     console.log("🖨️ Starting print process for", printQueue.length, "items")
     // Find printer by name
-    const selectedPrinterObj = availablePrinters.find(p => getPrinterName(p) === selectedPrinterName) || availablePrinters[0];
-    const printerSelection = getBestAvailablePrinter(selectedPrinterObj, defaultPrinter, availablePrinters)
-    
+    const selectedPrinterObj =
+      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
+      availablePrinters[0]
+    const printerSelection = getBestAvailablePrinter(
+      selectedPrinterObj,
+      defaultPrinter,
+      availablePrinters
+    )
+
     if (!isConnected) {
       console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
       showFeedback("Printer not connected - printing for debug", "error")
@@ -446,7 +462,7 @@ export default function LabelDemo() {
     }
 
     setIsLoading(true)
-    const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2)}`
     let successCount = 0
     let failCount = 0
     const failItems: string[] = []
@@ -456,7 +472,7 @@ export default function LabelDemo() {
         for (let i = 0; i < item.quantity; i++) {
           try {
             console.log(`🖨️ Processing item ${i + 1}/${item.quantity}: ${item.name}`)
-            
+
             // Generate label image
             const imageDataUrl = await formatLabelForPrintImage(
               item,
@@ -466,16 +482,23 @@ export default function LabelDemo() {
               useInitials,
               selectedInitial,
               labelHeight,
-              ingredients.map(ing => ({ uuid: String(ing.id), ingredientName: ing.name, allergens: ing.allergens || [] }))
-            );
+              ingredients.map((ing) => ({
+                uuid: String(ing.id),
+                ingredientName: ing.name,
+                allergens: ing.allergens || [],
+              }))
+            )
 
             console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
 
             // Revert to sending the same print request for all OSes
             if (isConnected) {
-              await print(imageDataUrl, undefined, { labelHeight });
+              await print(imageDataUrl, undefined, { labelHeight })
             } else {
-              console.log('🖨️ DEBUG: Would print image data:', imageDataUrl.substring(0, 100) + '...');
+              console.log(
+                "🖨️ DEBUG: Would print image data:",
+                imageDataUrl.substring(0, 100) + "..."
+              )
             }
 
             // Log the print action
@@ -485,42 +508,47 @@ export default function LabelDemo() {
               itemName: item.name,
               quantity: item.quantity || 1,
               printedAt: new Date().toISOString(),
-              expiryDate: item.expiryDate || calculateExpiryDate(
-                parseInt(expiryDays[item.labelType || "cooked"] || "") || 
-                getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds")
-              ),
+              expiryDate:
+                item.expiryDate ||
+                calculateExpiryDate(
+                  parseInt(expiryDays[item.labelType || "cooked"] || "") ||
+                    getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds")
+                ),
               initial: selectedInitial,
               labelHeight: labelHeight,
-              printerUsed: printerSelection.printer || 'Debug Mode',
+              printerUsed: printerSelection.printer || "Debug Mode",
               sessionId,
-            });
+            })
 
-            successCount++;
+            successCount++
           } catch (itemErr) {
-            failCount++;
-            failItems.push(item.name);
-            console.error("❌ Print error for item", item.name, itemErr);
+            failCount++
+            failItems.push(item.name)
+            console.error("❌ Print error for item", item.name, itemErr)
           }
         }
       }
 
       if (failCount === 0) {
-        const message = isConnected 
+        const message = isConnected
           ? `Successfully printed ${successCount} labels using ${printerSelection.printer?.name}`
-          : `DEBUG: Would print ${successCount} labels (printer not connected)`;
-        showFeedback(message, "success");
-        
+          : `DEBUG: Would print ${successCount} labels (printer not connected)`
+        showFeedback(message, "success")
+
         // Clear print queue and reset form after successful print
-        setPrintQueue([]);
-        setCustomExpiry({});
+        setPrintQueue([])
+        setCustomExpiry({})
       } else {
-        showFeedback(`Printed ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`, "error");
+        showFeedback(
+          `Printed ${successCount} labels, failed ${failCount}: ${failItems.join(", ")}`,
+          "error"
+        )
       }
     } catch (err) {
-      console.error("❌ Print process error:", err);
-      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error");
+      console.error("❌ Print process error:", err)
+      showFeedback(`Print failed: ${err instanceof Error ? err.message : String(err)}`, "error")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
   }
 
@@ -534,7 +562,7 @@ export default function LabelDemo() {
       showFeedback("Checking printer status, please wait...", "error")
       return
     }
-    
+
     if (!isConnected) {
       console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
       showFeedback("Printer not connected - printing for debug", "error")
@@ -543,7 +571,7 @@ export default function LabelDemo() {
 
     // Get the best available printer using our helper function
     const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
-    
+
     if (!printerToUse.printer) {
       console.warn("⚠️ No printer available, but allowing print for debug purposes")
       // Don't return, continue with printing for debug
@@ -553,7 +581,7 @@ export default function LabelDemo() {
       // Create a "USE FIRST" item for LabelRender
       const now = new Date()
       const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
-      
+
       const useFirstItem: PrintQueueItem = {
         uid: `use-first-${Date.now()}`,
         id: "use-first",
@@ -578,19 +606,22 @@ export default function LabelDemo() {
           selectedInitial,
           labelHeight
         )
-        
+
         // Print using WebSocket (if connected) or just log for debug
         if (isConnected) {
-          await print(imageDataUrl, undefined, { labelHeight });
+          await print(imageDataUrl, undefined, { labelHeight })
           console.log(`✅ Printed USE FIRST label ${i + 1}/${quantity}`)
         } else {
-          console.log(`🖨️ DEBUG: Would print USE FIRST label ${i + 1}/${quantity}:`, imageDataUrl.substring(0, 100) + "...")
+          console.log(
+            `🖨️ DEBUG: Would print USE FIRST label ${i + 1}/${quantity}:`,
+            imageDataUrl.substring(0, 100) + "..."
+          )
         }
       }
 
-      const message = isConnected 
+      const message = isConnected
         ? `Successfully printed ${quantity} USE FIRST label(s) using ${printerToUse.printer?.name}`
-        : `DEBUG: Would print ${quantity} USE FIRST label(s) (printer not connected)`;
+        : `DEBUG: Would print ${quantity} USE FIRST label(s) (printer not connected)`
       showFeedback(message, "success")
 
       await logAction("print_label", {
@@ -601,7 +632,7 @@ export default function LabelDemo() {
         expiryDate: expiry.toISOString().split("T")[0],
         initial: selectedInitial,
         labelHeight: labelHeight,
-        printerUsed: printerToUse.printer || 'Debug Mode',
+        printerUsed: printerToUse.printer || "Debug Mode",
       })
     } catch (err) {
       console.error("USE FIRST print error:", err)
@@ -616,12 +647,12 @@ export default function LabelDemo() {
       return
     }
     setShowDefrostModal(false)
-    
+
     if (printerLoading) {
       showFeedback("Checking printer status, please wait...", "error")
       return
     }
-    
+
     if (!isConnected) {
       console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
       showFeedback("Printer not connected - printing for debug", "error")
@@ -630,7 +661,7 @@ export default function LabelDemo() {
 
     // Get the best available printer using our helper function
     const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
-    
+
     if (!printerToUse.printer) {
       console.warn("⚠️ No printer available, but allowing print for debug purposes")
       // Don't return, continue with printing for debug
@@ -640,7 +671,7 @@ export default function LabelDemo() {
       // Create a defrost item for LabelRender
       const now = new Date()
       const expiry = new Date(now.getTime() + 24 * 60 * 60 * 1000)
-      
+
       const defrostItem: PrintQueueItem = {
         uid: `defrost-${ingredient.id}-${Date.now()}`,
         id: ingredient.id,
@@ -663,10 +694,10 @@ export default function LabelDemo() {
         selectedInitial,
         labelHeight
       )
-      
+
       // Print using WebSocket (if connected) or just log for debug
       if (isConnected) {
-        await print(imageDataUrl, undefined, { labelHeight });
+        await print(imageDataUrl, undefined, { labelHeight })
       } else {
         console.log("🖨️ DEBUG: Would print defrost label:", imageDataUrl.substring(0, 100) + "...")
         showFeedback("DEBUG: Would print defrosted label (printer not connected)", "success")
@@ -679,7 +710,7 @@ export default function LabelDemo() {
         expiryDate: expiry.toISOString().split("T")[0],
         initial: selectedInitial,
         labelHeight: labelHeight,
-        printerUsed: printerToUse.printer || 'Debug Mode',
+        printerUsed: printerToUse.printer || "Debug Mode",
       })
     } catch (err) {
       console.error("Defrost print error:", err)
@@ -699,28 +730,38 @@ export default function LabelDemo() {
   }
 
   return (
-    <div className="space-y-10 py-8 px-2 md:px-8 bg-gray-50 min-h-screen">
+    <div className="min-h-screen space-y-10 bg-gray-50 px-2 py-8 md:px-8">
       {subStatusMsg && (
-        <div className={`rounded-xl p-4 mb-6 border-2 ${subBlocked ? 'bg-red-100 text-red-800 border-red-300' : 'bg-yellow-50 text-yellow-900 border-yellow-200'}`}> {subStatusMsg} </div>
+        <div
+          className={`mb-6 rounded-xl border-2 p-4 ${subBlocked ? "border-red-300 bg-red-100 text-red-800" : "border-yellow-200 bg-yellow-50 text-yellow-900"}`}
+        >
+          {" "}
+          {subStatusMsg}{" "}
+        </div>
       )}
-      
+
       {/* Server Download Notice - Show when printer is not connected */}
       {!isConnected && (
-        <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-lg">
+        <div className="mb-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
           <div className="flex items-start gap-3">
-            <div className="text-purple-600 mt-0.5">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            <div className="mt-0.5 text-purple-600">
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                  clipRule="evenodd"
+                />
               </svg>
             </div>
             <div className="flex-1">
-              <h4 className="text-sm font-medium text-purple-800 mb-1">Need the printer server?</h4>
-              <p className="text-sm text-purple-700 mb-2">
-                If you don't have the printer server installed, you can download it from the Settings page.
+              <h4 className="mb-1 text-sm font-medium text-purple-800">Need the printer server?</h4>
+              <p className="mb-2 text-sm text-purple-700">
+                If you don't have the printer server installed, you can download it from the
+                Settings page.
               </p>
-              <a 
-                href="/dashboard/settings" 
-                className="inline-flex items-center px-3 py-1 bg-purple-600 text-white text-sm font-medium rounded hover:bg-purple-700 transition-colors"
+              <a
+                href="/dashboard/settings"
+                className="inline-flex items-center rounded bg-purple-600 px-3 py-1 text-sm font-medium text-white transition-colors hover:bg-purple-700"
               >
                 Go to Settings →
               </a>
@@ -728,40 +769,42 @@ export default function LabelDemo() {
           </div>
         </div>
       )}
-      
-      <div className="flex flex-col md:flex-row gap-10">
+
+      <div className="flex flex-col gap-10 md:flex-row">
         {/* Left Section: Label Printer & List */}
-        <div className="flex-1 min-w-[340px]">
-          <div className="bg-white rounded-xl shadow-lg border p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
+        <div className="min-w-[340px] flex-1">
+          <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">
+            <div className="mb-6 flex items-center justify-between">
               <h1 className="text-2xl font-bold tracking-tight">Label Printer</h1>
               {isConnected ? (
                 <>
-                  {console.log('Available printers:', availablePrinters)}
-                  <div className="mb-4 p-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white shadow-sm">
-                    <div className="font-semibold text-purple-900 mb-2">Available Printers</div>
+                  {console.log("Available printers:", availablePrinters)}
+                  <div className="mb-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                    <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
                     {availablePrinters.length > 0 ? (
                       <div className="flex flex-col gap-2">
                         <select
                           value={selectedPrinterName}
-                          onChange={e => {
-                            setSelectedPrinterName(e.target.value);
-                            const printer = availablePrinters.find((p: any) => getPrinterName(p) === e.target.value);
-                            selectPrinter(printer || null);
+                          onChange={(e) => {
+                            setSelectedPrinterName(e.target.value)
+                            const printer = availablePrinters.find(
+                              (p: any) => getPrinterName(p) === e.target.value
+                            )
+                            selectPrinter(printer || null)
                           }}
                           className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
                         >
                           <option value="">Select Printer</option>
                           {availablePrinters.map((printer: any) => {
-                            const printerName = getPrinterName(printer);
+                            const printerName = getPrinterName(printer)
                             return (
                               <option key={printerName} value={printerName}>
-                                {printerName} {printer.isDefault ? '(Default)' : ''}
+                                {printerName} {printer.isDefault ? "(Default)" : ""}
                               </option>
-                            );
+                            )
                           })}
                         </select>
-                        <div className="text-xs text-gray-700 mt-1">
+                        <div className="mt-1 text-xs text-gray-700">
                           {availablePrinters.length} printer(s) detected
                         </div>
                       </div>
@@ -771,28 +814,38 @@ export default function LabelDemo() {
                   </div>
                 </>
               ) : (
-                <div className="mb-4 p-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white shadow-sm text-red-700">
+                <div className="mb-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
                   No printers detected
                 </div>
               )}
             </div>
-            <LabelHeightChooser
-              selectedHeight={labelHeight}
-              onHeightChange={setLabelHeight}
-              className="mb-4"
-            />
+            <div className="mb-4 rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-4 shadow-sm">
+              <div className="flex items-center gap-3">
+                <label className="text-sm font-medium text-gray-700">Label Size:</label>
+                <div className="flex rounded-lg bg-gray-100 p-1">
+                  <span className="rounded-md bg-white px-3 py-1 text-sm font-medium text-purple-700 shadow-sm">
+                    60mm × 40mm
+                  </span>
+                </div>
+                <span className="text-xs text-gray-500">Standard label size</span>
+              </div>
+            </div>
           </div>
-          <div className="bg-white rounded-xl shadow-lg border p-6">
+          <div className="rounded-xl border bg-white p-6 shadow-lg">
             {/* Tab Switcher */}
             <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
               <button
                 className={`rounded-full px-5 py-2 text-base font-medium transition-all ${activeTab === "ingredients" ? "bg-purple-600 text-white shadow" : "text-gray-500 hover:text-purple-700"}`}
                 onClick={() => setActiveTab("ingredients")}
-              >Ingredients</button>
+              >
+                Ingredients
+              </button>
               <button
                 className={`rounded-full px-5 py-2 text-base font-medium transition-all ${activeTab === "menu" ? "bg-purple-600 text-white shadow" : "text-gray-500 hover:text-purple-700"}`}
                 onClick={() => setActiveTab("menu")}
-              >Menu Items</button>
+              >
+                Menu Items
+              </button>
             </div>
             {/* Search Bar */}
             <div className="mb-6">
@@ -801,7 +854,7 @@ export default function LabelDemo() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search ingredients or menu items..."
-                className="w-full rounded-lg border-2 border-purple-200 px-5 py-3 text-base focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                className="w-full rounded-lg border-2 border-purple-200 px-5 py-3 text-base transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
               />
             </div>
             {isLoading && <p>Loading...</p>}
@@ -813,105 +866,215 @@ export default function LabelDemo() {
                 : (paginatedMenuItems as MenuItem[])
               ).map((item, idx) => {
                 return (
-                  <div key={item.id} className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
+                  <div
+                    key={item.id}
+                    className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:shadow-md"
+                  >
                     {activeTab === "ingredients" ? (
                       <>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-900 whitespace-normal break-words">{item.name}</p>
+                        <div className="min-w-0 flex-1">
+                          <p className="whitespace-normal break-words font-semibold text-gray-900">
+                            {item.name}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
                             onClick={() => addToPrintQueue(item, activeTab)}
-                            disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                            disabled={printQueue.some(
+                              (q) => q.id === item.id && q.type === activeTab
+                            )}
                             variant="purple"
-                          >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
+                          >
+                            {printQueue.some((q) => q.id === item.id && q.type === activeTab)
+                              ? "Added"
+                              : "Add"}
+                          </Button>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex min-w-0 items-center gap-3">
                           {/* Menu item rendering (keep as is, or add icons/badges if needed) */}
-                          <p className="font-semibold truncate text-gray-900">{item.name}</p>
+                          <p className="truncate font-semibold text-gray-900">{item.name}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button
                             onClick={() => addToPrintQueue(item, activeTab)}
-                            disabled={printQueue.some((q) => q.id === item.id && q.type === activeTab)}
+                            disabled={printQueue.some(
+                              (q) => q.id === item.id && q.type === activeTab
+                            )}
                             variant="purple"
-                          >{printQueue.some((q) => q.id === item.id && q.type === activeTab) ? "Added" : "Add"}</Button>
+                          >
+                            {printQueue.some((q) => q.id === item.id && q.type === activeTab)
+                              ? "Added"
+                              : "Add"}
+                          </Button>
                         </div>
                       </>
                     )}
                   </div>
-                );
+                )
               })}
               {/* Pagination */}
-              <div className="flex items-center justify-center gap-2 mt-4">
-                <Button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} variant="outline" className="flex items-center gap-1"><ChevronLeftIcon className="h-4 w-4" /></Button>
-                <span className="min-w-[80px] text-center text-sm text-gray-700">{page} of {totalPages}</span>
-                <Button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages || totalPages === 0} variant="outline" className="flex items-center gap-1"><ChevronRightIcon className="h-4 w-4" /></Button>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <Button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
+                  <ChevronLeftIcon className="h-4 w-4" />
+                </Button>
+                <span className="min-w-[80px] text-center text-sm text-gray-700">
+                  {page} of {totalPages}
+                </span>
+                <Button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages || totalPages === 0}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
         </div>
         {/* Right Section: Print Queue */}
-        <div className="flex-1 min-w-[340px]">
+        <div className="min-w-[340px] flex-1">
           {/* Print Queue and Label Preview */}
           {/* At the top of the right section, show either the initials chooser or a message if useInitials is off */}
-          {(useInitials && customInitials.length > 0) ? (
-            <div className="mb-6 border rounded-xl bg-white px-6 py-4 flex items-center gap-4 shadow-sm">
-              <label htmlFor="initials-select" className="text-base font-semibold text-gray-800">Initials:</label>
+          {useInitials && customInitials.length > 0 ? (
+            <div className="mb-6 flex items-center gap-4 rounded-xl border bg-white px-6 py-4 shadow-sm">
+              <label htmlFor="initials-select" className="text-base font-semibold text-gray-800">
+                Initials:
+              </label>
               <select
                 id="initials-select"
                 value={selectedInitial}
-                onChange={e => setSelectedInitial(e.target.value)}
+                onChange={(e) => setSelectedInitial(e.target.value)}
                 className="rounded border px-3 py-2 text-base"
               >
                 <option value="">--</option>
                 {customInitials.map((init, idx) => (
-                  <option key={init + idx} value={init}>{init}</option>
+                  <option key={init + idx} value={init}>
+                    {init}
+                  </option>
                 ))}
               </select>
             </div>
           ) : (
-            <div className="mb-6 border rounded-xl bg-white px-6 py-4 flex items-center gap-4 shadow-sm">
-              <span className="text-base text-gray-700">To use initials, enable them in <b>Settings</b>.</span>
+            <div className="mb-6 flex items-center gap-4 rounded-xl border bg-white px-6 py-4 shadow-sm">
+              <span className="text-base text-gray-700">
+                To use initials, enable them in <b>Settings</b>.
+              </span>
             </div>
           )}
           <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
-            <div className="sticky top-0 flex items-center justify-between border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8 rounded-t-2xl">
-              <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
+            <div className="sticky top-0 flex items-center justify-between rounded-t-2xl border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8">
+              <h2 className="text-2xl font-bold tracking-tight text-purple-800">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={printLabels} disabled={printQueue.length === 0 || subBlocked || availablePrinters.length === 0 || !availablePrinters.find(p => getPrinterName(p) === selectedPrinterName)} variant="purple" title={subBlocked ? "Printing is disabled due to your subscription status." : printQueue.length === 0 ? "No items in print queue" : availablePrinters.length === 0 ? "No printers available" : "Print all labels in queue"}>Print Labels</Button>
-                <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
+                <Button
+                  onClick={printLabels}
+                  disabled={
+                    printQueue.length === 0 ||
+                    subBlocked ||
+                    availablePrinters.length === 0 ||
+                    !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                  }
+                  variant="purple"
+                  title={
+                    subBlocked
+                      ? "Printing is disabled due to your subscription status."
+                      : printQueue.length === 0
+                        ? "No items in print queue"
+                        : availablePrinters.length === 0
+                          ? "No printers available"
+                          : "Print all labels in queue"
+                  }
+                >
+                  Print Labels
+                </Button>
+                <Button
+                  onClick={clearPrintQueue}
+                  disabled={printQueue.length === 0}
+                  variant="outline"
+                  aria-label="Clear print queue"
+                >
+                  Clear Queue
+                </Button>
               </div>
             </div>
             <div className="px-8 pb-8 pt-4">
               {printQueue.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-                  <svg className="mb-4 h-12 w-12 text-purple-200" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01" /></svg>
-                  <p className="italic text-lg text-gray-400">Your print queue is empty.<br />Add items to get started!</p>
+                  <svg
+                    className="mb-4 h-12 w-12 text-purple-200"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M8 12h.01M12 12h.01M16 12h.01"
+                    />
+                  </svg>
+                  <p className="text-lg italic text-gray-400">
+                    Your print queue is empty.
+                    <br />
+                    Add items to get started!
+                  </p>
                 </div>
               ) : (
-                printQueue.filter(item => item.name && item.name.trim() !== "").map((item) => (
-                  <div key={item.uid} className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
-                    <div className="font-semibold text-gray-900 break-words whitespace-normal">
-                      {item.name}
+                printQueue
+                  .filter((item) => item.name && item.name.trim() !== "")
+                  .map((item) => (
+                    <div
+                      key={item.uid}
+                      className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg"
+                    >
+                      <div className="whitespace-normal break-words font-semibold text-gray-900">
+                        {item.name}
+                      </div>
+                      <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
+                      <div className="mt-1 flex items-center gap-2">
+                        <input
+                          type="number"
+                          min={1}
+                          value={item.quantity}
+                          onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
+                          className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                        />
+                        {"labelType" in item && (
+                          <select
+                            value={item.labelType || "cooked"}
+                            onChange={(e) =>
+                              updateLabelType(
+                                item.uid,
+                                e.target.value as "cooked" | "prep" | "ppds"
+                              )
+                            }
+                            className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                          >
+                            <option value="cooked">Cook</option>
+                            <option value="prep">Prep</option>
+                            <option value="ppds">PPDS</option>
+                          </select>
+                        )}
+                        <Button
+                          onClick={() => removeFromQueue(item.uid)}
+                          variant="outline"
+                          className="border-none bg-red-600 text-white shadow-none hover:bg-red-700 focus:bg-red-700"
+                          aria-label={`Remove ${item.name} from queue`}
+                        >
+                          Remove
+                        </Button>
+                      </div>
                     </div>
-                    <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
-                      {"labelType" in item && (
-                        <select value={item.labelType || "cooked"} onChange={(e) => updateLabelType(item.uid, e.target.value as "cooked" | "prep" | "ppds")} className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500">
-                          <option value="cooked">Cook</option>
-                          <option value="prep">Prep</option>
-                          <option value="ppds">PPDS</option>
-                        </select>
-                      )}
-                      <Button onClick={() => removeFromQueue(item.uid)} variant="outline" className="bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 border-none shadow-none" aria-label={`Remove ${item.name} from queue`}>Remove</Button>
-                    </div>
-                  </div>
-                ))
+                  ))
               )}
             </div>
           </div>
@@ -924,16 +1087,34 @@ export default function LabelDemo() {
             useInitials={useInitials}
             selectedInitial={selectedInitial}
             labelHeight={labelHeight}
-            allIngredients={ingredients.map(ing => ({ uuid: String(ing.id), ingredientName: ing.name, allergens: ing.allergens || [] }))}
+            allIngredients={ingredients.map((ing) => ({
+              uuid: String(ing.id),
+              ingredientName: ing.name,
+              allergens: ing.allergens || [],
+            }))}
           />
         </div>
       </div>
       {/* Floating Action Buttons: Use First & Defrost */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-4 z-50">
-        <Button onClick={() => setShowUseFirstModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white" aria-label="Print USE FIRST label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+      <div className="fixed bottom-8 right-8 z-50 flex flex-col gap-4">
+        <Button
+          onClick={() => setShowUseFirstModal(true)}
+          className="rounded-full bg-gradient-to-r from-red-500 to-red-600 px-8 py-4 text-lg font-bold text-white shadow-xl hover:from-red-600 hover:to-red-700"
+          aria-label="Print USE FIRST label"
+          tabIndex={0}
+          disabled={subBlocked}
+          title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
+        >
           USE FIRST
         </Button>
-        <Button onClick={() => setShowDefrostModal(true)} className="rounded-full px-8 py-4 text-lg font-bold shadow-xl bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white" aria-label="Print Defrosted label" tabIndex={0} disabled={subBlocked} title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}>
+        <Button
+          onClick={() => setShowDefrostModal(true)}
+          className="rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-4 text-lg font-bold text-white shadow-xl hover:from-blue-600 hover:to-blue-700"
+          aria-label="Print Defrosted label"
+          tabIndex={0}
+          disabled={subBlocked}
+          title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
+        >
           DEFROST
         </Button>
       </div>
@@ -947,9 +1128,7 @@ export default function LabelDemo() {
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
             <h2 className="mb-4 text-xl font-bold">How many USE FIRST labels?</h2>
             <div className="mb-4">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Quantity
-              </label>
+              <label className="mb-2 block text-sm font-medium text-gray-700">Quantity</label>
               <input
                 type="number"
                 min="1"
@@ -969,7 +1148,7 @@ export default function LabelDemo() {
                   setShowUseFirstModal(false)
                 }}
               >
-                Print {useFirstQuantity} Label{useFirstQuantity !== 1 ? 's' : ''}
+                Print {useFirstQuantity} Label{useFirstQuantity !== 1 ? "s" : ""}
               </Button>
               <Button
                 className="flex-1"
@@ -990,7 +1169,7 @@ export default function LabelDemo() {
         >
           <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
             <h2 className="mb-4 text-xl font-bold">Select Item to Defrost</h2>
-            
+
             <input
               type="text"
               value={defrostSearch}
@@ -1011,9 +1190,7 @@ export default function LabelDemo() {
                 </li>
               ))}
               {currentDefrostItems.length === 0 && (
-                <li className="px-4 py-2 text-gray-400">
-                  No ingredients found.
-                </li>
+                <li className="px-4 py-2 text-gray-400">No ingredients found.</li>
               )}
             </ul>
             <Button
@@ -1060,15 +1237,15 @@ function PrintPageSkeleton() {
 
 async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm") {
   console.log("🧪 Testing simple label generation...")
-  
+
   // Convert label height to cm, reducing by 0.5mm to prevent bottom cutoff
-  const heightCm = labelHeight === "31mm" ? "3.05cm" : labelHeight === "40mm" ? "3.95cm" : "7.95cm"
-  
+  const heightCm = "4.0cm" // Fixed to 40mm
+
   const container = document.createElement("div")
   container.style.position = "absolute"
   container.style.top = "0"
   container.style.left = "0"
-  container.style.width = "5.6cm"
+  container.style.width = "6.0cm" // Updated to 60mm
   container.style.height = heightCm
   container.style.background = "white"
   container.style.display = "flex"
@@ -1084,25 +1261,32 @@ async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm")
   container.style.visibility = "hidden"
   container.innerHTML = html
   document.body.appendChild(container)
-  
-  console.log("🧪 Simple container created, dimensions:", container.offsetWidth, "x", container.offsetHeight)
-  
+
+  console.log(
+    "🧪 Simple container created, dimensions:",
+    container.offsetWidth,
+    "x",
+    container.offsetHeight
+  )
+
   // Make sure container is visible for rendering
   container.style.visibility = "visible"
-  
-  const imageDataUrl = await (await import("html-to-image")).toPng(container, {
+
+  const imageDataUrl = await (
+    await import("html-to-image")
+  ).toPng(container, {
     cacheBust: true,
     width: container.offsetWidth,
     height: container.offsetHeight,
     style: {
-      transform: 'scale(1)',
-      transformOrigin: 'top left'
-    }
+      transform: "scale(1)",
+      transformOrigin: "top left",
+    },
   })
-  
+
   console.log("🧪 Simple PNG generated, length:", imageDataUrl.length)
   console.log("🧪 Simple PNG starts with:", imageDataUrl.substring(0, 50))
-  
+
   container.remove()
   return imageDataUrl
 }

@@ -22,7 +22,11 @@ interface PrinterContextType {
   connect: () => Promise<void>
   disconnect: () => Promise<void>
   reconnect: () => Promise<void>
-  print: (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number, labelHeight?: "31mm" | "40mm" | "80mm" }) => Promise<void>
+  print: (
+    imageData: string,
+    printer?: Printer,
+    options?: { widthPx?: number; heightPx?: number; labelHeight?: "40mm" | "80mm" }
+  ) => Promise<void>
   selectPrinter: (printer: Printer | null) => void
 }
 
@@ -30,7 +34,7 @@ const PrinterContext = createContext<PrinterContextType | undefined>(undefined)
 
 export function PrinterProvider({ children }: { children: React.ReactNode }) {
   const [selectedPrinter, setSelectedPrinter] = useState<Printer | null>(null)
-  
+
   // Use the PrintBridge hook for WebSocket connection
   const {
     isConnected,
@@ -41,7 +45,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     sendPrintJob,
     connect: printBridgeConnect,
     disconnect: printBridgeDisconnect,
-    reconnect: printBridgeReconnect
+    reconnect: printBridgeReconnect,
   } = usePrintBridge()
 
   const connect = async () => {
@@ -63,7 +67,11 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     setSelectedPrinter(printer)
   }
 
-  const print = async (imageData: string, printer?: Printer, options?: { widthPx?: number, heightPx?: number, labelHeight?: "31mm" | "40mm" | "80mm" }) => {
+  const print = async (
+    imageData: string,
+    printer?: Printer,
+    options?: { widthPx?: number; heightPx?: number; labelHeight?: "40mm" | "80mm" }
+  ) => {
     if (!isConnected) {
       throw new Error("Printer not connected. Please connect first.")
     }
@@ -75,21 +83,23 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     }
 
     // Map labelHeight string to mm
-    let labelHeightMm = 31;
+    let labelHeightMm = 40 // Default to 40mm
     if (options && options.labelHeight) {
-      if (options.labelHeight === "40mm") labelHeightMm = 40;
-      else if (options.labelHeight === "80mm") labelHeightMm = 80;
+      if (options.labelHeight === "40mm") labelHeightMm = 40
+      else if (options.labelHeight === "80mm") labelHeightMm = 80
     }
 
     try {
       // Remove data URL prefix if present
-      const cleanImageData = imageData.includes(',') ? imageData.split(',')[1] : imageData
+      const cleanImageData = imageData.includes(",") ? imageData.split(",")[1] : imageData
 
       // Send print job using PrintBridge
       const success = sendPrintJob(imageData, targetPrinter.name, 56, labelHeightMm)
-      
+
       if (success) {
-        console.log("✅ Print job sent successfully via PrintBridge", { printer: targetPrinter.name })
+        console.log("✅ Print job sent successfully via PrintBridge", {
+          printer: targetPrinter.name,
+        })
       } else {
         throw new Error("Failed to send print job via PrintBridge")
       }
@@ -120,17 +130,13 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     selectPrinter,
   }
 
-  return (
-    <PrinterContext.Provider value={value}>
-      {children}
-    </PrinterContext.Provider>
-  )
+  return <PrinterContext.Provider value={value}>{children}</PrinterContext.Provider>
 }
 
 export const usePrinter = () => {
   const context = useContext(PrinterContext)
   if (context === undefined) {
-    throw new Error('usePrinter must be used within a PrinterProvider')
+    throw new Error("usePrinter must be used within a PrinterProvider")
   }
   return context
-} 
+}

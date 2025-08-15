@@ -10,32 +10,45 @@ import { toPng } from "html-to-image"
 import { PPDSLabelRenderer } from "./PPDSLabelRenderer"
 
 function getPrinterName(printer: any): string {
-  if (!printer) return '';
-  if (typeof printer === 'string') return printer;
-  if (typeof printer.name === 'object' && typeof printer.name.name === 'string') return printer.name.name;
-  if (typeof printer.name === 'string') return printer.name;
-  return '';
+  if (!printer) return ""
+  if (typeof printer === "string") return printer
+  if (typeof printer.name === "object" && typeof printer.name.name === "string")
+    return printer.name.name
+  if (typeof printer.name === "string") return printer.name
+  return ""
 }
-function getBestAvailablePrinter(selectedPrinter: any, defaultPrinter: any, availablePrinters: any[]) {
-  const validPrinters = (availablePrinters || []).filter(printer => {
-    const name = getPrinterName(printer);
+function getBestAvailablePrinter(
+  selectedPrinter: any,
+  defaultPrinter: any,
+  availablePrinters: any[]
+) {
+  const validPrinters = (availablePrinters || []).filter((printer) => {
+    const name = getPrinterName(printer)
     return (
       name &&
       name.trim() !== "" &&
       name !== "Fallback_Printer" &&
-      !name.toLowerCase().includes('fallback')
-    );
-  });
-  if (selectedPrinter && selectedPrinter.name !== "Fallback_Printer" && validPrinters.some(p => p.name === selectedPrinter.name)) {
-    return { printer: selectedPrinter, reason: "Selected printer available" };
+      !name.toLowerCase().includes("fallback")
+    )
+  })
+  if (
+    selectedPrinter &&
+    selectedPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === selectedPrinter.name)
+  ) {
+    return { printer: selectedPrinter, reason: "Selected printer available" }
   }
-  if (defaultPrinter && defaultPrinter.name !== "Fallback_Printer" && validPrinters.some(p => p.name === defaultPrinter.name)) {
-    return { printer: defaultPrinter, reason: "Default printer available" };
+  if (
+    defaultPrinter &&
+    defaultPrinter.name !== "Fallback_Printer" &&
+    validPrinters.some((p) => p.name === defaultPrinter.name)
+  ) {
+    return { printer: defaultPrinter, reason: "Default printer available" }
   }
   if (validPrinters.length > 0) {
-    return { printer: validPrinters[0], reason: "First available printer" };
+    return { printer: validPrinters[0], reason: "First available printer" }
   }
-  return { printer: null, reason: "No valid printers available" };
+  return { printer: null, reason: "No valid printers available" }
 }
 
 export default function PPDSPage() {
@@ -53,45 +66,46 @@ export default function PPDSPage() {
   const { profile } = useAuth()
   const businessName = profile?.company_name || "InstaLabel Ltd"
   // Replace selectedPrinterSystemName with selectedPrinterName
-  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("");
-  const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
+  const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
 
   // Print logic (now real PNG generation and print)
   async function handlePrint() {
     if (printQueue.length === 0) {
-      alert("No items in print queue");
-      return;
+      alert("No items in print queue")
+      return
     }
     if (!isConnected) {
-      alert("Printer not connected");
-      return;
+      alert("Printer not connected")
+      return
     }
     // Find printer by name
-    const selectedPrinterObj = printers.find(p => getPrinterName(p) === selectedPrinterName) || printers[0];
-    const printerSelection = getBestAvailablePrinter(selectedPrinterObj, printers[0], printers);
+    const selectedPrinterObj =
+      printers.find((p) => getPrinterName(p) === selectedPrinterName) || printers[0]
+    const printerSelection = getBestAvailablePrinter(selectedPrinterObj, printers[0], printers)
     if (!printerSelection.printer) {
-      alert("No valid printer available");
-      return;
+      alert("No valid printer available")
+      return
     }
-    let successCount = 0;
-    let failCount = 0;
+    let successCount = 0
+    let failCount = 0
     for (const item of printQueue) {
       for (let i = 0; i < item.quantity; i++) {
         try {
           // Render label to PNG using html-to-image
-          const container = document.createElement("div");
-          container.style.position = "absolute";
-          container.style.top = "0";
-          container.style.left = "0";
-          container.style.width = "60mm";
-          container.style.height = "80mm";
-          container.style.backgroundColor = "white";
-          container.style.zIndex = "-1";
-          container.style.visibility = "hidden";
-          document.body.appendChild(container);
+          const container = document.createElement("div")
+          container.style.position = "absolute"
+          container.style.top = "0"
+          container.style.left = "0"
+          container.style.width = "60mm"
+          container.style.height = "40mm"
+          container.style.backgroundColor = "white"
+          container.style.zIndex = "-1"
+          container.style.visibility = "hidden"
+          document.body.appendChild(container)
           // Render PPDSLabelRenderer into container
           import("react-dom/client").then(({ createRoot }) => {
-            const root = createRoot(container);
+            const root = createRoot(container)
             // Only pass serializable item data
             root.render(
               <PPDSLabelRenderer
@@ -100,30 +114,30 @@ export default function PPDSPage() {
                 businessName={businessName}
                 allIngredients={allIngredients}
               />
-            );
+            )
             setTimeout(async () => {
-              container.style.visibility = "visible";
+              container.style.visibility = "visible"
               const imageDataUrl = await toPng(container, {
                 cacheBust: true,
                 width: container.offsetWidth,
                 height: container.offsetHeight,
                 style: {
-                  transform: 'scale(1)',
-                  transformOrigin: 'top left'
-                }
-              });
-              root.unmount();
-              container.remove();
-              await print(imageDataUrl, undefined, { labelHeight: "80mm" });
-              successCount++;
+                  transform: "scale(1)",
+                  transformOrigin: "top left",
+                },
+              })
+              root.unmount()
+              container.remove()
+              await print(imageDataUrl, undefined, { labelHeight: "80mm" })
+              successCount++
               if (successCount + failCount === printQueue.reduce((sum, q) => sum + q.quantity, 0)) {
-                setPrintQueue([]);
+                setPrintQueue([])
               }
-            }, 300);
-          });
+            }, 300)
+          })
         } catch (err) {
-          failCount++;
-          console.error("Print error for item", item.name, err);
+          failCount++
+          console.error("Print error for item", item.name, err)
         }
       }
     }
@@ -149,7 +163,8 @@ export default function PPDSPage() {
                 name,
                 printedOn: new Date().toISOString().split("T")[0],
                 expiryDate: calculateExpiryDate(expiryDays),
-                ingredients: item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [], // keep as names
+                ingredients:
+                  item.ingredients?.map((ing: any) => ing.ingredientName || "Unknown") || [], // keep as names
               })
             }
             i++
@@ -165,11 +180,10 @@ export default function PPDSPage() {
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) return
-    getAllIngredients(token)
-      .then((data) => {
-        const items = (Array.isArray(data) ? data : data.data) || []
-        setAllIngredients(items)
-      })
+    getAllIngredients(token).then((data) => {
+      const items = (Array.isArray(data) ? data : data.data) || []
+      setAllIngredients(items)
+    })
   }, [])
 
   // Fetch expiry days for PPDS
@@ -177,10 +191,10 @@ export default function PPDSPage() {
     const token = localStorage.getItem("token")
     if (!token) return
     fetch("/api/label-settings", {
-      headers: { "Authorization": `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then(res => res.json())
-      .then(data => {
+      .then((res) => res.json())
+      .then((data) => {
         const found = (data.settings || []).find((s: any) => s.label_type === "ppds")
         setExpiryDays(found ? parseInt(found.expiry_days) : 2)
       })
@@ -188,16 +202,16 @@ export default function PPDSPage() {
   }, [])
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const platform = window.navigator.platform.toLowerCase();
-      if (platform.includes('mac')) setOsType('mac');
-      else if (platform.includes('win')) setOsType('windows');
-      else setOsType('other');
+    if (typeof window !== "undefined") {
+      const platform = window.navigator.platform.toLowerCase()
+      if (platform.includes("mac")) setOsType("mac")
+      else if (platform.includes("win")) setOsType("windows")
+      else setOsType("other")
     }
-  }, []);
+  }, [])
   useEffect(() => {
-    console.log('[PPDS Print] Detected OS:', osType);
-  }, [osType]);
+    console.log("[PPDS Print] Detected OS:", osType)
+  }, [osType])
 
   function calculateExpiryDate(days: number) {
     const d = new Date()
@@ -234,7 +248,9 @@ export default function PPDSPage() {
     ])
   }
   function updateQuantity(uid: string, quantity: number) {
-    setPrintQueue((prev) => prev.map((q) => q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
+    setPrintQueue((prev) =>
+      prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
+    )
   }
   function removeFromQueue(uid: string) {
     setPrintQueue((prev) => prev.filter((q) => q.uid !== uid))
@@ -244,40 +260,47 @@ export default function PPDSPage() {
   }
 
   return (
-    <div className="space-y-10 py-8 px-2 md:px-8 bg-gray-50 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">PPDS Labels</h1>
-      <div className="flex flex-col md:flex-row gap-10">
+    <div className="min-h-screen space-y-10 bg-gray-50 px-2 py-8 md:px-8">
+      <h1 className="mb-4 text-2xl font-bold">PPDS Labels</h1>
+      <div className="flex flex-col gap-10 md:flex-row">
         {/* Left Section: Printer Chooser & Menu Items List */}
-        <div className="flex-1 min-w-[340px]">
+        <div className="min-w-[340px] flex-1">
           {/* Printer Chooser at the top */}
-          <div className="bg-white rounded-xl shadow-lg border p-4 mb-6">
-            <label className="block mb-2 font-medium">Select Printer:</label>
+          <div className="mb-6 rounded-xl border bg-white p-4 shadow-lg">
+            <label className="mb-2 block font-medium">Select Printer:</label>
             <select
               className="w-full rounded border px-2 py-1"
               value={selectedPrinterName}
-              onChange={e => {
-                setSelectedPrinterName(e.target.value);
-                const printer = printers.find(p => getPrinterName(p) === e.target.value);
-                if (printer) selectPrinter(printer);
+              onChange={(e) => {
+                setSelectedPrinterName(e.target.value)
+                const printer = printers.find((p) => getPrinterName(p) === e.target.value)
+                if (printer) selectPrinter(printer)
               }}
             >
               <option value="">Select a printer</option>
               {printers.map((printer) => {
-                const printerName = getPrinterName(printer);
+                const printerName = getPrinterName(printer)
                 return (
-                  <option key={printerName} value={printerName}>{printerName}</option>
-                );
+                  <option key={printerName} value={printerName}>
+                    {printerName}
+                  </option>
+                )
               })}
             </select>
-            {printers.length === 0 && <div className="text-xs text-red-600 mt-2">No printers detected</div>}
-            {printers.length > 0 && !printers.find(p => getPrinterName(p) === selectedPrinterName) && (
-              <div className="text-xs text-red-600 mt-2">Selected printer is not available. Please select another.</div>
+            {printers.length === 0 && (
+              <div className="mt-2 text-xs text-red-600">No printers detected</div>
             )}
-            {!isConnected && <div className="text-xs text-red-600 mt-2">Printer not connected</div>}
+            {printers.length > 0 &&
+              !printers.find((p) => getPrinterName(p) === selectedPrinterName) && (
+                <div className="mt-2 text-xs text-red-600">
+                  Selected printer is not available. Please select another.
+                </div>
+              )}
+            {!isConnected && <div className="mt-2 text-xs text-red-600">Printer not connected</div>}
           </div>
           {/* Menu Items List */}
-          <div className="bg-white rounded-xl shadow-lg border p-6 mb-8">
-            <div className="flex items-center justify-between mb-6">
+          <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">
+            <div className="mb-6 flex items-center justify-between">
               <h1 className="text-2xl font-bold tracking-tight">Menu Items</h1>
             </div>
             <div className="mb-6">
@@ -286,77 +309,152 @@ export default function PPDSPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search menu items..."
-                className="w-full rounded-lg border-2 border-purple-200 px-5 py-3 text-base focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                className="w-full rounded-lg border-2 border-purple-200 px-5 py-3 text-base transition focus:border-purple-500 focus:ring-2 focus:ring-purple-200"
               />
             </div>
             {isLoading && <p>Loading...</p>}
             {error && <p className="text-red-600">{error}</p>}
             <div className="mb-8">
               {paginatedMenuItems.map((item) => (
-                <div key={item.id} className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 hover:shadow-md transition">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-gray-900 whitespace-normal break-words">{item.name}</p>
+                <div
+                  key={item.id}
+                  className="mb-3 flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-4 transition hover:shadow-md"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="whitespace-normal break-words font-semibold text-gray-900">
+                      {item.name}
+                    </p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
                       onClick={() => addToPrintQueue(item)}
                       disabled={printQueue.some((q) => q.id === item.id)}
                       variant="purple"
-                    >{printQueue.some((q) => q.id === item.id) ? "Added" : "Add"}</Button>
+                    >
+                      {printQueue.some((q) => q.id === item.id) ? "Added" : "Add"}
+                    </Button>
                   </div>
                 </div>
               ))}
               {/* Pagination */}
-              <div className="flex items-center justify-center gap-2 mt-4">
-                <Button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} variant="outline" className="flex items-center gap-1"><ChevronLeftIcon className="h-4 w-4" /></Button>
-                <span className="min-w-[80px] text-center text-sm text-gray-700">{page} of {totalPages}</span>
-                <Button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages || totalPages === 0} variant="outline" className="flex items-center gap-1"><ChevronRightIcon className="h-4 w-4" /></Button>
+              <div className="mt-4 flex items-center justify-center gap-2">
+                <Button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
+                  <ChevronLeftIcon className="h-4 w-4" />
+                </Button>
+                <span className="min-w-[80px] text-center text-sm text-gray-700">
+                  {page} of {totalPages}
+                </span>
+                <Button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages || totalPages === 0}
+                  variant="outline"
+                  className="flex items-center gap-1"
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
         </div>
         {/* Right Section: Print Queue */}
-        <div className="flex-1 min-w-[340px]">
-          <div className="bg-white rounded-xl shadow-lg border p-6 mb-8">
+        <div className="min-w-[340px] flex-1">
+          <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">
             {/* Storage Info Input at the top */}
             <div className="mb-6">
-              <label className="block mb-2 font-medium">Storage Instruction (short):</label>
+              <label className="mb-2 block font-medium">Storage Instruction (short):</label>
               <input
                 type="text"
                 value={storageInfo}
-                onChange={e => setStorageInfo(e.target.value)}
+                onChange={(e) => setStorageInfo(e.target.value)}
                 maxLength={60}
                 placeholder="e.g. Keep refrigerated below 5°C"
                 className="w-full rounded border px-2 py-1 text-sm"
               />
             </div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-purple-800 tracking-tight">Print Queue</h2>
+            <div className="mb-6 flex items-center justify-between">
+              <h2 className="text-2xl font-bold tracking-tight text-purple-800">Print Queue</h2>
               <div className="flex gap-2">
-                <Button onClick={handlePrint} disabled={printQueue.length === 0 || printers.length === 0 || !printers.find(p => getPrinterName(p) === selectedPrinterName)} variant="purple">Print Labels</Button>
-                <Button onClick={clearPrintQueue} disabled={printQueue.length === 0} variant="outline" aria-label="Clear print queue">Clear Queue</Button>
+                <Button
+                  onClick={handlePrint}
+                  disabled={
+                    printQueue.length === 0 ||
+                    printers.length === 0 ||
+                    !printers.find((p) => getPrinterName(p) === selectedPrinterName)
+                  }
+                  variant="purple"
+                >
+                  Print Labels
+                </Button>
+                <Button
+                  onClick={clearPrintQueue}
+                  disabled={printQueue.length === 0}
+                  variant="outline"
+                  aria-label="Clear print queue"
+                >
+                  Clear Queue
+                </Button>
               </div>
             </div>
             <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
               <div className="px-8 pb-8 pt-4">
                 {printQueue.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-16 text-gray-400">
-                    <svg className="mb-4 h-12 w-12 text-purple-200" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01" /></svg>
-                    <p className="italic text-lg text-gray-400">Your print queue is empty.<br />Add items to get started!</p>
+                    <svg
+                      className="mb-4 h-12 w-12 text-purple-200"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M8 12h.01M12 12h.01M16 12h.01"
+                      />
+                    </svg>
+                    <p className="text-lg italic text-gray-400">
+                      Your print queue is empty.
+                      <br />
+                      Add items to get started!
+                    </p>
                   </div>
                 ) : (
-                  printQueue.filter(item => item.name && item.name.trim() !== "").map((item) => (
-                    <div key={item.uid} className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg">
-                      <div className="font-semibold text-gray-900 break-words whitespace-normal">
-                        {item.name}
+                  printQueue
+                    .filter((item) => item.name && item.name.trim() !== "")
+                    .map((item) => (
+                      <div
+                        key={item.uid}
+                        className="mb-4 flex flex-col gap-1 rounded-lg border border-gray-200 bg-gray-50 px-5 py-4 transition-shadow hover:shadow-lg"
+                      >
+                        <div className="whitespace-normal break-words font-semibold text-gray-900">
+                          {item.name}
+                        </div>
+                        <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
+                        <div className="mt-1 flex items-center gap-2">
+                          <input
+                            type="number"
+                            min={1}
+                            value={item.quantity}
+                            onChange={(e) => updateQuantity(item.uid, Number(e.target.value))}
+                            className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                          />
+                          <Button
+                            onClick={() => removeFromQueue(item.uid)}
+                            variant="outline"
+                            className="border-none bg-red-600 text-white shadow-none hover:bg-red-700 focus:bg-red-700"
+                            aria-label={`Remove ${item.name} from queue`}
+                          >
+                            Remove
+                          </Button>
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500">Expires: {item.expiryDate}</div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <input type="number" min={1} value={item.quantity} onChange={(e) => updateQuantity(item.uid, Number(e.target.value))} className="w-16 rounded-md border border-gray-300 bg-white px-3 py-1 text-center text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500" />
-                        <Button onClick={() => removeFromQueue(item.uid)} variant="outline" className="bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 border-none shadow-none" aria-label={`Remove ${item.name} from queue`}>Remove</Button>
-                      </div>
-                    </div>
-                  ))
+                    ))
                 )}
               </div>
             </div>
@@ -364,16 +462,24 @@ export default function PPDSPage() {
         </div>
       </div>
       {/* Label Preview as a wide section below both columns */}
-      <div className="w-full bg-white rounded-xl shadow-lg border p-6 mt-8">
-        <h2 className="text-lg font-semibold mb-2">Label Preview</h2>
-        {printQueue.length === 0 ? <p className="text-gray-500">No label selected.</p> : (
-          <div className="flex flex-wrap gap-4 justify-center">
+      <div className="mt-8 w-full rounded-xl border bg-white p-6 shadow-lg">
+        <h2 className="mb-2 text-lg font-semibold">Label Preview</h2>
+        {printQueue.length === 0 ? (
+          <p className="text-gray-500">No label selected.</p>
+        ) : (
+          <div className="flex flex-wrap justify-center gap-4">
             {printQueue.map((item) => (
-              <PPDSLabelRenderer key={item.uid} item={item} storageInfo={storageInfo} businessName={businessName} allIngredients={allIngredients} />
+              <PPDSLabelRenderer
+                key={item.uid}
+                item={item}
+                storageInfo={storageInfo}
+                businessName={businessName}
+                allIngredients={allIngredients}
+              />
             ))}
           </div>
         )}
       </div>
     </div>
   )
-} 
+}

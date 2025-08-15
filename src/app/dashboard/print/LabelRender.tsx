@@ -28,28 +28,13 @@ export default function LabelRender({
   selectedInitial,
   allergens,
   maxIngredients = 5,
-  labelHeight = "31mm",
+  labelHeight = "40mm",
   allIngredients = [],
 }: LabelRenderProps) {
   // --- Sizing and layout configuration ---
   const labelConfig = {
-    "31mm": {
-      heightCm: 3.05,
-      fontSize: 12,
-      nameFontSize: 15,
-      sectionSpacing: 2,
-      padding: 0, // Remove padding
-      maxNameLen: 18,
-      maxIngLen: 12,
-      maxAllergenLen: 10,
-      maxIngredientsToShow: 2,
-      expiresFontSize: 10,
-      metaFontSize: 8.5, // Increased from 6.5 (+2px)
-      containsFontSize: 9.5, // Increased from 7.5 (+2px)
-      ppdsFontSize: 9, // Increased from 7 (+2px)
-    },
     "40mm": {
-      heightCm: 3.95,
+      heightCm: 4.0,
       fontSize: 13,
       nameFontSize: 18,
       sectionSpacing: 4,
@@ -59,12 +44,12 @@ export default function LabelRender({
       maxAllergenLen: 12,
       maxIngredientsToShow: 5,
       expiresFontSize: 12,
-      metaFontSize: 9.5, // Increased from 7.5 (+2px)
-      containsFontSize: 10.5, // Increased from 8.5 (+2px)
-      ppdsFontSize: 9.5, // Increased from 7.5 (+2px)
+      metaFontSize: 9.5,
+      containsFontSize: 10.5,
+      ppdsFontSize: 9.5,
     },
     "80mm": {
-      heightCm: 7.95,
+      heightCm: 8.0,
       fontSize: 15,
       nameFontSize: 22,
       sectionSpacing: 8,
@@ -73,10 +58,10 @@ export default function LabelRender({
       maxIngLen: 22,
       maxAllergenLen: 18,
       maxIngredientsToShow: 12,
-      expiresFontSize: 16, // Reduced from 18 to fit on one line
-      metaFontSize: 13, // Increased from 11 (+2px)
-      containsFontSize: 15, // Increased from 13 (+2px)
-      ppdsFontSize: 14, // Increased from 12 (+2px)
+      expiresFontSize: 16,
+      metaFontSize: 13,
+      containsFontSize: 15,
+      ppdsFontSize: 14,
     },
   }
 
@@ -84,7 +69,7 @@ export default function LabelRender({
   const { heightCm, fontSize, nameFontSize, sectionSpacing, padding } = config
 
   // --- No padding for edge-to-edge ---
-  const LABEL_WIDTH_CM = 5.6
+  const LABEL_WIDTH_CM = 6.0 // Updated to 60mm
   const labelWidthCm = LABEL_WIDTH_CM
   const labelHeightCm = heightCm
 
@@ -137,7 +122,7 @@ export default function LabelRender({
 
     const wordCount = name.trim().split(/\s+/).length
 
-    // Apply font size reduction for both 40mm and 80mm labels
+    // Apply font size reduction for 40mm and 80mm labels
     if (labelHeight === "40mm") {
       if (wordCount === 2) return Math.max(baseFontSize - 2, 12)
       if (wordCount >= 3) return Math.max(baseFontSize - 4, 11)
@@ -212,8 +197,8 @@ export default function LabelRender({
   // --- Special USE FIRST label ---
   const isUseFirst = item.name === "USE FIRST"
   if (isUseFirst) {
-    const circleSize = labelHeight === "31mm" ? "2.2cm" : labelHeight === "40mm" ? "2.8cm" : "4.5cm"
-    const circleFont = labelHeight === "31mm" ? 14 : labelHeight === "40mm" ? 18 : 24
+    const circleSize = "2.8cm"
+    const circleFont = 18
 
     return (
       <div
@@ -471,7 +456,7 @@ export default function LabelRender({
         </div>
 
         {/* Allergen warnings for ingredient labels */}
-        {(labelHeight === "31mm" || labelHeight === "40mm") && itemAllergenNames.length > 0 && (
+        {itemAllergenNames.length > 0 && (
           <div
             style={{
               fontWeight: 900,
@@ -485,23 +470,6 @@ export default function LabelRender({
             }}
           >
             CONTAINS ALLERGENS
-          </div>
-        )}
-
-        {labelHeight === "80mm" && itemAllergenNames.length > 0 && (
-          <div
-            style={{
-              fontWeight: 900,
-              color: "black",
-              fontSize: fontSize,
-              textAlign: "center",
-              marginTop: 2,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              fontFamily: "inherit",
-            }}
-          >
-            CONTAINS ALLERGENS: {itemAllergenNames.map((a) => a.toUpperCase()).join(", ")}
           </div>
         )}
       </div>
@@ -627,26 +595,7 @@ export default function LabelRender({
       )}
 
       {/* Allergen warnings */}
-      {(labelHeight === "31mm" || labelHeight === "40mm") &&
-        item.type === "ingredients" &&
-        itemAllergenNames.length > 0 && (
-          <div
-            style={{
-              fontWeight: 900,
-              color: "black",
-              fontSize: fontSize,
-              textAlign: "center",
-              marginTop: 2,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              fontFamily: "monospace",
-            }}
-          >
-            CONTAINS ALLERGENS
-          </div>
-        )}
-
-      {labelHeight === "80mm" && item.type === "ingredients" && itemAllergenNames.length > 0 && (
+      {item.type === "ingredients" && itemAllergenNames.length > 0 && (
         <div
           style={{
             fontWeight: 900,
@@ -659,7 +608,7 @@ export default function LabelRender({
             fontFamily: "monospace",
           }}
         >
-          CONTAINS ALLERGENS: {itemAllergenNames.map((a) => a.toUpperCase()).join(", ")}
+          CONTAINS ALLERGENS
         </div>
       )}
     </div>
