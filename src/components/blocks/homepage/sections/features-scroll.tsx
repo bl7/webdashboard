@@ -6,11 +6,14 @@ import { motion } from "framer-motion"
 import { Star, Award, Users, TrendingUp, Quote } from "lucide-react"
 
 const foodBusinesses = [
-  { name: "Restaurant A", logo: "/noodle.png" },
-  { name: "Cafe B", logo: "/noodle.png" },
-  { name: "Catering C", logo: "/noodle.png" },
-  { name: "Food Truck D", logo: "/noodle.png" },
-  { name: "Bakery E", logo: "/noodle.png" },
+  { name: "Noodle Bar", logo: "/noodle.png" },
+  { name: "Crispy as duck", logo: "/noodle.png" },
+  { name: "Katsu curry bar", logo: "/noodle.png" },
+  { name: "Korean fried chicken", logo: "/noodle.png" },
+  { name: "bang fang rice bar", logo: "/noodle.png" },
+  { name: "Loco lime", logo: "/noodle.png" },
+  { name: "Katsu curry bar", logo: "/noodle.png" },
+  { name: "momo's bento bar", logo: "/noodle.png" },
 ]
 
 const trustSignals = [
@@ -26,11 +29,11 @@ export const TrustedBySection = () => {
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute left-1/3 top-1/3 h-32 w-32 rounded-full bg-purple-200/30 blur-2xl"></div>
-        <div className="absolute right-1/3 bottom-1/3 h-24 w-24 rounded-full bg-pink-200/30 blur-2xl"></div>
+        <div className="absolute bottom-1/3 right-1/3 h-24 w-24 rounded-full bg-pink-200/30 blur-2xl"></div>
       </div>
 
       <div className="relative mx-auto max-w-6xl">
-        <div className="text-center space-y-12">      
+        <div className="space-y-12 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -59,26 +62,28 @@ export const TrustedBySection = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="max-w-4xl mx-auto"
+            className="mx-auto max-w-4xl"
           >
-            <div className="bg-white rounded-2xl p-8 shadow-lg ring-1 ring-purple-100">
+            <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-purple-100">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600">
                     <Quote className="h-6 w-6 text-white" />
                   </div>
                 </div>
                 <div className="flex-1">
-                  <blockquote className="text-xl text-gray-700 leading-relaxed mb-4">
-                    "We switched from a basic label printer to InstaLabel and immediately saw the difference. Managing our 8 locations became effortless, and the inventory insights helped us reduce waste by 40% in the first quarter."
+                  <blockquote className="mb-4 text-xl leading-relaxed text-gray-700">
+                    "We switched from a basic label printer to InstaLabel and immediately saw the
+                    difference. Managing our 8 locations became effortless, and the inventory
+                    insights helped us reduce waste by 40% in the first quarter."
                   </blockquote>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-r from-purple-100 to-pink-100 rounded-full flex items-center justify-center">
-                      <span className="text-purple-600 font-bold text-sm">MC</span>
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
+                      <span className="text-sm font-bold text-purple-600">JL</span>
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900">Marcus Chen</div>
-                      <div className="text-sm text-gray-600">Operations Director, Urban Feast Group</div>
+                      <div className="font-semibold text-gray-900">Jonathan L.</div>
+                      <div className="text-sm text-gray-600">Owner, Noodle Bar Franchise</div>
                     </div>
                   </div>
                 </div>
@@ -94,9 +99,9 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="absolute left-0 top-0 w-16 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
-            <div className="absolute right-0 top-0 w-16 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
-            
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent"></div>
+            <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent"></div>
+
             <div className="relative rounded-2xl bg-white/60 p-8 shadow-lg ring-1 ring-purple-100 backdrop-blur-sm">
               <Marquee speed={25} pauseOnHover>
                 <div className="flex items-center gap-20 overflow-hidden px-10">
@@ -105,7 +110,7 @@ export const TrustedBySection = () => {
                       <img
                         src={logo}
                         alt={`${name} logo`}
-                        className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:grayscale-0 group-hover:drop-shadow-xl"
+                        className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
                       />
                     </div>
                   ))}

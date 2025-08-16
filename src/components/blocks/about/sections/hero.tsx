@@ -8,7 +8,7 @@ import { motion } from "framer-motion"
 
 export const AboutHero = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-32 pb-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
       {/* Background blobs (standardized) */}
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
@@ -35,8 +35,8 @@ export const AboutHero = () => {
 
           <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
             Smart labeling that keeps your kitchen compliant, waste-free, and running fast — no
-            training needed. Print from web dashboard or Sunmi devices, track usage with real-time analytics, 
-            and optimize your kitchen operations with comprehensive reporting.
+            training needed. Print from web dashboard or Sunmi devices, track usage with real-time
+            analytics, and optimize your kitchen operations with comprehensive reporting.
           </p>
 
           {/* Key Benefits */}
@@ -58,9 +58,7 @@ export const AboutHero = () => {
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
             <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
-              <Link href="/register">
-                Start Free Trial
-              </Link>
+              <Link href="/register">Start Free Trial</Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button variant="outline" size="lg">
@@ -87,9 +85,9 @@ export const AboutHero = () => {
             {/* Team Members */}
             <div className="space-y-4">
               {/* Chef */}
-              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-purple-500">
+              <div className="rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
                     <Users className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
@@ -100,9 +98,9 @@ export const AboutHero = () => {
               </div>
 
               {/* Kitchen Manager */}
-              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-purple-500 ml-4">
+              <div className="ml-4 rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
                     <Target className="h-6 w-6 text-purple-600" />
                   </div>
                   <div>
@@ -113,9 +111,9 @@ export const AboutHero = () => {
               </div>
 
               {/* Development Team */}
-              <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 ml-8">
+              <div className="ml-8 rounded-lg border-l-4 border-green-500 bg-white p-4 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                     <Heart className="h-6 w-6 text-green-600" />
                   </div>
                   <div>
@@ -127,7 +125,7 @@ export const AboutHero = () => {
             </div>
 
             {/* Stats */}
-            <div className="mt-6 grid grid-cols-3 gap-4 text-center">
+            {/* <div className="mt-6 grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-bold text-purple-600">500+</div>
                 <div className="text-xs text-gray-600">Kitchens</div>
@@ -140,12 +138,15 @@ export const AboutHero = () => {
                 <div className="text-2xl font-bold text-purple-600">99.9%</div>
                 <div className="text-xs text-gray-600">Uptime</div>
               </div>
-            </div>
+            </div> */}
           </div>
         </motion.div>
       </div>
       {/* Bottom fade overlay */}
-      <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
+      <div
+        className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
+        style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
+      />
     </section>
   )
 }
