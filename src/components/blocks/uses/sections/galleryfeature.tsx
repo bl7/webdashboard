@@ -1,9 +1,9 @@
-'use client'
+"use client"
 // components/RealWorldGallery.tsx
 import Image from "next/image"
 import A2 from "../../../../assets/images/kitchen.jpg"
 import A3 from "../../../../assets/images/value.jpeg"
-import A4 from "../../../../assets/images/before.png"
+import A4 from "../../../../assets/images/after.png"
 import { motion } from "framer-motion"
 
 const allergens = [
@@ -27,7 +27,7 @@ const customAllergens = ["Ginger", "Strawberry"]
 
 export const GalleryFeature = () => {
   return (
-    <section className="bg-white px-2 sm:px-6 py-12 sm:py-24">
+    <section className="bg-white px-2 py-12 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-6xl space-y-16 sm:space-y-24">
         {/* Advanced Customization Section */}
         <motion.div
@@ -39,38 +39,53 @@ export const GalleryFeature = () => {
         >
           <div className="space-y-6 md:w-1/2">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-3 bg-purple-50 px-4 py-2 rounded-full border border-purple-200">
+              <div className="inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2">
                 <span className="text-2xl">⚙️</span>
-                <span className="text-sm font-medium text-purple-700 uppercase tracking-wider">Advanced Customization</span>
+                <span className="text-sm font-medium uppercase tracking-wider text-purple-700">
+                  Advanced Customization
+                </span>
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">Smart allergen detection & customization</h3>
+              <h3 className="text-3xl font-bold text-gray-900">
+                Smart allergen detection & customization
+              </h3>
             </div>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Our intelligent system automatically detects and highlights all 14 required allergens, 
-              while allowing complete customization for your unique menu items and dietary requirements.
+            <p className="text-lg leading-relaxed text-gray-600">
+              Our intelligent system automatically detects and highlights all 14 required allergens,
+              while allowing complete customization for your unique menu items and dietary
+              requirements.
             </p>
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700">AI-powered ingredient analysis and allergen detection</span>
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <span className="text-gray-700">
+                  AI-powered ingredient analysis and allergen detection
+                </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700">Custom allergen database for regional requirements</span>
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <span className="text-gray-700">
+                  Custom allergen database for regional requirements
+                </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700">Flexible highlighting styles (bold, italic, underline, color)</span>
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <span className="text-gray-700">
+                  Flexible highlighting styles (bold, italic, underline, color)
+                </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0" />
-                <span className="text-gray-700">Multi-language support for international kitchens</span>
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <span className="text-gray-700">
+                  Multi-language support for international kitchens
+                </span>
               </div>
             </div>
 
             <div className="pt-4">
-              <p className="text-sm text-gray-600 mb-3">Standard allergens automatically detected:</p>
+              <p className="mb-3 text-sm text-gray-600">
+                Standard allergens automatically detected:
+              </p>
               <div className="flex flex-wrap gap-2">
                 {allergens.map((a) => (
                   <span
@@ -81,8 +96,8 @@ export const GalleryFeature = () => {
                   </span>
                 ))}
               </div>
-              
-              <p className="text-sm text-gray-600 mt-4">
+
+              <p className="mt-4 text-sm text-gray-600">
                 Plus custom allergens like{" "}
                 {customAllergens.map((item, i) => (
                   <span
@@ -107,9 +122,7 @@ export const GalleryFeature = () => {
             />
           </div>
         </motion.div>
-
       </div>
-    
     </section>
   )
 }
