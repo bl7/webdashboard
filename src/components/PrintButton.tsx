@@ -243,7 +243,9 @@ export const PrintButton: React.FC = () => {
           <option value="40mm">40mm (Standard)</option>
           <option value="80mm">80mm (Extended)</option>
         </select>
-        <div className="text-xs text-gray-500">56mm width x {labelHeight} height</div>
+        <div className="text-xs text-gray-500">
+          {labelHeight === "40mm" ? "60mm" : "56mm"} width x {labelHeight} height
+        </div>
       </div>
 
       {/* Test Label Preview */}

@@ -6,14 +6,13 @@ import { motion } from "framer-motion"
 import { Star, Award, Users, TrendingUp, Quote } from "lucide-react"
 
 const foodBusinesses = [
-  { name: "Noodle Bar", logo: "/noodle.png" },
-  { name: "Crispy as duck", logo: "/noodle.png" },
-  { name: "Katsu curry bar", logo: "/noodle.png" },
-  { name: "Korean fried chicken", logo: "/noodle.png" },
-  { name: "bang fang rice bar", logo: "/noodle.png" },
-  { name: "Loco lime", logo: "/noodle.png" },
-  { name: "Katsu curry bar", logo: "/noodle.png" },
-  { name: "momo's bento bar", logo: "/noodle.png" },
+  { name: "Noodle Bar", logo: "/noodlebar.png" },
+  { name: "Crispy as duck", logo: "/cad.png" },
+  { name: "Katsu curry bar", logo: "/katsu.png" },
+  { name: "Korean fried chicken", logo: "/korean.png" },
+  { name: "bang fang rice bar", logo: "/dangfang.jpg" },
+  { name: "Loco lime", logo: "/loco.png" },
+  // { name: "momo's bento bar", logo: "/noodle.png" },
 ]
 
 const trustSignals = [

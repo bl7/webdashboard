@@ -360,7 +360,8 @@ export const PrintBridgeIntegration: React.FC = () => {
             <option value="80mm">80mm (Large)</option>
           </select>
           <div className="text-xs text-purple-600">
-            Label will be printed at 56mm width x {labelHeight} height
+            Label will be printed at {labelHeight === "40mm" ? "60mm" : "56mm"} width x{" "}
+            {labelHeight} height
           </div>
         </div>
       </div>
