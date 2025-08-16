@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
         </div>{" "}
       </div>
       <div className="mt-6 text-sm text-muted-foreground">
-        Copyright © 2023 - current. <Link href="/">Vitacre Pvt. Ltd.</Link> All rights reserved.
+        Copyright © 2025 - current. <Link href="/">Zentra Ltd.</Link> All rights reserved.
       </div>
     </section>
   )
