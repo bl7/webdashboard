@@ -10,7 +10,6 @@ import { CheckCircle, Mail, User, Building, Phone } from "lucide-react"
 
 export const WaitlistModal = () => {
   const [isOpen, setIsOpen] = useState(false)
-  const [hasShown, setHasShown] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
     full_name: "",
@@ -20,32 +19,19 @@ export const WaitlistModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Show modal after 2 seconds on first visit (with page load delay)
+  // Show modal after 2 seconds on each page visit
   useEffect(() => {
-    // Wait for page to fully load first
+    // Wait for page to fully load first, then show modal after 2 seconds
     const pageLoadTimer = setTimeout(() => {
       const timer = setTimeout(() => {
-        if (!hasShown) {
-          setIsOpen(true)
-          setHasShown(true)
-          // Store in localStorage to remember the user has seen it
-          localStorage.setItem("waitlistModalShown", "true")
-        }
+        setIsOpen(true)
       }, 2000)
 
       return () => clearTimeout(timer)
     }, 1000) // Wait 1 second for page load, then 2 seconds for modal
 
     return () => clearTimeout(pageLoadTimer)
-  }, [hasShown])
-
-  // Check if user has already seen the modal
-  useEffect(() => {
-    const shown = localStorage.getItem("waitlistModalShown")
-    if (shown) {
-      setHasShown(true)
-    }
-  }, [])
+  }, []) // Empty dependency array means this runs on every page visit
 
   // Listen for manual open event
   useEffect(() => {
