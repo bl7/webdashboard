@@ -39,17 +39,17 @@ export const GalleryFeature = () => {
         >
           <div className="space-y-6 md:w-1/2">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2">
+              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 lg:mx-0">
                 <span className="text-2xl">⚙️</span>
                 <span className="text-sm font-medium uppercase tracking-wider text-purple-700">
                   Advanced Customization
                 </span>
               </div>
-              <h3 className="text-3xl font-bold text-gray-900">
+              <h3 className="text-center text-3xl font-bold text-gray-900 lg:text-left">
                 Smart allergen detection & customization
               </h3>
             </div>
-            <p className="text-lg leading-relaxed text-gray-600">
+            <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
               Our intelligent system automatically detects and highlights all 14 required allergens,
               while allowing complete customization for your unique menu items and dietary
               requirements.

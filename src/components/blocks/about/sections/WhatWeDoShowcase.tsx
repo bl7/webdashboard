@@ -47,7 +47,14 @@ const WhatWeDoShowcase = () => {
           quantity: 1,
           ingredients: ["Carrots", "Broccoli", "Celery", "Peppers"],
           allergens: [
-            { uuid: 3, allergenName: "Celery", category: "Vegetable", status: "Active" as const, addedAt: "", isCustom: false },
+            {
+              uuid: 3,
+              allergenName: "Celery",
+              category: "Vegetable",
+              status: "Active" as const,
+              addedAt: "",
+              isCustom: false,
+            },
           ],
           printedOn: "2024-07-01T09:00:00Z",
           expiryDate: "2024-07-01T18:00:00Z",
@@ -77,8 +84,22 @@ const WhatWeDoShowcase = () => {
           quantity: 1,
           ingredients: ["Chicken", "Coconut Milk", "Curry Powder", "Onion", "Garlic"],
           allergens: [
-            { uuid: 1, allergenName: "Milk", category: "Dairy", status: "Active" as const, addedAt: "", isCustom: false },
-            { uuid: 2, allergenName: "Mustard", category: "Spice", status: "Active" as const, addedAt: "", isCustom: false },
+            {
+              uuid: 1,
+              allergenName: "Milk",
+              category: "Dairy",
+              status: "Active" as const,
+              addedAt: "",
+              isCustom: false,
+            },
+            {
+              uuid: 2,
+              allergenName: "Mustard",
+              category: "Spice",
+              status: "Active" as const,
+              addedAt: "",
+              isCustom: false,
+            },
           ],
           printedOn: "2024-07-01T10:00:00Z",
           expiryDate: "2024-07-02T10:00:00Z",
@@ -107,16 +128,26 @@ const WhatWeDoShowcase = () => {
     name: "Chicken Caesar Salad",
     quantity: 1,
     labelType: "ppds",
-    ingredients: ["Chicken Breast", "Romaine Lettuce", "Caesar Dressing", "Parmesan Cheese", "Croutons"],
+    ingredients: [
+      "Chicken Breast",
+      "Romaine Lettuce",
+      "Caesar Dressing",
+      "Parmesan Cheese",
+      "Croutons",
+    ],
     printedOn: "2024-06-01",
-    expiryDate: "2024-06-03"
+    expiryDate: "2024-06-03",
   }
   const ppdsAllIngredients = [
     { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },
     { uuid: "a2", ingredientName: "Romaine Lettuce", allergens: [] },
-    { uuid: "a3", ingredientName: "Caesar Dressing", allergens: [ { allergenName: "Egg" }, { allergenName: "Fish" } ] },
-    { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [ { allergenName: "Milk" } ] },
-    { uuid: "a5", ingredientName: "Croutons", allergens: [ { allergenName: "Wheat" } ] },
+    {
+      uuid: "a3",
+      ingredientName: "Caesar Dressing",
+      allergens: [{ allergenName: "Egg" }, { allergenName: "Fish" }],
+    },
+    { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [{ allergenName: "Milk" }] },
+    { uuid: "a5", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
   ]
   const ppdsStorageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
   const ppdsBusinessName = "InstaLabel Ltd"
@@ -147,22 +178,32 @@ const WhatWeDoShowcase = () => {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="container mx-auto max-w-6xl flex flex-col items-center"
+        className="container mx-auto flex max-w-6xl flex-col items-center"
       >
-        <div className="flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20 w-full">
+        <div className="flex w-full flex-col items-center justify-center gap-10 md:flex-row md:gap-20">
           {/* Left: Text Content */}
-          <div className="flex-1 min-w-[320px] md:pr-8 flex flex-col items-start justify-center">
-
-            <h1 className="text-4xl sm:text-5xl font-black leading-tight tracking-tight mb-4">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent block">Any Label, Any Device</span>
-              <span className="text-gray-900 block">Professional, Compliant, Easy</span>
+          <div className="flex min-w-[320px] flex-1 flex-col items-center justify-center md:pr-8">
+            <h1 className="mb-4 text-center text-4xl font-black leading-tight tracking-tight sm:text-5xl md:text-left">
+              <span className="block bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Any Label, Any Device
+              </span>
+              <span className="block text-gray-900">Professional, Compliant, Easy</span>
             </h1>
-            <div className="text-lg text-gray-700 mb-6 max-w-xl">
-              Print professional kitchen labels (including PPDS and Natasha’s Law) with automatic date calculations, allergen warnings, and storage instructions. Works from any device—USB printer, Sunmi, or more. Perfect for any kitchen that needs to comply with food safety laws—from restaurants to delis to food trucks.
+            <div className="mb-6 max-w-xl text-center text-lg text-gray-700 md:text-left">
+              Print professional kitchen labels (including PPDS and Natasha’s Law) with automatic
+              date calculations, allergen warnings, and storage instructions. Works from any
+              device—USB printer, Sunmi, or more. Perfect for any kitchen that needs to comply with
+              food safety laws—from restaurants to delis to food trucks.
             </div>
             <ol className="mb-8 space-y-2 text-base text-gray-700">
-              <li className="flex items-start gap-2"><span className="font-bold text-lg">①</span> Tap a label type</li>
-              <li className="flex items-start gap-2"><span className="font-bold text-lg">②</span> Print instantly on USB/Sunmi</li>
+              <li className="flex items-center gap-2">
+                <span className="text-lg font-bold">①</span>
+                <span>Tap a label type</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-lg font-bold">②</span>
+                <span>Print instantly on USB/Sunmi</span>
+              </li>
             </ol>
           </div>
           {/* Right: Device Image - larger and animated */}
@@ -171,14 +212,14 @@ const WhatWeDoShowcase = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="flex-1 flex justify-center items-start min-w-[320px] mt-[-32px] md:mt-0"
+            className="mt-[-32px] flex min-w-[320px] flex-1 items-start justify-center md:mt-0"
           >
             <Image
               src={deviceImg}
               alt="Supported label printers"
               width={380}
               height={270}
-              style={{ borderRadius: 0, border: 'none' }}
+              style={{ borderRadius: 0, border: "none" }}
               priority
             />
           </motion.div>
@@ -191,19 +232,23 @@ const WhatWeDoShowcase = () => {
           viewport={{ once: true }}
           className="mt-8 w-full"
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 w-full max-w-6xl mx-auto">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
             {labelGrid.slice(1, 4).map((item, i) => (
-              <div key={i} className="flex flex-col items-center justify-end h-full">
-                <div className="mb-2 font-semibold text-gray-900 text-sm sm:text-base text-center">{item.label}</div>
-                <div className="flex items-center justify-center min-h-[120px] sm:min-h-[140px] h-[120px] sm:h-[140px] w-full">
+              <div key={i} className="flex h-full flex-col items-center justify-end">
+                <div className="mb-2 text-center text-sm font-semibold text-gray-900 sm:text-base">
+                  {item.label}
+                </div>
+                <div className="flex h-[160px] min-h-[160px] w-full items-center justify-center p-2 sm:h-[180px] sm:min-h-[180px] lg:h-[200px] lg:min-h-[200px]">
                   {item.preview}
                 </div>
               </div>
             ))}
-            {/* PPDS label preview last, match height */}
-            <div className="flex flex-col items-center justify-end h-full">
-              <div className="mb-2 font-semibold text-gray-900 text-sm sm:text-base text-center">{labelGrid[0].label}</div>
-              <div className="flex items-center justify-center min-h-[120px] sm:min-h-[140px] h-[120px] sm:h-[140px] w-full">
+            {/* PPDS label preview last, needs more height for content */}
+            <div className="flex h-full flex-col items-center justify-end">
+              <div className="mb-2 text-center text-sm font-semibold text-gray-900 sm:text-base">
+                {labelGrid[0].label}
+              </div>
+              <div className="flex h-[200px] min-h-[200px] w-full items-center justify-center p-2 sm:h-[220px] sm:min-h-[220px] lg:h-[240px] lg:min-h-[240px]">
                 {labelGrid[0].preview}
               </div>
             </div>
@@ -214,14 +259,12 @@ const WhatWeDoShowcase = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
             viewport={{ once: true }}
-            className="flex flex-col sm:flex-row gap-4 mt-8 justify-center sm:justify-start"
-          >
-           
-          </motion.div>
+            className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:justify-start"
+          ></motion.div>
         </motion.div>
       </motion.div>
     </section>
   )
 }
 
-export default WhatWeDoShowcase 
+export default WhatWeDoShowcase

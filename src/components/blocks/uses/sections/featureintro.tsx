@@ -67,17 +67,17 @@ export const FeatureIntro = () => {
           {/* Text 1 – Natasha's Law */}
           <div className="space-y-6">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2">
+              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 lg:mx-0">
                 <span className="text-2xl">📋</span>
                 <span className="text-sm font-medium uppercase tracking-wider text-purple-700">
                   Regulatory Compliance
                 </span>
               </div>
-              <h3 className="text-3xl font-bold leading-tight text-gray-900">
+              <h3 className="text-center text-3xl font-bold leading-tight text-gray-900 lg:text-left">
                 Natasha's Law Compliance
               </h3>
             </div>
-            <p className="text-lg leading-relaxed text-gray-600">
+            <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
               Stay ahead of food safety regulations with automated allergen tracking and compliant
               labeling. InstaLabel ensures your kitchen meets all Natasha's Law requirements without
               the complexity.
@@ -113,17 +113,17 @@ export const FeatureIntro = () => {
           {/* Text 2 – HACCP & Food Safety */}
           <div className="space-y-6">
             <div className="space-y-3">
-              <div className="inline-flex items-center gap-3 rounded-full border border-orange-200 bg-orange-50 px-4 py-2">
+              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 lg:mx-0">
                 <span className="text-2xl">🛡️</span>
                 <span className="text-sm font-medium uppercase tracking-wider text-orange-700">
                   Food Safety
                 </span>
               </div>
-              <h3 className="text-3xl font-bold leading-tight text-gray-900">
+              <h3 className="text-center text-3xl font-bold leading-tight text-gray-900 lg:text-left">
                 HACCP & Food Safety Management
               </h3>
             </div>
-            <p className="text-lg leading-relaxed text-gray-600">
+            <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
               Transform your kitchen's food safety practices with intelligent labeling that tracks
               every stage of food preparation, from receiving to service, ensuring complete
               traceability.

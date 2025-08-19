@@ -98,10 +98,10 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 bg-gradient-to-r from-white to-transparent"></div>
+            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16"></div>
             <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent"></div>
 
-            <div className="relative rounded-2xl bg-white/60 p-8 shadow-lg ring-1 ring-purple-100 backdrop-blur-sm">
+            <div className="relative p-10">
               <Marquee speed={25} pauseOnHover>
                 <div className="flex items-center gap-20 overflow-hidden px-10">
                   {foodBusinesses.map(({ name, logo }) => (

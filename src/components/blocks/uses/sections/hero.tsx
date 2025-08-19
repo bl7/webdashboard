@@ -9,7 +9,7 @@ import { motion } from "framer-motion"
 export const UsesHero = () => {
   return (
     <>
-      <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-32 pb-16">
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
         {/* Background blobs (standardized) */}
         <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
         <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
@@ -30,14 +30,15 @@ export const UsesHero = () => {
 
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
               <span className="text-purple-600">Label Everything,</span>
-              <br className="hidden md:block" />
+              <br />
               <span className="">Everywhere.</span>
             </h1>
 
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
               From allergen warnings to expiry dates, prep labels to HACCP compliance — InstaLabel
-              handles every labeling need. Print from web dashboard or Sunmi devices, track usage with real-time analytics, 
-              and optimize your kitchen operations with comprehensive reporting.
+              handles every labeling need. Print from web dashboard or Sunmi devices, track usage
+              with real-time analytics, and optimize your kitchen operations with comprehensive
+              reporting.
             </p>
 
             {/* Key Benefits */}
@@ -59,9 +60,7 @@ export const UsesHero = () => {
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
-                <Link href="/register">
-                  Start Free Trial
-                </Link>
+                <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Link href="/features">
@@ -90,48 +89,52 @@ export const UsesHero = () => {
               {/* Kitchen Workflow Steps */}
               <div className="space-y-4">
                 {/* Step 1: Prep */}
-                <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-blue-500">
+                <div className="rounded-lg border-l-4 border-blue-500 bg-white p-4 shadow-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
                       <ChefHat className="h-6 w-6 text-blue-600" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-900">Prep Labels</h4>
-                      <p className="text-sm text-gray-600">Fresh ingredients, prep times, expiry dates</p>
+                      <p className="text-sm text-gray-600">
+                        Fresh ingredients, prep times, expiry dates
+                      </p>
                     </div>
-                    <div className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-medium">
+                    <div className="rounded bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
                       PREP
                     </div>
                   </div>
                 </div>
 
                 {/* Step 2: Cook */}
-                <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-green-500 ml-4">
+                <div className="ml-4 rounded-lg border-l-4 border-green-500 bg-white p-4 shadow-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
                       <Clock className="h-6 w-6 text-green-600" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-900">Cook Labels</h4>
                       <p className="text-sm text-gray-600">Cook times, temperatures, allergens</p>
                     </div>
-                    <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
+                    <div className="rounded bg-green-100 px-2 py-1 text-xs font-medium text-green-800">
                       COOKED
                     </div>
                   </div>
                 </div>
 
                 {/* Step 3: PPDS */}
-                <div className="bg-white rounded-lg shadow-lg p-4 border-l-4 border-purple-500 ml-8">
+                <div className="ml-8 rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
                       <Shield className="h-6 w-6 text-purple-600" />
                     </div>
                     <div className="flex-1">
                       <h4 className="font-bold text-gray-900">PPDS Labels</h4>
-                      <p className="text-sm text-gray-600">Full ingredient lists, allergen warnings</p>
+                      <p className="text-sm text-gray-600">
+                        Full ingredient lists, allergen warnings
+                      </p>
                     </div>
-                    <div className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded font-medium">
+                    <div className="rounded bg-purple-100 px-2 py-1 text-xs font-medium text-purple-800">
                       PPDS
                     </div>
                   </div>
@@ -140,15 +143,15 @@ export const UsesHero = () => {
 
               {/* Usage Stats */}
               <div className="mt-6 grid grid-cols-3 gap-4 text-center">
-                <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
                   <div className="text-2xl font-bold text-blue-600">Prep</div>
                   <div className="text-xs text-gray-600">Daily Prep Items</div>
                 </div>
-                <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
                   <div className="text-2xl font-bold text-green-600">Cook</div>
                   <div className="text-xs text-gray-600">Hot Food Items</div>
                 </div>
-                <div className="bg-white rounded-lg p-3 shadow-sm border border-gray-200">
+                <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-sm">
                   <div className="text-2xl font-bold text-purple-600">PPDS</div>
                   <div className="text-xs text-gray-600">Pre-Packaged</div>
                 </div>
@@ -157,9 +160,11 @@ export const UsesHero = () => {
           </motion.div>
         </div>
         {/* Bottom fade overlay */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
+        />
       </section>
-      
     </>
   )
 }
