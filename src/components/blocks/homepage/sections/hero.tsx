@@ -16,6 +16,7 @@ import React from "react"
 import instaLabel from "@/assets/images/instaLabel.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { WaitlistModal } from "./WaitlistModal"
 
 export const Hero = () => {
   return (
@@ -129,7 +130,7 @@ export const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="flex items-start gap-2">
+            {/* <div className="flex items-start gap-2">
               <span className="text-lg">🧑‍🍳</span>
               <div>
                 <div className="text-sm font-bold text-gray-900">Designed for Real Kitchens</div>
@@ -138,7 +139,7 @@ export const Hero = () => {
                   dashboard.
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="flex items-start gap-2">
               <span className="text-lg">🔄</span>
               <div>
@@ -170,6 +171,21 @@ export const Hero = () => {
               </Button>
             </Link>
           </div>
+
+          {/* Waitlist Link */}
+          <div className="mt-3 text-center md:text-left">
+            <Button
+              variant="link"
+              className="text-sm text-purple-600 hover:text-purple-800"
+              onClick={() => {
+                // Trigger the waitlist modal
+                const event = new CustomEvent("openWaitlistModal")
+                window.dispatchEvent(event)
+              }}
+            >
+              Join the waitlist for early access →
+            </Button>
+          </div>
         </div>
       </div>
       {/* Bottom fade overlay */}
@@ -177,6 +193,9 @@ export const Hero = () => {
         className="pointer-events-none absolute bottom-0 left-0 z-0 h-12 w-full sm:h-24"
         style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
       />
+
+      {/* Waitlist Modal */}
+      <WaitlistModal />
     </section>
   )
 }

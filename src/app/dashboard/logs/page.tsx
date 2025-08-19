@@ -319,6 +319,47 @@ export default function PrintSessionsPage() {
       const allergens = JSON.parse(localStorage.getItem("allergens") || "[]")
       const allergenNames = allergens.map((a: any) => a.allergenName?.toLowerCase() || "")
 
+      // Fetch label settings for proper expiry calculation
+      const token = localStorage.getItem("token")
+      let labelSettings: any[] = []
+      if (token) {
+        try {
+          const settingsRes = await fetch("/api/label-settings", {
+            headers: { Authorization: `Bearer ${token}` },
+          })
+          const settingsData = await settingsRes.json()
+          labelSettings = settingsData.settings || []
+        } catch (error) {
+          console.warn("Failed to fetch label settings, using defaults")
+        }
+      }
+
+      // Helper function to calculate expiry date based on label type
+      const calculateExpiryDate = (labelType: string): string => {
+        const today = new Date()
+
+        if (labelType === "defrost") {
+          // Defrost labels expire in 24 hours (1 day)
+          today.setDate(today.getDate() + 1)
+          return today.toISOString().split("T")[0]
+        }
+
+        // Get expiry days from settings or use defaults
+        const setting = labelSettings.find((s: any) => s.label_type === labelType)
+        const expiryDays = setting
+          ? parseInt(setting.expiry_days)
+          : labelType === "cooked"
+            ? 1
+            : labelType === "prep"
+              ? 3
+              : labelType === "ppds"
+                ? 5
+                : 3
+
+        today.setDate(today.getDate() + expiryDays)
+        return today.toISOString().split("T")[0]
+      }
+
       let successCount = 0
       let failCount = 0
       const failItems: string[] = []
@@ -333,8 +374,8 @@ export default function PrintSessionsPage() {
             type: "menu", // Default to menu since we don't have this info in logs
             name: log.details.itemName,
             quantity: log.details.quantity,
-            printedOn: log.details.printedAt,
-            expiryDate: new Date().toISOString().split("T")[0], // Default expiry
+            printedOn: new Date().toISOString().split("T")[0], // Today's date
+            expiryDate: calculateExpiryDate(log.details.labelType), // Proper expiry calculation
             labelType: log.details.labelType,
             ingredients: [], // We don't have ingredients in logs
             allergens: [], // We don't have allergens in logs

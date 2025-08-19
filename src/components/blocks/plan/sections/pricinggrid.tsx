@@ -44,8 +44,8 @@ export const PricingGrid = () => {
   if (loading) {
     return (
       <div className="py-24 text-center">
-        <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-500 rounded-full animate-spin mb-4">
-          <div className="w-8 h-8 border-2 border-white border-t-transparent rounded-full"></div>
+        <div className="mb-4 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full bg-purple-500">
+          <div className="h-8 w-8 rounded-full border-2 border-white border-t-transparent"></div>
         </div>
         <p className="text-lg font-medium text-slate-600">Loading plans...</p>
       </div>
@@ -55,14 +55,17 @@ export const PricingGrid = () => {
   const getIcon = (index: number) => {
     const icons = [Clock, Users, Zap, Shield]
     const Icon = icons[index % icons.length]
-    return <Icon className="w-5 h-5" />
+    return <Icon className="h-5 w-5" />
   }
 
   return (
-    <section id="pricing" className="relative py-24 sm:py-32 bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+    <section
+      id="pricing"
+      className="relative bg-gradient-to-br from-purple-50 via-white to-pink-50 py-24 sm:py-32"
+    >
+      <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Enhanced Header */}
-        <div className="text-center mb-20">
+        <div className="mb-20 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -74,15 +77,16 @@ export const PricingGrid = () => {
               <Star className="mr-2 h-4 w-4" />
               Start Free Trial
             </div>
-            
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               <span>Simple, Transparent</span>
               <br />
               <span className="text-gray-900">Pricing</span>
             </h2>
-            
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Choose the perfect plan for your kitchen. All plans include a free trial to get you started.
+
+            <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-600">
+              Choose the perfect plan for your kitchen. All plans include a free trial to get you
+              started.
             </p>
           </motion.div>
 
@@ -92,22 +96,22 @@ export const PricingGrid = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-8 inline-flex items-center p-1 bg-white rounded-full shadow-lg border border-purple-200"
+            className="mt-8 inline-flex items-center rounded-full border border-purple-200 bg-white p-1 shadow-lg"
           >
             {["monthly", "yearly"].map((type) => (
               <button
                 key={type}
                 onClick={() => setBillingCycle(type as "monthly" | "yearly")}
                 className={cn(
-                  "relative px-6 py-3 rounded-full text-sm font-semibold transition-all duration-300",
+                  "relative rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300",
                   billingCycle === type
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-purple-800 hover:bg-purple-50"
+                    : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
                 )}
               >
                 {type === "monthly" ? "Monthly" : "Yearly"}
                 {type === "yearly" && (
-                  <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                  <span className="absolute -right-2 -top-2 rounded-full bg-orange-500 px-2 py-1 text-xs font-bold text-white">
                     Save 20%
                   </span>
                 )}
@@ -118,7 +122,15 @@ export const PricingGrid = () => {
 
         {/* Enhanced Pricing Cards */}
         <div className="flex justify-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl">
+          <div
+            className={
+              plans.length === 1
+                ? "w-full max-w-md"
+                : plans.length === 2
+                  ? "grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8"
+                  : "grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8"
+            }
+          >
             {plans.map((plan, index) => (
               <motion.div
                 key={plan.id || index}
@@ -127,9 +139,9 @@ export const PricingGrid = () => {
                 transition={{ delay: index * 0.2 }}
                 viewport={{ once: true }}
                 className={cn(
-                  "relative flex flex-col rounded-2xl border bg-white p-8 text-left shadow-lg transition-all hover:shadow-2xl hover:-translate-y-2",
+                  "relative flex flex-col rounded-2xl border bg-white p-8 text-left shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl",
                   index === 1
-                    ? "border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 ring-2 ring-purple-200 scale-105"
+                    ? "scale-105 border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 ring-2 ring-purple-200"
                     : "border-gray-200 hover:border-purple-300"
                 )}
               >
@@ -143,8 +155,8 @@ export const PricingGrid = () => {
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
-                  <p className="text-gray-600 mb-4">{plan.description}</p>
+                  <h3 className="mb-2 text-2xl font-bold text-gray-900">{plan.name}</h3>
+                  <p className="mb-4 text-gray-600">{plan.description}</p>
                   <div className="mb-4">
                     <span className="text-4xl font-black text-gray-900">
                       {billingCycle === "monthly"
@@ -155,20 +167,21 @@ export const PricingGrid = () => {
                           ? `£${(plan.price_yearly / 100).toFixed(2)}`
                           : "Custom Pricing"}
                     </span>
-                    <span className="text-gray-600 ml-2">
+                    <span className="ml-2 text-gray-600">
                       {billingCycle === "monthly" ? "/mo" : "/yr"}
                     </span>
                   </div>
                 </div>
 
                 {/* Features list - from API */}
-                <div className="space-y-3 mb-8">
-                  {Array.isArray(plan.features) && plan.features.map((feature: string, i: number) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <Check className="h-5 w-5 text-green-600" />
-                      <span className="text-gray-700">{feature}</span>
-                    </div>
-                  ))}
+                <div className="mb-8 space-y-3">
+                  {Array.isArray(plan.features) &&
+                    plan.features.map((feature: string, i: number) => (
+                      <div key={i} className="flex items-center gap-3">
+                        <Check className="h-5 w-5 text-green-600" />
+                        <span className="text-gray-700">{feature}</span>
+                      </div>
+                    ))}
                 </div>
 
                 <Link href="/register" className="mt-auto">
@@ -176,7 +189,7 @@ export const PricingGrid = () => {
                     className={cn(
                       "w-full py-3 font-semibold transition-all duration-300",
                       index === 1
-                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg hover:shadow-xl"
+                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
                         : "bg-gray-900 text-white hover:bg-gray-800"
                     )}
                   >

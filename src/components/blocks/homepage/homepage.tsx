@@ -3,7 +3,7 @@ import { Feature, Hero, TrustedBySection, Services, Pricing, BeforeAfterSection 
 import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
 import { HowItWorks } from "./sections/HowItWorks"
 import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcase"
-import WaitlistSection from "./sections/WaitlistSection"
+import { WaitlistModal } from "./sections/WaitlistModal"
 import { SquareIntegrationHomepage } from "./sections/SquareIntegrationHomepage"
 
 export const Homepage = () => {
@@ -19,7 +19,6 @@ export const Homepage = () => {
       {/* <PPDSLabelHomepageSection /> */}
       <BeforeAfterSection />
       <Pricing />
-      <WaitlistSection />
     </>
   )
 }
