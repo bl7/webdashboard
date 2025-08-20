@@ -431,8 +431,16 @@ export function Chatbot({ className }: ChatbotProps) {
 
         let currentIndex = 0
         const avatar1TypeInterval = setInterval(() => {
-          if (currentIndex < "Kaizoku oni orewa naru".length) {
-            setAvatar1Text("Kaizoku oni orewa naru".slice(0, currentIndex + 1))
+          if (
+            currentIndex <
+            "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!".length
+          ) {
+            setAvatar1Text(
+              "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!".slice(
+                0,
+                currentIndex + 1
+              )
+            )
             currentIndex++
           } else {
             clearInterval(avatar1TypeInterval)
@@ -801,9 +809,9 @@ export function Chatbot({ className }: ChatbotProps) {
 
             {/* Avatar1 overlay speech bubble */}
             <div
-              className={`absolute -top-16 transition-all duration-500 ${showAvatar1Overlay ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
+              className={`absolute -top-32 transition-all duration-500 ${showAvatar1Overlay ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
             >
-              <div className="min-w-[200px] max-w-[320px] rounded-lg border border-white/20 bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2 shadow-lg">
+              <div className="min-w-[200px] max-w-[550px] rounded-lg border border-white/20 bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2 shadow-lg">
                 <div className="flex items-center gap-2">
                   <Image
                     src="/avatar1.png"
@@ -814,9 +822,10 @@ export function Chatbot({ className }: ChatbotProps) {
                   />
                   <div className="text-sm font-medium leading-relaxed text-white">
                     {avatar1Text}
-                    {showAvatar1Overlay && avatar1Text.length < "Kaizoku oni orewa naru".length && (
-                      <span className="animate-pulse">|</span>
-                    )}
+                    {showAvatar1Overlay &&
+                      avatar1Text.length <
+                        "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!"
+                          .length && <span className="animate-pulse">|</span>}
                   </div>
                 </div>
               </div>
