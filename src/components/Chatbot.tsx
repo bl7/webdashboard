@@ -128,14 +128,51 @@ const knowledgeBase = [
       "InstaLabel automatically tracks expiry dates for all your food items with built-in logic per label type. You can set custom shelf life rules, get alerts for items approaching expiration, and print labels with clear expiry information. The system includes configurable expiry days for different label types (e.g., PPDS labels default to 2 days). You can also override expiry logic when needed while keeping full logging for traceability and audit purposes.",
   },
   {
-    keywords: ["mobile printing", "mobile devices", "android", "sunmi", "print from mobile"],
+    keywords: [
+      "bulk printing",
+      "multiple labels",
+      "print queue",
+      "spooler",
+      "batch printing",
+      "print many",
+      "print multiple",
+      "queue printing",
+      "bulk print",
+      "print bulk",
+      "multiple print",
+      "bulk labels",
+      "print queue system",
+      "batch labels",
+      "bulk printing feature",
+      "bulk print system",
+      "print queue feature",
+      "do you support bulk printing",
+      "bulk printing support",
+      "bulk printing capability",
+      "bulkprint",
+      "bulkprintfeature",
+    ],
     answer:
-      "Yes! InstaLabel supports mobile printing through our Android app, specifically designed for Sunmi devices. Sunmi devices have built-in thermal printers, making them perfect for mobile kitchens, food trucks, and outdoor catering. The mobile app provides the same labeling capabilities as the web dashboard, allowing you to print professional labels anywhere. For other mobile devices, you can access the web dashboard and print through compatible Bluetooth thermal printers.",
+      "BULK PRINTING FEATURE: InstaLabel includes a powerful bulk printing system with a print queue and spooler. You can add multiple items to your print queue, set quantities for each item, and print them all at once. The system supports bulk printing for any label type - you can print 10 prep labels, 5 cook labels, and 20 PPDS labels in one session. The print queue shows all pending items with their quantities, and you can clear or modify the queue before printing. This is perfect for busy prep times when you need to label multiple items quickly.",
   },
   {
-    keywords: ["bulk printing", "multiple labels", "print queue", "spooler", "batch printing"],
+    keywords: [
+      "mobile printing",
+      "mobile devices",
+      "android",
+      "sunmi",
+      "print from mobile",
+      "phone printing",
+      "tablet printing",
+      "mobile app printing",
+      "mobile label printing",
+      "sunmi printing",
+      "android app printing",
+      "mobile printing support",
+      "mobile printing capability",
+    ],
     answer:
-      "Absolutely! InstaLabel has a sophisticated print queue and spooler system. You can add multiple items to your print queue, set quantities for each item, and print them all at once. The system supports bulk printing for any label type - you can print 10 prep labels, 5 cook labels, and 20 PPDS labels in one session. The print queue shows all pending items with their quantities, and you can clear or modify the queue before printing. This is perfect for busy prep times when you need to label multiple items quickly.",
+      "Yes! InstaLabel supports mobile printing through our Android app, specifically designed for Sunmi devices. Sunmi devices have built-in thermal printers, making them perfect for mobile kitchens, food trucks, and outdoor catering. The mobile app provides the same labeling capabilities as the web dashboard, allowing you to print professional labels anywhere. For other mobile devices, you can access the web dashboard and print through compatible Bluetooth thermal printers.",
   },
   {
     keywords: ["customizable", "templates", "branding", "business name", "label customization"],
@@ -167,20 +204,25 @@ const knowledgeBase = [
     answer:
       "Yes, you can absolutely use your existing printer! InstaLabel is designed to work with the thermal printers you already have in your kitchen. As long as your printer is TSPL compliant (which most commercial thermal printers are), it will work seamlessly. The system automatically detects USB, Bluetooth, and network-connected printers. If you're upgrading from handwritten labels or a basic labeling system, you can continue using your current printer while getting all the benefits of InstaLabel's smart labeling features.",
   },
-  {
-    keywords: [
-      "mobile printing",
-      "how does mobile printing work",
-      "android printing",
-      "sunmi printing",
-    ],
-    answer:
-      "Mobile printing works through our dedicated Android app, optimized for Sunmi devices. Sunmi devices have integrated thermal printers, so you can print labels directly from your mobile device without any additional hardware. The app provides the same labeling interface as the web dashboard - select your menu items, choose label types, and print instantly. For other Android devices, you can access the web dashboard and print through compatible Bluetooth thermal printers. This makes InstaLabel perfect for food trucks, outdoor catering, and mobile kitchen operations.",
-  },
+
   {
     keywords: ["printer guide", "connecting printer", "setup guide", "printer connection"],
     answer:
       "InstaLabel makes printer setup simple! For USB printers, just plug in and the system auto-detects them. For Bluetooth printers, pair your device and select the printer in the dashboard. For Sunmi devices, the printer is built-in and ready to use. We provide comprehensive setup guides and documentation. The system includes automatic printer detection, connection status monitoring, and troubleshooting tools. If you need help, our support team can guide you through the setup process step-by-step.",
+  },
+  {
+    keywords: [
+      "which devices",
+      "supported devices",
+      "device support",
+      "what devices",
+      "compatible devices",
+      "devices supported",
+      "hardware support",
+      "device compatibility",
+    ],
+    answer:
+      "InstaLabel supports a wide range of devices! For printers, we support any TSPL compliant thermal printer including USB thermal printers, Bluetooth thermal printers, and network-connected printers. Popular brands like Brother, Zebra, and other commercial thermal printers work seamlessly. For mobile devices, we have a dedicated Android app optimized for Sunmi devices with built-in thermal printers, perfect for mobile kitchens and food trucks. For other Android devices, you can access the web dashboard and print through compatible Bluetooth thermal printers. The system automatically detects and connects to available printers, and we provide comprehensive setup guides for all device types.",
   },
 
   // 3. Compliance & Safety
@@ -303,7 +345,6 @@ const helpOptions = [
   { text: "Allergen Management", keywords: ["allergens", "allergen handling"] },
   { text: "Printer Compatibility", keywords: ["printers", "hardware compatibility"] },
   { text: "Mobile Printing", keywords: ["mobile printing", "sunmi"] },
-  { text: "Bulk Printing", keywords: ["bulk printing", "print queue"] },
   { text: "Natasha's Law Compliance", keywords: ["natasha's law", "ppds compliance"] },
   { text: "Free Trial & Demo", keywords: ["trial", "demo"] },
   { text: "Setup & Onboarding", keywords: ["setup", "get started"] },
@@ -514,10 +555,25 @@ export function Chatbot({ className }: ChatbotProps) {
     // Simple tokenization
     const tokens = normalized.split(/\s+/)
 
+    console.log("🔍 Searching for:", question)
+    console.log("🔍 Normalized:", normalized)
+    console.log("🔍 Tokens:", tokens)
+
     // Find all matching answers with improved scoring
     const matchingAnswers = knowledgeBase
       .map((item) => {
-        const score = item.keywords.reduce((totalScore, keyword) => {
+        let score = 0
+
+        // Check for exact phrase matches first (highest priority)
+        const exactPhraseMatch = item.keywords.some((keyword) =>
+          normalized.includes(keyword.toLowerCase().replace(/[^\w\s]/gi, ""))
+        )
+        if (exactPhraseMatch) {
+          score += 10 // High score for exact phrase match
+        }
+
+        // Then check individual keyword matches
+        const keywordScore = item.keywords.reduce((totalScore, keyword) => {
           const keywordTokens = keyword
             .toLowerCase()
             .replace(/[^\w\s]/gi, "")
@@ -526,8 +582,8 @@ export function Chatbot({ className }: ChatbotProps) {
             if (tokens.includes(token)) {
               return score + 1
             }
-            // Check for partial matches only for longer tokens
-            if (token.length > 3) {
+            // Check for partial matches only for longer tokens and only if no exact match
+            if (token.length > 3 && !exactPhraseMatch) {
               const partialMatch = tokens.some((t) => t.includes(token) || token.includes(t))
               return partialMatch ? score + 0.3 : score
             }
@@ -536,12 +592,26 @@ export function Chatbot({ className }: ChatbotProps) {
           return totalScore + matchScore
         }, 0)
 
+        score += keywordScore
+
+        // Debug logging for high-scoring matches
+        if (score > 0) {
+          console.log(
+            `📊 Score ${score} for:`,
+            item.keywords[0],
+            "| Answer preview:",
+            item.answer.substring(0, 50) + "..."
+          )
+        }
+
         return { ...item, score }
       })
       .filter((item) => item.score >= 0.5) // Minimum score threshold
       .sort((a, b) => b.score - a.score)
       .slice(0, 2) // Only take top 2 matches
       .map((item) => item.answer)
+
+    console.log("🎯 Final matches:", matchingAnswers.length)
 
     // If multiple matches, combine them intelligently
     if (matchingAnswers.length > 1) {
@@ -683,12 +753,13 @@ export function Chatbot({ className }: ChatbotProps) {
       const answer = findAnswer(inputValue)
       const isUnknown = !answer
       const isSupportQuestion =
-        inputValue.toLowerCase().includes("contact") ||
-        inputValue.toLowerCase().includes("support") ||
-        inputValue.toLowerCase().includes("help") ||
-        inputValue.toLowerCase().includes("customer service")
+        (inputValue.toLowerCase().includes("contact") ||
+          inputValue.toLowerCase().includes("support") ||
+          inputValue.toLowerCase().includes("help") ||
+          inputValue.toLowerCase().includes("customer service")) &&
+        !answer // Only treat as support question if no answer found
 
-      if (!isUnknown && !isSupportQuestion) {
+      if (answer) {
         // Get contextual options based on the question
         const contextualOptions = getContextualOptions(inputValue)
         sendBotMessage(answer, true, false)
@@ -702,8 +773,11 @@ export function Chatbot({ className }: ChatbotProps) {
           }
           return newMessages
         })
+      } else if (isSupportQuestion) {
+        // Support question - show only contact form without the "I'm not sure" text
+        sendBotMessage("", false, true)
       } else {
-        // Unknown question or support question - show contact form
+        // Unknown question - show contact form with explanation
         sendBotMessage(
           "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
           false,
@@ -749,8 +823,11 @@ export function Chatbot({ className }: ChatbotProps) {
           }
           return newMessages
         })
+      } else if (isSupportOption) {
+        // Support option - show only contact form without the "I'm not sure" text
+        sendBotMessage("", false, true)
       } else {
-        // Support option - show contact form
+        // Fallback for unknown questions - show contact form with explanation
         sendBotMessage(
           "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
           false,
