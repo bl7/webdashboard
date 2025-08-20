@@ -1,7 +1,23 @@
+# Robots.txt for InstaLabel.co
+# Allow all major search engines to access content
+
 User-agent: *
 Allow: /
 
-# Disallow private areas
+# Specific allowances for important content
+Allow: /blog/
+Allow: /features
+Allow: /uses
+Allow: /allergen-compliance
+Allow: /allergen-guide
+Allow: /printbridge
+Allow: /plan
+Allow: /about
+Allow: /bookdemo
+Allow: /square-integration
+Allow: /faqs
+
+# Block private areas
 Disallow: /dashboard/
 Disallow: /boss/
 Disallow: /bossdashboard/
@@ -16,35 +32,13 @@ Disallow: /forgot-password/
 Disallow: /reset-password/
 Disallow: /verify-otp/
 
-# Allow important pages
-Allow: /features
-Allow: /uses
-Allow: /plan
-Allow: /about
-Allow: /allergen-compliance
-Allow: /allergen-guide
-Allow: /printbridge
-Allow: /bookdemo
-Allow: /square-integration
-Allow: /blog
-Allow: /faqs
-
-# Sitemaps
-Sitemap: https://instalabel.co/sitemap.xml
-
-# Crawl delay (optional)
-Crawl-delay: 1
-
-# Additional directives for better SEO
-# Allow Google to access all public content
+# Specific search engine directives
 User-agent: Googlebot
 Allow: /
 
-# Allow Bing to access all public content
 User-agent: Bingbot
 Allow: /
 
-# Allow other major search engines
 User-agent: Slurp
 Allow: /
 
@@ -55,4 +49,10 @@ User-agent: Baiduspider
 Allow: /
 
 User-agent: YandexBot
-Allow: / 
+Allow: /
+
+# Sitemap location
+Sitemap: https://instalabel.co/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1 
