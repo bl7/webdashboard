@@ -1,4 +1,5 @@
 import { Footer, Header } from "@/components/navigation"
+import { Chatbot } from "@/components/Chatbot"
 
 export default function WebLayout({
   children,
@@ -10,6 +11,7 @@ export default function WebLayout({
       <Header />
       {children}
       <Footer />
+      <Chatbot />
     </main>
   )
 }
