@@ -99,9 +99,11 @@ const knowledgeBase = [
       "ppds",
       "ingredients",
       "defrost",
+      "label",
+      "labels",
     ],
     answer:
-      "InstaLabel supports 5 main label types: **Prep Labels** (ingredients, allergens, prep times, expiry dates), **Cook Labels** (cook times, temperatures, allergen info for service), **PPDS Labels** (full ingredient lists with allergen warnings for pre-packaged food), **Defrost Labels** (defrost dates and instructions), and **Use-First Labels** (priority consumption order). Each label automatically includes allergen alerts, expiry dates, and storage instructions.",
+      "InstaLabel supports 5 main label types with specific sizes: **Prep Labels** (60mm x 40mm for ingredients, allergens, prep times, expiry dates), **Cook Labels** (60mm x 40mm for cook times, temperatures, allergen info for service), **Defrost Labels** (60mm x 40mm for defrost dates and instructions), **PPDS Labels** (56mm x 80mm for full ingredient lists with allergen warnings for pre-packaged food), and **Use-First Labels** (60mm x 40mm for priority consumption order). Each label automatically includes allergen alerts, expiry dates, and storage instructions. You can order labels directly from the dashboard and we'll ship them to you!",
   },
   {
     keywords: [
