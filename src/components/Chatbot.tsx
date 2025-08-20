@@ -15,13 +15,14 @@ interface Message {
   timestamp: Date
   showOptions?: boolean
   showContactForm?: boolean
+  contextualOptions?: typeof helpOptions
 }
 
 interface ChatbotProps {
   className?: string
 }
 
-// Enhanced knowledge base with FAQs and more comprehensive answers
+// Enhanced knowledge base with comprehensive answers for all specified questions
 const knowledgeBase = [
   // General greetings and casual conversation
   {
@@ -30,83 +31,64 @@ const knowledgeBase = [
       "Hello there! 👋 I'm your InstaLabel assistant, ready to help you learn about our smart kitchen labeling system. How can I assist you today?",
   },
   {
-    keywords: ["how are you", "how are you doing", "how's it going"],
+    keywords: [
+      "how are you",
+      "how are you doing",
+      "how's it going",
+      "how you doing",
+      "whats up",
+      "sup",
+      "wassup",
+      "how do you do",
+    ],
     answer:
       "I'm doing great, thanks for asking! 😊 I'm here and ready to help you discover how InstaLabel can transform your kitchen operations. What would you like to know?",
   },
   {
-    keywords: ["thanks", "thank you", "thank you so much", "appreciate it"],
+    keywords: ["what's up", "whats up", "sup", "wassup", "what up", "what is up"],
+    answer:
+      "Not much, just here to help you with InstaLabel! 😄 What can I tell you about our smart kitchen labeling system?",
+  },
+  {
+    keywords: ["thanks", "thank you", "thank you so much", "appreciate it", "thx", "ty"],
     answer:
       "You're very welcome! 😊 I'm here to help make your InstaLabel journey as smooth as possible. Is there anything else you'd like to know?",
   },
   {
-    keywords: ["bye", "goodbye", "see you", "talk to you later", "have a good day"],
+    keywords: [
+      "bye",
+      "goodbye",
+      "see you",
+      "talk to you later",
+      "have a good day",
+      "cya",
+      "see ya",
+    ],
     answer:
       "Goodbye! 👋 Feel free to come back anytime if you have more questions about InstaLabel. Have a wonderful day!",
   },
+  {
+    keywords: ["cool", "awesome", "great", "amazing", "wow", "nice", "sweet"],
+    answer:
+      "I'm glad you think so! 😄 InstaLabel really is a game-changer for kitchen management. Would you like to learn more about any specific feature or see how it could work in your kitchen?",
+  },
+  {
+    keywords: ["interesting", "tell me more", "more info", "learn more", "that's interesting"],
+    answer:
+      "Absolutely! I'd love to tell you more about InstaLabel. What aspect interests you most - the labeling features, compliance benefits, ease of use, or something else? I'm here to help you discover everything InstaLabel can do for your business!",
+  },
+  {
+    keywords: ["who are you", "what can you do", "your name", "what do you do"],
+    answer:
+      "I'm your InstaLabel assistant! 🤖 I'm here to help answer your questions about our smart kitchen labeling system. I can tell you about features, pricing, compatibility, compliance, and more. Think of me as your personal InstaLabel guide!",
+  },
 
-  // Core product information
+  // 1. Product Overview & Features
   {
     keywords: ["what is instalabel", "what does instalabel do", "how does instalabel work"],
     answer:
-      "InstaLabel is a professional kitchen labeling system designed for restaurants, cafés, food trucks, and catering businesses. It lets you print food safety labels—prep, cook, use‑first, PPDS—instantly from any device without handwriting, fully compliant with regulations like Natasha's Law.",
+      "InstaLabel is a professional kitchen labeling system designed for restaurants, cafés, food trucks, and catering businesses. It lets you print food safety labels—prep, cook, use‑first, PPDS—instantly from any device without handwriting, fully compliant with regulations like Natasha's Law. Our system includes a web-based dashboard for managing ingredients, menu items, and labels, with built-in expiry date logic and allergen tracking.",
   },
-  {
-    keywords: ["who benefits", "who benefits most", "ideal for"],
-    answer:
-      "Food operations of all sizes benefit—especially those with busy prep areas, high staff turnover, or needing airtight compliance. Ideal for multi‑location kitchens striving to reduce waste and errors.",
-  },
-
-  // Pricing and plans
-  {
-    keywords: ["pricing", "cost", "how much", "plans", "subscription"],
-    answer:
-      "InstaLabel offers flexible pricing plans starting with a free trial. Our plans are designed to scale with your business needs, from small cafes to large restaurant chains. Contact us for detailed pricing information or book a demo to see which plan fits your business best.",
-  },
-  {
-    keywords: ["trial", "free trial", "demo", "book demo"],
-    answer:
-      "Yes! Try InstaLabel free for 14 days—no credit card required—with full access to features and existing printer support. You can also book a personalized demo where our team will show you exactly how InstaLabel can work in your kitchen.",
-  },
-
-  // Technical compatibility
-  {
-    keywords: [
-      "thermal printer",
-      "printer",
-      "hardware",
-      "compatible",
-      "equipment",
-      "what equipment",
-    ],
-    answer:
-      "Just any USB thermal label printer for web printing—or Android devices for mobile printing. Any TSPL compliant hardware will work. InstaLabel is compatible with most thermal printers commonly used in commercial kitchens.",
-  },
-  {
-    keywords: ["setup", "installation", "how to start", "getting started", "how fast is setup"],
-    answer:
-      "You can get started in minutes: upload your menu or ingredient list, plug in your printer, select the label type, and print—no drivers or plugins needed. After signing up, you can import your existing menu items, set up your thermal printer, and start printing labels within minutes.",
-  },
-
-  // Compliance and safety
-  {
-    keywords: [
-      "allergen",
-      "allergen labels",
-      "food safety",
-      "compliance",
-      "how does instalabel ensure compliance",
-    ],
-    answer:
-      "All labels include auto-calculated prep dates and expiry, highlight allergens (Natasha's Law), and use FDA/EHO-approved templates. The system generates complete print logs for easy audits. InstaLabel helps you create compliant allergen labels that meet food safety regulations.",
-  },
-  {
-    keywords: ["haccp", "food safety compliance", "regulations", "standards", "natasha's law"],
-    answer:
-      "InstaLabel is designed with HACCP principles in mind and helps you maintain food safety compliance. Our labeling system creates an audit trail, tracks food safety procedures, and ensures all regulatory requirements are met.",
-  },
-
-  // Label types and features
   {
     keywords: [
       "label types",
@@ -115,33 +97,183 @@ const knowledgeBase = [
       "prep labels",
       "cook labels",
       "ppds",
+      "ingredients",
+      "defrost",
     ],
     answer:
-      "InstaLabel supports prep, cook, use-first, defrost, and PPDS labels. Each includes ingredients, allergen alerts, prep/expiry dates, and storage instructions. You can print food safety labels instantly from any device without handwriting.",
+      "InstaLabel supports 5 main label types: **Prep Labels** (ingredients, allergens, prep times, expiry dates), **Cook Labels** (cook times, temperatures, allergen info for service), **PPDS Labels** (full ingredient lists with allergen warnings for pre-packaged food), **Defrost Labels** (defrost dates and instructions), and **Use-First Labels** (priority consumption order). Each label automatically includes allergen alerts, expiry dates, and storage instructions.",
   },
   {
-    keywords: ["expiry dates", "shelf life", "food expiration", "tracking", "override expiry"],
+    keywords: [
+      "allergens",
+      "allergen handling",
+      "how does instalabel handle allergens",
+      "allergen tracking",
+    ],
     answer:
-      "InstaLabel automatically tracks expiry dates for all your food items. You can set custom shelf life rules, get alerts for items approaching expiration, and print labels with clear expiry information. Yes—InstaLabel lets you adjust or override expiry logic when needed, while keeping full logging for traceability.",
+      "InstaLabel has comprehensive allergen management at the ingredient level. All labels automatically highlight allergens with clear warnings, use FDA/EHO-approved templates, and include allergen icons and color coding. The system tracks allergens per ingredient and automatically shows them on relevant labels. For PPDS labels, allergens are prominently displayed with asterisks (*) next to ingredients containing them, ensuring full Natasha's Law compliance.",
+  },
+  {
+    keywords: [
+      "expiry dates",
+      "shelf life",
+      "food expiration",
+      "tracking",
+      "override expiry",
+      "automatic expiry",
+    ],
+    answer:
+      "InstaLabel automatically tracks expiry dates for all your food items with built-in logic per label type. You can set custom shelf life rules, get alerts for items approaching expiration, and print labels with clear expiry information. The system includes configurable expiry days for different label types (e.g., PPDS labels default to 2 days). You can also override expiry logic when needed while keeping full logging for traceability and audit purposes.",
+  },
+  {
+    keywords: ["mobile printing", "mobile devices", "android", "sunmi", "print from mobile"],
+    answer:
+      "Yes! InstaLabel supports mobile printing through our Android app, specifically designed for Sunmi devices. Sunmi devices have built-in thermal printers, making them perfect for mobile kitchens, food trucks, and outdoor catering. The mobile app provides the same labeling capabilities as the web dashboard, allowing you to print professional labels anywhere. For other mobile devices, you can access the web dashboard and print through compatible Bluetooth thermal printers.",
+  },
+  {
+    keywords: ["bulk printing", "multiple labels", "print queue", "spooler", "batch printing"],
+    answer:
+      "Absolutely! InstaLabel has a sophisticated print queue and spooler system. You can add multiple items to your print queue, set quantities for each item, and print them all at once. The system supports bulk printing for any label type - you can print 10 prep labels, 5 cook labels, and 20 PPDS labels in one session. The print queue shows all pending items with their quantities, and you can clear or modify the queue before printing. This is perfect for busy prep times when you need to label multiple items quickly.",
+  },
+  {
+    keywords: ["customizable", "templates", "branding", "business name", "label customization"],
+    answer:
+      "Yes, InstaLabel labels are highly customizable! You can set your business name, customize storage information, and adjust label heights (40mm or 80mm). The system supports different font sizes and layouts for different label types. While the core templates are FDA/EHO-approved for compliance, you can personalize business information, storage instructions, and other details. The system also supports custom initials for staff identification and flexible expiry date configurations.",
   },
 
-  // Business types and results
+  // 2. Printers & Hardware
   {
-    keywords: ["restaurant", "cafe", "food business", "kitchen", "catering", "food truck"],
+    keywords: [
+      "printers",
+      "supported printers",
+      "thermal printer",
+      "usb",
+      "bluetooth",
+      "sunmi",
+      "hardware compatibility",
+    ],
     answer:
-      "InstaLabel is perfect for any food service business including restaurants, cafes, food trucks, catering companies, and commercial kitchens. Whether you're a small family restaurant or a large chain, our system scales to meet your needs.",
+      "InstaLabel supports multiple printer types: **USB thermal printers** (any TSPL compliant hardware), **Bluetooth thermal printers** for mobile use, and **Sunmi devices** with built-in printers. We have native Sunmi support - no additional hardware needed. For USB/Bluetooth printing, we use PrintBridge technology that works on both Windows (.NET) and macOS (Node.js). Any thermal printer commonly used in commercial kitchens will work, including popular brands like Brother, Zebra, and others. No special hardware required beyond a standard thermal printer.",
   },
   {
-    keywords: ["results", "what results", "expect", "benefits", "save time", "reduce waste"],
+    keywords: ["special hardware", "equipment needed", "what equipment", "hardware requirements"],
     answer:
-      "Restaurants save about 15+ hours per week, reduce waste by 30%, and avoid compliance fines—all typically paying back in the first month. You can expect improved efficiency, better compliance, and significant time savings.",
+      "You don't need any special hardware! InstaLabel works with standard thermal label printers that most commercial kitchens already have. For web printing, just plug in any USB thermal printer. For mobile printing, use our Android app on Sunmi devices (which have built-in printers). For Bluetooth printing, any TSPL compliant thermal printer will work. The system automatically detects and connects to available printers. No expensive proprietary hardware or special cartridges needed - just standard thermal labels.",
+  },
+  {
+    keywords: ["existing printer", "current printer", "use my printer", "printer compatibility"],
+    answer:
+      "Yes, you can absolutely use your existing printer! InstaLabel is designed to work with the thermal printers you already have in your kitchen. As long as your printer is TSPL compliant (which most commercial thermal printers are), it will work seamlessly. The system automatically detects USB, Bluetooth, and network-connected printers. If you're upgrading from handwritten labels or a basic labeling system, you can continue using your current printer while getting all the benefits of InstaLabel's smart labeling features.",
+  },
+  {
+    keywords: [
+      "mobile printing",
+      "how does mobile printing work",
+      "android printing",
+      "sunmi printing",
+    ],
+    answer:
+      "Mobile printing works through our dedicated Android app, optimized for Sunmi devices. Sunmi devices have integrated thermal printers, so you can print labels directly from your mobile device without any additional hardware. The app provides the same labeling interface as the web dashboard - select your menu items, choose label types, and print instantly. For other Android devices, you can access the web dashboard and print through compatible Bluetooth thermal printers. This makes InstaLabel perfect for food trucks, outdoor catering, and mobile kitchen operations.",
+  },
+  {
+    keywords: ["printer guide", "connecting printer", "setup guide", "printer connection"],
+    answer:
+      "InstaLabel makes printer setup simple! For USB printers, just plug in and the system auto-detects them. For Bluetooth printers, pair your device and select the printer in the dashboard. For Sunmi devices, the printer is built-in and ready to use. We provide comprehensive setup guides and documentation. The system includes automatic printer detection, connection status monitoring, and troubleshooting tools. If you need help, our support team can guide you through the setup process step-by-step.",
   },
 
-  // Support and contact
+  // 3. Compliance & Safety
   {
-    keywords: ["support", "help", "contact", "customer service"],
+    keywords: [
+      "natasha's law",
+      "natasha law",
+      "ppds compliance",
+      "how does instalabel help with natasha's law",
+    ],
     answer:
-      "Our support team is here to help! You can reach us through our contact form, email, or phone. We also provide comprehensive documentation and video tutorials to help you get the most out of InstaLabel.",
+      "InstaLabel is specifically designed for Natasha's Law compliance. Our PPDS (Prepacked for Direct Sale) labels automatically include full ingredient lists with allergen warnings. Each ingredient is checked against your allergen database, and allergens are prominently highlighted with asterisks (*) and clear warnings. The system uses FDA/EHO-approved templates and generates complete print logs for easy audits. All labels include auto-calculated prep dates and expiry, ensuring full compliance with food safety regulations.",
+  },
+  {
+    keywords: ["allergen accuracy", "how does it ensure allergen accuracy", "allergen compliance"],
+    answer:
+      "InstaLabel ensures allergen accuracy through a comprehensive ingredient-level tracking system. Each ingredient in your database has its allergens clearly defined. When creating labels, the system automatically cross-references ingredients with your allergen database and highlights any allergens present. For PPDS labels, allergens are shown both inline with ingredients and in a dedicated allergen summary box. The system prevents human error by automatically calculating allergen content rather than relying on manual entry for each label.",
+  },
+  {
+    keywords: [
+      "food safety standards",
+      "haccp",
+      "food safety compliance",
+      "regulations",
+      "standards",
+    ],
+    answer:
+      "InstaLabel is designed with HACCP principles in mind and helps maintain food safety compliance. Our labeling system creates a complete audit trail, tracks food safety procedures, and ensures all regulatory requirements are met. Features include automatic expiry date tracking, allergen management, prep date logging, and comprehensive print logs. The system generates complete documentation for food safety audits and helps maintain consistent labeling standards across your kitchen operations.",
+  },
+
+  // 4. Support & Onboarding
+  {
+    keywords: ["trial", "free trial", "demo", "book demo", "available trial"],
+    answer:
+      "Yes! InstaLabel offers a free 14-day trial with no credit card required. You get full access to all features and existing printer support during the trial. We also offer personalized demos where our team shows you exactly how InstaLabel works in your kitchen. You can book a demo through our website, and our team will walk you through the setup process, demonstrate key features, and answer any questions you have about implementation.",
+  },
+  {
+    keywords: ["request demo", "consultation", "demo consultation", "setup help"],
+    answer:
+      "Absolutely! You can request a personalized demo or consultation through our website. Our team will schedule a convenient time to show you InstaLabel in action, discuss your specific kitchen needs, and provide setup guidance. We offer both online demos and on-site consultations for larger operations. During the consultation, we'll assess your current labeling process, recommend the best setup for your kitchen, and help you plan the transition to InstaLabel.",
+  },
+  {
+    keywords: ["contact support", "support", "help", "customer service", "technical support"],
+    answer:
+      "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
+  },
+  {
+    keywords: ["guides", "videos", "tutorials", "documentation", "help resources"],
+    answer:
+      "Yes! InstaLabel provides extensive learning resources including step-by-step setup guides, video tutorials, comprehensive documentation, and best practice guides. Our resources cover everything from initial setup and printer connection to advanced features like bulk printing and allergen management. We also offer webinars and training sessions for teams. All documentation is regularly updated to reflect the latest features and compliance requirements.",
+  },
+
+  // 5. Miscellaneous / Unique Selling Points
+  {
+    keywords: ["save time", "kitchen staff", "efficiency", "time savings", "workflow"],
+    answer:
+      "InstaLabel significantly saves time for your kitchen staff! Restaurants typically save 15+ hours per week on labeling tasks. The system eliminates handwriting, automatically calculates expiry dates, and provides bulk printing capabilities. Staff can print multiple labels in seconds instead of manually writing each one. The intuitive interface reduces training time, and the automated allergen tracking prevents time-consuming errors. This efficiency improvement typically pays for itself within the first month of use.",
+  },
+  {
+    keywords: ["multiple kitchens", "locations", "multi-location", "scalable"],
+    answer:
+      "Yes! InstaLabel is designed to scale with your business. The system works for single kitchens and can expand to multiple locations. Each location can have its own printer setup while sharing the same labeling standards and compliance features. The web-based dashboard allows managers to monitor labeling across all locations from a central interface. While we're currently developing multi-user and multi-location features, the system is built with scalability in mind.",
+  },
+  {
+    keywords: ["setup", "installation", "how to start", "getting started", "how fast is setup"],
+    answer:
+      "You can get started in minutes: upload your menu or ingredient list, plug in your printer, select the label type, and print—no drivers or plugins needed. You can import your menu items and ingredients by uploading an Excel file formatted properly, or even import directly by integrating with Square POS. After signing up, you can set up your thermal printer and start printing labels within minutes.",
+  },
+  {
+    keywords: [
+      "pos integration",
+      "systems integration",
+      "existing systems",
+      "work with current systems",
+    ],
+    answer:
+      "InstaLabel is designed to work alongside your existing systems. You can import your menu items and ingredients by uploading an Excel file formatted properly, or even import directly by integrating with Square POS. We're actively developing additional POS integrations and multi-system connectivity. The system is built with open APIs and can export data for use in other systems. For now, you can manually import your menu items and ingredients, which typically takes just a few minutes.",
+  },
+  {
+    keywords: [
+      "kitchen sizes",
+      "small kitchen",
+      "medium kitchen",
+      "large kitchen",
+      "restaurant size",
+    ],
+    answer:
+      "InstaLabel is perfect for kitchens of all sizes! Small kitchens (1-10 staff) benefit from the simple setup and cost-effective pricing. Medium kitchens (10-50 staff) appreciate the bulk printing and workflow efficiency features. Large kitchens (50+ staff) benefit from the compliance features, audit trails, and scalable architecture. Whether you're a small café, medium restaurant, or large catering operation, InstaLabel adapts to your needs and grows with your business.",
+  },
+
+  // Pricing and plans
+  {
+    keywords: ["pricing", "cost", "how much", "plans", "subscription"],
+    answer:
+      "InstaLabel offers flexible pricing plans starting with a free trial. Our plans are designed to scale with your business needs, from small cafes to large restaurant chains. Visit our plans page for detailed pricing information or book a demo to see which plan fits your business best.",
   },
 
   // Additional helpful responses
@@ -165,12 +297,15 @@ const knowledgeBase = [
 // Helpful option buttons for users
 const helpOptions = [
   { text: "What is InstaLabel?", keywords: ["what is instalabel"] },
-  { text: "Pricing & Plans", keywords: ["pricing", "cost"] },
-  { text: "Technical Setup", keywords: ["setup", "printer", "equipment"] },
-  { text: "Compliance & Safety", keywords: ["compliance", "allergen", "haccp"] },
-  { text: "Label Types", keywords: ["label types", "prep labels"] },
-  { text: "Business Benefits", keywords: ["benefits", "results", "save time"] },
-  { text: "Contact Support", keywords: ["contact", "support", "help"] },
+  { text: "Label Types & Features", keywords: ["label types", "prep labels"] },
+  { text: "Allergen Management", keywords: ["allergens", "allergen handling"] },
+  { text: "Printer Compatibility", keywords: ["printers", "hardware compatibility"] },
+  { text: "Mobile Printing", keywords: ["mobile printing", "sunmi"] },
+  { text: "Bulk Printing", keywords: ["bulk printing", "print queue"] },
+  { text: "Natasha's Law Compliance", keywords: ["natasha's law", "ppds compliance"] },
+  { text: "Free Trial & Demo", keywords: ["trial", "demo"] },
+  { text: "Setup & Onboarding", keywords: ["setup", "get started"] },
+  { text: "Support & Contact", keywords: ["support", "contact"] },
 ]
 
 export function Chatbot({ className }: ChatbotProps) {
@@ -187,59 +322,304 @@ export function Chatbot({ className }: ChatbotProps) {
   const [inputValue, setInputValue] = useState("")
   const [isTyping, setIsTyping] = useState(false)
   const [askedTopics, setAskedTopics] = useState<Set<string>>(new Set())
+  const [showSpeechBubble, setShowSpeechBubble] = useState(false)
+  const [typedText, setTypedText] = useState("")
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
+  const [currentAvatarIndex, setCurrentAvatarIndex] = useState(0)
+  const [showAvatar1Overlay, setShowAvatar1Overlay] = useState(false)
+  const [avatar1Text, setAvatar1Text] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const currentMessageRef = useRef(0)
+
+  // Array of different greeting messages
+  const greetingMessages = [
+    "Hey, can I help you?",
+    "Hello, how can I help you today?",
+    "Need help with InstaLabel?",
+    "What can I assist you with?",
+    "Ready to help you today!",
+    "How can I make your day better?",
+    "Any questions about InstaLabel?",
+  ]
+
+  // Array of avatar images (excluding avatar1 for main display)
+  const avatarImages = [
+    "/avatar2.png",
+    "/avatar3.png",
+    "/avatar4.png",
+    "/avatar5.png",
+    "/avatar6.png",
+    "/avatar7.png",
+    "/avatar8.png",
+    "/avatar9.png",
+  ]
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  const toggleChat = () => {
+    setIsOpen(!isOpen)
+    if (!isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100)
+    }
   }
 
   useEffect(() => {
     scrollToBottom()
   }, [messages])
 
+  // Set random initial avatar on component mount
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * avatarImages.length)
+    setCurrentAvatarIndex(randomIndex)
+  }, [])
+
+  // Animate speech bubble with typing effect
+  useEffect(() => {
+    if (!isOpen) {
+      let intervalId: NodeJS.Timeout
+      let typeIntervalId: NodeJS.Timeout
+      let avatar1IntervalId: NodeJS.Timeout
+
+      const startAnimation = () => {
+        console.log("Regular avatar animation starting")
+        setShowSpeechBubble(true)
+        setTypedText("")
+
+        // Use random message for current avatar
+        const text = greetingMessages[Math.floor(Math.random() * greetingMessages.length)]
+        console.log("Regular avatar message:", text)
+        let currentIndex = 0
+
+        // Clear any existing typing interval
+        if (typeIntervalId) {
+          clearInterval(typeIntervalId)
+        }
+
+        typeIntervalId = setInterval(() => {
+          if (currentIndex < text.length) {
+            setTypedText(text.slice(0, currentIndex + 1))
+            currentIndex++
+          } else {
+            clearInterval(typeIntervalId)
+            // Keep text visible for a bit, then hide
+            setTimeout(() => {
+              setShowSpeechBubble(false)
+              setTypedText("")
+              console.log("Regular avatar message hidden")
+            }, 3000)
+          }
+        }, 50) // Faster typing - 50ms per character
+      }
+
+      // Start first animation immediately
+      startAnimation()
+
+      // Set up recurring animation for regular avatars - this should run indefinitely
+      intervalId = setInterval(() => {
+        console.log("Regular avatar interval triggered")
+        startAnimation()
+      }, 10000) // Show every 10 seconds
+
+      // Set up avatar1 overlay animation (appears less frequently)
+      avatar1IntervalId = setInterval(() => {
+        console.log("Avatar1 overlay starting")
+        setShowAvatar1Overlay(true)
+        setAvatar1Text("")
+
+        let currentIndex = 0
+        const avatar1TypeInterval = setInterval(() => {
+          if (currentIndex < "Kaizoku oni orewa naru".length) {
+            setAvatar1Text("Kaizoku oni orewa naru".slice(0, currentIndex + 1))
+            currentIndex++
+          } else {
+            clearInterval(avatar1TypeInterval)
+            setTimeout(() => {
+              setShowAvatar1Overlay(false)
+              setAvatar1Text("")
+              console.log("Avatar1 overlay hidden")
+            }, 3000)
+          }
+        }, 50)
+      }, 30000) // Avatar1 appears every 30 seconds
+
+      // Cleanup function to prevent multiple intervals
+      return () => {
+        console.log("Cleaning up intervals")
+        if (intervalId) clearInterval(intervalId)
+        if (typeIntervalId) clearInterval(typeIntervalId)
+        if (avatar1IntervalId) clearInterval(avatar1IntervalId)
+      }
+    } else {
+      // When chat is open, clear all intervals
+      console.log("Chat opened - clearing all intervals")
+      setShowSpeechBubble(false)
+      setShowAvatar1Overlay(false)
+      setTypedText("")
+      setAvatar1Text("")
+    }
+  }, [isOpen]) // Removed currentAvatarIndex from dependencies
+
+  // Backup mechanism to ensure regular avatar keeps cycling
+  useEffect(() => {
+    if (!isOpen) {
+      const backupInterval = setInterval(() => {
+        // Only trigger if no speech bubble is currently showing
+        if (!showSpeechBubble && !showAvatar1Overlay) {
+          console.log("Backup interval triggered - restarting regular avatar")
+          setShowSpeechBubble(true)
+          setTypedText("")
+
+          const text = greetingMessages[Math.floor(Math.random() * greetingMessages.length)]
+          let currentIndex = 0
+
+          const typeInterval = setInterval(() => {
+            if (currentIndex < text.length) {
+              setTypedText(text.slice(0, currentIndex + 1))
+              currentIndex++
+            } else {
+              clearInterval(typeInterval)
+              setTimeout(() => {
+                setShowSpeechBubble(false)
+                setTypedText("")
+              }, 3000)
+            }
+          }, 50)
+        }
+      }, 15000) // Check every 15 seconds
+
+      return () => clearInterval(backupInterval)
+    }
+  }, [isOpen, showSpeechBubble, showAvatar1Overlay])
+
   const findAnswer = (question: string): string => {
-    const lowerQuestion = question.toLowerCase()
+    // Normalize the input
+    const normalized = question
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, "")
+      .trim()
 
-    for (const item of knowledgeBase) {
-      if (item.keywords.some((keyword) => lowerQuestion.includes(keyword))) {
-        return item.answer
+    // Simple tokenization
+    const tokens = normalized.split(/\s+/)
+
+    // Find all matching answers with improved scoring
+    const matchingAnswers = knowledgeBase
+      .map((item) => {
+        const score = item.keywords.reduce((totalScore, keyword) => {
+          const keywordTokens = keyword
+            .toLowerCase()
+            .replace(/[^\w\s]/gi, "")
+            .split(/\s+/)
+          const matchScore = keywordTokens.reduce((score, token) => {
+            if (tokens.includes(token)) {
+              return score + 1
+            }
+            // Check for partial matches only for longer tokens
+            if (token.length > 3) {
+              const partialMatch = tokens.some((t) => t.includes(token) || token.includes(t))
+              return partialMatch ? score + 0.3 : score
+            }
+            return score
+          }, 0)
+          return totalScore + matchScore
+        }, 0)
+
+        return { ...item, score }
+      })
+      .filter((item) => item.score >= 0.5) // Minimum score threshold
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 2) // Only take top 2 matches
+      .map((item) => item.answer)
+
+    // If multiple matches, combine them intelligently
+    if (matchingAnswers.length > 1) {
+      return combineAnswers(matchingAnswers)
+    }
+
+    return matchingAnswers[0] || ""
+  }
+
+  // Combine multiple answers intelligently
+  const combineAnswers = (answers: string[]): string => {
+    if (answers.length === 0) return ""
+    if (answers.length === 1) return answers[0]
+
+    // Remove duplicates and combine
+    const uniqueAnswers = [...new Set(answers)]
+
+    if (uniqueAnswers.length === 1) return uniqueAnswers[0]
+
+    // Only combine if answers are significantly different (not just greetings)
+    const isGreetingAnswer = (answer: string) => {
+      const greetingKeywords = [
+        "hello",
+        "hi",
+        "hey",
+        "how are you",
+        "what's up",
+        "thanks",
+        "goodbye",
+      ]
+      return greetingKeywords.some((keyword) => answer.toLowerCase().includes(keyword))
+    }
+
+    const greetingAnswers = uniqueAnswers.filter(isGreetingAnswer)
+    const nonGreetingAnswers = uniqueAnswers.filter((answer) => !isGreetingAnswer(answer))
+
+    // If we have both greeting and non-greeting answers, prefer the non-greeting
+    if (nonGreetingAnswers.length > 0) {
+      return nonGreetingAnswers[0]
+    }
+
+    // If only greeting answers, return the first one
+    if (greetingAnswers.length > 0) {
+      return greetingAnswers[0]
+    }
+
+    // Fallback: combine with a separator
+    return uniqueAnswers.join("\n\nAdditionally, ")
+  }
+
+  // Get contextual follow-up options based on current topic
+  const getContextualOptions = (question: string): typeof helpOptions => {
+    const normalized = question
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, "")
+      .trim()
+
+    // Define topic relationships
+    const topicRelations = {
+      allergen: ["Label Types & Features", "Natasha's Law Compliance", "Compliance & Safety"],
+      printer: ["Mobile Printing", "Technical Setup", "Hardware Compatibility"],
+      label: ["Allergen Management", "Bulk Printing", "Label Types & Features"],
+      compliance: ["Natasha's Law Compliance", "Allergen Management", "Food Safety Standards"],
+      mobile: ["Mobile Printing", "Technical Setup", "Printer Compatibility"],
+      setup: ["Technical Setup", "Printer Compatibility", "Getting Started"],
+      pricing: ["Free Trial & Demo", "Plans & Pricing", "Contact Support"],
+      trial: ["Free Trial & Demo", "Setup & Onboarding", "Contact Support"],
+    }
+
+    // Find related topics
+    let relatedTopics: string[] = []
+    for (const [topic, related] of Object.entries(topicRelations)) {
+      if (normalized.includes(topic)) {
+        relatedTopics = [...relatedTopics, ...related]
       }
     }
 
-    return ""
-  }
+    // Get all options and prioritize related ones
+    const allOptions = getDynamicOptions()
+    const relatedOptions = allOptions.filter((option) =>
+      relatedTopics.some((topic) => option.text.includes(topic))
+    )
+    const otherOptions = allOptions.filter(
+      (option) => !relatedTopics.some((topic) => option.text.includes(topic))
+    )
 
-  // Test with some specific unknown questions to debug
-  const isUnknownQuestion = (question: string): boolean => {
-    const lowerQuestion = question.toLowerCase()
-
-    // Check if it's a known question
-    for (const item of knowledgeBase) {
-      if (item.keywords.some((keyword) => lowerQuestion.includes(keyword))) {
-        return false
-      }
-    }
-
-    return true
-  }
-
-  // Test function to trigger contact form
-  const testUnknownQuestion = () => {
-    const testQuestions = [
-      "What is the weather like?",
-      "How do I cook pasta?",
-      "What's your favorite color?",
-      "Tell me a joke",
-      "What time is it in Tokyo?",
-      "How many stars are in the sky?",
-      "What's the meaning of life?",
-      "Can you help me with my homework?",
-      "What's the capital of Mars?",
-      "How do I fix my car?",
-    ]
-
-    return testQuestions.some((q) => q.toLowerCase().includes(inputValue.toLowerCase()))
+    // Return related options first, then others
+    return [...relatedOptions, ...otherOptions].slice(0, 6)
   }
 
   // Get dynamic help options based on what user hasn't asked about
@@ -252,6 +632,25 @@ export function Chatbot({ className }: ChatbotProps) {
     })
   }
 
+  // Reusable function to send bot messages
+  const sendBotMessage = (
+    text: string,
+    showOptions = true,
+    showContactForm = false,
+    contextualOptions?: typeof helpOptions
+  ) => {
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text,
+      isUser: false,
+      timestamp: new Date(),
+      showOptions,
+      showContactForm,
+    }
+    setMessages((prev) => [...prev, botMessage])
+  }
+
+  // Improved message handling with better context
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
 
@@ -272,27 +671,34 @@ export function Chatbot({ className }: ChatbotProps) {
     // Simulate typing delay
     setTimeout(() => {
       const answer = findAnswer(inputValue)
-      const isUnknown = !answer || testUnknownQuestion()
+      const isUnknown = !answer
+      const isSupportQuestion =
+        inputValue.toLowerCase().includes("contact") ||
+        inputValue.toLowerCase().includes("support") ||
+        inputValue.toLowerCase().includes("help") ||
+        inputValue.toLowerCase().includes("customer service")
 
-      if (!isUnknown) {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: answer,
-          isUser: false,
-          timestamp: new Date(),
-          showOptions: true,
-        }
-        setMessages((prev) => [...prev, botMessage])
+      if (!isUnknown && !isSupportQuestion) {
+        // Get contextual options based on the question
+        const contextualOptions = getContextualOptions(inputValue)
+        sendBotMessage(answer, true, false)
+
+        // Update the last message with contextual options
+        setMessages((prev) => {
+          const newMessages = [...prev]
+          const lastMessage = newMessages[newMessages.length - 1]
+          if (lastMessage && !lastMessage.isUser) {
+            lastMessage.contextualOptions = contextualOptions
+          }
+          return newMessages
+        })
       } else {
-        // Unknown question - show contact form
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
-          isUser: false,
-          timestamp: new Date(),
-          showContactForm: true,
-        }
-        setMessages((prev) => [...prev, botMessage])
+        // Unknown question or support question - show contact form
+        sendBotMessage(
+          "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
+          false,
+          true
+        )
       }
 
       setIsTyping(false)
@@ -315,14 +721,32 @@ export function Chatbot({ className }: ChatbotProps) {
 
     setTimeout(() => {
       const answer = findAnswer(option.keywords[0])
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: answer,
-        isUser: false,
-        timestamp: new Date(),
-        showOptions: true,
+      const isSupportOption =
+        option.text.toLowerCase().includes("contact") ||
+        option.text.toLowerCase().includes("support")
+
+      if (answer && !isSupportOption) {
+        // Get contextual options based on the option clicked
+        const contextualOptions = getContextualOptions(option.text)
+        sendBotMessage(answer, true, false)
+
+        // Update the last message with contextual options
+        setMessages((prev) => {
+          const newMessages = [...prev]
+          const lastMessage = newMessages[newMessages.length - 1]
+          if (lastMessage && !lastMessage.isUser) {
+            lastMessage.contextualOptions = contextualOptions
+          }
+          return newMessages
+        })
+      } else {
+        // Support option - show contact form
+        sendBotMessage(
+          "I'm not sure about that specific question, but I'd be happy to help you get in touch with our team for more detailed assistance!",
+          false,
+          true
+        )
       }
-      setMessages((prev) => [...prev, botMessage])
       setIsTyping(false)
     }, 3000)
   }
@@ -334,34 +758,71 @@ export function Chatbot({ className }: ChatbotProps) {
     }
   }
 
-  const toggleChat = () => {
-    setIsOpen(!isOpen)
-    if (!isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100)
-    }
-  }
-
   const dynamicOptions = getDynamicOptions()
 
   return (
     <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
-      {/* Chat Toggle Button with avatar1 and speech bubble */}
+      {/* Chat Toggle Button with avatar1 and animated speech bubbles */}
       <div
         className={`transition-all duration-300 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
       >
-        <Button
-          onClick={toggleChat}
-          className="h-16 w-16 rounded-full border-4 border-white shadow-lg transition-all duration-300 hover:scale-110"
-          size="icon"
-        >
-          <Image
-            src="/avatar1.png"
-            alt="InstaLabel Assistant"
-            width={48}
-            height={48}
-            className="rounded-full"
-          />
-        </Button>
+        <div className="relative">
+          <Button
+            onClick={toggleChat}
+            className="h-16 w-16 rounded-full border-4 border-white shadow-lg transition-all duration-300 hover:scale-110"
+            size="icon"
+          >
+            <Image
+              src={avatarImages[currentAvatarIndex]}
+              alt="InstaLabel Assistant"
+              width={48}
+              height={48}
+              className="rounded-full"
+            />
+          </Button>
+
+          {/* Animated speech bubbles */}
+          <div className="absolute -left-52 top-2">
+            {/* Regular avatar speech bubble */}
+            <div
+              className={`absolute z-10 transition-all duration-500 ${showSpeechBubble ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
+            >
+              <div className="min-w-[200px] max-w-[320px] rounded-lg border border-white/20 bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 shadow-lg">
+                <div className="text-sm font-medium leading-relaxed text-white">
+                  {typedText}
+                  {showSpeechBubble && typedText.length < 50 && (
+                    <span className="animate-pulse">|</span>
+                  )}
+                </div>
+                {/* Speech bubble arrow pointing right to the button */}
+                <div className="absolute -right-2 top-3 h-0 w-0 border-b-4 border-l-4 border-t-4 border-transparent border-l-blue-600"></div>
+              </div>
+            </div>
+
+            {/* Avatar1 overlay speech bubble */}
+            <div
+              className={`absolute -top-16 transition-all duration-500 ${showAvatar1Overlay ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
+            >
+              <div className="min-w-[200px] max-w-[320px] rounded-lg border border-white/20 bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2 shadow-lg">
+                <div className="flex items-center gap-2">
+                  <Image
+                    src="/avatar1.png"
+                    alt="Avatar1"
+                    width={32}
+                    height={32}
+                    className="-mt-1 rounded-full"
+                  />
+                  <div className="text-sm font-medium leading-relaxed text-white">
+                    {avatar1Text}
+                    {showAvatar1Overlay && avatar1Text.length < "Kaizoku oni orewa naru".length && (
+                      <span className="animate-pulse">|</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Chat Window */}
@@ -375,7 +836,7 @@ export function Chatbot({ className }: ChatbotProps) {
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Image
-                  src="/avatar5.png"
+                  src={avatarImages[currentAvatarIndex]}
                   alt="InstaLabel Assistant"
                   width={40}
                   height={40}
