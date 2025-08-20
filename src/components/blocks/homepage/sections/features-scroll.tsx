@@ -1,9 +1,9 @@
 "use client"
 
-import Marquee from "@/lib/marqee"
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { Star, Award, Users, TrendingUp, Quote } from "lucide-react"
+import { Star, Award, Users, TrendingUp, Quote, ChevronLeft, ChevronRight } from "lucide-react"
+import Marquee from "@/lib/marqee"
 
 const foodBusinesses = [
   { name: "Noodle Bar", logo: "/noodlebar.png" },
@@ -23,6 +23,35 @@ const trustSignals = [
 ]
 
 export const TrustedBySection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  // Debug: Log when currentIndex changes
+  useEffect(() => {
+    console.log("Current index changed to:", currentIndex)
+    console.log("Current image:", foodBusinesses[currentIndex].logo)
+    console.log("Current company:", foodBusinesses[currentIndex].name)
+  }, [currentIndex])
+
+  const nextSlide = () => {
+    console.log("Next clicked, current index:", currentIndex)
+    setCurrentIndex((prev) => {
+      const newIndex = (prev + 1) % foodBusinesses.length
+      console.log("New index:", newIndex)
+      console.log("New image source:", foodBusinesses[newIndex].logo)
+      return newIndex
+    })
+  }
+
+  const prevSlide = () => {
+    console.log("Prev clicked, current index:", currentIndex)
+    setCurrentIndex((prev) => {
+      const newIndex = (prev - 1 + foodBusinesses.length) % foodBusinesses.length
+      console.log("New index:", newIndex)
+      console.log("New image source:", foodBusinesses[newIndex].logo)
+      return newIndex
+    })
+  }
+
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/50 to-white px-4 py-24 sm:px-6 md:px-12 lg:px-16">
       {/* Background decorative elements */}
@@ -78,7 +107,11 @@ export const TrustedBySection = () => {
                   </blockquote>
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
-                      <span className="text-sm font-bold text-purple-600">JL</span>
+                      <img
+                        src="/noodlebar.png"
+                        alt="Noodle Bar logo"
+                        className="h-8 w-8 rounded-full object-cover"
+                      />
                     </div>
                     <div>
                       <div className="font-semibold text-gray-900">Jonathan L.</div>
@@ -90,7 +123,7 @@ export const TrustedBySection = () => {
             </div>
           </motion.div>
 
-          {/* Company Logos Marquee */}
+          {/* Company Logos - Desktop Marquee / Mobile Carousel */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -98,23 +131,82 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="relative"
           >
-            <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16"></div>
-            <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent"></div>
+            {/* Desktop Marquee */}
+            <div className="hidden lg:block">
+              <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16"></div>
+              <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 bg-gradient-to-l from-white to-transparent"></div>
 
-            <div className="relative p-10">
-              <Marquee speed={25} pauseOnHover>
-                <div className="flex items-center gap-20 overflow-hidden px-10">
-                  {foodBusinesses.map(({ name, logo }) => (
-                    <div key={name} className="group">
+              <div className="relative p-10">
+                <Marquee speed={25} pauseOnHover>
+                  <div className="flex items-center gap-20 overflow-visible px-10 py-8">
+                    {foodBusinesses.map(({ name, logo }) => (
+                      <div key={name} className="group relative">
+                        <img
+                          src={logo}
+                          alt={`${name} logo`}
+                          className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </Marquee>
+              </div>
+            </div>
+
+            {/* Mobile Carousel */}
+            <div className="lg:hidden">
+              <div className="relative mx-auto max-w-sm">
+                <div className="flex items-center justify-center">
+                  <button
+                    onClick={prevSlide}
+                    className="absolute left-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:bg-gray-50"
+                    type="button"
+                  >
+                    <ChevronLeft className="h-5 w-5 text-gray-600" />
+                  </button>
+
+                  <div className="flex h-32 items-center justify-center px-16">
+                    <div className="group relative">
                       <img
-                        src={logo}
-                        alt={`${name} logo`}
-                        className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                        key={currentIndex} // Force re-render when index changes
+                        src={foodBusinesses[currentIndex].logo}
+                        alt={`${foodBusinesses[currentIndex].name} logo`}
+                        className="h-24 max-h-24 w-auto object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                        title={foodBusinesses[currentIndex].name}
                       />
                     </div>
+                  </div>
+
+                  <button
+                    onClick={nextSlide}
+                    className="absolute right-2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg transition-all hover:bg-gray-50"
+                    type="button"
+                  >
+                    <ChevronRight className="h-5 w-5 text-gray-600" />
+                  </button>
+                </div>
+
+                {/* Company Name Display */}
+                <div className="mt-3 text-center">
+                  <p className="text-sm font-medium text-gray-700">
+                    {foodBusinesses[currentIndex].name}
+                  </p>
+                </div>
+
+                {/* Carousel Indicators */}
+                <div className="mt-4 flex justify-center space-x-2">
+                  {foodBusinesses.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentIndex(index)}
+                      className={`h-2 w-2 rounded-full transition-all ${
+                        index === currentIndex ? "bg-purple-600" : "bg-gray-300"
+                      }`}
+                      type="button"
+                    />
                   ))}
                 </div>
-              </Marquee>
+              </div>
             </div>
           </motion.div>
         </div>
