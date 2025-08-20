@@ -4,7 +4,8 @@ import React from "react"
 
 export const metadata: Metadata = {
   title: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law | InstaLabel",
-  description: "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
+  description:
+    "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
   keywords: [
     "allergen compliance",
     "UK allergens guide",
@@ -35,27 +36,29 @@ export const metadata: Metadata = {
     "UK food safety",
     "kitchen allergen poster",
     "allergen compliance kit",
-    "free allergen guide"
+    "free allergen guide",
   ],
   openGraph: {
     title: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law",
-    description: "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens.",
+    description:
+      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens.",
     url: "https://instalabel.co/allergen-compliance",
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-allergen-compliance.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "UK Allergen Compliance Kit - 14 Allergens Guide"
-      }
-    ]
+        alt: "UK Allergen Compliance Kit - 14 Allergens Guide",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law",
-    description: "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials.",
-    images: ["https://instalabel.co/og-allergen-compliance.jpg"]
+    description:
+      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/allergen-compliance",
@@ -73,88 +76,90 @@ export const metadata: Metadata = {
   },
   other: {
     "google-site-verification": "your-verification-code",
-  }
+  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law | InstaLabel",
-    "description": "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
-    "url": "https://instalabel.co/allergen-compliance",
-    "mainEntity": {
+    name: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law | InstaLabel",
+    description:
+      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
+    url: "https://instalabel.co/allergen-compliance",
+    mainEntity: {
       "@type": "SoftwareApplication",
-      "name": "UK Allergen Compliance Kit",
-      "description": "Complete allergen compliance toolkit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Web",
-      "offers": {
+      name: "UK Allergen Compliance Kit",
+      description:
+        "Complete allergen compliance toolkit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      offers: {
         "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "GBP",
-        "availability": "https://schema.org/InStock"
+        price: "0",
+        priceCurrency: "GBP",
+        availability: "https://schema.org/InStock",
       },
-      "aggregateRating": {
+      aggregateRating: {
         "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "500"
-      }
+        ratingValue: "4.9",
+        reviewCount: "500",
+      },
     },
-    "breadcrumb": {
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://instalabel.co"
+          position: 1,
+          name: "Home",
+          item: "https://instalabel.co",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "Allergen Compliance",
-          "item": "https://instalabel.co/allergen-compliance"
-        }
-      ]
+          position: 2,
+          name: "Allergen Compliance",
+          item: "https://instalabel.co/allergen-compliance",
+        },
+      ],
     },
-    "faq": {
+    faq: {
       "@type": "FAQPage",
-      "mainEntity": [
+      mainEntity: [
         {
           "@type": "Question",
-          "name": "What are the 14 allergens that must be declared in the UK?",
-          "acceptedAnswer": {
+          name: "What are the 14 allergens that must be declared in the UK?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "The 14 allergens that must be declared in the UK are: 1. Celery, 2. Cereals containing gluten, 3. Crustaceans, 4. Eggs, 5. Fish, 6. Lupin, 7. Milk, 8. Molluscs, 9. Mustard, 10. Nuts, 11. Peanuts, 12. Sesame seeds, 13. Soya, 14. Sulphur dioxide/sulphites."
-          }
+            text: "The 14 allergens that must be declared in the UK are: 1. Celery, 2. Cereals containing gluten, 3. Crustaceans, 4. Eggs, 5. Fish, 6. Lupin, 7. Milk, 8. Molluscs, 9. Mustard, 10. Nuts, 11. Peanuts, 12. Sesame seeds, 13. Soya, 14. Sulphur dioxide/sulphites.",
+          },
         },
         {
           "@type": "Question",
-          "name": "What is Natasha's Law and how does it affect food businesses?",
-          "acceptedAnswer": {
+          name: "What is Natasha's Law and how does it affect food businesses?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Natasha's Law requires all food businesses to provide full ingredient lists and allergen information on pre-packed for direct sale (PPDS) foods. This affects all UK food businesses and requires clear allergen labeling on all food items."
-          }
+            text: "Natasha's Law requires all food businesses to provide full ingredient lists and allergen information on pre-packed for direct sale (PPDS) foods. This affects all UK food businesses and requires clear allergen labeling on all food items.",
+          },
         },
         {
           "@type": "Question",
-          "name": "How can I ensure my kitchen is compliant with allergen regulations?",
-          "acceptedAnswer": {
+          name: "How can I ensure my kitchen is compliant with allergen regulations?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "To ensure compliance: 1. Clearly declare all 14 allergens on your menu or food labels, 2. Train staff on allergen awareness, 3. Keep records of allergen information, 4. Have procedures to prevent cross-contamination, 5. Update allergen information when recipes change."
-          }
+            text: "To ensure compliance: 1. Clearly declare all 14 allergens on your menu or food labels, 2. Train staff on allergen awareness, 3. Keep records of allergen information, 4. Have procedures to prevent cross-contamination, 5. Update allergen information when recipes change.",
+          },
         },
         {
           "@type": "Question",
-          "name": "What should I include in my allergen compliance toolkit?",
-          "acceptedAnswer": {
+          name: "What should I include in my allergen compliance toolkit?",
+          acceptedAnswer: {
             "@type": "Answer",
-            "text": "Your allergen compliance toolkit should include: 14 allergens visual reference card, hidden allergen sources guide, cross-contamination prevention checklist, staff training template, Natasha's Law compliance audit, and emergency allergen response protocol."
-          }
-        }
-      ]
-    }
+            text: "Your allergen compliance toolkit should include: 14 allergens visual reference card, hidden allergen sources guide, cross-contamination prevention checklist, staff training template, Natasha's Law compliance audit, and emergency allergen response protocol.",
+          },
+        },
+      ],
+    },
   }
 
   return (
@@ -168,4 +173,4 @@ const Page = () => {
   )
 }
 
-export default Page 
+export default Page

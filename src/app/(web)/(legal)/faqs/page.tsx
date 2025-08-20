@@ -1,6 +1,6 @@
-"use client"
 import React from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui"
+import { Metadata } from "next"
 
 const faqsList = [
   {
@@ -47,6 +47,52 @@ const faqsList = [
     a: "Yes! Try InstaLabel free for 14 days—no credit card required—with full access to features and existing printer support.",
   },
 ]
+
+export const metadata: Metadata = {
+  title: "FAQs | InstaLabel Kitchen Labeling System | Common Questions",
+  description:
+    "Find answers to common questions about InstaLabel's kitchen labeling system. Learn about setup, compliance, printer compatibility, and how to get started with food safety labels.",
+  keywords: [
+    "InstaLabel FAQs",
+    "kitchen labeling questions",
+    "food safety labels FAQ",
+    "thermal printer setup",
+    "allergen labeling questions",
+    "Natasha's Law compliance",
+    "kitchen labeling system FAQ",
+    "restaurant labeling questions",
+    "food prep labels FAQ",
+    "kitchen automation questions",
+    "HACCP compliance FAQ",
+    "restaurant technology questions",
+    "kitchen management FAQ",
+    "food service labeling questions",
+  ],
+  openGraph: {
+    title: "FAQs | InstaLabel Kitchen Labeling System | Common Questions",
+    description:
+      "Find answers to common questions about InstaLabel's kitchen labeling system. Learn about setup, compliance, printer compatibility, and how to get started.",
+    url: "https://instalabel.co/faqs",
+    type: "website",
+    images: [
+      {
+        url: "https://www.instalabel.co/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "InstaLabel FAQs - Kitchen Labeling Questions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "FAQs | InstaLabel Kitchen Labeling System",
+    description: "Find answers to common questions about InstaLabel's kitchen labeling system.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
+  },
+  alternates: {
+    canonical: "https://instalabel.co/faqs",
+  },
+}
 
 export default function FAQPage() {
   const [value, setValue] = React.useState("1")

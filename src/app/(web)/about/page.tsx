@@ -1,10 +1,11 @@
-import { About } from '@/components/blocks';
-import { Metadata } from "next";
-import React from 'react';
+import { About } from "@/components/blocks"
+import { Metadata } from "next"
+import React from "react"
 
 export const metadata: Metadata = {
   title: "About InstaLabel | Kitchen Labeling Innovation & Food Safety Technology",
-  description: "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+  description:
+    "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
   keywords: [
     "about InstaLabel",
     "kitchen labeling innovation",
@@ -20,27 +21,29 @@ export const metadata: Metadata = {
     "food service innovation",
     "restaurant management software",
     "kitchen workflow automation",
-    "food labeling technology"
+    "food labeling technology",
   ],
   openGraph: {
     title: "About InstaLabel | Kitchen Labeling Innovation & Food Safety Technology",
-    description: "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+    description:
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
     url: "https://instalabel.co/about",
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-about.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "About InstaLabel - Kitchen Labeling Innovation"
-      }
-    ]
+        alt: "About InstaLabel - Kitchen Labeling Innovation",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "About InstaLabel | Kitchen Labeling Innovation & Food Safety Technology",
-    description: "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
-    images: ["https://instalabel.co/og-about.jpg"]
+    description:
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/about",
@@ -55,41 +58,42 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  }
+  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "About InstaLabel",
-    "description": "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
-    "url": "https://instalabel.co/about",
-    "mainEntity": {
+    name: "About InstaLabel",
+    description:
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+    url: "https://instalabel.co/about",
+    mainEntity: {
       "@type": "Organization",
-      "name": "InstaLabel",
-      "description": "Kitchen labeling innovation company",
-      "url": "https://instalabel.co",
-      "foundingDate": "2023",
-      "industry": "Food Service Technology"
+      name: "InstaLabel",
+      description: "Kitchen labeling innovation company",
+      url: "https://instalabel.co",
+      foundingDate: "2023",
+      industry: "Food Service Technology",
     },
-    "breadcrumb": {
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://instalabel.co"
+          position: 1,
+          name: "Home",
+          item: "https://instalabel.co",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "About",
-          "item": "https://instalabel.co/about"
-        }
-      ]
-    }
+          position: 2,
+          name: "About",
+          item: "https://instalabel.co/about",
+        },
+      ],
+    },
   }
 
   return (
@@ -100,7 +104,7 @@ const Page = () => {
       />
       <About />
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

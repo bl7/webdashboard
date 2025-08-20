@@ -4,7 +4,8 @@ import React from "react"
 
 export const metadata: Metadata = {
   title: "Kitchen Labeling Pricing | Restaurant Labeling Plans | InstaLabel",
-  description: "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support. Start free trial.",
+  description:
+    "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support. Start free trial.",
   keywords: [
     "kitchen labeling pricing",
     "restaurant labeling plans",
@@ -19,27 +20,29 @@ export const metadata: Metadata = {
     "kitchen efficiency software",
     "food service technology cost",
     "restaurant management pricing",
-    "kitchen workflow automation cost"
+    "kitchen workflow automation cost",
   ],
   openGraph: {
     title: "Kitchen Labeling Pricing | Restaurant Labeling Plans | InstaLabel",
-    description: "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
+    description:
+      "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
     url: "https://instalabel.co/plan",
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-pricing.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Kitchen Labeling Pricing Plans"
-      }
-    ]
+        alt: "Kitchen Labeling Pricing Plans",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Kitchen Labeling Pricing | Restaurant Labeling Plans",
-    description: "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
-    images: ["https://instalabel.co/og-pricing.jpg"]
+    description:
+      "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/plan",
@@ -54,73 +57,74 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  }
+  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Kitchen Labeling Pricing",
-    "description": "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
-    "url": "https://instalabel.co/plan",
-    "mainEntity": {
+    name: "Kitchen Labeling Pricing",
+    description:
+      "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
+    url: "https://instalabel.co/plan",
+    mainEntity: {
       "@type": "Product",
-      "name": "InstaLabel Kitchen Labeling System",
-      "description": "Professional kitchen labeling system for restaurants and food businesses",
-      "brand": {
+      name: "InstaLabel Kitchen Labeling System",
+      description: "Professional kitchen labeling system for restaurants and food businesses",
+      brand: {
         "@type": "Brand",
-        "name": "InstaLabel"
+        name: "InstaLabel",
       },
-      "offers": [
+      offers: [
         {
           "@type": "Offer",
-          "name": "Starter Plan",
-          "price": "0",
-          "priceCurrency": "GBP",
-          "description": "Free trial plan for small kitchens",
-          "availability": "https://schema.org/InStock"
+          name: "Starter Plan",
+          price: "0",
+          priceCurrency: "GBP",
+          description: "Free trial plan for small kitchens",
+          availability: "https://schema.org/InStock",
         },
         {
           "@type": "Offer",
-          "name": "Professional Plan",
-          "price": "29",
-          "priceCurrency": "GBP",
-          "description": "Professional plan for growing restaurants",
-          "availability": "https://schema.org/InStock"
+          name: "Professional Plan",
+          price: "29",
+          priceCurrency: "GBP",
+          description: "Professional plan for growing restaurants",
+          availability: "https://schema.org/InStock",
         },
         {
           "@type": "Offer",
-          "name": "Enterprise Plan",
-          "price": "99",
-          "priceCurrency": "GBP",
-          "description": "Enterprise plan for multi-location businesses",
-          "availability": "https://schema.org/InStock"
-        }
+          name: "Enterprise Plan",
+          price: "99",
+          priceCurrency: "GBP",
+          description: "Enterprise plan for multi-location businesses",
+          availability: "https://schema.org/InStock",
+        },
       ],
-      "aggregateRating": {
+      aggregateRating: {
         "@type": "AggregateRating",
-        "ratingValue": "4.8",
-        "reviewCount": "150"
-      }
+        ratingValue: "4.8",
+        reviewCount: "150",
+      },
     },
-    "breadcrumb": {
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://instalabel.co"
+          position: 1,
+          name: "Home",
+          item: "https://instalabel.co",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "Pricing",
-          "item": "https://instalabel.co/plan"
-        }
-      ]
-    }
+          position: 2,
+          name: "Pricing",
+          item: "https://instalabel.co/plan",
+        },
+      ],
+    },
   }
 
   return (

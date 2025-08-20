@@ -4,7 +4,8 @@ import React from "react"
 
 export const metadata: Metadata = {
   title: "UK 14 Allergens Guide | Complete Allergen Reference | Natasha's Law | InstaLabel",
-  description: "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements. Essential reference for Natasha's Law and EHO compliance.",
+  description:
+    "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements. Essential reference for Natasha's Law and EHO compliance.",
   keywords: [
     "UK 14 allergens",
     "allergen guide",
@@ -25,21 +26,29 @@ export const metadata: Metadata = {
     "allergen ingredients list",
     "allergen sources guide",
     "kitchen allergen poster",
-    "allergen reference card"
+    "allergen reference card",
   ],
   openGraph: {
     title: "UK 14 Allergens Guide | Complete Allergen Reference | Natasha's Law",
-    description: "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
+    description:
+      "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
     url: "https://instalabel.co/allergen-guide",
     type: "article",
     images: [
       {
-        url: "https://instalabel.co/og-allergen-guide.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "UK 14 Allergens Guide - Complete Reference"
-      }
-    ]
+        alt: "UK 14 Allergens Guide - Complete Reference",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "UK 14 Allergens Guide | Complete Allergen Reference | Natasha's Law",
+    description:
+      "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/allergen-guide",
@@ -54,7 +63,7 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  }
+  },
 }
 
 const Page = () => {
@@ -65,4 +74,4 @@ const Page = () => {
   )
 }
 
-export default Page 
+export default Page

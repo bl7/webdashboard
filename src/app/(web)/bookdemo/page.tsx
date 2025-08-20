@@ -4,7 +4,8 @@ import React from "react"
 
 export const metadata: Metadata = {
   title: "Book Demo | InstaLabel Kitchen Labeling System | Free Consultation",
-  description: "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation, expert consultation.",
+  description:
+    "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation, expert consultation.",
   keywords: [
     "book demo",
     "kitchen labeling demo",
@@ -19,27 +20,29 @@ export const metadata: Metadata = {
     "free consultation",
     "restaurant software demo",
     "kitchen labeling consultation",
-    "food service technology demo"
+    "food service technology demo",
   ],
   openGraph: {
     title: "Book Demo | InstaLabel Kitchen Labeling System | Free Consultation",
-    description: "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
+    description:
+      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
     url: "https://instalabel.co/bookdemo",
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-demo.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Book Demo - InstaLabel Kitchen Labeling System"
-      }
-    ]
+        alt: "Book Demo - InstaLabel Kitchen Labeling System",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Book Demo | InstaLabel Kitchen Labeling System",
-    description: "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
-    images: ["https://instalabel.co/og-demo.jpg"]
+    description:
+      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/bookdemo",
@@ -54,54 +57,55 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  }
+  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "Book Demo",
-    "description": "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
-    "url": "https://instalabel.co/bookdemo",
-    "mainEntity": {
+    name: "Book Demo",
+    description:
+      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
+    url: "https://instalabel.co/bookdemo",
+    mainEntity: {
       "@type": "Event",
-      "name": "InstaLabel Kitchen Labeling Demo",
-      "description": "Free consultation and demo of InstaLabel's kitchen labeling system",
-      "startDate": "2024-01-01T00:00:00Z",
-      "endDate": "2024-12-31T23:59:59Z",
-      "eventStatus": "https://schema.org/EventScheduled",
-      "eventAttendanceMode": "https://schema.org/OnlineEventAttendanceMode",
-      "organizer": {
+      name: "InstaLabel Kitchen Labeling Demo",
+      description: "Free consultation and demo of InstaLabel's kitchen labeling system",
+      startDate: "2024-01-01T00:00:00Z",
+      endDate: "2024-12-31T23:59:59Z",
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
+      organizer: {
         "@type": "Organization",
-        "name": "InstaLabel",
-        "url": "https://instalabel.co"
+        name: "InstaLabel",
+        url: "https://instalabel.co",
       },
-      "offers": {
+      offers: {
         "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "GBP",
-        "availability": "https://schema.org/InStock",
-        "description": "Free consultation and demo"
-      }
+        price: "0",
+        priceCurrency: "GBP",
+        availability: "https://schema.org/InStock",
+        description: "Free consultation and demo",
+      },
     },
-    "breadcrumb": {
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://instalabel.co"
+          position: 1,
+          name: "Home",
+          item: "https://instalabel.co",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "Book Demo",
-          "item": "https://instalabel.co/bookdemo"
-        }
-      ]
-    }
+          position: 2,
+          name: "Book Demo",
+          item: "https://instalabel.co/bookdemo",
+        },
+      ],
+    },
   }
 
   return (

@@ -1,3 +1,47 @@
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Terms and Conditions | InstaLabel Kitchen Labeling System",
+  description:
+    "Read InstaLabel's terms and conditions for our kitchen labeling software. Learn about user accounts, subscription terms, acceptable use, and service limitations.",
+  keywords: [
+    "InstaLabel terms",
+    "kitchen labeling terms",
+    "software terms and conditions",
+    "restaurant software terms",
+    "food safety software terms",
+    "kitchen management terms",
+    "subscription terms",
+    "software license agreement",
+    "restaurant technology terms",
+    "kitchen automation terms",
+  ],
+  openGraph: {
+    title: "Terms and Conditions | InstaLabel Kitchen Labeling System",
+    description:
+      "Read InstaLabel's terms and conditions for our kitchen labeling software. Learn about user accounts, subscription terms, and service limitations.",
+    url: "https://instalabel.co/terms",
+    type: "website",
+    images: [
+      {
+        url: "https://www.instalabel.co/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "InstaLabel Terms and Conditions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Terms and Conditions | InstaLabel Kitchen Labeling System",
+    description: "Read InstaLabel's terms and conditions for our kitchen labeling software.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
+  },
+  alternates: {
+    canonical: "https://instalabel.co/terms",
+  },
+}
+
 const Page = () => {
   return (
     <section className="bg-white">

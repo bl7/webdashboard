@@ -4,7 +4,8 @@ import React from "react"
 
 export const metadata: Metadata = {
   title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity | InstaLabel",
-  description: "Discover PrintBridge - our local bridge app that enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity, and reliable printing for your kitchen labels.",
+  description:
+    "Discover PrintBridge - our local bridge app that enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity, and reliable printing for your kitchen labels.",
   keywords: [
     "PrintBridge",
     "local bridge app",
@@ -23,27 +24,29 @@ export const metadata: Metadata = {
     "kitchen automation",
     "thermal printer app",
     "local printing bridge",
-    "web to thermal printer"
+    "web to thermal printer",
   ],
   openGraph: {
     title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity",
-    description: "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
+    description:
+      "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
     url: "https://instalabel.co/printbridge",
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-printbridge.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "PrintBridge Technology - Web to Printer Connectivity"
-      }
-    ]
+        alt: "PrintBridge Technology - Web to Printer Connectivity",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity",
-    description: "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
-    images: ["https://instalabel.co/og-printbridge.jpg"]
+    description:
+      "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co/printbridge",
@@ -58,51 +61,52 @@ export const metadata: Metadata = {
       "max-image-preview": "large",
       "max-snippet": -1,
     },
-  }
+  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    "name": "PrintBridge Technology",
-    "description": "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
-    "url": "https://instalabel.co/printbridge",
-    "mainEntity": {
+    name: "PrintBridge Technology",
+    description:
+      "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
+    url: "https://instalabel.co/printbridge",
+    mainEntity: {
       "@type": "SoftwareApplication",
-      "name": "PrintBridge",
-      "description": "Local bridge app for seamless web-to-printer connectivity",
-      "applicationCategory": "BusinessApplication",
-      "operatingSystem": "Windows, macOS",
-      "offers": {
+      name: "PrintBridge",
+      description: "Local bridge app for seamless web-to-printer connectivity",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Windows, macOS",
+      offers: {
         "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD",
-        "description": "Free with InstaLabel subscription"
+        price: "0",
+        priceCurrency: "USD",
+        description: "Free with InstaLabel subscription",
       },
-      "aggregateRating": {
+      aggregateRating: {
         "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "200"
-      }
+        ratingValue: "4.9",
+        reviewCount: "200",
+      },
     },
-    "breadcrumb": {
+    breadcrumb: {
       "@type": "BreadcrumbList",
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://instalabel.co"
+          position: 1,
+          name: "Home",
+          item: "https://instalabel.co",
         },
         {
           "@type": "ListItem",
-          "position": 2,
-          "name": "PrintBridge",
-          "item": "https://instalabel.co/printbridge"
-        }
-      ]
-    }
+          position: 2,
+          name: "PrintBridge",
+          item: "https://instalabel.co/printbridge",
+        },
+      ],
+    },
   }
 
   return (
@@ -116,4 +120,4 @@ const Page = () => {
   )
 }
 
-export default Page 
+export default Page
