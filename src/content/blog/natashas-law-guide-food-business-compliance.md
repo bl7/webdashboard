@@ -7,7 +7,7 @@ readTime: "8 min read"
 author: "InstaLabel Team"
 slug: "natashas-law-guide-food-business-compliance"
 featured: true
-image: "/public/labels/label3.png"
+image: "/opengraph-image.png"
 ---
 
 # Guide to Natasha's Law: What Every Food Business Needs to Know 🇬🇧

@@ -7,7 +7,7 @@ readTime: "9 min read"
 author: "InstaLabel Team"
 slug: "commercial-kitchen-label-printer-guide"
 featured: true
-image: "/public/labels/label1.png"
+image: "/opengraph-image.png"
 ---
 
 # Commercial Kitchen Label Printer: Complete Buyer's Guide for Restaurants & Food Service 🏪

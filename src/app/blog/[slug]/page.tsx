@@ -23,39 +23,67 @@ interface BlogPostMeta {
 }
 
 export async function generateStaticParams() {
-  const dir = path.join(process.cwd(), "src/content/blog");
-  const files = await fs.readdir(dir);
-  console.log("[generateStaticParams] Files in blog dir:", files);
+  const dir = path.join(process.cwd(), "src/content/blog")
+  const files = await fs.readdir(dir)
+  console.log("[generateStaticParams] Files in blog dir:", files)
   const slugs = files
-    .filter(file => typeof file === "string" && file.endsWith(".md"))
-    .map(file => ({
-      slug: file.replace(/\.md$/, "")
-    }));
-  console.log("[generateStaticParams] Blog slugs:", slugs);
-  return slugs;
+    .filter((file) => typeof file === "string" && file.endsWith(".md"))
+    .map((file) => ({
+      slug: file.replace(/\.md$/, ""),
+    }))
+  console.log("[generateStaticParams] Blog slugs:", slugs)
+  return slugs
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return {}
   const url = `https://instalabel.co/blog/${post.meta.slug}`
-  const image = post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined
+
+  // Use the default Open Graph image as fallback
+  const defaultImage = "https://www.instalabel.co/opengraph-image.png"
+  const image = post.meta.image ? `https://instalabel.co${post.meta.image}` : defaultImage
+
   return {
     title: post.meta.title,
     description: post.meta.description,
+    keywords: [
+      "kitchen labeling",
+      "food safety",
+      "restaurant technology",
+      "HACCP compliance",
+      "allergen labeling",
+      "kitchen management",
+      "restaurant best practices",
+      post.meta.category.toLowerCase(),
+    ],
     openGraph: {
       title: post.meta.title,
       description: post.meta.description,
       url,
       type: "article",
-      images: image ? [{ url: image, alt: post.meta.title }] : undefined,
+      images: [
+        {
+          url: image,
+          width: 1200,
+          height: 630,
+          alt: post.meta.title,
+        },
+      ],
+      publishedTime: post.meta.date,
+      authors: [post.meta.author],
+      section: post.meta.category,
     },
     twitter: {
-      card: image ? "summary_large_image" : "summary",
+      card: "summary_large_image",
       title: post.meta.title,
       description: post.meta.description,
-      images: image ? [image] : undefined,
+      images: [image],
     },
     alternates: {
       canonical: url,
@@ -98,7 +126,10 @@ function extractHeadings(markdown: string): { text: string; id: string; level: n
   while ((match = headingRegex.exec(markdown))) {
     const level = match[1].length
     const text = match[2].replace(/[#*`~]+/g, "").trim()
-    const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
+    const id = text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
     headings.push({ text, id, level })
   }
   return headings
@@ -115,31 +146,33 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
-    "headline": post.meta.title,
-    "description": post.meta.description,
-    "datePublished": post.meta.date,
-    "author": {
+    headline: post.meta.title,
+    description: post.meta.description,
+    datePublished: post.meta.date,
+    author: {
       "@type": "Person",
-      "name": post.meta.author || "InstaLabel Team"
+      name: post.meta.author || "InstaLabel Team",
     },
-    "image": post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined,
-    "mainEntityOfPage": {
+    image: post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined,
+    mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://instalabel.co/blog/${post.meta.slug}`
-    }
+      "@id": `https://instalabel.co/blog/${post.meta.slug}`,
+    },
   }
 
   // Related Articles
   const allPosts = await getAllBlogPostsMeta()
   // Prefer same category, fallback to recent
-  let related = allPosts.filter(p => p.slug !== post.meta.slug && p.category === post.meta.category)
+  let related = allPosts.filter(
+    (p) => p.slug !== post.meta.slug && p.category === post.meta.category
+  )
   if (related.length < 2) {
-    related = allPosts.filter(p => p.slug !== post.meta.slug)
+    related = allPosts.filter((p) => p.slug !== post.meta.slug)
   }
   related = related.slice(0, 3)
 
   // Find next/previous posts by date
-  const currentIndex = allPosts.findIndex(p => p.slug === post.meta.slug)
+  const currentIndex = allPosts.findIndex((p) => p.slug === post.meta.slug)
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
 
@@ -151,19 +184,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 py-12 px-4 sm:px-8 md:px-16">
-        <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 p-4 md:p-8 flex flex-col md:flex-row gap-8">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-12 sm:px-8 md:px-16">
+        <div className="mx-auto flex max-w-5xl flex-col gap-8 rounded-xl border border-gray-200 bg-white p-4 shadow-lg md:flex-row md:p-8">
           {/* Related Articles Sidebar */}
           {related.length > 0 && (
-            <aside className="md:w-1/3 w-full md:sticky md:top-8">
+            <aside className="w-full md:sticky md:top-8 md:w-1/3">
               <div className="mb-6">
-                <h2 className="text-lg font-bold mb-3 text-gray-900">Related Articles</h2>
+                <h2 className="mb-3 text-lg font-bold text-gray-900">Related Articles</h2>
                 <div className="flex flex-col gap-3">
-                  {related.map(r => (
-                    <Link key={r.slug} href={`/blog/${r.slug}`} className="block rounded-lg border border-gray-200 bg-purple-50 hover:bg-purple-100 transition p-3 shadow-sm">
-                      <div className="text-xs text-primary font-medium mb-1">{r.category}</div>
-                      <div className="font-semibold text-gray-900 mb-1 line-clamp-2">{r.title}</div>
-                      <div className="text-xs text-gray-500">{new Date(r.date).toLocaleDateString()} • {r.readTime}</div>
+                  {related.map((r) => (
+                    <Link
+                      key={r.slug}
+                      href={`/blog/${r.slug}`}
+                      className="block rounded-lg border border-gray-200 bg-purple-50 p-3 shadow-sm transition hover:bg-purple-100"
+                    >
+                      <div className="mb-1 text-xs font-medium text-primary">{r.category}</div>
+                      <div className="mb-1 line-clamp-2 font-semibold text-gray-900">{r.title}</div>
+                      <div className="text-xs text-gray-500">
+                        {new Date(r.date).toLocaleDateString()} • {r.readTime}
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -171,29 +210,35 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             </aside>
           )}
           {/* Main Blog Content */}
-          <main className="flex-1 min-w-0">
+          <main className="min-w-0 flex-1">
             {/* Breadcrumbs */}
             <nav className="mb-6" aria-label="Breadcrumb">
               <ol className="flex items-center space-x-2 text-sm text-gray-500">
                 <li>
-                  <Link href="/" className="hover:underline text-primary font-medium">Home</Link>
+                  <Link href="/" className="font-medium text-primary hover:underline">
+                    Home
+                  </Link>
                 </li>
                 <li aria-hidden="true">
-                  <ChevronRight className="inline h-4 w-4 mx-1 text-gray-400" />
+                  <ChevronRight className="mx-1 inline h-4 w-4 text-gray-400" />
                 </li>
                 <li>
-                  <Link href="/blog" className="hover:underline text-primary font-medium">Blog</Link>
+                  <Link href="/blog" className="font-medium text-primary hover:underline">
+                    Blog
+                  </Link>
                 </li>
                 <li aria-hidden="true">
-                  <ChevronRight className="inline h-4 w-4 mx-1 text-gray-400" />
+                  <ChevronRight className="mx-1 inline h-4 w-4 text-gray-400" />
                 </li>
-                <li className="truncate text-gray-700 font-semibold" aria-current="page">{post.meta.title}</li>
+                <li className="truncate font-semibold text-gray-700" aria-current="page">
+                  {post.meta.title}
+                </li>
               </ol>
             </nav>
-         
+
             <div className="mb-4 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2 text-xs text-gray-500">
-                <span className="inline-flex items-center gap-1 text-primary font-medium">
+                <span className="inline-flex items-center gap-1 font-medium text-primary">
                   <Calendar className="h-4 w-4" />
                   {new Date(post.meta.date).toLocaleDateString()}
                 </span>
@@ -204,36 +249,63 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
               <div className="text-xs text-gray-400">By {post.meta.author}</div>
             </div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-4 leading-snug">{post.meta.title}</h1>
+            <h1 className="mb-4 text-2xl font-bold leading-snug text-gray-900">
+              {post.meta.title}
+            </h1>
             {post.meta.image && (
-              <img src={post.meta.image} alt={post.meta.title} className="rounded-lg mb-6 w-full max-h-56 object-cover border" />
+              <img
+                src={post.meta.image}
+                alt={post.meta.title}
+                className="mb-6 max-h-56 w-full rounded-lg border object-cover"
+              />
             )}
-            <article className="prose prose-base max-w-none text-gray-800" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+            <article
+              className="prose prose-base max-w-none text-gray-800"
+              dangerouslySetInnerHTML={{ __html: contentHtml }}
+            />
             {/* Next/Previous Navigation */}
             {(prevPost || nextPost) && (
-              <div className="flex justify-between items-center mt-16 gap-4">
+              <div className="mt-16 flex items-center justify-between gap-4">
                 {prevPost ? (
-                  <Link href={`/blog/${prevPost.slug}`} className="flex-1 group block rounded-lg border border-gray-200 bg-purple-50 hover:bg-purple-100 transition p-4 shadow-sm text-left">
-                    <div className="text-xs text-primary font-medium mb-1">Previous</div>
-                    <div className="font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:underline">{prevPost.title}</div>
-                    <div className="text-xs text-gray-500">{new Date(prevPost.date).toLocaleDateString()} • {prevPost.readTime}</div>
+                  <Link
+                    href={`/blog/${prevPost.slug}`}
+                    className="group block flex-1 rounded-lg border border-gray-200 bg-purple-50 p-4 text-left shadow-sm transition hover:bg-purple-100"
+                  >
+                    <div className="mb-1 text-xs font-medium text-primary">Previous</div>
+                    <div className="mb-1 line-clamp-2 font-semibold text-gray-900 group-hover:underline">
+                      {prevPost.title}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {new Date(prevPost.date).toLocaleDateString()} • {prevPost.readTime}
+                    </div>
                   </Link>
-                ) : <div className="flex-1" />}
+                ) : (
+                  <div className="flex-1" />
+                )}
                 {nextPost ? (
-                  <Link href={`/blog/${nextPost.slug}`} className="flex-1 group block rounded-lg border border-gray-200 bg-purple-50 hover:bg-purple-100 transition p-4 shadow-sm text-right">
-                    <div className="text-xs text-primary font-medium mb-1">Next</div>
-                    <div className="font-semibold text-gray-900 mb-1 line-clamp-2 group-hover:underline">{nextPost.title}</div>
-                    <div className="text-xs text-gray-500">{new Date(nextPost.date).toLocaleDateString()} • {nextPost.readTime}</div>
+                  <Link
+                    href={`/blog/${nextPost.slug}`}
+                    className="group block flex-1 rounded-lg border border-gray-200 bg-purple-50 p-4 text-right shadow-sm transition hover:bg-purple-100"
+                  >
+                    <div className="mb-1 text-xs font-medium text-primary">Next</div>
+                    <div className="mb-1 line-clamp-2 font-semibold text-gray-900 group-hover:underline">
+                      {nextPost.title}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {new Date(nextPost.date).toLocaleDateString()} • {nextPost.readTime}
+                    </div>
                   </Link>
-                ) : <div className="flex-1" />}
+                ) : (
+                  <div className="flex-1" />
+                )}
               </div>
             )}
             {/* Author Bio Box */}
-            <div className="mt-16 flex items-center gap-4 bg-purple-50 border border-gray-200 rounded-lg p-4">
+            <div className="mt-16 flex items-center gap-4 rounded-lg border border-gray-200 bg-purple-50 p-4">
               <img
                 src={post.meta.author === "InstaLabel Team" ? "/avatar1.png" : "/avatar2.png"}
                 alt={post.meta.author}
-                className="w-14 h-14 rounded-full border object-cover"
+                className="h-14 w-14 rounded-full border object-cover"
               />
               <div>
                 <div className="font-semibold text-gray-900">{post.meta.author}</div>
@@ -246,11 +318,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
             <div className="mt-6">
-              <Link href="/blog" className="text-purple-500 hover:underline text-xs">← Back to Blog</Link>
+              <Link href="/blog" className="text-xs text-purple-500 hover:underline">
+                ← Back to Blog
+              </Link>
             </div>
           </main>
         </div>
       </div>
     </>
   )
-} 
+}

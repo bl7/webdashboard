@@ -7,7 +7,7 @@ readTime: "9 min read"
 author: "InstaLabel Team"
 slug: "roi-kitchen-automation-case-studies"
 featured: false
-image: "/public/noodle.png"
+image: "/opengraph-image.png"
 ---
 
 # The ROI of Kitchen Automation: Real Restaurant Case Studies
@@ -20,9 +20,9 @@ Automation in the kitchen isn’t just a luxury — it’s becoming essential fo
 
 - **Problem:** Staff were handwriting prep and expiry labels, often forgetting key info like dates or allergens.
 - **Solution:** Deployed InstaLabel’s cloud-based label system with predefined label types for prep and PPDS.
-- **Result:**  
-  - Saved ~8–10 hours/week in manual label writing  
-  - Reduced errors like missing expiry dates  
+- **Result:**
+  - Saved ~8–10 hours/week in manual label writing
+  - Reduced errors like missing expiry dates
   - Increased team consistency across shifts
 
 ---
@@ -31,10 +31,10 @@ Automation in the kitchen isn’t just a luxury — it’s becoming essential fo
 
 - **Problem:** Owner worried about allergen mislabeling after a local inspection flagged missing information.
 - **Solution:** Moved all ingredients and menu items into InstaLabel with allergen tracking per ingredient.
-- **Result:**  
-  - Labels now auto-highlight allergens from ingredient data  
-  - Passed follow-up inspection with no issues  
-  - Owner reports increased confidence from staff and customers  
+- **Result:**
+  - Labels now auto-highlight allergens from ingredient data
+  - Passed follow-up inspection with no issues
+  - Owner reports increased confidence from staff and customers
 
 ---
 
@@ -42,10 +42,10 @@ Automation in the kitchen isn’t just a luxury — it’s becoming essential fo
 
 - **Problem:** Frequent new hires meant inconsistent label formats and training headaches.
 - **Solution:** Standardized label templates using InstaLabel’s web dashboard and label print queue.
-- **Result:**  
-  - Reduced label training to <30 minutes for new staff  
-  - Labels always include correct date formats and allergen info  
-  - Staff now print instead of writing — cutting down mistakes and confusion  
+- **Result:**
+  - Reduced label training to <30 minutes for new staff
+  - Labels always include correct date formats and allergen info
+  - Staff now print instead of writing — cutting down mistakes and confusion
 
 ---
 
@@ -73,9 +73,9 @@ Real kitchens are already experiencing the benefits of automating their food lab
 
 Whether you're a growing café, a fast-paced kitchen, or a multi-site chain, labeling automation can offer:
 
-- Less waste  
-- Faster workflows  
-- Better compliance  
+- Less waste
+- Faster workflows
+- Better compliance
 - Happier teams
 
 **InstaLabel is helping kitchens move faster and safer — one label at a time.**

@@ -5,6 +5,7 @@ import { Calendar, ArrowRight, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import featureHeroImg from "@/assets/images/featurehero.png"
+import { Metadata } from "next"
 
 interface BlogPostMeta {
   title: string
@@ -37,15 +38,57 @@ async function getAllBlogPosts(): Promise<BlogPost[]> {
   return posts
 }
 
+export const metadata: Metadata = {
+  title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+  description:
+    "Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.",
+  keywords: [
+    "kitchen labeling blog",
+    "food safety articles",
+    "restaurant technology",
+    "kitchen management",
+    "HACCP compliance",
+    "allergen labeling",
+    "restaurant best practices",
+    "kitchen automation",
+    "food service technology",
+    "kitchen efficiency",
+  ],
+  openGraph: {
+    title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+    description:
+      "Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.",
+    url: "https://instalabel.co/blog",
+    type: "website",
+    images: [
+      {
+        url: "https://www.instalabel.co/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Kitchen Labeling Blog - Food Safety & Restaurant Technology",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+    description: "Expert insights on food safety, kitchen management, and restaurant technology.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
+  },
+  alternates: {
+    canonical: "https://instalabel.co/blog",
+  },
+}
+
 export default async function BlogPage() {
   const posts = await getAllBlogPosts()
-  const featuredPosts = posts.filter(post => post.meta.featured)
-  const regularPosts = posts.filter(post => !post.meta.featured)
+  const featuredPosts = posts.filter((post) => post.meta.featured)
+  const regularPosts = posts.filter((post) => !post.meta.featured)
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-screen items-center overflow-hidden px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16">
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         {/* Background blobs */}
         <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
         <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
@@ -66,44 +109,68 @@ export default async function BlogPage() {
             </h1>
 
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.
+              Expert insights on food safety, kitchen management, and restaurant technology. Stay up
+              to date with the latest trends and best practices for your kitchen and business.
             </p>
 
             {/* Blog Categories */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">Food Safety</Button>
-              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">Technology</Button>
-              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">Case Studies</Button>
-              <Button variant="outline" className="rounded-full text-xs sm:text-base px-3 sm:px-6 py-1.5 sm:py-2">Best Practices</Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+              >
+                Food Safety
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+              >
+                Technology
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+              >
+                Case Studies
+              </Button>
+              <Button
+                variant="outline"
+                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+              >
+                Best Practices
+              </Button>
             </div>
           </div>
 
           {/* Hero Image */}
-          <div className="w-full max-w-xs sm:max-w-md md:max-w-lg mx-auto">
+          <div className="mx-auto w-full max-w-xs sm:max-w-md md:max-w-lg">
             <img
               src={featureHeroImg.src}
               alt="Blog Hero"
-              className="rounded-xl shadow-lg border border-gray-200"
+              className="rounded-xl border border-gray-200 shadow-lg"
               loading="eager"
             />
           </div>
         </div>
         {/* Bottom fade overlay */}
-        <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 z-0" style={{background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)'}} />
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
+        />
       </section>
 
       {/* Featured Posts Section */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">Featured Articles</h2>
+          <h2 className="mb-8 text-3xl font-bold text-gray-900">Featured Articles</h2>
           <div className="grid gap-8 md:grid-cols-2">
             {featuredPosts.map((post) => (
               <div
                 key={post.slug}
-                className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between"
+                className="flex flex-col justify-between rounded-xl border border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-lg"
               >
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <span className="text-xs font-medium text-primary">{post.meta.category}</span>
                     <span className="text-gray-400">•</span>
                     <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -111,18 +178,20 @@ export default async function BlogPage() {
                       {new Date(post.meta.date).toLocaleDateString()}
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                  <h3 className="mb-2 text-xl font-bold text-gray-900">
                     <Link href={`/blog/${post.slug}`}>{post.meta.title}</Link>
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{post.meta.description}</p>
+                  <p className="mb-4 line-clamp-3 text-gray-600">{post.meta.description}</p>
                 </div>
-                <div className="flex items-center justify-between mt-2">
+                <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="h-3 w-3" />
                     {post.meta.readTime}
                   </div>
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/blog/${post.slug}`}>Read More <ArrowRight className="ml-1 h-3 w-3" /></Link>
+                    <Link href={`/blog/${post.slug}`}>
+                      Read More <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </Button>
                 </div>
               </div>
@@ -132,17 +201,17 @@ export default async function BlogPage() {
       </section>
 
       {/* All Posts Section */}
-      <section className="py-16 bg-white">
+      <section className="bg-white py-16">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">All Articles</h2>
+          <h2 className="mb-8 text-3xl font-bold text-gray-900">All Articles</h2>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {regularPosts.map((post) => (
               <div
                 key={post.slug}
-                className="bg-white rounded-xl shadow-md border border-gray-200 p-6 flex flex-col justify-between"
+                className="flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-6 shadow-md"
               >
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="mb-2 flex items-center gap-2">
                     <span className="text-xs font-medium text-primary">{post.meta.category}</span>
                     <span className="text-gray-400">•</span>
                     <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -150,18 +219,20 @@ export default async function BlogPage() {
                       {new Date(post.meta.date).toLocaleDateString()}
                     </div>
                   </div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  <h3 className="mb-2 text-lg font-bold text-gray-900">
                     <Link href={`/blog/${post.slug}`}>{post.meta.title}</Link>
                   </h3>
-                  <p className="text-gray-600 mb-4 line-clamp-3">{post.meta.description}</p>
+                  <p className="mb-4 line-clamp-3 text-gray-600">{post.meta.description}</p>
                 </div>
-                <div className="flex items-center justify-between mt-2">
+                <div className="mt-2 flex items-center justify-between">
                   <div className="flex items-center gap-1 text-xs text-gray-500">
                     <Clock className="h-3 w-3" />
                     {post.meta.readTime}
                   </div>
                   <Button variant="ghost" size="sm" asChild>
-                    <Link href={`/blog/${post.slug}`}>Read More <ArrowRight className="ml-1 h-3 w-3" /></Link>
+                    <Link href={`/blog/${post.slug}`}>
+                      Read More <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </Button>
                 </div>
               </div>

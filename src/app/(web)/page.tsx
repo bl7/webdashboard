@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://instalabel.co/og-homepage.jpg",
+        url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Kitchen Prep Label Printer UK - Restaurant Allergen Label Software",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software",
     description:
       "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens.",
-    images: ["https://instalabel.co/og-homepage.jpg"],
+    images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
     canonical: "https://instalabel.co",

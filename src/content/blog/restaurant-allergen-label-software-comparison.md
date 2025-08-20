@@ -7,7 +7,7 @@ readTime: "10 min read"
 author: "InstaLabel Team"
 slug: "restaurant-allergen-label-software-comparison"
 featured: true
-image: "/public/labels/label2.png"
+image: "/opengraph-image.png"
 ---
 
 # Restaurant Allergen Label Software: Complete Buyer's Guide 2024 🏷️

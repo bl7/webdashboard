@@ -7,7 +7,7 @@ readTime: "12 min read"
 author: "InstaLabel Team"
 slug: "haccp-label-app-complete-guide"
 featured: true
-image: "/public/labels/label3.png"
+image: "/opengraph-image.png"
 ---
 
 # HACCP Label App: Complete Guide to Food Safety Compliance & Digital Labeling 🔒

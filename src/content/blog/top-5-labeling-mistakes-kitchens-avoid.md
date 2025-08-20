@@ -7,7 +7,7 @@ readTime: "6 min read"
 author: "InstaLabel Team"
 slug: "top-5-labeling-mistakes-kitchens-avoid"
 featured: true
-image: "/public/labels/label2.png"
+image: "/opengraph-image.png"
 ---
 
 # Top 5 Labeling Mistakes in Kitchens (and How to Avoid Them) ⚠️

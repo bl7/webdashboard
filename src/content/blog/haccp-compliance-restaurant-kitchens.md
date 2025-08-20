@@ -7,7 +7,7 @@ readTime: "8 min read"
 author: "InstaLabel Team"
 slug: "haccp-compliance-restaurant-kitchens"
 featured: true
-image: "/public/labels/label1.png"
+image: "/opengraph-image.png"
 ---
 
 # Complete Guide to HACCP Compliance in Restaurant Kitchens
@@ -16,11 +16,11 @@ HACCP (Hazard Analysis and Critical Control Points) is a proven, systematic appr
 
 In this guide, we cover:
 
-- What HACCP is  
-- Why it matters for restaurants  
-- The 7 core principles  
-- Steps to implement HACCP in your kitchen  
-- Common challenges and practical solutions  
+- What HACCP is
+- Why it matters for restaurants
+- The 7 core principles
+- Steps to implement HACCP in your kitchen
+- Common challenges and practical solutions
 
 ---
 
@@ -36,10 +36,10 @@ It covers every stage: sourcing, handling, cooking, storage, and serving.
 
 Implementing HACCP helps you:
 
-- Prevent food safety incidents and outbreaks  
-- Meet legal and regulatory requirements  
-- Enhance food quality and consistency  
-- Build trust and confidence with customers and inspectors  
+- Prevent food safety incidents and outbreaks
+- Meet legal and regulatory requirements
+- Enhance food quality and consistency
+- Build trust and confidence with customers and inspectors
 
 ---
 
@@ -96,13 +96,13 @@ Implementing HACCP helps you:
 ## Common Challenges and Solutions
 
 - **Lack of Training**  
-  *Solution:* Provide regular, practical staff education sessions.
+  _Solution:_ Provide regular, practical staff education sessions.
 
 - **Complex Documentation**  
-  *Solution:* Use digital tools and apps (like InstaLabel for labeling) to simplify record-keeping.
+  _Solution:_ Use digital tools and apps (like InstaLabel for labeling) to simplify record-keeping.
 
 - **Resistance to Change**  
-  *Solution:* Communicate the benefits clearly and involve staff in the process.
+  _Solution:_ Communicate the benefits clearly and involve staff in the process.
 
 ---
 
