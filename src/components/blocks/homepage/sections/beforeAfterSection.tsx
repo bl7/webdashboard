@@ -137,7 +137,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           fill
           className="object-cover"
           draggable={false}
-          priority
+          loading="lazy"
         />
       </div>
 
@@ -155,7 +155,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           fill
           className="object-cover"
           draggable={false}
-          priority
+          loading="lazy"
         />
       </div>
 
@@ -341,7 +341,10 @@ export const BeforeAfterSection = () => {
               viewport={{ once: true, amount: 0.6 }}
               variants={buttonVariant}
             >
-              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl sm:w-auto" asChild>
+              <Button
+                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl sm:w-auto"
+                asChild
+              >
                 <Link href="/bookdemo">
                   Book Demo
                   <ArrowRight className="ml-2 h-5 w-5" />

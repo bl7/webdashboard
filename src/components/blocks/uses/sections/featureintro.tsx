@@ -34,6 +34,7 @@ export const FeatureIntro = () => {
                   fill
                   className="rounded-xl object-cover"
                   sizes="(max-width: 1024px) 100vw, 600px"
+                  loading="lazy"
                 />
               </div>
             </div>
@@ -50,6 +51,7 @@ export const FeatureIntro = () => {
                   fill
                   className="rounded-xl object-cover"
                   sizes="(max-width: 1024px) 100vw, 600px"
+                  loading="lazy"
                 />
               </div>
             </div>

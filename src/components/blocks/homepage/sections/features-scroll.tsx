@@ -70,7 +70,7 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <motion.h2
+            <motion.h3
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -82,7 +82,7 @@ export const TrustedBySection = () => {
               </span>
               <br />
               <span className="text-gray-900">From Real Kitchens</span>
-            </motion.h2>
+            </motion.h3>
           </motion.div>
 
           {/* Customer Success Story */}

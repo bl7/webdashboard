@@ -18,9 +18,9 @@ export const WhyInstaLabel = () => {
           className="space-y-4 text-center"
         >
           {/* Header */}
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Why InstaLabel?
-          </h2>
+          </h3>
           <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
             Born from real kitchen challenges, designed to simplify and secure your food operations.
           </p>

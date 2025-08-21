@@ -105,6 +105,7 @@ export default function FAQPage() {
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="my-8 text-3xl font-bold">Frequently Asked Questions</h1>
+      <h2 className="mb-6 text-2xl font-semibold text-gray-900">Common Questions</h2>
       <Accordion type="single" collapsible className="w-full">
         {faqsList.map((item, idx) => (
           <AccordionItem key={item.q} value={(idx + 1).toString()}>

@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "PrintBridge Technology | Web Printing",
   description:
-    "Discover PrintBridge - our local bridge app that enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity, and reliable printing for your kitchen labels.",
+    "Discover PrintBridge - our local bridge app for seamless printing from web dashboard to thermal printers. No complex setup, instant connectivity.",
   keywords: [
     "PrintBridge",
     "local bridge app",

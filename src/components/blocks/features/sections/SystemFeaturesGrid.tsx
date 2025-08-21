@@ -138,7 +138,13 @@ const SystemFeaturesGrid = () => (
           <h3 className="mb-2 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
             The Software
           </h3>
-          <Image src="/webdashboard/print.png" alt="Software Screenshot" width={350} height={400} />
+          <Image
+            src="/webdashboard/print.png"
+            alt="Software Screenshot"
+            width={350}
+            height={400}
+            loading="lazy"
+          />
         </div>
         <ul className="space-y-5">
           {softwareFeatures.map((item, i) => (

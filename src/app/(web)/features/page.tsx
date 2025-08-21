@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Kitchen Labeling Features | Food Safety",
   description:
-    "Discover InstaLabel's powerful kitchen labeling features: HACCP-compliant food safety labels, allergen warnings, expiry tracking, thermal printer support, and restaurant management tools. Start free trial.",
+    "Discover InstaLabel's powerful kitchen labeling features: HACCP-compliant food safety labels, allergen warnings, expiry tracking, thermal printer support, and restaurant management tools.",
   keywords: [
     "kitchen labeling features",
     "food safety labels",

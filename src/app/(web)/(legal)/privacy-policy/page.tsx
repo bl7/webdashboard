@@ -89,7 +89,7 @@ const Page = () => {
             <li>To improve our product and user experience</li>
             <li>To comply with legal obligations</li>
           </ul>
-          <h2>How We Share Your Information</h2>
+          <h3>How We Share Your Information</h3>
           <ul>
             <li>
               With service providers who help us operate InstaLabel (e.g., cloud hosting, analytics)

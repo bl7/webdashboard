@@ -86,7 +86,7 @@ const Page = () => {
               language, login state).
             </li>
           </ul>
-          <h2>3. Third-Party Cookies</h2>
+          <h3>3. Third-Party Cookies</h3>
           <p>
             Some third-party services (such as embedded videos or analytics) may set their own
             cookies. We do not control these cookies. Please refer to the privacy policies of those

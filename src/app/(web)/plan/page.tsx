@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Kitchen Labeling Pricing | Restaurant Plans",
   description:
-    "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support. Start free trial.",
+    "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
   keywords: [
     "kitchen labeling pricing",
     "restaurant labeling plans",

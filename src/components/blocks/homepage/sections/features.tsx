@@ -15,13 +15,13 @@ export const Feature = () => {
           viewport={{ once: true }}
           className="mb-12 space-y-4 text-center"
         >
-          <h2 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+          <h3 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Why Smart Kitchens Choose
             </span>
             <br />
             <span className="text-gray-900">InstaLabel Over Basic Label Printers</span>
-          </h2>
+          </h3>
         </motion.div>
 
         {/* Comparison Grid */}

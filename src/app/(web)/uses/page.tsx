@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Kitchen Labeling Uses | Food Prep",
   description:
-    "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance. Perfect for restaurants, cafes, and food businesses.",
+    "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance. Perfect for restaurants and food businesses.",
   keywords: [
     "kitchen labeling uses",
     "food prep labels",
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kitchen Labeling Uses | Food Prep",
     description:
-      "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
+      "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
     url: "https://www.instalabel.co/uses",
     type: "website",
     images: [
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kitchen Labeling Uses | Food Prep",
     description:
-      "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
+      "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -70,7 +70,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "Kitchen Labeling Uses",
     description:
-      "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
+      "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
     url: "https://www.instalabel.co/uses",
     mainEntity: {
       "@type": "Article",

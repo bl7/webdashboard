@@ -7,7 +7,7 @@ import { ArrowRight, CheckCircle, Zap, Shield, RefreshCw } from "lucide-react"
 export const metadata: Metadata = {
   title: "Square Integration | Menu Sync",
   description:
-    "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow. Keep your kitchen labels always up-to-date with your Square menu.",
+    "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow. Keep kitchen labels up-to-date.",
   keywords: [
     "Square integration",
     "Square POS integration",

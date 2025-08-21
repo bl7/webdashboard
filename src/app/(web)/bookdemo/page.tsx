@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Book Demo | Kitchen Labeling System",
   description:
-    "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation, expert consultation.",
+    "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation.",
   keywords: [
     "book demo",
     "kitchen labeling demo",

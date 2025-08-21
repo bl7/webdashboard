@@ -69,7 +69,7 @@ const Page = () => {
             maintaining the confidentiality of your login credentials and for all activity under
             your account. Notify us immediately of any unauthorized use.
           </p>
-          <h2>3. Service Description</h2>
+          <h3>3. Service Description</h3>
           <p>
             InstaLabel provides software for generating and printing food safety labels (prep, cook,
             use-first, PPDS) for professional kitchens. The service may include web and mobile

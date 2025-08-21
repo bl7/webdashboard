@@ -34,9 +34,9 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="mb-12 text-center sm:mb-16"
         >
-          <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h3 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Get in Touch
-          </h2>
+          </h3>
           <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
             Tell us a little bit about who you are, and we'll tell you a whole lot more about who we
             are.

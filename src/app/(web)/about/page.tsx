@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "About InstaLabel | Kitchen Labeling Innovation",
   description:
-    "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+    "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants and food businesses worldwide.",
   keywords: [
     "about InstaLabel",
     "kitchen labeling innovation",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "About InstaLabel | Kitchen Labeling Innovation",
     description:
-      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants and food businesses worldwide.",
     url: "https://www.instalabel.co/about",
     type: "website",
     images: [
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About InstaLabel | Kitchen Labeling Innovation",
     description:
-      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants and food businesses worldwide.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -67,7 +67,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "About InstaLabel",
     description:
-      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
+      "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants and food businesses worldwide.",
     url: "https://www.instalabel.co/about",
     mainEntity: {
       "@type": "Organization",

@@ -4,7 +4,7 @@ import { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
   description:
-    "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
+    "UK's leading kitchen label printer and allergen label software. HACCP-compliant app for commercial kitchens. Print food safety labels instantly.",
   keywords: [
     "kitchen prep label printer UK",
     "restaurant allergen label software",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
     description:
-      "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
+      "UK's leading kitchen label printer and allergen label software. HACCP-compliant app for commercial kitchens. Print food safety labels instantly.",
     url: "https://www.instalabel.co",
     type: "website",
     images: [
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
     description:
-      "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens.",
+      "UK's leading kitchen label printer and allergen label software. HACCP-compliant app for commercial kitchens.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {

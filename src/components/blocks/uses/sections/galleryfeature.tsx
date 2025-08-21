@@ -119,6 +119,7 @@ export const GalleryFeature = () => {
               width={500}
               height={350}
               className="object-cover"
+              loading="lazy"
             />
           </div>
         </motion.div>
