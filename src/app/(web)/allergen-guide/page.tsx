@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "UK 14 Allergens Guide | Natasha's Law Compliance",
+  title: "UK 14 Allergens Guide | Natasha's Law",
   description:
     "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements. Essential reference for Natasha's Law and EHO compliance.",
   keywords: [
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     "allergen reference card",
   ],
   openGraph: {
-    title: "UK 14 Allergens Guide | Natasha's Law Compliance",
+    title: "UK 14 Allergens Guide | Natasha's Law",
     description:
       "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
     url: "https://www.instalabel.co/allergen-guide",
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "UK 14 Allergens Guide | Natasha's Law Compliance",
+    title: "UK 14 Allergens Guide | Natasha's Law",
     description:
       "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

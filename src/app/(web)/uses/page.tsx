@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Kitchen Labeling Uses | Food Prep & PPDS Labels",
+  title: "Kitchen Labeling Uses | Food Prep",
   description:
     "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance. Perfect for restaurants, cafes, and food businesses.",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "food labeling software",
   ],
   openGraph: {
-    title: "Kitchen Labeling Uses | Food Prep & PPDS Labels",
+    title: "Kitchen Labeling Uses | Food Prep",
     description:
       "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
     url: "https://www.instalabel.co/uses",
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Labeling Uses | Food Prep & PPDS Labels",
+    title: "Kitchen Labeling Uses | Food Prep",
     description:
       "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

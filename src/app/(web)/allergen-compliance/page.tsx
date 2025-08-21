@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Free UK Allergen Compliance Kit | 14 Allergens Guide | InstaLabel",
+  title: "Free UK Allergen Compliance Kit",
   description:
     "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
   keywords: [

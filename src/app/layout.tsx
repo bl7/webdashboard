@@ -27,8 +27,8 @@ const accent_font = Oxygen({
 
 export const metadata: Metadata = {
   title: {
-    default: "InstaLabel - Smart Kitchen Labeling System | Food Safety Labels & Expiry Tracking",
-    template: "%s | InstaLabel - Professional Kitchen Labeling",
+    default: "Kitchen Label Printer UK | Restaurant Allergen Labels",
+    template: "%s | InstaLabel",
   },
   metadataBase: new URL("https://www.instalabel.co/"),
   description:

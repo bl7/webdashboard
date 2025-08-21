@@ -270,26 +270,34 @@ export const Footer = () => {
                 <Link
                   href="#"
                   className="group rounded-full bg-purple-800/50 p-2 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  aria-label="Follow us on Twitter"
                 >
                   <FaXTwitter className="h-4 w-4 text-white transition-colors duration-300 group-hover:text-sky-400" />
+                  <span className="sr-only">Twitter</span>
                 </Link>
                 <Link
                   href="#"
                   className="group rounded-full bg-purple-800/50 p-2 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  aria-label="Follow us on Instagram"
                 >
                   <FaInstagram className="h-4 w-4 text-white transition-colors duration-300 group-hover:text-pink-400" />
+                  <span className="sr-only">Instagram</span>
                 </Link>
                 <Link
                   href="#"
                   className="group rounded-full bg-purple-800/50 p-2 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  aria-label="Follow us on Facebook"
                 >
                   <FaFacebook className="h-4 w-4 text-white transition-colors duration-300 group-hover:text-blue-400" />
+                  <span className="sr-only">Facebook</span>
                 </Link>
                 <Link
                   href="#"
                   className="group rounded-full bg-purple-800/50 p-2 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  aria-label="Follow us on LinkedIn"
                 >
                   <FaLinkedin className="h-4 w-4 text-white transition-colors duration-300 group-hover:text-blue-500" />
+                  <span className="sr-only">LinkedIn</span>
                 </Link>
               </div>
             </div>

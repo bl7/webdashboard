@@ -8,8 +8,8 @@ import Link from "next/link"
 
 export const AllergenGuideCTA = () => {
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="bg-white py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           {/* Main CTA */}
           <motion.div
@@ -19,11 +19,12 @@ export const AllergenGuideCTA = () => {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
               Get Your Complete Allergen Compliance Kit
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              Download our free comprehensive toolkit with visual reference cards, checklists, and training templates for complete Natasha's Law compliance.
+            <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-600">
+              Download our free toolkit with visual reference cards, checklists, and training
+              templates for complete Natasha's Law compliance.
             </p>
           </motion.div>
 
@@ -33,10 +34,10 @@ export const AllergenGuideCTA = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             viewport={{ once: true }}
-            className="grid gap-6 md:grid-cols-3 mb-12"
+            className="mb-12 grid gap-6 md:grid-cols-3"
           >
-            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-3">
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+              <div className="mb-3 flex items-center gap-3">
                 <Shield className="h-6 w-6 text-purple-600" />
                 <h3 className="font-semibold text-gray-900">Visual Reference Cards</h3>
               </div>
@@ -45,23 +46,23 @@ export const AllergenGuideCTA = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-3">
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+              <div className="mb-3 flex items-center gap-3">
                 <CheckCircle2 className="h-6 w-6 text-purple-600" />
                 <h3 className="font-semibold text-gray-900">HACCP Checklists</h3>
               </div>
               <p className="text-sm text-gray-600">
-                Complete checklists for cross-contamination prevention and EHO compliance.
+                Complete checklists for cross-contamination prevention and EHO rules.
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center gap-3 mb-3">
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
+              <div className="mb-3 flex items-center gap-3">
                 <Download className="h-6 w-6 text-purple-600" />
                 <h3 className="font-semibold text-gray-900">Training Templates</h3>
               </div>
               <p className="text-sm text-gray-600">
-                Staff training materials and emergency response protocols for allergic reactions.
+                Staff training materials and emergency response plans for allergic reactions.
               </p>
             </div>
           </motion.div>
@@ -74,13 +75,10 @@ export const AllergenGuideCTA = () => {
             viewport={{ once: true }}
             className="flex flex-wrap items-center justify-center gap-4"
           >
-            <Button size="lg" className="bg-purple-600 text-white px-8 py-3 hover:bg-purple-700">
-              <Link href="/allergen-compliance">
-                Download Free Toolkit
-              </Link>
+            <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+              <Link href="/allergen-compliance">Download Free Toolkit</Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            
           </motion.div>
 
           {/* Trust Indicators */}
@@ -99,4 +97,4 @@ export const AllergenGuideCTA = () => {
       </div>
     </section>
   )
-} 
+}

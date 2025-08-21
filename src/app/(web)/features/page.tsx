@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Kitchen Labeling Features | Food Safety & Thermal Printers",
+  title: "Kitchen Labeling Features | Food Safety",
   description:
     "Discover InstaLabel's powerful kitchen labeling features: HACCP-compliant food safety labels, allergen warnings, expiry tracking, thermal printer support, and restaurant management tools. Start free trial.",
   keywords: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "restaurant technology",
   ],
   openGraph: {
-    title: "Kitchen Labeling Features | Food Safety & Thermal Printers",
+    title: "Kitchen Labeling Features | Food Safety",
     description:
       "Discover InstaLabel's powerful kitchen labeling features: HACCP-compliant food safety labels, allergen warnings, expiry tracking, thermal printer support, and restaurant management tools.",
     url: "https://www.instalabel.co/features",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Labeling Features | Food Safety & Thermal Printers",
+    title: "Kitchen Labeling Features | Food Safety",
     description:
       "Discover InstaLabel's powerful kitchen labeling features for food safety and compliance.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

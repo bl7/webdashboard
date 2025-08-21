@@ -5,7 +5,7 @@ import { Button } from "@/components/ui"
 import { ArrowRight, CheckCircle, Zap, Shield, RefreshCw } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Square Integration | Menu Sync & Allergen Detection",
+  title: "Square Integration | Menu Sync",
   description:
     "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow. Keep your kitchen labels always up-to-date with your Square menu.",
   keywords: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "restaurant management integration",
   ],
   openGraph: {
-    title: "Square Integration | Menu Sync & Allergen Detection",
+    title: "Square Integration | Menu Sync",
     description:
       "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow.",
     url: "https://www.instalabel.co/square-integration",
@@ -115,9 +115,9 @@ const Page = () => {
               <span className="text-gray-900">That Just Works</span>
             </h1>
             <p className="text-xl leading-relaxed text-gray-700">
-              Connect your Square POS with InstaLabel for automatic menu synchronization, smart
-              allergen detection, and bidirectional data flow. Keep your kitchen labels always
-              up-to-date with your Square menu.
+              Connect your Square POS with InstaLabel. Get automatic menu sync. Smart allergen
+              detection. Two-way data flow. Keep your kitchen labels always up-to-date with your
+              Square menu.
             </p>
 
             {/* Key Benefits */}
@@ -136,7 +136,7 @@ const Page = () => {
                 <div>
                   <div className="font-semibold text-gray-900">Smart Allergen Detection</div>
                   <div className="text-sm text-gray-600">
-                    AI-powered allergen identification from ingredients
+                    AI finds allergens in your ingredients
                   </div>
                 </div>
               </div>
@@ -144,9 +144,7 @@ const Page = () => {
                 <RefreshCw className="mt-1 h-5 w-5 text-purple-600" />
                 <div>
                   <div className="font-semibold text-gray-900">Bidirectional Flow</div>
-                  <div className="text-sm text-gray-600">
-                    Safe create-only mode prevents data conflicts
-                  </div>
+                  <div className="text-sm text-gray-600">Safe mode prevents data conflicts</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -232,7 +230,7 @@ const Page = () => {
               </div>
               <h3 className="mt-4 text-xl font-semibold text-gray-900">Connect</h3>
               <p className="mt-2 text-gray-600">
-                Authorize InstaLabel to access your Square menu data with secure OAuth.
+                Give InstaLabel permission to access your Square menu data.
               </p>
             </div>
             <div className="text-center">
@@ -241,7 +239,7 @@ const Page = () => {
               </div>
               <h3 className="mt-4 text-xl font-semibold text-gray-900">Sync</h3>
               <p className="mt-2 text-gray-600">
-                Your menu items automatically sync with allergen detection and ingredient analysis.
+                Your menu items sync automatically with allergen detection.
               </p>
             </div>
             <div className="text-center">
@@ -250,7 +248,7 @@ const Page = () => {
               </div>
               <h3 className="mt-4 text-xl font-semibold text-gray-900">Print</h3>
               <p className="mt-2 text-gray-600">
-                Print compliant labels instantly with up-to-date menu information.
+                Print labels instantly with current menu information.
               </p>
             </div>
           </div>

@@ -35,10 +35,10 @@ export const UsesHero = () => {
             </h1>
 
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              From allergen warnings to expiry dates, prep labels to HACCP compliance — InstaLabel
-              handles every labeling need. Print from web dashboard or Sunmi devices, track usage
-              with real-time analytics, and optimize your kitchen operations with comprehensive
-              reporting.
+              InstaLabel handles all your kitchen labeling needs. From allergen warnings to expiry
+              dates. From prep labels to food safety compliance. Print from your web dashboard or
+              Sunmi devices. Track usage with live analytics. Get detailed reports to improve your
+              kitchen operations.
             </p>
 
             {/* Key Benefits */}

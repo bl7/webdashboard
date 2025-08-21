@@ -139,8 +139,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return notFound()
-  const processedContent = await remark().use(html).process(post.content)
-  const contentHtml = processedContent.toString()
+  // Process content and convert H1 tags to H2 to avoid duplicate H1s
+  let processedContent = await remark().use(html).process(post.content)
+  let contentHtml = processedContent.toString()
+
+  // Convert H1 tags in content to H2 tags to avoid duplicate H1s
+  contentHtml = contentHtml.replace(/<h1/g, "<h2").replace(/<\/h1>/g, "</h2>")
 
   // JSON-LD Article Schema
   const jsonLd = {

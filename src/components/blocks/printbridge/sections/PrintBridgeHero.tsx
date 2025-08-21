@@ -57,10 +57,9 @@ export const PrintBridgeHero = () => {
             viewport={{ once: true }}
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              PrintBridge is InstaLabel’s seamless local printing solution, powered by Zentra—our
-              lightweight bridge app for Windows and Mac. Zentra connects your web dashboard
-              directly to your thermal printers. No complex network setup, no cloud
-              dependencies—just instant, reliable printing for your kitchen labels.
+              PrintBridge is our simple printing solution. It uses Zentra—a small app for Windows
+              and Mac. Zentra links your web dashboard to your thermal printers. No tricky network
+              setup. No cloud needed. Just fast, reliable printing for your kitchen labels.
             </p>
           </motion.div>
 
@@ -99,9 +98,9 @@ export const PrintBridgeHero = () => {
                 <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" asChild>
                 <a
-                  href="https://www.zentra.ltd/documentation"
+                  href="https://www.zentra-mu-flax.vercel.app/documentation"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

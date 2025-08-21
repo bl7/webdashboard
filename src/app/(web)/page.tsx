@@ -2,7 +2,7 @@ import { Homepage } from "@/components/blocks"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kitchen Label Printer UK | Restaurant Allergen Labels | HACCP App",
+  title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
   description:
     "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
   keywords: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     "food service technology UK",
   ],
   openGraph: {
-    title: "Kitchen Label Printer UK | Restaurant Allergen Labels | HACCP App",
+    title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
     description:
       "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
     url: "https://www.instalabel.co",
