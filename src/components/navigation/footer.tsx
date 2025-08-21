@@ -107,7 +107,7 @@ export const Footer = () => {
 
       {/* Enhanced Footer Section */}
       <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-10 text-sm text-white">
-        <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-4">
+        <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-5">
           {/* Logo + Description */}
           <div className="space-y-3">
             <div className="relative">
@@ -132,28 +132,79 @@ export const Footer = () => {
             </h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link
-                href="/faqs"
+                href="/uses"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
-                FAQs
+                Kitchen Labeling Uses
               </Link>
               <Link
-                href="/blog"
+                href="/features"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
-                Blogs
+                Features & Benefits
+              </Link>
+              <Link
+                href="/printbridge"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                PrintBridge Technology
+              </Link>
+              <Link
+                href="/square-integration"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Square Integration
               </Link>
               <Link
                 href="/allergen-compliance"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
-                Allergen Compliance
+                Allergen Compliance Kit
               </Link>
               <Link
                 href="/allergen-guide"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
-                Allergen Guide
+                UK 14 Allergens Guide
+              </Link>
+              <Link
+                href="/faqs"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Frequently Asked Questions
+              </Link>
+              <Link
+                href="/blog"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Kitchen Labeling Blog
+              </Link>
+            </nav>
+          </div>
+
+          {/* Business Links */}
+          <div className="space-y-3">
+            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+              Business
+            </h3>
+            <nav className="flex flex-col gap-2 text-xs text-white/80">
+              <Link
+                href="/plan"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Pricing Plans
+              </Link>
+              <Link
+                href="/bookdemo"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Book Free Demo
+              </Link>
+              <Link
+                href="/about"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                About InstaLabel
               </Link>
             </nav>
           </div>

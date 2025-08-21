@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import React from "react"
-import instaLabel from "@/assets/images/instaLabel.png"
+import instaLabel2 from "@/assets/images/instalabel2.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { WaitlistModal } from "./WaitlistModal"
@@ -38,11 +38,11 @@ export const Hero = () => {
           transition={{ duration: 0.6 }}
           className="mb-2 flex w-full max-w-none flex-[1.2] items-center justify-center md:mb-0"
         >
-          <div className="relative w-full max-w-[800px]">
+          <div className="relative flex w-full max-w-[800px] justify-center">
             <Image
-              src={instaLabel}
+              src={instaLabel2}
               alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
-              className="w-full object-contain transition duration-300 hover:-rotate-2 hover:scale-105"
+              className="w-full max-w-[320px] object-contain transition duration-300 hover:-rotate-2 hover:scale-105"
               priority
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
@@ -124,7 +124,7 @@ export const Hero = () => {
             <div className="flex items-start gap-2">
               <span className="text-lg">📱</span>
               <div>
-                <div className="text-sm font-bold text-gray-900">Print from Sunmi Devices</div>
+                <div className="text-sm font-bold text-gray-900">Print from Android Devices</div>
                 <div className="text-xs text-gray-600">
                   Mobile kitchen? Our Android app makes it portable.
                 </div>

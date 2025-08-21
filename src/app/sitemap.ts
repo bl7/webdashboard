@@ -24,12 +24,32 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   // Add static pages
-  const urls: MetadataRoute.Sitemap = staticPages.map((page, i) => ({
-    url: `${baseUrl}${page}`,
-    lastModified: new Date("2024-12-19"),
-    changeFrequency: page === "" || page === "/blog" ? "weekly" : "monthly",
-    priority: page === "" ? 1 : page === "/blog" ? 0.9 : 0.7,
-  }))
+  const urls: MetadataRoute.Sitemap = staticPages.map((page, i) => {
+    let priority = 0.7
+    let changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never" =
+      "monthly"
+
+    if (page === "") {
+      priority = 1.0
+      changeFrequency = "weekly"
+    } else if (page === "/blog") {
+      priority = 0.9
+      changeFrequency = "weekly"
+    } else if (page === "/features" || page === "/plan" || page === "/allergen-compliance") {
+      priority = 0.8
+      changeFrequency = "monthly"
+    } else if (page === "/uses" || page === "/printbridge" || page === "/square-integration") {
+      priority = 0.8
+      changeFrequency = "monthly"
+    }
+
+    return {
+      url: `${baseUrl}${page}`,
+      lastModified: new Date("2024-12-19"),
+      changeFrequency,
+      priority,
+    }
+  })
 
   // Add blog posts
   const blogDir = path.join(process.cwd(), "src/content/blog")

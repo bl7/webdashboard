@@ -10,11 +10,11 @@ import { Menu as MenuIcon, X as CloseIcon } from "lucide-react"
 import { MobileMenu } from "@/components/navigation/mobile-menu"
 
 const navItems = [
-  { label: "Uses", href: "/uses" },
-  { label: "Features", href: "/features" },
-  { label: "PrintBridge", href: "/printbridge" },
-  { label: "Plan", href: "/plan" },
-  { label: "About", href: "/about" },
+  { label: "Kitchen Labeling Uses", href: "/uses" },
+  { label: "Features & Benefits", href: "/features" },
+  { label: "PrintBridge Technology", href: "/printbridge" },
+  { label: "Pricing Plans", href: "/plan" },
+  { label: "About Us", href: "/about" },
   { label: "Contact", href: "/about#contact", hideOnMobile: true },
 ]
 
@@ -39,37 +39,37 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 w-full border-b transition-all duration-500 ease-out",
+        "fixed left-0 right-0 top-0 z-50 w-full border-b transition-all duration-500 ease-out",
         isScrolled
           ? "border-purple-200/30 bg-white/95 shadow-xl backdrop-blur-xl"
           : "border-purple-200/20 bg-white/85 backdrop-blur-lg"
       )}
     >
-      <div className="container flex h-16 sm:h-20 items-center justify-between px-2 sm:px-4 md:px-12 lg:px-16">
+      <div className="container flex h-16 items-center justify-between px-2 sm:h-20 sm:px-4 md:px-12 lg:px-16">
         {/* Logo */}
         <Link
           href="/"
           className={cn(
-            "flex items-center h-full transition-all duration-300 ease-out", 
+            "flex h-full items-center transition-all duration-300 ease-out",
             "hover:scale-105 active:scale-95"
           )}
         >
-          <div className="relative flex items-center  h-full overflow-hidden rounded-xl p-1 sm:p-2"> 
+          <div className="relative flex h-full items-center overflow-hidden rounded-xl p-1 sm:p-2">
             <Image
               src="/logo_long.svg"
               alt="InstaLabel"
               width={140}
               height={38}
               priority
-              className="transition-all duration-300 hover:brightness-110 drop-shadow-sm"
-              style={{ display: 'block', margin: '0 auto' }}
+              className="drop-shadow-sm transition-all duration-300 hover:brightness-110"
+              style={{ display: "block", margin: "0 auto" }}
             />
             <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 ease-out hover:translate-x-full" />
           </div>
         </Link>
         {/* Desktop Nav + CTA */}
-        <div className="hidden md:flex items-center gap-4 sm:gap-10">
-          <nav className="items-center gap-4 sm:gap-8 text-sm sm:text-base font-semibold text-gray-800 md:flex">
+        <div className="hidden items-center gap-4 sm:gap-10 md:flex">
+          <nav className="items-center gap-4 text-sm font-semibold text-gray-800 sm:gap-8 sm:text-base md:flex">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -77,13 +77,13 @@ export const Header = () => {
                 className={cn(
                   "relative transition-all duration-300 hover:scale-105",
                   isActive(item.href)
-                    ? "text-purple-700 font-bold"
+                    ? "font-bold text-purple-700"
                     : "text-gray-700 hover:text-purple-600"
                 )}
               >
                 {item.label}
                 {isActive(item.href) && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600" />
                 )}
               </Link>
             ))}
@@ -93,7 +93,7 @@ export const Header = () => {
               href="/register"
               className={cn(
                 buttonVariants({ variant: "default", size: "sm" }),
-                "h-9 sm:h-11 rounded-full px-4 sm:px-6 text-sm sm:text-base bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                "h-9 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl sm:h-11 sm:px-6 sm:text-base"
               )}
             >
               Free Trial
@@ -102,7 +102,7 @@ export const Header = () => {
               href="/login"
               className={cn(
                 buttonVariants({ variant: "outline", size: "sm" }),
-                "h-9 sm:h-11 rounded-full px-3 sm:px-5 text-sm sm:text-base border-2 border-purple-200 text-purple-700 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-800 font-semibold transition-all duration-300 hover:scale-105"
+                "h-9 rounded-full border-2 border-purple-200 px-3 text-sm font-semibold text-purple-700 transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-800 sm:h-11 sm:px-5 sm:text-base"
               )}
             >
               Sign In
@@ -111,7 +111,7 @@ export const Header = () => {
         </div>
         {/* Hamburger for mobile */}
         <button
-          className="md:hidden flex items-center justify-center p-2 rounded-lg hover:bg-purple-100 focus:outline-none"
+          className="flex items-center justify-center rounded-lg p-2 hover:bg-purple-100 focus:outline-none md:hidden"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
         >

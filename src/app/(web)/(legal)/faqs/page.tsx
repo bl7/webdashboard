@@ -1,6 +1,59 @@
-"use client"
 import React from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui"
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+  description:
+    "Find answers to common questions about InstaLabel's kitchen labeling system, food safety compliance, thermal printer support, and restaurant labeling features.",
+  keywords: [
+    "InstaLabel FAQ",
+    "kitchen labeling questions",
+    "food safety compliance FAQ",
+    "restaurant labeling help",
+    "thermal printer support",
+    "kitchen management FAQ",
+    "allergen labeling questions",
+    "HACCP compliance help",
+    "restaurant technology FAQ",
+    "kitchen automation questions",
+  ],
+  openGraph: {
+    title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+    description:
+      "Find answers to common questions about InstaLabel's kitchen labeling system, food safety compliance, thermal printer support, and restaurant labeling features.",
+    url: "https://instalabel.co/faqs",
+    type: "website",
+    images: [
+      {
+        url: "https://www.instalabel.co/opengraph-image.png",
+        width: 1200,
+        height: 630,
+        alt: "InstaLabel FAQ - Kitchen Labeling Questions",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+    description: "Find answers to common questions about InstaLabel's kitchen labeling system.",
+    images: ["https://www.instalabel.co/opengraph-image.png"],
+  },
+  alternates: {
+    canonical: "https://instalabel.co/faqs",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+}
 
 const faqsList = [
   {
@@ -49,17 +102,10 @@ const faqsList = [
 ]
 
 export default function FAQPage() {
-  const [value, setValue] = React.useState("1")
   return (
     <main className="mx-auto max-w-2xl px-4 py-12">
       <h1 className="my-8 text-3xl font-bold">Frequently Asked Questions</h1>
-      <Accordion
-        type="single"
-        collapsible
-        value={value}
-        onValueChange={setValue}
-        className="w-full"
-      >
+      <Accordion type="single" collapsible className="w-full">
         {faqsList.map((item, idx) => (
           <AccordionItem key={item.q} value={(idx + 1).toString()}>
             <AccordionTrigger className="text-base">{item.q}</AccordionTrigger>

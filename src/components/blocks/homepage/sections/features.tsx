@@ -117,6 +117,45 @@ export const Feature = () => {
             </ul>
           </motion.div>
         </motion.div>
+
+        {/* CTA Section with Internal Links */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          className="mt-12 text-center"
+        >
+          <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+            <h3 className="mb-4 text-2xl font-bold text-gray-900">
+              Ready to Upgrade Your Kitchen Labeling?
+            </h3>
+            <p className="mb-6 text-gray-600">
+              Explore our features, see pricing plans, or book a free demo to see InstaLabel in
+              action.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              <a
+                href="/features"
+                className="inline-flex items-center rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+              >
+                Explore All Features
+              </a>
+              <a
+                href="/plan"
+                className="inline-flex items-center rounded-lg border-2 border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-all duration-300 hover:border-purple-600 hover:bg-purple-50"
+              >
+                View Pricing Plans
+              </a>
+              <a
+                href="/bookdemo"
+                className="inline-flex items-center rounded-lg border-2 border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-all duration-300 hover:border-purple-600 hover:bg-purple-50"
+              >
+                Book Free Demo
+              </a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   )

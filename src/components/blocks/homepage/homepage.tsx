@@ -10,8 +10,8 @@ export const Homepage = () => {
   return (
     <>
       <Hero />
-      <TrustedBySection />
       <WhatWeDoShowcase />
+      <TrustedBySection />
       <Services />
       <Feature />
       <SquareIntegrationHomepage />
