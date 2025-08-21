@@ -63,6 +63,4 @@ export const HowToUploadSteps = () => (
   </section>
 )
 
-export default HowToUploadSteps
-
 export default HowToUploadSteps; 
