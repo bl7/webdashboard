@@ -16,9 +16,9 @@ export const AllergenGuideCompliance = () => {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
+          <h3 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
             Natasha's Law Compliance Requirements
-          </h2>
+          </h3>
           <p className="mx-auto max-w-3xl text-lg text-gray-600">
             What you need to know about allergen labeling in the UK and how to follow EHO rules.
           </p>

@@ -50,9 +50,9 @@ export const PPDSLabelShowcaseSection = () => (
           </span>{" "}
           Natasha's Law / PPDS Labels
         </div>
-        <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-left">
+        <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-left">
           Full-Compliance Food Labels, Instantly
-        </h2>
+        </h3>
         <p className="text-center text-lg leading-relaxed text-gray-700 lg:text-left">
           InstaLabel makes it effortless to print fully compliant PPDS (Prepacked for Direct Sale)
           labels. Our system automatically pulls ingredients and allergens, formats them to FSA

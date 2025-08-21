@@ -62,7 +62,7 @@ const Page = () => {
             Cookies are small data files stored on your device when you visit a website. They help
             us remember your preferences, keep you logged in, and analyze how you use our service.
           </p>
-          <h2>2. What Cookies Do We Use?</h2>
+          <h3>2. What Cookies Do We Use?</h3>
           <ul>
             <li>
               <strong>Essential Cookies:</strong> Required for core site functionality, such as

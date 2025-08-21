@@ -258,9 +258,9 @@ const Page = () => {
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-purple-100 to-pink-100 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         <div className="container mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+          <h3 className="text-3xl font-bold text-gray-900 sm:text-4xl">
             Ready to Connect Your Square POS?
-          </h2>
+          </h3>
           <p className="mt-4 text-lg text-gray-600">
             Join hundreds of restaurants already using InstaLabel with Square integration.
           </p>

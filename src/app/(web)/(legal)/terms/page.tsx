@@ -63,7 +63,7 @@ const Page = () => {
             By using InstaLabel, you agree to these Terms. If you do not agree, do not use the
             service.
           </p>
-          <h2>2. User Accounts</h2>
+          <h3>2. User Accounts</h3>
           <p>
             You must provide accurate information when creating an account. You are responsible for
             maintaining the confidentiality of your login credentials and for all activity under

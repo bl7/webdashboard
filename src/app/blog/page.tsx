@@ -203,7 +203,7 @@ export default async function BlogPage() {
       {/* All Posts Section */}
       <section className="bg-white py-16">
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
-          <h2 className="mb-8 text-3xl font-bold text-gray-900">All Articles</h2>
+          <h3 className="mb-8 text-3xl font-bold text-gray-900">All Articles</h3>
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {regularPosts.map((post) => (
               <div

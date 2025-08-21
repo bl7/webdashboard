@@ -26,13 +26,13 @@ export const Footer = () => {
 
         <div className="container relative z-10 mx-auto max-w-6xl space-y-12 text-center">
           <div className="space-y-8">
-            <h2 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+            <h3 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
               <span className="bg-gradient-to-r from-purple-700 to-pink-600 bg-clip-text text-transparent">
                 Ready to simplify
               </span>
               <br />
               <span className="text-gray-900">your kitchen labeling?</span>
-            </h2>
+            </h3>
             <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-700">
               EHO-compliant labels. Natasha's Law ready. No training required. Works with your
               existing Epson printer and Sunmi devices.

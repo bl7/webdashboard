@@ -1,6 +1,14 @@
 "use client"
 
-import { CheckCircle2, Shield, BookOpen, ClipboardList, Users, FileText, AlertCircle } from "lucide-react"
+import {
+  CheckCircle2,
+  Shield,
+  BookOpen,
+  ClipboardList,
+  Users,
+  FileText,
+  AlertCircle,
+} from "lucide-react"
 import { motion } from "framer-motion"
 
 export const AllergenComplianceSolution = () => {
@@ -9,75 +17,80 @@ export const AllergenComplianceSolution = () => {
       icon: Shield,
       title: "14 Allergens Visual Reference Card",
       description: "Kitchen-ready poster",
-      color: "purple"
+      color: "purple",
     },
     {
       icon: BookOpen,
       title: "Hidden Allergen Sources Guide",
       description: "300+ ingredients decoded",
-      color: "blue"
+      color: "blue",
     },
     {
       icon: ClipboardList,
       title: "Cross-Contamination Prevention Checklist",
       description: "HACCP-compliant",
-      color: "green"
+      color: "green",
     },
     {
       icon: Users,
       title: "Staff Training Template",
       description: "Customize for your team",
-      color: "purple"
+      color: "purple",
     },
     {
       icon: FileText,
       title: "Natasha's Law Compliance Audit",
       description: "25-point inspection",
-      color: "blue"
+      color: "blue",
     },
     {
       icon: AlertCircle,
       title: "Emergency Allergen Response Protocol",
       description: "Liability protection",
-      color: "red"
-    }
+      color: "red",
+    },
   ]
 
   const getIconColor = (color: string) => {
     switch (color) {
-      case "purple": return "text-purple-600 bg-purple-100"
-      case "blue": return "text-blue-600 bg-blue-100"
-      case "green": return "text-green-600 bg-green-100"
-      case "red": return "text-red-600 bg-red-100"
-      default: return "text-gray-600 bg-gray-100"
+      case "purple":
+        return "text-purple-600 bg-purple-100"
+      case "blue":
+        return "text-blue-600 bg-blue-100"
+      case "green":
+        return "text-green-600 bg-green-100"
+      case "red":
+        return "text-red-600 bg-red-100"
+      default:
+        return "text-gray-600 bg-gray-100"
     }
   }
 
   return (
-    <section className="py-20 px-4 bg-white">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <motion.h2 
+    <section className="bg-white px-4 py-20">
+      <div className="mx-auto max-w-6xl">
+        <div className="mb-12 text-center">
+          <motion.h3
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4"
+            className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl"
           >
             Complete UK Allergen Compliance Toolkit
-          </motion.h2>
-          <motion.p 
+          </motion.h3>
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
             viewport={{ once: true }}
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+            className="mx-auto max-w-3xl text-xl text-gray-600"
           >
             Everything you need for UK Natasha's Law compliance and EHO inspections
           </motion.p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="mb-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {toolkitItems.map((item, index) => (
             <motion.div
               key={index}
@@ -85,17 +98,17 @@ export const AllergenComplianceSolution = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 + index * 0.1 }}
               viewport={{ once: true }}
-              className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
             >
               <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-full ${getIconColor(item.color)} flex-shrink-0`}>
+                <div className={`rounded-full p-3 ${getIconColor(item.color)} flex-shrink-0`}>
                   <item.icon className="h-6 w-6" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-start gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-600" />
                     <div>
-                      <h3 className="font-semibold text-gray-900 mb-1">{item.title}</h3>
+                      <h3 className="mb-1 font-semibold text-gray-900">{item.title}</h3>
                       <p className="text-sm text-gray-600">{item.description}</p>
                     </div>
                   </div>
@@ -105,21 +118,19 @@ export const AllergenComplianceSolution = () => {
           ))}
         </div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.7 }}
           viewport={{ once: true }}
-          className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-8 text-center"
+          className="rounded-xl border border-yellow-200 bg-gradient-to-r from-yellow-50 to-orange-50 p-8 text-center"
         >
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-yellow-800 mb-2">
+          <div className="mx-auto max-w-2xl">
+            <h3 className="mb-2 text-2xl font-bold text-yellow-800">
               Normally £149 from food safety consultants
             </h3>
-            <p className="text-lg text-yellow-700 font-semibold">
-              Yours completely free
-            </p>
-            <p className="text-sm text-yellow-600 mt-2">
+            <p className="text-lg font-semibold text-yellow-700">Yours completely free</p>
+            <p className="mt-2 text-sm text-yellow-600">
               No hidden costs, no upsells, no strings attached
             </p>
           </div>
@@ -127,4 +138,4 @@ export const AllergenComplianceSolution = () => {
       </div>
     </section>
   )
-} 
+}

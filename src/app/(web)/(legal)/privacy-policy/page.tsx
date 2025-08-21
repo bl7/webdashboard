@@ -81,7 +81,7 @@ const Page = () => {
               for details.
             </li>
           </ul>
-          <h2>How We Use Your Information</h2>
+          <h3>How We Use Your Information</h3>
           <ul>
             <li>To provide and maintain the InstaLabel service</li>
             <li>To support food safety compliance and generate audit-ready print logs</li>

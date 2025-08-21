@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Star, Award, Users, TrendingUp, Quote, ChevronLeft, ChevronRight } from "lucide-react"
 import Marquee from "@/lib/marqee"
+import Image from "next/image"
 
 const foodBusinesses = [
   { name: "Noodle Bar", logo: "/noodlebar.png" },
@@ -107,10 +108,14 @@ export const TrustedBySection = () => {
                   </blockquote>
                   <div className="flex items-center gap-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
-                      <img
+                      <Image
                         src="/noodlebar.png"
                         alt="Noodle Bar logo"
+                        width={32}
+                        height={32}
+                        sizes="32px"
                         className="h-8 w-8 rounded-full object-cover"
+                        priority
                       />
                     </div>
                     <div>
@@ -141,10 +146,14 @@ export const TrustedBySection = () => {
                   <div className="flex items-center gap-20 overflow-visible px-10 py-8">
                     {foodBusinesses.map(({ name, logo }) => (
                       <div key={name} className="group relative">
-                        <img
+                        <Image
                           src={logo}
                           alt={`${name} logo`}
+                          width={96}
+                          height={96}
+                          sizes="96px"
                           className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                          loading="lazy"
                         />
                       </div>
                     ))}
@@ -167,12 +176,17 @@ export const TrustedBySection = () => {
 
                   <div className="flex h-32 items-center justify-center px-16">
                     <div className="group relative">
-                      <img
+                      <Image
                         key={currentIndex} // Force re-render when index changes
                         src={foodBusinesses[currentIndex].logo}
                         alt={`${foodBusinesses[currentIndex].name} logo`}
+                        width={96}
+                        height={96}
+                        sizes="96px"
                         className="h-24 max-h-24 w-auto object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
                         title={foodBusinesses[currentIndex].name}
+                        priority={currentIndex === 0}
+                        loading={currentIndex === 0 ? "eager" : "lazy"}
                       />
                     </div>
                   </div>

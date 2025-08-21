@@ -20,9 +20,9 @@ export const FeaturesGridUses = () => {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               Enterprise-Ready Labelling for Modern Kitchens
-            </h2>
+            </h3>
             <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
               Go beyond basic printing with tools built for speed, traceability, and food safety
               compliance.

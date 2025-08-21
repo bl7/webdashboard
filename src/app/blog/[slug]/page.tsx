@@ -192,7 +192,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           {related.length > 0 && (
             <aside className="w-full md:sticky md:top-8 md:w-1/3">
               <div className="mb-6">
-                <h2 className="mb-3 text-lg font-bold text-gray-900">Related Articles</h2>
+                <h3 className="mb-6 text-2xl font-bold text-gray-900">Related Articles</h3>
                 <div className="flex flex-col gap-3">
                   {related.map((r) => (
                     <Link

@@ -112,13 +112,13 @@ export const Services = () => {
               The Kitchen Labeling Crisis
             </div>
 
-            <h2 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h3 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Problems Every Kitchen
               </span>
               <br />
               <span className="text-gray-900">Faces Daily</span>
-            </h2>
+            </h3>
 
             <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
               Traditional labeling methods are costing kitchens time, money, and compliance. Here's
