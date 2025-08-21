@@ -10,11 +10,11 @@ import { Menu as MenuIcon, X as CloseIcon } from "lucide-react"
 import { MobileMenu } from "@/components/navigation/mobile-menu"
 
 const navItems = [
-  { label: "Kitchen Labeling Uses", href: "/uses" },
-  { label: "Features & Benefits", href: "/features" },
-  { label: "PrintBridge Technology", href: "/printbridge" },
-  { label: "Pricing Plans", href: "/plan" },
-  { label: "About Us", href: "/about" },
+  { label: "Uses", href: "/uses" },
+  { label: "Features", href: "/features" },
+  { label: "PrintBridge", href: "/printbridge" },
+  { label: "Plan", href: "/plan" },
+  { label: "About", href: "/about" },
   { label: "Contact", href: "/about#contact", hideOnMobile: true },
 ]
 
