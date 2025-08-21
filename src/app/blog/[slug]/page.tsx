@@ -43,10 +43,10 @@ export async function generateMetadata({
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return {}
-  const url = `https://instalabel.co/blog/${post.meta.slug}`
+  const url = `https://instalabel.co/blog/${slug}`
 
   // Use the default Open Graph image as fallback
-  const defaultImage = "https://www.instalabel.co/opengraph-image.png"
+  const defaultImage = "https://instalabel.co/opengraph-image.png"
   const image = post.meta.image ? `https://instalabel.co${post.meta.image}` : defaultImage
 
   return {
@@ -65,7 +65,7 @@ export async function generateMetadata({
     openGraph: {
       title: post.meta.title,
       description: post.meta.description,
-      url,
+      url: `https://instalabel.co/blog/${slug}`,
       type: "article",
       images: [
         {
@@ -86,7 +86,7 @@ export async function generateMetadata({
       images: [image],
     },
     alternates: {
-      canonical: url,
+      canonical: `https://instalabel.co/blog/${slug}`,
     },
   }
 }
@@ -156,23 +156,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     image: post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://instalabel.co/blog/${post.meta.slug}`,
+      "@id": `https://instalabel.co/blog/${slug}`,
     },
   }
 
   // Related Articles
   const allPosts = await getAllBlogPostsMeta()
   // Prefer same category, fallback to recent
-  let related = allPosts.filter(
-    (p) => p.slug !== post.meta.slug && p.category === post.meta.category
-  )
+  let related = allPosts.filter((p) => p.slug !== slug && p.category === post.meta.category)
   if (related.length < 2) {
-    related = allPosts.filter((p) => p.slug !== post.meta.slug)
+    related = allPosts.filter((p) => p.slug !== slug)
   }
   related = related.slice(0, 3)
 
   // Find next/previous posts by date
-  const currentIndex = allPosts.findIndex((p) => p.slug === post.meta.slug)
+  const currentIndex = allPosts.findIndex((p) => p.slug === slug)
   const prevPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null
   const nextPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null
 

@@ -42,11 +42,11 @@ export const metadata: Metadata = {
     title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software | HACCP Label App",
     description:
       "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly with thermal printers.",
-    url: "https://www.instalabel.co",
+    url: "https://instalabel.co",
     type: "website",
     images: [
       {
-        url: "https://www.instalabel.co/opengraph-image.png",
+        url: "https://instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
         alt: "Kitchen Prep Label Printer UK - Restaurant Allergen Label Software",
@@ -58,10 +58,10 @@ export const metadata: Metadata = {
     title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software",
     description:
       "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens.",
-    images: ["https://www.instalabel.co/opengraph-image.png"],
+    images: ["https://instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://www.instalabel.co",
+    canonical: "https://instalabel.co",
   },
   robots: {
     index: true,
@@ -109,7 +109,7 @@ export default function Home() {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://www.instalabel.co",
+          item: "https://instalabel.co",
         },
       ],
     },
@@ -128,7 +128,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "Kitchen Prep Label Printer UK Guide",
-          url: "https://www.instalabel.co/blog/kitchen-prep-label-printer-uk-guide",
+          url: "https://instalabel.co/blog/kitchen-prep-label-printer-uk-guide",
           description: "Complete guide to kitchen prep label printers for UK restaurants",
         },
       },
@@ -138,7 +138,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "Restaurant Allergen Label Software Guide",
-          url: "https://www.instalabel.co/blog/restaurant-allergen-label-software-comparison",
+          url: "https://instalabel.co/blog/restaurant-allergen-label-software-comparison",
           description: "Complete buyer's guide for restaurant allergen label software",
         },
       },
@@ -148,7 +148,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "HACCP Label App Complete Guide",
-          url: "https://www.instalabel.co/blog/haccp-label-app-complete-guide",
+          url: "https://instalabel.co/blog/haccp-label-app-complete-guide",
           description: "Complete guide to HACCP label apps for food safety compliance",
         },
       },
@@ -158,7 +158,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "Commercial Kitchen Label Printer Guide",
-          url: "https://www.instalabel.co/blog/commercial-kitchen-label-printer-guide",
+          url: "https://instalabel.co/blog/commercial-kitchen-label-printer-guide",
           description: "Complete buyer's guide for commercial kitchen label printers",
         },
       },
@@ -168,7 +168,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "Top 5 Labeling Mistakes in Kitchens",
-          url: "https://www.instalabel.co/blog/top-5-labeling-mistakes-kitchens-avoid",
+          url: "https://instalabel.co/blog/top-5-labeling-mistakes-kitchens-avoid",
           description: "Common kitchen labeling mistakes and how to avoid them",
         },
       },
@@ -178,7 +178,7 @@ export default function Home() {
         item: {
           "@type": "Article",
           name: "Natasha's Law Guide for Food Businesses",
-          url: "https://www.instalabel.co/blog/natashas-law-guide-food-business-compliance",
+          url: "https://instalabel.co/blog/natashas-law-guide-food-business-compliance",
           description: "Complete guide to Natasha's Law compliance for UK food businesses",
         },
       },

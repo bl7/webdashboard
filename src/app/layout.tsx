@@ -108,6 +108,9 @@ export const metadata: Metadata = {
     images: [og.src],
     creator: "@instalabel",
   },
+  alternates: {
+    canonical: "https://instalabel.co",
+  },
   category: "Food Service Technology",
 }
 
