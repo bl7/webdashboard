@@ -64,3 +64,5 @@ export const HowToUploadSteps = () => (
 )
 
 export default HowToUploadSteps
+
+export default HowToUploadSteps; 

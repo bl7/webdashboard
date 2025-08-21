@@ -1,4 +1,3 @@
-
 export async function registerUser(data: any) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
     method: "POST",
@@ -140,7 +139,7 @@ export async function deleteAllergen(id: string, token: string | null) {
   })
 
   if (!response.ok) {
-      const contentType = response.headers.get("content-type")
+    const contentType = response.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Delete allergen failed")
@@ -200,7 +199,7 @@ export async function getIngredient(ingredientId: string, token: string | null) 
 
   const contentType = response.headers.get("content-type")
   if (!response.ok) {
-      if (contentType && contentType.includes("application/json")) {
+    if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
       throw new Error(errorData.message || "Failed to fetch ingredient")
     } else {
@@ -235,7 +234,7 @@ export async function addIngredient(
   })
 
   if (!res.ok) {
-        const contentType = res.headers.get("content-type")
+    const contentType = res.headers.get("content-type")
     if (contentType && contentType.includes("application/json")) {
       const errorData = await res.json()
       throw new Error(errorData.message || "Failed to add ingredient")
@@ -284,7 +283,7 @@ export async function updateIngredient(
   }
 
   const resData = await res.json()
-    return resData
+  return resData
 }
 
 // Optional: Add function to delete ingredient
@@ -514,7 +513,7 @@ export async function resetPassword(email: string, newPassword: string, confirmP
 
 // Custom Allergens CRUD
 export async function getAllCustomAllergens(token: string | null) {
-  console.log('getAllCustomAllergens called with token:', token ? 'present' : 'missing');
+  console.log("getAllCustomAllergens called with token:", token ? "present" : "missing")
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customAllergens`, {
     method: "GET",
     headers: {
@@ -522,21 +521,24 @@ export async function getAllCustomAllergens(token: string | null) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
-  console.log('getAllCustomAllergens response status:', response.status);
+  console.log("getAllCustomAllergens response status:", response.status)
   if (!response.ok) {
-    const errorData = await response.json();
-    console.log('getAllCustomAllergens error:', errorData);
-    throw new Error(errorData.message || "Failed to fetch custom allergens");
+    const errorData = await response.json()
+    console.log("getAllCustomAllergens error:", errorData)
+    throw new Error(errorData.message || "Failed to fetch custom allergens")
   }
-  const data = await response.json();
-  console.log('getAllCustomAllergens success:', data);
-  return data;
+  const data = await response.json()
+  console.log("getAllCustomAllergens success:", data)
+  return data
 }
 
 export async function addCustomAllergen(allergenName: string, token: string | null) {
-  console.log('addCustomAllergen called with:', { allergenName, token: token ? 'present' : 'missing' });
+  console.log("addCustomAllergen called with:", {
+    allergenName,
+    token: token ? "present" : "missing",
+  })
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customAllergens`, {
     method: "POST",
     headers: {
@@ -545,21 +547,25 @@ export async function addCustomAllergen(allergenName: string, token: string | nu
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ allergenName }),
-  });
+  })
 
-  console.log('addCustomAllergen response status:', response.status);
+  console.log("addCustomAllergen response status:", response.status)
   if (!response.ok) {
-    const errorData = await response.json();
-    console.log('addCustomAllergen error:', errorData);
-    throw new Error(errorData.message || "Failed to add custom allergen");
+    const errorData = await response.json()
+    console.log("addCustomAllergen error:", errorData)
+    throw new Error(errorData.message || "Failed to add custom allergen")
   }
-  const data = await response.json();
-  console.log('addCustomAllergen success:', data);
-  return data;
+  const data = await response.json()
+  console.log("addCustomAllergen success:", data)
+  return data
 }
 
 export async function updateCustomAllergen(id: string, allergenName: string, token: string | null) {
-  console.log('updateCustomAllergen called with:', { id, allergenName, token: token ? 'present' : 'missing' });
+  console.log("updateCustomAllergen called with:", {
+    id,
+    allergenName,
+    token: token ? "present" : "missing",
+  })
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customAllergens/${id}`, {
     method: "PUT",
     headers: {
@@ -568,21 +574,21 @@ export async function updateCustomAllergen(id: string, allergenName: string, tok
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ allergenName }),
-  });
+  })
 
-  console.log('updateCustomAllergen response status:', response.status);
+  console.log("updateCustomAllergen response status:", response.status)
   if (!response.ok) {
-    const errorData = await response.json();
-    console.log('updateCustomAllergen error:', errorData);
-    throw new Error(errorData.message || "Failed to update custom allergen");
+    const errorData = await response.json()
+    console.log("updateCustomAllergen error:", errorData)
+    throw new Error(errorData.message || "Failed to update custom allergen")
   }
-  const data = await response.json();
-  console.log('updateCustomAllergen success:', data);
-  return data;
+  const data = await response.json()
+  console.log("updateCustomAllergen success:", data)
+  return data
 }
 
 export async function deleteCustomAllergen(id: string, token: string | null) {
-  console.log('deleteCustomAllergen called with:', { id, token: token ? 'present' : 'missing' });
+  console.log("deleteCustomAllergen called with:", { id, token: token ? "present" : "missing" })
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/customAllergens/${id}`, {
     method: "DELETE",
     headers: {
@@ -590,17 +596,17 @@ export async function deleteCustomAllergen(id: string, token: string | null) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
-  console.log('deleteCustomAllergen response status:', response.status);
+  console.log("deleteCustomAllergen response status:", response.status)
   if (!response.ok) {
-    const errorData = await response.json();
-    console.log('deleteCustomAllergen error:', errorData);
-    throw new Error(errorData.message || "Failed to delete custom allergen");
+    const errorData = await response.json()
+    console.log("deleteCustomAllergen error:", errorData)
+    throw new Error(errorData.message || "Failed to delete custom allergen")
   }
-  const data = await response.json();
-  console.log('deleteCustomAllergen success:', data);
-  return data;
+  const data = await response.json()
+  console.log("deleteCustomAllergen success:", data)
+  return data
 }
 
 // Item Categories (Menu Item Groups) CRUD
@@ -612,13 +618,13 @@ export async function getAllItemCategories(token: string | null) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to fetch item categories");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to fetch item categories")
   }
-  return await response.json();
+  return await response.json()
 }
 
 export async function addItemCategory(categoryName: string, token: string | null) {
@@ -630,13 +636,13 @@ export async function addItemCategory(categoryName: string, token: string | null
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ categoryName }),
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to add item category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to add item category")
   }
-  return await response.json();
+  return await response.json()
 }
 
 export async function updateItemCategory(id: string, categoryName: string, token: string | null) {
@@ -648,13 +654,13 @@ export async function updateItemCategory(id: string, categoryName: string, token
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ categoryName }),
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to update item category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to update item category")
   }
-  return await response.json();
+  return await response.json()
 }
 
 export async function deleteItemCategory(id: string, token: string | null) {
@@ -665,13 +671,13 @@ export async function deleteItemCategory(id: string, token: string | null) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to delete item category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to delete item category")
   }
-  return await response.json();
+  return await response.json()
 }
 
 // Ingredient Categories (Ingredient Groups) CRUD
@@ -683,16 +689,20 @@ export async function getAllIngredientCategories(token: string | null) {
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to fetch ingredient categories");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to fetch ingredient categories")
   }
-  return await response.json();
+  return await response.json()
 }
 
-export async function addIngredientCategory(categoryName: string, expiryDays: number, token: string | null) {
+export async function addIngredientCategory(
+  categoryName: string,
+  expiryDays: number,
+  token: string | null
+) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredientsCategory`, {
     method: "POST",
     headers: {
@@ -701,16 +711,20 @@ export async function addIngredientCategory(categoryName: string, expiryDays: nu
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ categoryName, expiryDays }),
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to add ingredient category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to add ingredient category")
   }
-  return await response.json();
+  return await response.json()
 }
 
-export async function updateIngredientCategory(id: string, expiryDays: number, token: string | null) {
+export async function updateIngredientCategory(
+  id: string,
+  expiryDays: number,
+  token: string | null
+) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/ingredientsCategory/${id}`, {
     method: "PUT",
     headers: {
@@ -719,13 +733,13 @@ export async function updateIngredientCategory(id: string, expiryDays: number, t
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ expiryDays }),
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to update ingredient category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to update ingredient category")
   }
-  return await response.json();
+  return await response.json()
 }
 
 export async function deleteIngredientCategory(id: string, token: string | null) {
@@ -736,11 +750,11 @@ export async function deleteIngredientCategory(id: string, token: string | null)
       Accept: "application/json",
       Authorization: `Bearer ${token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to delete ingredient category");
+    const errorData = await response.json()
+    throw new Error(errorData.message || "Failed to delete ingredient category")
   }
-  return await response.json();
+  return await response.json()
 }
