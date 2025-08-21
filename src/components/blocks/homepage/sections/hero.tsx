@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import React from "react"
-import instaLabel2 from "@/assets/images/instalabel2.png"
+import instaLabel2 from "@/assets/images/instaLabel2.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { WaitlistModal } from "./WaitlistModal"
