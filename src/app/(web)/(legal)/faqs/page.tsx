@@ -3,7 +3,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+  title: "FAQs | InstaLabel Kitchen Labeling",
   description:
     "Find answers to common questions about InstaLabel's kitchen labeling system, food safety compliance, thermal printer support, and restaurant labeling features.",
   keywords: [
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     "kitchen automation questions",
   ],
   openGraph: {
-    title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+    title: "FAQs | InstaLabel Kitchen Labeling",
     description:
       "Find answers to common questions about InstaLabel's kitchen labeling system, food safety compliance, thermal printer support, and restaurant labeling features.",
     url: "https://www.instalabel.co/faqs",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
+    title: "FAQs | InstaLabel Kitchen Labeling",
     description: "Find answers to common questions about InstaLabel's kitchen labeling system.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },

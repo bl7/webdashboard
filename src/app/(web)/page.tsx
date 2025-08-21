@@ -2,9 +2,9 @@ import { Homepage } from "@/components/blocks"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software | HACCP Label App",
+  title: "Kitchen Label Printer UK | Restaurant Allergen Labels | HACCP App",
   description:
-    "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly with thermal printers. Free trial available.",
+    "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
   keywords: [
     "kitchen prep label printer UK",
     "restaurant allergen label software",
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     "food service technology UK",
   ],
   openGraph: {
-    title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software | HACCP Label App",
+    title: "Kitchen Label Printer UK | Restaurant Allergen Labels | HACCP App",
     description:
-      "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly with thermal printers.",
+      "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens. Print food safety labels instantly.",
     url: "https://www.instalabel.co",
     type: "website",
     images: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Prep Label Printer UK | Restaurant Allergen Label Software",
+    title: "Kitchen Label Printer UK | Restaurant Allergen Labels",
     description:
       "UK's leading kitchen prep label printer and restaurant allergen label software. HACCP-compliant label app for commercial kitchens.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

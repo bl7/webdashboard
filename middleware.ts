@@ -16,7 +16,28 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(dashboardUrl)
   }
 
-  return NextResponse.next()
+  // Add security headers
+  const response = NextResponse.next()
+
+  // Content Security Policy
+  response.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://checkout.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://checkout.stripe.com; frame-src https://js.stripe.com https://checkout.stripe.com;"
+  )
+
+  // Referrer Policy
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
+
+  // X-Frame-Options
+  response.headers.set("X-Frame-Options", "DENY")
+
+  // X-Content-Type-Options
+  response.headers.set("X-Content-Type-Options", "nosniff")
+
+  // X-XSS-Protection
+  response.headers.set("X-XSS-Protection", "1; mode=block")
+
+  return response
 }
 
 export const config = {

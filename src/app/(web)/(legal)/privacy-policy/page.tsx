@@ -137,8 +137,8 @@ const Page = () => {
             </li>
             <li>
               Website:{" "}
-              <a href="https://www.instalabel.co/support" target="_blank" rel="noopener">
-                https://www.instalabel.co/support
+              <a href="https://www.instalabel.co/about#contact" target="_blank" rel="noopener">
+                https://www.instalabel.co/about#contact
               </a>
             </li>
           </ul>
