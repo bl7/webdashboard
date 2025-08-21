@@ -369,8 +369,6 @@ export function Chatbot({ className }: ChatbotProps) {
   const [typedText, setTypedText] = useState("")
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0)
   const [currentAvatarIndex, setCurrentAvatarIndex] = useState(0)
-  const [showAvatar1Overlay, setShowAvatar1Overlay] = useState(false)
-  const [avatar1Text, setAvatar1Text] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const currentMessageRef = useRef(0)
@@ -386,8 +384,9 @@ export function Chatbot({ className }: ChatbotProps) {
     "Any questions about InstaLabel?",
   ]
 
-  // Array of avatar images (excluding avatar1 for main display)
+  // Array of avatar images (including avatar1 for regular rotation)
   const avatarImages = [
+    "/avatar1.png",
     "/avatar2.png",
     "/avatar3.png",
     "/avatar4.png",
@@ -419,12 +418,11 @@ export function Chatbot({ className }: ChatbotProps) {
     setCurrentAvatarIndex(randomIndex)
   }, [])
 
-  // Animate speech bubble with typing effect
+  // Animate speech bubble with typing effect and avatar cycling
   useEffect(() => {
     if (!isOpen) {
       let intervalId: NodeJS.Timeout
       let typeIntervalId: NodeJS.Timeout
-      let avatar1IntervalId: NodeJS.Timeout
 
       const startAnimation = () => {
         console.log("Regular avatar animation starting")
@@ -452,6 +450,9 @@ export function Chatbot({ className }: ChatbotProps) {
               setShowSpeechBubble(false)
               setTypedText("")
               console.log("Regular avatar message hidden")
+
+              // Cycle to next avatar after message is hidden
+              setCurrentAvatarIndex((prevIndex) => (prevIndex + 1) % avatarImages.length)
             }, 3000)
           }
         }, 50) // Faster typing - 50ms per character
@@ -466,50 +467,17 @@ export function Chatbot({ className }: ChatbotProps) {
         startAnimation()
       }, 10000) // Show every 10 seconds
 
-      // Set up avatar1 overlay animation (appears less frequently)
-      avatar1IntervalId = setInterval(() => {
-        console.log("Avatar1 overlay starting")
-        setShowAvatar1Overlay(true)
-        setAvatar1Text("")
-
-        let currentIndex = 0
-        const avatar1TypeInterval = setInterval(() => {
-          if (
-            currentIndex <
-            "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!".length
-          ) {
-            setAvatar1Text(
-              "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!".slice(
-                0,
-                currentIndex + 1
-              )
-            )
-            currentIndex++
-          } else {
-            clearInterval(avatar1TypeInterval)
-            setTimeout(() => {
-              setShowAvatar1Overlay(false)
-              setAvatar1Text("")
-              console.log("Avatar1 overlay hidden")
-            }, 3000)
-          }
-        }, 50)
-      }, 30000) // Avatar1 appears every 30 seconds
-
       // Cleanup function to prevent multiple intervals
       return () => {
         console.log("Cleaning up intervals")
         if (intervalId) clearInterval(intervalId)
         if (typeIntervalId) clearInterval(typeIntervalId)
-        if (avatar1IntervalId) clearInterval(avatar1IntervalId)
       }
     } else {
       // When chat is open, clear all intervals
       console.log("Chat opened - clearing all intervals")
       setShowSpeechBubble(false)
-      setShowAvatar1Overlay(false)
       setTypedText("")
-      setAvatar1Text("")
     }
   }, [isOpen]) // Removed currentAvatarIndex from dependencies
 
@@ -518,7 +486,7 @@ export function Chatbot({ className }: ChatbotProps) {
     if (!isOpen) {
       const backupInterval = setInterval(() => {
         // Only trigger if no speech bubble is currently showing
-        if (!showSpeechBubble && !showAvatar1Overlay) {
+        if (!showSpeechBubble) {
           console.log("Backup interval triggered - restarting regular avatar")
           setShowSpeechBubble(true)
           setTypedText("")
@@ -535,6 +503,9 @@ export function Chatbot({ className }: ChatbotProps) {
               setTimeout(() => {
                 setShowSpeechBubble(false)
                 setTypedText("")
+
+                // Cycle to next avatar after message is hidden
+                setCurrentAvatarIndex((prevIndex) => (prevIndex + 1) % avatarImages.length)
               }, 3000)
             }
           }, 50)
@@ -543,7 +514,7 @@ export function Chatbot({ className }: ChatbotProps) {
 
       return () => clearInterval(backupInterval)
     }
-  }, [isOpen, showSpeechBubble, showAvatar1Overlay])
+  }, [isOpen, showSpeechBubble])
 
   const findAnswer = (question: string): string => {
     // Normalize the input
@@ -883,30 +854,6 @@ export function Chatbot({ className }: ChatbotProps) {
                 </div>
                 {/* Speech bubble arrow pointing right to the button */}
                 <div className="absolute -right-2 top-3 h-0 w-0 border-b-4 border-l-4 border-t-4 border-transparent border-l-blue-600"></div>
-              </div>
-            </div>
-
-            {/* Avatar1 overlay speech bubble */}
-            <div
-              className={`absolute -top-32 transition-all duration-500 ${showAvatar1Overlay ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
-            >
-              <div className="min-w-[200px] max-w-[550px] rounded-lg border border-white/20 bg-gradient-to-r from-red-600 to-orange-600 px-4 py-2 shadow-lg">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src="/avatar1.png"
-                    alt="Avatar1"
-                    width={32}
-                    height={32}
-                    className="-mt-1 rounded-full"
-                  />
-                  <div className="text-sm font-medium leading-relaxed text-white">
-                    {avatar1Text}
-                    {showAvatar1Overlay &&
-                      avatar1Text.length <
-                        "InstaLabel wa sugee zo! Zettee tameshite miro! Kaizoku-ō ni ore wa naru!"
-                          .length && <span className="animate-pulse">|</span>}
-                  </div>
-                </div>
               </div>
             </div>
           </div>
