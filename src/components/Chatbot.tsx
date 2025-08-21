@@ -373,17 +373,6 @@ export function Chatbot({ className }: ChatbotProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const currentMessageRef = useRef(0)
 
-  // Array of different greeting messages
-  const greetingMessages = [
-    "Hey, can I help you?",
-    "Hello, how can I help you today?",
-    "Need help with InstaLabel?",
-    "What can I assist you with?",
-    "Ready to help you today!",
-    "How can I make your day better?",
-    "Any questions about InstaLabel?",
-  ]
-
   // Array of avatar images (including avatar1 for regular rotation)
   const avatarImages = [
     "/avatar1.png",
@@ -395,6 +384,101 @@ export function Chatbot({ className }: ChatbotProps) {
     "/avatar7.png",
     "/avatar8.png",
     "/avatar9.png",
+    "/avatar10.png",
+  ]
+
+  // Multiple messages for each avatar (One Piece characters)
+  const avatarMessages = [
+    // 🏴‍☠️ Luffy (Avatar1)
+    [
+      "Oi! Need some help? Let's make this quick, I'm hungry! 🍖", // Original
+      "Hey! What do you need? I'll help fast so we can eat after! 🍖",
+      "Shishishi~! Got a question? Ask me anything! 🍖",
+      "Oi! Let's get this done quick, adventure's waiting! 🍖",
+      "Hi! I'm Luffy, and I'll be King of the Pirates… but first, need help? 🍖",
+      "Hungry? Oh wait—no, you need help! What's up? 🍖",
+    ],
+    // ⚔️ Zoro (Avatar2)
+    [
+      "Tch… What do you need? Don't waste my time unless it's important. ⚔️", // Original
+      "Lost? Hmph, I'll get you back on track. ⚔️",
+      "What do you need? Make it quick. ⚔️",
+      "Don't bother me with nonsense. Ask straight. ⚔️",
+      "If you're looking for direction… well, I'm not the best. But I'll help. ⚔️",
+      "Tch… fine. What's the problem? ⚔️",
+    ],
+    // 🗺️ Nami (Avatar3)
+    [
+      "Hi there~! How can I guide you today? 🗺️", // Original
+      "Hi there! Need me to guide you somewhere? 🗺️",
+      "What can I help you navigate today? 🗺️",
+      "Looking for something? I'll find the way! 🗺️",
+      "Hello~! Let's chart a course for your answer. 🗺️",
+      "Ask me anything—I'll make it easy. 🗺️",
+    ],
+    // 🩺 Chopper (Avatar4)
+    [
+      "Hello! Do you need any help? I'll do my best! 🩺", // Original
+      "Hi! Do you need some help? I'll try my best! 🩺",
+      "Oh! You need something? I can do it! 🩺",
+      "Don't worry, you're safe with me! 🩺",
+      "I'll take care of it—leave it to me! 🩺",
+      "Hehe… really? You think I'm helpful?! 🩺",
+    ],
+    // 📜 Robin (Avatar5)
+    [
+      "Good day. What information are you searching for? 📜", // Original
+      "Hello. What would you like to know? 📜",
+      "I'll uncover the answer for you. 📜",
+      "Seeking knowledge? Let's find it together. 📜",
+      "Good day. What's on your mind? 📜",
+      "Every question has a story—what's yours? 📜",
+    ],
+    // 🍳 Sanji (Avatar6)
+    [
+      "Ah, welcome~! What can I do for you today, my dear guest? 💐🍳", // Original
+      "Welcome, my dear guest. How may I serve you today? 💐🍳",
+      "Need help? Consider it done—with style. 💐🍳",
+      "Hello! What can I get for you, sweetheart? 💐🍳",
+      "A fine request deserves fine service—tell me! 💐🍳",
+      "Your wish is my command, mademoiselle. 💐🍳",
+    ],
+    // 🔧 Franky (Avatar7)
+    [
+      "SUUUPER~! Need help? Leave it to me! 🔧", // Original
+      "SUUUPER! What do you need help with?! 🔧",
+      "Oi! Let's fix this problem, no sweat! 🔧",
+      "Need help? Leave it to a cyborg like me! 🔧",
+      "This is gonna be a SUUUPER solution! 🔧",
+      "Yow! What's the issue? I'll make it flashy! 🔧",
+    ],
+    // 🌊 Jinbe (Avatar8)
+    [
+      "Greetings. How may I assist you today? 🌊", // Original
+      "Greetings. What do you need assistance with? 🌊",
+      "Calm seas, calm answers—what can I do for you? 🌊",
+      "Tell me your concern, and I will guide you through. 🌊",
+      "Hello. Allow me to support you. 🌊",
+      "The tide is in your favor. How may I help? 🌊",
+    ],
+    // 🎯 Usopp (Avatar9)
+    [
+      "You're in luck! You've got the great Usopp here to solve all your problems! 🎯", // Original
+      "You're in luck—the great Usopp will help you! 🎯",
+      "I can solve anything! …Well, maybe not everything… but try me! 🎯",
+      "Don't worry, your problem is no match for me! 🎯",
+      "I'm the bravest warrior of the sea, and I'll guide you! 🎯",
+      "Hey! What do you need? I'll shoot straight to the answer! 🎯",
+    ],
+    // 🎻 Brook (Avatar10)
+    [
+      "Yohohoho! May I lend you a hand? Oh, but I don't have any flesh on mine! 🎻💀", // Original
+      "Yohohoho! How may I help you today? 🎻💀",
+      "Need a hand? Oh, but I don't have any flesh on mine! 🎻💀",
+      "Hello, hello! What's troubling your soul? 🎻💀",
+      "Yohoho! Allow me to assist, if you don't mind the bones! 🎻💀",
+      "May I help you? Or perhaps sing you a tune? 🎻💀",
+    ],
   ]
 
   const scrollToBottom = () => {
@@ -429,9 +513,15 @@ export function Chatbot({ className }: ChatbotProps) {
         setShowSpeechBubble(true)
         setTypedText("")
 
-        // Use random message for current avatar
-        const text = greetingMessages[Math.floor(Math.random() * greetingMessages.length)]
-        console.log("Regular avatar message:", text)
+        // Use random message from current avatar's message array
+        const characterMessages = avatarMessages[currentAvatarIndex]
+        const text = characterMessages[Math.floor(Math.random() * characterMessages.length)]
+        console.log(
+          "Regular avatar animation - currentAvatarIndex:",
+          currentAvatarIndex,
+          "message:",
+          text
+        )
         let currentIndex = 0
 
         // Clear any existing typing interval
@@ -450,9 +540,6 @@ export function Chatbot({ className }: ChatbotProps) {
               setShowSpeechBubble(false)
               setTypedText("")
               console.log("Regular avatar message hidden")
-
-              // Cycle to next avatar after message is hidden
-              setCurrentAvatarIndex((prevIndex) => (prevIndex + 1) % avatarImages.length)
             }, 3000)
           }
         }, 50) // Faster typing - 50ms per character
@@ -479,7 +566,7 @@ export function Chatbot({ className }: ChatbotProps) {
       setShowSpeechBubble(false)
       setTypedText("")
     }
-  }, [isOpen]) // Removed currentAvatarIndex from dependencies
+  }, [isOpen, currentAvatarIndex]) // Include currentAvatarIndex to update message when avatar changes
 
   // Backup mechanism to ensure regular avatar keeps cycling
   useEffect(() => {
@@ -491,7 +578,9 @@ export function Chatbot({ className }: ChatbotProps) {
           setShowSpeechBubble(true)
           setTypedText("")
 
-          const text = greetingMessages[Math.floor(Math.random() * greetingMessages.length)]
+          const characterMessages = avatarMessages[currentAvatarIndex]
+          const text = characterMessages[Math.floor(Math.random() * characterMessages.length)]
+          console.log("Backup interval - currentAvatarIndex:", currentAvatarIndex, "message:", text)
           let currentIndex = 0
 
           const typeInterval = setInterval(() => {
@@ -503,9 +592,6 @@ export function Chatbot({ className }: ChatbotProps) {
               setTimeout(() => {
                 setShowSpeechBubble(false)
                 setTypedText("")
-
-                // Cycle to next avatar after message is hidden
-                setCurrentAvatarIndex((prevIndex) => (prevIndex + 1) % avatarImages.length)
               }, 3000)
             }
           }, 50)
@@ -514,7 +600,7 @@ export function Chatbot({ className }: ChatbotProps) {
 
       return () => clearInterval(backupInterval)
     }
-  }, [isOpen, showSpeechBubble])
+  }, [isOpen, showSpeechBubble, currentAvatarIndex])
 
   const findAnswer = (question: string): string => {
     // Normalize the input
@@ -819,7 +905,7 @@ export function Chatbot({ className }: ChatbotProps) {
   const dynamicOptions = getDynamicOptions()
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 ${className}`}>
+    <div className={`fixed bottom-20 right-4 z-50 ${className}`}>
       {/* Chat Toggle Button with avatar1 and animated speech bubbles */}
       <div
         className={`transition-all duration-300 ${isOpen ? "scale-0 opacity-0" : "scale-100 opacity-100"}`}
