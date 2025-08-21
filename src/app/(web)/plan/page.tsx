@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Kitchen Labeling Pricing | Restaurant Labeling Plans | InstaLabel",
+  title: "Kitchen Labeling Pricing | Restaurant Plans",
   description:
     "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support. Start free trial.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "kitchen workflow automation cost",
   ],
   openGraph: {
-    title: "Kitchen Labeling Pricing | Restaurant Labeling Plans | InstaLabel",
+    title: "Kitchen Labeling Pricing | Restaurant Plans",
     description:
       "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
     url: "https://www.instalabel.co/plan",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Labeling Pricing | Restaurant Labeling Plans",
+    title: "Kitchen Labeling Pricing | Restaurant Plans",
     description:
       "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

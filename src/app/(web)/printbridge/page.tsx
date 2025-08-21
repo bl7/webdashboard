@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity | InstaLabel",
+  title: "PrintBridge Technology | Web-to-Printer Connectivity",
   description:
     "Discover PrintBridge - our local bridge app that enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity, and reliable printing for your kitchen labels.",
   keywords: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     "web to thermal printer",
   ],
   openGraph: {
-    title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity",
+    title: "PrintBridge Technology | Web-to-Printer Connectivity",
     description:
       "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
     url: "https://www.instalabel.co/printbridge",

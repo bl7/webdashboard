@@ -5,7 +5,7 @@ import { Button } from "@/components/ui"
 import { ArrowRight, CheckCircle, Zap, Shield, RefreshCw } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Square Integration | Seamless Menu Sync & Allergen Detection | InstaLabel",
+  title: "Square Integration | Menu Sync & Allergen Detection",
   description:
     "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow. Keep your kitchen labels always up-to-date with your Square menu.",
   keywords: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "restaurant management integration",
   ],
   openGraph: {
-    title: "Square Integration | Seamless Menu Sync & Allergen Detection",
+    title: "Square Integration | Menu Sync & Allergen Detection",
     description:
       "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow.",
     url: "https://www.instalabel.co/square-integration",

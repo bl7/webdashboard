@@ -11,6 +11,9 @@ export const metadata: Metadata = {
     index: false,
     follow: false,
   },
+  alternates: {
+    canonical: "https://www.instalabel.co",
+  },
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {

@@ -341,12 +341,12 @@ export const BeforeAfterSection = () => {
               viewport={{ once: true, amount: 0.6 }}
               variants={buttonVariant}
             >
-              <Link href="/bookdemo">
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl sm:w-auto">
+              <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl sm:w-auto" asChild>
+                <Link href="/bookdemo">
                   Book Demo
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </motion.div>
           </motion.div>
           {/* Right: Before/After Slider */}

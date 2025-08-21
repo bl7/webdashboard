@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Book Demo | InstaLabel Kitchen Labeling System | Free Consultation",
+  title: "Book Demo | Kitchen Labeling System | Free",
   description:
     "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation, expert consultation.",
   keywords: [
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     "food service technology demo",
   ],
   openGraph: {
-    title: "Book Demo | InstaLabel Kitchen Labeling System | Free Consultation",
+    title: "Book Demo | Kitchen Labeling System | Free",
     description:
       "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
     url: "https://www.instalabel.co/bookdemo",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Book Demo | InstaLabel Kitchen Labeling System",
+    title: "Book Demo | Kitchen Labeling System",
     description:
       "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

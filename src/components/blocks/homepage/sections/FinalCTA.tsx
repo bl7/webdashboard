@@ -83,18 +83,18 @@ export const FinalCTA = () => {
             viewport={{ once: true }}
             className="flex flex-wrap items-center justify-center gap-6"
           >
-            <Link href="/bookdemo">
-              <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-10 py-5 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-10 py-5 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300" asChild>
+              <Link href="/bookdemo">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             
-            <Link href="/contact">
-              <Button variant="outline" size="lg" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-5 text-lg font-semibold backdrop-blur-sm transition-all duration-300">
+            <Button variant="outline" size="lg" className="border-2 border-white/30 text-white hover:bg-white/10 px-8 py-5 text-lg font-semibold backdrop-blur-sm transition-all duration-300" asChild>
+              <Link href="/contact">
                 Speak to Sales
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </motion.div>
 
           {/* Trust Signals */}

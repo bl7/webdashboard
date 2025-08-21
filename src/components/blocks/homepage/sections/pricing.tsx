@@ -176,18 +176,19 @@ export const Pricing = () => {
                       ))}
                   </div>
 
-                  <Link href="/register" className="mt-auto">
-                    <Button
-                      className={cn(
-                        "w-full py-3 font-semibold transition-all duration-300",
-                        index === 1
-                          ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
-                          : "bg-gray-900 text-white hover:bg-gray-800"
-                      )}
-                    >
+                  <Button
+                    className={cn(
+                      "w-full py-3 font-semibold transition-all duration-300",
+                      index === 1
+                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+                        : "bg-gray-900 text-white hover:bg-gray-800"
+                    )}
+                    asChild
+                  >
+                    <Link href="/register" className="mt-auto">
                       {index === 1 ? "Start Free Trial" : "Get Started"}
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </motion.div>
               ))
             )}
@@ -203,24 +204,22 @@ export const Pricing = () => {
           className="space-y-6"
         >
           <div className="space-y-4">
-            <Link href="/bookdemo" passHref>
-              <Button
-                size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
-              >
-                Book Demo
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+              asChild
+            >
+              <Link href="/bookdemo">Book Demo</Link>
+            </Button>
 
-            <Link href="/register" passHref>
-              <Button
-                variant="outline"
-                size="lg"
-                className="mx-3 border-2 border-purple-200 px-8 py-4 text-lg font-semibold text-purple-700 transition-all duration-300 hover:bg-purple-50 hover:text-purple-800"
-              >
-                Start Trial
-              </Button>
-            </Link>
+            <Button
+              variant="outline"
+              size="lg"
+              className="mx-3 border-2 border-purple-200 px-8 py-4 text-lg font-semibold text-purple-700 transition-all duration-300 hover:bg-purple-50 hover:text-purple-800"
+              asChild
+            >
+              <Link href="/register">Start Trial</Link>
+            </Button>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600">

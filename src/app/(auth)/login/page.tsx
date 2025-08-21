@@ -69,6 +69,20 @@ export default function LoginPage() {
 
       <div className="mt-6 text-sm text-muted-foreground">
         Copyright © 2023 - current. <Link href="/">InstaLabel Pvt. Ltd.</Link> All rights reserved.
+        <div className="mt-2 flex gap-4 text-xs">
+          <Link href="/features" className="hover:underline">
+            Features
+          </Link>
+          <Link href="/plan" className="hover:underline">
+            Pricing
+          </Link>
+          <Link href="/about" className="hover:underline">
+            About
+          </Link>
+          <Link href="/faqs" className="hover:underline">
+            Help
+          </Link>
+        </div>
       </div>
     </section>
   )

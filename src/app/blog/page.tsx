@@ -39,7 +39,7 @@ async function getAllBlogPosts(): Promise<BlogPost[]> {
 }
 
 export const metadata: Metadata = {
-  title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+  title: "Kitchen Labeling Blog | Food Safety & Compliance",
   description:
     "Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.",
   keywords: [
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
     "kitchen efficiency",
   ],
   openGraph: {
-    title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+    title: "Kitchen Labeling Blog | Food Safety & Compliance",
     description:
       "Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.",
     url: "https://www.instalabel.co/blog",
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
+    title: "Kitchen Labeling Blog | Food Safety & Compliance",
     description: "Expert insights on food safety, kitchen management, and restaurant technology.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
