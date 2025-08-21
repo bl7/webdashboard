@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Legal | InstaLabel Kitchen Labeling System",
     description: "Legal information for InstaLabel kitchen labeling system.",
-    url: "https://instalabel.co",
+    url: "https://www.instalabel.co",
     type: "website",
     images: [
       {

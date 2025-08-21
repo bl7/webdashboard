@@ -317,7 +317,7 @@ Choosing the right kitchen prep label printer for your UK restaurant is a critic
 4. **Plan for training** - Comprehensive staff education
 5. **Monitor and optimize** - Regular system reviews
 
-Ready to upgrade your kitchen labeling system? [Start your free trial with InstaLabel today](https://instalabel.co/register) and see how our UK-optimized solution can transform your prep area efficiency and compliance.
+Ready to upgrade your kitchen labeling system? [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and see how our UK-optimized solution can transform your prep area efficiency and compliance.
 
 **Related Resources:**
 
@@ -329,4 +329,4 @@ Ready to upgrade your kitchen labeling system? [Start your free trial with Insta
 
 ---
 
-_Looking for specific recommendations for your kitchen size or type? [Book a free consultation](https://instalabel.co/bookdemo) with our UK kitchen labeling experts._
+_Looking for specific recommendations for your kitchen size or type? [Book a free consultation](https://www.instalabel.co/bookdemo) with our UK kitchen labeling experts._

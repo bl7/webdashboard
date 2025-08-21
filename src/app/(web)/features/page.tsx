@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Kitchen Labeling Features | Food Safety Labels & Thermal Printer Support",
     description:
       "Discover InstaLabel's powerful kitchen labeling features: HACCP-compliant food safety labels, allergen warnings, expiry tracking, thermal printer support, and restaurant management tools.",
-    url: "https://instalabel.co/features",
+    url: "https://www.instalabel.co/features",
     type: "website",
     images: [
       {
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/features",
+    canonical: "https://www.instalabel.co/features",
   },
 }
 

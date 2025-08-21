@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "Kitchen Labeling Pricing | Restaurant Labeling Plans | InstaLabel",
     description:
       "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
-    url: "https://instalabel.co/plan",
+    url: "https://www.instalabel.co/plan",
     type: "website",
     images: [
       {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/plan",
+    canonical: "https://www.instalabel.co/plan",
   },
   robots: {
     index: true,
@@ -67,7 +67,7 @@ const Page = () => {
     name: "Kitchen Labeling Pricing",
     description:
       "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
-    url: "https://instalabel.co/plan",
+    url: "https://www.instalabel.co/plan",
     mainEntity: {
       "@type": "Product",
       name: "InstaLabel Kitchen Labeling System",
@@ -115,13 +115,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Pricing",
-          item: "https://instalabel.co/plan",
+          item: "https://www.instalabel.co/plan",
         },
       ],
     },

@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     title: "Kitchen Labeling Blog | Food Safety, Compliance & Restaurant Technology",
     description:
       "Expert insights on food safety, kitchen management, and restaurant technology. Stay up to date with the latest trends and best practices for your kitchen and business.",
-    url: "https://instalabel.co/blog",
+    url: "https://www.instalabel.co/blog",
     type: "website",
     images: [
       {
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/blog",
+    canonical: "https://www.instalabel.co/blog",
   },
 }
 

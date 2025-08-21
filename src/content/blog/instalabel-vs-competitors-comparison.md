@@ -136,4 +136,4 @@ While some competitors may offer deeper integrations or enterprise-level support
 
 **If you’re looking for a lightweight, compliant, and future-focused label printing system — InstaLabel is worth a serious look.**
 
-Try it for free at [instalabel.co](https://instalabel.co)
+Try it for free at [instalabel.co](https://www.instalabel.co)

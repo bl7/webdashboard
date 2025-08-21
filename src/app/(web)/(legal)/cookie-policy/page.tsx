@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Cookie Policy | InstaLabel Kitchen Labeling System",
     description:
       "Learn about how InstaLabel uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website.",
-    url: "https://instalabel.co/cookie-policy",
+    url: "https://www.instalabel.co/cookie-policy",
     type: "website",
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/cookie-policy",
+    canonical: "https://www.instalabel.co/cookie-policy",
   },
 }
 

@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://instalabel.co",
+    url: "https://www.instalabel.co",
     title: "instaLabel",
     description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
     siteName: "instaLabel",

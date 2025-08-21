@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     title: "Book Demo | InstaLabel Kitchen Labeling System | Free Consultation",
     description:
       "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
-    url: "https://instalabel.co/bookdemo",
+    url: "https://www.instalabel.co/bookdemo",
     type: "website",
     images: [
       {
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/bookdemo",
+    canonical: "https://www.instalabel.co/bookdemo",
   },
   robots: {
     index: true,
@@ -67,7 +67,7 @@ const Page = () => {
     name: "Book Demo",
     description:
       "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
-    url: "https://instalabel.co/bookdemo",
+    url: "https://www.instalabel.co/bookdemo",
     mainEntity: {
       "@type": "Event",
       name: "InstaLabel Kitchen Labeling Demo",
@@ -79,7 +79,7 @@ const Page = () => {
       organizer: {
         "@type": "Organization",
         name: "InstaLabel",
-        url: "https://instalabel.co",
+        url: "https://www.instalabel.co",
       },
       offers: {
         "@type": "Offer",
@@ -96,13 +96,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Book Demo",
-          item: "https://instalabel.co/bookdemo",
+          item: "https://www.instalabel.co/bookdemo",
         },
       ],
     },

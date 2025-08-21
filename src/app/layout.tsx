@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     default: "InstaLabel - Smart Kitchen Labeling System | Food Safety Labels & Expiry Tracking",
     template: "%s | InstaLabel - Professional Kitchen Labeling",
   },
-  metadataBase: new URL("https://instalabel.co/"),
+  metadataBase: new URL("https://www.instalabel.co/"),
   description:
     "InstaLabel: Professional kitchen labeling system for restaurants, cafes, and food businesses. Print food safety labels, allergen warnings, expiry dates, and prep labels instantly. Thermal printer compatible, HACCP compliant, and easy to use. Start free trial today.",
   keywords: [
@@ -85,7 +85,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: "https://instalabel.co/",
+    url: "https://www.instalabel.co/",
     title: "InstaLabel - Smart Kitchen Labeling System | Food Safety & Expiry Tracking",
     description:
       "Professional kitchen labeling system for restaurants and food businesses. Print food safety labels, allergen warnings, and expiry dates instantly. Thermal printer compatible and HACCP compliant.",
@@ -109,7 +109,7 @@ export const metadata: Metadata = {
     creator: "@instalabel",
   },
   alternates: {
-    canonical: "https://instalabel.co",
+    canonical: "https://www.instalabel.co",
   },
   category: "Food Service Technology",
 }
@@ -125,7 +125,7 @@ export default function RootLayout({
     name: "InstaLabel",
     description:
       "Professional kitchen labeling system for restaurants and food businesses. Print food safety labels, allergen warnings, and expiry dates instantly.",
-    url: "https://instalabel.co",
+    url: "https://www.instalabel.co",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web Browser",
     offers: {
@@ -142,7 +142,7 @@ export default function RootLayout({
     provider: {
       "@type": "Organization",
       name: "InstaLabel",
-      url: "https://instalabel.co",
+      url: "https://www.instalabel.co",
     },
   }
 
@@ -151,7 +151,7 @@ export default function RootLayout({
     "@type": "LocalBusiness",
     name: "InstaLabel",
     description: "Professional kitchen labeling system for restaurants and food businesses",
-    url: "https://instalabel.co",
+    url: "https://www.instalabel.co",
     telephone: "+44-20-1234-5678",
     email: "hello@instalabel.co",
     address: {

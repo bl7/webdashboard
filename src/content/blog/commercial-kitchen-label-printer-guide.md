@@ -464,8 +464,8 @@ The right commercial kitchen label printer can transform your food service opera
 3. **Plan for growth** - Select scalable solutions that grow with your business
 4. **Prioritize software integration** - Choose solutions with comprehensive labeling software
 
-Ready to upgrade your commercial kitchen labeling system? [Start your free trial with InstaLabel today](https://instalabel.co/register) and see how our commercial-grade solution can transform your kitchen's efficiency and compliance.
+Ready to upgrade your commercial kitchen labeling system? [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and see how our commercial-grade solution can transform your kitchen's efficiency and compliance.
 
 ---
 
-_Need help choosing the right commercial printer for your kitchen? [Book a free consultation](https://instalabel.co/bookdemo) with our commercial kitchen experts._
+_Need help choosing the right commercial printer for your kitchen? [Book a free consultation](https://www.instalabel.co/bookdemo) with our commercial kitchen experts._

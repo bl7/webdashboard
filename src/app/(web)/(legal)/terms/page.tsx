@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Terms and Conditions | InstaLabel Kitchen Labeling System",
     description:
       "Read InstaLabel's terms and conditions for our kitchen labeling software. Learn about user accounts, subscription terms, and service limitations.",
-    url: "https://instalabel.co/terms",
+    url: "https://www.instalabel.co/terms",
     type: "website",
     images: [
       {
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/terms",
+    canonical: "https://www.instalabel.co/terms",
   },
 }
 

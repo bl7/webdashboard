@@ -15,6 +15,6 @@ export default function robots(): MetadataRoute.Robots {
         "/private/",
       ],
     },
-    sitemap: "https://instalabel.co/sitemap.xml",
+    sitemap: "https://www.instalabel.co/sitemap.xml",
   }
 }

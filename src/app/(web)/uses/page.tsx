@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "Kitchen Labeling Uses | Food Prep, Cook & PPDS Labels | InstaLabel",
     description:
       "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
-    url: "https://instalabel.co/uses",
+    url: "https://www.instalabel.co/uses",
     type: "website",
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/uses",
+    canonical: "https://www.instalabel.co/uses",
   },
   robots: {
     index: true,
@@ -71,7 +71,7 @@ const Page = () => {
     name: "Kitchen Labeling Uses",
     description:
       "Discover all kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
-    url: "https://instalabel.co/uses",
+    url: "https://www.instalabel.co/uses",
     mainEntity: {
       "@type": "Article",
       name: "Kitchen Labeling Uses Guide",
@@ -89,13 +89,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Uses",
-          item: "https://instalabel.co/uses",
+          item: "https://www.instalabel.co/uses",
         },
       ],
     },

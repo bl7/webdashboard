@@ -1,18 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { sendMail } from '@/lib/mail';
+import { NextRequest, NextResponse } from "next/server"
+import { sendMail } from "@/lib/mail"
 
 export async function POST(req: NextRequest) {
   try {
-    const { to, name, company, reschedule, time } = await req.json();
-    
+    const { to, name, company, reschedule, time } = await req.json()
+
     if (!to || !name) {
-      return NextResponse.json({ error: 'Missing recipient or name' }, { status: 400 });
+      return NextResponse.json({ error: "Missing recipient or name" }, { status: 400 })
     }
 
-    let subject = '';
-    let mainContent = '';
+    let subject = ""
+    let mainContent = ""
     if (reschedule && time) {
-      subject = 'Your InstaLabel Demo Has Been Rescheduled! 📅';
+      subject = "Your InstaLabel Demo Has Been Rescheduled! 📅"
       mainContent = `
         <div style="background: linear-gradient(135deg, #f59e42 0%, #fbbf24 100%); padding: 24px; border-radius: 12px; margin: 24px 0;">
           <h2 style="color: white; margin: 0 0 16px 0; font-size: 24px; font-weight: 600;">
@@ -20,18 +20,18 @@ export async function POST(req: NextRequest) {
           </h2>
           <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; border-left: 4px solid #ffffff;">
             <p style="color: white; margin: 0; font-size: 16px; font-weight: 500;">
-              📅 ${new Date(time).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              📅 ${new Date(time).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
             </p>
             <p style="color: white; margin: 8px 0 0 0; font-size: 16px; font-weight: 500;">
-              ⏰ ${new Date(time).toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                timeZoneName: 'short'
+              ⏰ ${new Date(time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZoneName: "short",
               })}
             </p>
           </div>
@@ -39,9 +39,9 @@ export async function POST(req: NextRequest) {
         <p style="color: #374151; line-height: 1.6; margin: 16px 0;">
           Your demo with InstaLabel has been <b>rescheduled</b> to the above date and time. We look forward to meeting you and showing you how InstaLabel can help your business!
         </p>
-      `;
+      `
     } else if (time) {
-      subject = 'Your InstaLabel Demo is Scheduled! 📅';
+      subject = "Your InstaLabel Demo is Scheduled! 📅"
       mainContent = `
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; margin: 24px 0;">
           <h2 style="color: white; margin: 0 0 16px 0; font-size: 24px; font-weight: 600;">
@@ -49,18 +49,18 @@ export async function POST(req: NextRequest) {
           </h2>
           <div style="background: rgba(255,255,255,0.1); padding: 16px; border-radius: 8px; border-left: 4px solid #ffffff;">
             <p style="color: white; margin: 0; font-size: 16px; font-weight: 500;">
-              📅 ${new Date(time).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              📅 ${new Date(time).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
             </p>
             <p style="color: white; margin: 8px 0 0 0; font-size: 16px; font-weight: 500;">
-              ⏰ ${new Date(time).toLocaleTimeString('en-US', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                timeZoneName: 'short'
+              ⏰ ${new Date(time).toLocaleTimeString("en-US", {
+                hour: "2-digit",
+                minute: "2-digit",
+                timeZoneName: "short",
               })}
             </p>
           </div>
@@ -68,16 +68,16 @@ export async function POST(req: NextRequest) {
         <p style="color: #374151; line-height: 1.6; margin: 16px 0;">
           We're excited to show you how InstaLabel can transform your labeling process and boost your productivity. Our team will walk you through key features and answer all your questions.
         </p>
-      `;
+      `
     } else {
-      subject = 'Thank you for your interest in InstaLabel! 🚀';
+      subject = "Thank you for your interest in InstaLabel! 🚀"
       mainContent = `
         <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 24px; border-radius: 12px; margin: 24px 0;">
           <h2 style="color: white; margin: 0 0 16px 0; font-size: 24px; font-weight: 600;">
             🙏 Thank You for Your Interest!
           </h2>
           <p style="color: white; margin: 0; font-size: 16px; line-height: 1.6;">
-            We appreciate you taking the time to learn about InstaLabel${company ? ` and how it can benefit ${company}` : ''}.
+            We appreciate you taking the time to learn about InstaLabel${company ? ` and how it can benefit ${company}` : ""}.
           </p>
         </div>
         <p style="color: #374151; line-height: 1.6; margin: 16px 0;">
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
             <li><strong>Dedicated Support:</strong> Our team is here to help you succeed</li>
           </ul>
         </div>
-      `;
+      `
     }
 
     const body = `
@@ -109,7 +109,7 @@ export async function POST(req: NextRequest) {
           <div style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%); padding: 32px 24px; text-align: center;">
             <img src="long_logo.png" alt="InstaLabel Logo" style="max-height: 60px; width: auto; margin-bottom: 16px;">
             <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.5px;">
-              ${subject.includes('Rescheduled') ? 'Demo Rescheduled' : 'Welcome to InstaLabel'}
+              ${subject.includes("Rescheduled") ? "Demo Rescheduled" : "Welcome to InstaLabel"}
             </h1>
           </div>
 
@@ -123,15 +123,19 @@ export async function POST(req: NextRequest) {
 
             <!-- Call to Action -->
             <div style="text-align: center; margin: 32px 0;">
-              ${subject.includes('Rescheduled') ? `
+              ${
+                subject.includes("Rescheduled")
+                  ? `
                 <a href="mailto:support@instalabel.com" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
                   📧 Contact Us for Questions
                 </a>
-              ` : `
-                <a href="https://instalabel.com/demo" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
+              `
+                  : `
+                <a href="https://www.instalabel.com/demo" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
                   🚀 Schedule Your Demo
                 </a>
-              `}
+              `
+              }
             </div>
 
             <!-- Support Section -->
@@ -162,13 +166,12 @@ export async function POST(req: NextRequest) {
         </div>
       </body>
       </html>
-    `;
+    `
 
-    await sendMail({ to, subject, body });
-    return NextResponse.json({ success: true });
-    
+    await sendMail({ to, subject, body })
+    return NextResponse.json({ success: true })
   } catch (err) {
-    console.error('Demo request email error:', err);
-    return NextResponse.json({ error: 'Failed to send email' }, { status: 500 });
+    console.error("Demo request email error:", err)
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
   }
 }

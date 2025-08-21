@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: "About InstaLabel | Kitchen Labeling Innovation & Food Safety Technology",
     description:
       "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
-    url: "https://instalabel.co/about",
+    url: "https://www.instalabel.co/about",
     type: "website",
     images: [
       {
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/about",
+    canonical: "https://www.instalabel.co/about",
   },
   robots: {
     index: true,
@@ -68,12 +68,12 @@ const Page = () => {
     name: "About InstaLabel",
     description:
       "Learn about InstaLabel's mission to revolutionize kitchen labeling. Founded by food industry experts, we provide smart labeling solutions for restaurants, cafes, and food businesses worldwide.",
-    url: "https://instalabel.co/about",
+    url: "https://www.instalabel.co/about",
     mainEntity: {
       "@type": "Organization",
       name: "InstaLabel",
       description: "Kitchen labeling innovation company",
-      url: "https://instalabel.co",
+      url: "https://www.instalabel.co",
       foundingDate: "2023",
       industry: "Food Service Technology",
     },
@@ -84,13 +84,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "About",
-          item: "https://instalabel.co/about",
+          item: "https://www.instalabel.co/about",
         },
       ],
     },

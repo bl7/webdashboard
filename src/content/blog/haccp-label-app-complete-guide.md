@@ -453,8 +453,8 @@ The right HACCP label app can transform your kitchen's food safety compliance, o
 3. **Plan for growth** - Select scalable solutions that grow with your business
 4. **Prioritize support** - Local expertise is invaluable for HACCP compliance
 
-Ready to upgrade your HACCP compliance system? [Start your free trial with InstaLabel today](https://instalabel.co/register) and experience the difference that professional HACCP label apps can make for your food safety management.
+Ready to upgrade your HACCP compliance system? [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and experience the difference that professional HACCP label apps can make for your food safety management.
 
 ---
 
-_Need help implementing HACCP compliance in your kitchen? [Book a free consultation](https://instalabel.co/bookdemo) with our food safety experts._
+_Need help implementing HACCP compliance in your kitchen? [Book a free consultation](https://www.instalabel.co/bookdemo) with our food safety experts._

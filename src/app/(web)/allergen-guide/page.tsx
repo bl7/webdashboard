@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     title: "UK 14 Allergens Guide | Complete Allergen Reference | Natasha's Law",
     description:
       "Complete UK 14 allergens guide with detailed information, hidden sources, and compliance requirements.",
-    url: "https://instalabel.co/allergen-guide",
+    url: "https://www.instalabel.co/allergen-guide",
     type: "article",
     images: [
       {
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/allergen-guide",
+    canonical: "https://www.instalabel.co/allergen-guide",
   },
   robots: {
     index: true,

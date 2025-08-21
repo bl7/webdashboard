@@ -377,8 +377,8 @@ The right restaurant allergen label software can transform your kitchen's effici
 3. **Plan for growth** - Select scalable solutions that grow with your business
 4. **Prioritize support** - Local expertise is invaluable for compliance issues
 
-Ready to upgrade your allergen labeling system? [Start your free trial with InstaLabel today](https://instalabel.co/register) and experience the difference that professional allergen label software can make for your restaurant.
+Ready to upgrade your allergen labeling system? [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and experience the difference that professional allergen label software can make for your restaurant.
 
 ---
 
-_Need help choosing the right plan for your restaurant? [Book a free consultation](https://instalabel.co/bookdemo) with our allergen labeling experts._
+_Need help choosing the right plan for your restaurant? [Book a free consultation](https://www.instalabel.co/bookdemo) with our allergen labeling experts._

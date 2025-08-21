@@ -93,7 +93,7 @@ Here’s the bottom line:
 
 - Always use waterproof, smudge-proof labels — soggy stickers are the enemy
 - Train your team thoroughly on labeling procedures
-- Upgrade to digital labeling tools (Psst… [InstaLabel](https://instalabel.co) makes this easy and reliable)
+- Upgrade to digital labeling tools (Psst… [InstaLabel](https://www.instalabel.co) makes this easy and reliable)
 
 ---
 
@@ -104,7 +104,7 @@ If your current system is “write it on masking tape and hope for the best,” 
 
 Let InstaLabel help you transform your labeling from “meh” to meticulous. Your team—and your health inspector—will thank you.
 
-👉 [Try InstaLabel free today](https://instalabel.co)
+👉 [Try InstaLabel free today](https://www.instalabel.co)
 
 ---
 

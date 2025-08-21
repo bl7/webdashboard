@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Frequently Asked Questions | InstaLabel Kitchen Labeling System",
     description:
       "Find answers to common questions about InstaLabel's kitchen labeling system, food safety compliance, thermal printer support, and restaurant labeling features.",
-    url: "https://instalabel.co/faqs",
+    url: "https://www.instalabel.co/faqs",
     type: "website",
     images: [
       {
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/faqs",
+    canonical: "https://www.instalabel.co/faqs",
   },
   robots: {
     index: true,

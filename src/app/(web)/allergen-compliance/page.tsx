@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     title: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law",
     description:
       "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens.",
-    url: "https://instalabel.co/allergen-compliance",
+    url: "https://www.instalabel.co/allergen-compliance",
     type: "website",
     images: [
       {
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/allergen-compliance",
+    canonical: "https://www.instalabel.co/allergen-compliance",
   },
   robots: {
     index: true,
@@ -86,7 +86,7 @@ const Page = () => {
     name: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law | InstaLabel",
     description:
       "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
-    url: "https://instalabel.co/allergen-compliance",
+    url: "https://www.instalabel.co/allergen-compliance",
     mainEntity: {
       "@type": "SoftwareApplication",
       name: "UK Allergen Compliance Kit",
@@ -113,13 +113,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Allergen Compliance",
-          item: "https://instalabel.co/allergen-compliance",
+          item: "https://www.instalabel.co/allergen-compliance",
         },
       ],
     },

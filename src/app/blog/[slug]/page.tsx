@@ -43,11 +43,11 @@ export async function generateMetadata({
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return {}
-  const url = `https://instalabel.co/blog/${slug}`
+  const url = `https://www.instalabel.co/blog/${slug}`
 
   // Use the default Open Graph image as fallback
-  const defaultImage = "https://instalabel.co/opengraph-image.png"
-  const image = post.meta.image ? `https://instalabel.co${post.meta.image}` : defaultImage
+  const defaultImage = "https://www.instalabel.co/opengraph-image.png"
+  const image = post.meta.image ? `https://www.instalabel.co${post.meta.image}` : defaultImage
 
   return {
     title: post.meta.title,
@@ -65,7 +65,7 @@ export async function generateMetadata({
     openGraph: {
       title: post.meta.title,
       description: post.meta.description,
-      url: `https://instalabel.co/blog/${slug}`,
+      url: `https://www.instalabel.co/blog/${slug}`,
       type: "article",
       images: [
         {
@@ -86,7 +86,7 @@ export async function generateMetadata({
       images: [image],
     },
     alternates: {
-      canonical: `https://instalabel.co/blog/${slug}`,
+      canonical: `https://www.instalabel.co/blog/${slug}`,
     },
   }
 }
@@ -153,10 +153,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       "@type": "Person",
       name: post.meta.author || "InstaLabel Team",
     },
-    image: post.meta.image ? `https://instalabel.co${post.meta.image}` : undefined,
+    image: post.meta.image ? `https://www.instalabel.co${post.meta.image}` : undefined,
     mainEntityOfPage: {
       "@type": "WebPage",
-      "@id": `https://instalabel.co/blog/${slug}`,
+      "@id": `https://www.instalabel.co/blog/${slug}`,
     },
   }
 

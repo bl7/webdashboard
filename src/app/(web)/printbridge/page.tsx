@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     title: "PrintBridge Technology | Seamless Web-to-Printer Connectivity",
     description:
       "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
-    url: "https://instalabel.co/printbridge",
+    url: "https://www.instalabel.co/printbridge",
     type: "website",
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/printbridge",
+    canonical: "https://www.instalabel.co/printbridge",
   },
   robots: {
     index: true,
@@ -71,7 +71,7 @@ const Page = () => {
     name: "PrintBridge Technology",
     description:
       "PrintBridge enables seamless printing from your web dashboard to thermal printers. No complex setup, instant connectivity.",
-    url: "https://instalabel.co/printbridge",
+    url: "https://www.instalabel.co/printbridge",
     mainEntity: {
       "@type": "SoftwareApplication",
       name: "PrintBridge",
@@ -97,13 +97,13 @@ const Page = () => {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item: "https://instalabel.co",
+          item: "https://www.instalabel.co",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "PrintBridge",
-          item: "https://instalabel.co/printbridge",
+          item: "https://www.instalabel.co/printbridge",
         },
       ],
     },

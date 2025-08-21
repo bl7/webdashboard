@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Homepage -->
   <url>
-    <loc>https://instalabel.co/</loc>
+    <loc>https://www.instalabel.co/</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -10,67 +10,67 @@
   
   <!-- Main Pages -->
   <url>
-    <loc>https://instalabel.co/blog</loc>
+    <loc>https://www.instalabel.co/blog</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/features</loc>
+    <loc>https://www.instalabel.co/features</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/uses</loc>
+    <loc>https://www.instalabel.co/uses</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/allergen-compliance</loc>
+    <loc>https://www.instalabel.co/allergen-compliance</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/allergen-guide</loc>
+    <loc>https://www.instalabel.co/allergen-guide</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/plan</loc>
+    <loc>https://www.instalabel.co/plan</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/printbridge</loc>
+    <loc>https://www.instalabel.co/printbridge</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/about</loc>
+    <loc>https://www.instalabel.co/about</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/bookdemo</loc>
+    <loc>https://www.instalabel.co/bookdemo</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/square-integration</loc>
+    <loc>https://www.instalabel.co/square-integration</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/faqs</loc>
+    <loc>https://www.instalabel.co/faqs</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -78,37 +78,37 @@
   
   <!-- High-Priority Blog Posts -->
   <url>
-    <loc>https://instalabel.co/blog/kitchen-prep-label-printer-uk-guide</loc>
+    <loc>https://www.instalabel.co/blog/kitchen-prep-label-printer-uk-guide</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/restaurant-allergen-label-software-comparison</loc>
+    <loc>https://www.instalabel.co/blog/restaurant-allergen-label-software-comparison</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/haccp-label-app-complete-guide</loc>
+    <loc>https://www.instalabel.co/blog/haccp-label-app-complete-guide</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/commercial-kitchen-label-printer-guide</loc>
+    <loc>https://www.instalabel.co/blog/commercial-kitchen-label-printer-guide</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/natashas-law-guide-food-business-compliance</loc>
+    <loc>https://www.instalabel.co/blog/natashas-law-guide-food-business-compliance</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/top-5-labeling-mistakes-kitchens-avoid</loc>
+    <loc>https://www.instalabel.co/blog/top-5-labeling-mistakes-kitchens-avoid</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -116,37 +116,37 @@
   
   <!-- Additional Blog Posts -->
   <url>
-    <loc>https://instalabel.co/blog/implement-allergen-labeling-kitchen</loc>
+    <loc>https://www.instalabel.co/blog/implement-allergen-labeling-kitchen</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/essential-food-safety-labels-restaurants</loc>
+    <loc>https://www.instalabel.co/blog/essential-food-safety-labels-restaurants</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/haccp-compliance-restaurant-kitchens</loc>
+    <loc>https://www.instalabel.co/blog/haccp-compliance-restaurant-kitchens</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/thermal-vs-inkjet-kitchen-labels</loc>
+    <loc>https://www.instalabel.co/blog/thermal-vs-inkjet-kitchen-labels</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/roi-kitchen-automation-case-studies</loc>
+    <loc>https://www.instalabel.co/blog/roi-kitchen-automation-case-studies</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/blog/instalabel-vs-competitors-comparison</loc>
+    <loc>https://www.instalabel.co/blog/instalabel-vs-competitors-comparison</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
@@ -154,19 +154,19 @@
   
   <!-- Legal Pages -->
   <url>
-    <loc>https://instalabel.co/privacy-policy</loc>
+    <loc>https://www.instalabel.co/privacy-policy</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/terms</loc>
+    <loc>https://www.instalabel.co/terms</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://instalabel.co/cookie-policy</loc>
+    <loc>https://www.instalabel.co/cookie-policy</loc>
     <lastmod>2024-12-19</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

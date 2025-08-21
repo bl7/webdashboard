@@ -309,8 +309,8 @@ Poor labeling doesn't have to be a kitchen problem. With the right system, label
 
 Whether you're a café, a restaurant, or a large-scale caterer, InstaLabel helps you stay compliant, cut waste, and work smarter.
 
-**👉 Ready to eliminate these labeling mistakes?** [Start your free trial with InstaLabel today](https://instalabel.co/register) and see how proper labeling can transform your kitchen's efficiency and safety.
+**👉 Ready to eliminate these labeling mistakes?** [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and see how proper labeling can transform your kitchen's efficiency and safety.
 
 ---
 
-_Need help identifying which labeling mistakes are costing your kitchen the most? [Book a free consultation](https://instalabel.co/bookdemo) with our kitchen labeling experts._
+_Need help identifying which labeling mistakes are costing your kitchen the most? [Book a free consultation](https://www.instalabel.co/bookdemo) with our kitchen labeling experts._

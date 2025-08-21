@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Square Integration | Seamless Menu Sync & Allergen Detection",
     description:
       "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow.",
-    url: "https://instalabel.co/square-integration",
+    url: "https://www.instalabel.co/square-integration",
     type: "website",
     images: [
       {
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/square-integration",
+    canonical: "https://www.instalabel.co/square-integration",
   },
   robots: {
     index: true,
@@ -69,7 +69,7 @@ const Page = () => {
     name: "Square Integration",
     description:
       "Connect InstaLabel with Square POS for automatic menu synchronization, smart allergen detection, and bidirectional data flow.",
-    url: "https://instalabel.co/square-integration",
+    url: "https://www.instalabel.co/square-integration",
     mainEntity: {
       "@type": "SoftwareApplication",
       name: "InstaLabel Square Integration",

@@ -350,8 +350,8 @@ At InstaLabel, we make **Natasha's Law compliance** simple and stress-free:
 - **Comprehensive audit trails** for inspections
 - **Simple, fast labeling** that doesn't slow down service
 
-**👉 Ready to simplify Natasha's Law compliance?** [Start your free trial with InstaLabel today](https://instalabel.co/register) and ensure your business stays compliant while protecting your customers.
+**👉 Ready to simplify Natasha's Law compliance?** [Start your free trial with InstaLabel today](https://www.instalabel.co/register) and ensure your business stays compliant while protecting your customers.
 
 ---
 
-_Need help implementing Natasha's Law compliance in your kitchen? [Book a free consultation](https://instalabel.co/bookdemo) with our food safety experts._
+_Need help implementing Natasha's Law compliance in your kitchen? [Book a free consultation](https://www.instalabel.co/bookdemo) with our food safety experts._

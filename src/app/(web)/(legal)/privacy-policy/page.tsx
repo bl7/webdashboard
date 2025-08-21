@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: "Privacy Policy | InstaLabel Kitchen Labeling System",
     description:
       "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data when using our kitchen labeling software.",
-    url: "https://instalabel.co/privacy-policy",
+    url: "https://www.instalabel.co/privacy-policy",
     type: "website",
     images: [
       {
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
-    canonical: "https://instalabel.co/privacy-policy",
+    canonical: "https://www.instalabel.co/privacy-policy",
   },
 }
 
@@ -137,8 +137,8 @@ const Page = () => {
             </li>
             <li>
               Website:{" "}
-              <a href="https://InstaLabel.com/support" target="_blank" rel="noopener">
-                https://InstaLabel.com/support
+              <a href="https://www.instalabel.com/support" target="_blank" rel="noopener">
+                https://www.instalabel.com/support
               </a>
             </li>
           </ul>
