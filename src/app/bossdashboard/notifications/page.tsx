@@ -1,23 +1,43 @@
-'use client'
+"use client"
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { 
-  Bell, 
-  CheckCircle, 
-  AlertTriangle, 
-  Package, 
-  Truck, 
-  RotateCcw, 
-  Search, 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import {
+  Bell,
+  CheckCircle,
+  AlertTriangle,
+  Package,
+  Truck,
+  RotateCcw,
+  Search,
   Trash2,
   Eye,
-  EyeOff
+  EyeOff,
 } from "lucide-react"
 import { useDarkMode } from "../context/DarkModeContext"
 
@@ -77,7 +97,7 @@ export default function NotificationsPage() {
     label_order_paid: 0,
     label_order_shipped: 0,
     label_order_delivered: 0,
-    label_order_cancelled: 0
+    label_order_cancelled: 0,
   })
   const [selectedNotification, setSelectedNotification] = useState<AdminNotification | null>(null)
   const [showDetailModal, setShowDetailModal] = useState(false)
@@ -93,9 +113,9 @@ export default function NotificationsPage() {
 
   const fetchNotifications = async () => {
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
-      const response = await fetch('/api/admin-notifications', {
-        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const response = await fetch("/api/admin-notifications", {
+        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
       if (response.ok) {
         const data = await response.json()
@@ -103,7 +123,7 @@ export default function NotificationsPage() {
         calculateStats(data.notifications)
       }
     } catch (error) {
-      console.error('Failed to fetch notifications:', error)
+      console.error("Failed to fetch notifications:", error)
     } finally {
       setLoading(false)
     }
@@ -112,22 +132,25 @@ export default function NotificationsPage() {
   const calculateStats = (notificationList: AdminNotification[]) => {
     const newStats = {
       total: notificationList.length,
-      unread: notificationList.filter(n => !n.read).length,
-      new_signup: notificationList.filter(n => n.type === 'new_signup').length,
-      upgrade: notificationList.filter(n => n.type === 'upgrade').length,
-      device_shipped: notificationList.filter(n => n.type === 'device_shipped').length,
-      device_delivered: notificationList.filter(n => n.type === 'device_delivered').length,
-      device_return_requested: notificationList.filter(n => n.type === 'device_return_requested').length,
-      device_returned: notificationList.filter(n => n.type === 'device_returned').length,
-      cancellation: notificationList.filter(n => n.type === 'cancellation').length,
-      payment_failed: notificationList.filter(n => n.type === 'payment_failed').length,
-      payment_recovered: notificationList.filter(n => n.type === 'payment_recovered').length,
-      plan_renewal: notificationList.filter(n => n.type === 'plan_renewal').length,
-      label_order_placed: notificationList.filter(n => n.type === 'label_order_placed').length,
-      label_order_paid: notificationList.filter(n => n.type === 'label_order_paid').length,
-      label_order_shipped: notificationList.filter(n => n.type === 'label_order_shipped').length,
-      label_order_delivered: notificationList.filter(n => n.type === 'label_order_delivered').length,
-      label_order_cancelled: notificationList.filter(n => n.type === 'label_order_cancelled').length
+      unread: notificationList.filter((n) => !n.read).length,
+      new_signup: notificationList.filter((n) => n.type === "new_signup").length,
+      upgrade: notificationList.filter((n) => n.type === "upgrade").length,
+      device_shipped: notificationList.filter((n) => n.type === "device_shipped").length,
+      device_delivered: notificationList.filter((n) => n.type === "device_delivered").length,
+      device_return_requested: notificationList.filter((n) => n.type === "device_return_requested")
+        .length,
+      device_returned: notificationList.filter((n) => n.type === "device_returned").length,
+      cancellation: notificationList.filter((n) => n.type === "cancellation").length,
+      payment_failed: notificationList.filter((n) => n.type === "payment_failed").length,
+      payment_recovered: notificationList.filter((n) => n.type === "payment_recovered").length,
+      plan_renewal: notificationList.filter((n) => n.type === "plan_renewal").length,
+      label_order_placed: notificationList.filter((n) => n.type === "label_order_placed").length,
+      label_order_paid: notificationList.filter((n) => n.type === "label_order_paid").length,
+      label_order_shipped: notificationList.filter((n) => n.type === "label_order_shipped").length,
+      label_order_delivered: notificationList.filter((n) => n.type === "label_order_delivered")
+        .length,
+      label_order_cancelled: notificationList.filter((n) => n.type === "label_order_cancelled")
+        .length,
     }
     setStats(newStats)
   }
@@ -137,23 +160,24 @@ export default function NotificationsPage() {
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(notification =>
-        notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        notification.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        notification.type.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(
+        (notification) =>
+          notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          notification.message.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          notification.type.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
 
     // Filter by type
-    if (typeFilter !== 'all') {
-      filtered = filtered.filter(notification => notification.type === typeFilter)
+    if (typeFilter !== "all") {
+      filtered = filtered.filter((notification) => notification.type === typeFilter)
     }
 
     // Filter by read status
-    if (readFilter === 'unread') {
-      filtered = filtered.filter(notification => !notification.read)
-    } else if (readFilter === 'read') {
-      filtered = filtered.filter(notification => notification.read)
+    if (readFilter === "unread") {
+      filtered = filtered.filter((notification) => !notification.read)
+    } else if (readFilter === "read") {
+      filtered = filtered.filter((notification) => notification.read)
     }
 
     // Sort: unread first, then by timestamp (newest first)
@@ -161,7 +185,7 @@ export default function NotificationsPage() {
       // First sort by read status (unread first)
       if (!a.read && b.read) return -1
       if (a.read && !b.read) return 1
-      
+
       // Then sort by timestamp (newest first)
       return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     })
@@ -171,46 +195,46 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationId: number) => {
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
       const response = await fetch(`/api/admin-notifications/${notificationId}/read`, {
-        method: 'PATCH',
-        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        method: "PATCH",
+        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data
       }
     } catch (error) {
-      console.error('Failed to mark notification as read:', error)
+      console.error("Failed to mark notification as read:", error)
     }
   }
 
   const markAllAsRead = async () => {
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
-      const response = await fetch('/api/admin-notifications/mark-all-read', {
-        method: 'PATCH',
-        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const response = await fetch("/api/admin-notifications/mark-all-read", {
+        method: "PATCH",
+        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data
       }
     } catch (error) {
-      console.error('Failed to mark all notifications as read:', error)
+      console.error("Failed to mark all notifications as read:", error)
     }
   }
 
   const deleteNotification = async (notificationId: number) => {
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
       const response = await fetch(`/api/admin-notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
+        method: "DELETE",
+        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
       if (response.ok) {
         await fetchNotifications() // Refresh the data
       }
     } catch (error) {
-      console.error('Failed to delete notification:', error)
+      console.error("Failed to delete notification:", error)
     }
   }
 
@@ -230,7 +254,7 @@ export default function NotificationsPage() {
       label_order_paid: CheckCircle,
       label_order_shipped: Truck,
       label_order_delivered: Package,
-      label_order_cancelled: AlertTriangle
+      label_order_cancelled: AlertTriangle,
     }
     return iconMap[type as keyof typeof iconMap] || Bell
   }
@@ -241,7 +265,10 @@ export default function NotificationsPage() {
       upgrade: { color: "bg-purple-100 text-blue-800", label: "Upgrade" },
       device_shipped: { color: "bg-purple-100 text-blue-800", label: "Device Shipped" },
       device_delivered: { color: "bg-green-100 text-green-800", label: "Device Delivered" },
-      device_return_requested: { color: "bg-orange-100 text-orange-800", label: "Return Requested" },
+      device_return_requested: {
+        color: "bg-orange-100 text-orange-800",
+        label: "Return Requested",
+      },
       device_returned: { color: "bg-purple-100 text-purple-800", label: "Device Returned" },
       cancellation: { color: "bg-red-100 text-red-800", label: "Cancellation" },
       payment_failed: { color: "bg-red-100 text-red-800", label: "Payment Failed" },
@@ -250,20 +277,26 @@ export default function NotificationsPage() {
       label_order_placed: { color: "bg-gray-100 text-gray-800", label: "Label Order Placed" },
       label_order_paid: { color: "bg-green-100 text-green-800", label: "Label Order Paid" },
       label_order_shipped: { color: "bg-purple-100 text-blue-800", label: "Label Order Shipped" },
-      label_order_delivered: { color: "bg-green-100 text-green-800", label: "Label Order Delivered" },
-      label_order_cancelled: { color: "bg-red-100 text-red-800", label: "Label Order Cancelled" }
+      label_order_delivered: {
+        color: "bg-green-100 text-green-800",
+        label: "Label Order Delivered",
+      },
+      label_order_cancelled: { color: "bg-red-100 text-red-800", label: "Label Order Cancelled" },
     }
-    const config = badgeConfig[type as keyof typeof badgeConfig] || { color: "bg-gray-100 text-gray-800", label: type }
+    const config = badgeConfig[type as keyof typeof badgeConfig] || {
+      color: "bg-gray-100 text-gray-800",
+      label: type,
+    }
     return <Badge className={config.color}>{config.label}</Badge>
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     })
   }
 
@@ -279,14 +312,20 @@ export default function NotificationsPage() {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className={`text-3xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Admin Notifications</h1>
+          <h1 className={`text-3xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+            Admin Notifications
+          </h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
           {[...Array(6)].map((_, i) => (
-            <Card key={i} className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+            <Card key={i} className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
               <CardContent className="p-6">
-                <div className={`h-4 rounded animate-pulse mb-2 ${isDarkMode ? "bg-gray-600" : "bg-gray-200"}`}></div>
-                <div className={`h-8 rounded animate-pulse ${isDarkMode ? "bg-gray-600" : "bg-gray-200"}`}></div>
+                <div
+                  className={`mb-2 h-4 animate-pulse rounded ${isDarkMode ? "bg-gray-600" : "bg-gray-200"}`}
+                ></div>
+                <div
+                  className={`h-8 animate-pulse rounded ${isDarkMode ? "bg-gray-600" : "bg-gray-200"}`}
+                ></div>
               </CardContent>
             </Card>
           ))}
@@ -296,17 +335,18 @@ export default function NotificationsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="container mx-auto max-w-7xl px-4 py-6">
       <div className={`space-y-6 ${isDarkMode ? "text-white" : ""}`}>
         {/* Notification Detail Modal */}
         <Dialog open={showDetailModal} onOpenChange={setShowDetailModal}>
-          <DialogContent className={`max-w-2xl ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
+          <DialogContent className={`max-w-2xl ${isDarkMode ? "border-gray-700 bg-gray-800" : ""}`}>
             <DialogHeader>
               <DialogTitle className={`flex items-center gap-2 ${isDarkMode ? "text-white" : ""}`}>
-                {selectedNotification && (() => {
-                  const IconComponent = getTypeIcon(selectedNotification.type)
-                  return <IconComponent className="w-5 h-5" />
-                })()}
+                {selectedNotification &&
+                  (() => {
+                    const IconComponent = getTypeIcon(selectedNotification.type)
+                    return <IconComponent className="h-5 w-5" />
+                  })()}
                 {selectedNotification?.title}
               </DialogTitle>
               <DialogDescription className={isDarkMode ? "text-gray-300" : ""}>
@@ -318,38 +358,77 @@ export default function NotificationsPage() {
                         {formatDate(selectedNotification.timestamp)}
                       </span>
                     </div>
-                    <div className={`p-4 rounded-lg ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}>
+                    <div className={`rounded-lg p-4 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}>
                       <p className="whitespace-pre-wrap">{selectedNotification.message}</p>
                     </div>
                     {selectedNotification.data && (
                       <div className="space-y-4">
                         {/* Customer Information */}
-                        {(selectedNotification.data.customer_name || selectedNotification.data.email) && (
-                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-blue-900/20" : "bg-purple-50"}`}>
-                            <h4 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Customer Information</h4>
+                        {(selectedNotification.data.customer_name ||
+                          selectedNotification.data.email) && (
+                          <div
+                            className={`rounded-lg p-4 ${isDarkMode ? "bg-blue-900/20" : "bg-purple-50"}`}
+                          >
+                            <h4
+                              className={`mb-3 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              Customer Information
+                            </h4>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               {selectedNotification.data.customer_name && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Name:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.customer_name}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Name:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.customer_name}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.email && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Email:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.email}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Email:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.email}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.company && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Company:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.company}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Company:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.company}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.plan_name && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Plan:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.plan_name}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Plan:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.plan_name}
+                                  </span>
                                 </div>
                               )}
                             </div>
@@ -357,48 +436,118 @@ export default function NotificationsPage() {
                         )}
 
                         {/* Order Details */}
-                        {selectedNotification.type.startsWith('label_order_') && (
-                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-green-900/20" : "bg-green-50"}`}>
-                            <h4 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Order Details</h4>
+                        {selectedNotification.type.startsWith("label_order_") && (
+                          <div
+                            className={`rounded-lg p-4 ${isDarkMode ? "bg-green-900/20" : "bg-green-50"}`}
+                          >
+                            <h4
+                              className={`mb-3 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              Order Details
+                            </h4>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Order ID:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>#{selectedNotification.data.order_id}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Order ID:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  #{selectedNotification.data.order_id}
+                                </span>
                               </div>
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Product:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.product_name}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Product:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  {selectedNotification.data.product_name}
+                                </span>
                               </div>
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Bundles:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.bundle_count}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Bundles:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  {selectedNotification.data.bundle_count}
+                                </span>
                               </div>
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Total Labels:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.label_count}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Total Labels:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  {selectedNotification.data.label_count}
+                                </span>
                               </div>
                               {selectedNotification.data.amount_formatted && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Amount:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.amount_formatted}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Amount:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.amount_formatted}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.shipping_address && (
                                 <div className="col-span-2">
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Shipping Address:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.shipping_address}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Shipping Address:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.shipping_address}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.tracking_number && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Tracking:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.tracking_number}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Tracking:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.tracking_number}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.cancellation_reason && (
                                 <div className="col-span-2">
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Cancellation Reason:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.cancellation_reason}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Cancellation Reason:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.cancellation_reason}
+                                  </span>
                                 </div>
                               )}
                             </div>
@@ -406,43 +555,98 @@ export default function NotificationsPage() {
                         )}
 
                         {/* Device Information */}
-                        {selectedNotification.type.startsWith('device_') && (
-                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-purple-900/20" : "bg-purple-50"}`}>
-                            <h4 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Device Information</h4>
+                        {selectedNotification.type.startsWith("device_") && (
+                          <div
+                            className={`rounded-lg p-4 ${isDarkMode ? "bg-purple-900/20" : "bg-purple-50"}`}
+                          >
+                            <h4
+                              className={`mb-3 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              Device Information
+                            </h4>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Device ID:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.device_id}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Device ID:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  {selectedNotification.data.device_id}
+                                </span>
                               </div>
                               <div>
-                                <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Status:</span>
-                                <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.status}</span>
+                                <span
+                                  className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                >
+                                  Status:
+                                </span>
+                                <span
+                                  className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                >
+                                  {selectedNotification.data.status}
+                                </span>
                               </div>
                             </div>
                           </div>
                         )}
 
                         {/* Payment Information */}
-                        {(selectedNotification.type.includes('payment') || selectedNotification.data.amount) && (
-                          <div className={`p-4 rounded-lg ${isDarkMode ? "bg-yellow-900/20" : "bg-yellow-50"}`}>
-                            <h4 className={`font-semibold mb-3 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Payment Information</h4>
+                        {(selectedNotification.type.includes("payment") ||
+                          selectedNotification.data.amount) && (
+                          <div
+                            className={`rounded-lg p-4 ${isDarkMode ? "bg-yellow-900/20" : "bg-yellow-50"}`}
+                          >
+                            <h4
+                              className={`mb-3 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                            >
+                              Payment Information
+                            </h4>
                             <div className="grid grid-cols-2 gap-4 text-sm">
                               {selectedNotification.data.amount && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Amount:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.amount}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Amount:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.amount}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.failure_reason && (
                                 <div className="col-span-2">
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Failure Reason:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{selectedNotification.data.failure_reason}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Failure Reason:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {selectedNotification.data.failure_reason}
+                                  </span>
                                 </div>
                               )}
                               {selectedNotification.data.next_billing && (
                                 <div>
-                                  <span className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Next Billing:</span>
-                                  <span className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}>{new Date(selectedNotification.data.next_billing).toLocaleDateString()}</span>
+                                  <span
+                                    className={`font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                                  >
+                                    Next Billing:
+                                  </span>
+                                  <span
+                                    className={`ml-2 ${isDarkMode ? "text-white" : "text-gray-900"}`}
+                                  >
+                                    {new Date(
+                                      selectedNotification.data.next_billing
+                                    ).toLocaleDateString()}
+                                  </span>
                                 </div>
                               )}
                             </div>
@@ -450,9 +654,15 @@ export default function NotificationsPage() {
                         )}
 
                         {/* Raw Data (for debugging) */}
-                        <div className={`p-4 rounded-lg ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}>
-                          <h4 className={`font-medium mb-2 ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Raw Data:</h4>
-                          <pre className="text-xs overflow-auto max-h-32">
+                        <div
+                          className={`rounded-lg p-4 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"}`}
+                        >
+                          <h4
+                            className={`mb-2 font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}
+                          >
+                            Raw Data:
+                          </h4>
+                          <pre className="max-h-32 overflow-auto text-xs">
                             {JSON.stringify(selectedNotification.data, null, 2)}
                           </pre>
                         </div>
@@ -471,115 +681,154 @@ export default function NotificationsPage() {
         </Dialog>
 
         <div className="flex items-center justify-between">
-          <h1 className={`text-3xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Admin Notifications</h1>
+          <h2 className={`text-3xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+            Admin Notifications
+          </h2>
           <div className="flex gap-2">
             <Button variant="outline" onClick={markAllAsRead}>
-              <CheckCircle className="w-4 h-4 mr-2" />
+              <CheckCircle className="mr-2 h-4 w-4" />
               Mark All as Read
             </Button>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4">
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-6">
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Total</p>
-                  <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : ""}`}>{stats.total}</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    Total
+                  </p>
+                  <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : ""}`}>
+                    {stats.total}
+                  </p>
                 </div>
-                <Bell className={`w-8 h-8 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
+                <Bell className={`h-8 w-8 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Unread</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    Unread
+                  </p>
                   <p className="text-2xl font-bold text-red-600">{stats.unread}</p>
                 </div>
-                <EyeOff className="w-8 h-8 text-red-400" />
+                <EyeOff className="h-8 w-8 text-red-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>New Signups</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    New Signups
+                  </p>
                   <p className="text-2xl font-bold text-green-600">{stats.new_signup}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-green-400" />
+                <CheckCircle className="h-8 w-8 text-green-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Upgrades</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    Upgrades
+                  </p>
                   <p className="text-2xl font-bold text-purple-600">{stats.upgrade}</p>
                 </div>
-                <AlertTriangle className="w-8 h-8 text-purple-400" />
+                <AlertTriangle className="h-8 w-8 text-purple-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Device Events</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    Device Events
+                  </p>
                   <p className="text-2xl font-bold text-purple-600">
-                    {stats.device_shipped + stats.device_delivered + stats.device_return_requested + stats.device_returned}
+                    {stats.device_shipped +
+                      stats.device_delivered +
+                      stats.device_return_requested +
+                      stats.device_returned}
                   </p>
                 </div>
-                <Package className="w-8 h-8 text-purple-400" />
+                <Package className="h-8 w-8 text-purple-400" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Label Orders</p>
+                  <p
+                    className={`text-sm font-medium ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}
+                  >
+                    Label Orders
+                  </p>
                   <p className="text-2xl font-bold text-green-600">
-                    {stats.label_order_placed + stats.label_order_paid + stats.label_order_shipped + stats.label_order_delivered + stats.label_order_cancelled}
+                    {stats.label_order_placed +
+                      stats.label_order_paid +
+                      stats.label_order_shipped +
+                      stats.label_order_delivered +
+                      stats.label_order_cancelled}
                   </p>
                 </div>
-                <Bell className="w-8 h-8 text-green-400" />
+                <Bell className="h-8 w-8 text-green-400" />
               </div>
             </CardContent>
           </Card>
         </div>
 
         {/* Filters */}
-        <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardContent className="p-6">
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col gap-4 sm:flex-row">
               <div className="flex-1">
                 <div className="relative">
-                  <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
+                  <Search
+                    className={`absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform ${isDarkMode ? "text-gray-500" : "text-gray-400"}`}
+                  />
                   <Input
                     placeholder="Search notifications..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className={`pl-10 ${isDarkMode ? "bg-gray-700 border-gray-600 text-white" : ""}`}
+                    className={`pl-10 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : ""}`}
                   />
                 </div>
               </div>
               <div className="w-full sm:w-48">
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className={isDarkMode ? "bg-gray-700 border-gray-600 text-white" : ""}>
+                  <SelectTrigger
+                    className={isDarkMode ? "border-gray-600 bg-gray-700 text-white" : ""}
+                  >
                     <SelectValue placeholder="Filter by type" />
                   </SelectTrigger>
-                  <SelectContent className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+                  <SelectContent className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
                     <SelectItem value="all">All Types</SelectItem>
                     <SelectItem value="new_signup">New Signups</SelectItem>
                     <SelectItem value="upgrade">Upgrades</SelectItem>
@@ -601,10 +850,12 @@ export default function NotificationsPage() {
               </div>
               <div className="w-full sm:w-48">
                 <Select value={readFilter} onValueChange={setReadFilter}>
-                  <SelectTrigger className={isDarkMode ? "bg-gray-700 border-gray-600 text-white" : ""}>
+                  <SelectTrigger
+                    className={isDarkMode ? "border-gray-600 bg-gray-700 text-white" : ""}
+                  >
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
-                  <SelectContent className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+                  <SelectContent className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
                     <SelectItem value="all">All</SelectItem>
                     <SelectItem value="unread">Unread</SelectItem>
                     <SelectItem value="read">Read</SelectItem>
@@ -616,7 +867,7 @@ export default function NotificationsPage() {
         </Card>
 
         {/* Notifications Table */}
-        <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardHeader>
             <CardTitle className={isDarkMode ? "text-white" : ""}>Notifications</CardTitle>
           </CardHeader>
@@ -635,22 +886,30 @@ export default function NotificationsPage() {
                 </TableHeader>
                 <TableBody>
                   {filteredNotifications.map((notification) => (
-                    <TableRow 
-                      key={notification.id} 
-                      className={`${!notification.read ? (isDarkMode ? 'bg-blue-900/20' : 'bg-purple-50') : ''} ${isDarkMode ? 'border-gray-700' : ''}`}
+                    <TableRow
+                      key={notification.id}
+                      className={`${!notification.read ? (isDarkMode ? "bg-blue-900/20" : "bg-purple-50") : ""} ${isDarkMode ? "border-gray-700" : ""}`}
                     >
                       <TableCell>
                         <div className="flex items-center gap-2">
                           {(() => {
                             const IconComponent = getTypeIcon(notification.type)
-                            return <IconComponent className="w-4 h-4" />
+                            return <IconComponent className="h-4 w-4" />
                           })()}
                           {getTypeBadge(notification.type)}
                         </div>
                       </TableCell>
-                      <TableCell className={`font-medium ${isDarkMode ? "text-white" : ""}`}>{notification.title}</TableCell>
-                      <TableCell className={`max-w-xs truncate ${isDarkMode ? "text-gray-300" : ""}`}>{notification.message}</TableCell>
-                      <TableCell className={isDarkMode ? "text-gray-300" : ""}>{formatDate(notification.timestamp)}</TableCell>
+                      <TableCell className={`font-medium ${isDarkMode ? "text-white" : ""}`}>
+                        {notification.title}
+                      </TableCell>
+                      <TableCell
+                        className={`max-w-xs truncate ${isDarkMode ? "text-gray-300" : ""}`}
+                      >
+                        {notification.message}
+                      </TableCell>
+                      <TableCell className={isDarkMode ? "text-gray-300" : ""}>
+                        {formatDate(notification.timestamp)}
+                      </TableCell>
                       <TableCell>
                         {notification.read ? (
                           <Badge variant="outline">Read</Badge>
@@ -665,7 +924,7 @@ export default function NotificationsPage() {
                             size="sm"
                             onClick={() => showNotificationDetail(notification)}
                           >
-                            <Eye className="w-4 h-4" />
+                            <Eye className="h-4 w-4" />
                           </Button>
                           {!notification.read && (
                             <Button
@@ -673,7 +932,7 @@ export default function NotificationsPage() {
                               size="sm"
                               onClick={() => markAsRead(notification.id)}
                             >
-                              <CheckCircle className="w-4 h-4" />
+                              <CheckCircle className="h-4 w-4" />
                             </Button>
                           )}
                           <Button
@@ -681,7 +940,7 @@ export default function NotificationsPage() {
                             size="sm"
                             onClick={() => deleteNotification(notification.id)}
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
                       </TableCell>
@@ -690,9 +949,9 @@ export default function NotificationsPage() {
                 </TableBody>
               </Table>
             </div>
-            
+
             {filteredNotifications.length === 0 && (
-              <div className={`text-center py-8 ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+              <div className={`py-8 text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
                 No notifications found matching your criteria.
               </div>
             )}
@@ -701,4 +960,4 @@ export default function NotificationsPage() {
       </div>
     </div>
   )
-} 
+}

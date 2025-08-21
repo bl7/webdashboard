@@ -128,7 +128,7 @@ const Page = () => {
           <h2>12. Contact Us</h2>
           <p>
             If you have questions about these Terms, contact us at{" "}
-            <a href="mailto:support@instalabel.com">support@instalabel.com</a>.
+            <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
           </p>
         </article>
         <div className="py-8 text-sm text-muted-foreground"> As of March 2nd, 2025</div>

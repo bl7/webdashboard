@@ -301,7 +301,7 @@ export default function PPDSPage() {
           {/* Menu Items List */}
           <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">
             <div className="mb-6 flex items-center justify-between">
-              <h1 className="text-2xl font-bold tracking-tight">Menu Items</h1>
+              <h2 className="text-2xl font-bold tracking-tight">Menu Items</h2>
             </div>
             <div className="mb-6">
               <input

@@ -5,15 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: [
-        "/dashboard/",
-        "/boss/",
-        "/bossdashboard/",
-        "/api/",
-        "/_next/",
-        "/admin/",
-        "/private/",
-      ],
+      disallow: ["/dashboard/", "/boss/", "/bossdashboard/", "/api/", "/admin/", "/private/"],
     },
     sitemap: "https://www.instalabel.co/sitemap.xml",
   }

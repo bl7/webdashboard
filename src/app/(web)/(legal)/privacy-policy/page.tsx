@@ -55,7 +55,7 @@ const Page = () => {
               Your privacy is important to us. This Privacy Policy explains how InstaLabel Pvt. Ltd.
               ("InstaLabel", "we", "us", or "our") collects, uses, and protects your information
               when you use our kitchen labeling software and related services. If you have any
-              questions, <a href="mailto:support@InstaLabel.com">please get in touch.</a>
+              questions, <a href="mailto:support@instalabel.co">please get in touch.</a>
             </h3>
           </div>
         </div>
@@ -133,12 +133,12 @@ const Page = () => {
           <h2>Contact Us</h2>
           <ul>
             <li>
-              Email: <a href="mailto:support@InstaLabel.com">support@InstaLabel.com</a>
+              Email: <a href="mailto:support@instalabel.co">support@instalabel.co</a>
             </li>
             <li>
               Website:{" "}
-              <a href="https://www.instalabel.com/support" target="_blank" rel="noopener">
-                https://www.instalabel.com/support
+              <a href="https://www.instalabel.co/support" target="_blank" rel="noopener">
+                https://www.instalabel.co/support
               </a>
             </li>
           </ul>

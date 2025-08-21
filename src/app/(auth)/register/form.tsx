@@ -165,7 +165,7 @@ export function RegisterForm() {
             Terms of Service
           </Link>{" "}
           and{" "}
-          <Link className="text-primary hover:underline" href="/privacy">
+          <Link className="text-primary hover:underline" href="/privacy-policy">
             Privacy Policy
           </Link>
           .

@@ -55,7 +55,7 @@ const Page = () => {
           <p>
             InstaLabel Pvt. Ltd. ("InstaLabel", "we", "us", or "our") uses cookies and similar
             technologies to provide, improve, and secure our kitchen labeling software and website (
-            <a href="https://www.InstaLabel.com">https://www.InstaLabel.com</a>).
+            <a href="https://www.instalabel.co">https://www.instalabel.co</a>).
           </p>
           <h2>1. What are Cookies?</h2>
           <p>
@@ -107,7 +107,7 @@ const Page = () => {
           <h2>6. Contact Us</h2>
           <p>
             If you have questions about our Cookie Policy, contact us at{" "}
-            <a href="mailto:support@InstaLabel.com">support@InstaLabel.com</a>.
+            <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
           </p>
         </article>
         <div className="py-8 text-sm text-muted-foreground"> As of March 25th, 2024</div>

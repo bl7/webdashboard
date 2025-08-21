@@ -1,8 +1,21 @@
 import React from "react"
-
+import { Metadata } from "next"
 import Link from "next/link"
 import Image from "next/image"
 import { RegisterForm } from "./form"
+
+export const metadata: Metadata = {
+  title: "Register | InstaLabel Kitchen Labeling System",
+  description:
+    "Create your InstaLabel account to start using our professional kitchen labeling system for food safety and compliance.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+  alternates: {
+    canonical: "https://www.instalabel.co/register",
+  },
+}
 
 export default function RegisterPage() {
   function getTimeOfDayGreeting() {
