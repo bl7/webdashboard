@@ -389,95 +389,85 @@ export function Chatbot({ className }: ChatbotProps) {
 
   // Multiple messages for each avatar (One Piece characters)
   const avatarMessages = [
-    // 🏴‍☠️ Luffy (Avatar1)
+    // 🏴‍☠️ Luffy (Energetic / Cheerful)
     [
-      "Oi! Need some help? Let's make this quick, I'm hungry! 🍖", // Original
-      "Hey! What do you need? I'll help fast so we can eat after! 🍖",
-      "Shishishi~! Got a question? Ask me anything! 🍖",
-      "Oi! Let's get this done quick, adventure's waiting! 🍖",
-      "Hi! I'm Luffy, and I'll be King of the Pirates… but first, need help? 🍖",
-      "Hungry? Oh wait—no, you need help! What's up? 🍖",
+      "Hey there! Need a hand? 🏴‍☠️",
+      "Let’s get this done quickly! 🏴‍☠️",
+      "Hi! What can I help you with today? 🏴‍☠️",
+      "Got a question? I’ve got answers! 🏴‍☠️",
+      "Let’s make this simple for you! 🏴‍☠️",
     ],
-    // ⚔️ Zoro (Avatar2)
+    // ⚔️ Zoro (Calm / Straightforward)
     [
-      "Tch… What do you need? Don't waste my time unless it's important. ⚔️", // Original
-      "Lost? Hmph, I'll get you back on track. ⚔️",
-      "What do you need? Make it quick. ⚔️",
-      "Don't bother me with nonsense. Ask straight. ⚔️",
-      "If you're looking for direction… well, I'm not the best. But I'll help. ⚔️",
-      "Tch… fine. What's the problem? ⚔️",
+      "What do you need? ⚔️",
+      "Tell me directly—I’ll help. ⚔️",
+      "Let’s keep it clear and quick. ⚔️",
+      "Need something solved? ⚔️",
+      "I’ll get you where you need to go. ⚔️",
     ],
-    // 🗺️ Nami (Avatar3)
+    // 🗺️ Nami (Friendly / Guiding)
     [
-      "Hi there~! How can I guide you today? 🗺️", // Original
-      "Hi there! Need me to guide you somewhere? 🗺️",
-      "What can I help you navigate today? 🗺️",
-      "Looking for something? I'll find the way! 🗺️",
-      "Hello~! Let's chart a course for your answer. 🗺️",
-      "Ask me anything—I'll make it easy. 🗺️",
+      "Hi there! I’ll guide you through. 🗺️",
+      "Looking for something? I’ll help you find it. 🗺️",
+      "Let’s chart the best path for you. 🗺️",
+      "What can I walk you through today? 🗺️",
+      "I’ll make this easy to follow. 🗺️",
     ],
-    // 🩺 Chopper (Avatar4)
+    // 🎯 Usopp (Confident / Playful)
     [
-      "Hello! Do you need any help? I'll do my best! 🩺", // Original
-      "Hi! Do you need some help? I'll try my best! 🩺",
-      "Oh! You need something? I can do it! 🩺",
-      "Don't worry, you're safe with me! 🩺",
-      "I'll take care of it—leave it to me! 🩺",
-      "Hehe… really? You think I'm helpful?! 🩺",
+      "You’re in the right place—I’ve got this! 🎯",
+      "Don’t worry, I can handle it. 🎯",
+      "Need something? I’ll take care of it. 🎯",
+      "Stick with me, and you’ll be sorted in no time. 🎯",
+      "Ready to solve your problem? Let’s go! 🎯",
     ],
-    // 📜 Robin (Avatar5)
+    // 🍳 Sanji (Polite / Courteous)
     [
-      "Good day. What information are you searching for? 📜", // Original
-      "Hello. What would you like to know? 📜",
-      "I'll uncover the answer for you. 📜",
-      "Seeking knowledge? Let's find it together. 📜",
-      "Good day. What's on your mind? 📜",
-      "Every question has a story—what's yours? 📜",
+      "Welcome! How may I assist you today? 🍳",
+      "It’s my pleasure to help—what do you need? 🍳",
+      "I’m here to make this easy for you. 🍳",
+      "Tell me what you’re looking for—I’ll handle the rest. 🍳",
+      "Happy to assist anytime! 🍳",
     ],
-    // 🍳 Sanji (Avatar6)
+    // 🩺 Chopper (Kind / Supportive)
     [
-      "Ah, welcome~! What can I do for you today, my dear guest? 💐🍳", // Original
-      "Welcome, my dear guest. How may I serve you today? 💐🍳",
-      "Need help? Consider it done—with style. 💐🍳",
-      "Hello! What can I get for you, sweetheart? 💐🍳",
-      "A fine request deserves fine service—tell me! 💐🍳",
-      "Your wish is my command, mademoiselle. 💐🍳",
+      "Hi! I’ll do my best to help you. 🩺",
+      "No worries, we’ll figure this out together. 🩺",
+      "What do you need? I’ll take care of it. 🩺",
+      "You’re safe here—just ask! 🩺",
+      "Let’s solve this step by step. 🩺",
     ],
-    // 🔧 Franky (Avatar7)
+    // 📜 Robin (Calm / Knowledgeable)
     [
-      "SUUUPER~! Need help? Leave it to me! 🔧", // Original
-      "SUUUPER! What do you need help with?! 🔧",
-      "Oi! Let's fix this problem, no sweat! 🔧",
-      "Need help? Leave it to a cyborg like me! 🔧",
-      "This is gonna be a SUUUPER solution! 🔧",
-      "Yow! What's the issue? I'll make it flashy! 🔧",
+      "Hello. What information do you need? 📜",
+      "I’ll find the right answer for you. 📜",
+      "Let’s uncover the solution together. 📜",
+      "Every question has an answer—let’s find yours. 📜",
+      "Good day. What can I clarify for you? 📜",
     ],
-    // 🌊 Jinbe (Avatar8)
+    // 🔧 Franky (Energetic / Problem-solver)
     [
-      "Greetings. How may I assist you today? 🌊", // Original
-      "Greetings. What do you need assistance with? 🌊",
-      "Calm seas, calm answers—what can I do for you? 🌊",
-      "Tell me your concern, and I will guide you through. 🌊",
-      "Hello. Allow me to support you. 🌊",
-      "The tide is in your favor. How may I help? 🌊",
+      "Need a fix? I’m on it! 🔧",
+      "Let’s solve this—fast and smooth! 🔧",
+      "Leave it to me, I’ll handle it! 🔧",
+      "What’s the issue? I’ll patch it up right away! 🔧",
+      "Time for a quick solution—let’s go! 🔧",
     ],
-    // 🎯 Usopp (Avatar9)
+    // 🎻 Brook (Quirky / Lighthearted)
     [
-      "You're in luck! You've got the great Usopp here to solve all your problems! 🎯", // Original
-      "You're in luck—the great Usopp will help you! 🎯",
-      "I can solve anything! …Well, maybe not everything… but try me! 🎯",
-      "Don't worry, your problem is no match for me! 🎯",
-      "I'm the bravest warrior of the sea, and I'll guide you! 🎯",
-      "Hey! What do you need? I'll shoot straight to the answer! 🎯",
+      "Hello! How may I help you today? 🎻",
+      "Need help? I’ll do my best! 🎻",
+      "Hi there, let’s get things sorted out. 🎻",
+      "I’m always happy to lend a hand! 🎻",
+      "Let’s turn your question into a smooth answer. 🎻",
     ],
-    // 🎻 Brook (Avatar10)
+    // 🌊 Jinbe (Respectful / Reassuring)
     [
-      "Yohohoho! May I lend you a hand? Oh, but I don't have any flesh on mine! 🎻💀", // Original
-      "Yohohoho! How may I help you today? 🎻💀",
-      "Need a hand? Oh, but I don't have any flesh on mine! 🎻💀",
-      "Hello, hello! What's troubling your soul? 🎻💀",
-      "Yohoho! Allow me to assist, if you don't mind the bones! 🎻💀",
-      "May I help you? Or perhaps sing you a tune? 🎻💀",
+      "Greetings. What can I do for you today? 🌊",
+      "Calmly now—tell me what you need. 🌊",
+      "I’ll guide you through this. 🌊",
+      "Let’s take it step by step together. 🌊",
+      "The solution is close. How may I help? 🌊",
     ],
   ]
 
