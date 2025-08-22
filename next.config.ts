@@ -113,6 +113,20 @@ const nextConfig = {
           },
         ],
       },
+      // Sitemap cache headers
+      {
+        source: "/sitemap.xml",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, s-maxage=3600, stale-while-revalidate=86400",
+          },
+          {
+            key: "Content-Type",
+            value: "application/xml; charset=utf-8",
+          },
+        ],
+      },
       // CORS headers for all API routes (fixes React Native issues)
       {
         source: "/api/(.*)",

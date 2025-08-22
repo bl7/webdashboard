@@ -92,32 +92,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return urls
 }
-
-// Add custom headers for better caching
-export async function GET() {
-  const sitemapData = await sitemap()
-  
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${sitemapData
-  .map(
-    (url) => {
-      const lastMod = url.lastModified ? new Date(url.lastModified).toISOString() : new Date().toISOString()
-      return `  <url>
-    <loc>${url.url}</loc>
-    <lastmod>${lastMod}</lastmod>
-    <changefreq>${url.changeFrequency}</changefreq>
-    <priority>${url.priority}</priority>
-  </url>`
-    }
-  )
-  .join("\n")}
-</urlset>`
-
-  return new Response(xml, {
-    headers: {
-      "Content-Type": "application/xml",
-      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
-    },
-  })
-}
