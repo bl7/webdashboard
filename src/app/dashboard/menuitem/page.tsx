@@ -65,18 +65,18 @@ export default function MenuItemsDashboard() {
     ingredientIDs: [],
   })
   const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null)
-  const [ingredientSearch, setIngredientSearch] = useState("");
-  const [editIngredientSearch, setEditIngredientSearch] = useState("");
+  const [ingredientSearch, setIngredientSearch] = useState("")
+  const [editIngredientSearch, setEditIngredientSearch] = useState("")
 
-  const { 
-    menuItems, 
-    loading, 
-    error, 
-    addNewMenuItem, 
-    updateExistingMenuItem, 
-    deleteExistingMenuItem 
+  const {
+    menuItems,
+    loading,
+    error,
+    addNewMenuItem,
+    updateExistingMenuItem,
+    deleteExistingMenuItem,
   } = useMenuItems()
-  
+
   const { ingredients, loading: ingredientsLoading } = useIngredients()
   const perPage = 10
 
@@ -91,8 +91,8 @@ export default function MenuItemsDashboard() {
     const exportData = filtered.map((item) => ({
       ID: item.menuItemID,
       Name: item.menuItemName,
-      Ingredients: item.ingredients.map(ing => ing.ingredientName).join(", "),
-      Allergens: item.allergens.map(all => all.allergenName).join(", "),
+      Ingredients: item.ingredients.map((ing) => ing.ingredientName).join(", "),
+      Allergens: item.allergens.map((all) => all.allergenName).join(", "),
       ExpiryDays: item.expiryDays || "N/A",
     }))
     const worksheet = XLSX.utils.json_to_sheet(exportData)
@@ -108,7 +108,9 @@ export default function MenuItemsDashboard() {
     }
 
     // Duplicate check (case-insensitive, trimmed)
-    const exists = menuItems.some(i => i.menuItemName.trim().toLowerCase() === newItem.menuItemName.trim().toLowerCase())
+    const exists = menuItems.some(
+      (i) => i.menuItemName.trim().toLowerCase() === newItem.menuItemName.trim().toLowerCase()
+    )
     if (exists) {
       toast.error("A menu item with this name already exists.")
       return
@@ -167,7 +169,7 @@ export default function MenuItemsDashboard() {
   const openEditModal = (item: MenuItem) => {
     setEditItem({
       menuItemName: item.menuItemName,
-      ingredientIDs: item.ingredients.map(ing => ing.uuid),
+      ingredientIDs: item.ingredients.map((ing) => ing.uuid),
       categoryID: item.categoryID,
       menuItemID: item.menuItemID,
     })
@@ -290,7 +292,9 @@ export default function MenuItemsDashboard() {
             {paginated.map((item) => (
               <tr key={item.menuItemID} className="transition hover:bg-muted">
                 <td className="px-6 py-4 font-medium">{item.menuItemName}</td>
-                <td className="px-6 py-4">{item.ingredients.map(ing => ing.ingredientName).join(", ")}</td>
+                <td className="px-6 py-4">
+                  {item.ingredients.map((ing) => ing.ingredientName).join(", ")}
+                </td>
                 <td className="px-6 py-4">
                   {item.allergens.length > 0 ? (
                     <div className="flex flex-wrap gap-1">
@@ -443,17 +447,20 @@ export default function MenuItemsDashboard() {
                   <Input
                     placeholder="Search ingredients..."
                     value={ingredientSearch}
-                    onChange={e => setIngredientSearch(e.target.value)}
+                    onChange={(e) => setIngredientSearch(e.target.value)}
                     className="mb-2 w-full px-2 py-1 text-sm"
                   />
-                  {getAvailableIngredients(newItem.ingredientIDs)
-                    .filter(ing => ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())).length === 0 ? (
+                  {getAvailableIngredients(newItem.ingredientIDs).filter((ing) =>
+                    ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())
+                  ).length === 0 ? (
                     <div className="px-2 py-1 text-sm text-muted-foreground">
                       No more ingredients available
                     </div>
                   ) : (
                     getAvailableIngredients(newItem.ingredientIDs)
-                      .filter(ing => ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase()))
+                      .filter((ing) =>
+                        ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())
+                      )
                       .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
                       .map((ingredient) => (
                         <DropdownMenuItem
@@ -503,8 +510,8 @@ export default function MenuItemsDashboard() {
             >
               Cancel
             </Button>
-            <Button onClick={handleAddItem} disabled={!newItem.menuItemName.trim()}>
-              Save
+            <Button onClick={handleAddItem} disabled={!newItem.menuItemName.trim() || loading}>
+              {loading ? "Adding..." : "Save"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -578,17 +585,22 @@ export default function MenuItemsDashboard() {
                   <Input
                     placeholder="Search ingredients..."
                     value={editIngredientSearch}
-                    onChange={e => setEditIngredientSearch(e.target.value)}
+                    onChange={(e) => setEditIngredientSearch(e.target.value)}
                     className="mb-2 w-full px-2 py-1 text-sm"
                   />
-                  {getAvailableIngredients(editItem.ingredientIDs)
-                    .filter(ing => ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase())).length === 0 ? (
+                  {getAvailableIngredients(editItem.ingredientIDs).filter((ing) =>
+                    ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase())
+                  ).length === 0 ? (
                     <div className="px-2 py-2 text-center text-sm text-muted-foreground">
                       No more ingredients available
                     </div>
                   ) : (
                     getAvailableIngredients(editItem.ingredientIDs)
-                      .filter(ing => ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase()))
+                      .filter((ing) =>
+                        ing.ingredientName
+                          .toLowerCase()
+                          .includes(editIngredientSearch.toLowerCase())
+                      )
                       .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
                       .map((ingredient) => (
                         <DropdownMenuItem
@@ -629,8 +641,8 @@ export default function MenuItemsDashboard() {
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
-              Are you sure you want to delete "<strong>{itemToDelete?.menuItemName}</strong>"? This action
-              cannot be undone.
+              Are you sure you want to delete "<strong>{itemToDelete?.menuItemName}</strong>"? This
+              action cannot be undone.
             </p>
           </div>
           <DialogFooter>
@@ -662,12 +674,13 @@ export default function MenuItemsDashboard() {
                 <strong>Name:</strong> {selected.menuItemName}
               </p>
               <p>
-                <strong>Ingredients:</strong> {selected.ingredients.map(ing => ing.ingredientName).join(", ")}
+                <strong>Ingredients:</strong>{" "}
+                {selected.ingredients.map((ing) => ing.ingredientName).join(", ")}
               </p>
               <p>
                 <strong>Allergens:</strong>{" "}
                 {selected.allergens.length > 0
-                  ? selected.allergens.map(all => all.allergenName).join(", ")
+                  ? selected.allergens.map((all) => all.allergenName).join(", ")
                   : "None"}
               </p>
               <p>

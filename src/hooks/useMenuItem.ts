@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import { getAllMenuItems, addMenuItems, getMenuItem, updateMenuItem, deleteMenuItem } from "@/lib/api"
+import {
+  getAllMenuItems,
+  addMenuItems,
+  getMenuItem,
+  updateMenuItem,
+  deleteMenuItem,
+} from "@/lib/api"
 
 export type MenuItem = {
   menuItemID: string
@@ -37,6 +43,29 @@ export function useMenuItems() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [lastSubmission, setLastSubmission] = useState<{ name: string; timestamp: number } | null>(
+    null
+  )
+
+  // Submission guard to prevent rapid successive submissions
+  const isSubmissionAllowed = (menuItemName: string) => {
+    if (!lastSubmission) return true
+
+    const timeSinceLastSubmission = Date.now() - lastSubmission.timestamp
+    const isSameName = lastSubmission.name.toLowerCase() === menuItemName.toLowerCase()
+
+    // Prevent same name submission within 5 seconds
+    if (isSameName && timeSinceLastSubmission < 5000) {
+      return false
+    }
+
+    // Prevent any submission within 1 second
+    if (timeSinceLastSubmission < 1000) {
+      return false
+    }
+
+    return true
+  }
 
   // Fetch all menu items
   const fetchMenuItems = async () => {
@@ -51,7 +80,7 @@ export function useMenuItems() {
 
     try {
       const res = await getAllMenuItems(token)
-      console.log('Raw menu items API response:', res)
+      console.log("Raw menu items API response:", res)
       if (!res?.data) {
         setMenuItems([])
         return
@@ -93,19 +122,69 @@ export function useMenuItems() {
       return false
     }
 
+    // Check submission guard
+    if (!isSubmissionAllowed(menuItemData.menuItemName)) {
+      toast.error("Please wait before submitting again. Check for duplicates.")
+      return false
+    }
+
+    // Additional duplicate check before API call (case-insensitive, trimmed)
+    const normalizedName = menuItemData.menuItemName.trim().toLowerCase()
+    const exists = menuItems.some((i) => i.menuItemName.trim().toLowerCase() === normalizedName)
+    if (exists) {
+      toast.error("A menu item with this name already exists.")
+      return false
+    }
+
     setLoading(true)
     try {
-      console.log('Sending menu item payload:', menuItemData)
+      console.log("🚀 [DEBUG] Starting addNewMenuItem call:", menuItemData)
+      console.log("🚀 [DEBUG] Current timestamp:", Date.now())
+
       const response = await addMenuItems(menuItemData, token)
-      
-      // Refresh the menu items list to get the updated data
+      console.log("🚀 [DEBUG] API response received:", response)
+
+      // Update submission guard
+      setLastSubmission({
+        name: menuItemData.menuItemName,
+        timestamp: Date.now(),
+      })
+
+      // Double-check for duplicates after API call (in case of race conditions)
       await fetchMenuItems()
-      
-      toast.success("Menu item added successfully")
+      const updatedMenuItems = await getAllMenuItems(token)
+
+      // Check if multiple items with same name were created
+      const duplicateCount =
+        updatedMenuItems.data
+          ?.flatMap((cat: any) => cat.items || [])
+          .filter((item: any) => item.menuItemName.trim().toLowerCase() === normalizedName)
+          .length || 0
+
+      if (duplicateCount > 1) {
+        console.warn(
+          `⚠️ [WARNING] Found ${duplicateCount} duplicate menu items with name: "${menuItemData.menuItemName}"`
+        )
+        toast.warning(
+          `Menu item created, but ${duplicateCount} duplicates were detected. Please check your data.`
+        )
+      } else {
+        toast.success("Menu item added successfully")
+      }
+
       return true
     } catch (err: any) {
       console.error("Error adding menu item:", err)
-      toast.error(err.message || "Failed to add menu item")
+
+      // Handle specific error cases
+      if (err.message?.includes("duplicate") || err.message?.includes("already exists")) {
+        toast.error("This menu item already exists. Please use a different name.")
+      } else if (err.message?.includes("network") || err.message?.includes("timeout")) {
+        toast.error("Network issue detected. Please check your connection and try again.")
+      } else {
+        toast.error(err.message || "Failed to add menu item")
+      }
+
       return false
     } finally {
       setLoading(false)
@@ -123,10 +202,10 @@ export function useMenuItems() {
     setLoading(true)
     try {
       await updateMenuItem(menuItemId, menuItemData, token)
-      
+
       // Refresh the menu items list to get the updated data
       await fetchMenuItems()
-      
+
       toast.success("Menu item updated successfully")
       return true
     } catch (err: any) {
@@ -149,10 +228,10 @@ export function useMenuItems() {
     setLoading(true)
     try {
       await deleteMenuItem(menuItemId, token)
-      
+
       // Remove from local state
       setMenuItems((prev) => prev.filter((item) => item.menuItemID !== menuItemId))
-      
+
       toast.success("Menu item deleted successfully")
       return true
     } catch (err: any) {

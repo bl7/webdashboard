@@ -89,6 +89,30 @@ const nextConfig = {
   // Headers for performance, caching, and CORS
   async headers() {
     return [
+      // CSS MIME type headers (CRITICAL FIX for Next.js 15)
+      {
+        source: "/(.*)\\.css",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      // Global CSS files
+      {
+        source: "/globals.css",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css; charset=utf-8",
+          },
+        ],
+      },
       // CORS headers for all API routes (fixes React Native issues)
       {
         source: "/api/(.*)",
