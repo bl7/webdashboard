@@ -52,7 +52,4 @@ User-agent: YandexBot
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.instalabel.co/sitemap.xml
-
-# Crawl delay (optional)
-Crawl-delay: 1 
+Sitemap: https://www.instalabel.co/sitemap.xml 
