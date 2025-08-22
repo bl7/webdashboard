@@ -5,7 +5,9 @@ import matter from "gray-matter"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.instalabel.co"
-  const currentDate = new Date().toISOString()
+  
+  // Use a fixed deployment date for static pages (only change when content actually changes)
+  const staticPageDate = new Date("2025-08-22T10:00:00.000Z") // Fixed deployment date
   
   const staticPages = [
     "",
@@ -25,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/cookie-policy",
   ]
 
-  // Add static pages with current date
+  // Add static pages with fixed deployment date
   const urls: MetadataRoute.Sitemap = staticPages.map((page, i) => {
     let priority = 0.7
     let changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never" =
@@ -47,7 +49,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return {
       url: `${baseUrl}${page}`,
-      lastModified: new Date(),
+      lastModified: staticPageDate,
       changeFrequency,
       priority,
     }
