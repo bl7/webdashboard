@@ -119,7 +119,7 @@ const nextConfig = {
         headers: [
           {
             key: "Cache-Control",
-            value: "public, max-age=0, s-maxage=300, stale-while-revalidate=600",
+            value: "public, max-age=0, s-maxage=600, stale-while-revalidate=300",
           },
           {
             key: "Content-Type",
