@@ -5,6 +5,8 @@ import matter from "gray-matter"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://www.instalabel.co"
+  const currentDate = new Date().toISOString()
+  
   const staticPages = [
     "",
     "/blog",
@@ -23,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/cookie-policy",
   ]
 
-  // Add static pages
+  // Add static pages with current date
   const urls: MetadataRoute.Sitemap = staticPages.map((page, i) => {
     let priority = 0.7
     let changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never" =
@@ -45,21 +47,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return {
       url: `${baseUrl}${page}`,
-      lastModified: new Date("2024-12-19"),
+      lastModified: new Date(),
       changeFrequency,
       priority,
     }
   })
 
-  // Add blog posts
+  // Add blog posts with actual file modification dates
   const blogDir = path.join(process.cwd(), "src/content/blog")
   const files = await fs.readdir(blogDir)
 
   for (const file of files) {
     if (!file.endsWith(".md")) continue
-    const raw = await fs.readFile(path.join(blogDir, file), "utf8")
+    const filePath = path.join(blogDir, file)
+    const raw = await fs.readFile(filePath, "utf8")
     const { data } = matter(raw)
     const slug = data.slug || file.replace(/\.md$/, "")
+
+    // Get actual file modification date
+    const stats = await fs.stat(filePath)
+    const lastModified = stats.mtime
 
     // Set priority based on content type
     let priority = 0.7
@@ -77,11 +84,40 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     urls.push({
       url: `${baseUrl}/blog/${slug}`,
-      lastModified: new Date("2024-12-19"),
+      lastModified,
       changeFrequency: "monthly",
       priority: priority,
     })
   }
 
   return urls
+}
+
+// Add custom headers for better caching
+export async function GET() {
+  const sitemapData = await sitemap()
+  
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapData
+  .map(
+    (url) => {
+      const lastMod = url.lastModified ? new Date(url.lastModified).toISOString() : new Date().toISOString()
+      return `  <url>
+    <loc>${url.url}</loc>
+    <lastmod>${lastMod}</lastmod>
+    <changefreq>${url.changeFrequency}</changefreq>
+    <priority>${url.priority}</priority>
+  </url>`
+    }
+  )
+  .join("\n")}
+</urlset>`
+
+  return new Response(xml, {
+    headers: {
+      "Content-Type": "application/xml",
+      "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+    },
+  })
 }
