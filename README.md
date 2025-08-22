@@ -15,3 +15,4 @@ We are using QZ Tray to connect to label printers via USB/Bluetooth and print fr
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+# Force sitemap regeneration
