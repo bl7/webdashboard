@@ -13,7 +13,7 @@ import {
 } from "lucide-react"
 import Image from "next/image"
 import React from "react"
-import instaLabel2 from "@/assets/images/instaLabel2.png"
+import instaLabel3 from "@/assets/images/instalabel3.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { WaitlistModal } from "./WaitlistModal"
@@ -40,9 +40,9 @@ export const Hero = () => {
         >
           <div className="relative flex w-full max-w-[800px] justify-center">
             <Image
-              src={instaLabel2}
+              src={instaLabel3}
               alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
-              className="w-full max-w-[320px] object-contain transition duration-300 hover:-rotate-2 hover:scale-105"
+              className="w-full max-w-[660px] object-contain transition duration-300 hover:scale-105"
               priority
               placeholder="blur"
               blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
