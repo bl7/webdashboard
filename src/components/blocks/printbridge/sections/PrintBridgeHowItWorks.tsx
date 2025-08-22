@@ -50,9 +50,9 @@ export const PrintBridgeHowItWorks = () => {
             <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
               PrintBridge, powered by Zentra
             </div>
-            <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
               The Local Print Solution That Changes Everything
-            </h3>
+            </h2>
             <div className="mx-auto max-w-2xl text-base text-gray-600">
               Zentra connects your web dashboard to any USB printer. It bypasses browser
               limitations. WebSocket bridge, USB auto-discovery, silent printing.

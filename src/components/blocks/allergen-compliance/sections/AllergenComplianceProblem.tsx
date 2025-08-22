@@ -8,7 +8,7 @@ export const AllergenComplianceProblem = () => {
     <section className="bg-gray-50 px-4 py-20">
       <div className="mx-auto max-w-4xl">
         <div className="mb-12 text-center">
-          <motion.h3
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -16,7 +16,7 @@ export const AllergenComplianceProblem = () => {
             className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl"
           >
             Allergen Compliance is Getting Harder
-          </motion.h3>
+          </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

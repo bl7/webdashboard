@@ -33,9 +33,9 @@ export const PrintBridgeUseCases = () => (
         <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200 mb-2">
           Beyond Kitchen Labels: Where Zentra Excels
         </div>
-        <h2 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-gray-900">
+        <h3 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-gray-900">
           Use Cases
-        </h2>
+        </h3>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto mt-2">
           Any web app that needs reliable USB printing—Zentra PrintBridge is ready.
         </p>

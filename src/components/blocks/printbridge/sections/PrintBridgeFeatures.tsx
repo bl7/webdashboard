@@ -49,9 +49,9 @@ export const PrintBridgeFeatures = () => {
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="text-center space-y-4 mb-10 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+          <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             PrintBridge Features
-          </h2>
+          </h3>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Built for reliability, security, and ease of use in professional kitchen environments
           </p>

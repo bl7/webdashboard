@@ -3,9 +3,9 @@ import { FaDownload, FaEdit, FaUpload, FaCheckCircle } from "react-icons/fa"
 export const HowToUploadSteps = () => (
   <section className="bg-white px-4 py-16 sm:px-6 lg:px-16">
     <div className="mx-auto mb-10 max-w-3xl text-center">
-      <h3 className="mb-2 text-2xl font-bold text-gray-900 md:text-3xl">
+      <h2 className="mb-2 text-2xl font-bold text-gray-900 md:text-3xl">
         Get Up and Running in Minutes
-      </h3>
+      </h2>
       <p className="text-lg text-gray-600">
         Follow these simple steps to import your menu, ingredients, and allergens in bulk.
       </p>

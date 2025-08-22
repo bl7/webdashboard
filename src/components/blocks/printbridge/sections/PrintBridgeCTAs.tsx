@@ -43,9 +43,9 @@ export const PrintBridgeCTAs = () => (
         <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
           Get Started with PrintBridge
         </div>
-        <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
+        <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
           Choose Your Path
-        </h2>
+        </h3>
         <p className="mx-auto mt-2 max-w-2xl text-lg text-gray-600">
           PrintBridge is included with every InstaLabel account. Whether you’re new or already a
           customer, pick the option that fits you best.

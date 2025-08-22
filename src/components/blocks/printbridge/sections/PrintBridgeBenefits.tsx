@@ -42,9 +42,9 @@ export const PrintBridgeBenefits = () => {
       <div className="relative mx-auto max-w-7xl space-y-12 sm:space-y-20">
         {/* Header */}
         <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+          <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
             Why Choose PrintBridge (Powered by Zentra)?
-          </h2>
+          </h3>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Experience the benefits of local printing technology designed for professional kitchens—powered by Zentra, our lightweight bridge app for Windows and Mac.
           </p>
