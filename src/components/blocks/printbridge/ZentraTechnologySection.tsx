@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 
 export const ZentraTechnologySection = () => (
   <section className="relative w-full px-4 sm:px-6 md:px-12 lg:px-16 mb-12">
@@ -13,11 +14,13 @@ export const ZentraTechnologySection = () => (
           </div>
           {/* Zentra screenshot fills browser */}
           <div className="flex-grow min-h-0 w-full flex items-stretch">
-            <img
+            <Image
               src="/zentra.png"
               alt="Zentra Screenshot"
+              width={2880}
+              height={1576}
               className="w-full h-full object-cover"
-              style={{ display: 'block', maxWidth: '100%', maxHeight: '100%' }}
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
         </div>

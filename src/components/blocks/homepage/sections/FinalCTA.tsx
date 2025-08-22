@@ -30,7 +30,7 @@ export const FinalCTA = () => {
               Limited Time: Free Setup + 14-Day Trial
             </div>
             
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
+            <h3 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
               Ready to Transform
               <br />
               <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">

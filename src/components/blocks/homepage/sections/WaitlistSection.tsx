@@ -12,22 +12,22 @@ export default function WaitlistSection() {
     email: "",
     full_name: "",
     company_name: "",
-    phone: ""
+    phone: "",
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!formData.email || !formData.full_name) {
       toast.error("Please fill in all required fields")
       return
@@ -63,22 +63,17 @@ export default function WaitlistSection() {
 
   if (isSubmitted) {
     return (
-      <section className="py-16 bg-gradient-to-br from-purple-50 to-blue-50">
+      <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
+          <div className="mx-auto max-w-2xl text-center">
             <div className="mb-8">
-              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                You're on the list!
-              </h2>
-              <p className="text-lg text-gray-600 mb-6">
-                Thank you for your interest in InstaLabel. We'll be in touch soon with updates about our launch.
+              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
+              <h3 className="mb-4 text-3xl font-bold text-gray-900">You're on the list!</h3>
+              <p className="mb-6 text-lg text-gray-600">
+                Thank you for your interest in InstaLabel. We'll be in touch soon with updates about
+                our launch.
               </p>
-              <Button 
-                onClick={() => setIsSubmitted(false)}
-                variant="outline"
-                className="mt-4"
-              >
+              <Button onClick={() => setIsSubmitted(false)} variant="outline" className="mt-4">
                 Join Another Email
               </Button>
             </div>
@@ -89,20 +84,18 @@ export default function WaitlistSection() {
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-purple-50 to-blue-50">
+    <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-16">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Join the Waitlist
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Be among the first to experience the future of food labeling. 
-              Join our waitlist and get early access to InstaLabel when we launch.
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-4xl font-bold text-gray-900">Join the Waitlist</h2>
+            <p className="mx-auto max-w-2xl text-xl text-gray-600">
+              Be among the first to experience the future of food labeling. Join our waitlist and
+              get early access to InstaLabel when we launch.
             </p>
           </div>
 
-          <Card className="max-w-2xl mx-auto">
+          <Card className="mx-auto max-w-2xl">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">Get Early Access</CardTitle>
               <CardDescription>
@@ -111,7 +104,7 @@ export default function WaitlistSection() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="relative">
                     <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -136,8 +129,8 @@ export default function WaitlistSection() {
                     />
                   </div>
                 </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div className="relative">
                     <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
@@ -161,16 +154,16 @@ export default function WaitlistSection() {
                   </div>
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                <Button
+                  type="submit"
+                  className="w-full bg-purple-600 text-white hover:bg-purple-700"
                   disabled={isLoading}
                 >
                   {isLoading ? "Joining..." : "Join the Waitlist"}
                 </Button>
               </form>
 
-              <p className="text-sm text-gray-500 text-center mt-4">
+              <p className="mt-4 text-center text-sm text-gray-500">
                 We'll only use your information to notify you about InstaLabel updates.
               </p>
             </CardContent>
@@ -179,4 +172,4 @@ export default function WaitlistSection() {
       </div>
     </section>
   )
-} 
+}

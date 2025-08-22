@@ -1,5 +1,6 @@
 import React from "react"
 import { Cloud, CheckCircle, Settings, Repeat, Users, ShieldCheck, Zap } from "lucide-react"
+import Image from "next/image"
 
 const softwareFeatures = [
   { icon: <CheckCircle className="h-7 w-7 text-green-600" />, title: "Label Printing Made Easy", description: "Print EHO and Natasha’s Law compliant labels in seconds—no handwriting needed." },
@@ -36,7 +37,14 @@ export const SoftwareFeaturesGrid = () => (
       </div>
       {/* Image */}
       <div className="flex-1 flex justify-center">
-        <img src="/assets/images/feature.png" alt="Software screenshot" className="rounded-xl shadow-lg max-w-xs w-full" />
+        <Image 
+          src="/assets/images/feature.png" 
+          alt="Software screenshot" 
+          width={1536}
+          height={1024}
+          className="rounded-xl shadow-lg max-w-xs w-full" 
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
       </div>
     </div>
   </section>

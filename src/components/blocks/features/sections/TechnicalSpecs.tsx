@@ -1,14 +1,14 @@
 import React from "react"
 
 export const TechnicalSpecs = () => (
-  <section className="py-16 bg-white">
+  <section className="bg-white py-16">
     <div className="container mx-auto px-4">
-      <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4 text-center">
-        Technical Specifications
+      <h2 className="mb-4 text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+        Device & Software Specifications
       </h2>
-      <div className="grid gap-8 md:grid-cols-2 max-w-4xl mx-auto">
+      <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Device Specs</h3>
+          <h3 className="mb-2 text-xl font-semibold text-gray-900">Device Specs</h3>
           <ul className="list-disc pl-5 text-gray-700">
             <li>2-day battery life, can be used while charging</li>
             <li>5.99" HD+ touchscreen, wipeclean and hygienic</li>
@@ -19,7 +19,7 @@ export const TechnicalSpecs = () => (
           </ul>
         </div>
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Software Specs</h3>
+          <h3 className="mb-2 text-xl font-semibold text-gray-900">Software Specs</h3>
           <ul className="list-disc pl-5 text-gray-700">
             <li>Cloud-based storage, unlimited products</li>
             <li>Instant reprints from any device/location</li>
@@ -34,4 +34,4 @@ export const TechnicalSpecs = () => (
   </section>
 )
 
-export default TechnicalSpecs; 
+export default TechnicalSpecs

@@ -141,9 +141,11 @@ const SystemFeaturesGrid = () => (
           <Image
             src="/webdashboard/print.png"
             alt="Software Screenshot"
-            width={350}
-            height={400}
+            width={2880}
+            height={1800}
+            className="w-full max-w-xs rounded-xl shadow-lg"
             loading="lazy"
+            sizes="(max-width: 768px) 100vw, 50vw"
           />
         </div>
         <ul className="space-y-5">

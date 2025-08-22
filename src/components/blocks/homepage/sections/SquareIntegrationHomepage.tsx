@@ -27,7 +27,7 @@ export const SquareIntegrationHomepage = () => {
               Exclusive Square Integration
             </div>
             
-            <h2 className="text-4xl md:text-5xl font-black leading-tight tracking-tight mb-6">
+            <h3 className="text-4xl md:text-5xl font-black leading-tight tracking-tight mb-6">
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 The Only Labeling Solution That Speaks
               </span>

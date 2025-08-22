@@ -4,6 +4,7 @@ import matter from "gray-matter"
 import { Calendar, ArrowRight, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import Image from "next/image"
 import featureHeroImg from "@/assets/images/featurehero.png"
 import { Metadata } from "next"
 
@@ -144,11 +145,13 @@ export default async function BlogPage() {
 
           {/* Hero Image */}
           <div className="mx-auto w-full max-w-xs sm:max-w-md md:max-w-lg">
-            <img
-              src={featureHeroImg.src}
+            <Image
+              src={featureHeroImg}
               alt="Blog Hero"
+              width={1024}
+              height={1024}
               className="rounded-xl border border-gray-200 shadow-lg"
-              loading="eager"
+              priority
             />
           </div>
         </div>
@@ -190,7 +193,7 @@ export default async function BlogPage() {
                   </div>
                   <Button variant="ghost" size="sm" asChild>
                     <Link href={`/blog/${post.slug}`}>
-                      Read More <ArrowRight className="ml-1 h-3 w-3" />
+                      Read Article <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>
                   </Button>
                 </div>
@@ -231,7 +234,7 @@ export default async function BlogPage() {
                   </div>
                   <Button variant="ghost" size="sm" asChild>
                     <Link href={`/blog/${post.slug}`}>
-                      Read More <ArrowRight className="ml-1 h-3 w-3" />
+                      Read Article <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>
                   </Button>
                 </div>

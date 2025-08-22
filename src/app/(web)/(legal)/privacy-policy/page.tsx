@@ -51,12 +51,12 @@ const Page = () => {
         <div className="flex w-full">
           <div className="w-full">
             <h1 className="mb-3 text-5xl font-bold">Privacy Policy</h1>
-            <h3 className="text-lg leading-relaxed">
+            <p className="mb-8 text-lg leading-relaxed text-gray-600">
               Your privacy is important to us. This Privacy Policy explains how InstaLabel Pvt. Ltd.
               ("InstaLabel", "we", "us", or "our") collects, uses, and protects your information
               when you use our kitchen labeling software and related services. If you have any
               questions, <a href="mailto:support@instalabel.co">please get in touch.</a>
-            </h3>
+            </p>
           </div>
         </div>
         <article>

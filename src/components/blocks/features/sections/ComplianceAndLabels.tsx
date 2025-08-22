@@ -2,6 +2,7 @@
 import React, { useState } from "react"
 import dynamic from "next/dynamic"
 import { motion } from "framer-motion"
+import Image from "next/image"
 
 const LabelRender = dynamic(() => import("@/app/dashboard/print/LabelRender"), { ssr: false })
 const PPDSLabelRenderer = dynamic(
@@ -209,10 +210,13 @@ export const ComplianceAndLabels = () => {
               transition={{ duration: 0.5, delay: 0.1 * idx }}
               viewport={{ once: true }}
             >
-              <img
+              <Image
                 src={img.src}
                 alt={img.alt}
+                width={2880}
+                height={1800}
                 className="w-full rounded-lg shadow transition-transform hover:scale-105"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               />
               <div className="mt-2 text-center text-sm text-gray-600">{img.label}</div>
             </motion.button>
@@ -236,10 +240,13 @@ export const ComplianceAndLabels = () => {
               &#8592;
             </button>
             <div className="flex flex-col items-center">
-              <img
+              <Image
                 src={screenshots[current].src}
                 alt={screenshots[current].alt}
+                width={2880}
+                height={1800}
                 className="max-h-[80vh] w-auto rounded-lg shadow-lg"
+                sizes="(max-width: 768px) 90vw, 80vw"
               />
               <div className="mt-4 text-lg text-white">{screenshots[current].label}</div>
             </div>

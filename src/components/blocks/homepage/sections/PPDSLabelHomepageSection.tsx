@@ -37,7 +37,7 @@ export const PPDSLabelHomepageSection = () => (
         <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
           <span role="img" aria-label="label">🏷️</span> Professional Labeling Made Simple
         </div>
-        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
+        <h3 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
           <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
             PPDS & Natasha's Law Labels
           </span>

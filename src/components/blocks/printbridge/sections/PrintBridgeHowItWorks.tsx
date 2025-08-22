@@ -54,10 +54,8 @@ export const PrintBridgeHowItWorks = () => {
               The Local Print Solution That Changes Everything
             </h3>
             <div className="mx-auto max-w-2xl text-base text-gray-600">
-              Zentra (our Node.js for macOS and .NET for Windows app) connects your web dashboard to
-              any USB printer, bypassing browser limitations entirely. WebSocket bridge, USB
-              auto-discovery, silent printing—trusted by 500+ kitchens, printing 1000s of labels
-              daily.
+              Zentra connects your web dashboard to any USB printer. It bypasses browser
+              limitations. WebSocket bridge, USB auto-discovery, silent printing.
             </div>
           </div>
         </motion.div>

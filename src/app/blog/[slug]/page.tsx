@@ -8,6 +8,7 @@ import html from "remark-html"
 import remarkToc from "remark-toc"
 import { Calendar, ChevronRight } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 import { Fragment } from "react"
 
 interface BlogPostMeta {
@@ -255,10 +256,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               {post.meta.title}
             </h1>
             {post.meta.image && (
-              <img
+              <Image
                 src={post.meta.image}
                 alt={post.meta.title}
+                width={1200}
+                height={630}
                 className="mb-6 max-h-56 w-full rounded-lg border object-cover"
+                sizes="(max-width: 768px) 100vw, 800px"
               />
             )}
             <article
@@ -304,10 +308,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             )}
             {/* Author Bio Box */}
             <div className="mt-16 flex items-center gap-4 rounded-lg border border-gray-200 bg-purple-50 p-4">
-              <img
+              <Image
                 src={post.meta.author === "InstaLabel Team" ? "/avatar1.png" : "/avatar2.png"}
                 alt={post.meta.author}
+                width={1024}
+                height={1024}
                 className="h-14 w-14 rounded-full border object-cover"
+                sizes="56px"
               />
               <div>
                 <div className="font-semibold text-gray-900">{post.meta.author}</div>

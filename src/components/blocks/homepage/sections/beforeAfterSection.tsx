@@ -138,6 +138,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           className="object-cover"
           draggable={false}
           loading="lazy"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         />
       </div>
 
@@ -156,6 +157,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           className="object-cover"
           draggable={false}
           loading="lazy"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
         />
       </div>
 

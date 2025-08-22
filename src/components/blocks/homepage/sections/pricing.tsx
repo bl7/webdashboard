@@ -36,7 +36,7 @@ export const Pricing = () => {
             ROI-Focused Pricing
           </div>
 
-          <h2 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+          <h3 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               Save £2,000+ Monthly
             </span>

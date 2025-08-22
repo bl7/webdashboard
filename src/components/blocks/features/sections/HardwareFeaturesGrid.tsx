@@ -1,5 +1,6 @@
 import React from "react"
 import { Printer, Wifi, Smartphone, Barcode, Flashlight, Shield } from "lucide-react"
+import Image from "next/image"
 
 const hardwareFeatures = [
   { icon: <Printer className="h-7 w-7 text-purple-600" />, title: "Integrated Printer", description: "Prints directly onto thermal labels—no ink or cartridges needed." },
@@ -35,7 +36,14 @@ export const HardwareFeaturesGrid = () => (
       </div>
       {/* Image */}
       <div className="flex-1 flex justify-center">
-        <img src="/assets/images/deviceinhand.png" alt="Device in hand" className="rounded-xl shadow-lg max-w-xs w-full" />
+        <Image 
+          src="/assets/images/deviceinhand.png" 
+          alt="Device in hand" 
+          width={800}
+          height={800}
+          className="rounded-xl shadow-lg max-w-xs w-full" 
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
       </div>
     </div>
   </section>
