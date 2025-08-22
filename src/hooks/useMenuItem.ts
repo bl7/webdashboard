@@ -80,7 +80,6 @@ export function useMenuItems() {
 
     try {
       const res = await getAllMenuItems(token)
-      console.log("Raw menu items API response:", res)
       if (!res?.data) {
         setMenuItems([])
         return
@@ -138,11 +137,7 @@ export function useMenuItems() {
 
     setLoading(true)
     try {
-      console.log("🚀 [DEBUG] Starting addNewMenuItem call:", menuItemData)
-      console.log("🚀 [DEBUG] Current timestamp:", Date.now())
-
       const response = await addMenuItems(menuItemData, token)
-      console.log("🚀 [DEBUG] API response received:", response)
 
       // Update submission guard
       setLastSubmission({

@@ -499,19 +499,12 @@ export function Chatbot({ className }: ChatbotProps) {
       let typeIntervalId: NodeJS.Timeout
 
       const startAnimation = () => {
-        console.log("Regular avatar animation starting")
         setShowSpeechBubble(true)
         setTypedText("")
 
         // Use random message from current avatar's message array
         const characterMessages = avatarMessages[currentAvatarIndex]
         const text = characterMessages[Math.floor(Math.random() * characterMessages.length)]
-        console.log(
-          "Regular avatar animation - currentAvatarIndex:",
-          currentAvatarIndex,
-          "message:",
-          text
-        )
         let currentIndex = 0
 
         // Clear any existing typing interval
@@ -529,7 +522,6 @@ export function Chatbot({ className }: ChatbotProps) {
             setTimeout(() => {
               setShowSpeechBubble(false)
               setTypedText("")
-              console.log("Regular avatar message hidden")
             }, 3000)
           }
         }, 50) // Faster typing - 50ms per character
@@ -540,19 +532,16 @@ export function Chatbot({ className }: ChatbotProps) {
 
       // Set up recurring animation for regular avatars - this should run indefinitely
       intervalId = setInterval(() => {
-        console.log("Regular avatar interval triggered")
         startAnimation()
       }, 10000) // Show every 10 seconds
 
       // Cleanup function to prevent multiple intervals
       return () => {
-        console.log("Cleaning up intervals")
         if (intervalId) clearInterval(intervalId)
         if (typeIntervalId) clearInterval(typeIntervalId)
       }
     } else {
       // When chat is open, clear all intervals
-      console.log("Chat opened - clearing all intervals")
       setShowSpeechBubble(false)
       setTypedText("")
     }
@@ -564,13 +553,11 @@ export function Chatbot({ className }: ChatbotProps) {
       const backupInterval = setInterval(() => {
         // Only trigger if no speech bubble is currently showing
         if (!showSpeechBubble) {
-          console.log("Backup interval triggered - restarting regular avatar")
           setShowSpeechBubble(true)
           setTypedText("")
 
           const characterMessages = avatarMessages[currentAvatarIndex]
           const text = characterMessages[Math.floor(Math.random() * characterMessages.length)]
-          console.log("Backup interval - currentAvatarIndex:", currentAvatarIndex, "message:", text)
           let currentIndex = 0
 
           const typeInterval = setInterval(() => {
@@ -601,10 +588,6 @@ export function Chatbot({ className }: ChatbotProps) {
 
     // Simple tokenization
     const tokens = normalized.split(/\s+/)
-
-    console.log("🔍 Searching for:", question)
-    console.log("🔍 Normalized:", normalized)
-    console.log("🔍 Tokens:", tokens)
 
     // Find all matching answers with improved scoring
     const matchingAnswers = knowledgeBase
@@ -641,24 +624,12 @@ export function Chatbot({ className }: ChatbotProps) {
 
         score += keywordScore
 
-        // Debug logging for high-scoring matches
-        if (score > 0) {
-          console.log(
-            `📊 Score ${score} for:`,
-            item.keywords[0],
-            "| Answer preview:",
-            item.answer.substring(0, 50) + "..."
-          )
-        }
-
         return { ...item, score }
       })
       .filter((item) => item.score >= 0.5) // Minimum score threshold
       .sort((a, b) => b.score - a.score)
       .slice(0, 2) // Only take top 2 matches
       .map((item) => item.answer)
-
-    console.log("🎯 Final matches:", matchingAnswers.length)
 
     // If multiple matches, combine them intelligently
     if (matchingAnswers.length > 1) {

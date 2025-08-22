@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogFooter,
   Label,
+  DialogDescription,
 } from "@/components/ui"
 import { Plus, Eye, Pencil, Trash, FileDown, X, ChevronDown } from "lucide-react"
 import {
@@ -414,6 +415,9 @@ export default function MenuItemsDashboard() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Add New Menu Item</DialogTitle>
+            <DialogDescription>
+              Create a new menu item by selecting ingredients and setting a name.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -522,6 +526,9 @@ export default function MenuItemsDashboard() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Edit Menu Item</DialogTitle>
+            <DialogDescription>
+              Modify the menu item name and ingredients as needed.
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -638,6 +645,9 @@ export default function MenuItemsDashboard() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Delete Menu Item</DialogTitle>
+            <DialogDescription>
+              This action cannot be undone. The menu item will be permanently removed.
+            </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             <p className="text-sm text-muted-foreground">
@@ -667,6 +677,9 @@ export default function MenuItemsDashboard() {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>View Menu Item</DialogTitle>
+            <DialogDescription>
+              View detailed information about the selected menu item.
+            </DialogDescription>
           </DialogHeader>
           {selected && (
             <div className="grid gap-2 py-4">
