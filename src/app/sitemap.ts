@@ -3,7 +3,23 @@ import fs from "fs/promises"
 import path from "path"
 import matter from "gray-matter"
 
+// Helper function to detect Googlebot
+function isGooglebot(userAgent: string): boolean {
+  return /Googlebot/i.test(userAgent)
+}
+
+// Helper function to log Googlebot hits
+function logGooglebotHit(userAgent: string) {
+  if (isGooglebot(userAgent)) {
+    console.log(`[Googlebot] Sitemap requested at ${new Date().toISOString()}`)
+    console.log(`[Googlebot] User-Agent: ${userAgent}`)
+  }
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Log when sitemap is generated (this will show in server logs)
+  console.log(`[Sitemap] Generated at ${new Date().toISOString()}`)
+
   const baseUrl = "https://www.instalabel.co"
 
   // Use realistic, varied dates for static pages based on when they were likely last updated
