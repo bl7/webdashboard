@@ -4,7 +4,6 @@ import "./globals.css"
 import og from "./opengraph-image.png"
 import { Toaster } from "sonner"
 import { AuthProvider } from "@/context/AuthContext"
-import Head from "next/head"
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer"
 import { Analytics } from "@/components/Analytics"
 import { PerformanceMonitor } from "@/components/PerformanceMonitor"
@@ -80,8 +79,13 @@ export const metadata: Metadata = {
         url: "/logo_sm.png",
         href: "/logo_sm.png",
       },
+      {
+        url: "/favicon.ico",
+        sizes: "any",
+      },
     ],
     apple: "/logo_sm.png",
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     type: "website",
@@ -112,6 +116,9 @@ export const metadata: Metadata = {
     canonical: "https://www.instalabel.co",
   },
   category: "Food Service Technology",
+  other: {
+    sitemap: "/sitemap.xml",
+  },
 }
 
 export default function RootLayout({
@@ -193,25 +200,6 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <Head>
-        <title>Smart Kitchen Labeling System | Cloud-Based Food Safety Labels | InstaLabel</title>
-        <meta
-          name="description"
-          content="Next-generation kitchen labeling system with cloud management, multi-location sync, and smart inventory tracking. More advanced than traditional label printers. Free trial."
-        />
-        <meta
-          name="keywords"
-          content="smart kitchen labeling system, cloud food labeling, multi-location kitchen management, advanced food safety labels, digital kitchen labeling, restaurant tech solutions"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        {/* Favicon declarations */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-      </Head>
       <body className={`${base_font.className} ${accent_font.variable}`}>
         <script
           type="application/ld+json"
