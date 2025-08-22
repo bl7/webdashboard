@@ -105,9 +105,9 @@ export const ComplianceAndLabels = () => {
           <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
             Stay Compliant, Print with Confidence
           </div>
-          <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Stay Compliant, Print with Confidence
-          </h2>
+          </h3>
           <p className="mx-auto mt-4 max-w-2xl text-center text-lg font-medium text-gray-700">
             InstaLabel makes it easy to stay compliant with Natasha’s Law and EHO requirements—no
             more guesswork or handwritten mistakes. See exactly what your labels will look like, and

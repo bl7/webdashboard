@@ -43,7 +43,7 @@ export const PPDSLabelHomepageSection = () => (
           </span>
           <br />
           <span className="text-gray-900">Professional, Compliant, Easy</span>
-        </h2>
+        </h3>
         <p className="text-xl text-gray-700 max-w-2xl mx-auto md:mx-0 leading-relaxed">
           Print professional PPDS labels with automatic date calculations, allergen warnings, and storage instructions. Perfect for any kitchen that needs to comply with Natasha's Law - from restaurants to delis to food trucks.
         </p>

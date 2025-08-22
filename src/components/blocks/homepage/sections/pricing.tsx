@@ -42,7 +42,7 @@ export const Pricing = () => {
             </span>
             <br />
             <span className="text-gray-900">On Kitchen Operations</span>
-          </h2>
+          </h3>
 
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-600 sm:text-2xl">
             Most kitchens save 15+ hours weekly and reduce waste by 30%. Your InstaLabel investment

@@ -33,7 +33,7 @@ export const SquareIntegrationHomepage = () => {
               </span>
               <br />
               <span className="text-black">Square</span>
-            </h2>
+            </h3>
             
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
               The only food labeling solution with <strong>native Square POS integration</strong>. 

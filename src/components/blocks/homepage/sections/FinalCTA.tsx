@@ -36,7 +36,7 @@ export const FinalCTA = () => {
               <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
                 Your Kitchen?
               </span>
-            </h2>
+            </h3>
             
             <p className="mx-auto max-w-3xl text-xl text-white/90 leading-relaxed">
               Join 500+ kitchens that have eliminated labeling chaos and compliance risks. 
