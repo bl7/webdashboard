@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     "free allergen guide",
   ],
   openGraph: {
-    title: "Free UK Allergen Compliance Kit | 14 Allergens Guide",
+    title: "Free UK Allergen Compliance Kit",
     description:
       "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens.",
     url: "https://www.instalabel.co/allergen-compliance",
@@ -55,7 +55,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free UK Allergen Compliance Kit | 14 Allergens Guide",
+    title: "Free UK Allergen Compliance Kit",
     description:
       "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

@@ -1,5 +1,5 @@
 ---
-title: "Staff Training and Customer Communication for Allergen Labeling"
+title: "Staff Training for Allergen Labeling | InstaLabel"
 description: "Practical checklists and templates to help your team stay allergen-aware and keep your customers informed."
 date: "2024-12-17"
 category: "Allergen Management"
@@ -21,14 +21,14 @@ Effective allergen labeling is a team effort. Here are practical tools to help y
 - [ ] Understand the 8 major allergens and any custom allergens in your kitchen
 - [ ] Identify allergenic ingredients and potential cross-contamination points
 - [ ] Follow proper hygiene and prep procedures to avoid allergen cross-contact
-- [ ] Use InstaLabel’s system to check allergen data and print accurate labels
+- [ ] Use InstaLabel's system to check allergen data and print accurate labels
 - [ ] Verify labels for prep, cook, and PPDS items before use
 - [ ] Confidently respond to customer allergen questions
 - [ ] Attend regular refresher training sessions to stay updated
 
 ---
 
-## Customer-Facing Allergen Information Sheet (Sample)
+### Customer-Facing Allergen Information Sheet (Sample)
 
 **Your Safety is Our Priority: Allergen Information**
 

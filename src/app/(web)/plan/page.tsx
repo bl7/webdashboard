@@ -133,6 +133,10 @@ const Page = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+
+      {/* Simple H2 heading for SEO */}
+      <h2 className="sr-only">Kitchen Labeling Pricing Plans</h2>
+
       <Plan />
     </>
   )

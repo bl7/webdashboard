@@ -3,13 +3,13 @@ import { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | InstaLabel Kitchen Labeling System",
-    default: "Legal | InstaLabel Kitchen Labeling System",
+    template: "%s | InstaLabel",
+    default: "Legal | InstaLabel",
   },
   description:
     "Legal information for InstaLabel kitchen labeling system including terms, privacy policy, cookie policy, and FAQs.",
   openGraph: {
-    title: "Legal | InstaLabel Kitchen Labeling System",
+    title: "Legal | InstaLabel",
     description: "Legal information for InstaLabel kitchen labeling system.",
     url: "https://www.instalabel.co",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Legal | InstaLabel Kitchen Labeling System",
+    title: "Legal | InstaLabel",
     description: "Legal information for InstaLabel kitchen labeling system.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },

@@ -102,6 +102,10 @@ const Page = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
+
+      {/* Simple H2 heading for SEO */}
+      <h2 className="sr-only">About InstaLabel - Kitchen Labeling Innovation</h2>
+
       <About />
     </>
   )

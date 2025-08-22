@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Cookie Policy | InstaLabel Kitchen Labeling System",
+  title: "Cookie Policy | InstaLabel Kitchen Labeling",
   description:
     "Learn about how InstaLabel uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website.",
   keywords: [
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     "kitchen automation cookies",
   ],
   openGraph: {
-    title: "Cookie Policy | InstaLabel Kitchen Labeling System",
+    title: "Cookie Policy | InstaLabel Kitchen Labeling",
     description:
       "Learn about how InstaLabel uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website.",
     url: "https://www.instalabel.co/cookie-policy",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cookie Policy | InstaLabel Kitchen Labeling System",
+    title: "Cookie Policy | InstaLabel Kitchen Labeling",
     description: "Learn about how InstaLabel uses cookies and similar technologies.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -92,19 +92,19 @@ const Page = () => {
             cookies. We do not control these cookies. Please refer to the privacy policies of those
             providers for more information.
           </p>
-          <h2>4. Cookie Consent and Management</h2>
+          <h3>4. Cookie Consent and Management</h3>
           <p>
             By using our website, you consent to our use of cookies as described in this policy. You
             can manage or delete cookies in your browser settings. Most browsers allow you to block
             cookies, delete existing cookies, or be notified before a cookie is set. Blocking some
             cookies may affect your experience.
           </p>
-          <h2>5. Changes to This Policy</h2>
+          <h3>5. Changes to This Policy</h3>
           <p>
             We may update this Cookie Policy from time to time. We will post any changes on this
             page and update the date below.
           </p>
-          <h2>6. Contact Us</h2>
+          <h3>6. Contact Us</h3>
           <p>
             If you have questions about our Cookie Policy, contact us at{" "}
             <a href="mailto:support@instalabel.co">support@instalabel.co</a>.

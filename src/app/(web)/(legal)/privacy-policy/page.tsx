@@ -2,7 +2,7 @@ import React from "react"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | InstaLabel Kitchen Labeling System",
+  title: "Privacy Policy | InstaLabel",
   description:
     "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data when using our kitchen labeling software and services.",
   keywords: [
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     "kitchen automation privacy",
   ],
   openGraph: {
-    title: "Privacy Policy | InstaLabel Kitchen Labeling System",
+    title: "Privacy Policy | InstaLabel",
     description:
       "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data when using our kitchen labeling software.",
     url: "https://www.instalabel.co/privacy-policy",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy | InstaLabel Kitchen Labeling System",
+    title: "Privacy Policy | InstaLabel",
     description:
       "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
@@ -99,19 +99,19 @@ const Page = () => {
               With your consent, or as part of a business transfer (e.g., merger or acquisition)
             </li>
           </ul>
-          <h2>Data Retention</h2>
+          <h3>Data Retention</h3>
           <p>
             We retain your account data and print logs for as long as your account is active or as
             needed to comply with legal and regulatory requirements. You may request deletion of
             your data by contacting us, but some records may be retained for compliance purposes.
           </p>
-          <h2>Security</h2>
+          <h3>Security</h3>
           <p>
             We use industry-standard security measures to protect your data. However, no method of
             transmission or storage is 100% secure. We encourage you to use strong passwords and
             keep your login credentials confidential.
           </p>
-          <h2>Your Rights</h2>
+          <h3>Your Rights</h3>
           <ul>
             <li>You can access, update, or delete your account information at any time.</li>
             <li>
@@ -120,17 +120,17 @@ const Page = () => {
             </li>
             <li>You can manage cookie preferences in your browser settings.</li>
           </ul>
-          <h2>Children's Privacy</h2>
+          <h3>Children's Privacy</h3>
           <p>
             InstaLabel is not intended for use by children under 16. We do not knowingly collect
             personal information from children.
           </p>
-          <h2>Changes to This Policy</h2>
+          <h3>Changes to This Policy</h3>
           <p>
             We may update this Privacy Policy from time to time. We will notify you of significant
             changes by posting the new policy on our website and updating the date below.
           </p>
-          <h2>Contact Us</h2>
+          <h3>Contact Us</h3>
           <ul>
             <li>
               Email: <a href="mailto:support@instalabel.co">support@instalabel.co</a>

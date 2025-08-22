@@ -19,9 +19,9 @@ export const AllergenGuideCTA = () => {
             viewport={{ once: true }}
             className="mb-8"
           >
-            <h2 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
+            <h3 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
               Get Your Complete Allergen Compliance Kit
-            </h2>
+            </h3>
             <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-600">
               Download our free toolkit with visual reference cards, checklists, and training
               templates for complete Natasha's Law compliance.

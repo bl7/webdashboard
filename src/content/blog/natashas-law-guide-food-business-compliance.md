@@ -1,5 +1,5 @@
 ---
-title: "Guide to Natasha's Law: What Every Food Business Needs to Know"
+title: "Natasha's Law Guide: Food Business Compliance"
 description: "Complete guide to Natasha's Law compliance for UK food businesses. Learn what PPDS food is, the 14 allergens, labeling requirements, and how to stay compliant with proper labeling systems."
 date: "2024-12-19"
 category: "Food Safety"
@@ -12,9 +12,9 @@ image: "/opengraph-image.png"
 
 # Guide to Natasha's Law: What Every Food Business Needs to Know 🇬🇧
 
-If you run a food business in the UK, you've likely heard of **Natasha's Law**. Introduced in October 2021, this legislation transformed the way food must be labeled — and for good reason. But many kitchens are still unsure about what exactly it requires and how to stay compliant without slowing down service.
+Natasha's Law is a crucial piece of UK food safety legislation that affects every food business. Understanding and complying with this law is essential for protecting your customers and avoiding legal consequences.
 
-Here's a simple guide to Natasha's Law, why it matters, and how your business can stay on top of it.
+In this comprehensive guide, we'll cover everything you need to know about Natasha's Law, from what it is to how to implement compliant labeling in your business.
 
 ---
 
@@ -33,14 +33,14 @@ The law requires that all **prepacked for direct sale (PPDS)** food includes a f
 
 ---
 
-## What Counts as PPDS Food?
+### What Counts as PPDS Food?
 
 **PPDS food** is any food that is:
 
 - **Made and packed** on the same premises where it's being sold
 - **Prepacked before** the customer orders it
 
-### Examples of PPDS Food:
+#### Examples of PPDS Food:
 
 🥪 **Sandwiches** made on-site and wrapped before sale
 🥤 **Smoothies** pre-bottled in-store
@@ -50,7 +50,7 @@ The law requires that all **prepacked for direct sale (PPDS)** food includes a f
 🍱 **Meal deals** and lunch boxes
 🥤 **Drinks** bottled or packaged in-store
 
-### What's NOT PPDS:
+#### What's NOT PPDS:
 
 - Food made to order (like a custom sandwich)
 - Food packaged at the point of sale
@@ -61,17 +61,17 @@ The law requires that all **prepacked for direct sale (PPDS)** food includes a f
 
 ---
 
-## What Must Be on the Label?
+### What Must Be on the Label?
 
 Under Natasha's Law, every PPDS label must include:
 
-### **1. Full List of Ingredients**
+#### **1. Full List of Ingredients**
 
 - **All ingredients** in descending order of weight
 - **No hidden ingredients** - everything must be declared
 - **Clear ingredient names** that customers can understand
 
-### **2. Clear Allergen Information**
+#### **2. Clear Allergen Information**
 
 The **14 major allergens** must be highlighted using one of these methods:
 
@@ -80,7 +80,7 @@ The **14 major allergens** must be highlighted using one of these methods:
 - **Different colour**
 - **Underlined text**
 
-### **3. The 14 Major Allergens:**
+#### **3. The 14 Major Allergens:**
 
 1. **Celery** (including celeriac)
 2. **Cereals containing gluten** (wheat, rye, barley, oats)
@@ -97,7 +97,7 @@ The **14 major allergens** must be highlighted using one of these methods:
 13. **Sulphur dioxide/sulphites** (at levels above 10mg/kg)
 14. **Tree nuts** (almonds, hazelnuts, walnuts, cashews, etc.)
 
-### **4. Label Format Requirements:**
+#### **4. Label Format Requirements:**
 
 - **Clear and legible** text
 - **Durable** labels that won't fade or smudge
@@ -106,15 +106,15 @@ The **14 major allergens** must be highlighted using one of these methods:
 
 ---
 
-## Why This Matters
+### Why This Matters
 
-### **Customer Safety:**
+#### **Customer Safety:**
 
 - **Allergies can be life-threatening** - anaphylaxis can occur within minutes
 - **Clear labeling saves lives** by preventing accidental exposure
 - **Peace of mind** for customers with allergies and their families
 
-### **Business Compliance:**
+#### **Business Compliance:**
 
 - **Legal requirement** - failure to comply is a criminal offence
 - **Fines up to £10,000** for non-compliance
