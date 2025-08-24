@@ -68,46 +68,6 @@ const Page = () => {
     description:
       "Choose the perfect kitchen labeling plan for your restaurant. From starter plans to enterprise solutions, all include food safety labels, allergen warnings, and thermal printer support.",
     url: "https://www.instalabel.co/plan",
-    mainEntity: {
-      "@type": "Product",
-      name: "InstaLabel Kitchen Labeling System",
-      description: "Professional kitchen labeling system for restaurants and food businesses",
-      brand: {
-        "@type": "Brand",
-        name: "InstaLabel",
-      },
-      offers: [
-        {
-          "@type": "Offer",
-          name: "Starter Plan",
-          price: "0",
-          priceCurrency: "GBP",
-          description: "Free trial plan for small kitchens",
-          availability: "https://schema.org/InStock",
-        },
-        {
-          "@type": "Offer",
-          name: "Professional Plan",
-          price: "29",
-          priceCurrency: "GBP",
-          description: "Professional plan for growing restaurants",
-          availability: "https://schema.org/InStock",
-        },
-        {
-          "@type": "Offer",
-          name: "Enterprise Plan",
-          price: "99",
-          priceCurrency: "GBP",
-          description: "Enterprise plan for multi-location businesses",
-          availability: "https://schema.org/InStock",
-        },
-      ],
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.8",
-        reviewCount: "150",
-      },
-    },
     breadcrumb: {
       "@type": "BreadcrumbList",
       itemListElement: [

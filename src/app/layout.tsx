@@ -136,12 +136,6 @@ export default function RootLayout({
     url: "https://www.instalabel.co",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web Browser",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-      description: "Free trial available",
-    },
     aggregateRating: {
       "@type": "AggregateRating",
       ratingValue: "4.8",
@@ -182,20 +176,6 @@ export default function RootLayout({
     serviceArea: {
       "@type": "Country",
       name: "United Kingdom",
-    },
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: "Kitchen Labeling Solutions",
-      itemListElement: [
-        {
-          "@type": "Offer",
-          itemOffered: {
-            "@type": "Service",
-            name: "Kitchen Labeling System",
-            description: "Professional kitchen labeling system for restaurants",
-          },
-        },
-      ],
     },
   }
 

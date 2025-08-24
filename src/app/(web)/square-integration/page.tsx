@@ -77,12 +77,6 @@ const Page = () => {
         "Seamless integration between InstaLabel and Square POS for menu synchronization",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web Browser",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        description: "Included with InstaLabel subscription",
-      },
     },
   }
 

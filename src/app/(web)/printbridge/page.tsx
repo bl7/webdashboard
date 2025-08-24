@@ -78,12 +78,6 @@ const Page = () => {
       description: "Local bridge app for seamless web-to-printer connectivity",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Windows, macOS",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        description: "Free with InstaLabel subscription",
-      },
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",

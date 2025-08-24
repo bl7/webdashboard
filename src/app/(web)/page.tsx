@@ -80,28 +80,10 @@ export default function Home() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "InstaLabel - Smart Kitchen Labeling System",
+    name: "InstaLabel - Smart Kitchen Labeling System | Food Safety & Expiry Tracking",
     description:
-      "Professional kitchen labeling system for restaurants and food businesses. Print food safety labels, allergen warnings, and expiry dates instantly.",
+      "Professional kitchen labeling system for restaurants and food businesses. Print food safety labels, allergen warnings, and expiry dates instantly. Thermal printer compatible and HACCP compliant.",
     url: "https://www.instalabel.co",
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: "InstaLabel",
-      description: "Professional kitchen labeling system for restaurants and food businesses",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web Browser",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        description: "Free trial available",
-      },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.8",
-        ratingCount: "150",
-      },
-    },
     breadcrumb: {
       "@type": "BreadcrumbList",
       itemListElement: [

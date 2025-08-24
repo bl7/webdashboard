@@ -94,12 +94,6 @@ const Page = () => {
         "Complete allergen compliance toolkit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "GBP",
-        availability: "https://schema.org/InStock",
-      },
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",

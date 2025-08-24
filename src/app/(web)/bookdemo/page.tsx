@@ -81,13 +81,6 @@ const Page = () => {
         name: "InstaLabel",
         url: "https://www.instalabel.co",
       },
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "GBP",
-        availability: "https://schema.org/InStock",
-        description: "Free consultation and demo",
-      },
     },
     breadcrumb: {
       "@type": "BreadcrumbList",
