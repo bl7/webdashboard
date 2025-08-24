@@ -29,10 +29,11 @@ export default function BridgeDownload({ platform, className = "" }: BridgeDownl
     setShowConfirmDialog(false)
 
     try {
-      // Platform-specific download URLs from Google Drive
+      // Platform-specific download URLs from Dropbox
       const downloadUrls = {
-        mac: "https://drive.google.com/uc?export=download&id=13Sii6eNnATJ1DNZbM1JzA3z89QozjxLU",
-        windows: "https://drive.google.com/uc?export=download&id=1JAkNQwa07DkQ1YvUV1EmPuLzgdlLSiFp",
+        mac: "https://www.dropbox.com/scl/fi/qodk02n8oac3edpjiw2z6/PrintBridgeByZentraV1.0.1.dmg?rlkey=ukthk0tryg2dplnws606spg6o&st=foxgx1ej&dl=1",
+        windows:
+          "https://www.dropbox.com/scl/fi/la0emsxn68t1wyjbi6lhn/PrintServer.Tray.exe?rlkey=t0tv6csz7lp7b2u5cnao42ybd&st=mqbhmdiq&dl=1",
       }
 
       const downloadUrl = downloadUrls[platform]
@@ -106,9 +107,8 @@ export default function BridgeDownload({ platform, className = "" }: BridgeDownl
           <DialogHeader>
             <DialogTitle>Confirm Download</DialogTitle>
             <DialogDescription>
-              You're about to download the InstaLabel Print Server for{" "}
-              {platform === "mac" ? "macOS" : "Windows"}. This will start the download immediately.
-              Do you want to continue?
+              You're about to download PrintBridge for {platform === "mac" ? "macOS" : "Windows"}.
+              This will start the download immediately. Do you want to continue?
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
