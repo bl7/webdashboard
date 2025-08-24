@@ -1,37 +1,7 @@
 {
-  "redirects": [
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "instalabel.co"
-        }
-      ],
-      "destination": "https://www.instalabel.co/:path*",
-      "permanent": true
-    },
-    {
-      "source": "/:path*",
-      "has": [
-        {
-          "type": "host",
-          "value": "http://instalabel.co"
-        }
-      ],
-      "destination": "https://www.instalabel.co/:path*",
-      "permanent": true
+  "functions": {
+    "app/api/stripe/webhook/route.ts": {
+      "maxDuration": 30
     }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "index, follow"
-        }
-      ]
-    }
-  ]
+  }
 }
