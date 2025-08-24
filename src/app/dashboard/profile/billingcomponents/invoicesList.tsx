@@ -15,9 +15,22 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
 
   useEffect(() => {
     if (!userId) return
-    fetch(`/api/subscription_better/invoices?user_id=${userId}`)
-      .then(res => res.json())
-      .then(data => setInvoices(data.invoices || []))
+
+    const token = localStorage.getItem("token")
+    if (!token) return
+
+    fetch(`/api/subscription_better/invoices?user_id=${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => setInvoices(data.invoices || []))
+      .catch((error) => {
+        console.error("Error fetching invoices:", error)
+        setInvoices([])
+      })
   }, [userId])
 
   const totalPages = Math.ceil(invoices.length / itemsPerPage)
@@ -73,7 +86,8 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
       }
     }
   }
-  const allCurrentSelected = currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
+  const allCurrentSelected =
+    currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
@@ -116,7 +130,10 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
             const planName = entry.description || entry.lines?.data?.[0]?.description || "Invoice"
             const isSelected = selectedIds.has(entry.id)
             return (
-              <div key={entry.id} className="grid grid-cols-12 items-center rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow">
+              <div
+                key={entry.id}
+                className="grid grid-cols-12 items-center rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow"
+              >
                 <div className="col-span-1">
                   <Checkbox checked={isSelected} onCheckedChange={() => toggleSelect(entry.id)} />
                 </div>
@@ -126,7 +143,14 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
                 <div className="col-span-2 text-sm">{dateFormatted}</div>
                 <div className="col-span-1 text-right">
                   {entry.invoice_pdf ? (
-                    <a href={entry.invoice_pdf} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary" aria-label={`Download invoice ${entry.id} PDF`} onClick={(e) => e.stopPropagation()}>
+                    <a
+                      href={entry.invoice_pdf}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-primary"
+                      aria-label={`Download invoice ${entry.id} PDF`}
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <DownloadIcon size={16} />
                     </a>
                   ) : null}
@@ -139,13 +163,23 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-center gap-2">
-          <Button variant="outline" size="sm" onClick={goToPreviousPage} disabled={currentPage === 1}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToPreviousPage}
+            disabled={currentPage === 1}
+          >
             <ChevronLeftIcon size={16} />
           </Button>
           <span className="text-sm">
             Page {currentPage} of {totalPages}
           </span>
-          <Button variant="outline" size="sm" onClick={goToNextPage} disabled={currentPage === totalPages}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={goToNextPage}
+            disabled={currentPage === totalPages}
+          >
             <ChevronRightIcon size={16} />
           </Button>
         </div>
