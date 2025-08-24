@@ -1,7 +1,8 @@
-'use client'
+"use client"
 
-import { useEffect } from 'react'
-import { Button } from '@/components/ui/button'
+import { useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
 
 export default function Error({
   error,
@@ -10,10 +11,16 @@ export default function Error({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const router = useRouter()
+
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error('Application error:', error)
+    console.error("Application error:", error)
   }, [error])
+
+  const goHome = () => {
+    router.push("/")
+  }
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col items-center justify-center">
@@ -28,20 +35,14 @@ export default function Error({
           </div>
         )}
         <div className="flex gap-2">
-          <Button
-            onClick={reset}
-            variant="default"
-          >
+          <Button onClick={reset} variant="default">
             Try again
           </Button>
-          <Button
-            onClick={() => window.location.href = '/'}
-            variant="outline"
-          >
+          <Button onClick={goHome} variant="outline">
             Go to Home
           </Button>
         </div>
       </div>
     </div>
   )
-} 
+}

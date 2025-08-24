@@ -86,6 +86,23 @@ const nextConfig = {
     return []
   },
 
+  // Redirects configuration to prevent redirect loops
+  async redirects() {
+    return [
+      // Handle legacy URLs that might cause redirects
+      {
+        source: "/home",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/index",
+        destination: "/",
+        permanent: true,
+      },
+    ]
+  },
+
   // Headers for performance, caching, and CORS
   async headers() {
     return [

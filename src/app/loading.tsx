@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import { Manrope, Oxygen } from "next/font/google"
 import "./globals.css"
-import og from "./opengraph-image.png"
-import { Toaster } from "sonner"
 
 const base_font = Manrope({ subsets: ["latin"] })
 const accent_font = Oxygen({
@@ -12,41 +10,25 @@ const accent_font = Oxygen({
 })
 
 export const metadata: Metadata = {
-  title: { default: "instaLabel", template: "%s - instaLabel" },
-  metadataBase: new URL("https://instalabelco"),
-  description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
-  icons: {
-    icon: [
-      {
-        url: "/public/logo_sm.png",
-        href: "/logo_sm.png",
-      },
-    ],
-  },
-  openGraph: {
-    type: "website",
-    url: "https://www.instalabel.co",
-    title: "instaLabel",
-    description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
-    siteName: "instaLabel",
-    images: [og.src],
-  },
-  twitter: {
-    title: "instaLabel",
-    description: "Streamlined Kitchen Labeling for Food Safety and Expiry Tracking",
-    card: "summary_large_image",
+  title: { default: "Loading... | InstaLabel", template: "%s | InstaLabel" },
+  metadataBase: new URL("https://www.instalabel.co"),
+  description: "Loading InstaLabel - Kitchen Labeling System",
+  robots: {
+    index: false,
+    follow: false,
   },
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function Loading() {
   return (
-    <div className={`${base_font.className} ${accent_font.variable}`}>
-      {children}
-      <Toaster />
+    <div
+      className={`${base_font.className} ${accent_font.variable} flex min-h-screen items-center justify-center`}
+    >
+      <div className="text-center">
+        <div className="mx-auto mb-4 h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+        <h2 className="text-xl font-semibold">Loading InstaLabel...</h2>
+        <p className="text-muted-foreground">Please wait while we prepare your experience</p>
+      </div>
     </div>
   )
 }

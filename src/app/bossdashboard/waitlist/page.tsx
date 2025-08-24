@@ -1,25 +1,38 @@
 "use client"
 
 import React, { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { 
-  Search, 
-  Mail, 
-  User, 
-  Building, 
-  Phone, 
-  Calendar, 
-  Edit, 
+import {
+  Search,
+  Mail,
+  User,
+  Building,
+  Phone,
+  Calendar,
+  Edit,
   Trash2,
   Filter,
-  Download
+  Download,
 } from "lucide-react"
 
 interface WaitlistEntry {
@@ -36,6 +49,7 @@ interface WaitlistEntry {
 }
 
 export default function WaitlistPage() {
+  const router = useRouter()
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
@@ -45,7 +59,7 @@ export default function WaitlistPage() {
     status: "",
     notes: "",
     contacted_at: "",
-    contacted_by: ""
+    contacted_by: "",
   })
 
   useEffect(() => {
@@ -61,17 +75,16 @@ export default function WaitlistPage() {
       }
 
       const response = await fetch("/api/waitlist", {
-        headers: { "Authorization": `Bearer ${bossToken}` }
+        headers: { Authorization: `Bearer ${bossToken}` },
       })
-      
+
       if (response.ok) {
         const data = await response.json()
         setWaitlist(data.waitlist || [])
       } else if (response.status === 401) {
         toast.error("Authentication failed. Please login again.")
         // Redirect to login
-        localStorage.removeItem("bossToken")
-        window.location.href = "/boss/login"
+        redirectToLogin()
       } else {
         const errorData = await response.json()
         toast.error(errorData.error || "Failed to fetch waitlist")
@@ -89,8 +102,10 @@ export default function WaitlistPage() {
     setEditForm({
       status: entry.status,
       notes: entry.notes || "",
-      contacted_at: entry.contacted_at ? new Date(entry.contacted_at).toISOString().split('T')[0] : "",
-      contacted_by: entry.contacted_by || ""
+      contacted_at: entry.contacted_at
+        ? new Date(entry.contacted_at).toISOString().split("T")[0]
+        : "",
+      contacted_by: entry.contacted_by || "",
     })
   }
 
@@ -108,9 +123,9 @@ export default function WaitlistPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${bossToken}`
+          Authorization: `Bearer ${bossToken}`,
         },
-        body: JSON.stringify(editForm)
+        body: JSON.stringify(editForm),
       })
 
       if (response.ok) {
@@ -119,8 +134,7 @@ export default function WaitlistPage() {
         setEditingEntry(null)
       } else if (response.status === 401) {
         toast.error("Authentication failed. Please login again.")
-        localStorage.removeItem("bossToken")
-        window.location.href = "/boss/login"
+        redirectToLogin()
       } else {
         const data = await response.json()
         toast.error(data.error || "Failed to update entry")
@@ -143,7 +157,7 @@ export default function WaitlistPage() {
 
       const response = await fetch(`/api/waitlist/${id}`, {
         method: "DELETE",
-        headers: { "Authorization": `Bearer ${bossToken}` }
+        headers: { Authorization: `Bearer ${bossToken}` },
       })
 
       if (response.ok) {
@@ -151,8 +165,7 @@ export default function WaitlistPage() {
         fetchWaitlist()
       } else if (response.status === 401) {
         toast.error("Authentication failed. Please login again.")
-        localStorage.removeItem("bossToken")
-        window.location.href = "/boss/login"
+        redirectToLogin()
       } else {
         toast.error("Failed to delete entry")
       }
@@ -163,57 +176,79 @@ export default function WaitlistPage() {
   }
 
   const exportToCSV = () => {
-    const headers = ["Name", "Email", "Company", "Phone", "Status", "Notes", "Joined Date", "Contacted Date", "Contacted By"]
+    const headers = [
+      "Name",
+      "Email",
+      "Company",
+      "Phone",
+      "Status",
+      "Notes",
+      "Joined Date",
+      "Contacted Date",
+      "Contacted By",
+    ]
     const csvContent = [
       headers.join(","),
-      ...filteredWaitlist.map(entry => [
-        `"${entry.full_name}"`,
-        `"${entry.email}"`,
-        `"${entry.company_name || ""}"`,
-        `"${entry.phone || ""}"`,
-        `"${entry.status}"`,
-        `"${entry.notes || ""}"`,
-        `"${new Date(entry.created_at).toLocaleDateString()}"`,
-        `"${entry.contacted_at ? new Date(entry.contacted_at).toLocaleDateString() : ""}"`,
-        `"${entry.contacted_by || ""}"`
-      ].join(","))
+      ...filteredWaitlist.map((entry) =>
+        [
+          `"${entry.full_name}"`,
+          `"${entry.email}"`,
+          `"${entry.company_name || ""}"`,
+          `"${entry.phone || ""}"`,
+          `"${entry.status}"`,
+          `"${entry.notes || ""}"`,
+          `"${new Date(entry.created_at).toLocaleDateString()}"`,
+          `"${entry.contacted_at ? new Date(entry.contacted_at).toLocaleDateString() : ""}"`,
+          `"${entry.contacted_by || ""}"`,
+        ].join(",")
+      ),
     ].join("\n")
 
     const blob = new Blob([csvContent], { type: "text/csv" })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = `waitlist-${new Date().toISOString().split('T')[0]}.csv`
+    a.download = `waitlist-${new Date().toISOString().split("T")[0]}.csv`
     a.click()
     window.URL.revokeObjectURL(url)
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "pending": return "bg-yellow-100 text-yellow-800"
-      case "contacted": return "bg-blue-100 text-blue-800"
-      case "converted": return "bg-green-100 text-green-800"
-      case "rejected": return "bg-red-100 text-red-800"
-      default: return "bg-gray-100 text-gray-800"
+      case "pending":
+        return "bg-yellow-100 text-yellow-800"
+      case "contacted":
+        return "bg-blue-100 text-blue-800"
+      case "converted":
+        return "bg-green-100 text-green-800"
+      case "rejected":
+        return "bg-red-100 text-red-800"
+      default:
+        return "bg-gray-100 text-gray-800"
     }
   }
 
-  const filteredWaitlist = waitlist.filter(entry => {
-    const matchesSearch = 
+  const filteredWaitlist = waitlist.filter((entry) => {
+    const matchesSearch =
       entry.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       entry.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (entry.company_name && entry.company_name.toLowerCase().includes(searchTerm.toLowerCase()))
-    
+
     const matchesStatus = statusFilter === "all" || entry.status === statusFilter
-    
+
     return matchesSearch && matchesStatus
   })
+
+  const redirectToLogin = () => {
+    localStorage.removeItem("bossToken")
+    router.push("/boss/login")
+  }
 
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600 mx-auto mb-4"></div>
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
           <p className="text-gray-600">Loading waitlist...</p>
         </div>
       </div>
@@ -223,16 +258,16 @@ export default function WaitlistPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Waitlist Management</h1>
+        <h1 className="mb-2 text-3xl font-bold text-gray-900">Waitlist Management</h1>
         <p className="text-gray-600">Manage and track waitlist entries</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <User className="h-8 w-8 text-purple-600 mr-3" />
+              <User className="mr-3 h-8 w-8 text-purple-600" />
               <div>
                 <p className="text-sm text-gray-600">Total Entries</p>
                 <p className="text-2xl font-bold">{waitlist.length}</p>
@@ -243,10 +278,12 @@ export default function WaitlistPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <Mail className="h-8 w-8 text-yellow-600 mr-3" />
+              <Mail className="mr-3 h-8 w-8 text-yellow-600" />
               <div>
                 <p className="text-sm text-gray-600">Pending</p>
-                <p className="text-2xl font-bold">{waitlist.filter(w => w.status === "pending").length}</p>
+                <p className="text-2xl font-bold">
+                  {waitlist.filter((w) => w.status === "pending").length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -254,10 +291,12 @@ export default function WaitlistPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <Building className="h-8 w-8 text-blue-600 mr-3" />
+              <Building className="mr-3 h-8 w-8 text-blue-600" />
               <div>
                 <p className="text-sm text-gray-600">Contacted</p>
-                <p className="text-2xl font-bold">{waitlist.filter(w => w.status === "contacted").length}</p>
+                <p className="text-2xl font-bold">
+                  {waitlist.filter((w) => w.status === "contacted").length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -265,10 +304,12 @@ export default function WaitlistPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center">
-              <Calendar className="h-8 w-8 text-green-600 mr-3" />
+              <Calendar className="mr-3 h-8 w-8 text-green-600" />
               <div>
                 <p className="text-sm text-gray-600">Converted</p>
-                <p className="text-2xl font-bold">{waitlist.filter(w => w.status === "converted").length}</p>
+                <p className="text-2xl font-bold">
+                  {waitlist.filter((w) => w.status === "converted").length}
+                </p>
               </div>
             </div>
           </CardContent>
@@ -276,7 +317,7 @@ export default function WaitlistPage() {
       </div>
 
       {/* Filters and Actions */}
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <div className="flex-1">
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -302,7 +343,7 @@ export default function WaitlistPage() {
             </SelectContent>
           </Select>
           <Button onClick={exportToCSV} variant="outline">
-            <Download className="h-4 w-4 mr-2" />
+            <Download className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
         </div>
@@ -318,13 +359,13 @@ export default function WaitlistPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3">Name</th>
-                  <th className="text-left p-3">Email</th>
-                  <th className="text-left p-3">Company</th>
-                  <th className="text-left p-3">Phone</th>
-                  <th className="text-left p-3">Status</th>
-                  <th className="text-left p-3">Joined</th>
-                  <th className="text-left p-3">Actions</th>
+                  <th className="p-3 text-left">Name</th>
+                  <th className="p-3 text-left">Email</th>
+                  <th className="p-3 text-left">Company</th>
+                  <th className="p-3 text-left">Phone</th>
+                  <th className="p-3 text-left">Status</th>
+                  <th className="p-3 text-left">Joined</th>
+                  <th className="p-3 text-left">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -335,14 +376,14 @@ export default function WaitlistPage() {
                     </td>
                     <td className="p-3">
                       <div className="flex items-center">
-                        <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                        <Mail className="mr-2 h-4 w-4 text-gray-400" />
                         {entry.email}
                       </div>
                     </td>
                     <td className="p-3">
                       {entry.company_name ? (
                         <div className="flex items-center">
-                          <Building className="h-4 w-4 text-gray-400 mr-2" />
+                          <Building className="mr-2 h-4 w-4 text-gray-400" />
                           {entry.company_name}
                         </div>
                       ) : (
@@ -352,7 +393,7 @@ export default function WaitlistPage() {
                     <td className="p-3">
                       {entry.phone ? (
                         <div className="flex items-center">
-                          <Phone className="h-4 w-4 text-gray-400 mr-2" />
+                          <Phone className="mr-2 h-4 w-4 text-gray-400" />
                           {entry.phone}
                         </div>
                       ) : (
@@ -360,22 +401,14 @@ export default function WaitlistPage() {
                       )}
                     </td>
                     <td className="p-3">
-                      <Badge className={getStatusColor(entry.status)}>
-                        {entry.status}
-                      </Badge>
+                      <Badge className={getStatusColor(entry.status)}>{entry.status}</Badge>
                     </td>
-                    <td className="p-3">
-                      {new Date(entry.created_at).toLocaleDateString()}
-                    </td>
+                    <td className="p-3">{new Date(entry.created_at).toLocaleDateString()}</td>
                     <td className="p-3">
                       <div className="flex gap-2">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleEdit(entry)}
-                            >
+                            <Button variant="outline" size="sm" onClick={() => handleEdit(entry)}>
                               <Edit className="h-4 w-4" />
                             </Button>
                           </DialogTrigger>
@@ -386,7 +419,12 @@ export default function WaitlistPage() {
                             <div className="space-y-4">
                               <div>
                                 <label className="text-sm font-medium">Status</label>
-                                <Select value={editForm.status} onValueChange={(value) => setEditForm(prev => ({ ...prev, status: value }))}>
+                                <Select
+                                  value={editForm.status}
+                                  onValueChange={(value) =>
+                                    setEditForm((prev) => ({ ...prev, status: value }))
+                                  }
+                                >
                                   <SelectTrigger>
                                     <SelectValue />
                                   </SelectTrigger>
@@ -402,7 +440,9 @@ export default function WaitlistPage() {
                                 <label className="text-sm font-medium">Notes</label>
                                 <Textarea
                                   value={editForm.notes}
-                                  onChange={(e) => setEditForm(prev => ({ ...prev, notes: e.target.value }))}
+                                  onChange={(e) =>
+                                    setEditForm((prev) => ({ ...prev, notes: e.target.value }))
+                                  }
                                   placeholder="Add notes about this entry..."
                                 />
                               </div>
@@ -411,14 +451,24 @@ export default function WaitlistPage() {
                                 <Input
                                   type="date"
                                   value={editForm.contacted_at}
-                                  onChange={(e) => setEditForm(prev => ({ ...prev, contacted_at: e.target.value }))}
+                                  onChange={(e) =>
+                                    setEditForm((prev) => ({
+                                      ...prev,
+                                      contacted_at: e.target.value,
+                                    }))
+                                  }
                                 />
                               </div>
                               <div>
                                 <label className="text-sm font-medium">Contacted By</label>
                                 <Input
                                   value={editForm.contacted_by}
-                                  onChange={(e) => setEditForm(prev => ({ ...prev, contacted_by: e.target.value }))}
+                                  onChange={(e) =>
+                                    setEditForm((prev) => ({
+                                      ...prev,
+                                      contacted_by: e.target.value,
+                                    }))
+                                  }
                                   placeholder="Who contacted this person?"
                                 />
                               </div>
@@ -426,8 +476,8 @@ export default function WaitlistPage() {
                                 <Button onClick={handleUpdate} className="flex-1">
                                   Update Entry
                                 </Button>
-                                <Button 
-                                  variant="outline" 
+                                <Button
+                                  variant="outline"
                                   onClick={() => setEditingEntry(null)}
                                   className="flex-1"
                                 >
@@ -437,11 +487,7 @@ export default function WaitlistPage() {
                             </div>
                           </DialogContent>
                         </Dialog>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleDelete(entry.id)}
-                        >
+                        <Button variant="outline" size="sm" onClick={() => handleDelete(entry.id)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
@@ -455,4 +501,4 @@ export default function WaitlistPage() {
       </Card>
     </div>
   )
-} 
+}

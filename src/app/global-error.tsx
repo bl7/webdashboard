@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 
 export default function GlobalError({
@@ -9,6 +10,12 @@ export default function GlobalError({
   error: Error & { digest?: string }
   reset: () => void
 }) {
+  const router = useRouter()
+
+  const goHome = () => {
+    router.push('/')
+  }
+
   return (
     <html>
       <body>
@@ -31,7 +38,7 @@ export default function GlobalError({
                 Try again
               </Button>
               <Button
-                onClick={() => window.location.href = '/'}
+                onClick={goHome}
                 variant="outline"
               >
                 Go to Home

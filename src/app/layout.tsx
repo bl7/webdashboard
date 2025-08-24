@@ -118,6 +118,7 @@ export const metadata: Metadata = {
   category: "Food Service Technology",
   other: {
     sitemap: "/sitemap.xml",
+    "google-site-verification": "your-verification-code-here", // Add your GSC verification code
   },
 }
 
