@@ -41,7 +41,7 @@ function calculateExpiryDate(days: number): string {
   return today.toISOString().split("T")[0]
 }
 
-function getDefaultExpiryDays(type: "cooked" | "prep" | "ppds"): number {
+function getDefaultExpiryDays(type: "cooked" | "prep" | "ppds" | "default"): number {
   switch (type) {
     case "cooked":
       return 1
@@ -49,6 +49,8 @@ function getDefaultExpiryDays(type: "cooked" | "prep" | "ppds"): number {
       return 3
     case "ppds":
       return 5
+    case "default":
+      return 2
     default:
       return 3
   }
@@ -393,7 +395,7 @@ export default function LabelDemo() {
             ...base,
             ingredients: (item as MenuItem).ingredients,
             allergens: (item as any).allergens, // Fix: set allergens for menu items
-            labelType: "cooked" as "cooked",
+            labelType: "default" as "default",
           }
 
     setPrintQueue((prev) => [...prev, newItem])
@@ -404,7 +406,7 @@ export default function LabelDemo() {
       prev.map((q) => (q.uid === uid ? { ...q, quantity: Math.max(1, quantity) } : q))
     )
 
-  const updateLabelType = (uid: string, labelType: "cooked" | "prep" | "ppds") =>
+  const updateLabelType = (uid: string, labelType: "cooked" | "prep" | "ppds" | "default") =>
     setPrintQueue((prev) =>
       prev.map((q) =>
         q.uid === uid
@@ -512,7 +514,7 @@ export default function LabelDemo() {
                 item.expiryDate ||
                 calculateExpiryDate(
                   parseInt(expiryDays[item.labelType || "cooked"] || "") ||
-                    getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds")
+                    getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds" | "default")
                 ),
               initial: selectedInitial,
               labelHeight: labelHeight,
@@ -1050,15 +1052,16 @@ export default function LabelDemo() {
                         />
                         {"labelType" in item && (
                           <select
-                            value={item.labelType || "cooked"}
+                            value={item.labelType || "default"}
                             onChange={(e) =>
                               updateLabelType(
                                 item.uid,
-                                e.target.value as "cooked" | "prep" | "ppds"
+                                e.target.value as "cooked" | "prep" | "ppds" | "default"
                               )
                             }
                             className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
                           >
+                            <option value="default">Default</option>
                             <option value="cooked">Cook</option>
                             <option value="prep">Prep</option>
                             <option value="ppds">PPDS</option>

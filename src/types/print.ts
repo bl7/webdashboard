@@ -10,5 +10,5 @@ export type PrintQueueItem = {
   ingredients?: string[]
   printedOn?: string
   expiryDate?: string
-  labelType?: "cooked" | "prep" | "ppds"
+  labelType?: "cooked" | "prep" | "ppds" | "default"
 }

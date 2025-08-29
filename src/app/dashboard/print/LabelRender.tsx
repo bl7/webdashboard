@@ -246,7 +246,7 @@ export default function LabelRender({
   }
 
   // --- COOK/PREP Menu Labels ---
-  if ((item.labelType === "cooked" || item.labelType === "prep") && item.type === "menu") {
+  if ((item.labelType === "cooked" || item.labelType === "prep" || item.labelType === "default") && item.type === "menu") {
     const containsLine = allergenicIngredients.map((ing, idx) => (
       <span key={ing + idx} style={{ fontWeight: 600, fontFamily: "inherit" }}>
         {capitalize(ing)}
@@ -310,7 +310,9 @@ export default function LabelRender({
           {useInitials && selectedInitial && (
             <span style={{ fontWeight: 900, margin: "0 8px" }}>{selectedInitial}</span>
           )}
-          <span style={{ fontWeight: 700 }}>{labelTypeShort}</span>
+          {item.labelType !== "default" && (
+            <span style={{ fontWeight: 700 }}>{labelTypeShort}</span>
+          )}
         </div>
 
         <div
@@ -409,7 +411,7 @@ export default function LabelRender({
   // --- Ingredient Labels ---
   if (
     item.type === "ingredients" &&
-    (!item.labelType || item.labelType === "cooked" || item.labelType === "prep")
+    (!item.labelType || item.labelType === "cooked" || item.labelType === "prep" || item.labelType === "default")
   ) {
     return (
       <div style={baseStyle}>
@@ -520,6 +522,7 @@ export default function LabelRender({
             Printed: {shortPrinted}
             {item.labelType === "prep" && " (PREP)"}
             {item.labelType === "cooked" && " (COOK)"}
+            {item.labelType === "default" && ""}
           </span>
           <span>Expires: {shortExpiry}</span>
         </div>
