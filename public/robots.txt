@@ -53,3 +53,4 @@ Allow: /
 
 # Sitemap location
 Sitemap: https://www.instalabel.co/sitemap.xml 
+Sitemap: https://www.instalabel.co/sitemap-test.xml
