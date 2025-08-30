@@ -275,7 +275,7 @@ export const BeforeAfterSection = () => {
                 The Kitchen Transformation
               </motion.div>
 
-              <motion.h2
+              <motion.h3
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
@@ -287,7 +287,7 @@ export const BeforeAfterSection = () => {
                 </span>
                 <br />
                 <span className="text-gray-900">Kitchen Control</span>
-              </motion.h2>
+              </motion.h3>
             </div>
 
             <motion.div

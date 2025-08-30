@@ -47,18 +47,15 @@ const features = [
     solution: "Print in the middle of service without delay.",
     outcome: "Labels don't slow down the line.",
   },
-  
 ]
-
-
 
 export const CoreFeaturesGrid = () => {
   return (
-    <section className="-mt-8 sm:-mt-16 py-8 sm:py-12">
+    <section className="-mt-8 py-8 sm:-mt-16 sm:py-12">
       <div className="container px-2 sm:px-4 md:px-12 lg:px-16">
-        <h2 className="mb-6 sm:mb-8 text-center text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+        <h3 className="mb-6 text-center text-3xl font-bold tracking-tight text-gray-900 sm:mb-8 sm:text-4xl">
           Built for the Chaos of a Real Kitchen
-        </h2>
+        </h3>
         <div className="grid gap-6 sm:gap-10 md:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
@@ -71,13 +68,11 @@ export const CoreFeaturesGrid = () => {
                 {feature.icon}
                 <h3 className="text-lg font-semibold text-gray-900">{feature.title}</h3>
               </div>
-              <p className="mb-1 text-sm text-gray-600 font-medium">{feature.solution}</p>
+              <p className="mb-1 text-sm font-medium text-gray-600">{feature.solution}</p>
               <p className="text-sm text-gray-500">{feature.outcome}</p>
             </motion.div>
           ))}
         </div>
-
-       
       </div>
     </section>
   )

@@ -16,9 +16,9 @@ export const AllergenGuideCrossContamination = () => {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h2 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
+          <h3 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
             Preventing Cross-Contamination
-          </h2>
+          </h3>
           <p className="mx-auto max-w-3xl text-lg text-gray-600">
             Key steps to prevent allergen cross-contamination in your kitchen and keep food
             preparation safe.

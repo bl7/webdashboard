@@ -3,9 +3,9 @@ import React from "react"
 export const TechnicalSpecs = () => (
   <section className="bg-white py-16">
     <div className="container mx-auto px-4">
-      <h2 className="mb-4 text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+      <h3 className="mb-4 text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
         Device & Software Specifications
-      </h2>
+      </h3>
       <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-2">
         <div>
           <h3 className="mb-2 text-xl font-semibold text-gray-900">Device Specs</h3>

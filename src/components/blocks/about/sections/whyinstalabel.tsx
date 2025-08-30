@@ -75,29 +75,6 @@ export const WhyInstaLabel = () => {
               </div>
             </div>
           </div>
-
-          {/* Card 3 - Food Safety */}
-          {/* <div className="group">
-            <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-              </div>
-              
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Boost Food Safety
-              </h3>
-              <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                Minimize risks in your kitchen with reliable tracking that protects your customers and
-                your reputation.
-              </p>
-              
-              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
-                500+ Kitchens Trust Us
-              </div>
-            </div>
-          </div> */}
         </motion.div>
 
         {/* Bottom CTA/Trust Section */}

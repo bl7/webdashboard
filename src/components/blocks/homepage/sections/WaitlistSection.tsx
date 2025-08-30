@@ -88,7 +88,7 @@ export default function WaitlistSection() {
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-4xl font-bold text-gray-900">Join the Waitlist</h2>
+            <h3 className="mb-4 text-4xl font-bold text-gray-900">Join the Waitlist</h3>
             <p className="mx-auto max-w-2xl text-xl text-gray-600">
               Be among the first to experience the future of food labeling. Join our waitlist and
               get early access to InstaLabel when we launch.

@@ -41,9 +41,9 @@ export const PrintBridgeTechSpecs = () => {
           <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
             Built by Developers, For Developers
           </div>
-          <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
+          <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
             PrintBridge Technical Specs
-          </h2>
+          </h3>
           <div className="mx-auto max-w-xl text-lg text-gray-600 lg:mx-0">
             Native Node.js and .NET apps, WebSocket communication, USB driver integration,
             enterprise-grade security.

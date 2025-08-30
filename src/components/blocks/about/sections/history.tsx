@@ -54,9 +54,9 @@ export const History = () => {
         >
           {/* Header */}
           <div className="mb-12 text-center sm:mb-16">
-            <h3 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
               From Kitchen Chaos to Labeling Clarity
-            </h3>
+            </h2>
             <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
           </div>
 

@@ -34,22 +34,22 @@ const features = [
 
 export const WhyChooseUs = () => {
   return (
-    <section className="relative bg-white px-4 sm:px-6 py-12 sm:py-16">
+    <section className="relative bg-white px-4 py-12 sm:px-6 sm:py-16">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
-      
+
       <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
-        <div className="text-center space-y-4">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
+        <div className="space-y-4 text-center">
+          <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
             Why Choose InstaLabel?
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          </h3>
+          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
             We've built our platform with the needs of real businesses in mind — fast, scalable, and
             beautifully simple.
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-5xl mx-auto">
+        <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {features.map((feature, i) => (
             <motion.div
               key={i}
@@ -59,26 +59,20 @@ export const WhyChooseUs = () => {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
+              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
                     {feature.icon}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      {feature.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {feature.description}
-                    </p>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
+                    <p className="text-sm leading-relaxed text-gray-600">{feature.description}</p>
                   </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
-
-     
       </div>
     </section>
   )

@@ -70,7 +70,7 @@ export const AllergenComplianceSolution = () => {
     <section className="bg-white px-4 py-20">
       <div className="mx-auto max-w-6xl">
         <div className="mb-12 text-center">
-          <motion.h2
+          <motion.h3
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -78,7 +78,7 @@ export const AllergenComplianceSolution = () => {
             className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl"
           >
             Complete UK Allergen Compliance Toolkit
-          </motion.h2>
+          </motion.h3>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

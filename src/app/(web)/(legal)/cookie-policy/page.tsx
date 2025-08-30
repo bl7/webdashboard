@@ -57,7 +57,7 @@ const Page = () => {
             technologies to provide, improve, and secure our kitchen labeling software and website (
             <a href="https://www.instalabel.co">https://www.instalabel.co</a>).
           </p>
-          <h2>1. What are Cookies?</h2>
+          <h3>1. What are Cookies?</h3>
           <p>
             Cookies are small data files stored on your device when you visit a website. They help
             us remember your preferences, keep you logged in, and analyze how you use our service.

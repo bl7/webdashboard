@@ -36,9 +36,9 @@ export const SquareIntegration = () => {
             <SquareLogo size="sm" className="mr-2" />
             Exclusive Square Integration
           </div>
-          <h2 className="mb-6 text-4xl font-black leading-tight tracking-tight text-black md:text-5xl">
+          <h3 className="mb-6 text-4xl font-black leading-tight tracking-tight text-black md:text-5xl">
             The Only Labeling Solution That Speaks Square
-          </h2>
+          </h3>
           <p className="mx-auto max-w-3xl text-xl text-gray-600">
             The only food labeling solution with <strong>native Square POS integration</strong>.
             Smart bidirectional sync with AI-powered allergen detection, safe create-only mode, and

@@ -103,9 +103,9 @@ const SystemFeaturesGrid = () => (
         className="flex h-full flex-col space-y-8 rounded-2xl border border-purple-100 bg-white/80 p-8 shadow"
       >
         <div className="mb-2 flex flex-col items-center">
-          <h2 className="mb-2 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
+          <h3 className="mb-2 text-center text-2xl font-bold text-gray-900 sm:text-3xl">
             The Hardware
-          </h2>
+          </h3>
           <Image
             src={HardwareImage}
             width={100}

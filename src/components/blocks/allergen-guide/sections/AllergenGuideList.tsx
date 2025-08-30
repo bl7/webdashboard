@@ -143,9 +143,9 @@ export const AllergenGuideList = () => {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <h3 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 lg:text-4xl">
             The 14 Allergens You Must Declare
-          </h3>
+          </h2>
           <p className="mx-auto max-w-3xl text-lg text-gray-600">
             UK food law requires you to declare these 14 allergens on your menu or food labels. Each
             allergen has specific rules and hidden sources you need to know.
