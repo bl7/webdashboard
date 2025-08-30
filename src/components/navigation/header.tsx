@@ -12,7 +12,6 @@ import { MobileMenu } from "@/components/navigation/mobile-menu"
 const navItems = [
   { label: "Uses", href: "/uses" },
   { label: "Features", href: "/features" },
-  { label: "PrintBridge", href: "/printbridge" },
   { label: "Plan", href: "/plan" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/about#contact", hideOnMobile: true },

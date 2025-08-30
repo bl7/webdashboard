@@ -179,6 +179,12 @@ export const Footer = () => {
               >
                 Kitchen Labeling Blog
               </Link>
+              <Link
+                href="/printbridge"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                PrintBridge Technology
+              </Link>
             </nav>
           </div>
 

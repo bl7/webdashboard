@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui"
-import { ArrowRight, Shield, AlertTriangle, CheckCircle2 } from "lucide-react"
+import { ArrowRight, Shield, AlertTriangle, CheckCircle2, Brain } from "lucide-react"
 import React from "react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -43,9 +43,9 @@ export const AllergenGuideHero = () => {
             viewport={{ once: true }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">UK 14 Allergens</span>
+              <span className="text-purple-600">The Complete UK Allergen Guide</span>
               <br className="hidden md:block" />
-              <span>Complete Reference Guide</span>
+              <span>(with Free Quiz)</span>
             </h1>
           </motion.div>
 
@@ -57,13 +57,32 @@ export const AllergenGuideHero = () => {
             viewport={{ once: true }}
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              Complete guide for Natasha's Law compliance. All 14 allergens covered. Hidden sources
-              listed. Cross-contamination prevention tips. Everything UK food businesses need to
-              know.
+              Understand the 14 allergens, HACCP compliance, and test your knowledge. Complete guide
+              for Natasha's Law compliance with interactive quiz.
             </p>
           </motion.div>
 
-          {/* 4. Key benefits grid */}
+          {/* 4. Quiz teaser */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            viewport={{ once: true }}
+          >
+            <div className="rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-4">
+              <div className="flex items-center gap-3">
+                <Brain className="h-5 w-5 text-purple-600" />
+                <div className="text-sm">
+                  <span className="font-semibold text-purple-800">
+                    Think you know your allergens?
+                  </span>
+                  <span className="text-purple-700"> Take the quick compliance quiz!</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* 5. Key benefits grid */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -81,12 +100,12 @@ export const AllergenGuideHero = () => {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <AlertTriangle className="h-4 w-4 text-purple-600" />
-                <span>Hidden Sources Listed</span>
+                <span>Interactive Quiz</span>
               </div>
             </div>
           </motion.div>
 
-          {/* 5. CTAs */}
+          {/* 6. CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -95,7 +114,7 @@ export const AllergenGuideHero = () => {
           >
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
-                <Link href="/allergen-compliance">Download Free Toolkit</Link>
+                <Link href="#quiz">Jump to the Quiz ↓</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="outline" size="lg">
