@@ -26,6 +26,7 @@ import {
 import * as XLSX from "xlsx"
 import { useMenuItems, type MenuItem } from "@/hooks/useMenuItem"
 import { useIngredients } from "@/hooks/useIngredients"
+import { useAllergens } from "@/hooks/useAllergens"
 import { toast } from "sonner"
 
 type MenuItemFormData = {
@@ -58,6 +59,7 @@ export default function MenuItemsDashboard() {
   const [showAddModal, setShowAddModal] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const [showAddIngredientModal, setShowAddIngredientModal] = useState(false)
   const [newItem, setNewItem] = useState<MenuItemFormData>({
     menuItemName: "",
     ingredientIDs: [],
@@ -69,6 +71,15 @@ export default function MenuItemsDashboard() {
   const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null)
   const [ingredientSearch, setIngredientSearch] = useState("")
   const [editIngredientSearch, setEditIngredientSearch] = useState("")
+
+  // Add New Ingredient Modal State
+  const [newIngredient, setNewIngredient] = useState({
+    ingredientName: "",
+    expiryDays: 0,
+  })
+  const [selectedAllergens, setSelectedAllergens] = useState<string[]>([])
+  const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
+  const [allergenSearch, setAllergenSearch] = useState("")
 
   // Multi-select state
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([])
@@ -84,7 +95,8 @@ export default function MenuItemsDashboard() {
     deleteExistingMenuItem,
   } = useMenuItems()
 
-  const { ingredients, loading: ingredientsLoading } = useIngredients()
+  const { ingredients, loading: ingredientsLoading, addNewIngredient } = useIngredients()
+  const { allergens, isLoading: allergensLoading } = useAllergens()
   const perPage = 10
 
   const filtered = menuItems.filter((item) =>
@@ -248,6 +260,43 @@ export default function MenuItemsDashboard() {
 
   const getAvailableIngredients = (ingredientIds: string[]) => {
     return ingredients.filter((ing) => !ingredientIds.includes(ing.uuid))
+  }
+
+  const handleAddNewIngredient = async () => {
+    if (!newIngredient.ingredientName.trim()) {
+      toast.error("Ingredient name is required")
+      return
+    }
+
+    if (newIngredient.expiryDays <= 0) {
+      toast.error("Expiry days must be greater than 0")
+      return
+    }
+
+    // Check if ingredient already exists (case-insensitive)
+    const exists = ingredients.some(
+      (ing) =>
+        ing.ingredientName.trim().toLowerCase() ===
+        newIngredient.ingredientName.trim().toLowerCase()
+    )
+    if (exists) {
+      toast.error("An ingredient with this name already exists")
+      return
+    }
+
+    const success = await addNewIngredient({
+      ingredientName: newIngredient.ingredientName.trim(),
+      expiryDays: newIngredient.expiryDays,
+      allergenIDs: selectedAllergens,
+    })
+
+    if (success) {
+      // Reset form
+      setNewIngredient({ ingredientName: "", expiryDays: 0 })
+      setSelectedAllergens([])
+      setShowAddIngredientModal(false)
+      toast.success("Ingredient added successfully! You can now select it from the dropdown.")
+    }
   }
 
   // Multi-select functions
@@ -521,7 +570,17 @@ export default function MenuItemsDashboard() {
             </div>
 
             <div>
-              <Label>Ingredients</Label>
+              <div className="mb-2 flex items-center justify-between">
+                <Label>Ingredients</Label>
+                <button
+                  type="button"
+                  onClick={() => setShowAddIngredientModal(true)}
+                  className="cursor-pointer text-sm text-blue-600 underline hover:text-blue-800"
+                >
+                  + Add New Ingredient
+                </button>
+              </div>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -638,7 +697,16 @@ export default function MenuItemsDashboard() {
             </div>
 
             <div>
-              <Label>Ingredients</Label>
+              <div className="mb-2 flex items-center justify-between">
+                <Label>Ingredients</Label>
+                <button
+                  type="button"
+                  onClick={() => setShowAddIngredientModal(true)}
+                  className="cursor-pointer text-sm text-blue-600 underline hover:text-blue-800"
+                >
+                  + Add New Ingredient
+                </button>
+              </div>
               <div className="rounded-lg border border-green-200 bg-green-50 p-4">
                 <Label className="mb-3 block text-sm font-medium text-green-800">
                   Current Ingredients ({editItem.ingredientIDs.length})
@@ -841,6 +909,106 @@ export default function MenuItemsDashboard() {
             </Button>
             <Button variant="destructive" onClick={handleBulkDelete}>
               {loading ? "Deleting..." : `Delete ${selectedMenuItems.length} Menu Item(s)`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add New Ingredient Dialog */}
+      <Dialog open={showAddIngredientModal} onOpenChange={setShowAddIngredientModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New Ingredient</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-1">
+              <Label htmlFor="ingredientName">Name</Label>
+              <Input
+                id="ingredientName"
+                placeholder="E.g. Sugar"
+                value={newIngredient.ingredientName}
+                onChange={(e) =>
+                  setNewIngredient({ ...newIngredient, ingredientName: e.target.value })
+                }
+                disabled={ingredientsLoading}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="expiryDays">Expiry Days</Label>
+              <Input
+                id="expiryDays"
+                type="number"
+                min={1}
+                placeholder="E.g. 7"
+                value={newIngredient.expiryDays}
+                onChange={(e) =>
+                  setNewIngredient({ ...newIngredient, expiryDays: Number(e.target.value) })
+                }
+                disabled={ingredientsLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Allergens</Label>
+              <DropdownMenu open={allergenDropdownOpen} onOpenChange={setAllergenDropdownOpen}>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-between"
+                    disabled={allergensLoading}
+                  >
+                    {selectedAllergens.length === 0
+                      ? "Select allergens..."
+                      : `${selectedAllergens.length} allergen(s) selected`}
+                    <ChevronDown className="ml-2 h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-full">
+                  <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <Input
+                    placeholder="Search allergens..."
+                    value={allergenSearch}
+                    onChange={(e) => setAllergenSearch(e.target.value)}
+                    className="mb-2 w-full px-2 py-1 text-sm"
+                  />
+                  {allergens
+                    .filter((allergen) =>
+                      allergen.name.toLowerCase().includes(allergenSearch.toLowerCase())
+                    )
+                    .map((allergen) => (
+                      <DropdownMenuCheckboxItem
+                        key={allergen.id}
+                        checked={selectedAllergens.includes(allergen.id)}
+                        onCheckedChange={(checked) => {
+                          if (checked) {
+                            setSelectedAllergens([...selectedAllergens, allergen.id])
+                          } else {
+                            setSelectedAllergens(
+                              selectedAllergens.filter((id) => id !== allergen.id)
+                            )
+                          }
+                        }}
+                      >
+                        {allergen.name}
+                      </DropdownMenuCheckboxItem>
+                    ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddIngredientModal(false)
+                setNewIngredient({ ingredientName: "", expiryDays: 0 })
+                setSelectedAllergens([])
+              }}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleAddNewIngredient} disabled={ingredientsLoading}>
+              {ingredientsLoading ? "Adding..." : "Add Ingredient"}
             </Button>
           </DialogFooter>
         </DialogContent>

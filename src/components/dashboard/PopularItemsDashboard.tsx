@@ -1,20 +1,20 @@
-'use client'
+"use client"
 
-import React, { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { 
-  BarChart3, 
-  TrendingUp, 
+import React, { useState, useEffect } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import {
+  BarChart3,
+  TrendingUp,
   RefreshCw,
   AlertTriangle,
   CheckCircle,
   Star,
   ChevronDown,
-  ChevronUp
-} from 'lucide-react'
-import { toast } from 'sonner'
+  ChevronUp,
+} from "lucide-react"
+import { toast } from "sonner"
 
 interface SalesData {
   date: string
@@ -32,7 +32,7 @@ interface PopularItem {
   quantity: number
   revenue: number
   rank: number
-  trend: 'up' | 'down' | 'stable'
+  trend: "up" | "down" | "stable"
 }
 
 export default function PopularItemsDashboard() {
@@ -49,31 +49,30 @@ export default function PopularItemsDashboard() {
   const fetchSalesData = async () => {
     setLoading(true)
     setError(null)
-    
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) throw new Error('No authentication token')
 
-      const response = await fetch('/api/square/sales', {
-        headers: { 'Authorization': `Bearer ${token}` }
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) throw new Error("No authentication token")
+
+      const response = await fetch("/api/square/sales", {
+        headers: { Authorization: `Bearer ${token}` },
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to fetch sales data')
+        throw new Error(errorData.error || "Failed to fetch sales data")
       }
 
       const data: SalesData = await response.json()
       setSalesData(data)
-      
+
       // Generate popular items list
       const popular = generatePopularItems(data)
       setPopularItems(popular)
-      
     } catch (error: any) {
-      console.error('Failed to fetch sales data:', error)
+      console.error("Failed to fetch sales data:", error)
       setError(error.message)
-      toast.error('Failed to load sales data')
+      toast.error("Failed to load sales data")
     } finally {
       setLoading(false)
     }
@@ -85,18 +84,21 @@ export default function PopularItemsDashboard() {
       quantity: item.quantity,
       revenue: item.revenue,
       rank: index + 1,
-      trend: Math.random() > 0.5 ? 'up' : 'down' as 'up' | 'down' | 'stable' // Mock trend for now
+      trend: Math.random() > 0.5 ? "up" : ("down" as "up" | "down" | "stable"), // Mock trend for now
     }))
-    
+
     // Sort by quantity sold (most popular first)
     return items.sort((a, b) => b.quantity - a.quantity).slice(0, 10)
   }
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up': return <TrendingUp className="h-4 w-4 text-green-600" />
-      case 'down': return <TrendingUp className="h-4 w-4 text-red-600 rotate-180" />
-      default: return <BarChart3 className="h-4 w-4 text-gray-600" />
+      case "up":
+        return <TrendingUp className="h-4 w-4 text-green-600" />
+      case "down":
+        return <TrendingUp className="h-4 w-4 rotate-180 text-red-600" />
+      default:
+        return <BarChart3 className="h-4 w-4 text-gray-600" />
     }
   }
 
@@ -108,9 +110,9 @@ export default function PopularItemsDashboard() {
   }
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
     }).format(amount)
   }
 
@@ -137,9 +139,13 @@ export default function PopularItemsDashboard() {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-6">
-          <p className="text-red-700 mb-4">{error}</p>
-          <Button onClick={fetchSalesData} variant="outline" className="border-red-300 text-red-700 hover:bg-red-50">
-            <RefreshCw className="h-4 w-4 mr-2" />
+          <p className="mb-4 text-red-700">{error}</p>
+          <Button
+            onClick={fetchSalesData}
+            variant="outline"
+            className="border-red-300 text-red-700 hover:bg-red-50"
+          >
+            <RefreshCw className="mr-2 h-4 w-4" />
             Retry
           </Button>
         </CardContent>
@@ -149,7 +155,7 @@ export default function PopularItemsDashboard() {
 
   return (
     <Card className="w-full border-0 bg-gradient-to-br from-purple-50 to-pink-50 shadow-lg">
-      <CardHeader 
+      <CardHeader
         className="cursor-pointer select-none border-b border-purple-100 bg-gradient-to-r from-purple-100 to-pink-100"
         onClick={() => setExpanded((prev) => !prev)}
       >
@@ -170,7 +176,7 @@ export default function PopularItemsDashboard() {
         <CardDescription className="text-purple-700">
           Top selling items from yesterday's Square sales
           {salesData && (
-            <span className="block text-sm text-purple-600 mt-1">
+            <span className="mt-1 block text-sm text-purple-600">
               Based on {salesData.itemSales.length} items sold
             </span>
           )}
@@ -178,54 +184,64 @@ export default function PopularItemsDashboard() {
       </CardHeader>
       {expanded && (
         <CardContent className="pt-6">
-        {popularItems.length > 0 ? (
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h3 className="text-lg font-semibold text-purple-800">Top 10 Popular Items</h3>
-              <Button onClick={fetchSalesData} size="sm" variant="outline" className="border-purple-300 text-purple-700 hover:bg-purple-50">
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
-              </Button>
-            </div>
-            
-            <div className="grid gap-4">
-              {popularItems.map((item, index) => (
-                <div key={index} className="flex items-center justify-between p-4 border border-purple-200 rounded-lg bg-white/50 hover:bg-white/70 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      {getRankBadge(item.rank)}
-                      <span className="font-medium text-purple-900">{item.itemName}</span>
+          {popularItems.length > 0 ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-purple-800">Top 10 Popular Items</h3>
+                <Button
+                  onClick={fetchSalesData}
+                  size="sm"
+                  variant="outline"
+                  className="border-purple-300 text-purple-700 hover:bg-purple-50"
+                >
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Refresh
+                </Button>
+              </div>
+
+              <div className="grid gap-4">
+                {popularItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between rounded-lg border border-purple-200 bg-white/50 p-4 transition-colors hover:bg-white/70"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2">
+                        {getRankBadge(item.rank)}
+                        <span className="font-medium text-purple-900">{item.itemName}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4">
+                      <div className="text-right">
+                        <div className="text-sm text-purple-600">Quantity Sold</div>
+                        <div className="font-semibold text-purple-900">{item.quantity}</div>
+                      </div>
+
+                      <div className="text-right">
+                        <div className="text-sm text-purple-600">Revenue</div>
+                        <div className="font-semibold text-purple-900">
+                          {formatCurrency(item.revenue)}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1">{getTrendIcon(item.trend)}</div>
                     </div>
                   </div>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="text-right">
-                      <div className="text-sm text-purple-600">Quantity Sold</div>
-                      <div className="font-semibold text-purple-900">{item.quantity}</div>
-                    </div>
-                    
-                    <div className="text-right">
-                      <div className="text-sm text-purple-600">Revenue</div>
-                      <div className="font-semibold text-purple-900">{formatCurrency(item.revenue)}</div>
-                    </div>
-                    
-                    <div className="flex items-center gap-1">
-                      {getTrendIcon(item.trend)}
-                    </div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
-            <p className="text-purple-700 font-medium mb-2">No Sales Data Available</p>
-            <p className="text-purple-600 text-sm">No sales were recorded yesterday. Check back later for popular items.</p>
-          </div>
-        )}
-      </CardContent>
+          ) : (
+            <div className="py-8 text-center">
+              <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
+              <p className="mb-2 font-medium text-purple-700">No Sales Data Available</p>
+              <p className="text-sm text-purple-600">
+                No sales were recorded yesterday. Check back later for popular items.
+              </p>
+            </div>
+          )}
+        </CardContent>
       )}
     </Card>
   )
-} 
+}
