@@ -12,14 +12,50 @@ export default function ProfileSetupPage() {
   useEffect(() => {
     const storedUserId = localStorage.getItem("userid")
     setUserId(storedUserId)
-    // Check for subscription data
-    const subscription = localStorage.getItem("subscription")
-    if (subscription) {
-      router.replace("/dashboard")
-      return
+
+    // Check if user has completed profile setup and has an active subscription
+    const checkUserStatus = async () => {
+      if (!storedUserId) {
+        setLoading(false)
+        return
+      }
+
+      try {
+        const token = localStorage.getItem("token")
+        if (!token) {
+          setLoading(false)
+          return
+        }
+
+        const [profileRes, subRes] = await Promise.all([
+          fetch(`/api/profile?user_id=${storedUserId}`),
+          fetch(`/api/subscription_better/status`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }),
+        ])
+
+        if (profileRes.ok && subRes.ok) {
+          const { profile } = await profileRes.json()
+          const { subscription } = await subRes.json()
+
+          // Only redirect if user has both profile and active subscription
+          if (profile?.company_name && profile?.email && subscription?.status === "active") {
+            router.replace("/dashboard")
+            return
+          }
+        }
+      } catch (error) {
+        console.error("Error checking user status:", error)
+      }
+
+      setLoading(false)
     }
-    setLoading(false)
-  }, [])
+
+    checkUserStatus()
+  }, [router])
 
   if (loading) {
     return <div>Loading...</div>

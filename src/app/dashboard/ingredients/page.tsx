@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, Pencil, Trash, FileDown, X, ChevronDown, Loader2 } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
 
 import {
   Dialog,
@@ -89,8 +90,13 @@ export default function IngredientsTable() {
   const [editSelectedAllergens, setEditSelectedAllergens] = useState<string[]>([])
   const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
   const [editAllergenDropdownOpen, setEditAllergenDropdownOpen] = useState(false)
-  const [allergenSearch, setAllergenSearch] = useState("");
-  const [editAllergenSearch, setEditAllergenSearch] = useState("");
+  const [allergenSearch, setAllergenSearch] = useState("")
+  const [editAllergenSearch, setEditAllergenSearch] = useState("")
+
+  // Multi-select state
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
+  const [selectAll, setSelectAll] = useState(false)
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false)
 
   // Use the ingredients hook
   const {
@@ -131,7 +137,10 @@ export default function IngredientsTable() {
     }
 
     // Duplicate check (case-insensitive, trimmed)
-    const exists = ingredients.some(i => i.ingredientName.trim().toLowerCase() === newIngredient.ingredientName.trim().toLowerCase())
+    const exists = ingredients.some(
+      (i) =>
+        i.ingredientName.trim().toLowerCase() === newIngredient.ingredientName.trim().toLowerCase()
+    )
     if (exists) {
       toast.error("An ingredient with this name already exists.")
       return
@@ -288,6 +297,40 @@ export default function IngredientsTable() {
     page * itemsPerPage
   )
 
+  // Multi-select functions
+  const handleSelectIngredient = (ingredientId: string) => {
+    setSelectedIngredients((prev) =>
+      prev.includes(ingredientId)
+        ? prev.filter((id) => id !== ingredientId)
+        : [...prev, ingredientId]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedIngredients([])
+      setSelectAll(false)
+    } else {
+      setSelectedIngredients(paginatedIngredients.map((ing) => ing.uuid))
+      setSelectAll(true)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedIngredients.length === 0) return
+
+    const success = await Promise.all(selectedIngredients.map((id) => deleteExistingIngredient(id)))
+
+    if (success.every(Boolean)) {
+      toast.success(`Successfully deleted ${selectedIngredients.length} ingredient(s)`)
+      setSelectedIngredients([])
+      setSelectAll(false)
+      setBulkDeleteOpen(false)
+    } else {
+      toast.error("Some ingredients failed to delete")
+    }
+  }
+
   // Loader and skeleton logic
   if (loading || allergensLoading) {
     return <IngredientsSkeleton />
@@ -313,6 +356,14 @@ export default function IngredientsTable() {
           <Button variant="outline" className="mr-5" onClick={exportToXLSX}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
+
+          {/* Bulk Delete Button */}
+          {selectedIngredients.length > 0 && (
+            <Button variant="destructive" className="mr-5" onClick={() => setBulkDeleteOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete {selectedIngredients.length} Selected
+            </Button>
+          )}
 
           {/* Add Ingredient Dialog */}
           <Dialog open={open} onOpenChange={setOpen}>
@@ -372,13 +423,19 @@ export default function IngredientsTable() {
                         <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent className="w-80" align="start">
+                    <DropdownMenuContent
+                      className="w-[var(--radix-dropdown-menu-trigger-width)]"
+                      side="bottom"
+                      align="start"
+                      sideOffset={4}
+                      avoidCollisions={false}
+                    >
                       <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
                       <DropdownMenuSeparator />
                       <Input
                         placeholder="Search allergens..."
                         value={allergenSearch}
-                        onChange={e => setAllergenSearch(e.target.value)}
+                        onChange={(e) => setAllergenSearch(e.target.value)}
                         className="mb-2 w-full px-2 py-1 text-sm"
                       />
                       {allergensError ? (
@@ -394,7 +451,9 @@ export default function IngredientsTable() {
                       ) : (
                         <div className="max-h-60 overflow-y-auto">
                           {allergens
-                            .filter(a => a.name.toLowerCase().includes(allergenSearch.toLowerCase()))
+                            .filter((a) =>
+                              a.name.toLowerCase().includes(allergenSearch.toLowerCase())
+                            )
                             .sort((a, b) => a.name.localeCompare(b.name))
                             .map((allergen) => (
                               <DropdownMenuCheckboxItem
@@ -422,11 +481,7 @@ export default function IngredientsTable() {
                   {selectedAllergens.length > 0 && (
                     <div className="mt-2 flex flex-wrap gap-1">
                       {getSelectedAllergenNames().map((name, index) => (
-                        <Badge
-                          key={selectedAllergens[index]}
-                          variant="outline"
-                          className="text-xs"
-                        >
+                        <Badge key={selectedAllergens[index]} variant="outline" className="text-xs">
                           {name}
                           <button
                             type="button"
@@ -514,8 +569,8 @@ export default function IngredientsTable() {
                   ) : (
                     <div className="space-y-4">
                       {/* Current Allergens Display */}
-                              <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
-          <Label className="mb-3 block text-sm font-medium text-orange-800">
+                      <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
+                        <Label className="mb-3 block text-sm font-medium text-orange-800">
                           Current Allergens ({editSelectedAllergens.length})
                         </Label>
                         {editSelectedAllergens.length === 0 ? (
@@ -571,22 +626,32 @@ export default function IngredientsTable() {
                               <ChevronDown className="ml-2 h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent className="max-h-48 w-full overflow-y-auto">
+                          <DropdownMenuContent
+                            className="w-[var(--radix-dropdown-menu-trigger-width)]"
+                            side="bottom"
+                            align="start"
+                            sideOffset={4}
+                            avoidCollisions={false}
+                          >
                             <DropdownMenuLabel>Available Allergens</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <Input
                               placeholder="Search allergens..."
                               value={editAllergenSearch}
-                              onChange={e => setEditAllergenSearch(e.target.value)}
+                              onChange={(e) => setEditAllergenSearch(e.target.value)}
                               className="mb-2 w-full px-2 py-1 text-sm"
                             />
-                            {getAvailableAllergens().filter(a => a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())).length === 0 ? (
+                            {getAvailableAllergens().filter((a) =>
+                              a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())
+                            ).length === 0 ? (
                               <div className="px-2 py-2 text-center text-sm text-muted-foreground">
                                 No more allergens available
                               </div>
                             ) : (
                               getAvailableAllergens()
-                                .filter(a => a.name.toLowerCase().includes(editAllergenSearch.toLowerCase()))
+                                .filter((a) =>
+                                  a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())
+                                )
                                 .sort((a, b) => a.name.localeCompare(b.name))
                                 .map((allergen) => (
                                   <DropdownMenuItem
@@ -698,11 +763,25 @@ export default function IngredientsTable() {
               className="m-6 w-full p-6 sm:w-64"
             />
           </div>
+
+          {/* Selection info */}
+          {selectedIngredients.length > 0 && (
+            <div className="text-sm text-muted-foreground">
+              {selectedIngredients.length} ingredient(s) selected
+            </div>
+          )}
         </div>
 
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-12">
+                <Checkbox
+                  checked={selectAll}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all ingredients"
+                />
+              </TableHead>
               <TableHead className="w-1/4">Name</TableHead>
               <TableHead className="w-1/4">Expiry Days</TableHead>
               <TableHead className="w-1/4">Allergens</TableHead>
@@ -712,6 +791,13 @@ export default function IngredientsTable() {
           <TableBody>
             {paginatedIngredients.map((ingredient) => (
               <TableRow key={ingredient.uuid}>
+                <TableCell>
+                  <Checkbox
+                    checked={selectedIngredients.includes(ingredient.uuid)}
+                    onCheckedChange={() => handleSelectIngredient(ingredient.uuid)}
+                    aria-label={`Select ${ingredient.ingredientName}`}
+                  />
+                </TableCell>
                 <TableCell>{ingredient.ingredientName}</TableCell>
                 <TableCell>{ingredient.expiryDays}</TableCell>
                 <TableCell>
@@ -813,6 +899,36 @@ export default function IngredientsTable() {
           </Button>
         </div>
       </div>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <AlertDialog open={bulkDeleteOpen} onOpenChange={setBulkDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Multiple Ingredients</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {selectedIngredients.length} selected ingredient(s)?
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleBulkDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                `Delete ${selectedIngredients.length} Ingredient(s)`
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

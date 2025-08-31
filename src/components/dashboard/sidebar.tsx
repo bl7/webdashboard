@@ -40,9 +40,9 @@ const NAV_ITEMS = [
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
 
-const ADMIN_ROUTES = NAV_ITEMS.filter((i) => !["Dashboard", "Print Label", "PrintBridge Test"].includes(i.label)).map(
-  (i) => i.href
-)
+const ADMIN_ROUTES = NAV_ITEMS.filter(
+  (i) => !["Dashboard", "Print Label", "PrintBridge Test"].includes(i.label)
+).map((i) => i.href)
 
 interface SidebarProps {
   isSetupPage?: boolean
@@ -76,7 +76,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const filteredNavItems = isAdmin
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label));
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label))
   const isExpanded = sidebarOpen || sidebarMobile
 
   // Insert PPDS link for admins only after 'Print Label'
@@ -86,7 +86,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         { label: "PPDS", icon: <FaPrint />, href: "/dashboard/ppds" },
         ...NAV_ITEMS.slice(3),
       ]
-    : filteredNavItems;
+    : filteredNavItems
 
   // Load initial data from localStorage
   useEffect(() => {
@@ -123,9 +123,9 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
           fetch(`/api/profile?user_id=${userId}`),
           fetch(`/api/subscription_better/status`, {
             headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            }
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
           }),
           fetch(`/api/admin-access?user_id=${userId}`),
         ])
@@ -179,7 +179,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const handleLogout = () => {
     if (!mounted) return
-    ;["token", "userid", "name", "profilePicture", "adminAccess"].forEach((k) =>
+    ;["token", "userid", "name", "profilePicture", "adminAccess", "profileData"].forEach((k) =>
       localStorage.removeItem(k)
     )
     setIsAdmin(false)
@@ -216,14 +216,14 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
     <Tooltip.Provider>
       <div className="sticky top-0 z-20 h-screen shrink-0 overflow-y-auto">
         {/* Mobile Toggle Button */}
-        <div className="fixed left-0 top-0 z-50 flex items-center h-16 w-full bg-transparent lg:hidden">
-        <button
-          onClick={toggleSidebar}
+        <div className="fixed left-0 top-0 z-50 flex h-16 w-full items-center bg-transparent lg:hidden">
+          <button
+            onClick={toggleSidebar}
             className="ml-4 flex h-10 w-10 items-center justify-center rounded-md bg-[hsl(var(--primary))] text-white shadow-lg"
-          aria-label="Toggle Sidebar"
-        >
-          {sidebarMobile ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
-        </button>
+            aria-label="Toggle Sidebar"
+          >
+            {sidebarMobile ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
+          </button>
         </div>
 
         {/* Desktop Toggle Button - positioned at sidebar edge */}
@@ -272,14 +272,14 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                 className="transition-opacity"
               />
             ) : (
-              <div className="w-full flex items-center justify-center">
-              <Image
-                src="/logo_sm_white.png"
-                alt="Small Logo"
+              <div className="flex w-full items-center justify-center">
+                <Image
+                  src="/logo_sm_white.png"
+                  alt="Small Logo"
                   width={40}
                   height={40}
-                className="transition-opacity"
-              />
+                  className="transition-opacity"
+                />
               </div>
             )}
           </div>

@@ -20,7 +20,7 @@ import * as XLSX from "xlsx"
 import { useAllergens, type Allergen } from "@/hooks/useAllergens"
 import { allergenIconMap } from "../../../components/allergenicons"
 import allergenColorMap from "@/components/allergencolormap"
-import AppLoader from "@/components/AppLoader" 
+import AppLoader from "@/components/AppLoader"
 import { toast } from "sonner"
 
 function AllergensSkeleton() {
@@ -98,7 +98,9 @@ export default function AllergenDashboard() {
     if (!newAllergenName.trim()) return
 
     // Duplicate check (case-insensitive, trimmed)
-    const exists = allergens.some(a => a.name.trim().toLowerCase() === newAllergenName.trim().toLowerCase())
+    const exists = allergens.some(
+      (a) => a.name.trim().toLowerCase() === newAllergenName.trim().toLowerCase()
+    )
     if (exists) {
       toast.error("An allergen with this name already exists.")
       return

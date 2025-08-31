@@ -55,7 +55,7 @@ DECLARE
     company_name TEXT;
 BEGIN
     -- Get user details
-    SELECT email, full_name, company INTO user_email, user_name, company_name
+    SELECT email, full_name, company_name INTO user_email, user_name, company_name
     FROM user_profiles 
     WHERE user_id = NEW.user_id;
     
@@ -91,7 +91,7 @@ DECLARE
 BEGIN
     IF OLD.plan_name != NEW.plan_name THEN
         -- Get user details
-        SELECT email, full_name, company INTO user_email, user_name, company_name
+        SELECT email, full_name, company_name INTO user_email, user_name, company_name
         FROM user_profiles 
         WHERE user_id = NEW.user_id;
         
@@ -127,12 +127,12 @@ DECLARE
     user_name TEXT;
     company_name TEXT;
 BEGIN
-    -- Check if subscription was cancelled
-    IF OLD.status != 'canceled' AND NEW.status = 'canceled' THEN
-        -- Get user details
-        SELECT email, full_name, company INTO user_email, user_name, company_name
-        FROM user_profiles 
-        WHERE user_id = NEW.user_id;
+            -- Check if subscription was cancelled
+        IF OLD.status != 'canceled' AND NEW.status = 'canceled' THEN
+            -- Get user details
+            SELECT email, full_name, company_name INTO user_email, user_name, company_name
+            FROM user_profiles 
+            WHERE user_id = NEW.user_id;
         
         PERFORM create_admin_notification(
             'cancellation',

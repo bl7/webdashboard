@@ -11,7 +11,9 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  if (token && !isAuthRoute) {
+  // Allow authenticated users to access setup and other specific routes
+  const allowedAuthenticatedRoutes = ["/setup", "/dashboard"]
+  if (token && !isAuthRoute && !allowedAuthenticatedRoutes.includes(pathname)) {
     const dashboardUrl = new URL("/dashboard", req.url)
     return NextResponse.redirect(dashboardUrl)
   }

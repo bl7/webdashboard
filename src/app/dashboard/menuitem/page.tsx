@@ -13,6 +13,7 @@ import {
   DialogDescription,
 } from "@/components/ui"
 import { Plus, Eye, Pencil, Trash, FileDown, X, ChevronDown } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -69,6 +70,11 @@ export default function MenuItemsDashboard() {
   const [ingredientSearch, setIngredientSearch] = useState("")
   const [editIngredientSearch, setEditIngredientSearch] = useState("")
 
+  // Multi-select state
+  const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([])
+  const [selectAll, setSelectAll] = useState(false)
+  const [bulkDeleteOpen, setBulkDeleteOpen] = useState(false)
+
   const {
     menuItems,
     loading,
@@ -89,13 +95,35 @@ export default function MenuItemsDashboard() {
   const maxPages = Math.ceil(filtered.length / perPage)
 
   const handleExportExcel = () => {
-    const exportData = filtered.map((item) => ({
-      ID: item.menuItemID,
-      Name: item.menuItemName,
-      Ingredients: item.ingredients.map((ing) => ing.ingredientName).join(", "),
-      Allergens: item.allergens.map((all) => all.allergenName).join(", "),
-      ExpiryDays: item.expiryDays || "N/A",
-    }))
+    // Create export data in the template format
+    const exportData: Array<{
+      menu_item_name: string
+      ingredient_name: string
+      shelf_life_days: string | number
+      allergens: string
+    }> = []
+
+    filtered.forEach((item) => {
+      // For each ingredient in the menu item, create a separate row
+      item.ingredients.forEach((ingredient) => {
+        // Find the ingredient's expiry days from the ingredients list
+        const ingredientData = ingredients.find((ing) => ing.uuid === ingredient.uuid)
+        const expiryDays = ingredientData?.expiryDays || "N/A"
+
+        // Get allergens for this specific ingredient
+        const ingredientAllergens = ingredientData?.allergens?.map((a) => a.allergenName) || []
+        const allergensText =
+          ingredientAllergens.length > 0 ? ingredientAllergens.join(", ") : "None"
+
+        exportData.push({
+          menu_item_name: item.menuItemName,
+          ingredient_name: ingredient.ingredientName,
+          shelf_life_days: expiryDays,
+          allergens: allergensText,
+        })
+      })
+    })
+
     const worksheet = XLSX.utils.json_to_sheet(exportData)
     const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(workbook, worksheet, "MenuItems")
@@ -222,6 +250,38 @@ export default function MenuItemsDashboard() {
     return ingredients.filter((ing) => !ingredientIds.includes(ing.uuid))
   }
 
+  // Multi-select functions
+  const handleSelectMenuItem = (menuItemId: string) => {
+    setSelectedMenuItems((prev) =>
+      prev.includes(menuItemId) ? prev.filter((id) => id !== menuItemId) : [...prev, menuItemId]
+    )
+  }
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      setSelectedMenuItems([])
+      setSelectAll(false)
+    } else {
+      setSelectedMenuItems(paginated.map((item) => item.menuItemID))
+      setSelectAll(true)
+    }
+  }
+
+  const handleBulkDelete = async () => {
+    if (selectedMenuItems.length === 0) return
+
+    const success = await Promise.all(selectedMenuItems.map((id) => deleteExistingMenuItem(id)))
+
+    if (success.every(Boolean)) {
+      toast.success(`Successfully deleted ${selectedMenuItems.length} menu item(s)`)
+      setSelectedMenuItems([])
+      setSelectAll(false)
+      setBulkDeleteOpen(false)
+    } else {
+      toast.error("Some menu items failed to delete")
+    }
+  }
+
   // Loading state
   if (loading && menuItems.length === 0) {
     return <MenuItemsSkeleton />
@@ -249,6 +309,15 @@ export default function MenuItemsDashboard() {
           <Button variant="outline" className="mr-5" onClick={handleExportExcel}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
+
+          {/* Bulk Delete Button */}
+          {selectedMenuItems.length > 0 && (
+            <Button variant="destructive" className="mr-5" onClick={() => setBulkDeleteOpen(true)}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete {selectedMenuItems.length} Selected
+            </Button>
+          )}
+
           <Button onClick={() => setShowAddModal(true)} variant="default">
             <Plus className="mr-2 h-4 w-4" />
             Add Menu Item
@@ -278,10 +347,24 @@ export default function MenuItemsDashboard() {
             onChange={(e) => setQuery(e.target.value)}
             disabled={loading}
           />
+
+          {/* Selection info */}
+          {selectedMenuItems.length > 0 && (
+            <div className="text-sm text-muted-foreground">
+              {selectedMenuItems.length} menu item(s) selected
+            </div>
+          )}
         </div>
         <table className="min-w-full text-left text-sm">
           <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
             <tr>
+              <th className="w-12 px-6 py-4">
+                <Checkbox
+                  checked={selectAll}
+                  onCheckedChange={handleSelectAll}
+                  aria-label="Select all menu items"
+                />
+              </th>
               <th className="px-6 py-4">Name</th>
               <th className="px-6 py-4">Ingredients</th>
               <th className="px-6 py-4">Allergens</th>
@@ -292,6 +375,13 @@ export default function MenuItemsDashboard() {
           <tbody className="divide-y divide-border">
             {paginated.map((item) => (
               <tr key={item.menuItemID} className="transition hover:bg-muted">
+                <td className="px-6 py-4">
+                  <Checkbox
+                    checked={selectedMenuItems.includes(item.menuItemID)}
+                    onCheckedChange={() => handleSelectMenuItem(item.menuItemID)}
+                    aria-label={`Select ${item.menuItemName}`}
+                  />
+                </td>
                 <td className="px-6 py-4 font-medium">{item.menuItemName}</td>
                 <td className="px-6 py-4">
                   {item.ingredients.map((ing) => ing.ingredientName).join(", ")}
@@ -338,7 +428,7 @@ export default function MenuItemsDashboard() {
             ))}
             {paginated.length === 0 && (
               <tr>
-                <td colSpan={5} className="py-8 text-center text-muted-foreground">
+                <td colSpan={6} className="py-8 text-center text-muted-foreground">
                   No menu items found.
                 </td>
               </tr>
@@ -445,7 +535,13 @@ export default function MenuItemsDashboard() {
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)]"
+                  side="bottom"
+                  align="start"
+                  sideOffset={4}
+                  avoidCollisions={false}
+                >
                   <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <Input
@@ -586,7 +682,13 @@ export default function MenuItemsDashboard() {
                     <ChevronDown className="ml-2 h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
+                <DropdownMenuContent
+                  className="w-[var(--radix-dropdown-menu-trigger-width)]"
+                  side="bottom"
+                  align="start"
+                  sideOffset={4}
+                  avoidCollisions={false}
+                >
                   <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <Input
@@ -705,6 +807,40 @@ export default function MenuItemsDashboard() {
             <Button onClick={() => setSelected(null)}>
               <X className="mr-2 h-4 w-4" />
               Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Bulk Delete Confirmation Dialog */}
+      <Dialog open={bulkDeleteOpen} onOpenChange={() => setBulkDeleteOpen(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Multiple Menu Items</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete {selectedMenuItems.length} selected menu item(s)? This
+              action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <p className="text-sm text-muted-foreground">
+              This will permanently delete {selectedMenuItems.length} menu item(s). This action
+              cannot be undone.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setBulkDeleteOpen(false)
+                setSelectedMenuItems([])
+                setSelectAll(false)
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleBulkDelete}>
+              {loading ? "Deleting..." : `Delete ${selectedMenuItems.length} Menu Item(s)`}
             </Button>
           </DialogFooter>
         </DialogContent>

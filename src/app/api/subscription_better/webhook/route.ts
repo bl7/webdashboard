@@ -269,14 +269,14 @@ export async function POST(req: NextRequest) {
               trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency,
               cancel_at_period_end, pending_plan_change, pending_plan_change_effective,
               card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint,
-              created_at, updated_at, price_id, plan_interval,
+              price_id, plan_interval,
               refund_due_at, refund_amount, pending_price_id, pending_plan_interval, pending_plan_name, cancel_at
             ) VALUES (
               $1, $2, $3, $4, $5, $6,
               to_timestamp($7), to_timestamp($8), to_timestamp($9), to_timestamp($10), $11, $12, $13,
               $14, $15, to_timestamp($16),
               $17, $18, $19, $20, $21, $22,
-              NOW(), NOW(), $23, $24,
+              $23, $24,
               to_timestamp($25), $26, $27, $28, $29, to_timestamp($30)
             )
             ON CONFLICT (user_id) DO UPDATE SET
@@ -756,14 +756,14 @@ export async function POST(req: NextRequest) {
               trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency,
               cancel_at_period_end, pending_plan_change, pending_plan_change_effective,
               card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint,
-              created_at, updated_at, price_id, plan_interval,
+              price_id, plan_interval,
               refund_due_at, refund_amount, pending_price_id, pending_plan_interval, pending_plan_name, cancel_at
             ) VALUES (
               $1, $2, $3, $4, $5, $6,
               to_timestamp($7), to_timestamp($8), to_timestamp($9), to_timestamp($10), $11, $12, $13,
               $14, $15, to_timestamp($16),
               $17, $18, $19, $20, $21, $22,
-              NOW(), NOW(), $23, $24,
+              $23, $24,
               to_timestamp($25), $26, $27, $28, $29, to_timestamp($30)
             )
             ON CONFLICT (user_id) DO UPDATE SET
@@ -910,14 +910,14 @@ export async function POST(req: NextRequest) {
               trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency,
               cancel_at_period_end, pending_plan_change, pending_plan_change_effective,
               card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint,
-              created_at, updated_at, price_id, plan_interval,
+              price_id, plan_interval,
               refund_due_at, refund_amount, pending_price_id, pending_plan_interval, pending_plan_name, cancel_at
             ) VALUES (
               $1, $2, $3, $4, $5, $6,
               to_timestamp($7), to_timestamp($8), to_timestamp($9), to_timestamp($10), $11, $12, $13,
               $14, $15, to_timestamp($16),
               $17, $18, $19, $20, $21, $22,
-              NOW(), NOW(), $23, $24,
+              $23, $24,
               to_timestamp($25), $26, $27, $28, $29, to_timestamp($30)
             )
             ON CONFLICT (user_id) DO UPDATE SET
@@ -1103,18 +1103,18 @@ export async function POST(req: NextRequest) {
               user_id, stripe_customer_id, stripe_subscription_id, plan_id, price_id, plan_name, plan_interval, status,
               trial_start, trial_end, current_period_start, current_period_end, billing_interval, amount, currency,
               cancel_at_period_end, pending_plan_change, pending_plan_change_effective,
-              card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint, created_at, updated_at
+              card_brand, card_last4, card_exp_month, card_exp_year, card_country, card_fingerprint
             ) VALUES (
               $1, $2, $3, $4, $5, $6, $7,
-              $8, to_timestamp($9), to_timestamp($10), to_timestamp($11), $12, $13, $14,
-              $15, $16, to_timestamp($17),
-              $18, $19, $20, $21, $22, $23, NOW(), NOW()
+              $8, $9, $10, $11, $12, $13, $14,
+              $15, $16, $17,
+              $18, $19, $20, $21, $22, $23, $24
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, price_id = $5, plan_name = $6, plan_interval = $7, status = $8,
-              trial_start = to_timestamp($9), trial_end = to_timestamp($10), current_period_start = to_timestamp($11), current_period_end = to_timestamp($12),
+              trial_start = $9, trial_end = $10, current_period_start = $11, current_period_end = $12,
               billing_interval = $13, amount = $14, currency = $15, cancel_at_period_end = $16,
-              pending_plan_change = $17, pending_plan_change_effective = to_timestamp($18),
+              pending_plan_change = $17, pending_plan_change_effective = $18,
               card_brand = $19, card_last4 = $20, card_exp_month = $21, card_exp_year = $22, card_country = $23, card_fingerprint = $24, updated_at = NOW()`,
             [
               user_id,
@@ -1125,16 +1125,22 @@ export async function POST(req: NextRequest) {
               plan_name,
               plan_interval,
               sub.status,
-              sub.trial_start || null,
-              sub.trial_end || null,
-              sub.items.data[0]?.current_period_start || null,
-              sub.items.data[0]?.current_period_end || null,
+              sub.trial_start ? new Date(Number(sub.trial_start) * 1000) : null,
+              sub.trial_end ? new Date(Number(sub.trial_end) * 1000) : null,
+              sub.items.data[0]?.current_period_start
+                ? new Date(Number(sub.items.data[0].current_period_start) * 1000)
+                : null,
+              sub.items.data[0]?.current_period_end
+                ? new Date(Number(sub.items.data[0].current_period_end) * 1000)
+                : null,
               sub.items.data[0]?.price?.recurring?.interval || null,
               sub.items.data[0]?.price?.unit_amount || null,
               sub.items.data[0]?.price?.currency || null,
               sub.cancel_at_period_end || false,
               sub.metadata?.pending_plan_change || null,
-              sub.metadata?.pending_plan_change_effective || null,
+              sub.metadata?.pending_plan_change_effective
+                ? new Date(Number(sub.metadata.pending_plan_change_effective) * 1000)
+                : null,
               card?.brand || null,
               card?.last4 || null,
               card?.exp_month || null,

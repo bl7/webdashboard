@@ -17,7 +17,7 @@ import { useState, useCallback } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { loginUser } from "@/lib/api" 
+import { loginUser } from "@/lib/api"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -50,9 +50,41 @@ export function LoginForm() {
           console.log("full_name", localStorage.getItem("full_name"))
           console.log("userid", localStorage.getItem("userid"))
           toast.success("Login successful")
-          router.push("/dashboard")
           localStorage.setItem("name", response.name)
           console.log("receicved data", response)
+
+          // Check user status and redirect appropriately
+          try {
+            const [profileRes, subRes] = await Promise.all([
+              fetch(`/api/profile?user_id=${response.uuid}`),
+              fetch(`/api/subscription_better/status`, {
+                headers: {
+                  Authorization: `Bearer ${response.token}`,
+                  "Content-Type": "application/json",
+                },
+              }),
+            ])
+
+            if (profileRes.ok && subRes.ok) {
+              const { profile } = await profileRes.json()
+              const { subscription } = await subRes.json()
+
+              // If user has both profile and active subscription, go to dashboard
+              if (profile?.company_name && profile?.email && subscription?.status === "active") {
+                router.push("/dashboard")
+              } else {
+                // Otherwise, go to setup to complete profile/subscription
+                router.push("/setup")
+              }
+            } else {
+              // If we can't check status, go to setup
+              router.push("/setup")
+            }
+          } catch (error) {
+            console.error("Error checking user status:", error)
+            // If there's an error, go to setup
+            router.push("/setup")
+          }
         } else {
           toast.error("Invalid login response")
         }
