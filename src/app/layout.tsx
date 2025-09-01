@@ -76,15 +76,22 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/logo_sm.png",
-        href: "/logo_sm.png",
-      },
-      {
         url: "/favicon.ico",
         sizes: "any",
       },
+      {
+        url: "/logo_sm.png",
+        sizes: "32x32",
+        type: "image/png",
+      },
     ],
-    apple: "/logo_sm.png",
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
     shortcut: "/favicon.ico",
   },
   openGraph: {
