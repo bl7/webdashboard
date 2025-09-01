@@ -246,27 +246,14 @@ export default function LabelRender({
   }
 
   // --- COOK/PREP Menu Labels ---
-  if ((item.labelType === "cooked" || item.labelType === "prep" || item.labelType === "default") && item.type === "menu") {
-    const containsLine = allergenicIngredients.map((ing, idx) => (
-      <span key={ing + idx} style={{ fontWeight: 600, fontFamily: "inherit" }}>
-        {capitalize(ing)}
-        {allergenMap[ing] && allergenMap[ing].length > 0 && (
-          <>
-            {" "}
-            (
-            <span style={{ fontWeight: 900, fontFamily: "inherit" }}>
-              {allergenMap[ing].map((a, i) => (
-                <span key={a + i} style={{ fontWeight: 900, fontFamily: "inherit" }}>
-                  *{a}*{i < allergenMap[ing].length - 1 ? ", " : ""}
-                </span>
-              ))}
-            </span>
-            )
-          </>
-        )}
-        {idx < allergenicIngredients.length - 1 && ", "}
-      </span>
-    ))
+  if (
+    (item.labelType === "cooked" || item.labelType === "prep" || item.labelType === "default") &&
+    item.type === "menu"
+  ) {
+    // Get unique allergens for this menu item
+    const uniqueAllergens = Array.from(
+      new Set(allergenicIngredients.flatMap((ing) => allergenMap[ing] || []))
+    )
 
     return (
       <div style={baseStyle}>
@@ -328,10 +315,14 @@ export default function LabelRender({
           }}
         >
           <span style={{ fontWeight: 700, fontFamily: "inherit" }}>Contains: </span>
-          {allergenicIngredients.length === 0 ? (
-            <span style={{ fontWeight: 500, fontFamily: "inherit" }}>None</span>
+          {uniqueAllergens.length === 0 ? (
+            <span style={{ fontWeight: 500, fontFamily: "inherit" }}>
+              Does not contain any allergens
+            </span>
           ) : (
-            containsLine
+            <span style={{ fontWeight: 600, fontFamily: "inherit" }}>
+              {uniqueAllergens.join(", ")}
+            </span>
           )}
         </div>
       </div>
@@ -411,7 +402,10 @@ export default function LabelRender({
   // --- Ingredient Labels ---
   if (
     item.type === "ingredients" &&
-    (!item.labelType || item.labelType === "cooked" || item.labelType === "prep" || item.labelType === "default")
+    (!item.labelType ||
+      item.labelType === "cooked" ||
+      item.labelType === "prep" ||
+      item.labelType === "default")
   ) {
     return (
       <div style={baseStyle}>
