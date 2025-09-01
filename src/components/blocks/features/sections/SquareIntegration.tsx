@@ -19,11 +19,7 @@ import Image from "next/image"
 
 export const SquareIntegration = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 py-24">
-      {/* Background Elements */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-20 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-20 blur-3xl" />
-
+    <section className="relative overflow-hidden bg-white py-24">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

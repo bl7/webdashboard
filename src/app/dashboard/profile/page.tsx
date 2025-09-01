@@ -6,14 +6,14 @@ import { toast } from "sonner"
 import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import OrderLabelsTab from './OrderLabelsTab'
+import OrderLabelsTab from "./OrderLabelsTab"
 import Image from "next/image"
 
 const features = [
   "Device Provided",
   "Unlimited Label Printing",
   "Access to Web Dashboard",
-  "Sunmi Printer Support",
+  "Mobile App Access",
   "Weekly Free Prints",
 ]
 
@@ -26,7 +26,7 @@ const plans = [
       "Device Provided": "Epson TM-M30 Included",
       "Unlimited Label Printing": true,
       "Access to Web Dashboard": false,
-      "Sunmi Printer Support": false,
+      "Mobile App Access": false,
       "Weekly Free Prints": false,
     },
     description:
@@ -39,14 +39,14 @@ const plans = [
     monthly: "£25/mo",
     yearly: "£270/yr",
     features: {
-      "Device Provided": "Sunmi or Epson Included",
+      "Device Provided": "Mobile Device or Epson Included",
       "Unlimited Label Printing": true,
       "Access to Web Dashboard": true,
-      "Sunmi Printer Support": true,
+      "Mobile App Access": true,
       "Weekly Free Prints": false,
     },
     description:
-      "Everything in Basic plus Web Dashboard access and support for Sunmi touchscreen printers.",
+      "Everything in Basic plus Web Dashboard access and support for mobile devices and touchscreen printers.",
     highlight: false,
     cta: "Go Premium",
   },
@@ -55,7 +55,7 @@ const plans = [
 const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 const ProfileDashboard = () => {
-  const [activeTab, setActiveTab] = useState<'account' | 'billing' | 'labels'>('account')
+  const [activeTab, setActiveTab] = useState<"account" | "billing" | "labels">("account")
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [companyName, setCompanyName] = useState("")
   const [userId, setUserId] = useState<string | null>(null)
@@ -236,18 +236,18 @@ const ProfileDashboard = () => {
       {/* --- Tabs section (add Order Labels tab) --- */}
       <div className="mb-6 flex border-b">
         {[
-          { key: 'account', label: 'Account' },
-          { key: 'billing', label: 'Billing' },
-          { key: 'labels', label: 'Order Labels' },
+          { key: "account", label: "Account" },
+          { key: "billing", label: "Billing" },
+          { key: "labels", label: "Order Labels" },
         ].map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key as 'account' | 'billing' | 'labels')}
+            onClick={() => setActiveTab(tab.key as "account" | "billing" | "labels")}
             className={cn(
-              'border-b-2 px-4 py-2 text-sm font-medium transition',
+              "border-b-2 px-4 py-2 text-sm font-medium transition",
               activeTab === tab.key
-                ? 'border-primary text-primary'
-                : 'border-transparent text-muted-foreground hover:text-primary'
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-primary"
             )}
           >
             {tab.label}
@@ -255,7 +255,7 @@ const ProfileDashboard = () => {
         ))}
       </div>
 
-      {activeTab === 'account' && (
+      {activeTab === "account" && (
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Profile Card */}
           <div className="flex flex-col items-center rounded-xl border bg-white p-6 shadow-sm">
@@ -277,13 +277,11 @@ const ProfileDashboard = () => {
             </div>
             <h2 className="text-lg font-semibold">{name}</h2>
             <p className="text-center text-sm text-muted-foreground">{email}</p>
-            
+
             {/* Company Name and Email Section */}
             <div className="mt-4 w-full space-y-3">
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-700">
-                  Company Name
-                </label>
+                <label className="mb-1 block text-xs font-medium text-gray-700">Company Name</label>
                 <Input
                   type="text"
                   value={companyName}
@@ -292,11 +290,9 @@ const ProfileDashboard = () => {
                   className="text-sm"
                 />
               </div>
-              
+
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-700">
-                  Name
-                </label>
+                <label className="mb-1 block text-xs font-medium text-gray-700">Name</label>
                 <Input
                   type="text"
                   value={name}
@@ -305,11 +301,9 @@ const ProfileDashboard = () => {
                   className="text-sm"
                 />
               </div>
-              
+
               <div>
-                <label className="mb-1 block text-xs font-medium text-gray-700">
-                  Email
-                </label>
+                <label className="mb-1 block text-xs font-medium text-gray-700">Email</label>
                 <Input
                   type="email"
                   value={email}
@@ -318,7 +312,7 @@ const ProfileDashboard = () => {
                   className="text-sm"
                 />
               </div>
-              
+
               <Button onClick={handleSave} className="w-full text-sm">
                 Save Changes
               </Button>
@@ -416,9 +410,9 @@ const ProfileDashboard = () => {
         </div>
       )}
 
-      {activeTab === 'billing' && userId && <Billing />}
+      {activeTab === "billing" && userId && <Billing />}
 
-      {activeTab === 'labels' && <OrderLabelsTab />}
+      {activeTab === "labels" && <OrderLabelsTab />}
 
       {/* Avatar Modal */}
       {showModal && (
@@ -448,8 +442,6 @@ const ProfileDashboard = () => {
           </div>
         </div>
       )}
-
-    
     </div>
   )
 }

@@ -37,10 +37,10 @@ export const HowItWorks = () => (
             desc: "Import your menu and ingredients, or enter them manually in minutes.",
           },
           {
-            icon: <Printer className="h-8 w-8 text-pink-600" />,
-            bg: "bg-pink-100",
-            title: "Connect Any Printer",
-            desc: "Works with any USB label printer — no special hardware required.",
+            icon: <Printer className="h-8 w-8 text-purple-600" />,
+            bg: "bg-purple-100",
+            title: "Print Labels",
+            desc: "Print from the dashboard or directly on mobile devices with our app.",
           },
           {
             icon: <Layers className="h-8 w-8 text-blue-600" />,
@@ -52,7 +52,7 @@ export const HowItWorks = () => (
             icon: <Smartphone className="h-8 w-8 text-green-600" />,
             bg: "bg-green-100",
             title: "Print Instantly",
-            desc: "Print from the dashboard or directly on a Sunmi device (app runs natively).",
+            desc: "Print from the dashboard or directly on mobile devices with our app.",
           },
         ].map((step, i) => (
           <motion.div
@@ -73,12 +73,11 @@ export const HowItWorks = () => (
           </motion.div>
         ))}
       </div>
-      {/* Sunmi Device Note */}
-      <div className="mt-8 flex items-center justify-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700">
-          <Smartphone className="h-5 w-5 text-blue-600" />
-          Print directly from Sunmi device — InstaLabel app runs natively on Sunmi Android.
-        </span>
+      {/* Mobile Device Note */}
+      <div className="mt-4 rounded-lg bg-purple-50 p-4 text-center">
+        <p className="text-sm text-purple-800">
+          Print directly from mobile devices — InstaLabel app runs on Android and iOS.
+        </p>
       </div>
     </div>
   </section>

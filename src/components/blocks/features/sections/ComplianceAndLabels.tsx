@@ -91,7 +91,7 @@ export const ComplianceAndLabels = () => {
   const next = () => setCurrent((c) => (c === screenshots.length - 1 ? 0 : c + 1))
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50 to-pink-50 py-20">
+    <section className="relative overflow-hidden bg-white py-20">
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]" />
       <div className="container mx-auto max-w-5xl px-4">
         {/* Split/gradient header */}
@@ -105,7 +105,7 @@ export const ComplianceAndLabels = () => {
           <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
             Stay Compliant, Print with Confidence
           </div>
-          <h3 className="text-center text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h3 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">
             Stay Compliant, Print with Confidence
           </h3>
           <p className="mx-auto mt-4 max-w-2xl text-center text-lg font-medium text-gray-700">
@@ -122,18 +122,18 @@ export const ComplianceAndLabels = () => {
         >
           <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-2">
             <div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                Natasha’s Law (Sale Labels)
-              </h3>
+              <h4 className="mb-2 text-lg font-semibold text-gray-900">
+                Natasha's Law (Sale Labels)
+              </h4>
               <ul className="mb-6 list-disc pl-5 text-gray-700">
                 <li>Allergen summary and inline highlighting</li>
                 <li>Customisable storage instructions</li>
                 <li>Business name and traceability info</li>
                 <li>80mm label layout for maximum clarity</li>
               </ul>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
+              <h4 className="mb-2 text-lg font-semibold text-gray-900">
                 EHO Prep Labels (Back of House)
-              </h3>
+              </h4>
               <ul className="list-disc pl-5 text-gray-700">
                 <li>Clear, bold expiry date for easy identification</li>
                 <li>Printed date, item location, allergens, staff initials</li>
@@ -195,9 +195,9 @@ export const ComplianceAndLabels = () => {
         viewport={{ once: true }}
         className="mx-auto mt-20 max-w-5xl px-4"
       >
-        <h3 className="mb-4 text-center text-2xl font-bold text-gray-900">
+        <h4 className="mb-4 text-center text-lg font-bold text-gray-900">
           Web Interface Screenshots
-        </h3>
+        </h4>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
           {screenshots.map((img, idx) => (
             <motion.button

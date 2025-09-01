@@ -504,7 +504,7 @@ export default function DevicesPage() {
                           onChange={(e) =>
                             setEditingDevice((prev) => ({ ...prev, device_type: e.target.value }))
                           }
-                          placeholder="e.g., Sunmi T2, Sunmi L2"
+                          placeholder="e.g., Mobile Device, Epson TM-T20"
                           className="mt-1"
                         />
                       ) : (

@@ -160,19 +160,17 @@ const knowledgeBase = [
       "mobile printing",
       "mobile devices",
       "android",
-      "sunmi",
       "print from mobile",
       "phone printing",
       "tablet printing",
       "mobile app printing",
       "mobile label printing",
-      "sunmi printing",
       "android app printing",
       "mobile printing support",
       "mobile printing capability",
     ],
     answer:
-      "Yes! InstaLabel supports mobile printing through our Android app, specifically designed for Sunmi devices. Sunmi devices have built-in thermal printers, making them perfect for mobile kitchens, food trucks, and outdoor catering. The mobile app provides the same labeling capabilities as the web dashboard, allowing you to print professional labels anywhere. For other mobile devices, you can access the web dashboard and print through compatible Bluetooth thermal printers.",
+      "Yes! InstaLabel supports mobile printing through our Android app, designed for mobile devices with thermal printers. The mobile app provides the same labeling capabilities as the web dashboard, allowing you to print labels from anywhere in your kitchen or on the go.",
   },
   {
     keywords: ["customizable", "templates", "branding", "business name", "label customization"],
@@ -188,16 +186,15 @@ const knowledgeBase = [
       "thermal printer",
       "usb",
       "bluetooth",
-      "sunmi",
       "hardware compatibility",
     ],
     answer:
-      "InstaLabel supports multiple printer types: **USB thermal printers** (any TSPL compliant hardware), **Bluetooth thermal printers** for mobile use, and **Sunmi devices** with built-in printers. We have native Sunmi support - no additional hardware needed. For USB/Bluetooth printing, we use PrintBridge technology that works on both Windows (.NET) and macOS (Node.js). Any thermal printer commonly used in commercial kitchens will work, including popular brands like Brother, Zebra, and others. No special hardware required beyond a standard thermal printer.",
+      "InstaLabel supports multiple printing methods: **USB thermal printers** for desktop use, **Bluetooth thermal printers** for mobile use, and **mobile devices** with thermal printing capabilities. We have native mobile support - no additional hardware needed. For USB/Bluetooth printing, we use PrintBridge technology that works on both Windows (.NET) and macOS (Node.js). Any thermal printer commonly used in commercial kitchens will work.",
   },
   {
     keywords: ["special hardware", "equipment needed", "what equipment", "hardware requirements"],
     answer:
-      "You don't need any special hardware! InstaLabel works with standard thermal label printers that most commercial kitchens already have. For web printing, just plug in any USB thermal printer. For mobile printing, use our Android app on Sunmi devices (which have built-in printers). For Bluetooth printing, any TSPL compliant thermal printer will work. The system automatically detects and connects to available printers. No expensive proprietary hardware or special cartridges needed - just standard thermal labels.",
+      "You don't need any special hardware! InstaLabel works with standard thermal label printers that most commercial kitchens already have. For web printing, just plug in any USB thermal printer. For mobile printing, use our Android app on mobile devices (which have thermal printing capabilities). For Bluetooth printing, any TSPL compliant thermal printer will work. The system automatically detects and connects to available printers. No expensive proprietary hardware required.",
   },
   {
     keywords: ["existing printer", "current printer", "use my printer", "printer compatibility"],
@@ -208,7 +205,7 @@ const knowledgeBase = [
   {
     keywords: ["printer guide", "connecting printer", "setup guide", "printer connection"],
     answer:
-      "InstaLabel makes printer setup simple! For USB printers, just plug in and the system auto-detects them. For Bluetooth printers, pair your device and select the printer in the dashboard. For Sunmi devices, the printer is built-in and ready to use. We provide comprehensive setup guides and documentation. The system includes automatic printer detection, connection status monitoring, and troubleshooting tools. If you need help, our support team can guide you through the setup process step-by-step.",
+      "To connect a printer, simply plug it in via USB or connect via Bluetooth, then select the printer in the dashboard. For mobile devices, the printer is built-in and ready to use. We provide comprehensive setup guides and documentation. The system includes automatic printer detection, connection status monitoring, and troubleshooting tools.",
   },
   {
     keywords: [
@@ -222,7 +219,7 @@ const knowledgeBase = [
       "device compatibility",
     ],
     answer:
-      "InstaLabel supports a wide range of devices! For printers, we support any TSPL compliant thermal printer including USB thermal printers, Bluetooth thermal printers, and network-connected printers. Popular brands like Brother, Zebra, and other commercial thermal printers work seamlessly. For mobile devices, we have a dedicated Android app optimized for Sunmi devices with built-in thermal printers, perfect for mobile kitchens and food trucks. For other Android devices, you can access the web dashboard and print through compatible Bluetooth thermal printers. The system automatically detects and connects to available printers, and we provide comprehensive setup guides for all device types.",
+      "Yes! We have a dedicated Android app optimized for mobile devices with thermal printing capabilities, perfect for mobile kitchens and food trucks. For other Android devices, you can access the web dashboard and print through compatible Bluetooth thermal printers.",
   },
 
   // 3. Compliance & Safety
@@ -281,11 +278,7 @@ const knowledgeBase = [
     answer:
       "InstaLabel significantly saves time for your kitchen staff! Restaurants typically save 15+ hours per week on labeling tasks. The system eliminates handwriting, automatically calculates expiry dates, and provides bulk printing capabilities. Staff can print multiple labels in seconds instead of manually writing each one. The intuitive interface reduces training time, and the automated allergen tracking prevents time-consuming errors. This efficiency improvement typically pays for itself within the first month of use.",
   },
-  {
-    keywords: ["multiple kitchens", "locations", "multi-location", "scalable"],
-    answer:
-      "Yes! InstaLabel is designed to scale with your business. The system works for single kitchens and can expand to multiple locations. Each location can have its own printer setup while sharing the same labeling standards and compliance features. The web-based dashboard allows managers to monitor labeling across all locations from a central interface. While we're currently developing multi-user and multi-location features, the system is built with scalability in mind.",
-  },
+
   {
     keywords: ["setup", "installation", "how to start", "getting started", "how fast is setup"],
     answer:
@@ -344,7 +337,7 @@ const helpOptions = [
   { text: "Label Types & Features", keywords: ["label types", "prep labels"] },
   { text: "Allergen Management", keywords: ["allergens", "allergen handling"] },
   { text: "Printer Compatibility", keywords: ["printers", "hardware compatibility"] },
-  { text: "Mobile Printing", keywords: ["mobile printing", "sunmi"] },
+  { text: "Mobile Printing", keywords: ["mobile printing", "mobile devices"] },
   { text: "Natasha's Law Compliance", keywords: ["natasha's law", "ppds compliance"] },
   { text: "Free Trial & Demo", keywords: ["trial", "demo"] },
   { text: "Setup & Onboarding", keywords: ["setup", "get started"] },

@@ -1,34 +1,29 @@
 "use client"
 
-import { Lightbulb, ShieldCheck, Zap, Layers3, SmilePlus } from "lucide-react"
+import { CheckCircle, Globe, Download, Zap, Shield, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
-const features = [
+const setupSupport = [
   {
-    icon: <Zap className="h-6 w-6 text-purple-600" />,
-    title: "Fast Setup",
-    description:
-      "Get started in minutes with our plug-and-play system. No technical skills required.",
+    title: "Free 30-minute onboarding call",
+    description: "To verify printer compatibility",
+    icon: <Globe className="h-5 w-5 text-blue-600" />,
   },
   {
-    icon: <ShieldCheck className="h-6 w-6 text-purple-600" />,
-    title: "Reliable & Secure",
-    description: "Built with reliability and security in mind, for uninterrupted label printing.",
+    title: "Guided PrintBridge installation",
+    description: "Step-by-step assistance",
+    icon: <Download className="h-5 w-5 text-green-600" />,
   },
   {
-    icon: <Layers3 className="h-6 w-6 text-purple-600" />,
-    title: "Scalable Infrastructure",
-    description: "Whether you're a small business or a large chain, our platform grows with you.",
+    title: "15-minute staff training session",
+    description: "Via video call",
+    icon: <Zap className="h-5 w-5 text-purple-600" />,
   },
   {
-    icon: <Lightbulb className="h-6 w-6 text-purple-600" />,
-    title: "Smart Dashboard",
-    description: "Track usage, manage devices, and monitor performance with ease.",
-  },
-  {
-    icon: <SmilePlus className="h-6 w-6 text-purple-600" />,
-    title: "Friendly Support",
-    description: "Need help? Our support team is here for you — quick, helpful, and human.",
+    title: "First-week check-in",
+    description: "To ensure optimal usage",
+    icon: <Shield className="h-5 w-5 text-orange-600" />,
   },
 ]
 
@@ -40,38 +35,81 @@ export const WhyChooseUs = () => {
 
       <div className="relative mx-auto max-w-7xl space-y-16 sm:space-y-20">
         <div className="space-y-4 text-center">
-          <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Why Choose InstaLabel?
+          <h3 className="text-2xl font-bold text-gray-900 md:text-3xl">
+            System Requirements & Setup Support
           </h3>
           <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
-            We've built our platform with the needs of real businesses in mind — fast, scalable, and
-            beautifully simple.
+            Everything you need to know to get up and running with InstaLabel quickly and
+            efficiently.
           </p>
         </div>
 
-        <div className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
-                <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
-                    {feature.icon}
+        <div className="mx-auto grid max-w-5xl gap-8 md:grid-cols-2">
+          {/* Technical Requirements */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            viewport={{ once: true }}
+            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+          >
+            <h5 className="mb-4 text-lg font-semibold text-gray-900">Technical Requirements</h5>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                <span className="text-sm text-gray-700">
+                  Modern web browser (Chrome, Firefox, Safari, Edge)
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                <span className="text-sm text-gray-700">
+                  USB thermal printer OR Android device with Bluetooth printer
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                <span className="text-sm text-gray-700">
+                  Internet connection for dashboard access
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
+                <span className="text-sm text-gray-700">
+                  140MB storage space for PrintBridge (if using USB printing)
+                </span>
+              </li>
+            </ul>
+          </motion.div>
+
+          {/* Setup Support */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            viewport={{ once: true }}
+            className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+          >
+            <h5 className="mb-4 text-lg font-semibold text-gray-900">Setup Support Included</h5>
+            <div className="space-y-4">
+              {setupSupport.map((support, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="flex items-start gap-3"
+                >
+                  <div className="flex-shrink-0 rounded-lg bg-gray-100 p-2">{support.icon}</div>
+                  <div>
+                    <div className="font-medium text-gray-900">{support.title}</div>
+                    <div className="text-sm text-gray-600">{support.description}</div>
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <h3 className="mb-2 text-lg font-semibold text-gray-900">{feature.title}</h3>
-                    <p className="text-sm leading-relaxed text-gray-600">{feature.description}</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>

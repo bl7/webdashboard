@@ -33,14 +33,15 @@ Choosing the right kitchen labeling system is essential for food safety, operati
 - A print queue/spooler system to manage local printing
 - Web-based dashboard for managing ingredients, menu items, and labels
 - Support for multiple label printers (via USB or Bluetooth)
-- Sunmi label printer support (built-in)
+- Mobile app with thermal printer support
+- Mobile label printer support (built-in)
 
 What it **does not** currently include:
 
 - Inventory tracking
 - POS integration
 - Multi-location or multi-user support
-- Fully cloud-based printing (local bridge required unless using Sunmi)
+- Fully cloud-based printing (local bridge required unless using mobile devices)
 - Native mobile app
 
 **Competitors** often offer:
@@ -72,7 +73,7 @@ Some competitors follow a more complex pricing model:
 **InstaLabel** focuses on:
 
 - Clean web interface
-- Minimal setup time (especially with Sunmi devices)
+- Minimal setup time (especially with mobile devices)
 - Clear workflows for entering ingredients, menu items, and printing labels
 
 However, setup for USB/Bluetooth printing requires installing a local print server app (still in development for full cross-platform support).
@@ -90,7 +91,7 @@ Some competitors offer:
 **InstaLabel** currently supports:
 
 - Direct printing to USB/Bluetooth printers via a local print bridge
-- Native Sunmi device support (no bridge needed)
+- Native mobile device support (no bridge needed)
 - Manual entry of data (ingredients, menu items, expiry logic)
 
 Planned integrations (not yet live):
@@ -125,13 +126,13 @@ Support is responsive, but as a growing startup, InstaLabel does not yet offer:
 
 ## Conclusion
 
-**InstaLabel** is built for modern kitchens that need an easy, compliant way to print food labels — especially in small to medium-sized food businesses. It excels in allergen management, expiry date labeling, and Sunmi printer support, with a strong focus on compliance with Natasha’s Law.
+**InstaLabel** is built for modern kitchens that need an easy, compliant way to print food labels — especially in small to medium-sized food businesses. It excels in allergen management, expiry date labeling, and mobile printer support, with a strong focus on compliance with Natasha's Law.
 
 While some competitors may offer deeper integrations or enterprise-level support, InstaLabel stands out for:
 
 - Clean and practical user experience
 - Strong allergen + expiry logic
-- Direct-to-printer simplicity (especially on Sunmi)
+- Direct-to-printer simplicity (especially on mobile devices)
 - Transparent pricing and self-serve setup
 
 **If you’re looking for a lightweight, compliant, and future-focused label printing system — InstaLabel is worth a serious look.**

@@ -35,7 +35,7 @@ export const Footer = () => {
             </h3>
             <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-700">
               EHO-compliant labels. Natasha's Law ready. No training required. Works with your
-              existing Epson printer and Sunmi devices.
+              existing Epson printer and mobile devices.
             </p>
           </div>
 
@@ -121,7 +121,7 @@ export const Footer = () => {
             </div>
             <p className="max-w-xs text-xs leading-snug text-white/70">
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
-              one app. Print from web dashboard or Sunmi devices with real-time analytics.
+              one app. Print from web dashboard or mobile devices with real-time analytics.
             </p>
           </div>
 

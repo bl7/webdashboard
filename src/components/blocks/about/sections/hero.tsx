@@ -33,9 +33,9 @@ export const AboutHero = () => {
             <span className="">Works.</span>
           </h1>
 
-          <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-            Smart labeling that keeps your kitchen compliant, waste-free, and running fast — no
-            training needed. Print from web dashboard or Sunmi devices, track usage with real-time
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            We built InstaLabel to remove chaos from food labeling — and help you stay training
+            needed. Print from web dashboard or mobile devices, track usage with real-time
             analytics, and optimize your kitchen operations with comprehensive reporting.
           </p>
 
@@ -47,7 +47,7 @@ export const AboutHero = () => {
             </div>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
               <Smartphone className="h-4 w-4 text-purple-600" />
-              <span>Sunmi Compatible</span>
+              <span>Mobile Compatible</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
               <BarChart3 className="h-4 w-4 text-purple-600" />
@@ -70,7 +70,7 @@ export const AboutHero = () => {
           <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
             <span>✓ Free 14-day trial</span>
             <span>✓ No credit card required</span>
-            <span>✓ Setup in 5 minutes</span>
+            <span>✓ Mobile Compatible</span>
           </div>
         </motion.div>
 

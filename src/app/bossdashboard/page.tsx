@@ -340,7 +340,7 @@ export default function BossDashboard() {
                 {recentDevices.map((d: any) => (
                   <li key={d.id}>
                     {d.customer_name || d.customer_email || "Unknown User"} -{" "}
-                    {d.device_type || "Sunmi Device"} ({d.status})
+                    {d.device_type || "Mobile Device"} ({d.status})
                   </li>
                 ))}
               </ul>

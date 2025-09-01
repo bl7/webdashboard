@@ -141,7 +141,7 @@ export const PricingHero = () => {
               </div>
               <div className="flex items-center gap-1">
                 <CheckCircle className="h-3 w-3 text-green-600" />
-                <span>Sunmi Support</span>
+                <span>Mobile Support</span>
               </div>
               <div className="flex items-center gap-1">
                 <CheckCircle className="h-3 w-3 text-green-600" />

@@ -1,5 +1,15 @@
 import React from "react"
-import { UsesHero, FeatureIntro, FeaturesGridUses, GalleryFeature, PPDSLabelShowcaseSection } from "./sections"
+import {
+  UsesHero,
+  FeatureIntro,
+  FeaturesGridUses,
+  GalleryFeature,
+  PPDSLabelShowcaseSection,
+  EnhancedLabelTypes,
+  PrintingSetup,
+  IndustryUseCases,
+  WorkflowIntegration,
+} from "./sections"
 
 export const Uses = () => {
   return (
@@ -7,6 +17,10 @@ export const Uses = () => {
       <UsesHero />
       <PPDSLabelShowcaseSection />
       <FeatureIntro />
+      <EnhancedLabelTypes />
+      <PrintingSetup />
+      <IndustryUseCases />
+      <WorkflowIntegration />
       <GalleryFeature />
       <FeaturesGridUses />
     </>

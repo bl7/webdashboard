@@ -11,7 +11,7 @@ const defaultFeatures = [
   "Device Provided",
   "Unlimited Label Printing",
   "Access to Web Dashboard",
-  "Sunmi Printer Support",
+  "Mobile App Access",
   "Weekly Free Prints",
 ]
 

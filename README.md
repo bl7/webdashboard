@@ -10,9 +10,10 @@ Package manager
 npm install
 ```
 
-We are using QZ Tray to connect to label printers via USB/Bluetooth and print from our web app. We also have a mobile app that uses sunmi device to print the labels.
+We are using PrintBridge to connect to label printers via USB/Bluetooth and print from our web app. We also have a mobile app that uses mobile devices to print the labels.
 
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
 # Force sitemap regeneration

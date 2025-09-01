@@ -25,7 +25,7 @@ Thermal printers are widely used in professional kitchens and foodservice busine
 - **No ink required:** Uses heat-sensitive labels, reducing maintenance and running costs
 - **Fast print speeds:** Ideal for busy prep times
 - **Moisture & heat resistant:** Prints are more durable in harsh kitchen environments
-- **Compact footprint:** Most models are small and portable (including mobile options like Sunmi)
+- **Compact footprint:** Most models are small and portable (including mobile options)
 
 ### ⚠️ Cons:
 
@@ -33,7 +33,7 @@ Thermal printers are widely used in professional kitchens and foodservice busine
 - **Upfront cost:** Hardware may be slightly more expensive than consumer inkjets
 - **Special label stock required:** Must use thermal-compatible labels
 
-**InstaLabel is fully optimized for thermal printers**, including USB, Bluetooth, and Sunmi printers with built-in support.
+**InstaLabel is fully optimized for thermal printers**, including USB, Bluetooth, and mobile printers with built-in support.
 
 ---
 

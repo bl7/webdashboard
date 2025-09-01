@@ -78,8 +78,8 @@ const Page = () => {
           <h3>4. Hardware Compatibility</h3>
           <p>
             You are responsible for ensuring your printer and devices are compatible with
-            InstaLabel. We support most USB thermal label printers and Sunmi Android devices, but
-            cannot guarantee compatibility with all hardware.
+            InstaLabel. We support most USB thermal label printers and mobile devices, but cannot
+            guarantee compatibility with all hardware.
           </p>
           <h3>5. Subscription, Fees, and Payment</h3>
           <p>

@@ -3,18 +3,19 @@ import { FeaturesHero, WhyChooseUs } from "."
 import { HowToUploadSteps } from "./sections/HowToUploadSteps"
 import SystemFeaturesGrid from "./sections/SystemFeaturesGrid"
 import ComplianceAndLabels from "./sections/ComplianceAndLabels"
-import TechnicalSpecs from "./sections/TechnicalSpecs"
-import { SquareIntegration } from "./sections/SquareIntegration"
+import { EnhancedSquareIntegration } from "./sections/EnhancedSquareIntegration"
+import { SystemPerformance } from "./sections/SystemPerformance"
 
 export const Features = () => {
   return (
     <>
       <FeaturesHero />
       <SystemFeaturesGrid />
-      <SquareIntegration />
-      <HowToUploadSteps />
+      <SystemPerformance />
+      <EnhancedSquareIntegration />
       <ComplianceAndLabels />
-      <TechnicalSpecs />
+      <HowToUploadSteps />
+
       <WhyChooseUs />
     </>
   )

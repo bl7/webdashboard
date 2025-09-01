@@ -5,8 +5,16 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Kitchen Labeling Uses | Food Prep",
   description:
-    "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance. Perfect for restaurants and food businesses.",
+    "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures. Used by 500+ UK kitchens daily.",
   keywords: [
+    "kitchen labeling applications",
+    "restaurant food labeling uses",
+    "commercial kitchen label types",
+    "food prep labeling workflows",
+    "how to use kitchen labeling system",
+    "restaurant PPDS labeling requirements",
+    "food safety label applications",
+    "kitchen prep label workflows",
     "kitchen labeling uses",
     "food prep labels",
     "cook labels",
@@ -29,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kitchen Labeling Uses | Food Prep",
     description:
-      "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
+      "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures.",
     url: "https://www.instalabel.co/uses",
     type: "website",
     images: [
@@ -45,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kitchen Labeling Uses | Food Prep",
     description:
-      "Discover kitchen labeling uses: prep labels, cook labels, PPDS labels, allergen warnings, expiry tracking, and HACCP compliance.",
+      "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {

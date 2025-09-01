@@ -34,11 +34,10 @@ export const UsesHero = () => {
               <span className="">Everywhere.</span>
             </h1>
 
-            <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              InstaLabel handles all your kitchen labeling needs. From allergen warnings to expiry
-              dates. From prep labels to food safety compliance. Print from your web dashboard or
-              Sunmi devices. Track usage with live analytics. Get detailed reports to improve your
-              kitchen operations.
+            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+              We built InstaLabel to remove chaos from food labeling — and help you stay mobile
+              devices. Track usage with live analytics. Get detailed reports to improve your kitchen
+              operations and reduce waste.
             </p>
 
             {/* Key Benefits */}
@@ -49,7 +48,7 @@ export const UsesHero = () => {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <Smartphone className="h-4 w-4 text-purple-600" />
-                <span>Sunmi Compatible</span>
+                <span>Mobile Compatible</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <BarChart3 className="h-4 w-4 text-purple-600" />
@@ -71,10 +70,10 @@ export const UsesHero = () => {
             </div>
 
             {/* Trust indicators */}
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <span>✓ Free 14-day trial</span>
               <span>✓ No credit card required</span>
-              <span>✓ Works with any thermal printer</span>
+              <span>✓ Mobile Compatible</span>
             </div>
           </motion.div>
 

@@ -37,9 +37,9 @@ const features = [
   },
   {
     icon: <FaBluetooth className="h-6 w-6 text-indigo-500" />,
-    title: "Sunmi & Bluetooth Ready.",
-    solution: "Plug-and-play with the printers you already have.",
-    outcome: "No new hardware required.",
+    title: "Mobile & Bluetooth Ready.",
+    solution: "Print from anywhere with mobile app and Bluetooth thermal printers.",
+    outcome: "Stay in control, even when off-site.",
   },
   {
     icon: <FaBolt className="h-6 w-6 text-orange-500" />,
