@@ -1,0 +1,6 @@
+export { KitchenLabelPrinterPage } from "./kitchen-label-printer"
+export { KitchenLabelPrinterHero } from "./sections/KitchenLabelPrinterHero"
+export { KitchenLabelPrinterProblem } from "./sections/KitchenLabelPrinterProblem"
+export { KitchenLabelPrinterSolution } from "./sections/KitchenLabelPrinterSolution"
+export { KitchenLabelPrinterComparison } from "./sections/KitchenLabelPrinterComparison"
+export { KitchenLabelPrinterFeatures } from "./sections/KitchenLabelPrinterFeatures"

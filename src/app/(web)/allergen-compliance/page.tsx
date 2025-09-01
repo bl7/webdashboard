@@ -3,10 +3,22 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Free UK Allergen Compliance Kit",
+  title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
   description:
-    "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
+    "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
   keywords: [
+    "allergen label printer",
+    "allergen label software",
+    "allergen compliance software",
+    "14 allergens software",
+    "natasha's law software",
+    "kitchen label software",
+    "best kitchen label software",
+    "allergen labeling software",
+    "food safety labeling software",
+    "kitchen automation software",
+    "label printer software UK",
+    "instalabel software",
     "allergen compliance",
     "UK allergens guide",
     "14 allergens",
@@ -39,9 +51,9 @@ export const metadata: Metadata = {
     "free allergen guide",
   ],
   openGraph: {
-    title: "Free UK Allergen Compliance Kit",
+    title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
     description:
-      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
     url: "https://www.instalabel.co/allergen-compliance",
     type: "website",
     images: [
@@ -49,15 +61,15 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "UK Allergen Compliance Kit - 14 Allergens Guide",
+        alt: "InstaLabel - Best Allergen Label Software",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Free UK Allergen Compliance Kit",
+    title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
     description:
-      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -74,26 +86,22 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  other: {
-    "google-site-verification": "your-verification-code",
-  },
 }
 
 const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Free UK Allergen Compliance Kit | 14 Allergens Guide | Natasha's Law | InstaLabel",
+    name: "InstaLabel Allergen Label Software",
     description:
-      "Download free UK allergen compliance kit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials. Used by 500+ UK kitchens. EHO approved.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
     url: "https://www.instalabel.co/allergen-compliance",
     mainEntity: {
       "@type": "SoftwareApplication",
-      name: "UK Allergen Compliance Kit",
-      description:
-        "Complete allergen compliance toolkit with 14 allergens guide, Natasha's Law checklist, and HACCP-compliant materials",
+      name: "InstaLabel",
+      description: "AI-powered kitchen label software for allergen compliance and food safety",
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Web",
+      operatingSystem: "Web, Android",
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",
@@ -138,10 +146,10 @@ const Page = () => {
         },
         {
           "@type": "Question",
-          name: "How can I ensure my kitchen is compliant with allergen regulations?",
+          name: "How can InstaLabel software help with allergen compliance?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "To ensure compliance: 1. Clearly declare all 14 allergens on your menu or food labels, 2. Train staff on allergen awareness, 3. Keep records of allergen information, 4. Have procedures to prevent cross-contamination, 5. Update allergen information when recipes change.",
+            text: "InstaLabel software automatically generates compliant labels with all 14 UK allergens, ensures Natasha's Law compliance, provides AI-powered allergen detection, and works with any thermal printer. It reduces labeling time by 95% and eliminates compliance errors.",
           },
         },
         {

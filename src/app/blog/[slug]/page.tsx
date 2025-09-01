@@ -15,12 +15,13 @@ interface BlogPostMeta {
   title: string
   description: string
   date: string
-  category: string
-  readTime: string
+  category?: string
+  readTime?: string
   author: string
   slug: string
-  featured: boolean
+  featured?: boolean
   image?: string
+  tags?: string[]
 }
 
 export async function generateStaticParams() {
@@ -61,7 +62,7 @@ export async function generateMetadata({
       "allergen labeling",
       "kitchen management",
       "restaurant best practices",
-      post.meta.category.toLowerCase(),
+      ...(post.meta.category ? [post.meta.category.toLowerCase()] : []),
     ],
     openGraph: {
       title: post.meta.title,
@@ -78,7 +79,7 @@ export async function generateMetadata({
       ],
       publishedTime: post.meta.date,
       authors: [post.meta.author],
-      section: post.meta.category,
+      section: post.meta.category || "Kitchen Technology",
     },
     twitter: {
       card: "summary_large_image",
@@ -140,12 +141,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   const { slug } = await params
   const post = await getPostBySlug(slug)
   if (!post) return notFound()
-  // Process content and convert H1 tags to H2 to avoid duplicate H1s
+  // Process content and fix heading hierarchy for SEO
   let processedContent = await remark().use(html).process(post.content)
   let contentHtml = processedContent.toString()
 
-  // Convert H1 tags in content to H2 tags to avoid duplicate H1s
-  contentHtml = contentHtml.replace(/<h1/g, "<h2").replace(/<\/h1>/g, "</h2>")
+  // Fix heading hierarchy to avoid multiple h2 tags (bad for SEO)
+  // Convert h1 -> h3, h2 -> h3, h3 -> h4, h4 -> h5, h5 -> h6, h6 -> h6
+  contentHtml = contentHtml
+    .replace(/<h6/g, "<h6") // h6 stays h6
+    .replace(/<\/h6>/g, "</h6>")
+    .replace(/<h5/g, "<h6") // h5 becomes h6
+    .replace(/<\/h5>/g, "</h6>")
+    .replace(/<h4/g, "<h5") // h4 becomes h5
+    .replace(/<\/h4>/g, "</h5>")
+    .replace(/<h3/g, "<h4") // h3 becomes h4
+    .replace(/<\/h3>/g, "</h4>")
+    .replace(/<h2/g, "<h3") // h2 becomes h3 (main content headings)
+    .replace(/<\/h2>/g, "</h3>")
+    .replace(/<h1/g, "<h3") // h1 becomes h3 (shouldn't exist but just in case)
+    .replace(/<\/h1>/g, "</h3>")
 
   // JSON-LD Article Schema
   const jsonLd = {
@@ -252,9 +266,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
               <div className="text-xs text-gray-400">By {post.meta.author}</div>
             </div>
-            <h1 className="mb-4 text-2xl font-bold leading-snug text-gray-900">
+            <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-900">
               {post.meta.title}
-            </h1>
+            </h2>
             {post.meta.image && (
               <Image
                 src={post.meta.image}

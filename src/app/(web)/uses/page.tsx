@@ -3,10 +3,14 @@ import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Kitchen Labeling Uses | Food Prep",
+  title: "Kitchen Labeling Uses | Food Prep | InstaLabel Software",
   description:
     "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures. Used by 500+ UK kitchens daily.",
   keywords: [
+    "ingredient label printer",
+    "restaurant label printer",
+    "expiry date printer",
+    "kitchen label printer software",
     "kitchen labeling applications",
     "restaurant food labeling uses",
     "commercial kitchen label types",
@@ -33,9 +37,11 @@ export const metadata: Metadata = {
     "food prep workflow",
     "kitchen efficiency",
     "food labeling software",
+    "best kitchen label software",
+    "instalabel software",
   ],
   openGraph: {
-    title: "Kitchen Labeling Uses | Food Prep",
+    title: "Kitchen Labeling Uses | Food Prep | InstaLabel Software",
     description:
       "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures.",
     url: "https://www.instalabel.co/uses",
@@ -51,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Labeling Uses | Food Prep",
+    title: "Kitchen Labeling Uses | Food Prep | InstaLabel Software",
     description:
       "Discover practical kitchen labeling applications with InstaLabel. Real workflows for prep labels, PPDS compliance, cook labels, and food safety procedures.",
     images: ["https://www.instalabel.co/opengraph-image.png"],

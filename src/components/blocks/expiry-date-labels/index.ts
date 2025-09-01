@@ -1,0 +1,7 @@
+export { ExpiryDateLabelsPage } from "./expiry-date-labels"
+export { ExpiryDateLabelsHero } from "./sections/ExpiryDateLabelsHero"
+export { ExpiryDateLabelsProblem } from "./sections/ExpiryDateLabelsProblem"
+export { ExpiryDateLabelsSolution } from "./sections/ExpiryDateLabelsSolution"
+export { ExpiryDateLabelsFeatures } from "./sections/ExpiryDateLabelsFeatures"
+export { ExpiryDateLabelsCompliance } from "./sections/ExpiryDateLabelsCompliance"
+export { ExpiryDateLabelsCTAs } from "./sections/ExpiryDateLabelsCTAs"

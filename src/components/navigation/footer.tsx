@@ -150,6 +150,42 @@ export const Footer = () => {
                 PrintBridge Technology
               </Link>
               <Link
+                href="/kitchen-label-printer"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Kitchen Label Printer Software
+              </Link>
+              <Link
+                href="/expiry-date-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Expiry Date Label Software
+              </Link>
+              <Link
+                href="/dissolvable-kitchen-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Dissolvable Kitchen Labels
+              </Link>
+              <Link
+                href="/natashas-law"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Natasha's Law Compliance
+              </Link>
+              <Link
+                href="/haccp-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                HACCP Labels
+              </Link>
+              <Link
+                href="/label-printer-uk-comparison"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Label Printer UK Comparison
+              </Link>
+              <Link
                 href="/square-integration"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
@@ -160,6 +196,12 @@ export const Footer = () => {
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
                 Allergen Compliance Kit
+              </Link>
+              <Link
+                href="/mobile-app"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Mobile App
               </Link>
               <Link
                 href="/allergen-guide"
@@ -178,12 +220,6 @@ export const Footer = () => {
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
                 Kitchen Labeling Blog
-              </Link>
-              <Link
-                href="/printbridge"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                PrintBridge Technology
               </Link>
             </nav>
           </div>
