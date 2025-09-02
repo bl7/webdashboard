@@ -12,6 +12,7 @@ import {
   FaBars,
   FaChevronLeft,
   FaUpload,
+  FaList,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
   { label: "Analytics", icon: <FaChartPie />, href: "/dashboard/analytics" },
   { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
+  { label: "Bulk Print", icon: <FaList />, href: "/dashboard/bulk-print" },
   { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
   { label: "PrintBridge Test", icon: <FaPrint />, href: "/dashboard/printbridge-test" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
@@ -41,7 +43,7 @@ const NAV_ITEMS = [
 ]
 
 const ADMIN_ROUTES = NAV_ITEMS.filter(
-  (i) => !["Dashboard", "Print Label", "PrintBridge Test"].includes(i.label)
+  (i) => !["Dashboard", "Print Label", "Bulk Print", "PrintBridge Test"].includes(i.label)
 ).map((i) => i.href)
 
 interface SidebarProps {
@@ -76,7 +78,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const filteredNavItems = isAdmin
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label"].includes(i.label))
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Print Label", "Bulk Print"].includes(i.label))
   const isExpanded = sidebarOpen || sidebarMobile
 
   // Insert PPDS link for admins only after 'Print Label'
