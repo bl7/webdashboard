@@ -1,10 +1,14 @@
 import React from "react"
-import { Feature, Hero, TrustedBySection, Services, Pricing, BeforeAfterSection } from "."
+import { Hero, TrustedBySection, Services, Pricing, BeforeAfterSection } from "."
 import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
 import { HowItWorks } from "./sections/HowItWorks"
 import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcase"
 import { WaitlistModal } from "./sections/WaitlistModal"
-import { SquareIntegrationHomepage } from "./sections/SquareIntegrationHomepage"
+import {
+  SquareIntegrationHomepage,
+  SimplePricing,
+  AllergenQuizSection,
+} from "./sections/SquareIntegrationHomepage"
 
 export const Homepage = () => {
   return (
@@ -13,12 +17,12 @@ export const Homepage = () => {
       <WhatWeDoShowcase />
       <TrustedBySection />
       <Services />
-      <Feature />
+      <BeforeAfterSection />
       <SquareIntegrationHomepage />
+      <SimplePricing />
       <HowItWorks />
       {/* <PPDSLabelHomepageSection /> */}
-      <BeforeAfterSection />
-      <Pricing />
+      <AllergenQuizSection />
     </>
   )
 }

@@ -75,7 +75,7 @@ export const TrustedBySection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
-              className="text-4xl font-black leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl"
+              className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
             >
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Real Results

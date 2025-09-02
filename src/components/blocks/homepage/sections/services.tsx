@@ -12,6 +12,7 @@ import {
   Calendar,
   FileText,
   Brain,
+  Smartphone,
 } from "lucide-react"
 import { Button } from "@/components/ui"
 import { ArrowRight, StepForward } from "lucide-react"
@@ -53,6 +54,22 @@ export const Services = () => {
       bgColor: "bg-red-50",
       borderColor: "border-red-200",
     },
+    {
+      icon: Shield,
+      title: "No Natasha's Law Compliance",
+      desc: "Basic label printers can't handle PPDS requirements, leaving you vulnerable to compliance violations.",
+      color: "text-red-600",
+      bgColor: "bg-red-50",
+      borderColor: "border-red-200",
+    },
+    {
+      icon: Smartphone,
+      title: "No Mobile Printing Capability",
+      desc: "Can't print from mobile devices, forcing staff to run back to fixed workstations during busy periods.",
+      color: "text-orange-600",
+      bgColor: "bg-orange-50",
+      borderColor: "border-orange-200",
+    },
   ]
 
   const solutions = [
@@ -88,6 +105,22 @@ export const Services = () => {
       bgColor: "bg-green-50",
       borderColor: "border-green-200",
     },
+    {
+      icon: FileText,
+      title: "Complete Print Logs & Traceability",
+      desc: "Full audit trail with print history for compliance reporting and food safety tracking.",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
+      borderColor: "border-blue-200",
+    },
+    {
+      icon: Smartphone,
+      title: "Mobile Printing Anywhere",
+      desc: "Print from any device - desktop, tablet, or smartphone for ultimate kitchen flexibility.",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
+      borderColor: "border-purple-200",
+    },
   ]
 
   return (
@@ -113,7 +146,7 @@ export const Services = () => {
               The Kitchen Labeling Crisis
             </div>
 
-            <h3 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
+            <h3 className="font-accent text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">
               <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Problems Every Kitchen
               </span>
@@ -121,7 +154,7 @@ export const Services = () => {
               <span className="text-gray-900">Faces Daily</span>
             </h3>
 
-            <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
+            <p className="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600">
               Traditional labeling methods are costing kitchens time, money, and compliance. Here's
               what's broken and how InstaLabel fixes it.
             </p>
@@ -138,8 +171,8 @@ export const Services = () => {
             className="space-y-6"
           >
             <div className="mb-8 text-center lg:text-left">
-              <h3 className="mb-2 text-2xl font-bold text-red-700">The Problems</h3>
-              <p className="text-gray-600">What's costing your kitchen time and money</p>
+              <h4 className="mb-2 text-lg font-bold text-red-700">The Problems</h4>
+              <p className="text-sm text-gray-600">What's costing your kitchen time and money</p>
             </div>
 
             <div className="space-y-4">
@@ -159,10 +192,10 @@ export const Services = () => {
                       <Icon className={`h-7 w-7 ${color}`} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-red-600">
+                      <h4 className="mb-2 text-sm font-bold text-gray-900 transition-colors group-hover:text-red-600">
                         {title}
-                      </h3>
-                      <p className="leading-relaxed text-gray-600">{desc}</p>
+                      </h4>
+                      <p className="text-xs leading-relaxed text-gray-600">{desc}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -179,8 +212,8 @@ export const Services = () => {
             className="space-y-6"
           >
             <div className="mb-8 text-center lg:text-left">
-              <h3 className="mb-2 text-2xl font-bold text-green-700">The InstaLabel Solution</h3>
-              <p className="text-gray-600">How smart automation transforms your kitchen</p>
+              <h4 className="mb-2 text-lg font-bold text-green-700">The InstaLabel Solution</h4>
+              <p className="text-sm text-gray-600">How smart automation transforms your kitchen</p>
             </div>
 
             <div className="space-y-4">
@@ -200,10 +233,10 @@ export const Services = () => {
                       <Icon className={`h-7 w-7 ${color}`} />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h3 className="mb-2 text-xl font-bold text-gray-900 transition-colors group-hover:text-green-600">
+                      <h4 className="mb-2 text-sm font-bold text-gray-900 transition-colors group-hover:text-green-600">
                         {title}
-                      </h3>
-                      <p className="leading-relaxed text-gray-600">{desc}</p>
+                      </h4>
+                      <p className="text-xs leading-relaxed text-gray-600">{desc}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -238,41 +271,6 @@ export const Services = () => {
           >
             <Link href="/register">Start Trial</Link>
           </Button>
-        </motion.div>
-
-        {/* Quiz Teaser Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="mt-12"
-        >
-          <div className="rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
-              <Brain className="h-8 w-8 text-purple-600" />
-            </div>
-            <h3 className="mb-3 text-2xl font-bold text-gray-900">Test Your Allergen Knowledge</h3>
-            <p className="mx-auto mb-6 max-w-2xl text-lg text-gray-600">
-              Think you know your allergens? Take our quick 10-question UK compliance quiz and see
-              how well you understand food safety regulations.
-            </p>
-            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-              <Button
-                size="lg"
-                className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700"
-                asChild
-              >
-                <Link href="/allergen-guide">
-                  Take the Quiz
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <p className="text-sm font-medium text-purple-600">
-                Free • 5 minutes • Instant results
-              </p>
-            </div>
-          </div>
         </motion.div>
       </div>
     </section>
