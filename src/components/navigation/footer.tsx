@@ -299,7 +299,7 @@ export const Footer = () => {
                   href="tel:+447585644204"
                   className="block transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
                 >
-                  +44 7405 924790
+                  +44 7585 644204
                 </Link>
               </div>
             </div>
@@ -309,7 +309,7 @@ export const Footer = () => {
                 Follow Us
               </h3>
               <div className="flex gap-3">
-                <Link
+                {/* <Link
                   href="#"
                   className="group rounded-full bg-purple-800/50 p-2 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
                   aria-label="Follow us on Twitter"
@@ -340,7 +340,7 @@ export const Footer = () => {
                 >
                   <FaLinkedin className="h-4 w-4 text-white transition-colors duration-300 group-hover:text-blue-500" />
                   <span className="sr-only">LinkedIn</span>
-                </Link>
+                </Link> */}
               </div>
             </div>
           </div>
