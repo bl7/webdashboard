@@ -296,7 +296,7 @@ export const Footer = () => {
                   contact@instalabel.co
                 </Link>
                 <Link
-                  href="tel:+447405924790"
+                  href="tel:+447585644204"
                   className="block transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
                 >
                   +44 7405 924790
