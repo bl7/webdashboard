@@ -100,6 +100,7 @@ export default function LabelRender({
       return d.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
+        year: "numeric",
       })
     } catch {
       return date || "N/A"
@@ -261,23 +262,17 @@ export default function LabelRender({
 
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
             fontWeight: 900,
             fontSize: config.expiresFontSize,
             marginBottom: 2,
             fontFamily: "inherit",
             letterSpacing: 0,
             width: "100%",
-            flexWrap: "nowrap", // Prevent wrapping to new line
           }}
         >
-          <span style={{ flex: 1, textAlign: "left", minWidth: 0 }}>Expires:</span>
-          <span style={{ flex: 1, textAlign: "center", minWidth: 0 }}>
-            {expiresDay && <span>{expiresDay}.</span>}
+          <span>
+            Expires: {expiresDay} {shortExpiry}
           </span>
-          <span style={{ flex: 1, textAlign: "right", minWidth: 0 }}>{shortExpiry}</span>
         </div>
 
         <div
@@ -413,23 +408,17 @@ export default function LabelRender({
 
         <div
           style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
             fontWeight: 900,
             fontSize: config.expiresFontSize,
             marginBottom: 2,
             fontFamily: "inherit",
             letterSpacing: 0,
             width: "100%",
-            flexWrap: "nowrap", // Prevent wrapping to new line
           }}
         >
-          <span style={{ flex: 1, textAlign: "left", minWidth: 0 }}>Expires:</span>
-          <span style={{ flex: 1, textAlign: "center", minWidth: 0 }}>
-            {expiresDay && <span>{expiresDay}.</span>}
+          <span>
+            Expires: {expiresDay} {shortExpiry}
           </span>
-          <span style={{ flex: 1, textAlign: "right", minWidth: 0 }}>{shortExpiry}</span>
         </div>
 
         <div

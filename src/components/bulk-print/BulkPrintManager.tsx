@@ -22,6 +22,28 @@ import { getAllIngredients, getAllMenuItems } from "@/lib/api"
 import { formatLabelForPrintImage } from "@/app/dashboard/print/labelFormatter"
 import { PrintQueueItem } from "@/types/print"
 
+// Helper functions for expiry date calculation (same as print page)
+function calculateExpiryDate(days: number): string {
+  const today = new Date()
+  today.setDate(today.getDate() + days)
+  return today.toISOString().split("T")[0]
+}
+
+function getDefaultExpiryDays(type: "cooked" | "prep" | "ppds" | "default"): number {
+  switch (type) {
+    case "cooked":
+      return 1
+    case "prep":
+      return 3
+    case "ppds":
+      return 5
+    case "default":
+      return 2
+    default:
+      return 3
+  }
+}
+
 interface BulkPrintList {
   id: string
   name: string
@@ -47,13 +69,43 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
   const [editListName, setEditListName] = useState("")
   const [editListDescription, setEditListDescription] = useState("")
   const [isPrinting, setIsPrinting] = useState(false)
+  const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
 
   const { isConnected, print, selectedPrinter, defaultPrinter, printers } = usePrinter()
 
   // Fetch lists on component mount
   useEffect(() => {
     fetchLists()
+    fetchExpirySettings()
   }, [])
+
+  const fetchExpirySettings = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      const response = await fetch(`/api/label-settings`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch expiry settings")
+      }
+
+      const data = await response.json()
+      const expiryMap = Object.fromEntries(
+        (data.settings || []).map((item: any) => [item.label_type, item.expiry_days.toString()])
+      )
+      setExpiryDays(expiryMap)
+    } catch (error) {
+      console.error("Failed to load expiry settings:", error)
+      // Use default values if fetch fails
+      setExpiryDays({})
+    }
+  }
 
   const fetchLists = async () => {
     try {
@@ -255,6 +307,10 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
         if (item.item_type === "ingredient") {
           const ingredient = allIngredients.find((ing: any) => ing.uuid === item.item_id)
+          // For ingredients, use their own expiry date or default to 3 days
+          const defaultIngredientDays = 3
+          const expiryDate = ingredient?.expiryDate || calculateExpiryDate(defaultIngredientDays)
+
           return {
             uid: uniqueId,
             id: item.item_id,
@@ -263,12 +319,17 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
             quantity: item.quantity,
             allergens: ingredient?.allergens || [],
             printedOn: new Date().toISOString().split("T")[0],
-            expiryDate:
-              ingredient?.expiryDate ||
-              new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+            expiryDate,
           }
         } else {
           const menuItem = allMenuItems.find((menu: any) => menu.menuItemID === item.item_id)
+          // For menu items, use database expiry days based on label type
+          const labelType = item.label_type as "cooked" | "prep" | "ppds" | "default"
+          const dbExpiryDays = parseInt(expiryDays[labelType] || "")
+          const defaultDays = getDefaultExpiryDays(labelType)
+          const finalDays = dbExpiryDays || defaultDays
+          const expiryDate = calculateExpiryDate(finalDays)
+
           return {
             uid: uniqueId,
             id: item.item_id,
@@ -277,9 +338,9 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
             quantity: item.quantity,
             ingredients: menuItem?.ingredients?.map((ing: any) => ing.ingredientName) || [],
             allergens: menuItem?.allergens || [],
-            labelType: item.label_type as "cooked" | "prep" | "ppds" | "default",
+            labelType,
             printedOn: new Date().toISOString().split("T")[0],
-            expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+            expiryDate,
           }
         }
       })
@@ -304,21 +365,24 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
       for (const item of printItems) {
         try {
-          // Generate image for the label
-          const imageData = await formatLabelForPrintImage(
-            item,
-            [], // allergens - will be fetched from item data
-            {}, // customExpiry
-            5, // maxIngredients
-            false, // useInitials
-            "", // selectedInitial
-            "40mm", // labelHeight
-            allIngredients
-          )
+          // Print the item quantity number of times
+          for (let i = 0; i < item.quantity; i++) {
+            // Generate image for the label
+            const imageData = await formatLabelForPrintImage(
+              item,
+              [], // allergens - will be fetched from item data
+              {}, // customExpiry
+              5, // maxIngredients
+              false, // useInitials
+              "", // selectedInitial
+              "40mm", // labelHeight
+              allIngredients
+            )
 
-          // Print the label
-          await print(imageData, targetPrinter, { labelHeight: "40mm" })
-          successCount++
+            // Print the label
+            await print(imageData, targetPrinter, { labelHeight: "40mm" })
+            successCount++
+          }
         } catch (error) {
           console.error(`Failed to print ${item.name}:`, error)
           failCount++
