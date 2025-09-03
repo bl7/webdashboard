@@ -305,9 +305,9 @@ export const Footer = () => {
             </div>
 
             <div className="space-y-2">
-              <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+              {/* <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
                 Follow Us
-              </h3>
+              </h3> */}
               <div className="flex gap-3">
                 {/* <Link
                   href="#"
