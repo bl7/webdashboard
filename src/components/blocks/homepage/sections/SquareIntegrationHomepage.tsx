@@ -23,6 +23,7 @@ import Link from "next/link"
 import Image from "next/image"
 import instaLabel2 from "@/assets/images/instaLabel2.png"
 import kitchenInstalabel from "@/assets/images/kitchenInstalabel.png"
+import labelPrunterInKitchen from "@/assets/images/labelPrunterInKitchen.png"
 
 export const SquareIntegrationHomepage = () => {
   const features = [
@@ -207,11 +208,11 @@ export const SimplePricing = () => {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="relative"
           >
-            <div className="relative flex h-80 w-full items-center justify-center rounded-2xl">
+            <div className="relative flex h-96 w-full items-center justify-center overflow-hidden rounded-2xl">
               <Image
-                src={instaLabel2}
-                alt="InstaLabel Kitchen Labeling System - Professional Food Safety Labels and Thermal Printer"
-                className="h-full w-full object-contain transition duration-300 hover:scale-105"
+                src={labelPrunterInKitchen}
+                alt="Label printer in kitchen - Professional food safety labeling system"
+                className="h-full w-full object-cover transition duration-300 hover:scale-105"
                 priority
                 placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R//2Q=="
