@@ -43,9 +43,9 @@ export const KitchenLabelPrinterHero = () => {
             viewport={{ once: true }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">The Best Kitchen Label</span>
+              <span className="text-purple-600">The Best Software</span>
               <br className="hidden md:block" />
-              <span>Software for Any Printer</span>
+              <span>for Thermal Label Printer</span>
             </h1>
           </motion.div>
 

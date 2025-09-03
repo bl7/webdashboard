@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Table,
   TableBody,
@@ -18,6 +19,24 @@ import { PrintQueueItem } from "@/types/print"
 import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import useBillingData from "../profile/hooks/useBillingData"
+
+// Helper function for expiry date calculation
+function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "default"): string {
+  const today = new Date()
+  const expiryDays =
+    labelType === "cooked"
+      ? 3
+      : labelType === "prep"
+        ? 3
+        : labelType === "default"
+          ? 2
+          : labelType === "ppds"
+            ? 5
+            : 3
+
+  today.setDate(today.getDate() + expiryDays)
+  return today.toISOString().split("T")[0]
+}
 
 interface PrintLog {
   id: number
@@ -37,6 +56,8 @@ interface PrintLog {
       state: string
     }
     sessionId?: string
+    bulkPrintListId?: string
+    bulkPrintListName?: string
   }
   timestamp: string
 }
@@ -134,14 +155,24 @@ function getPrinterName(printer: any): string {
 
 export default function PrintSessionsPage() {
   const [printLogs, setPrintLogs] = useState<PrintLog[]>([])
-  const [groupedSessions, setGroupedSessions] = useState<GroupedPrintSession[]>([])
-  const [filteredSessions, setFilteredSessions] = useState<GroupedPrintSession[]>([])
+  const [filteredLogs, setFilteredLogs] = useState<PrintLog[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState("")
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [totalCount, setTotalCount] = useState(0)
+  const [hasMore, setHasMore] = useState(false)
+  const [itemsPerPage] = useState(20)
+
+  // Filter state
+  const [dateFrom, setDateFrom] = useState("")
+  const [actionFilter, setActionFilter] = useState("print_label")
 
   // Printer context
   const {
@@ -166,86 +197,73 @@ export default function PrintSessionsPage() {
     if (!id) return
   }, [])
 
-  useEffect(() => {
-    async function fetchPrintSessions() {
+  const fetchPrintSessions = async (page: number = 1, reset: boolean = true) => {
+    if (reset) {
       setLoading(true)
       setError(null)
-      try {
-        const token = localStorage.getItem("token")
-        if (!token) {
-          throw new Error("No authentication token found")
-        }
-
-        const res = await fetch(`/api/logs`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        })
-        if (!res.ok) {
-          const errData = await res.json()
-          throw new Error(errData.error || "Failed to fetch print sessions")
-        }
-        const data = await res.json()
-
-        // Filter only print_label actions
-        const printLabelLogs = (data.logs || []).filter((log: any) => log.action === "print_label")
-        setPrintLogs(printLabelLogs)
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error")
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchPrintSessions()
-  }, [])
-
-  // Group logs by print session (use sessionId if present, else fallback)
-  useEffect(() => {
-    if (printLogs.length === 0) {
-      setGroupedSessions([])
-      return
     }
 
-    const grouped: { [key: string]: PrintLog[] } = {}
-
-    printLogs.forEach((log) => {
-      const sessionKey =
-        log.details.sessionId ||
-        `${new Date(log.timestamp).getTime()}-${log.details.printerUsed?.name || "unknown"}`
-      if (!grouped[sessionKey]) {
-        grouped[sessionKey] = []
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        throw new Error("No authentication token found")
       }
-      grouped[sessionKey].push(log)
-    })
 
-    // Convert to GroupedPrintSession array
-    const sessions: GroupedPrintSession[] = Object.entries(grouped).map(([sessionId, logs]) => {
-      const firstLog = logs[0]
-      return {
-        sessionId,
-        timestamp: firstLog.timestamp,
-        printedAt: firstLog.details.printedAt,
-        items: logs,
-        printerUsed: firstLog.details.printerUsed,
-        initial: firstLog.details.initial,
-        labelHeight: firstLog.details.labelHeight,
+      // Build query parameters
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: itemsPerPage.toString(),
+        action: actionFilter,
+      })
+
+      if (dateFrom) {
+        params.append("dateFrom", dateFrom)
       }
-    })
 
-    // Sort by timestamp (newest first)
-    sessions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      const res = await fetch(`/api/logs?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
 
-    setGroupedSessions(sessions)
-  }, [printLogs])
+      if (!res.ok) {
+        const errData = await res.json()
+        throw new Error(errData.error || "Failed to fetch print sessions")
+      }
+
+      const data = await res.json()
+      const printLogs: PrintLog[] = data.logs || []
+
+      if (reset) {
+        setPrintLogs(printLogs)
+      } else {
+        setPrintLogs((prev) => [...prev, ...printLogs])
+      }
+
+      // Update pagination state
+      setCurrentPage(data.pagination.currentPage)
+      setTotalPages(data.pagination.totalPages)
+      setTotalCount(data.pagination.totalCount)
+      setHasMore(data.pagination.hasMore)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
-    const filtered = groupedSessions.filter((session) => {
-      const itemNames = session.items.map((item) => item.details.itemName).join(" ")
-      return itemNames.toLowerCase().includes(search.toLowerCase())
+    fetchPrintSessions(1, true)
+  }, [dateFrom, actionFilter])
+
+  // Filter logs by search term
+  useEffect(() => {
+    const filtered = printLogs.filter((log) => {
+      return log.details.itemName.toLowerCase().includes(search.toLowerCase())
     })
-    setFilteredSessions(filtered)
-  }, [search, groupedSessions])
+    setFilteredLogs(filtered)
+  }, [search, printLogs])
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -280,6 +298,117 @@ export default function PrintSessionsPage() {
   function getLabelTypes(session: GroupedPrintSession): string {
     const types = [...new Set(session.items.map((item) => item.details.labelType))]
     return types.map((type) => type.toUpperCase()).join(", ")
+  }
+
+  async function handlePrintLog(log: PrintLog) {
+    const logId = log.id.toString()
+
+    if (printingStates[logId]) {
+      console.log("Already printing this log")
+      return
+    }
+
+    setPrintingStates((prev) => ({ ...prev, [logId]: true }))
+
+    try {
+      console.log("🖨️ Starting re-print for log:", log.id, log.details.itemName)
+
+      // Find printer by name
+      const selectedPrinterObj =
+        availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
+        availablePrinters[0]
+      const printerSelection = getBestAvailablePrinter(
+        selectedPrinterObj,
+        defaultPrinter,
+        availablePrinters
+      )
+
+      if (!isConnected) {
+        console.warn("⚠️ Printer not connected, but allowing print for debug purposes")
+        // Don't return, continue with printing for debug
+      }
+
+      if (!printerSelection.printer) {
+        console.warn("⚠️ No printer available, but allowing print for debug purposes")
+        // Don't return, continue with printing for debug
+      }
+
+      let successCount = 0
+      let failCount = 0
+      const failItems: string[] = []
+
+      // Create a PrintQueueItem from the log data
+      const printItem: PrintQueueItem = {
+        uid: log.details.itemId,
+        id: log.details.itemId,
+        type: "menu", // Default to menu since we don't have this info in logs
+        name: log.details.itemName,
+        quantity: log.details.quantity,
+        printedOn: new Date().toISOString().split("T")[0], // Today's date
+        expiryDate: calculateExpiryDate(log.details.labelType), // Proper expiry calculation
+        labelType: log.details.labelType,
+        ingredients: [], // We don't have ingredients in logs
+        allergens: [], // We don't have allergens in logs
+      }
+
+      // Use the label height from the log or default to 40mm
+      const labelHeight = log.details.labelHeight || "40mm"
+
+      // Print multiple copies based on quantity
+      for (let i = 0; i < log.details.quantity; i++) {
+        try {
+          // Generate the label image
+          const imageDataUrl = await formatLabelForPrintImage(
+            printItem,
+            [], // allergenNames - empty since we don't have this in logs
+            {}, // customExpiry
+            5, // maxIngredients
+            false, // useInitials
+            log.details.initial || "", // selectedInitial
+            labelHeight
+          )
+
+          console.log(
+            `🖨️ Image generated for ${log.details.itemName} copy ${i + 1}/${log.details.quantity}, length: ${imageDataUrl.length}`
+          )
+
+          if (!imageDataUrl) {
+            failCount++
+            failItems.push(log.details.itemName)
+            console.error(
+              `❌ Print error for item ${log.details.itemName}: imageDataUrl is undefined`
+            )
+            continue
+          }
+
+          // Print using WebSocket (if connected) or just log for debug
+          if (isConnected) {
+            await print(imageDataUrl)
+            console.log(
+              `✅ Printed ${log.details.itemName} copy ${i + 1}/${log.details.quantity} successfully`
+            )
+          } else {
+            console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
+          }
+
+          successCount++
+        } catch (itemErr) {
+          failCount++
+          failItems.push(log.details.itemName)
+          console.error("❌ Print error for item", log.details.itemName, itemErr)
+        }
+      }
+
+      console.log(`🖨️ Re-print completed: ${successCount} successful, ${failCount} failed`)
+
+      if (failCount > 0) {
+        console.warn("⚠️ Some items failed to print:", failItems)
+      }
+    } catch (error) {
+      console.error("❌ Error during re-print:", error)
+    } finally {
+      setPrintingStates((prev) => ({ ...prev, [logId]: false }))
+    }
   }
 
   async function handlePrintSession(session: GroupedPrintSession) {
@@ -352,11 +481,11 @@ export default function PrintSessionsPage() {
             ? 1
             : labelType === "prep"
               ? 3
-            : labelType === "default"
-              ? 2
-              : labelType === "ppds"
-                ? 5
-                : 3
+              : labelType === "default"
+                ? 2
+                : labelType === "ppds"
+                  ? 5
+                  : 3
 
         today.setDate(today.getDate() + expiryDays)
         return today.toISOString().split("T")[0]
@@ -443,28 +572,50 @@ export default function PrintSessionsPage() {
   }
 
   function exportToXLSX() {
-    const dataForExport = filteredSessions.map((session) => ({
-      "Session ID": session.sessionId,
-      Items: getItemNames(session),
-      "Total Quantity": getTotalQuantity(session),
-      "Label Types": getLabelTypes(session),
-      "Printed At": formatPrintedAt(session.printedAt),
-      "Logged At": formatTimestamp(session.timestamp),
-      "Printer Used": session.printerUsed?.name || "Unknown",
-      Initial: session.initial || "None",
+    const dataForExport = filteredLogs.map((log) => ({
+      "Log ID": log.id,
+      "Item Name": log.details.itemName,
+      Quantity: log.details.quantity,
+      "Label Type": log.details.labelType.toUpperCase(),
+      "Printed At": formatPrintedAt(log.details.printedAt),
+      "Logged At": formatTimestamp(log.timestamp),
+      "Printer Used":
+        typeof log.details.printerUsed === "string"
+          ? log.details.printerUsed
+          : log.details.printerUsed?.name || "Unknown",
+      Initial: log.details.initial || "None",
+      "Session ID": log.details.sessionId || "N/A",
+      "Bulk Print List": log.details.bulkPrintListName || "Regular Print",
     }))
 
     const worksheet = XLSX.utils.json_to_sheet(dataForExport)
     const workbook = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Print Sessions")
-    XLSX.writeFile(workbook, "print_sessions.xlsx")
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Print Logs")
+    XLSX.writeFile(workbook, "print_logs.xlsx")
   }
 
-  // Pagination logic
-  const itemsPerPage = 20
-  const [page, setPage] = useState(1)
-  const totalPages = Math.ceil(filteredSessions.length / itemsPerPage)
-  const paginatedSessions = filteredSessions.slice((page - 1) * itemsPerPage, page * itemsPerPage)
+  // Pagination handlers
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage)
+    fetchPrintSessions(newPage, true)
+  }
+
+  const handleLoadMore = () => {
+    if (hasMore && !loading) {
+      fetchPrintSessions(currentPage + 1, false)
+    }
+  }
+
+  // Filter handlers
+  const handleDateFilterChange = (newDate: string) => {
+    setDateFrom(newDate)
+    setCurrentPage(1)
+  }
+
+  const handleActionFilterChange = (newAction: string) => {
+    setActionFilter(newAction)
+    setCurrentPage(1)
+  }
 
   // Show skeleton if loading and no data loaded yet
   if (loading && printLogs.length === 0) {
@@ -474,7 +625,7 @@ export default function PrintSessionsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Print Sessions</h2>
+        <h2 className="text-2xl font-semibold">Print Logs</h2>
         <Button variant="outline" className="mr-5" onClick={exportToXLSX}>
           <FileDown className="mr-2 h-4 w-4" /> Export Data
         </Button>
@@ -515,8 +666,49 @@ export default function PrintSessionsPage() {
 
       <div className="grid grid-cols-1 gap-4">
         <div className="my-6 rounded-xl border bg-card p-6 shadow">
-          <p className="text-muted-foreground">Total Print Sessions</p>
-          <h3 className="text-2xl font-bold">{filteredSessions.length}</h3>
+          <p className="text-muted-foreground">Total Print Logs</p>
+          <h3 className="text-2xl font-bold">{totalCount}</h3>
+        </div>
+      </div>
+
+      {/* Filter Controls */}
+      <div className="mb-6 flex flex-wrap gap-4 rounded-lg border bg-card p-4">
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="dateFrom">Date From</Label>
+          <Input
+            id="dateFrom"
+            type="date"
+            value={dateFrom}
+            onChange={(e) => handleDateFilterChange(e.target.value)}
+            className="w-40"
+          />
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label htmlFor="actionFilter">Action Type</Label>
+          <select
+            id="actionFilter"
+            value={actionFilter}
+            onChange={(e) => handleActionFilterChange(e.target.value)}
+            className="h-10 w-32 rounded-md border border-input bg-background px-3 py-2 text-sm"
+          >
+            <option value="print_label">Print Label</option>
+            <option value="all">All Actions</option>
+          </select>
+        </div>
+        <div className="flex flex-col gap-2">
+          <Label>Clear Filters</Label>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setDateFrom("")
+              setActionFilter("print_label")
+              setCurrentPage(1)
+            }}
+            className="h-10"
+          >
+            Clear
+          </Button>
         </div>
       </div>
 
@@ -541,71 +733,80 @@ export default function PrintSessionsPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="whitespace-nowrap">Items</TableHead>
-                <TableHead className="whitespace-nowrap">Total Quantity</TableHead>
-                <TableHead className="whitespace-nowrap">Label Types</TableHead>
+                <TableHead className="whitespace-nowrap">Item Name</TableHead>
+                <TableHead className="whitespace-nowrap">Quantity</TableHead>
+                <TableHead className="whitespace-nowrap">Label Type</TableHead>
                 <TableHead className="whitespace-nowrap">Printed At</TableHead>
+                <TableHead className="whitespace-nowrap">Logged At</TableHead>
                 <TableHead className="whitespace-nowrap">Printer</TableHead>
                 <TableHead className="whitespace-nowrap">Initial</TableHead>
+                <TableHead className="whitespace-nowrap">Session ID</TableHead>
+                <TableHead className="whitespace-nowrap">Bulk Print</TableHead>
                 <TableHead className="whitespace-nowrap">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {paginatedSessions.map((session) => (
-                <TableRow key={session.sessionId}>
+              {printLogs.map((log) => (
+                <TableRow key={log.id}>
                   <TableCell className="max-w-xs font-medium">
-                    <div className="truncate" title={getItemNames(session)}>
-                      {getItemNames(session)}
+                    <div className="truncate" title={log.details.itemName}>
+                      {log.details.itemName}
                     </div>
                   </TableCell>
+                  <TableCell>{log.details.quantity}</TableCell>
                   <TableCell>
-                    {isNaN(getTotalQuantity(session)) ? "N/A" : getTotalQuantity(session)}
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-semibold ${
+                        log.details.labelType === "cooked"
+                          ? "bg-red-100 text-red-800"
+                          : log.details.labelType === "prep"
+                            ? "bg-purple-100 text-blue-800"
+                            : log.details.labelType === "default"
+                              ? "bg-gray-100 text-gray-800"
+                              : "bg-green-100 text-green-800"
+                      }`}
+                    >
+                      {log.details.labelType.toUpperCase()}
+                    </span>
                   </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {[...new Set(session.items.map((item) => item.details.labelType))].map(
-                        (type) => (
-                          <span
-                            key={type}
-                            className={`rounded-full px-2 py-1 text-xs font-semibold ${
-                              type === "cooked"
-                                ? "bg-red-100 text-red-800"
-                                : type === "prep"
-                                  ? "bg-purple-100 text-blue-800"
-                                  : type === "default"
-                                    ? "bg-gray-100 text-gray-800"
-                                    : "bg-green-100 text-green-800"
-                            }`}
-                          >
-                            {type.toUpperCase()}
-                          </span>
-                        )
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>{formatPrintedAt(session.printedAt)}</TableCell>
+                  <TableCell>{formatPrintedAt(log.details.printedAt)}</TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {typeof session.printerUsed === "string"
-                      ? session.printerUsed
-                      : session.printerUsed && typeof session.printerUsed.name === "string"
-                        ? session.printerUsed.name
+                    {formatTimestamp(log.timestamp)}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {typeof log.details.printerUsed === "string"
+                      ? log.details.printerUsed
+                      : log.details.printerUsed && typeof log.details.printerUsed.name === "string"
+                        ? log.details.printerUsed.name
                         : "Unknown"}
                   </TableCell>
                   <TableCell>
-                    {session.initial ? (
+                    {log.details.initial ? (
                       <span className="rounded border px-2 py-1 font-mono text-xs">
-                        {session.initial}
+                        {log.details.initial}
                       </span>
                     ) : (
                       <span className="text-xs text-muted-foreground">None</span>
                     )}
                   </TableCell>
+                  <TableCell className="font-mono text-sm text-muted-foreground">
+                    {log.details.sessionId ? log.details.sessionId.slice(-8) : "N/A"}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {log.details.bulkPrintListName ? (
+                      <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
+                        {log.details.bulkPrintListName}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Regular</span>
+                    )}
+                  </TableCell>
                   <TableCell>
                     <Button
                       size="sm"
-                      onClick={() => handlePrintSession(session)}
+                      onClick={() => handlePrintLog(log)}
                       disabled={
-                        printingStates[session.sessionId] ||
+                        printingStates[log.id] ||
                         subBlocked ||
                         availablePrinters.length === 0 ||
                         !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
@@ -620,12 +821,12 @@ export default function PrintSessionsPage() {
                                   (p) => getPrinterName(p) === selectedPrinterName
                                 )
                               ? "No valid printer selected"
-                              : printingStates[session.sessionId]
+                              : printingStates[log.id]
                                 ? "Printing in progress"
-                                : "Print all labels in this session"
+                                : "Print this label"
                       }
                     >
-                      {printingStates[session.sessionId] ? (
+                      {printingStates[log.id] ? (
                         <div className="flex items-center gap-2">
                           <div className="h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                           Printing...
@@ -633,7 +834,7 @@ export default function PrintSessionsPage() {
                       ) : (
                         <>
                           <Printer className="mr-1 h-3 w-3" />
-                          Print All
+                          Print
                         </>
                       )}
                     </Button>
@@ -644,73 +845,98 @@ export default function PrintSessionsPage() {
           </Table>
         )}
 
-        <div className="mt-4 flex justify-end gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-          >
-            Previous
-          </Button>
+        <div className="mt-4 flex flex-col gap-4">
+          {/* Pagination Info */}
+          <div className="text-center text-sm text-muted-foreground">
+            Showing {printLogs.length} of {totalCount} logs (Page {currentPage} of {totalPages})
+          </div>
 
-          {/* First page */}
-          <Button
-            variant={page === 1 ? "default" : "outline"}
-            size="sm"
-            onClick={() => setPage(1)}
-            className="min-w-[36px] px-2 py-1"
-          >
-            1
-          </Button>
-
-          {/* Ellipsis before current range */}
-          {page > 3 && totalPages > 5 && (
-            <span className="px-2 py-1 text-muted-foreground">...</span>
-          )}
-
-          {/* Pages around current */}
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .filter(
-              (p) => p !== 1 && p !== totalPages && Math.abs(p - page) <= 1 // show current, previous, next
-            )
-            .map((p) => (
-              <Button
-                key={p}
-                variant={page === p ? "default" : "outline"}
-                size="sm"
-                onClick={() => setPage(p)}
-                className="min-w-[36px] px-2 py-1"
-              >
-                {p}
-              </Button>
-            ))}
-
-          {/* Ellipsis after current range */}
-          {page < totalPages - 2 && totalPages > 5 && (
-            <span className="px-2 py-1 text-muted-foreground">...</span>
-          )}
-
-          {/* Last page */}
-          {totalPages > 1 && (
+          {/* Pagination Controls */}
+          <div className="flex justify-center gap-2">
             <Button
-              variant={page === totalPages ? "default" : "outline"}
+              variant="outline"
               size="sm"
-              onClick={() => setPage(totalPages)}
-              className="min-w-[36px] px-2 py-1"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1 || loading}
             >
-              {totalPages}
+              Previous
             </Button>
-          )}
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-          >
-            Next
-          </Button>
+            {/* First page */}
+            <Button
+              variant={currentPage === 1 ? "default" : "outline"}
+              size="sm"
+              onClick={() => handlePageChange(1)}
+              className="min-w-[36px] px-2 py-1"
+              disabled={loading}
+            >
+              1
+            </Button>
+
+            {/* Ellipsis before current range */}
+            {currentPage > 3 && totalPages > 5 && (
+              <span className="px-2 py-1 text-muted-foreground">...</span>
+            )}
+
+            {/* Pages around current */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(
+                (p) => p !== 1 && p !== totalPages && Math.abs(p - currentPage) <= 1 // show current, previous, next
+              )
+              .map((p) => (
+                <Button
+                  key={p}
+                  variant={currentPage === p ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handlePageChange(p)}
+                  className="min-w-[36px] px-2 py-1"
+                  disabled={loading}
+                >
+                  {p}
+                </Button>
+              ))}
+
+            {/* Ellipsis after current range */}
+            {currentPage < totalPages - 2 && totalPages > 5 && (
+              <span className="px-2 py-1 text-muted-foreground">...</span>
+            )}
+
+            {/* Last page */}
+            {totalPages > 1 && (
+              <Button
+                variant={currentPage === totalPages ? "default" : "outline"}
+                size="sm"
+                onClick={() => handlePageChange(totalPages)}
+                className="min-w-[36px] px-2 py-1"
+                disabled={loading}
+              >
+                {totalPages}
+              </Button>
+            )}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages || loading}
+            >
+              Next
+            </Button>
+          </div>
+
+          {/* Load More Button (Alternative to pagination) */}
+          {hasMore && (
+            <div className="flex justify-center">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                disabled={loading}
+                className="px-6"
+              >
+                {loading ? "Loading..." : "Load More"}
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </div>

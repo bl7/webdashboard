@@ -21,6 +21,7 @@ import { usePrinter } from "@/context/PrinterContext"
 import { getAllIngredients, getAllMenuItems } from "@/lib/api"
 import { formatLabelForPrintImage } from "@/app/dashboard/print/labelFormatter"
 import { PrintQueueItem } from "@/types/print"
+import { logAction } from "@/lib/logAction"
 
 // Helper functions for expiry date calculation (same as print page)
 function calculateExpiryDate(days: number): string {
@@ -359,6 +360,9 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
       toast.info(`Starting to print ${printItems.length} items from "${list.name}"...`)
 
+      // Generate session ID for bulk print
+      const sessionId = `bulk-session-${Date.now()}-${Math.random().toString(36).slice(2)}`
+
       // Print each item
       let successCount = 0
       let failCount = 0
@@ -383,6 +387,22 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
             await print(imageData, targetPrinter, { labelHeight: "40mm" })
             successCount++
           }
+
+          // Log the print action ONCE per item with correct quantity
+          await logAction("print_label", {
+            labelType: item.labelType || item.type,
+            itemId: item.uid || item.id,
+            itemName: item.name,
+            quantity: item.quantity || 1,
+            printedAt: new Date().toISOString(),
+            expiryDate: item.expiryDate || calculateExpiryDate(3), // Default 3 days
+            initial: "", // No initials in bulk print
+            labelHeight: "40mm",
+            printerUsed: targetPrinter || "Unknown",
+            sessionId,
+            bulkPrintListId: listId,
+            bulkPrintListName: list.name,
+          })
         } catch (error) {
           console.error(`Failed to print ${item.name}:`, error)
           failCount++

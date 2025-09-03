@@ -471,10 +471,11 @@ export default function LabelDemo() {
 
     try {
       for (const item of printQueue) {
-        for (let i = 0; i < item.quantity; i++) {
-          try {
-            console.log(`🖨️ Processing item ${i + 1}/${item.quantity}: ${item.name}`)
+        try {
+          console.log(`🖨️ Processing item: ${item.name} (quantity: ${item.quantity})`)
 
+          // Print multiple copies of the same label
+          for (let i = 0; i < item.quantity; i++) {
             // Generate label image
             const imageDataUrl = await formatLabelForPrintImage(
               item,
@@ -491,7 +492,9 @@ export default function LabelDemo() {
               }))
             )
 
-            console.log(`🖨️ Image generated for ${item.name}, length: ${imageDataUrl.length}`)
+            console.log(
+              `🖨️ Image generated for ${item.name} copy ${i + 1}/${item.quantity}, length: ${imageDataUrl.length}`
+            )
 
             // Revert to sending the same print request for all OSes
             if (isConnected) {
@@ -502,32 +505,32 @@ export default function LabelDemo() {
                 imageDataUrl.substring(0, 100) + "..."
               )
             }
-
-            // Log the print action
-            await logAction("print_label", {
-              labelType: item.labelType || item.type,
-              itemId: item.uid || item.id,
-              itemName: item.name,
-              quantity: item.quantity || 1,
-              printedAt: new Date().toISOString(),
-              expiryDate:
-                item.expiryDate ||
-                calculateExpiryDate(
-                  parseInt(expiryDays[item.labelType || "cooked"] || "") ||
-                    getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds" | "default")
-                ),
-              initial: selectedInitial,
-              labelHeight: labelHeight,
-              printerUsed: printerSelection.printer || "Debug Mode",
-              sessionId,
-            })
-
-            successCount++
-          } catch (itemErr) {
-            failCount++
-            failItems.push(item.name)
-            console.error("❌ Print error for item", item.name, itemErr)
           }
+
+          // Log the print action ONCE per item with correct quantity
+          await logAction("print_label", {
+            labelType: item.labelType || item.type,
+            itemId: item.uid || item.id,
+            itemName: item.name,
+            quantity: item.quantity || 1,
+            printedAt: new Date().toISOString(),
+            expiryDate:
+              item.expiryDate ||
+              calculateExpiryDate(
+                parseInt(expiryDays[item.labelType || "cooked"] || "") ||
+                  getDefaultExpiryDays(item.labelType as "cooked" | "prep" | "ppds" | "default")
+              ),
+            initial: selectedInitial,
+            labelHeight: labelHeight,
+            printerUsed: printerSelection.printer || "Debug Mode",
+            sessionId,
+          })
+
+          successCount += item.quantity
+        } catch (itemErr) {
+          failCount++
+          failItems.push(item.name)
+          console.error("❌ Print error for item", item.name, itemErr)
         }
       }
 
@@ -612,10 +615,10 @@ export default function LabelDemo() {
         // Print using WebSocket (if connected) or just log for debug
         if (isConnected) {
           await print(imageDataUrl, undefined, { labelHeight })
-          console.log(`✅ Printed USE FIRST label ${i + 1}/${quantity}`)
+          console.log(`✅ Printed USE FIRST label copy ${i + 1}/${quantity}`)
         } else {
           console.log(
-            `🖨️ DEBUG: Would print USE FIRST label ${i + 1}/${quantity}:`,
+            `🖨️ DEBUG: Would print USE FIRST label copy ${i + 1}/${quantity}:`,
             imageDataUrl.substring(0, 100) + "..."
           )
         }
