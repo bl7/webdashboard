@@ -8,6 +8,7 @@ import {
   FaBluetooth,
   FaBolt,
   FaUserCheck,
+  FaLayerGroup,
 } from "react-icons/fa"
 
 const features = [
@@ -46,6 +47,12 @@ const features = [
     title: "Speed Built In.",
     solution: "Print in the middle of service without delay.",
     outcome: "Labels don't slow down the line.",
+  },
+  {
+    icon: <FaLayerGroup className="h-6 w-6 text-teal-500" />,
+    title: "Bulk Printing Made Easy.",
+    solution: "Create print lists and print multiple labels at once.",
+    outcome: "Save time during prep and service rush.",
   },
 ]
 

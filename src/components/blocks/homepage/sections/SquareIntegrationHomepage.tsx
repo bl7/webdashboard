@@ -16,6 +16,7 @@ import {
   Printer,
   Square,
   Brain,
+  Layers,
 } from "lucide-react"
 import { motion } from "framer-motion"
 import Link from "next/link"
@@ -59,6 +60,11 @@ export const SquareIntegrationHomepage = () => {
       icon: WifiOff,
       title: "Offline Printing",
       description: "Keep printing even when offline, auto-sync later.",
+    },
+    {
+      icon: Layers,
+      title: "Bulk Printing",
+      description: "Create and print multiple labels at once for efficiency.",
     },
   ]
 

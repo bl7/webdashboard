@@ -114,6 +114,9 @@ export const Feature = () => {
                 <span className="text-xl">✅</span>Blazing fast PNG-to-label conversion — no
                 drivers, no dialog boxes
               </li>
+              <li className="flex items-start gap-3">
+                <span className="text-xl">✅</span>Bulk printing for multiple labels at once
+              </li>
             </ul>
           </motion.div>
         </motion.div>
