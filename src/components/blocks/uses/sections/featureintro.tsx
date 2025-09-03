@@ -3,6 +3,8 @@
 import Image from "next/image"
 import Natasha from "../../../../assets/images/natashalaw.png"
 import PPDS from "../../../../assets/images/after.png"
+import PPDSLabelonProduct from "../../../../assets/images/PPDSLabelonProduct.png"
+import ChefWithPrepLabel from "../../../../assets/images/ChefWithPrepLabel.png"
 import { motion } from "framer-motion"
 
 export const FeatureIntro = () => {
@@ -29,8 +31,8 @@ export const FeatureIntro = () => {
             <div className="relative rounded-2xl border border-white/20 bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-all duration-500 group-hover:shadow-2xl">
               <div className="relative aspect-[3/2] h-64 w-full sm:h-80 lg:h-96">
                 <Image
-                  src={Natasha}
-                  alt="Natasha's Law Label"
+                  src={PPDSLabelonProduct}
+                  alt="PPDS Label on Product - Natasha's Law Compliant Food Label"
                   fill
                   className="rounded-xl object-cover"
                   sizes="(max-width: 1024px) 100vw, 600px"
@@ -46,8 +48,8 @@ export const FeatureIntro = () => {
             <div className="relative rounded-2xl border border-white/20 bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-all duration-500 group-hover:shadow-2xl">
               <div className="relative aspect-[3/2] h-64 w-full sm:h-80 lg:h-96">
                 <Image
-                  src={PPDS}
-                  alt="Prep Label Example"
+                  src={ChefWithPrepLabel}
+                  alt="Chef with Prep Label - Professional kitchen food preparation labeling"
                   fill
                   className="rounded-xl object-cover"
                   sizes="(max-width: 1024px) 100vw, 600px"
