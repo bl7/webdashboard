@@ -4,6 +4,7 @@ import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
 import { HowItWorks } from "./sections/HowItWorks"
 import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcase"
 import { WaitlistModal } from "./sections/WaitlistModal"
+import { FAQ } from "./sections/FAQ"
 import {
   SquareIntegrationHomepage,
   SimplePricing,
@@ -18,6 +19,7 @@ export const Homepage = () => {
       <TrustedBySection />
       <Services />
       <BeforeAfterSection />
+      <FAQ />
       <SquareIntegrationHomepage />
       <SimplePricing />
       <HowItWorks />

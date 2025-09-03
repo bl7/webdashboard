@@ -298,13 +298,12 @@ export const BeforeAfterSection = () => {
               className="space-y-6"
             >
               <p className="text-center text-xl leading-relaxed text-gray-600 lg:text-left">
-                See the difference: handwritten labels with crossed-out dates vs. professional,
-                compliant labels printed in seconds. No more illegible handwriting, no more
-                forgotten allergen warnings, no more compliance risks.
+                Say goodbye to crossed-out dates, illegible handwriting, and forgotten allergens.
+                With InstaLabel, every label is professional, compliant, and printed in seconds.
               </p>
               <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
-                InstaLabel transforms your kitchen from a labeling nightmare into a streamlined
-                operation where every label is perfect, every time.
+                Transform your kitchen into a streamlined, efficient operation where mistakes are
+                eliminated and compliance is automatic. Faster prep. Safer food. Smarter kitchen.
               </p>
             </motion.div>
 
