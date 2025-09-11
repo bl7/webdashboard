@@ -104,4 +104,16 @@
     <loc>https://www.instalabel.co/cookie-policy</loc>
     <lastmod>2025-01-15</lastmod>
   </url>
+  <url>
+    <loc>https://www.instalabel.co/login</loc>
+    <lastmod>2025-01-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.instalabel.co/register</loc>
+    <lastmod>2025-01-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.instalabel.co/forgot-password</loc>
+    <lastmod>2025-01-15</lastmod>
+  </url>
 </urlset>
