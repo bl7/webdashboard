@@ -2,6 +2,8 @@
 
 import React from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 import LabelRender from "@/app/dashboard/print/LabelRender"
 
 export const LabelShowcase = () => {
@@ -69,7 +71,7 @@ export const LabelShowcase = () => {
                     }}
                     expiry="2024-07-05T08:00:00Z"
                     useInitials={true}
-                    selectedInitial="BR"
+                    selectedInitial="BL"
                     allergens={[]}
                     labelHeight="40mm"
                     allIngredients={[]}
@@ -115,7 +117,7 @@ export const LabelShowcase = () => {
                     }}
                     expiry="2024-07-01T18:00:00Z"
                     useInitials={true}
-                    selectedInitial="NG"
+                    selectedInitial="BL"
                     allergens={["Celery"]}
                     labelHeight="40mm"
                     allIngredients={[
@@ -218,7 +220,7 @@ export const LabelShowcase = () => {
                     item={defrostSampleItem}
                     expiry={defrostSampleItem.expiryDate}
                     useInitials={true}
-                    selectedInitial="DF"
+                    selectedInitial="BL"
                     allergens={["Fish"]}
                     labelHeight="40mm"
                     allIngredients={defrostAllIngredients}
@@ -278,6 +280,13 @@ export const LabelShowcase = () => {
                       Simple, clean labels for individual ingredients. Perfect for storage
                       containers and prep stations.
                     </p>
+                    <Link
+                      href="/ingredient-labels"
+                      className="mt-2 inline-flex items-center text-sm font-medium text-blue-600 transition-colors hover:text-blue-800"
+                    >
+                      Learn more about Ingredient Labels
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -294,6 +303,13 @@ export const LabelShowcase = () => {
                       Detailed labels showing ingredients, allergens, prep times, and expiry dates
                       for prepared items.
                     </p>
+                    <Link
+                      href="/prep-labels"
+                      className="mt-2 inline-flex items-center text-sm font-medium text-green-600 transition-colors hover:text-green-800"
+                    >
+                      Learn more about Prep Labels
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -309,6 +325,13 @@ export const LabelShowcase = () => {
                       Hot food labels with cook times, temperatures, and allergen information for
                       service.
                     </p>
+                    <Link
+                      href="/cooked-labels"
+                      className="mt-2 inline-flex items-center text-sm font-medium text-orange-600 transition-colors hover:text-orange-800"
+                    >
+                      Learn more about Cook Labels
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -325,6 +348,13 @@ export const LabelShowcase = () => {
                       Track defrost dates, times, and staff for frozen foods. Ensure food safety and
                       compliance with clear, automated defrost labeling.
                     </p>
+                    <Link
+                      href="/defrost-labels"
+                      className="mt-2 inline-flex items-center text-sm font-medium text-cyan-600 transition-colors hover:text-cyan-800"
+                    >
+                      Learn more about Defrost Labels
+                      <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
                   </div>
                 </div>
               </div>

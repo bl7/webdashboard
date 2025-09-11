@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useAllergens } from "@/hooks/useAllergens"
 import { useIngredients } from "@/hooks/useIngredients"
+import { MultiSelect, type MultiSelectOption } from "@/components/ui/multi-select"
 
 type Ingredient = {
   uuid: string
@@ -88,10 +89,6 @@ export default function IngredientsTable() {
   })
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([])
   const [editSelectedAllergens, setEditSelectedAllergens] = useState<string[]>([])
-  const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
-  const [editAllergenDropdownOpen, setEditAllergenDropdownOpen] = useState(false)
-  const [allergenSearch, setAllergenSearch] = useState("")
-  const [editAllergenSearch, setEditAllergenSearch] = useState("")
 
   // Multi-select state
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([])
@@ -209,32 +206,6 @@ export default function IngredientsTable() {
     }
   }
 
-  const handleAllergenToggle = (allergenId: string) => {
-    setSelectedAllergens((prev) =>
-      prev.includes(allergenId) ? prev.filter((id) => id !== allergenId) : [...prev, allergenId]
-    )
-  }
-
-  const handleEditAllergenToggle = (allergenId: string) => {
-    setEditSelectedAllergens((prev) =>
-      prev.includes(allergenId) ? prev.filter((id) => id !== allergenId) : [...prev, allergenId]
-    )
-  }
-
-  const removeSelectedAllergen = (allergenId: string) => {
-    setSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
-  }
-
-  const removeEditSelectedAllergen = (allergenId: string) => {
-    setEditSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
-  }
-
-  const getSelectedAllergenNames = () => {
-    return allergens
-      .filter((allergen) => selectedAllergens.includes((allergen as any).id))
-      .map((allergen) => allergen.name)
-  }
-
   const mapAllergenNamesToIds = (ingredientAllergens: { uuid: string; allergenName: string }[]) => {
     return ingredientAllergens
       .map((ingredientAllergen: { uuid: string; allergenName: string }) => {
@@ -243,36 +214,6 @@ export default function IngredientsTable() {
         return foundAllergen ? foundAllergen.id : null // or foundAllergen.uuid
       })
       .filter((id): id is string => id !== null) // Type-safe filter to remove null values
-  }
-  const getEditSelectedAllergenDetails = () => {
-    return editSelectedAllergens
-      .map((allergenId) => {
-        const allergen = allergens.find((a) => a.id === allergenId) // or a.uuid - match your data structure
-        return allergen
-          ? {
-              id: allergenId,
-              name: allergen.name,
-              category: allergen.category,
-            }
-          : null
-      })
-      .filter(
-        (allergen): allergen is { id: string; name: string; category: string } => allergen !== null
-      )
-  }
-
-  const getAvailableAllergens = () => {
-    return allergens.filter(
-      (allergen) => !editSelectedAllergens.includes(allergen.id) // or allergen.uuid - match your data structure
-    )
-  }
-
-  const handleAddEditAllergen = (allergenId: string) => {
-    setEditSelectedAllergens((prev) => [...prev, allergenId])
-  }
-
-  const handleRemoveEditAllergen = (allergenId: string) => {
-    setEditSelectedAllergens((prev) => prev.filter((id) => id !== allergenId))
   }
 
   const handleEditIngredient = (ingredient: Ingredient) => {
@@ -404,98 +345,22 @@ export default function IngredientsTable() {
                     disabled={loading}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label>Allergens</Label>
-                  <DropdownMenu open={allergenDropdownOpen} onOpenChange={setAllergenDropdownOpen}>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="w-full justify-between text-left font-normal"
-                        disabled={allergensLoading || loading}
-                      >
-                        <span>
-                          {allergensLoading
-                            ? "Loading allergens..."
-                            : selectedAllergens.length === 0
-                              ? "Select allergens..."
-                              : `${selectedAllergens.length} allergen${selectedAllergens.length === 1 ? "" : "s"} selected`}
-                        </span>
-                        <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      className="w-[var(--radix-dropdown-menu-trigger-width)]"
-                      side="bottom"
-                      align="start"
-                      sideOffset={4}
-                      avoidCollisions={false}
-                    >
-                      <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <Input
-                        placeholder="Search allergens..."
-                        value={allergenSearch}
-                        onChange={(e) => setAllergenSearch(e.target.value)}
-                        className="mb-2 w-full px-2 py-1 text-sm"
-                      />
-                      {allergensError ? (
-                        <div className="px-2 py-1 text-sm text-red-500">
-                          Error loading allergens: {allergensError}
-                        </div>
-                      ) : allergensLoading ? (
-                        <div className="px-2 py-1 text-sm">Loading allergens...</div>
-                      ) : allergens.length === 0 ? (
-                        <div className="px-2 py-1 text-sm text-muted-foreground">
-                          No allergens available
-                        </div>
-                      ) : (
-                        <div className="max-h-60 overflow-y-auto">
-                          {allergens
-                            .filter((a) =>
-                              a.name.toLowerCase().includes(allergenSearch.toLowerCase())
-                            )
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map((allergen) => (
-                              <DropdownMenuCheckboxItem
-                                key={allergen.id}
-                                checked={selectedAllergens.includes(allergen.id)}
-                                onCheckedChange={() => handleAllergenToggle(allergen.id)}
-                                className="flex items-center space-x-2 px-2 py-2"
-                              >
-                                <div className="flex flex-col">
-                                  <span className="font-medium">{allergen.name}</span>
-                                  {allergen.category && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {allergen.category}
-                                    </span>
-                                  )}
-                                </div>
-                              </DropdownMenuCheckboxItem>
-                            ))}
-                        </div>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {/* Display selected allergens as badges */}
-                  {selectedAllergens.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      {getSelectedAllergenNames().map((name, index) => (
-                        <Badge key={selectedAllergens[index]} variant="outline" className="text-xs">
-                          {name}
-                          <button
-                            type="button"
-                            className="ml-1 hover:text-destructive"
-                            onClick={() => removeSelectedAllergen(selectedAllergens[index])}
-                            disabled={loading}
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </Badge>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <MultiSelect
+                  label="Allergens"
+                  options={allergens.map((allergen) => ({
+                    value: allergen.id,
+                    label: allergen.name,
+                    description: allergen.category,
+                  }))}
+                  selectedValues={selectedAllergens}
+                  onSelectionChange={setSelectedAllergens}
+                  placeholder="Select allergens..."
+                  searchPlaceholder="Search allergens..."
+                  loading={allergensLoading}
+                  error={allergensError || undefined}
+                  emptyMessage="No allergens available"
+                  disabled={loading}
+                />
               </div>
               <DialogFooter>
                 <Button
@@ -557,126 +422,22 @@ export default function IngredientsTable() {
                   />
                 </div>
 
-                {/* Allergens Management */}
-                <div>
-                  <Label className="mb-3 block text-sm font-medium">Manage Allergens</Label>
-                  {allergensLoading ? (
-                    <div className="text-sm text-muted-foreground">Loading allergens...</div>
-                  ) : allergensError ? (
-                    <div className="text-sm text-red-500">
-                      Error loading allergens: {allergensError}
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {/* Current Allergens Display */}
-                      <div className="rounded-lg border border-orange-200 bg-orange-50 p-4">
-                        <Label className="mb-3 block text-sm font-medium text-orange-800">
-                          Current Allergens ({editSelectedAllergens.length})
-                        </Label>
-                        {editSelectedAllergens.length === 0 ? (
-                          <p className="text-sm italic text-muted-foreground">
-                            No allergens selected. Add some allergens below.
-                          </p>
-                        ) : (
-                          <div className="flex flex-wrap gap-2">
-                            {getEditSelectedAllergenDetails().map((allergen) => (
-                              <div
-                                key={allergen.id}
-                                className="flex items-center gap-2 rounded-md bg-orange-100 px-3 py-2 text-sm shadow-sm"
-                              >
-                                <div className="flex flex-col">
-                                  <span className="font-medium">{allergen.name}</span>
-                                  {allergen.category && (
-                                    <span className="text-xs text-muted-foreground">
-                                      {allergen.category}
-                                    </span>
-                                  )}
-                                </div>
-                                <Button
-                                  size="icon"
-                                  variant="ghost"
-                                  className="h-5 w-5 rounded-full hover:bg-orange-200"
-                                  onClick={() => handleRemoveEditAllergen(allergen.id)}
-                                  title={`Remove ${allergen.name}`}
-                                  disabled={loading}
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Add More Allergens Section */}
-                      <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
-                        <Label className="mb-3 block text-sm font-medium text-blue-800">
-                          Add More Allergens
-                        </Label>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="outline"
-                              className="w-full justify-between"
-                              disabled={getAvailableAllergens().length === 0 || loading}
-                            >
-                              {getAvailableAllergens().length === 0
-                                ? "All allergens selected"
-                                : `Add Allergen (${getAvailableAllergens().length} available)`}
-                              <ChevronDown className="ml-2 h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent
-                            className="w-[var(--radix-dropdown-menu-trigger-width)]"
-                            side="bottom"
-                            align="start"
-                            sideOffset={4}
-                            avoidCollisions={false}
-                          >
-                            <DropdownMenuLabel>Available Allergens</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <Input
-                              placeholder="Search allergens..."
-                              value={editAllergenSearch}
-                              onChange={(e) => setEditAllergenSearch(e.target.value)}
-                              className="mb-2 w-full px-2 py-1 text-sm"
-                            />
-                            {getAvailableAllergens().filter((a) =>
-                              a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())
-                            ).length === 0 ? (
-                              <div className="px-2 py-2 text-center text-sm text-muted-foreground">
-                                No more allergens available
-                              </div>
-                            ) : (
-                              getAvailableAllergens()
-                                .filter((a) =>
-                                  a.name.toLowerCase().includes(editAllergenSearch.toLowerCase())
-                                )
-                                .sort((a, b) => a.name.localeCompare(b.name))
-                                .map((allergen) => (
-                                  <DropdownMenuItem
-                                    key={allergen.id}
-                                    onClick={() => handleAddEditAllergen(allergen.id)}
-                                    className="cursor-pointer"
-                                  >
-                                    <Plus className="mr-2 h-4 w-4" />
-                                    <div className="flex flex-col">
-                                      <span className="font-medium">{allergen.name}</span>
-                                      {allergen.category && (
-                                        <span className="text-xs text-muted-foreground">
-                                          {allergen.category}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </DropdownMenuItem>
-                                ))
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <MultiSelect
+                  label="Allergens"
+                  options={allergens.map((allergen) => ({
+                    value: allergen.id,
+                    label: allergen.name,
+                    description: allergen.category,
+                  }))}
+                  selectedValues={editSelectedAllergens}
+                  onSelectionChange={setEditSelectedAllergens}
+                  placeholder="Select allergens..."
+                  searchPlaceholder="Search allergens..."
+                  loading={allergensLoading}
+                  error={allergensError || undefined}
+                  emptyMessage="No allergens available"
+                  disabled={loading}
+                />
               </div>
               <DialogFooter>
                 <Button

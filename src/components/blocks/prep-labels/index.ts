@@ -1,0 +1,6 @@
+export { PrepLabelsPage } from "./prep-labels"
+export { PrepLabelsHero } from "./sections/PrepLabelsHero"
+export { PrepLabelsWhyMatters } from "./sections/PrepLabelsWhyMatters"
+export { PrepLabelsFeatures } from "./sections/PrepLabelsFeatures"
+export { PrepLabelsExample } from "./sections/PrepLabelsExample"
+export { PrepLabelsBenefits } from "./sections/PrepLabelsBenefits"

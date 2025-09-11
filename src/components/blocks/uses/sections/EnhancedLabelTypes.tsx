@@ -1,6 +1,7 @@
 "use client"
 import React from "react"
 import { motion } from "framer-motion"
+import Link from "next/link"
 import {
   Clock,
   ChefHat,
@@ -10,6 +11,7 @@ import {
   AlertTriangle,
   CheckCircle,
   FileText,
+  ArrowRight,
 } from "lucide-react"
 
 export const EnhancedLabelTypes = () => {
@@ -188,6 +190,25 @@ export const EnhancedLabelTypes = () => {
                         <span className="text-sm leading-relaxed text-gray-700">{benefit}</span>
                       </motion.div>
                     ))}
+                  </div>
+
+                  {/* Learn More Link */}
+                  <div className="mt-6 border-t border-gray-200 pt-4">
+                    <Link
+                      href={
+                        labelType.type === "Prep Labels"
+                          ? "/prep-labels"
+                          : labelType.type === "Cook Labels"
+                            ? "/cooked-labels"
+                            : labelType.type === "PPDS Labels"
+                              ? "/natashas-law"
+                              : "#"
+                      }
+                      className="inline-flex items-center text-sm font-medium text-purple-600 transition-colors hover:text-purple-800"
+                    >
+                      Learn more about {labelType.type}
+                      <ArrowRight className="ml-1 h-4 w-4" />
+                    </Link>
                   </div>
                 </div>
               </div>

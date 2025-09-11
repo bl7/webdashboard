@@ -1,0 +1,6 @@
+export { CookedLabelsPage } from "./cooked-labels"
+export { CookedLabelsHero } from "./sections/CookedLabelsHero"
+export { CookedLabelsWhyMatters } from "./sections/CookedLabelsWhyMatters"
+export { CookedLabelsFeatures } from "./sections/CookedLabelsFeatures"
+export { CookedLabelsExample } from "./sections/CookedLabelsExample"
+export { CookedLabelsBenefits } from "./sections/CookedLabelsBenefits"

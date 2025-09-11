@@ -25,7 +25,7 @@ const WhatWeDoShowcase = () => {
         },
         expiry: "2024-07-05T08:00:00Z",
         useInitials: true,
-        selectedInitial: "BR",
+        selectedInitial: "BL",
         allergens: [],
         labelHeight: "40mm" as const,
         allIngredients: [],
@@ -57,7 +57,7 @@ const WhatWeDoShowcase = () => {
         },
         expiry: "2024-07-01T18:00:00Z",
         useInitials: true,
-        selectedInitial: "NG",
+        selectedInitial: "BL",
         allergens: ["Celery"],
         labelHeight: "40mm" as const,
         allIngredients: [

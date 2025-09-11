@@ -28,6 +28,7 @@ import { useMenuItems, type MenuItem } from "@/hooks/useMenuItem"
 import { useIngredients } from "@/hooks/useIngredients"
 import { useAllergens } from "@/hooks/useAllergens"
 import { toast } from "sonner"
+import { MultiSelect, type MultiSelectOption } from "@/components/ui/multi-select"
 
 type MenuItemFormData = {
   menuItemName: string
@@ -69,8 +70,6 @@ export default function MenuItemsDashboard() {
     ingredientIDs: [],
   })
   const [itemToDelete, setItemToDelete] = useState<MenuItem | null>(null)
-  const [ingredientSearch, setIngredientSearch] = useState("")
-  const [editIngredientSearch, setEditIngredientSearch] = useState("")
 
   // Add New Ingredient Modal State
   const [newIngredient, setNewIngredient] = useState({
@@ -78,8 +77,6 @@ export default function MenuItemsDashboard() {
     expiryDays: 0,
   })
   const [selectedAllergens, setSelectedAllergens] = useState<string[]>([])
-  const [allergenDropdownOpen, setAllergenDropdownOpen] = useState(false)
-  const [allergenSearch, setAllergenSearch] = useState("")
 
   // Multi-select state
   const [selectedMenuItems, setSelectedMenuItems] = useState<string[]>([])
@@ -96,7 +93,7 @@ export default function MenuItemsDashboard() {
   } = useMenuItems()
 
   const { ingredients, loading: ingredientsLoading, addNewIngredient } = useIngredients()
-  const { allergens, isLoading: allergensLoading } = useAllergens()
+  const { allergens, isLoading: allergensLoading, error: allergensError } = useAllergens()
   const perPage = 10
 
   const filtered = menuItems.filter((item) =>
@@ -220,46 +217,6 @@ export default function MenuItemsDashboard() {
   const openDeleteModal = (item: MenuItem) => {
     setItemToDelete(item)
     setShowDeleteModal(true)
-  }
-
-  const handleAddIngredient = (ingredientId: string, isEdit = false) => {
-    if (isEdit) {
-      setEditItem((prev) => ({
-        ...prev,
-        ingredientIDs: prev.ingredientIDs.includes(ingredientId)
-          ? prev.ingredientIDs
-          : [...prev.ingredientIDs, ingredientId],
-      }))
-    } else {
-      setNewItem((prev) => ({
-        ...prev,
-        ingredientIDs: prev.ingredientIDs.includes(ingredientId)
-          ? prev.ingredientIDs
-          : [...prev.ingredientIDs, ingredientId],
-      }))
-    }
-  }
-
-  const handleRemoveIngredient = (ingredientId: string, isEdit = false) => {
-    if (isEdit) {
-      setEditItem((prev) => ({
-        ...prev,
-        ingredientIDs: prev.ingredientIDs.filter((id) => id !== ingredientId),
-      }))
-    } else {
-      setNewItem((prev) => ({
-        ...prev,
-        ingredientIDs: prev.ingredientIDs.filter((id) => id !== ingredientId),
-      }))
-    }
-  }
-
-  const getSelectedIngredients = (ingredientIds: string[]) => {
-    return ingredients.filter((ing) => ingredientIds.includes(ing.uuid))
-  }
-
-  const getAvailableIngredients = (ingredientIds: string[]) => {
-    return ingredients.filter((ing) => !ingredientIds.includes(ing.uuid))
   }
 
   const handleAddNewIngredient = async () => {
@@ -581,82 +538,21 @@ export default function MenuItemsDashboard() {
                 </button>
               </div>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between"
-                    disabled={getAvailableIngredients(newItem.ingredientIDs).length === 0}
-                  >
-                    {getAvailableIngredients(newItem.ingredientIDs).length === 0
-                      ? "All ingredients selected"
-                      : `Add Ingredient (${getAvailableIngredients(newItem.ingredientIDs).length} available)`}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-[var(--radix-dropdown-menu-trigger-width)]"
-                  side="bottom"
-                  align="start"
-                  sideOffset={4}
-                  avoidCollisions={false}
-                >
-                  <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <Input
-                    placeholder="Search ingredients..."
-                    value={ingredientSearch}
-                    onChange={(e) => setIngredientSearch(e.target.value)}
-                    className="mb-2 w-full px-2 py-1 text-sm"
-                  />
-                  {getAvailableIngredients(newItem.ingredientIDs).filter((ing) =>
-                    ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())
-                  ).length === 0 ? (
-                    <div className="px-2 py-1 text-sm text-muted-foreground">
-                      No more ingredients available
-                    </div>
-                  ) : (
-                    getAvailableIngredients(newItem.ingredientIDs)
-                      .filter((ing) =>
-                        ing.ingredientName.toLowerCase().includes(ingredientSearch.toLowerCase())
-                      )
-                      .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
-                      .map((ingredient) => (
-                        <DropdownMenuItem
-                          key={ingredient.uuid}
-                          onClick={() => handleAddIngredient(ingredient.uuid)}
-                        >
-                          {ingredient.ingredientName}
-                        </DropdownMenuItem>
-                      ))
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              {/* Selected Ingredients */}
-              {newItem.ingredientIDs.length > 0 && (
-                <div className="mt-3">
-                  <Label className="mb-2 block text-sm font-medium">Selected Ingredients</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {getSelectedIngredients(newItem.ingredientIDs).map((ingredient) => (
-                      <div
-                        key={ingredient.uuid}
-                        className="flex items-center gap-1 rounded-full bg-purple-100 px-3 py-1 text-sm"
-                      >
-                        <span>{ingredient.ingredientName}</span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-4 w-4 p-0 hover:bg-purple-200"
-                          onClick={() => handleRemoveIngredient(ingredient.uuid)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <MultiSelect
+                label="Ingredients"
+                options={ingredients.map((ingredient) => ({
+                  value: ingredient.uuid,
+                  label: ingredient.ingredientName,
+                }))}
+                selectedValues={newItem.ingredientIDs}
+                onSelectionChange={(selectedIds) =>
+                  setNewItem({ ...newItem, ingredientIDs: selectedIds })
+                }
+                placeholder="Select ingredients..."
+                searchPlaceholder="Search ingredients..."
+                loading={ingredientsLoading}
+                emptyMessage="No ingredients available"
+              />
             </div>
           </div>
           <DialogFooter>
@@ -707,89 +603,21 @@ export default function MenuItemsDashboard() {
                   + Add New Ingredient
                 </button>
               </div>
-              <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-                <Label className="mb-3 block text-sm font-medium text-green-800">
-                  Current Ingredients ({editItem.ingredientIDs.length})
-                </Label>
-                {editItem.ingredientIDs.length === 0 ? (
-                  <p className="text-sm italic text-muted-foreground">
-                    No ingredients selected. Add some ingredients below.
-                  </p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {getSelectedIngredients(editItem.ingredientIDs).map((ingredient) => (
-                      <div
-                        key={ingredient.uuid}
-                        className="flex items-center gap-1 rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
-                      >
-                        <span>{ingredient.ingredientName}</span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          className="h-4 w-4 p-0 hover:bg-green-200"
-                          onClick={() => handleRemoveIngredient(ingredient.uuid, true)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between"
-                    disabled={getAvailableIngredients(editItem.ingredientIDs).length === 0}
-                  >
-                    {getAvailableIngredients(editItem.ingredientIDs).length === 0
-                      ? "All ingredients selected"
-                      : `Add Ingredient (${getAvailableIngredients(editItem.ingredientIDs).length} available)`}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-[var(--radix-dropdown-menu-trigger-width)]"
-                  side="bottom"
-                  align="start"
-                  sideOffset={4}
-                  avoidCollisions={false}
-                >
-                  <DropdownMenuLabel>Available Ingredients</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <Input
-                    placeholder="Search ingredients..."
-                    value={editIngredientSearch}
-                    onChange={(e) => setEditIngredientSearch(e.target.value)}
-                    className="mb-2 w-full px-2 py-1 text-sm"
-                  />
-                  {getAvailableIngredients(editItem.ingredientIDs).filter((ing) =>
-                    ing.ingredientName.toLowerCase().includes(editIngredientSearch.toLowerCase())
-                  ).length === 0 ? (
-                    <div className="px-2 py-2 text-center text-sm text-muted-foreground">
-                      No more ingredients available
-                    </div>
-                  ) : (
-                    getAvailableIngredients(editItem.ingredientIDs)
-                      .filter((ing) =>
-                        ing.ingredientName
-                          .toLowerCase()
-                          .includes(editIngredientSearch.toLowerCase())
-                      )
-                      .sort((a, b) => a.ingredientName.localeCompare(b.ingredientName))
-                      .map((ingredient) => (
-                        <DropdownMenuItem
-                          key={ingredient.uuid}
-                          onClick={() => handleAddIngredient(ingredient.uuid, true)}
-                        >
-                          {ingredient.ingredientName}
-                        </DropdownMenuItem>
-                      ))
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <MultiSelect
+                label="Ingredients"
+                options={ingredients.map((ingredient) => ({
+                  value: ingredient.uuid,
+                  label: ingredient.ingredientName,
+                }))}
+                selectedValues={editItem.ingredientIDs}
+                onSelectionChange={(selectedIds) =>
+                  setEditItem({ ...editItem, ingredientIDs: selectedIds })
+                }
+                placeholder="Select ingredients..."
+                searchPlaceholder="Search ingredients..."
+                loading={ingredientsLoading}
+                emptyMessage="No ingredients available"
+              />
             </div>
           </div>
           <DialogFooter>
@@ -947,54 +775,22 @@ export default function MenuItemsDashboard() {
                 disabled={ingredientsLoading}
               />
             </div>
-            <div className="space-y-2">
-              <Label>Allergens</Label>
-              <DropdownMenu open={allergenDropdownOpen} onOpenChange={setAllergenDropdownOpen}>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-between"
-                    disabled={allergensLoading}
-                  >
-                    {selectedAllergens.length === 0
-                      ? "Select allergens..."
-                      : `${selectedAllergens.length} allergen(s) selected`}
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-full">
-                  <DropdownMenuLabel>Select Allergens</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <Input
-                    placeholder="Search allergens..."
-                    value={allergenSearch}
-                    onChange={(e) => setAllergenSearch(e.target.value)}
-                    className="mb-2 w-full px-2 py-1 text-sm"
-                  />
-                  {allergens
-                    .filter((allergen) =>
-                      allergen.name.toLowerCase().includes(allergenSearch.toLowerCase())
-                    )
-                    .map((allergen) => (
-                      <DropdownMenuCheckboxItem
-                        key={allergen.id}
-                        checked={selectedAllergens.includes(allergen.id)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            setSelectedAllergens([...selectedAllergens, allergen.id])
-                          } else {
-                            setSelectedAllergens(
-                              selectedAllergens.filter((id) => id !== allergen.id)
-                            )
-                          }
-                        }}
-                      >
-                        {allergen.name}
-                      </DropdownMenuCheckboxItem>
-                    ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
+            <MultiSelect
+              label="Allergens"
+              options={allergens.map((allergen) => ({
+                value: allergen.id,
+                label: allergen.name,
+                description: allergen.category,
+              }))}
+              selectedValues={selectedAllergens}
+              onSelectionChange={setSelectedAllergens}
+              placeholder="Select allergens..."
+              searchPlaceholder="Search allergens..."
+              loading={allergensLoading}
+              error={allergensError || undefined}
+              emptyMessage="No allergens available"
+              disabled={ingredientsLoading}
+            />
           </div>
           <DialogFooter>
             <Button

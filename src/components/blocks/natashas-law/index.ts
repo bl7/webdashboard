@@ -1,1 +1,6 @@
 export { NatashasLawPage } from "./natashas-law"
+export { NatashasLawHero } from "./sections/NatashasLawHero"
+export { NatashasLawWhyMatters } from "./sections/NatashasLawWhyMatters"
+export { NatashasLawHowItWorks } from "./sections/NatashasLawHowItWorks"
+export { NatashasLawExampleLabel } from "./sections/NatashasLawExampleLabel"
+export { NatashasLawBenefits } from "./sections/NatashasLawBenefits"

@@ -1,28 +1,45 @@
-import type { Metadata } from "next"
-import { NatashasLawPage } from "@/components/blocks/natashas-law/natashas-law"
+import { NatashasLawPage } from "@/components/blocks/natashas-law"
+import { Metadata } from "next"
+import React from "react"
 
 export const metadata: Metadata = {
-  title: "InstaLabel: Natasha's Law Compliance Software | UK Food Labeling",
+  title: "Natasha's Law / PPDS Labels | Compliance Made Effortless | InstaLabel",
   description:
-    "InstaLabel ensures 100% Natasha's Law compliance for UK food businesses. AI-powered software automatically generates compliant labels with allergen information, ingredients, and expiry dates. Start your free trial.",
+    "Print fully compliant PPDS labels in seconds. InstaLabel automatically formats ingredients, highlights allergens, and includes all legally required info for Natasha's Law compliance.",
   keywords: [
-    "natasha's law",
-    "natasha's law compliance",
-    "PPDS labeling",
-    "food allergen labeling",
-    "UK food labeling regulations",
-    "kitchen label software",
+    "PPDS labels",
+    "Natasha's Law compliance labels",
+    "food allergen labels software UK",
+    "prepacked for direct sale labels",
+    "Natasha's Law requirements",
+    "PPDS labeling software",
+    "food allergen compliance",
+    "restaurant labeling UK",
+    "food safety labels",
+    "allergen warning labels",
+    "kitchen labeling software",
+    "food prep labels",
+    "compliance labeling",
+    "FSA labeling requirements",
+    "food business labeling",
+    "allergen management software",
+    "restaurant compliance",
+    "food labeling automation",
+    "kitchen management software",
+    "food safety compliance",
+    "thermal printer labels",
+    "kitchen automation",
+    "restaurant technology",
+    "food prep workflow",
+    "kitchen efficiency",
+    "food labeling software",
     "best kitchen label software",
-    "allergen label software",
-    "food safety labeling software",
-    "kitchen automation software",
-    "label printer software UK",
     "instalabel software",
   ],
   openGraph: {
-    title: "InstaLabel: Natasha's Law Compliance Software | UK Food Labeling",
+    title: "Natasha's Law / PPDS Labels | Compliance Made Effortless",
     description:
-      "InstaLabel ensures 100% Natasha's Law compliance for UK food businesses. AI-powered software automatically generates compliant labels with allergen information, ingredients, and expiry dates. Start your free trial.",
+      "Print fully compliant PPDS labels in seconds. InstaLabel automatically formats ingredients, highlights allergens, and includes all legally required info.",
     url: "https://www.instalabel.co/natashas-law",
     type: "website",
     images: [
@@ -30,15 +47,15 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "InstaLabel - Natasha's Law Compliance Software",
+        alt: "Natasha's Law / PPDS Labels - Compliance Made Effortless",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "InstaLabel: Natasha's Law Compliance Software | UK Food Labeling",
+    title: "Natasha's Law / PPDS Labels | Compliance Made Effortless",
     description:
-      "InstaLabel ensures 100% Natasha's Law compliance for UK food businesses. AI-powered software automatically generates compliant labels with allergen information, ingredients, and expiry dates. Start your free trial.",
+      "Print fully compliant PPDS labels in seconds. InstaLabel automatically formats ingredients, highlights allergens, and includes all legally required info.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -61,20 +78,20 @@ const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "InstaLabel Natasha's Law Compliance Software",
+    name: "Natasha's Law / PPDS Labels",
     description:
-      "InstaLabel ensures 100% Natasha's Law compliance for UK food businesses. AI-powered software automatically generates compliant labels with allergen information, ingredients, and expiry dates. Start your free trial.",
+      "Print fully compliant PPDS labels in seconds. InstaLabel automatically formats ingredients, highlights allergens, and includes all legally required info.",
     url: "https://www.instalabel.co/natashas-law",
     mainEntity: {
       "@type": "SoftwareApplication",
-      name: "InstaLabel",
-      description: "AI-powered kitchen label software for Natasha's Law compliance",
+      name: "InstaLabel PPDS Labels",
+      description: "Software for creating compliant PPDS labels under Natasha's Law",
       applicationCategory: "BusinessApplication",
-      operatingSystem: "Web, Android",
+      operatingSystem: "Web-based",
       aggregateRating: {
         "@type": "AggregateRating",
         ratingValue: "4.9",
-        reviewCount: "500",
+        reviewCount: "200",
       },
     },
     breadcrumb: {
@@ -89,7 +106,7 @@ const Page = () => {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Natasha's Law Compliance",
+          name: "Natasha's Law / PPDS Labels",
           item: "https://www.instalabel.co/natashas-law",
         },
       ],

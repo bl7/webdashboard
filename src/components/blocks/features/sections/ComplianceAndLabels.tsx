@@ -174,7 +174,7 @@ export const ComplianceAndLabels = () => {
                         item={samplePrep}
                         expiry={samplePrep.expiryDate}
                         useInitials={true}
-                        selectedInitial="NG"
+                        selectedInitial="BL"
                         allergens={["Celery"]}
                         labelHeight={"40mm"}
                         allIngredients={samplePrepAllIngredients}

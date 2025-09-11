@@ -1,0 +1,6 @@
+export { IngredientLabelsPage } from "./ingredient-labels"
+export { IngredientLabelsHero } from "./sections/IngredientLabelsHero"
+export { IngredientLabelsChallenge } from "./sections/IngredientLabelsChallenge"
+export { IngredientLabelsFeatures } from "./sections/IngredientLabelsFeatures"
+export { IngredientLabelsExample } from "./sections/IngredientLabelsExample"
+export { IngredientLabelsBenefits } from "./sections/IngredientLabelsBenefits"

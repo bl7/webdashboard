@@ -107,7 +107,7 @@ export const Footer = () => {
 
       {/* Enhanced Footer Section */}
       <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-10 text-sm text-white">
-        <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-5">
+        <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-6">
           {/* Logo + Description */}
           <div className="space-y-3">
             <div className="relative">
@@ -154,30 +154,6 @@ export const Footer = () => {
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
                 Kitchen Label Printer Software
-              </Link>
-              <Link
-                href="/expiry-date-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                Expiry Date Label Software
-              </Link>
-              <Link
-                href="/dissolvable-kitchen-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                Dissolvable Kitchen Labels
-              </Link>
-              <Link
-                href="/natashas-law"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                Natasha's Law Compliance
-              </Link>
-              <Link
-                href="/haccp-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                HACCP Labels
               </Link>
               <Link
                 href="/label-printer-uk-comparison"
@@ -247,6 +223,63 @@ export const Footer = () => {
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
                 About InstaLabel
+              </Link>
+            </nav>
+          </div>
+
+          {/* Labels Links */}
+          <div className="space-y-3">
+            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+              Labels
+            </h3>
+            <nav className="flex flex-col gap-2 text-xs text-white/80">
+              <Link
+                href="/natashas-law"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Natasha's Law Labels
+              </Link>
+              <Link
+                href="/prep-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Prep Labels
+              </Link>
+              <Link
+                href="/cooked-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Cooked Labels
+              </Link>
+              <Link
+                href="/defrost-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Defrost Labels
+              </Link>
+              <Link
+                href="/ingredient-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Ingredient Labels
+              </Link>
+              <Link
+                href="/expiry-date-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Expiry Date Labels
+              </Link>
+              <Link
+                href="/haccp-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                HACCP Labels
+              </Link>
+              <Link
+                href="/dissolvable-kitchen-labels"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+              >
+                Dissolvable Labels
               </Link>
             </nav>
           </div>
