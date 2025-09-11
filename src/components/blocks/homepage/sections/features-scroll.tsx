@@ -152,7 +152,7 @@ export const TrustedBySection = () => {
                           width={96}
                           height={96}
                           sizes="96px"
-                          className="h-24 max-h-24 w-auto cursor-pointer object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                          className="h-24 max-h-24 w-auto cursor-pointer object-contain transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl"
                           loading="lazy"
                         />
                       </div>
@@ -174,16 +174,16 @@ export const TrustedBySection = () => {
                     <ChevronLeft className="h-5 w-5 text-gray-600" />
                   </button>
 
-                  <div className="flex h-32 items-center justify-center px-16">
+                  <div className="flex h-40 items-center justify-center px-16">
                     <div className="group relative">
                       <Image
                         key={currentIndex} // Force re-render when index changes
                         src={foodBusinesses[currentIndex].logo}
                         alt={`${foodBusinesses[currentIndex].name} logo`}
-                        width={96}
-                        height={96}
-                        sizes="96px"
-                        className="h-24 max-h-24 w-auto object-contain grayscale transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl group-hover:grayscale-0"
+                        width={128}
+                        height={128}
+                        sizes="128px"
+                        className="h-32 max-h-32 w-auto object-contain transition-all duration-500 ease-in-out group-hover:scale-110 group-hover:drop-shadow-xl"
                         title={foodBusinesses[currentIndex].name}
                         priority={currentIndex === 0}
                         loading={currentIndex === 0 ? "eager" : "lazy"}
