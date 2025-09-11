@@ -15,13 +15,57 @@ import {
 import { FileDown, Printer } from "lucide-react"
 import * as XLSX from "xlsx"
 import { formatLabelForPrintImage } from "../print/labelFormatter"
+import { PPDSLabelRenderer } from "../ppds/PPDSLabelRenderer"
+import { toPng } from "html-to-image"
+import ReactDOM from "react-dom/client"
 import { PrintQueueItem } from "@/types/print"
 import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import useBillingData from "../profile/hooks/useBillingData"
 
+// Helper function to generate PPDS label image
+async function formatPPDSLabelForPrintImage(
+  item: PrintQueueItem,
+  businessName: string = "InstaLabel"
+): Promise<string> {
+  console.log("🖼️ Starting PPDS image generation for:", item.name)
+
+  const container = document.createElement("div")
+  container.style.position = "absolute"
+  container.style.top = "0"
+  container.style.left = "0"
+  container.style.width = "60mm"
+  container.style.height = "80mm"
+  container.style.backgroundColor = "white"
+  container.style.zIndex = "-1"
+  container.style.visibility = "hidden"
+  document.body.appendChild(container)
+
+  const root = ReactDOM.createRoot(container)
+  root.render(
+    <PPDSLabelRenderer
+      item={item}
+      storageInfo="Keep refrigerated"
+      businessName={businessName}
+      allIngredients={[]}
+    />
+  )
+
+  // Wait for React to render
+  await new Promise((resolve) => setTimeout(resolve, 300))
+
+  const imageDataUrl = await toPng(container, {
+    quality: 1.0,
+    pixelRatio: 2,
+    backgroundColor: "white",
+  })
+
+  document.body.removeChild(container)
+  return imageDataUrl
+}
+
 // Helper function for expiry date calculation
-function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "default"): string {
+function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "ppd" | "default"): string {
   const today = new Date()
   const expiryDays =
     labelType === "cooked"
@@ -32,7 +76,9 @@ function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "default"):
           ? 2
           : labelType === "ppds"
             ? 5
-            : 3
+            : labelType === "ppd"
+              ? 5
+              : 3
 
   today.setDate(today.getDate() + expiryDays)
   return today.toISOString().split("T")[0]
@@ -46,7 +92,7 @@ interface PrintLog {
     itemId: string
     itemName: string
     quantity: number
-    labelType: "cooked" | "prep" | "ppds" | "default"
+    labelType: "cooked" | "prep" | "ppds" | "ppd" | "default"
     printedAt: string
     initial?: string
     labelHeight?: LabelHeight
@@ -297,7 +343,13 @@ export default function PrintSessionsPage() {
 
   function getLabelTypes(session: GroupedPrintSession): string {
     const types = [...new Set(session.items.map((item) => item.details.labelType))]
-    return types.map((type) => type.toUpperCase()).join(", ")
+    return types
+      .map((type) => {
+        if (type === "ppd") return "PPDS 40mm"
+        if (type === "ppds") return "PPDS 80mm"
+        return type.toUpperCase()
+      })
+      .join(", ")
   }
 
   async function handlePrintLog(log: PrintLog) {
@@ -512,19 +564,41 @@ export default function PrintSessionsPage() {
             allergens: [], // We don't have allergens in logs
           }
 
-          // Use the label height from the log or default to 40mm
-          const labelHeight = log.details.labelHeight || "40mm"
+          // Determine label height and print function based on label type
+          let labelHeight = log.details.labelHeight || "40mm"
+          let imageDataUrl: string
 
-          // Generate the label image
-          const imageDataUrl = await formatLabelForPrintImage(
-            printItem,
-            allergenNames,
-            {}, // customExpiry
-            5, // maxIngredients
-            false, // useInitials
-            log.details.initial || "", // selectedInitial
-            labelHeight
-          )
+          if (log.details.labelType === "ppd") {
+            // PPD (PPDS 40mm) - use label print page function
+            labelHeight = "40mm"
+            imageDataUrl = await formatLabelForPrintImage(
+              printItem,
+              allergenNames,
+              {}, // customExpiry
+              5, // maxIngredients
+              false, // useInitials
+              log.details.initial || "", // selectedInitial
+              labelHeight
+            )
+          } else if (log.details.labelType === "ppds") {
+            // PPDS (PPDS 80mm) - use PPDS page function
+            labelHeight = "80mm"
+            imageDataUrl = await formatPPDSLabelForPrintImage(
+              printItem,
+              "InstaLabel" // businessName
+            )
+          } else {
+            // Other label types - use default function
+            imageDataUrl = await formatLabelForPrintImage(
+              printItem,
+              allergenNames,
+              {}, // customExpiry
+              5, // maxIngredients
+              false, // useInitials
+              log.details.initial || "", // selectedInitial
+              labelHeight
+            )
+          }
 
           console.log(
             `🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl.length}`
@@ -576,7 +650,12 @@ export default function PrintSessionsPage() {
       "Log ID": log.id,
       "Item Name": log.details.itemName,
       Quantity: log.details.quantity,
-      "Label Type": log.details.labelType.toUpperCase(),
+      "Label Type":
+        log.details.labelType === "ppd"
+          ? "PPDS 40mm"
+          : log.details.labelType === "ppds"
+            ? "PPDS 80mm"
+            : log.details.labelType.toUpperCase(),
       "Printed At": formatPrintedAt(log.details.printedAt),
       "Logged At": formatTimestamp(log.timestamp),
       "Printer Used":
@@ -766,7 +845,11 @@ export default function PrintSessionsPage() {
                               : "bg-green-100 text-green-800"
                       }`}
                     >
-                      {log.details.labelType.toUpperCase()}
+                      {log.details.labelType === "ppd"
+                        ? "PPDS 40mm"
+                        : log.details.labelType === "ppds"
+                          ? "PPDS 80mm"
+                          : log.details.labelType.toUpperCase()}
                     </span>
                   </TableCell>
                   <TableCell>{formatPrintedAt(log.details.printedAt)}</TableCell>
