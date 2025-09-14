@@ -141,39 +141,53 @@ function getBestAvailablePrinter(
   console.log("🖨️ Printer Selection Debug:", {
     selectedPrinter: selectedPrinter?.name,
     defaultPrinter: defaultPrinter?.name,
-    availablePrinters: availablePrinters?.slice(0, 5).map((p) => p.name),
+    availablePrinters: availablePrinters?.slice(0, 5).map((p) => p.name), // Limit log spam
     availableCount: availablePrinters?.length || 0,
   })
 
-  const validPrinters = (availablePrinters || []).filter(
-    (printer) =>
-      printer &&
-      printer.name &&
-      printer.name.trim() !== "" &&
-      printer.name !== "Fallback_Printer" &&
-      !printer.name.toLowerCase().includes("fallback")
+  // Ensure we have a valid array
+  const validPrinters = (availablePrinters || []).filter((printer) => {
+    const name = getPrinterName(printer)
+    return (
+      name &&
+      name.trim() !== "" &&
+      name !== "Fallback_Printer" &&
+      !name.toLowerCase().includes("fallback")
+    )
+  })
+
+  console.log(
+    "🖨️ Valid printers after filtering:",
+    validPrinters.map((p) => p.name)
   )
 
+  // First priority: selected printer (if it exists in valid printers)
   if (
     selectedPrinter &&
     selectedPrinter.name !== "Fallback_Printer" &&
     validPrinters.some((p) => p.name === selectedPrinter.name)
   ) {
+    console.log("🖨️ ✅ Using selected printer:", selectedPrinter.name)
     return { printer: selectedPrinter, reason: "Selected printer available" }
   }
 
+  // Second priority: default printer (if it exists in valid printers)
   if (
     defaultPrinter &&
     defaultPrinter.name !== "Fallback_Printer" &&
     validPrinters.some((p) => p.name === defaultPrinter.name)
   ) {
+    console.log("🖨️ ✅ Using default printer:", defaultPrinter.name)
     return { printer: defaultPrinter, reason: "Default printer available" }
   }
 
+  // Third priority: first available valid printer
   if (validPrinters.length > 0) {
+    console.log("🖨️ ✅ Using first available printer:", validPrinters[0].name)
     return { printer: validPrinters[0], reason: "First available printer" }
   }
 
+  console.log("🖨️ ❌ No valid printers available")
   return { printer: null, reason: "No valid printers available" }
 }
 
