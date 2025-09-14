@@ -8,6 +8,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
 import { toPng } from "html-to-image"
 import { PPDSLabelRenderer } from "./PPDSLabelRenderer"
+import { logAction } from "@/lib/logAction"
+import ReactDOM from "react-dom/client"
 
 function getPrinterName(printer: any): string {
   if (!printer) return ""
@@ -87,26 +89,34 @@ export default function PPDSPage() {
       alert("No valid printer available")
       return
     }
+
+    console.log("🖨️ Starting PPDS print process for", printQueue.length, "items")
+    const sessionId = `ppds-session-${Date.now()}-${Math.random().toString(36).slice(2)}`
     let successCount = 0
     let failCount = 0
-    for (const item of printQueue) {
-      for (let i = 0; i < item.quantity; i++) {
+    const failItems: string[] = []
+
+    try {
+      for (const item of printQueue) {
         try {
-          // Render label to PNG using html-to-image
-          const container = document.createElement("div")
-          container.style.position = "absolute"
-          container.style.top = "0"
-          container.style.left = "0"
-          container.style.width = "56mm"
-          container.style.height = "80mm"
-          container.style.backgroundColor = "white"
-          container.style.zIndex = "-1"
-          container.style.visibility = "hidden"
-          document.body.appendChild(container)
-          // Render PPDSLabelRenderer into container
-          import("react-dom/client").then(({ createRoot }) => {
-            const root = createRoot(container)
-            // Only pass serializable item data
+          console.log(`🖨️ Processing PPDS item: ${item.name} (quantity: ${item.quantity})`)
+
+          // Print multiple copies of the same label
+          for (let i = 0; i < item.quantity; i++) {
+            // Render label to PNG using html-to-image
+            const container = document.createElement("div")
+            container.style.position = "absolute"
+            container.style.top = "0"
+            container.style.left = "0"
+            container.style.width = "56mm"
+            container.style.height = "80mm"
+            container.style.backgroundColor = "white"
+            container.style.zIndex = "-1"
+            container.style.visibility = "hidden"
+            document.body.appendChild(container)
+
+            // Render PPDSLabelRenderer into container
+            const root = ReactDOM.createRoot(container)
             root.render(
               <PPDSLabelRenderer
                 item={{ ...item }}
@@ -115,31 +125,80 @@ export default function PPDSPage() {
                 allIngredients={allIngredients}
               />
             )
-            setTimeout(async () => {
-              container.style.visibility = "visible"
-              const imageDataUrl = await toPng(container, {
-                cacheBust: true,
-                width: container.offsetWidth,
-                height: container.offsetHeight,
-                style: {
-                  transform: "scale(1)",
-                  transformOrigin: "top left",
-                },
-              })
-              root.unmount()
-              container.remove()
+
+            // Wait for React to render
+            await new Promise((resolve) => setTimeout(resolve, 300))
+            container.style.visibility = "visible"
+
+            const imageDataUrl = await toPng(container, {
+              cacheBust: true,
+              width: container.offsetWidth,
+              height: container.offsetHeight,
+              style: {
+                transform: "scale(1)",
+                transformOrigin: "top left",
+              },
+            })
+
+            root.unmount()
+            document.body.removeChild(container)
+
+            console.log(
+              `🖨️ PPDS image generated for ${item.name} copy ${i + 1}/${item.quantity}, length: ${imageDataUrl.length}`
+            )
+
+            // Print using WebSocket (if connected) or just log for debug
+            if (isConnected) {
               await print(imageDataUrl, undefined, { labelHeight: "80mm" })
-              successCount++
-              if (successCount + failCount === printQueue.reduce((sum, q) => sum + q.quantity, 0)) {
-                setPrintQueue([])
-              }
-            }, 300)
+              console.log(
+                `✅ Printed PPDS ${item.name} copy ${i + 1}/${item.quantity} successfully`
+              )
+            } else {
+              console.log(
+                "🖨️ DEBUG: Would print PPDS image data:",
+                imageDataUrl.substring(0, 100) + "..."
+              )
+            }
+          }
+
+          // Log the print action ONCE per item with correct quantity
+          await logAction("print_label", {
+            labelType: "ppds",
+            itemId: item.uid || item.id,
+            itemName: item.name,
+            quantity: item.quantity || 1,
+            printedAt: new Date().toISOString(),
+            expiryDate: item.expiryDate || calculateExpiryDate(expiryDays),
+            initial: "", // No initials in PPDS
+            labelHeight: "80mm",
+            printerUsed: printerSelection.printer || "Debug Mode",
+            sessionId,
           })
+
+          successCount++
         } catch (err) {
           failCount++
-          console.error("Print error for item", item.name, err)
+          failItems.push(item.name)
+          console.error("❌ PPDS print error for item", item.name, err)
         }
       }
+
+      console.log(`🖨️ PPDS print completed: ${successCount} successful, ${failCount} failed`)
+
+      if (failCount > 0) {
+        console.warn("⚠️ Some PPDS items failed to print:", failItems)
+        alert(
+          `PPDS print completed with errors: ${successCount} successful, ${failCount} failed. Failed items: ${failItems.join(", ")}`
+        )
+      } else if (successCount > 0) {
+        alert(`Successfully printed ${successCount} PPDS label(s)`)
+      }
+
+      // Clear print queue after completion
+      setPrintQueue([])
+    } catch (error) {
+      console.error("❌ Error during PPDS print:", error)
+      alert(`PPDS print failed: ${error instanceof Error ? error.message : String(error)}`)
     }
   }
 

@@ -391,8 +391,14 @@ export default function BulkPrintListDetail({
           }
 
           // Log the print action ONCE per item with correct quantity
+          // Convert "ppds" to "ppd" for bulk print list logging
+          const logLabelType =
+            (printItem.labelType || printItem.type) === "ppds"
+              ? "ppd"
+              : printItem.labelType || printItem.type
+
           await logAction("print_label", {
-            labelType: printItem.labelType || printItem.type,
+            labelType: logLabelType,
             itemId: printItem.uid || printItem.id,
             itemName: printItem.name,
             quantity: printItem.quantity || 1,

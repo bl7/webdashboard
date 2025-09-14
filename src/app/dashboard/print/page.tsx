@@ -508,8 +508,12 @@ export default function LabelDemo() {
           }
 
           // Log the print action ONCE per item with correct quantity
+          // Convert "ppds" to "ppd" for print label page logging
+          const logLabelType =
+            (item.labelType || item.type) === "ppds" ? "ppd" : item.labelType || item.type
+
           await logAction("print_label", {
-            labelType: item.labelType || item.type,
+            labelType: logLabelType,
             itemId: item.uid || item.id,
             itemName: item.name,
             quantity: item.quantity || 1,

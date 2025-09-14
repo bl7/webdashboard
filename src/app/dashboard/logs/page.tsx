@@ -22,6 +22,7 @@ import { PrintQueueItem } from "@/types/print"
 import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import useBillingData from "../profile/hooks/useBillingData"
+import { getAllIngredients, getAllMenuItems } from "@/lib/api"
 
 // Helper function for expiry date calculation
 function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "ppd" | "default"): string {
@@ -172,6 +173,12 @@ function getPrinterName(printer: any): string {
   return ""
 }
 
+// Helper to find ingredients for a menu item
+function findMenuItemIngredients(itemId: string, allMenuItems: any[]): any[] {
+  const menuItem = allMenuItems.find((item) => item.menuItemID === itemId || item.id === itemId)
+  return menuItem?.ingredients || []
+}
+
 export default function PrintSessionsPage() {
   const [printLogs, setPrintLogs] = useState<PrintLog[]>([])
   const [filteredLogs, setFilteredLogs] = useState<PrintLog[]>([])
@@ -181,6 +188,10 @@ export default function PrintSessionsPage() {
   const [printingStates, setPrintingStates] = useState<{ [key: string]: boolean }>({})
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
+
+  // Data for ingredients and menu items
+  const [allIngredients, setAllIngredients] = useState<any[]>([])
+  const [allMenuItems, setAllMenuItems] = useState<any[]>([])
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
@@ -214,6 +225,42 @@ export default function PrintSessionsPage() {
   useEffect(() => {
     const id = localStorage.getItem("userid")
     if (!id) return
+  }, [])
+
+  // Fetch ingredients and menu items data
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token")
+      if (!token) return
+
+      try {
+        const [ingredientsData, menuItemsData] = await Promise.all([
+          getAllIngredients(token),
+          getAllMenuItems(token),
+        ])
+
+        setAllIngredients(
+          Array.isArray(ingredientsData) ? ingredientsData : ingredientsData?.data || []
+        )
+
+        // Flatten menu items from categories
+        const menuItems = []
+        const categories = Array.isArray(menuItemsData) ? menuItemsData : menuItemsData?.data || []
+        for (const category of categories) {
+          for (const item of category.items || []) {
+            menuItems.push({
+              ...item,
+              categoryName: category.categoryName,
+            })
+          }
+        }
+        setAllMenuItems(menuItems)
+      } catch (error) {
+        console.error("Error fetching ingredients and menu items:", error)
+      }
+    }
+
+    fetchData()
   }, [])
 
   const fetchPrintSessions = async (page: number = 1, reset: boolean = true) => {
@@ -365,6 +412,9 @@ export default function PrintSessionsPage() {
       let failCount = 0
       const failItems: string[] = []
 
+      // Find ingredients for this menu item
+      const itemIngredients = findMenuItemIngredients(log.details.itemId, allMenuItems)
+
       // Create a PrintQueueItem from the log data
       const printItem: PrintQueueItem = {
         uid: log.details.itemId,
@@ -375,7 +425,7 @@ export default function PrintSessionsPage() {
         printedOn: new Date().toISOString().split("T")[0], // Today's date
         expiryDate: calculateExpiryDate(log.details.labelType), // Proper expiry calculation
         labelType: log.details.labelType,
-        ingredients: [], // We don't have ingredients in logs
+        ingredients: itemIngredients.map((ing: any) => ing.ingredientName || ing.name || "Unknown"),
         allergens: [], // We don't have allergens in logs
       }
 
@@ -411,7 +461,7 @@ export default function PrintSessionsPage() {
                 item={printItem}
                 storageInfo="Keep refrigerated"
                 businessName="InstaLabel"
-                allIngredients={[]}
+                allIngredients={allIngredients}
               />
             )
 
@@ -440,7 +490,12 @@ export default function PrintSessionsPage() {
               5, // maxIngredients
               false, // useInitials
               log.details.initial || "", // selectedInitial
-              labelHeight
+              labelHeight,
+              allIngredients.map((ing) => ({
+                uuid: String(ing.id || ing.ingredientID),
+                ingredientName: ing.ingredientName || ing.name,
+                allergens: ing.allergens || [],
+              }))
             )
           }
 
@@ -602,6 +657,9 @@ export default function PrintSessionsPage() {
       // Print each item in the session
       for (const log of session.items) {
         try {
+          // Find ingredients for this menu item
+          const itemIngredients = findMenuItemIngredients(log.details.itemId, allMenuItems)
+
           // Create a PrintQueueItem from the log data
           const printItem: PrintQueueItem = {
             uid: log.details.itemId,
@@ -612,7 +670,9 @@ export default function PrintSessionsPage() {
             printedOn: new Date().toISOString().split("T")[0], // Today's date
             expiryDate: calculateExpiryDate(log.details.labelType), // Proper expiry calculation
             labelType: log.details.labelType,
-            ingredients: [], // We don't have ingredients in logs
+            ingredients: itemIngredients.map(
+              (ing: any) => ing.ingredientName || ing.name || "Unknown"
+            ),
             allergens: [], // We don't have allergens in logs
           }
 
@@ -661,7 +721,7 @@ export default function PrintSessionsPage() {
                 item={printItem}
                 storageInfo="Keep refrigerated"
                 businessName="InstaLabel"
-                allIngredients={[]}
+                allIngredients={allIngredients}
               />
             )
 
@@ -691,7 +751,12 @@ export default function PrintSessionsPage() {
               5, // maxIngredients
               false, // useInitials
               log.details.initial || "", // selectedInitial
-              labelHeight
+              labelHeight,
+              allIngredients.map((ing) => ({
+                uuid: String(ing.id || ing.ingredientID),
+                ingredientName: ing.ingredientName || ing.name,
+                allergens: ing.allergens || [],
+              }))
             )
           }
 
