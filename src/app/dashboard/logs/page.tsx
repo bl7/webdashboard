@@ -364,6 +364,9 @@ export default function PrintSessionsPage() {
 
     try {
       console.log("🖨️ Starting re-print for log:", log.id, log.details.itemName)
+      console.log("🖨️ Printer connection status:", isConnected)
+      console.log("🖨️ Available printers:", availablePrinters.length)
+      console.log("🖨️ Selected printer:", selectedPrinterName)
 
       // Find printer by name
       const selectedPrinterObj =
@@ -421,7 +424,7 @@ export default function PrintSessionsPage() {
           )
 
           console.log(
-            `🖨️ Image generated for ${log.details.itemName} copy ${i + 1}/${log.details.quantity}, length: ${imageDataUrl.length}`
+            `🖨️ Image generated for ${log.details.itemName} copy ${i + 1}/${log.details.quantity}, length: ${imageDataUrl?.length || 0}`
           )
 
           if (!imageDataUrl) {
@@ -435,7 +438,7 @@ export default function PrintSessionsPage() {
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
-            await print(imageDataUrl)
+            await print(imageDataUrl, undefined, { labelHeight })
             console.log(
               `✅ Printed ${log.details.itemName} copy ${i + 1}/${log.details.quantity} successfully`
             )
@@ -455,9 +458,15 @@ export default function PrintSessionsPage() {
 
       if (failCount > 0) {
         console.warn("⚠️ Some items failed to print:", failItems)
+        alert(
+          `Print completed with errors: ${successCount} successful, ${failCount} failed. Failed items: ${failItems.join(", ")}`
+        )
+      } else if (successCount > 0) {
+        alert(`Successfully printed ${successCount} label(s)`)
       }
     } catch (error) {
       console.error("❌ Error during re-print:", error)
+      alert(`Print failed: ${error instanceof Error ? error.message : String(error)}`)
     } finally {
       setPrintingStates((prev) => ({ ...prev, [logId]: false }))
     }
@@ -468,6 +477,12 @@ export default function PrintSessionsPage() {
     setPrintingStates((prev) => ({ ...prev, [sessionId]: true }))
 
     try {
+      console.log("🖨️ Starting print session:", sessionId, "Items:", session.items.length)
+      console.log("🖨️ Printer connection status:", isConnected)
+      console.log("🖨️ Available printers:", availablePrinters.length)
+      console.log("🖨️ Selected printer:", selectedPrinterName)
+      console.log("🖨️ Printer loading:", printerLoading)
+
       if (printerLoading) {
         throw new Error("Checking printer status, please wait...")
       }
@@ -483,6 +498,15 @@ export default function PrintSessionsPage() {
         ) ||
         selectedPrinter ||
         defaultPrinter
+
+      console.log("🖨️ Printer selection debug:", {
+        selectedPrinterName,
+        printerToUse: printerToUse?.name,
+        selectedPrinter: selectedPrinter?.name,
+        defaultPrinter: defaultPrinter?.name,
+        availablePrinters: availablePrinters.map((p) => p.name),
+      })
+
       if (printerToUse) selectPrinter(printerToUse)
 
       // Get the best available printer using our helper function
@@ -491,6 +515,11 @@ export default function PrintSessionsPage() {
         defaultPrinter,
         availablePrinters
       )
+
+      console.log("🖨️ Final printer selection:", {
+        printer: printerSelection.printer?.name,
+        reason: printerSelection.reason,
+      })
 
       if (!printerSelection.printer) {
         console.warn("⚠️ No printer available, but allowing print for debug purposes")
@@ -568,9 +597,14 @@ export default function PrintSessionsPage() {
           let labelHeight = log.details.labelHeight || "40mm"
           let imageDataUrl: string
 
+          console.log(
+            `🖨️ Generating image for ${log.details.itemName}, labelType: ${log.details.labelType}, labelHeight: ${labelHeight}`
+          )
+
           if (log.details.labelType === "ppd") {
             // PPD (PPDS 40mm) - use label print page function
             labelHeight = "40mm"
+            console.log("🖨️ Using formatLabelForPrintImage for PPD")
             imageDataUrl = await formatLabelForPrintImage(
               printItem,
               allergenNames,
@@ -583,12 +617,14 @@ export default function PrintSessionsPage() {
           } else if (log.details.labelType === "ppds") {
             // PPDS (PPDS 80mm) - use PPDS page function
             labelHeight = "80mm"
+            console.log("🖨️ Using formatPPDSLabelForPrintImage for PPDS")
             imageDataUrl = await formatPPDSLabelForPrintImage(
               printItem,
               "InstaLabel" // businessName
             )
           } else {
             // Other label types - use default function
+            console.log("🖨️ Using formatLabelForPrintImage for other label types")
             imageDataUrl = await formatLabelForPrintImage(
               printItem,
               allergenNames,
@@ -601,7 +637,7 @@ export default function PrintSessionsPage() {
           }
 
           console.log(
-            `🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl.length}`
+            `🖨️ Image generated for ${log.details.itemName}, length: ${imageDataUrl?.length || 0}`
           )
 
           if (!imageDataUrl) {
@@ -615,7 +651,7 @@ export default function PrintSessionsPage() {
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
-            await print(imageDataUrl)
+            await print(imageDataUrl, undefined, { labelHeight })
             console.log(`✅ Printed ${log.details.itemName} successfully`)
           } else {
             console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
