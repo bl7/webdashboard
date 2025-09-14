@@ -23,47 +23,6 @@ import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import useBillingData from "../profile/hooks/useBillingData"
 
-// Helper function to generate PPDS label image
-async function formatPPDSLabelForPrintImage(
-  item: PrintQueueItem,
-  businessName: string = "InstaLabel"
-): Promise<string> {
-  console.log("🖼️ Starting PPDS image generation for:", item.name)
-
-  const container = document.createElement("div")
-  container.style.position = "absolute"
-  container.style.top = "0"
-  container.style.left = "0"
-  container.style.width = "60mm"
-  container.style.height = "80mm"
-  container.style.backgroundColor = "white"
-  container.style.zIndex = "-1"
-  container.style.visibility = "hidden"
-  document.body.appendChild(container)
-
-  const root = ReactDOM.createRoot(container)
-  root.render(
-    <PPDSLabelRenderer
-      item={item}
-      storageInfo="Keep refrigerated"
-      businessName={businessName}
-      allIngredients={[]}
-    />
-  )
-
-  // Wait for React to render
-  await new Promise((resolve) => setTimeout(resolve, 300))
-
-  const imageDataUrl = await toPng(container, {
-    quality: 1.0,
-    pixelRatio: 2,
-    backgroundColor: "white",
-  })
-
-  document.body.removeChild(container)
-  return imageDataUrl
-}
-
 // Helper function for expiry date calculation
 function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "ppd" | "default"): string {
   const today = new Date()
@@ -426,16 +385,64 @@ export default function PrintSessionsPage() {
       // Print multiple copies based on quantity
       for (let i = 0; i < log.details.quantity; i++) {
         try {
-          // Generate the label image
-          const imageDataUrl = await formatLabelForPrintImage(
-            printItem,
-            [], // allergenNames - empty since we don't have this in logs
-            {}, // customExpiry
-            5, // maxIngredients
-            false, // useInitials
-            log.details.initial || "", // selectedInitial
-            labelHeight
-          )
+          // Generate the label image based on label type
+          let imageDataUrl: string
+
+          if (log.details.labelType === "ppds") {
+            // PPDS (PPDS 80mm) - use same approach as PPDS page
+            console.log("🖨️ Using PPDS page approach for 80mm labels in handlePrintLog")
+
+            // Create container for 80mm PPDS label (same as PPDS page)
+            const container = document.createElement("div")
+            container.style.position = "absolute"
+            container.style.top = "0"
+            container.style.left = "0"
+            container.style.width = "56mm"
+            container.style.height = "80mm"
+            container.style.backgroundColor = "white"
+            container.style.zIndex = "-1"
+            container.style.visibility = "hidden"
+            document.body.appendChild(container)
+
+            // Render PPDSLabelRenderer into container (same as PPDS page)
+            const root = ReactDOM.createRoot(container)
+            root.render(
+              <PPDSLabelRenderer
+                item={printItem}
+                storageInfo="Keep refrigerated"
+                businessName="InstaLabel"
+                allIngredients={[]}
+              />
+            )
+
+            // Wait for React to render and generate image (same as PPDS page)
+            await new Promise((resolve) => setTimeout(resolve, 300))
+            container.style.visibility = "visible"
+
+            imageDataUrl = await toPng(container, {
+              cacheBust: true,
+              width: container.offsetWidth,
+              height: container.offsetHeight,
+              style: {
+                transform: "scale(1)",
+                transformOrigin: "top left",
+              },
+            })
+
+            root.unmount()
+            document.body.removeChild(container)
+          } else {
+            // Other label types - use default function
+            imageDataUrl = await formatLabelForPrintImage(
+              printItem,
+              [], // allergenNames - empty since we don't have this in logs
+              {}, // customExpiry
+              5, // maxIngredients
+              false, // useInitials
+              log.details.initial || "", // selectedInitial
+              labelHeight
+            )
+          }
 
           console.log(
             `🖨️ Image generated for ${log.details.itemName} copy ${i + 1}/${log.details.quantity}, length: ${imageDataUrl?.length || 0}`
@@ -452,7 +459,9 @@ export default function PrintSessionsPage() {
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
-            await print(imageDataUrl, undefined, { labelHeight })
+            // Use correct label height for PPDS labels
+            const printLabelHeight = log.details.labelType === "ppds" ? "80mm" : labelHeight
+            await print(imageDataUrl, undefined, { labelHeight: printLabelHeight })
             console.log(
               `✅ Printed ${log.details.itemName} copy ${i + 1}/${log.details.quantity} successfully`
             )
@@ -629,13 +638,49 @@ export default function PrintSessionsPage() {
               labelHeight
             )
           } else if (log.details.labelType === "ppds") {
-            // PPDS (PPDS 80mm) - use PPDS page function
+            // PPDS (PPDS 80mm) - use same approach as PPDS page
             labelHeight = "80mm"
-            console.log("🖨️ Using formatPPDSLabelForPrintImage for PPDS")
-            imageDataUrl = await formatPPDSLabelForPrintImage(
-              printItem,
-              "InstaLabel" // businessName
+            console.log("🖨️ Using PPDS page approach for 80mm labels")
+
+            // Create container for 80mm PPDS label (same as PPDS page)
+            const container = document.createElement("div")
+            container.style.position = "absolute"
+            container.style.top = "0"
+            container.style.left = "0"
+            container.style.width = "56mm"
+            container.style.height = "80mm"
+            container.style.backgroundColor = "white"
+            container.style.zIndex = "-1"
+            container.style.visibility = "hidden"
+            document.body.appendChild(container)
+
+            // Render PPDSLabelRenderer into container (same as PPDS page)
+            const root = ReactDOM.createRoot(container)
+            root.render(
+              <PPDSLabelRenderer
+                item={printItem}
+                storageInfo="Keep refrigerated"
+                businessName="InstaLabel"
+                allIngredients={[]}
+              />
             )
+
+            // Wait for React to render and generate image (same as PPDS page)
+            await new Promise((resolve) => setTimeout(resolve, 300))
+            container.style.visibility = "visible"
+
+            imageDataUrl = await toPng(container, {
+              cacheBust: true,
+              width: container.offsetWidth,
+              height: container.offsetHeight,
+              style: {
+                transform: "scale(1)",
+                transformOrigin: "top left",
+              },
+            })
+
+            root.unmount()
+            document.body.removeChild(container)
           } else {
             // Other label types - use default function
             console.log("🖨️ Using formatLabelForPrintImage for other label types")
@@ -665,7 +710,9 @@ export default function PrintSessionsPage() {
 
           // Print using WebSocket (if connected) or just log for debug
           if (isConnected) {
-            await print(imageDataUrl, undefined, { labelHeight })
+            // Use correct label height for PPDS labels
+            const printLabelHeight = log.details.labelType === "ppds" ? "80mm" : labelHeight
+            await print(imageDataUrl, undefined, { labelHeight: printLabelHeight })
             console.log(`✅ Printed ${log.details.itemName} successfully`)
           } else {
             console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")
