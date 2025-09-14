@@ -502,6 +502,8 @@ export default function PrintSessionsPage() {
           console.log(
             `🖨️ Image generated for ${log.details.itemName} copy ${i + 1}/${log.details.quantity}, length: ${imageDataUrl?.length || 0}`
           )
+          console.log("🖨️ PrintItem ingredients in handlePrintLog:", printItem.ingredients)
+          console.log("🖨️ AllIngredients count in handlePrintLog:", allIngredients.length)
 
           if (!imageDataUrl) {
             failCount++
@@ -672,7 +674,7 @@ export default function PrintSessionsPage() {
             labelType: log.details.labelType,
             ingredients: itemIngredients.map(
               (ing: any) => ing.ingredientName || ing.name || "Unknown"
-            ),
+            ), // Array of strings
             allergens: [], // We don't have allergens in logs
           }
 
@@ -683,6 +685,8 @@ export default function PrintSessionsPage() {
           console.log(
             `🖨️ Generating image for ${log.details.itemName}, labelType: ${log.details.labelType}, labelHeight: ${labelHeight}`
           )
+          console.log("🖨️ PrintItem ingredients:", printItem.ingredients)
+          console.log("🖨️ AllIngredients count:", allIngredients.length)
 
           if (log.details.labelType === "ppd") {
             // PPD (PPDS 40mm) - use label print page function
