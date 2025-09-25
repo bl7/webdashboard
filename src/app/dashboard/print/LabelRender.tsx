@@ -442,20 +442,36 @@ export default function LabelRender({
 
         {/* Allergen warnings for ingredient labels */}
         {itemAllergenNames.length > 0 && (
-          <div
-            style={{
-              fontWeight: 900,
-              color: "black",
-              fontSize: fontSize,
-              textAlign: "center",
-              marginTop: 2,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              fontFamily: "inherit",
-            }}
-          >
-            CONTAINS ALLERGENS
-          </div>
+          <>
+            <div
+              style={{
+                fontWeight: 900,
+                color: "black",
+                fontSize: fontSize,
+                textAlign: "center",
+                marginTop: 2,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                fontFamily: "inherit",
+              }}
+            >
+              CONTAINS ALLERGENS
+            </div>
+            <div
+              style={{
+                fontWeight: 700,
+                color: "black",
+                fontSize: fontSize - 2,
+                textAlign: "center",
+                marginTop: 1,
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+                fontFamily: "inherit",
+              }}
+            >
+              {itemAllergenNames.join(", ")}
+            </div>
+          </>
         )}
       </div>
     )
@@ -582,20 +598,36 @@ export default function LabelRender({
 
       {/* Allergen warnings */}
       {item.type === "ingredients" && itemAllergenNames.length > 0 && (
-        <div
-          style={{
-            fontWeight: 900,
-            color: "black",
-            fontSize: fontSize,
-            textAlign: "center",
-            marginTop: 2,
-            letterSpacing: 1,
-            textTransform: "uppercase",
-            fontFamily: "monospace",
-          }}
-        >
-          CONTAINS ALLERGENS
-        </div>
+        <>
+          <div
+            style={{
+              fontWeight: 900,
+              color: "black",
+              fontSize: fontSize,
+              textAlign: "center",
+              marginTop: 2,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              fontFamily: "monospace",
+            }}
+          >
+            CONTAINS ALLERGENS
+          </div>
+          <div
+            style={{
+              fontWeight: 700,
+              color: "black",
+              fontSize: fontSize - 2,
+              textAlign: "center",
+              marginTop: 1,
+              letterSpacing: 0.5,
+              textTransform: "uppercase",
+              fontFamily: "monospace",
+            }}
+          >
+            {itemAllergenNames.join(", ")}
+          </div>
+        </>
       )}
     </div>
   )
