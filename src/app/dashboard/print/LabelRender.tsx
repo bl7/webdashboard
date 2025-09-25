@@ -441,7 +441,7 @@ export default function LabelRender({
         </div>
 
         {/* Allergen warnings for ingredient labels */}
-        {itemAllergenNames.length > 0 && (
+        {itemAllergenNames.length > 0 ? (
           <>
             <div
               style={{
@@ -472,6 +472,21 @@ export default function LabelRender({
               {itemAllergenNames.join(", ")}
             </div>
           </>
+        ) : (
+          <div
+            style={{
+              fontWeight: 900,
+              color: "black",
+              fontSize: fontSize,
+              textAlign: "center",
+              marginTop: 2,
+              letterSpacing: 1,
+              textTransform: "uppercase",
+              fontFamily: "inherit",
+            }}
+          >
+            DOES NOT CONTAIN ANY ALLERGEN
+          </div>
         )}
       </div>
     )
@@ -597,8 +612,39 @@ export default function LabelRender({
       )}
 
       {/* Allergen warnings */}
-      {item.type === "ingredients" && itemAllergenNames.length > 0 && (
-        <>
+      {item.type === "ingredients" &&
+        (itemAllergenNames.length > 0 ? (
+          <>
+            <div
+              style={{
+                fontWeight: 900,
+                color: "black",
+                fontSize: fontSize,
+                textAlign: "center",
+                marginTop: 2,
+                letterSpacing: 1,
+                textTransform: "uppercase",
+                fontFamily: "monospace",
+              }}
+            >
+              CONTAINS ALLERGENS
+            </div>
+            <div
+              style={{
+                fontWeight: 700,
+                color: "black",
+                fontSize: fontSize - 2,
+                textAlign: "center",
+                marginTop: 1,
+                letterSpacing: 0.5,
+                textTransform: "uppercase",
+                fontFamily: "monospace",
+              }}
+            >
+              {itemAllergenNames.join(", ")}
+            </div>
+          </>
+        ) : (
           <div
             style={{
               fontWeight: 900,
@@ -611,24 +657,9 @@ export default function LabelRender({
               fontFamily: "monospace",
             }}
           >
-            CONTAINS ALLERGENS
+            DOES NOT CONTAIN ANY ALLERGEN
           </div>
-          <div
-            style={{
-              fontWeight: 700,
-              color: "black",
-              fontSize: fontSize - 2,
-              textAlign: "center",
-              marginTop: 1,
-              letterSpacing: 0.5,
-              textTransform: "uppercase",
-              fontFamily: "monospace",
-            }}
-          >
-            {itemAllergenNames.join(", ")}
-          </div>
-        </>
-      )}
+        ))}
     </div>
   )
 }

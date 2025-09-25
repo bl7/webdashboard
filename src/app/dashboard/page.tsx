@@ -22,7 +22,7 @@ const CARD_STYLES = {
     text: "text-red-700",
     accent: "bg-red-500",
     hover: "hover:from-red-100 hover:to-red-150",
-    icon: "🚫"
+    icon: "🚫",
   },
   ingredients: {
     bg: "bg-gradient-to-br from-emerald-50 to-emerald-100",
@@ -31,7 +31,7 @@ const CARD_STYLES = {
     text: "text-emerald-700",
     accent: "bg-emerald-500",
     hover: "hover:from-emerald-100 hover:to-emerald-150",
-    icon: "🥬"
+    icon: "🥬",
   },
   menuItems: {
     bg: "bg-gradient-to-br from-blue-50 to-blue-100",
@@ -40,12 +40,14 @@ const CARD_STYLES = {
     text: "text-purple-700",
     accent: "bg-purple-500",
     hover: "hover:from-blue-100 hover:to-blue-150",
-    icon: "📋"
+    icon: "📋",
   },
 }
 
 export default function DashboardPage() {
-  const [activeList, setActiveList] = useState<"allergens" | "ingredients" | "menuItems" | null>(null)
+  const [activeList, setActiveList] = useState<"allergens" | "ingredients" | "menuItems" | null>(
+    null
+  )
 
   const { customAllergens, isLoading: allergensLoading } = useAllergens()
   const { ingredients, loading: ingredientsLoading } = useIngredients()
@@ -74,21 +76,21 @@ export default function DashboardPage() {
       title: "Custom Allergens",
       count: customAllergens.length,
       loading: allergensLoading,
-      description: "Manage your custom allergen list"
+      description: "Manage your custom allergen list",
     },
     {
       key: "ingredients",
       title: "Ingredients",
       count: ingredients.length,
       loading: ingredientsLoading,
-      description: "Track all available ingredients"
+      description: "Track all available ingredients",
     },
     {
       key: "menuItems",
       title: "Menu Items",
       count: menuItems.length,
       loading: menuItemsLoading,
-      description: "View your complete menu"
+      description: "View your complete menu",
     },
   ] as const
 
@@ -109,9 +111,8 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-12">
       <div className="mx-auto w-full max-w-7xl">
-        
         {/* Expiration Metrics Cards */}
-        <motion.section 
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -121,7 +122,7 @@ export default function DashboardPage() {
         </motion.section>
 
         {/* Next To Expire Section */}
-        <motion.section 
+        <motion.section
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -131,7 +132,7 @@ export default function DashboardPage() {
         </motion.section>
 
         {/* Square Integration Dashboard */}
-        <motion.section 
+        {/* <motion.section 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
@@ -142,67 +143,68 @@ export default function DashboardPage() {
             <LowStockAlerts />
           </div>
           <PopularItemsDashboard />
-        </motion.section>
+        </motion.section> */}
 
         {/* Main Content */}
-        <motion.section 
+        <motion.section
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden"
+          className="overflow-hidden rounded-3xl border border-white/20 bg-white/70 shadow-2xl backdrop-blur-xl"
         >
           {/* Stats Cards */}
-          <div className={`grid transition-all duration-500 ease-in-out ${
-            activeList ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3 gap-0'
-          } w-full`}>
-            {!activeList && cards.map((card, index) => {
-              const style = CARD_STYLES[card.key]
-              return (
-                <motion.button
-                  key={card.key}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => setActiveList(card.key)}
-                  disabled={card.loading}
-                  className={`
-                    group relative p-8 text-left transition-all duration-300 ease-out w-full
-                    ${style.bg} ${style.hover} ${style.shadow}
-                    border-r border-white/30 last:border-r-0 md:border-r md:last:border-r-0
-                    hover:shadow-xl hover:shadow-slate-200/50
-                    disabled:cursor-not-allowed disabled:opacity-50
-                  `}
-                >
-                  {/* Card Content */}
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-4xl mb-2">{style.icon}</div>
-                      <div className={`w-3 h-3 rounded-full ${style.accent} opacity-60 group-hover:opacity-100 transition-opacity`}></div>
-                    </div>
-                    
-                    <h3 className={`text-lg font-bold ${style.text} mb-2 group-hover:text-opacity-90 transition-colors`}>
-                      {card.title}
-                    </h3>
-                    
-                    <div className="flex items-baseline gap-2 mb-3">
-                      <span className={`text-4xl font-black ${style.text}`}>
-                        {card.loading ? <AppLoader message="" /> : card.count}
-                      </span>
-                      <span className="text-sm text-slate-500 font-medium">items</span>
-                    </div>
-                    
-                    <p className="text-sm text-slate-600 group-hover:text-slate-700 transition-colors">
-                      {card.description}
-                    </p>
-                  </div>
+          <div
+            className={`grid transition-all duration-500 ease-in-out ${
+              activeList ? "grid-cols-1" : "grid-cols-1 gap-0 md:grid-cols-3"
+            } w-full`}
+          >
+            {!activeList &&
+              cards.map((card, index) => {
+                const style = CARD_STYLES[card.key]
+                return (
+                  <motion.button
+                    key={card.key}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 + 0.3 }}
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setActiveList(card.key)}
+                    disabled={card.loading}
+                    className={`group relative w-full p-8 text-left transition-all duration-300 ease-out ${style.bg} ${style.hover} ${style.shadow} border-r border-white/30 last:border-r-0 hover:shadow-xl hover:shadow-slate-200/50 disabled:cursor-not-allowed disabled:opacity-50 md:border-r md:last:border-r-0`}
+                  >
+                    {/* Card Content */}
+                    <div className="relative z-10">
+                      <div className="mb-4 flex items-center justify-between">
+                        <div className="mb-2 text-4xl">{style.icon}</div>
+                        <div
+                          className={`h-3 w-3 rounded-full ${style.accent} opacity-60 transition-opacity group-hover:opacity-100`}
+                        ></div>
+                      </div>
 
-                  {/* Subtle gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </motion.button>
-              )
-            })}
+                      <h3
+                        className={`text-lg font-bold ${style.text} mb-2 transition-colors group-hover:text-opacity-90`}
+                      >
+                        {card.title}
+                      </h3>
+
+                      <div className="mb-3 flex items-baseline gap-2">
+                        <span className={`text-4xl font-black ${style.text}`}>
+                          {card.loading ? <AppLoader message="" /> : card.count}
+                        </span>
+                        <span className="text-sm font-medium text-slate-500">items</span>
+                      </div>
+
+                      <p className="text-sm text-slate-600 transition-colors group-hover:text-slate-700">
+                        {card.description}
+                      </p>
+                    </div>
+
+                    {/* Subtle gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+                  </motion.button>
+                )
+              })}
 
             {/* Expanded List View */}
             <AnimatePresence mode="wait">
@@ -212,30 +214,27 @@ export default function DashboardPage() {
                   animate={{ opacity: 1, height: "auto" }}
                   exit={{ opacity: 0, height: 0 }}
                   transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="col-span-1 md:col-span-3 overflow-hidden"
+                  className="col-span-1 overflow-hidden md:col-span-3"
                 >
-                  <div className={`
-                    p-8 min-h-[500px] relative
-                    ${CARD_STYLES[activeList].bg}
-                  `}>
+                  <div className={`relative min-h-[500px] p-8 ${CARD_STYLES[activeList].bg} `}>
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-8">
+                    <div className="mb-8 flex items-center justify-between">
                       <div className="flex items-center gap-4">
                         <div className="text-3xl">{CARD_STYLES[activeList].icon}</div>
                         <div>
                           <h2 className={`text-2xl font-bold ${CARD_STYLES[activeList].text}`}>
                             {listTitle}
                           </h2>
-                          <p className="text-slate-600 text-sm mt-1">
+                          <p className="mt-1 text-sm text-slate-600">
                             {listItems.length} total items
                           </p>
                         </div>
                       </div>
-                      
+
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="px-6 py-3 bg-white/80 hover:bg-white text-slate-700 font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-200 backdrop-blur-sm border border-white/50"
+                        className="rounded-xl border border-white/50 bg-white/80 px-6 py-3 font-medium text-slate-700 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow-lg"
                         onClick={() => setActiveList(null)}
                       >
                         ← Back to Overview
@@ -243,10 +242,10 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Items Grid */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 max-h-80 overflow-y-auto pr-2 custom-scrollbar">
+                    <div className="custom-scrollbar grid max-h-80 grid-cols-1 gap-4 overflow-y-auto pr-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                       {listItems.length === 0 ? (
                         <div className="col-span-full flex flex-col items-center justify-center py-16 text-slate-500">
-                          <div className="text-6xl mb-4 opacity-30">📋</div>
+                          <div className="mb-4 text-6xl opacity-30">📋</div>
                           <p className="text-lg font-medium">No items found</p>
                           <p className="text-sm">Add some items to get started</p>
                         </div>
@@ -258,11 +257,13 @@ export default function DashboardPage() {
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 0.2, delay: idx * 0.02 }}
                             whileHover={{ scale: 1.02, y: -1 }}
-                            className="bg-white/70 backdrop-blur-sm border border-white/50 rounded-xl p-4 shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer group"
+                            className="group cursor-pointer rounded-xl border border-white/50 bg-white/70 p-4 shadow-sm backdrop-blur-sm transition-all duration-200 hover:shadow-md"
                           >
                             <div className="flex items-center gap-3">
-                              <div className={`w-2 h-2 rounded-full ${CARD_STYLES[activeList].accent} opacity-60 group-hover:opacity-100 transition-opacity`}></div>
-                              <span className="text-slate-800 font-medium group-hover:text-slate-900 transition-colors truncate">
+                              <div
+                                className={`h-2 w-2 rounded-full ${CARD_STYLES[activeList].accent} opacity-60 transition-opacity group-hover:opacity-100`}
+                              ></div>
+                              <span className="truncate font-medium text-slate-800 transition-colors group-hover:text-slate-900">
                                 {item}
                               </span>
                             </div>
@@ -270,10 +271,10 @@ export default function DashboardPage() {
                         ))
                       )}
                     </div>
-                    
+
                     {/* Background decoration */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-2xl"></div>
-                    <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-white/10 to-transparent rounded-full blur-xl"></div>
+                    <div className="absolute right-0 top-0 h-32 w-32 rounded-full bg-gradient-to-br from-white/20 to-transparent blur-2xl"></div>
+                    <div className="absolute bottom-0 left-0 h-24 w-24 rounded-full bg-gradient-to-tr from-white/10 to-transparent blur-xl"></div>
                   </div>
                 </motion.div>
               )}
@@ -307,44 +308,44 @@ function DashboardSkeleton() {
     <div className="space-y-8">
       {/* Expiration Metrics Skeleton */}
       <div className="mb-8">
-        <div className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-xl border border-white/20 p-6">
+        <div className="rounded-2xl border border-white/20 bg-white/70 p-6 shadow-xl backdrop-blur-xl">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-slate-200 rounded-xl animate-pulse"></div>
+                <div className="h-12 w-12 animate-pulse rounded-xl bg-slate-200"></div>
                 <div>
-                  <div className="h-5 w-32 bg-slate-200 rounded animate-pulse mb-1"></div>
-                  <div className="h-4 w-24 bg-slate-200 rounded animate-pulse"></div>
+                  <div className="mb-1 h-5 w-32 animate-pulse rounded bg-slate-200"></div>
+                  <div className="h-4 w-24 animate-pulse rounded bg-slate-200"></div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="h-8 w-16 bg-slate-200 rounded animate-pulse mb-1"></div>
-                <div className="h-4 w-12 bg-slate-200 rounded animate-pulse"></div>
+                <div className="mb-1 h-8 w-16 animate-pulse rounded bg-slate-200"></div>
+                <div className="h-4 w-12 animate-pulse rounded bg-slate-200"></div>
               </div>
             </div>
-            <div className="h-4 w-48 bg-slate-200 rounded animate-pulse"></div>
+            <div className="h-4 w-48 animate-pulse rounded bg-slate-200"></div>
           </div>
         </div>
       </div>
 
       {/* Main Content Skeleton */}
-      <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-        <div className="text-center py-12 px-8">
-          <div className="h-12 bg-gradient-to-r from-slate-200 to-slate-300 rounded-lg mb-4 animate-pulse"></div>
-          <div className="h-6 bg-slate-200 rounded-lg mb-12 max-w-md mx-auto animate-pulse"></div>
+      <div className="overflow-hidden rounded-3xl border border-white/20 bg-white/70 shadow-2xl backdrop-blur-xl">
+        <div className="px-8 py-12 text-center">
+          <div className="mb-4 h-12 animate-pulse rounded-lg bg-gradient-to-r from-slate-200 to-slate-300"></div>
+          <div className="mx-auto mb-12 h-6 max-w-md animate-pulse rounded-lg bg-slate-200"></div>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="p-8 border-r border-white/30 last:border-r-0">
+            <div key={i} className="border-r border-white/30 p-8 last:border-r-0">
               <div className="space-y-4">
-                <div className="flex justify-between items-start">
-                  <div className="w-8 h-8 bg-slate-200 rounded-full animate-pulse"></div>
-                  <div className="w-3 h-3 bg-slate-200 rounded-full animate-pulse"></div>
+                <div className="flex items-start justify-between">
+                  <div className="h-8 w-8 animate-pulse rounded-full bg-slate-200"></div>
+                  <div className="h-3 w-3 animate-pulse rounded-full bg-slate-200"></div>
                 </div>
-                <div className="h-6 bg-slate-200 rounded animate-pulse w-3/4"></div>
-                <div className="h-10 bg-slate-200 rounded animate-pulse w-1/2"></div>
-                <div className="h-4 bg-slate-200 rounded animate-pulse w-full"></div>
+                <div className="h-6 w-3/4 animate-pulse rounded bg-slate-200"></div>
+                <div className="h-10 w-1/2 animate-pulse rounded bg-slate-200"></div>
+                <div className="h-4 w-full animate-pulse rounded bg-slate-200"></div>
               </div>
             </div>
           ))}
