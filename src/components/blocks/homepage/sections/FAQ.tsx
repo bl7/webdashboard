@@ -127,6 +127,39 @@ export const FAQ = () => {
             </Accordion>
           </div>
         </motion.div>
+
+        {/* Video Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          viewport={{ once: true }}
+          className="mt-16 text-center"
+        >
+          <div className="mb-8">
+            <h4 className="mb-4 text-2xl font-bold text-gray-900 sm:text-3xl">
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                See InstaLabel in Action
+              </span>
+            </h4>
+            <p className="text-lg text-gray-600">
+              Watch how easy it is to create compliant kitchen labels in seconds
+            </p>
+          </div>
+
+          <div className="flex justify-center">
+            <iframe
+              width="560"
+              height="315"
+              src="https://www.youtube.com/embed/NPSIOvzwJ-s"
+              title="InstaLabel Demo - See How Easy Kitchen Labeling Can Be"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full max-w-4xl rounded-xl shadow-lg"
+            ></iframe>
+          </div>
+        </motion.div>
       </div>
     </section>
   )
