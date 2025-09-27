@@ -48,18 +48,6 @@ export const HowToUploadSteps = () => (
         </p>
       </div>
     </div>
-    <div className="my-8 flex justify-center">
-      <iframe
-        width="560"
-        height="315"
-        src="https://www.youtube.com/embed/NPSIOvzwJ-s"
-        title="How to Use InstaLabel Bulk Upload"
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        className="w-full max-w-2xl rounded-xl shadow-lg"
-      ></iframe>
-    </div>
   </section>
 )
 

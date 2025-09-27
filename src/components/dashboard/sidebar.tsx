@@ -13,6 +13,7 @@ import {
   FaChevronLeft,
   FaUpload,
   FaList,
+  FaPlay,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
@@ -40,6 +41,7 @@ const NAV_ITEMS = [
   // { label: "Groups", icon: <FaLayerGroup />, href: "/dashboard/group" },
   { label: "Upload", icon: <FaUpload />, href: "/dashboard/upload" },
   { label: "Profile", icon: <FaUser />, href: "/dashboard/profile" },
+  { label: "Tutorials", icon: <FaPlay />, href: "/dashboard/tutorials" },
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
 
