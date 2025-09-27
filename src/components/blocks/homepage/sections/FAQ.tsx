@@ -148,16 +148,18 @@ export const FAQ = () => {
           </div>
 
           <div className="flex justify-center">
-            <iframe
-              width="560"
-              height="315"
-              src="https://www.youtube.com/embed/NPSIOvzwJ-s"
-              title="InstaLabel Demo - See How Easy Kitchen Labeling Can Be"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full max-w-4xl rounded-xl shadow-lg"
-            ></iframe>
+            <div className="w-full max-w-4xl">
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl shadow-lg">
+                <iframe
+                  src="https://www.youtube.com/embed/NPSIOvzwJ-s"
+                  title="InstaLabel Demo - See How Easy Kitchen Labeling Can Be"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 h-full w-full"
+                ></iframe>
+              </div>
+            </div>
           </div>
         </motion.div>
       </div>
