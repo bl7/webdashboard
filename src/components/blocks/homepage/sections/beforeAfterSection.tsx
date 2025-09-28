@@ -117,7 +117,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[4/3] w-full select-none overflow-hidden rounded-3xl border-2 border-purple-200 shadow-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+      className="relative aspect-[4/5] w-full select-none overflow-hidden rounded-3xl border-2 border-purple-200 shadow-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
       onMouseDown={onDragStart}
       onTouchStart={onDragStart}
       onKeyDown={handleKeyDown}
