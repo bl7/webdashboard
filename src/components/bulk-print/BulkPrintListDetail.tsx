@@ -21,6 +21,16 @@ import { usePrinter } from "@/context/PrinterContext"
 import { formatLabelForPrintImage } from "@/app/dashboard/print/labelFormatter"
 import { logAction } from "@/lib/logAction"
 
+// Helper function to get printer name (same as other pages)
+function getPrinterName(printer: any): string {
+  if (!printer) return ""
+  if (typeof printer === "string") return printer
+  if (typeof printer.name === "object" && typeof printer.name.name === "string")
+    return printer.name.name
+  if (typeof printer.name === "string") return printer.name
+  return ""
+}
+
 // Helper functions for expiry date calculation (same as print page)
 function calculateExpiryDate(days: number): string {
   const today = new Date()
@@ -75,7 +85,7 @@ export default function BulkPrintListDetail({
   onPrint,
   onOpenItemSelector,
 }: BulkPrintListDetailProps) {
-  const { print, isConnected, defaultPrinter } = usePrinter()
+  const { print, isConnected, defaultPrinter, printers: availablePrinters } = usePrinter()
   const [list, setList] = useState<BulkPrintList | null>(null)
   const [items, setItems] = useState<BulkPrintListItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -86,11 +96,47 @@ export default function BulkPrintListDetail({
   const [isPrinting, setIsPrinting] = useState(false)
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
 
+  // Printer selection state
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
+  const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
+
   useEffect(() => {
     fetchListDetails()
     fetchAllItems()
     fetchExpirySettings()
   }, [listId])
+
+  // Platform detection and printer selection initialization
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userAgent = window.navigator.userAgent.toLowerCase()
+      if (userAgent.includes("mac")) {
+        setOsType("mac")
+      } else if (userAgent.includes("win")) {
+        setOsType("windows")
+      } else {
+        setOsType("other")
+      }
+    }
+  }, [])
+
+  // Initialize printer selection when printers are available
+  useEffect(() => {
+    if (availablePrinters && availablePrinters.length > 0 && !selectedPrinterName) {
+      // Try to use default printer first, then first available
+      const defaultPrinterName = defaultPrinter ? getPrinterName(defaultPrinter) : ""
+      const firstPrinterName = getPrinterName(availablePrinters[0])
+
+      if (
+        defaultPrinterName &&
+        availablePrinters.some((p) => getPrinterName(p) === defaultPrinterName)
+      ) {
+        setSelectedPrinterName(defaultPrinterName)
+      } else if (firstPrinterName) {
+        setSelectedPrinterName(firstPrinterName)
+      }
+    }
+  }, [availablePrinters, defaultPrinter, selectedPrinterName])
 
   const fetchExpirySettings = async () => {
     try {
@@ -277,9 +323,17 @@ export default function BulkPrintListDetail({
         return
       }
 
-      // Check if printer is connected
+      // Check if printer is connected and selected
       if (!isConnected) {
         toast.error("Printer is not connected. Please connect your printer first.")
+        return
+      }
+
+      if (
+        !selectedPrinterName ||
+        !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+      ) {
+        toast.error("Please select a valid printer.")
         return
       }
 
@@ -381,7 +435,10 @@ export default function BulkPrintListDetail({
               allIngredients
             )
             if (labelImage) {
-              await print(labelImage, defaultPrinter || undefined, { labelHeight: "40mm" })
+              const selectedPrinter = availablePrinters.find(
+                (p) => getPrinterName(p) === selectedPrinterName
+              )
+              await print(labelImage, selectedPrinter || undefined, { labelHeight: "40mm" })
               successCount++
             } else {
               console.error(`Failed to generate label image for ${printItem.name}`)
@@ -406,7 +463,7 @@ export default function BulkPrintListDetail({
             expiryDate: printItem.expiryDate || calculateExpiryDate(3), // Default 3 days
             initial: "", // No initials in bulk print
             labelHeight: "40mm",
-            printerUsed: defaultPrinter || "Unknown",
+            printerUsed: selectedPrinterName || "Unknown",
             sessionId,
             bulkPrintListId: listId,
             bulkPrintListName: list?.name || "Unknown List",
@@ -455,9 +512,17 @@ export default function BulkPrintListDetail({
         return
       }
 
-      // Check if printer is connected
+      // Check if printer is connected and selected
       if (!isConnected) {
         toast.error("Printer is not connected. Please connect your printer first.")
+        return
+      }
+
+      if (
+        !selectedPrinterName ||
+        !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+      ) {
+        toast.error("Please select a valid printer.")
         return
       }
 
@@ -556,7 +621,10 @@ export default function BulkPrintListDetail({
               allIngredients
             )
             if (labelImage) {
-              await print(labelImage, defaultPrinter || undefined, { labelHeight: "40mm" })
+              const selectedPrinter = availablePrinters.find(
+                (p) => getPrinterName(p) === selectedPrinterName
+              )
+              await print(labelImage, selectedPrinter || undefined, { labelHeight: "40mm" })
               successCount++
             } else {
               console.error(`Failed to generate label image for ${printItem.name}`)
@@ -649,11 +717,45 @@ export default function BulkPrintListDetail({
             <Plus className="mr-2 h-4 w-4" />
             Add Items
           </Button>
+
+          {/* Printer Selection */}
+          <div className="flex items-center space-x-2">
+            <Label htmlFor="printer-select" className="text-sm font-medium">
+              Printer:
+            </Label>
+            <Select value={selectedPrinterName} onValueChange={setSelectedPrinterName}>
+              <SelectTrigger className="w-48">
+                <SelectValue placeholder="Select printer" />
+              </SelectTrigger>
+              <SelectContent>
+                {availablePrinters.map((printer) => {
+                  const printerName = getPrinterName(printer)
+                  return (
+                    <SelectItem key={printerName} value={printerName}>
+                      {printerName}
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+
           {items.length > 0 && (
             <Button
               onClick={printAllItems}
-              disabled={isPrinting || !isConnected}
-              title={!isConnected ? "Printer is not connected" : ""}
+              disabled={
+                isPrinting ||
+                !isConnected ||
+                !selectedPrinterName ||
+                !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+              }
+              title={
+                !isConnected
+                  ? "Printer is not connected"
+                  : !selectedPrinterName
+                    ? "Please select a printer"
+                    : ""
+              }
             >
               <Printer className="mr-2 h-4 w-4" />
               {isPrinting ? "Printing..." : `Print All (${items.length})`}
@@ -663,8 +765,19 @@ export default function BulkPrintListDetail({
             <Button
               variant="outline"
               onClick={printSelectedItems}
-              disabled={isPrinting || !isConnected}
-              title={!isConnected ? "Printer is not connected" : ""}
+              disabled={
+                isPrinting ||
+                !isConnected ||
+                !selectedPrinterName ||
+                !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+              }
+              title={
+                !isConnected
+                  ? "Printer is not connected"
+                  : !selectedPrinterName
+                    ? "Please select a printer"
+                    : ""
+              }
             >
               <Printer className="mr-2 h-4 w-4" />
               {isPrinting ? "Printing..." : `Print Selected (${selectedItems.size})`}
