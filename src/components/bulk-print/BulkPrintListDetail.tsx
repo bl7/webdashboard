@@ -719,26 +719,43 @@ export default function BulkPrintListDetail({
           </Button>
 
           {/* Printer Selection */}
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="printer-select" className="text-sm font-medium">
-              Printer:
-            </Label>
-            <Select value={selectedPrinterName} onValueChange={setSelectedPrinterName}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Select printer" />
-              </SelectTrigger>
-              <SelectContent>
-                {availablePrinters.map((printer) => {
-                  const printerName = getPrinterName(printer)
-                  return (
-                    <SelectItem key={printerName} value={printerName}>
-                      {printerName}
-                    </SelectItem>
-                  )
-                })}
-              </SelectContent>
-            </Select>
-          </div>
+          {isConnected ? (
+            <>
+              <div className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
+                {availablePrinters.length > 0 ? (
+                  <div className="flex flex-col gap-2">
+                    <select
+                      value={selectedPrinterName}
+                      onChange={(e) => {
+                        setSelectedPrinterName(e.target.value)
+                      }}
+                      className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
+                    >
+                      <option value="">Select Printer</option>
+                      {availablePrinters.map((printer: any) => {
+                        const printerName = getPrinterName(printer)
+                        return (
+                          <option key={printerName} value={printerName}>
+                            {printerName} {printer.isDefault ? "(Default)" : ""}
+                          </option>
+                        )
+                      })}
+                    </select>
+                    <div className="mt-1 text-xs text-gray-700">
+                      {availablePrinters.length} printer(s) detected
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-500">No printers detected</div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
+              No printers detected
+            </div>
+          )}
 
           {items.length > 0 && (
             <Button

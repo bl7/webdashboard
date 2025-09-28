@@ -326,36 +326,47 @@ export default function PPDSPage() {
         <div className="min-w-[340px] flex-1">
           {/* Printer Chooser at the top */}
           <div className="mb-6 rounded-xl border bg-white p-4 shadow-lg">
-            <label className="mb-2 block font-medium">Select Printer:</label>
-            <select
-              className="w-full rounded border px-2 py-1"
-              value={selectedPrinterName}
-              onChange={(e) => {
-                setSelectedPrinterName(e.target.value)
-                const printer = printers.find((p) => getPrinterName(p) === e.target.value)
-                if (printer) selectPrinter(printer)
-              }}
-            >
-              <option value="">Select a printer</option>
-              {printers.map((printer) => {
-                const printerName = getPrinterName(printer)
-                return (
-                  <option key={printerName} value={printerName}>
-                    {printerName}
-                  </option>
-                )
-              })}
-            </select>
-            {printers.length === 0 && (
-              <div className="mt-2 text-xs text-red-600">No printers detected</div>
-            )}
-            {printers.length > 0 &&
-              !printers.find((p) => getPrinterName(p) === selectedPrinterName) && (
-                <div className="mt-2 text-xs text-red-600">
-                  Selected printer is not available. Please select another.
+            {isConnected ? (
+              <>
+                <div className="mb-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                  <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
+                  {printers.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      <select
+                        value={selectedPrinterName}
+                        onChange={(e) => {
+                          setSelectedPrinterName(e.target.value)
+                          const printer = printers.find(
+                            (p: any) => getPrinterName(p) === e.target.value
+                          )
+                          selectPrinter(printer || null)
+                        }}
+                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
+                      >
+                        <option value="">Select Printer</option>
+                        {printers.map((printer: any) => {
+                          const printerName = getPrinterName(printer)
+                          return (
+                            <option key={printerName} value={printerName}>
+                              {printerName} {printer.isDefault ? "(Default)" : ""}
+                            </option>
+                          )
+                        })}
+                      </select>
+                      <div className="mt-1 text-xs text-gray-700">
+                        {printers.length} printer(s) detected
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-gray-500">No printers detected</div>
+                  )}
                 </div>
-              )}
-            {!isConnected && <div className="mt-2 text-xs text-red-600">Printer not connected</div>}
+              </>
+            ) : (
+              <div className="mb-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
+                No printers detected
+              </div>
+            )}
           </div>
           {/* Menu Items List */}
           <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">

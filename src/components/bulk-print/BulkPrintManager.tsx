@@ -22,6 +22,23 @@ import { getAllIngredients, getAllMenuItems } from "@/lib/api"
 import { formatLabelForPrintImage } from "@/app/dashboard/print/labelFormatter"
 import { PrintQueueItem } from "@/types/print"
 import { logAction } from "@/lib/logAction"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+
+// Helper function to get printer name (same as other pages)
+function getPrinterName(printer: any): string {
+  if (!printer) return ""
+  if (typeof printer === "string") return printer
+  if (typeof printer.name === "object" && typeof printer.name.name === "string")
+    return printer.name.name
+  if (typeof printer.name === "string") return printer.name
+  return ""
+}
 
 // Helper functions for expiry date calculation (same as print page)
 function calculateExpiryDate(days: number): string {
@@ -72,13 +89,40 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
   const [isPrinting, setIsPrinting] = useState(false)
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
 
-  const { isConnected, print, selectedPrinter, defaultPrinter, printers } = usePrinter()
+  // Printer selection state
+  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
+
+  const {
+    isConnected,
+    print,
+    selectedPrinter,
+    defaultPrinter,
+    printers: availablePrinters,
+  } = usePrinter()
 
   // Fetch lists on component mount
   useEffect(() => {
     fetchLists()
     fetchExpirySettings()
   }, [])
+
+  // Initialize printer selection when printers are available
+  useEffect(() => {
+    if (availablePrinters && availablePrinters.length > 0 && !selectedPrinterName) {
+      // Try to use default printer first, then first available
+      const defaultPrinterName = defaultPrinter ? getPrinterName(defaultPrinter) : ""
+      const firstPrinterName = getPrinterName(availablePrinters[0])
+
+      if (
+        defaultPrinterName &&
+        availablePrinters.some((p) => getPrinterName(p) === defaultPrinterName)
+      ) {
+        setSelectedPrinterName(defaultPrinterName)
+      } else if (firstPrinterName) {
+        setSelectedPrinterName(firstPrinterName)
+      }
+    }
+  }, [availablePrinters, defaultPrinter, selectedPrinterName])
 
   const fetchExpirySettings = async () => {
     try {
@@ -346,17 +390,21 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
         }
       })
 
-      // Check printer connection
+      // Check printer connection and selection
       if (!isConnected) {
         toast.error("Printer not connected. Please connect your printer first.")
         return
       }
 
-      const targetPrinter = selectedPrinter || defaultPrinter
-      if (!targetPrinter) {
-        toast.error("No printer selected. Please select a printer first.")
+      if (
+        !selectedPrinterName ||
+        !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+      ) {
+        toast.error("Please select a valid printer.")
         return
       }
+
+      const targetPrinter = availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
 
       toast.info(`Starting to print ${printItems.length} items from "${list.name}"...`)
 
@@ -402,7 +450,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
             expiryDate: item.expiryDate || calculateExpiryDate(3), // Default 3 days
             initial: "", // No initials in bulk print
             labelHeight: "40mm",
-            printerUsed: targetPrinter || "Unknown",
+            printerUsed: selectedPrinterName || "Unknown",
             sessionId,
             bulkPrintListId: listId,
             bulkPrintListName: list.name,
@@ -458,49 +506,90 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
           </p>
         </div>
 
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Create List
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create Bulk Print List</DialogTitle>
-              <DialogDescription>
-                Create a new list to organize ingredients and menu items for bulk printing.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="list-name">List Name</Label>
-                <Input
-                  id="list-name"
-                  value={newListName}
-                  onChange={(e) => setNewListName(e.target.value)}
-                  placeholder="e.g., Daily Prep List"
-                />
+        <div className="flex items-center space-x-4">
+          {/* Printer Selection */}
+          {isConnected ? (
+            <>
+              <div className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
+                {availablePrinters.length > 0 ? (
+                  <div className="flex flex-col gap-2">
+                    <select
+                      value={selectedPrinterName}
+                      onChange={(e) => {
+                        setSelectedPrinterName(e.target.value)
+                      }}
+                      className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
+                    >
+                      <option value="">Select Printer</option>
+                      {availablePrinters.map((printer: any) => {
+                        const printerName = getPrinterName(printer)
+                        return (
+                          <option key={printerName} value={printerName}>
+                            {printerName} {printer.isDefault ? "(Default)" : ""}
+                          </option>
+                        )
+                      })}
+                    </select>
+                    <div className="mt-1 text-xs text-gray-700">
+                      {availablePrinters.length} printer(s) detected
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-xs text-gray-500">No printers detected</div>
+                )}
               </div>
-              <div>
-                <Label htmlFor="list-description">Description (Optional)</Label>
-                <Textarea
-                  id="list-description"
-                  value={newListDescription}
-                  onChange={(e) => setNewListDescription(e.target.value)}
-                  placeholder="Describe what this list is for..."
-                  rows={3}
-                />
-              </div>
+            </>
+          ) : (
+            <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
+              No printers detected
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                Cancel
+          )}
+
+          <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Create List
               </Button>
-              <Button onClick={createList}>Create List</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create Bulk Print List</DialogTitle>
+                <DialogDescription>
+                  Create a new list to organize ingredients and menu items for bulk printing.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="list-name">List Name</Label>
+                  <Input
+                    id="list-name"
+                    value={newListName}
+                    onChange={(e) => setNewListName(e.target.value)}
+                    placeholder="e.g., Daily Prep List"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="list-description">Description (Optional)</Label>
+                  <Textarea
+                    id="list-description"
+                    value={newListDescription}
+                    onChange={(e) => setNewListDescription(e.target.value)}
+                    placeholder="Describe what this list is for..."
+                    rows={3}
+                  />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={createList}>Create List</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {lists.length === 0 ? (
@@ -560,7 +649,22 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
                     size="sm"
                     className="flex-1"
                     onClick={() => printListDirectly(list.id)}
-                    disabled={isPrinting || list.item_count === 0}
+                    disabled={
+                      isPrinting ||
+                      list.item_count === 0 ||
+                      !isConnected ||
+                      !selectedPrinterName ||
+                      !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                    }
+                    title={
+                      !isConnected
+                        ? "Printer is not connected"
+                        : !selectedPrinterName
+                          ? "Please select a printer"
+                          : list.item_count === 0
+                            ? "No items in this list"
+                            : ""
+                    }
                   >
                     <Printer className="mr-2 h-4 w-4" />
                     {isPrinting ? "Printing..." : "Print"}
