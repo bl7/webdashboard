@@ -504,48 +504,50 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
           <p className="text-muted-foreground">
             Create and manage lists of ingredients and menu items for bulk printing
           </p>
+
+          {/* Printer Selection - moved to left side */}
+          <div className="mt-4">
+            {isConnected ? (
+              <>
+                <div className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
+                  <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
+                  {availablePrinters.length > 0 ? (
+                    <div className="flex flex-col gap-2">
+                      <select
+                        value={selectedPrinterName}
+                        onChange={(e) => {
+                          setSelectedPrinterName(e.target.value)
+                        }}
+                        className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
+                      >
+                        <option value="">Select Printer</option>
+                        {availablePrinters.map((printer: any) => {
+                          const printerName = getPrinterName(printer)
+                          return (
+                            <option key={printerName} value={printerName}>
+                              {printerName} {printer.isDefault ? "(Default)" : ""}
+                            </option>
+                          )
+                        })}
+                      </select>
+                      <div className="mt-1 text-xs text-gray-700">
+                        {availablePrinters.length} printer(s) detected
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="text-xs text-gray-500">No printers detected</div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
+                No printers detected
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Printer Selection */}
-          {isConnected ? (
-            <>
-              <div className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
-                <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
-                {availablePrinters.length > 0 ? (
-                  <div className="flex flex-col gap-2">
-                    <select
-                      value={selectedPrinterName}
-                      onChange={(e) => {
-                        setSelectedPrinterName(e.target.value)
-                      }}
-                      className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
-                    >
-                      <option value="">Select Printer</option>
-                      {availablePrinters.map((printer: any) => {
-                        const printerName = getPrinterName(printer)
-                        return (
-                          <option key={printerName} value={printerName}>
-                            {printerName} {printer.isDefault ? "(Default)" : ""}
-                          </option>
-                        )
-                      })}
-                    </select>
-                    <div className="mt-1 text-xs text-gray-700">
-                      {availablePrinters.length} printer(s) detected
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-xs text-gray-500">No printers detected</div>
-                )}
-              </div>
-            </>
-          ) : (
-            <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
-              No printers detected
-            </div>
-          )}
-
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
               <Button>
