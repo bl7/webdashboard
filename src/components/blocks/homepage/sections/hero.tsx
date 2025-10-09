@@ -81,7 +81,7 @@ export const Hero = () => {
           </div>
           {/* Power Statement */}
           <div className="mb-1 mt-2 text-sm font-semibold text-purple-700 sm:text-base">
-            From PPDS to prep — get compliant labels in seconds, not hours.
+            From PPDS to prep — get EHO and Food Safety compliant labels in seconds, not hours.
           </div>
           {/* Key Benefits (Visual with Icons) */}
           <div className="grid grid-cols-1 gap-3 py-1 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">

@@ -88,6 +88,8 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
   const [editListDescription, setEditListDescription] = useState("")
   const [isPrinting, setIsPrinting] = useState(false)
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // Printer selection state
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
@@ -99,6 +101,17 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
     defaultPrinter,
     printers: availablePrinters,
   } = usePrinter()
+
+  // Ensure component is mounted before accessing localStorage
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Load admin status from localStorage
+  useEffect(() => {
+    if (!mounted) return
+    setIsAdmin(localStorage.getItem("adminAccess") === "true")
+  }, [mounted])
 
   // Fetch lists on component mount
   useEffect(() => {
@@ -622,14 +635,16 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
                       <CardDescription className="mt-1">{list.description}</CardDescription>
                     )}
                   </div>
-                  <div className="ml-2 flex items-center space-x-1">
-                    <Button variant="ghost" size="sm" onClick={() => openEditDialog(list)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm" onClick={() => deleteList(list.id)}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  {isAdmin && (
+                    <div className="ml-2 flex items-center space-x-1">
+                      <Button variant="ghost" size="sm" onClick={() => openEditDialog(list)}>
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="sm" onClick={() => deleteList(list.id)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </CardHeader>
               <CardContent className="pt-0">

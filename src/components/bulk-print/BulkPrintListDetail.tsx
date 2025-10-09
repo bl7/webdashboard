@@ -95,10 +95,23 @@ export default function BulkPrintListDetail({
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set())
   const [isPrinting, setIsPrinting] = useState(false)
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // Printer selection state
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
+
+  // Ensure component is mounted before accessing localStorage
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Load admin status from localStorage
+  useEffect(() => {
+    if (!mounted) return
+    setIsAdmin(localStorage.getItem("adminAccess") === "true")
+  }, [mounted])
 
   useEffect(() => {
     fetchListDetails()
@@ -916,9 +929,11 @@ export default function BulkPrintListDetail({
                         </div>
                       )}
 
-                      <Button variant="ghost" size="sm" onClick={() => removeItem(item.id)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      {isAdmin && (
+                        <Button variant="ghost" size="sm" onClick={() => removeItem(item.id)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </CardContent>

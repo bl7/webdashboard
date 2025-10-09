@@ -35,8 +35,8 @@ export default function LabelRender({
   const labelConfig = {
     "40mm": {
       heightCm: 4.0,
-      fontSize: 13,
-      nameFontSize: 18,
+      fontSize: 15,
+      nameFontSize: 21,
       sectionSpacing: 4,
       padding: 0, // Remove padding
       maxNameLen: 22,
@@ -50,8 +50,8 @@ export default function LabelRender({
     },
     "80mm": {
       heightCm: 8.0,
-      fontSize: 15,
-      nameFontSize: 22,
+      fontSize: 17,
+      nameFontSize: 25,
       sectionSpacing: 8,
       padding: 0, // Remove padding
       maxNameLen: 32,

@@ -195,7 +195,7 @@ export const Footer = () => {
                 href="/blog"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >
-                Kitchen Labeling Blog
+                Blog
               </Link>
             </nav>
           </div>

@@ -4,8 +4,8 @@ export const newSubscriptionEmail = ({
   trialDays,
   trialEndDate,
   amount,
-  currency = 'gbp',
-  billingInterval
+  currency = "gbp",
+  billingInterval,
 }: {
   name: string
   planName: string
@@ -13,7 +13,7 @@ export const newSubscriptionEmail = ({
   trialEndDate: string
   amount: number
   currency?: string
-  billingInterval: 'month' | 'year'
+  billingInterval: "month" | "year"
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -266,7 +266,7 @@ export const newSubscriptionEmail = ({
             <div class="info-card">
                 <h3>📋 Subscription Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
-                <p><strong>Billing Cycle:</strong> ${billingInterval === 'month' ? 'Monthly' : 'Annual'}</p>
+                <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
                 <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
                 <p><strong>Status:</strong> Active</p>
             </div>
@@ -327,17 +327,17 @@ export const planChangeEmail = ({
   changeType,
   effectiveDate,
   amount,
-  currency = 'gbp',
-  billingInterval
+  currency = "gbp",
+  billingInterval,
 }: {
   name: string
   oldPlan: string
   newPlan: string
-  changeType: 'upgrade' | 'downgrade' | 'billing_change'
+  changeType: "upgrade" | "downgrade" | "billing_change"
   effectiveDate: string
   amount: number
   currency?: string
-  billingInterval: 'month' | 'year'
+  billingInterval: "month" | "year"
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -655,18 +655,20 @@ export const planChangeEmail = ({
             </div>
             
             <div class="change-summary ${changeType}">
-                <div class="change-badge ${changeType === 'upgrade' ? 'upgrade-badge' : changeType === 'downgrade' ? 'downgrade-badge' : 'billing-badge'}">
-                    ${changeType === 'upgrade' ? 'Upgraded' : changeType === 'downgrade' ? 'Downgraded' : 'Billing Updated'}
+                <div class="change-badge ${changeType === "upgrade" ? "upgrade-badge" : changeType === "downgrade" ? "downgrade-badge" : "billing-badge"}">
+                    ${changeType === "upgrade" ? "Upgraded" : changeType === "downgrade" ? "Downgraded" : "Billing Updated"}
                 </div>
                 <h3>📋 Change Summary</h3>
                 <p><strong>Previous Plan:</strong> ${oldPlan}</p>
                 <p><strong>New Plan:</strong> ${newPlan}</p>
-                <p><strong>Billing Cycle:</strong> ${billingInterval === 'month' ? 'Monthly' : 'Annual'}</p>
+                <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
                 <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
                 <p><strong>Effective Date:</strong> ${effectiveDate}</p>
             </div>
             
-            ${changeType === 'upgrade' ? `
+            ${
+              changeType === "upgrade"
+                ? `
             <div class="benefits-section">
                 <h3>🚀 Enhanced Features Now Available</h3>
                 <ul class="benefits-list">
@@ -677,23 +679,33 @@ export const planChangeEmail = ({
                     <li>Higher monthly limits and increased storage capacity</li>
                 </ul>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
-            ${changeType === 'downgrade' ? `
+            ${
+              changeType === "downgrade"
+                ? `
             <div class="notice-section">
                 <h3>📅 Important Notice</h3>
                 <p>Your plan change will take effect at the end of your current billing cycle. You'll continue to have access to all current features until <strong>${effectiveDate}</strong>.</p>
                 <p>After this date, your account will be adjusted to match your new plan's feature set and limits.</p>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
-            ${changeType === 'billing_change' ? `
+            ${
+              changeType === "billing_change"
+                ? `
             <div class="notice-section">
                 <h3>💳 Billing Cycle Update</h3>
                 <p>Your billing frequency has been successfully updated. The new billing schedule will take effect on <strong>${effectiveDate}</strong>.</p>
                 <p>Any prorated charges or credits will be automatically applied to your next invoice.</p>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
             <div style="text-align: center;">
                 <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/billing" class="cta-button">
@@ -741,14 +753,12 @@ export const cancellationEmail = ({
   planName,
   cancellationType,
   endDate,
-  refundInfo,
-  currency = 'gbp'
+  currency = "gbp",
 }: {
   name: string
   planName: string
-  cancellationType: 'immediate' | 'monthly' | 'annual'
+  cancellationType: "immediate" | "period_end"
   endDate: string
-  refundInfo?: { amount: number; date: string }
   currency?: string
 }) => `<!DOCTYPE html>
 <html lang="en">
@@ -782,34 +792,33 @@ export const cancellationEmail = ({
             <div class="cancellation-details">
                 <h3>❌ Cancellation Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
-                <p><strong>Cancellation Type:</strong> ${cancellationType === 'immediate' ? 'Immediate' : cancellationType === 'monthly' ? 'Monthly Notice' : 'Annual Notice'}</p>
+                <p><strong>Cancellation Type:</strong> ${cancellationType === "immediate" ? "Immediate" : "End of Billing Period"}</p>
                 <p><strong>Service End Date:</strong> ${endDate}</p>
             </div>
             
-            ${cancellationType === 'immediate' ? `
+            ${
+              cancellationType === "immediate"
+                ? `
             <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ff9800;">
                 <h3>⚠️ Immediate Cancellation</h3>
                 <p>Your subscription has been cancelled immediately. You will no longer have access to InstaLabel services.</p>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
-            ${cancellationType === 'monthly' ? `
+            ${
+              cancellationType !== "immediate"
+                ? `
             <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #ff9800;">
-                <h3>📅 Monthly Notice Period</h3>
-                <p>As per our cancellation policy, you have been charged for one additional month. Your service will end on ${endDate}.</p>
-                <p>You can continue using all InstaLabel features until this date.</p>
+                <h3>📅 Service Continuation</h3>
+                <p>Your subscription will continue until the end of your current billing period on ${endDate}.</p>
+                <p>You can continue using all InstaLabel features until this date. No refunds will be provided for unused time.</p>
             </div>
-            ` : ''}
+            `
+                : ""
+            }
             
-            ${cancellationType === 'annual' && refundInfo ? `
-            <div class="refund-info">
-                <h3>💰 Refund Information</h3>
-                <p>As per our annual cancellation policy, you will receive a refund of 50% of the remaining months after your final month.</p>
-                <p><strong>Refund Amount:</strong> ${currency.toUpperCase()} ${refundInfo.amount}</p>
-                <p><strong>Refund Date:</strong> ${refundInfo.date}</p>
-                <p>The refund will be processed to your original payment method.</p>
-            </div>
-            ` : ''}
             
             <h3>📊 What Happens Next</h3>
             <ul>
@@ -851,26 +860,26 @@ export const cancellationEmail = ({
 // Helper function to format dates consistently
 export const formatDate = (date: Date | string): string => {
   const d = new Date(date)
-  return d.toLocaleDateString('en-GB', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return d.toLocaleDateString("en-GB", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   })
 }
 
 // Helper function to format currency
-export const formatCurrency = (amount: number, currency: string = 'gbp'): string => {
-  return new Intl.NumberFormat('en-GB', {
-    style: 'currency',
-    currency: currency.toUpperCase()
+export const formatCurrency = (amount: number, currency: string = "gbp"): string => {
+  return new Intl.NumberFormat("en-GB", {
+    style: "currency",
+    currency: currency.toUpperCase(),
   }).format(amount / 100) // Convert from cents to pounds
-} 
+}
 export const expiringSoonEmail = ({
   name,
   planName,
   expiryDate,
-  daysLeft
+  daysLeft,
 }: {
   name: string
   planName: string
@@ -1148,7 +1157,7 @@ export const expiringSoonEmail = ({
             </div>
             
             <div class="expiry-warning">
-                <div class="countdown-badge">${daysLeft} Day${daysLeft === 1 ? '' : 's'} Left</div>
+                <div class="countdown-badge">${daysLeft} Day${daysLeft === 1 ? "" : "s"} Left</div>
                 <h3>⚠️ Subscription Expiring Soon</h3>
                 <p>Your <strong>${planName}</strong> subscription will expire on <strong>${expiryDate}</strong>.</p>
                 <p>After this date, you will lose access to all premium features and your account will be downgraded to our free tier.</p>
@@ -1217,15 +1226,15 @@ export const renewalReminderEmail = ({
   planName,
   renewalDate,
   amount,
-  currency = 'gbp',
-  billingInterval
+  currency = "gbp",
+  billingInterval,
 }: {
   name: string
   planName: string
   renewalDate: string
   amount?: number
   currency?: string
-  billingInterval?: 'month' | 'year'
+  billingInterval?: "month" | "year"
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1551,7 +1560,7 @@ export const renewalReminderEmail = ({
                 <div class="renewal-badge">Auto-Renewal</div>
                 <h3>🔄 Upcoming Renewal</h3>
                 <p>Your <strong>${planName}</strong> subscription will automatically renew on <strong>${renewalDate}</strong>.</p>
-                ${amount ? `<p><strong>Renewal Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)} (${billingInterval === 'month' ? 'Monthly' : 'Annual'})</p>` : ''}
+                ${amount ? `<p><strong>Renewal Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)} (${billingInterval === "month" ? "Monthly" : "Annual"})</p>` : ""}
                 <p>No action is required on your part - your subscription will continue seamlessly.</p>
             </div>
             
@@ -1559,7 +1568,7 @@ export const renewalReminderEmail = ({
                 <h3>📋 Current Subscription Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
                 <p><strong>Renewal Date:</strong> ${renewalDate}</p>
-                ${amount ? `<p><strong>Billing Cycle:</strong> ${billingInterval === 'month' ? 'Monthly' : 'Annual'}</p>` : ''}
+                ${amount ? `<p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>` : ""}
                 <p><strong>Status:</strong> Active</p>
             </div>
             
@@ -1629,15 +1638,15 @@ export const renewalConfirmationEmail = ({
   planName,
   renewalDate,
   amount,
-  currency = 'gbp',
-  billingInterval
+  currency = "gbp",
+  billingInterval,
 }: {
   name: string
   planName: string
   renewalDate: string
   amount: number
   currency?: string
-  billingInterval: 'month' | 'year'
+  billingInterval: "month" | "year"
 }) => `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1890,7 +1899,7 @@ export const renewalConfirmationEmail = ({
             <div class="info-card">
                 <h3>📋 Subscription Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
-                <p><strong>Billing Cycle:</strong> ${billingInterval === 'month' ? 'Monthly' : 'Annual'}</p>
+                <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
                 <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
                 <p><strong>Status:</strong> Active</p>
             </div>
@@ -1899,7 +1908,7 @@ export const renewalConfirmationEmail = ({
                 <div class="renewal-badge">Renewed</div>
                 <h3>🎉 Renewal Confirmed</h3>
                 <p><strong>Renewal Date:</strong> ${renewalDate}</p>
-                <p><strong>Next Billing:</strong> ${billingInterval === 'month' ? 'Next month' : 'Next year'}</p>
+                <p><strong>Next Billing:</strong> ${billingInterval === "month" ? "Next month" : "Next year"}</p>
                 <p>Your subscription has been automatically renewed. Continue enjoying all premium features without interruption.</p>
             </div>
             
@@ -1947,7 +1956,7 @@ export const renewalConfirmationEmail = ({
 export const paymentFailedEmail = ({
   name,
   planName,
-  dueDate
+  dueDate,
 }: {
   name: string
   planName: string
@@ -2288,7 +2297,7 @@ export const trialEndingSoonEmail = ({
   name,
   planName,
   trialEndDate,
-  daysLeft
+  daysLeft,
 }: {
   name: string
   planName: string
@@ -2588,7 +2597,7 @@ export const trialEndingSoonEmail = ({
             <div class="info-card countdown-card">
                 <div class="countdown-badge">Time Remaining</div>
                 <div class="countdown-number">${daysLeft}</div>
-                <div class="countdown-text">Day${daysLeft === 1 ? '' : 's'} Left</div>
+                <div class="countdown-text">Day${daysLeft === 1 ? "" : "s"} Left</div>
                 <p>Your trial will end on <strong>${trialEndDate}</strong>. After this date, you'll need an active subscription to continue using InstaLabel.</p>
             </div>
             
@@ -2940,7 +2949,7 @@ export const labelOrderConfirmationEmail = ({
                 <div class="shipping-badge">Shipping</div>
                 <h3>🚚 Delivery Information</h3>
                 <p><strong>Shipping Address:</strong></p>
-                <div class="shipping-address">${shippingAddress.replace(/, /g, '<br>')}</div>
+                <div class="shipping-address">${shippingAddress.replace(/, /g, "<br>")}</div>
                 <p style="margin-top: 12px;">Expected delivery: 3-5 business days</p>
             </div>
             
@@ -3352,7 +3361,7 @@ export const labelOrderShippedEmail = ({
                 <div class="delivery-badge">In Transit</div>
                 <h3>🚚 Delivery Information</h3>
                 <p><strong>Shipping Address:</strong></p>
-                <div class="shipping-address">${shippingAddress.replace(/, /g, '<br>')}</div>
+                <div class="shipping-address">${shippingAddress.replace(/, /g, "<br>")}</div>
                 <p style="margin-top: 12px;"><strong>Expected Delivery:</strong> 2-3 business days</p>
                 
                 <div class="tracking-section">
@@ -3769,7 +3778,7 @@ export const labelOrderAdminNotificationEmail = ({
                 <div class="shipping-badge">Shipping</div>
                 <h3>🚚 Shipping Information</h3>
                 <p><strong>Delivery Address:</strong></p>
-                <div class="shipping-address">${shippingAddress.replace(/, /g, '<br>')}</div>
+                <div class="shipping-address">${shippingAddress.replace(/, /g, "<br>")}</div>
                 <p style="margin-top: 12px;"><strong>Processing time:</strong> Ship within 24 hours</p>
             </div>
             

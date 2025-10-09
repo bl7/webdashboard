@@ -125,7 +125,7 @@ export const metadata: Metadata = {
   category: "Food Service Technology",
   other: {
     sitemap: "/sitemap.xml",
-    "google-site-verification": "your-verification-code-here", // Add your GSC verification code
+    "google-site-verification": "njHVl6pfnji-AMsQsDOr1R72Rn2U-fvzt9_fas2XjtI",
   },
 }
 
@@ -162,7 +162,7 @@ export default function RootLayout({
     description: "Professional kitchen labeling system for restaurants and food businesses",
     url: "https://www.instalabel.co",
     telephone: "+44-20-1234-5678",
-    email: "hello@instalabel.co",
+    email: "contact@instalabel.co",
     address: {
       "@type": "PostalAddress",
       addressCountry: "GB",

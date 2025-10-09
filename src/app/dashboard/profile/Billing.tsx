@@ -29,7 +29,7 @@ function TrialBanner({ subscription }: { subscription: any }) {
         <span className="font-semibold text-lg">You are on a free trial!</span>
       </div>
       <div className="text-base font-medium">
-        {daysLeft}/10 days left in your trial. &nbsp;|&nbsp; Ends: <span className="font-semibold">{trialEnd.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
+        {daysLeft}/14 days left in your trial. &nbsp;|&nbsp; Ends: <span className="font-semibold">{trialEnd.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}</span>
       </div>
     </div>
   )

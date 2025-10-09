@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       line_items: [{ price: price_id, quantity: 1 }],
       subscription_data: {
         metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
-        ...(trialEligible ? { trial_period_days: 10 } : {}),
+        ...(trialEligible ? { trial_period_days: 14 } : {}),
       },
       metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
