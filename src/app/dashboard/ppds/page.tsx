@@ -272,6 +272,11 @@ export default function PPDSPage() {
     console.log("[PPDS Print] Detected OS:", osType)
   }, [osType])
 
+  // Reset page to 1 when search term changes
+  useEffect(() => {
+    setPage(1)
+  }, [searchTerm])
+
   function calculateExpiryDate(days: number) {
     const d = new Date()
     d.setDate(d.getDate() + days)
@@ -279,13 +284,14 @@ export default function PPDSPage() {
   }
 
   // Pagination and search
-  const filteredMenuItems = useMemo(
-    () =>
-      !searchTerm
-        ? menuItems
-        : menuItems.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [menuItems, searchTerm]
-  )
+  const filteredMenuItems = useMemo(() => {
+    const filtered = !searchTerm
+      ? menuItems
+      : menuItems.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    // Sort alphabetically by name
+    return filtered.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }, [menuItems, searchTerm])
   const paginatedMenuItems = useMemo(
     () => filteredMenuItems.slice((page - 1) * itemsPerPage, page * itemsPerPage),
     [filteredMenuItems, page]

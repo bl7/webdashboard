@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
   }
   const { user_id, email, plan_id, price_id } = body
   // Debug log
-  console.log('DEBUG: Received checkout payload', { user_id, email, plan_id, price_id })
+  console.log("DEBUG: Received checkout payload", { user_id, email, plan_id, price_id })
   if (!user_id || !email || !plan_id || !price_id) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
   }
@@ -22,16 +22,16 @@ export async function POST(req: NextRequest) {
       [plan_id]
     )
     if (planRes.rows.length === 0) {
-      console.error('[CHECKOUT] Plan not found:', plan_id);
+      console.error("[CHECKOUT] Plan not found:", plan_id)
       return NextResponse.json({ error: "Plan not found" }, { status: 404 })
     }
     const plan = planRes.rows[0]
     let plan_name = plan.name
     let plan_interval = null
-    if (price_id === plan.stripe_price_id_monthly) plan_interval = 'monthly'
-    else if (price_id === plan.stripe_price_id_yearly) plan_interval = 'yearly'
+    if (price_id === plan.stripe_price_id_monthly) plan_interval = "monthly"
+    else if (price_id === plan.stripe_price_id_yearly) plan_interval = "yearly"
     else {
-      console.error('[CHECKOUT] Invalid price_id for plan:', { plan_id, price_id, plan });
+      console.error("[CHECKOUT] Invalid price_id for plan:", { plan_id, price_id, plan })
       return NextResponse.json({ error: "Invalid price ID for plan" }, { status: 400 })
     }
     // Find or create Stripe customer
@@ -39,21 +39,21 @@ export async function POST(req: NextRequest) {
     const customers = await stripe.customers.list({ email, limit: 1 })
     if (customers.data.length > 0) {
       customer = customers.data[0]
-      console.log('[CHECKOUT] Found existing customer:', { customer_id: customer.id, email });
+      console.log("[CHECKOUT] Found existing customer:", { customer_id: customer.id, email })
       if (customer.metadata?.user_id !== user_id) {
-        console.log('[CHECKOUT] Updating customer metadata:', { customer_id: customer.id, user_id });
+        console.log("[CHECKOUT] Updating customer metadata:", { customer_id: customer.id, user_id })
         await stripe.customers.update(customer.id, { metadata: { user_id } })
       }
     } else {
-      console.log('[CHECKOUT] Creating new customer:', { email, user_id });
+      console.log("[CHECKOUT] Creating new customer:", { email, user_id })
       customer = await stripe.customers.create({ email, metadata: { user_id } })
     }
     // Check if user has ever had any subscription before (not just a trial)
     const subCheck = await pool.query(
       `SELECT 1 FROM subscription_better WHERE user_id = $1 LIMIT 1`,
       [user_id]
-    );
-    const trialEligible = subCheck.rows.length === 0;
+    )
+    const trialEligible = subCheck.rows.length === 0
     // Create checkout session with detailed metadata
     const sessionData = {
       customer: customer.id,
@@ -70,12 +70,12 @@ export async function POST(req: NextRequest) {
       allow_promotion_codes: true,
       billing_address_collection: "auto" as const,
     }
-    console.log('[CHECKOUT] Creating session with data:', sessionData);
+    console.log("[CHECKOUT] Creating session with data:", sessionData)
     const session = await stripe.checkout.sessions.create(sessionData)
-    console.log('[CHECKOUT] Session created:', { session_id: session.id });
+    console.log("[CHECKOUT] Session created:", { session_id: session.id })
     return NextResponse.json({ url: session.url })
   } catch (error: any) {
-    console.error('[CHECKOUT] Error:', error);
+    console.error("[CHECKOUT] Error:", error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
-} 
+}

@@ -335,20 +335,22 @@ export default function LabelDemo() {
     setSubStatusMsg(msg)
   }, [subscription])
 
-  const filteredIngredients = useMemo(
-    () =>
-      !searchTerm
-        ? ingredients
-        : ingredients.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [ingredients, searchTerm]
-  )
-  const filteredMenuItems = useMemo(
-    () =>
-      !searchTerm
-        ? menuItems
-        : menuItems.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase())),
-    [menuItems, searchTerm]
-  )
+  const filteredIngredients = useMemo(() => {
+    const filtered = !searchTerm
+      ? ingredients
+      : ingredients.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    // Sort alphabetically by name
+    return filtered.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }, [ingredients, searchTerm])
+  const filteredMenuItems = useMemo(() => {
+    const filtered = !searchTerm
+      ? menuItems
+      : menuItems.filter((i) => i.name.toLowerCase().includes(searchTerm.toLowerCase()))
+
+    // Sort alphabetically by name
+    return filtered.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+  }, [menuItems, searchTerm])
   const paginatedIngredients = useMemo(
     () => filteredIngredients.slice((page - 1) * itemsPerPage, page * itemsPerPage),
     [filteredIngredients, page]
@@ -578,8 +580,15 @@ export default function LabelDemo() {
       // Don't return, continue with printing for debug
     }
 
-    // Get the best available printer using our helper function
-    const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    // Find printer by name (same logic as main print functionality)
+    const selectedPrinterObj =
+      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
+      availablePrinters[0]
+    const printerToUse = getBestAvailablePrinter(
+      selectedPrinterObj,
+      defaultPrinter,
+      availablePrinters
+    )
 
     if (!printerToUse.printer) {
       console.warn("⚠️ No printer available, but allowing print for debug purposes")
@@ -668,8 +677,15 @@ export default function LabelDemo() {
       // Don't return, continue with printing for debug
     }
 
-    // Get the best available printer using our helper function
-    const printerToUse = getBestAvailablePrinter(selectedPrinter, defaultPrinter, availablePrinters)
+    // Find printer by name (same logic as main print functionality)
+    const selectedPrinterObj =
+      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
+      availablePrinters[0]
+    const printerToUse = getBestAvailablePrinter(
+      selectedPrinterObj,
+      defaultPrinter,
+      availablePrinters
+    )
 
     if (!printerToUse.printer) {
       console.warn("⚠️ No printer available, but allowing print for debug purposes")
@@ -1112,8 +1128,20 @@ export default function LabelDemo() {
           className="rounded-full bg-gradient-to-r from-red-500 to-red-600 px-8 py-4 text-lg font-bold text-white shadow-xl hover:from-red-600 hover:to-red-700"
           aria-label="Print USE FIRST label"
           tabIndex={0}
-          disabled={subBlocked}
-          title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
+          disabled={
+            subBlocked ||
+            availablePrinters.length === 0 ||
+            !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+          }
+          title={
+            subBlocked
+              ? "Printing is disabled due to your subscription status."
+              : availablePrinters.length === 0
+                ? "No printers available"
+                : !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                  ? "No printer selected"
+                  : "Print USE FIRST label"
+          }
         >
           USE FIRST
         </Button>
@@ -1122,8 +1150,20 @@ export default function LabelDemo() {
           className="rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-4 text-lg font-bold text-white shadow-xl hover:from-blue-600 hover:to-blue-700"
           aria-label="Print Defrosted label"
           tabIndex={0}
-          disabled={subBlocked}
-          title={subBlocked ? "Printing is disabled due to your subscription status." : undefined}
+          disabled={
+            subBlocked ||
+            availablePrinters.length === 0 ||
+            !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+          }
+          title={
+            subBlocked
+              ? "Printing is disabled due to your subscription status."
+              : availablePrinters.length === 0
+                ? "No printers available"
+                : !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                  ? "No printer selected"
+                  : "Print Defrosted label"
+          }
         >
           DEFROST
         </Button>

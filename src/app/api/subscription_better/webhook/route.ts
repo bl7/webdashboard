@@ -824,19 +824,19 @@ export async function POST(req: NextRequest) {
           if (!customer.deleted) userEmail = (customer as any).email
         }
         if (!user_id) user_id = "unknown-" + sub.customer
-        // Send cancellation email
-        if (userEmail) {
-          await sendMail({
-            to: userEmail,
-            subject: "Your InstaLabel Subscription Has Been Cancelled",
-            body: cancellationEmail({
-              name: userEmail,
-              planName: sub.metadata?.plan_name || (sub as any)["plan_id"] || "",
-              cancellationType: "immediate",
-              endDate: new Date().toLocaleDateString(),
-            }),
-          })
-        }
+        // Email sending disabled for subscription cancellations
+        // if (userEmail) {
+        //   await sendMail({
+        //     to: userEmail,
+        //     subject: "Your InstaLabel Subscription Has Been Cancelled",
+        //     body: cancellationEmail({
+        //       name: userEmail,
+        //       planName: sub.metadata?.plan_name || (sub as any)["plan_id"] || "",
+        //       cancellationType: "immediate",
+        //       endDate: new Date().toLocaleDateString(),
+        //     }),
+        //   })
+        // }
 
         // Log the full Stripe subscription object for debugging
         console.log("[WEBHOOK] Stripe Subscription Object:", JSON.stringify(sub, null, 2))

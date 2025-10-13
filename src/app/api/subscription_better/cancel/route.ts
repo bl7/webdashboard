@@ -95,16 +95,17 @@ export async function POST(req: NextRequest) {
         `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
         [user_id, sub.stripe_subscription_id, reason || null]
       )
-      await sendMail({
-        to: userEmail,
-        subject: "Subscription Cancellation",
-        body: cancellationEmail({
-          name: userEmail,
-          planName: sub.plan_name || sub.plan_id || "",
-          cancellationType: "immediate",
-          endDate: new Date().toLocaleDateString(),
-        }),
-      })
+      // Email sending disabled for subscription cancellations
+      // await sendMail({
+      //   to: userEmail,
+      //   subject: "Subscription Cancellation",
+      //   body: cancellationEmail({
+      //     name: userEmail,
+      //     planName: sub.plan_name || sub.plan_id || "",
+      //     cancellationType: "immediate",
+      //     endDate: new Date().toLocaleDateString(),
+      //   }),
+      // })
       return NextResponse.json({
         success: true,
         message: "Your subscription has been cancelled immediately.",
@@ -139,16 +140,17 @@ export async function POST(req: NextRequest) {
       [user_id, sub.stripe_subscription_id, reason || null]
     )
 
-    await sendMail({
-      to: userEmail,
-      subject: "Subscription Cancellation",
-      body: cancellationEmail({
-        name: userEmail,
-        planName: sub.plan_name || sub.plan_id || "",
-        cancellationType: "period_end",
-        endDate: new Date((stripeSub as any).current_period_end * 1000).toLocaleDateString(),
-      }),
-    })
+    // Email sending disabled for subscription cancellations
+    // await sendMail({
+    //   to: userEmail,
+    //   subject: "Subscription Cancellation",
+    //   body: cancellationEmail({
+    //     name: userEmail,
+    //     planName: sub.plan_name || sub.plan_id || "",
+    //     cancellationType: "period_end",
+    //     endDate: new Date((stripeSub as any).current_period_end * 1000).toLocaleDateString(),
+    //   }),
+    // })
 
     return NextResponse.json({
       success: true,
