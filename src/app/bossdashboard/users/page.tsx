@@ -29,6 +29,13 @@ export default function UsersPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
+  const [showExtendTrialModal, setShowExtendTrialModal] = useState(false)
+  const [extendTrialDays, setExtendTrialDays] = useState<number>(7)
+  const [extendTrialReason, setExtendTrialReason] = useState<string>("")
+  const [showCancelModal, setShowCancelModal] = useState(false)
+  const [cancelMode, setCancelMode] = useState<"immediate" | "period_end">("period_end")
+  const [cancelReason, setCancelReason] = useState<string>("")
+  const [actionLoading, setActionLoading] = useState<boolean>(false)
   const { isDarkMode } = useDarkMode()
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [printsOpen, setPrintsOpen] = useState(false)
@@ -320,6 +327,34 @@ export default function UsersPage() {
                     >
                       View
                     </button>
+                    {user.status === "trialing" &&
+                      user.trial_end &&
+                      new Date(user.trial_end).getTime() > Date.now() && (
+                        <button
+                          className="rounded bg-blue-600 px-3 py-1 text-white transition hover:bg-blue-700"
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setExtendTrialDays(7)
+                            setExtendTrialReason("")
+                            setShowExtendTrialModal(true)
+                          }}
+                        >
+                          Extend Trial
+                        </button>
+                      )}
+                    {user.status !== "canceled" && (
+                      <button
+                        className="rounded bg-red-600 px-3 py-1 text-white transition hover:bg-red-700"
+                        onClick={() => {
+                          setSelectedUser(user)
+                          setCancelMode("period_end")
+                          setCancelReason("")
+                          setShowCancelModal(true)
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                       onClick={() => openPrintsDrawer(user)}
@@ -539,6 +574,217 @@ export default function UsersPage() {
               <div>
                 <span className="font-semibold">Created At:</span>{" "}
                 {new Date(selectedUser.created_at).toLocaleString()}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Extend Trial Modal */}
+      {showExtendTrialModal && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div
+            className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                Extend Trial — {selectedUser.company_name}
+              </h3>
+              <button
+                onClick={() => setShowExtendTrialModal(false)}
+                className={`rounded-md p-1 transition-colors ${isDarkMode ? "text-gray-400 hover:bg-gray-700 hover:text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label
+                  className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}
+                >
+                  Days
+                </label>
+                <input
+                  type="number"
+                  min={1}
+                  value={extendTrialDays}
+                  onChange={(e) => setExtendTrialDays(parseInt(e.target.value || "0", 10))}
+                  className={`w-full rounded-md border px-3 py-2 transition-colors ${isDarkMode ? "border-gray-600 bg-gray-700 text-white focus:border-purple-500" : "border-gray-300 bg-white text-gray-900 focus:border-purple-500"} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20`}
+                />
+              </div>
+              <div>
+                <label
+                  className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}
+                >
+                  Reason (optional)
+                </label>
+                <textarea
+                  value={extendTrialReason}
+                  onChange={(e) => setExtendTrialReason(e.target.value)}
+                  className={`w-full rounded-md border px-3 py-2 transition-colors ${isDarkMode ? "border-gray-600 bg-gray-700 text-white focus:border-purple-500" : "border-gray-300 bg-white text-gray-900 focus:border-purple-500"} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20`}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowExtendTrialModal(false)}
+                  className={`rounded px-4 py-2 ${isDarkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-gray-900 hover:bg-gray-300"}`}
+                  disabled={actionLoading}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!selectedUser) return
+                    setActionLoading(true)
+                    try {
+                      const bossToken =
+                        typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                      const res = await fetch("/api/subscription_better/extend-trial", {
+                        method: "POST",
+                        headers: bossToken
+                          ? {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${bossToken}`,
+                            }
+                          : { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          user_id: selectedUser.user_id,
+                          days: extendTrialDays,
+                          reason: extendTrialReason,
+                        }),
+                      })
+                      const data = await res.json()
+                      if (!res.ok || data.error) {
+                        alert(data.error || "Failed to extend trial")
+                      } else {
+                        setShowExtendTrialModal(false)
+                        // refresh users
+                        const refToken =
+                          typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                        const r = await fetch("/api/subscription_better/users", {
+                          headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
+                        })
+                        const d = await r.json()
+                        setUsers(Array.isArray(d) ? d : [])
+                      }
+                    } finally {
+                      setActionLoading(false)
+                    }
+                  }}
+                  className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-70"
+                  disabled={actionLoading || !extendTrialDays || extendTrialDays <= 0}
+                >
+                  {actionLoading ? "Saving..." : "Extend"}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cancel Subscription Modal */}
+      {showCancelModal && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div
+            className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+          >
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                Cancel Subscription — {selectedUser.company_name}
+              </h3>
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className={`rounded-md p-1 transition-colors ${isDarkMode ? "text-gray-400 hover:bg-gray-700 hover:text-white" : "text-gray-600 hover:bg-gray-100"}`}
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label
+                  className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}
+                >
+                  Cancellation type
+                </label>
+                <select
+                  value={cancelMode}
+                  onChange={(e) => setCancelMode(e.target.value as any)}
+                  className={`w-full rounded-md border px-3 py-2 transition-colors ${isDarkMode ? "border-gray-600 bg-gray-700 text-white focus:border-purple-500" : "border-gray-300 bg-white text-gray-900 focus:border-purple-500"} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20`}
+                >
+                  <option value="immediate">Immediate</option>
+                  <option value="period_end">End of billing period</option>
+                </select>
+              </div>
+              <div>
+                <label
+                  className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-white" : "text-gray-700"}`}
+                >
+                  Reason (optional)
+                </label>
+                <textarea
+                  value={cancelReason}
+                  onChange={(e) => setCancelReason(e.target.value)}
+                  className={`w-full rounded-md border px-3 py-2 transition-colors ${isDarkMode ? "border-gray-600 bg-gray-700 text-white focus:border-purple-500" : "border-gray-300 bg-white text-gray-900 focus:border-purple-500"} focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20`}
+                />
+              </div>
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={() => setShowCancelModal(false)}
+                  className={`rounded px-4 py-2 ${isDarkMode ? "bg-gray-700 text-white hover:bg-gray-600" : "bg-gray-200 text-gray-900 hover:bg-gray-300"}`}
+                  disabled={actionLoading}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!selectedUser) return
+                    if (
+                      !confirm(
+                        `Are you sure you want to ${cancelMode === "immediate" ? "cancel immediately" : "cancel at period end"}?`
+                      )
+                    )
+                      return
+                    setActionLoading(true)
+                    try {
+                      const bossToken =
+                        typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                      const res = await fetch("/api/subscription_better/cancel", {
+                        method: "POST",
+                        headers: bossToken
+                          ? {
+                              "Content-Type": "application/json",
+                              Authorization: `Bearer ${bossToken}`,
+                            }
+                          : { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          user_id: selectedUser.user_id,
+                          immediate: cancelMode === "immediate",
+                          reason: cancelReason,
+                        }),
+                      })
+                      const data = await res.json()
+                      if (!res.ok || data.error) {
+                        alert(data.error || "Failed to cancel subscription")
+                      } else {
+                        setShowCancelModal(false)
+                        // refresh users
+                        const refToken =
+                          typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                        const r = await fetch("/api/subscription_better/users", {
+                          headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
+                        })
+                        const d = await r.json()
+                        setUsers(Array.isArray(d) ? d : [])
+                      }
+                    } finally {
+                      setActionLoading(false)
+                    }
+                  }}
+                  className="rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700 disabled:opacity-70"
+                  disabled={actionLoading}
+                >
+                  {actionLoading ? "Cancelling..." : "Confirm"}
+                </button>
               </div>
             </div>
           </div>

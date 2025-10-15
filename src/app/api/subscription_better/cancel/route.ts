@@ -6,7 +6,24 @@ import { cancellationEmail } from "@/components/templates/subscriptionEmails"
 import { verifyAuthToken } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
-  const { user_id, immediate, reason } = await req.json()
+  const { role, userUuid } = await verifyAuthToken(req)
+  const body = (await req.json()) as { user_id?: string; immediate?: boolean; reason?: string }
+  let user_id: string | undefined = body?.user_id
+  const immediate: boolean | undefined = body?.immediate
+  const reason: string | undefined = body?.reason
+
+  // Authorization rules:
+  // - boss: may cancel any user_id (must be provided)
+  // - user: may cancel only their own; ignore/override provided user_id
+  if (role === "user") {
+    user_id = String(userUuid)
+  } else if (role === "boss") {
+    if (!user_id) {
+      return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
+    }
+  } else {
+    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
+  }
 
   if (!user_id) {
     return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
@@ -74,8 +91,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Only allow immediate cancel if trialing
-    if (sub.status === "trialing") {
+    // Immediate cancellation
+    if (immediate === true) {
       await stripe.subscriptions.cancel(sub.stripe_subscription_id)
       await client.query(
         `UPDATE subscription_better
@@ -112,8 +129,8 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Non-trialing: cancel at end of next full calendar month
-    // Simplified cancellation: cancel at period end for all plans, no refunds
+    // Cancel at end of current billing period
+    // Simplified: no refunds
     await stripe.subscriptions.update(sub.stripe_subscription_id, {
       cancel_at_period_end: true,
     })
