@@ -78,6 +78,46 @@ export default function AnalyticsDashboard() {
         <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Monthly Plan Users
+            </CardTitle>
+            <BarChart3 className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              {data.monthlyActive}
+            </div>
+            <p className="text-xs text-muted-foreground">Active on monthly billing</p>
+          </CardContent>
+        </Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Annual Plan Users
+            </CardTitle>
+            <BarChart3 className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">
+              {data.annualActive}
+            </div>
+            <p className="text-xs text-muted-foreground">Active on annual billing</p>
+          </CardContent>
+        </Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Trialing Users
+            </CardTitle>
+            <Activity className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white">{data.trialing}</div>
+            <p className="text-xs text-muted-foreground">Currently in trial</p>
+          </CardContent>
+        </Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
               Monthly Revenue
             </CardTitle>
             <TrendingUp className="h-5 w-5 text-primary" />

@@ -1,6 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { Search, Plus, Users, X, Eye } from "lucide-react"
+import { Search, Plus, Users, X, Eye, BarChart2 } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useDarkMode } from "../context/DarkModeContext"
 
 interface User {
@@ -9,6 +10,7 @@ interface User {
   company_name: string
   plan_name: string
   status: string
+  billing_interval?: "month" | "year" | null
   current_period_end: string | null
   trial_end: string | null
   pending_plan_change: string | null
@@ -22,12 +24,24 @@ export default function UsersPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [planFilter, setPlanFilter] = useState("")
+  const [billingFilter, setBillingFilter] = useState("") // '' | 'month' | 'year'
   const [statusFilter, setStatusFilter] = useState("")
   const [currentPage, setCurrentPage] = useState(1)
   const [showAddModal, setShowAddModal] = useState(false)
   const [showViewModal, setShowViewModal] = useState(false)
   const { isDarkMode } = useDarkMode()
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [printsOpen, setPrintsOpen] = useState(false)
+  const [printsLoading, setPrintsLoading] = useState(false)
+  const [printsRange, setPrintsRange] = useState<"today" | "yesterday" | "week" | "month" | "all">(
+    "today"
+  )
+  const [printsSummary, setPrintsSummary] = useState<{
+    totalPrints: number
+    entries: number
+    byLabelType: any[]
+    logs: any[]
+  } | null>(null)
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -41,9 +55,12 @@ export default function UsersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true)
-      const res = await fetch("/api/subscription_better/users")
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const res = await fetch("/api/subscription_better/users", {
+        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+      })
       const data = await res.json()
-      console.log('Users API response:', data)
+      console.log("Users API response:", data)
       if (data.error) {
         setUsers([])
       } else {
@@ -55,15 +72,23 @@ export default function UsersPage() {
   }, [])
 
   // Filtering logic
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch =
-      (user.company_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.plan_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (user.status || "").toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesPlan = planFilter ? user.plan_name === planFilter : true
-    const matchesStatus = statusFilter ? user.status === statusFilter : true
-    return matchesSearch && matchesPlan && matchesStatus
-  })
+  const filteredUsers = users
+    // Sort latest signups first by created_at desc (fallback to current_period_end if needed)
+    .slice()
+    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .filter((user) => {
+      const matchesSearch =
+        (user.company_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.email || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.plan_name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (user.status || "").toLowerCase().includes(searchTerm.toLowerCase())
+      const matchesPlan = planFilter ? user.plan_name === planFilter : true
+      const matchesStatus = statusFilter ? user.status === statusFilter : true
+      const matchesBilling = billingFilter
+        ? (user.billing_interval || "").toLowerCase() === billingFilter
+        : true
+      return matchesSearch && matchesPlan && matchesStatus && matchesBilling
+    })
 
   // Pagination
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
@@ -89,6 +114,52 @@ export default function UsersPage() {
     setShowViewModal(true)
   }
 
+  const openPrintsDrawer = (user: User) => {
+    setSelectedUser(user)
+    setPrintsOpen(true)
+  }
+
+  useEffect(() => {
+    if (!printsOpen || !selectedUser) return
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const buildRange = () => {
+      const today = new Date().toISOString().slice(0, 10)
+      if (printsRange === "today") return `?date_from=${today}&date_to=${today}`
+      if (printsRange === "yesterday") {
+        const d = new Date()
+        d.setDate(d.getDate() - 1)
+        const y = d.toISOString().slice(0, 10)
+        return `?date_from=${y}&date_to=${y}`
+      }
+      if (printsRange === "month") {
+        const now = new Date()
+        const first = new Date(now.getFullYear(), now.getMonth(), 1)
+        const from = first.toISOString().slice(0, 10)
+        return `?date_from=${from}&date_to=${today}`
+      }
+      if (printsRange === "all") {
+        // Cover all time by setting an early from date
+        return `?date_from=1970-01-01&date_to=${today}`
+      }
+      const now = new Date()
+      const day = now.getDay() || 7
+      const monday = new Date(now)
+      monday.setDate(now.getDate() - (day - 1))
+      const sunday = new Date(monday)
+      sunday.setDate(monday.getDate() + 6)
+      const from = monday.toISOString().slice(0, 10),
+        to = sunday.toISOString().slice(0, 10)
+      return `?date_from=${from}&date_to=${to}`
+    }
+    setPrintsLoading(true)
+    fetch(`/api/logs/summary/user/${selectedUser.user_id}${buildRange()}`, {
+      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+    })
+      .then((r) => r.json())
+      .then(setPrintsSummary)
+      .finally(() => setPrintsLoading(false))
+  }, [printsOpen, printsRange, selectedUser])
+
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -101,81 +172,162 @@ export default function UsersPage() {
   }
 
   return (
-    <div className={`p-6 min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}>
+    <div
+      className={`min-h-screen p-6 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
+    >
       {/* Header */}
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="mb-2 text-2xl font-bold">Users Management</h1>
-          <p className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Manage your users and their subscriptions</p>
+          <p className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+            Manage your users and their subscriptions
+          </p>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <div className="mb-6 flex flex-wrap gap-4 items-center">
-        <div className={`flex items-center rounded border ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"}`}>
+      <div className="mb-6 flex flex-wrap items-center gap-4">
+        <div
+          className={`flex items-center rounded border ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"}`}
+        >
           <Search className="ml-2 h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search users..."
             value={searchTerm}
-            onChange={e => { setSearchTerm(e.target.value); setCurrentPage(1) }}
-            className={`ml-2 bg-transparent py-2 px-2 outline-none ${isDarkMode ? "text-white" : "text-gray-900"}`}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setCurrentPage(1)
+            }}
+            className={`ml-2 bg-transparent px-2 py-2 outline-none ${isDarkMode ? "text-white" : "text-gray-900"}`}
           />
         </div>
         <select
           className={`rounded border p-2 ${isDarkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-white text-gray-900"}`}
           value={planFilter}
-          onChange={e => { setPlanFilter(e.target.value); setCurrentPage(1) }}
+          onChange={(e) => {
+            setPlanFilter(e.target.value)
+            setCurrentPage(1)
+          }}
         >
           <option value="">All Plans</option>
-          {[...new Set(users.map(u => u.plan_name))].map(plan => (
-            <option key={plan} value={plan}>{plan}</option>
+          {[...new Set(users.map((u) => u.plan_name))].map((plan) => (
+            <option key={plan} value={plan}>
+              {plan}
+            </option>
           ))}
         </select>
         <select
           className={`rounded border p-2 ${isDarkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-white text-gray-900"}`}
+          value={billingFilter}
+          onChange={(e) => {
+            setBillingFilter(e.target.value)
+            setCurrentPage(1)
+          }}
+        >
+          <option value="">All Billing</option>
+          <option value="month">Monthly</option>
+          <option value="year">Annual</option>
+        </select>
+        <select
+          className={`rounded border p-2 ${isDarkMode ? "border-gray-700 bg-gray-800 text-white" : "border-gray-300 bg-white text-gray-900"}`}
           value={statusFilter}
-          onChange={e => { setStatusFilter(e.target.value); setCurrentPage(1) }}
+          onChange={(e) => {
+            setStatusFilter(e.target.value)
+            setCurrentPage(1)
+          }}
         >
           <option value="">All Statuses</option>
-          {[...new Set(users.map(u => u.status))].map(status => (
-            <option key={status} value={status}>{status}</option>
+          {[...new Set(users.map((u) => u.status))].map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
           ))}
         </select>
       </div>
 
       {/* Users Table */}
-      <div className={`overflow-x-auto rounded-lg border ${isDarkMode ? "border-gray-700" : "border-gray-200"}`}>
+      <div
+        className={`overflow-x-auto rounded-lg border ${isDarkMode ? "border-gray-700" : "border-gray-200"}`}
+      >
         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
           <thead className={isDarkMode ? "bg-gray-800" : "bg-gray-100"}>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Company</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Plan</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Renewal</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Trial End</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Pending Change</th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Company
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Email
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Plan
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Billing
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Renewal
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Trial End
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Pending Change
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-            {paginatedUsers.map(user => (
-              <tr key={user.user_id} className={isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"}>
+            {paginatedUsers.map((user) => (
+              <tr
+                key={user.user_id}
+                className={isDarkMode ? "hover:bg-gray-800" : "hover:bg-gray-50"}
+              >
                 <td className="px-6 py-4">{user.company_name}</td>
                 <td className="px-6 py-4">{user.email}</td>
                 <td className="px-6 py-4">{user.plan_name}</td>
-                <td className="px-6 py-4">{user.status}</td>
-                <td className="px-6 py-4">{user.current_period_end ? new Date(user.current_period_end).toLocaleDateString() : '-'}</td>
-                <td className="px-6 py-4">{user.trial_end ? new Date(user.trial_end).toLocaleDateString() : '-'}</td>
-                <td className="px-6 py-4">{user.pending_plan_change ? `${user.pending_plan_change} (${user.pending_plan_change_effective ? new Date(user.pending_plan_change_effective).toLocaleDateString() : ''})` : '-'}</td>
                 <td className="px-6 py-4">
-                  <button
-                    className="rounded bg-purple-600 text-white px-3 py-1 hover:bg-purple-700 transition"
-                    onClick={() => openViewModal(user)}
-                  >
-                    View
-                  </button>
+                  {user.billing_interval === "month"
+                    ? "Monthly"
+                    : user.billing_interval === "year"
+                      ? "Annual"
+                      : "-"}
+                </td>
+                <td className="px-6 py-4">{user.status}</td>
+                <td className="px-6 py-4">
+                  {user.current_period_end
+                    ? new Date(user.current_period_end).toLocaleDateString()
+                    : "-"}
+                </td>
+                <td className="px-6 py-4">
+                  {user.trial_end ? new Date(user.trial_end).toLocaleDateString() : "-"}
+                </td>
+                <td className="px-6 py-4">
+                  {user.pending_plan_change
+                    ? `${user.pending_plan_change} (${user.pending_plan_change_effective ? new Date(user.pending_plan_change_effective).toLocaleDateString() : ""})`
+                    : "-"}
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    <button
+                      className="rounded bg-purple-600 px-3 py-1 text-white transition hover:bg-purple-700"
+                      onClick={() => openViewModal(user)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                      onClick={() => openPrintsDrawer(user)}
+                      title="View print stats"
+                    >
+                      <BarChart2 className="h-4 w-4" /> Prints
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -187,7 +339,8 @@ export default function UsersPage() {
       {totalPages > 1 && (
         <div className="mt-6 flex items-center justify-between">
           <div className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-            Showing {startIndex + 1} to {Math.min(startIndex + usersPerPage, filteredUsers.length)} of {filteredUsers.length} results
+            Showing {startIndex + 1} to {Math.min(startIndex + usersPerPage, filteredUsers.length)}{" "}
+            of {filteredUsers.length} results
           </div>
           <div className="flex space-x-2">
             <button
@@ -242,9 +395,13 @@ export default function UsersPage() {
       {/* Add User Modal */}
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+          <div
+            className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+          >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>Add New User</h3>
+              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                Add New User
+              </h3>
               <button
                 onClick={() => setShowAddModal(false)}
                 className={`rounded-md p-1 transition-colors ${isDarkMode ? "text-gray-400 hover:bg-gray-700 hover:text-white" : "text-gray-600 hover:bg-gray-100"}`}
@@ -337,9 +494,13 @@ export default function UsersPage() {
       {/* View User Modal */}
       {showViewModal && selectedUser && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+          <div
+            className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+          >
             <div className="mb-4 flex items-center justify-between">
-              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>User Details</h3>
+              <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                User Details
+              </h3>
               <button
                 onClick={() => setShowViewModal(false)}
                 className={`rounded-md p-1 transition-colors ${isDarkMode ? "text-gray-400 hover:bg-gray-700 hover:text-white" : "text-gray-600 hover:bg-gray-100"}`}
@@ -359,15 +520,21 @@ export default function UsersPage() {
               </div>
               <div>
                 <span className="font-semibold">Renewal Date:</span>{" "}
-                {selectedUser.current_period_end ? new Date(selectedUser.current_period_end).toLocaleDateString() : '-'}
+                {selectedUser.current_period_end
+                  ? new Date(selectedUser.current_period_end).toLocaleDateString()
+                  : "-"}
               </div>
               <div>
                 <span className="font-semibold">Trial End:</span>{" "}
-                {selectedUser.trial_end ? new Date(selectedUser.trial_end).toLocaleDateString() : '-'}
+                {selectedUser.trial_end
+                  ? new Date(selectedUser.trial_end).toLocaleDateString()
+                  : "-"}
               </div>
               <div>
                 <span className="font-semibold">Pending Change:</span>{" "}
-                {selectedUser.pending_plan_change ? `${selectedUser.pending_plan_change} (${selectedUser.pending_plan_change_effective ? new Date(selectedUser.pending_plan_change_effective).toLocaleDateString() : ''})` : '-'}
+                {selectedUser.pending_plan_change
+                  ? `${selectedUser.pending_plan_change} (${selectedUser.pending_plan_change_effective ? new Date(selectedUser.pending_plan_change_effective).toLocaleDateString() : ""})`
+                  : "-"}
               </div>
               <div>
                 <span className="font-semibold">Created At:</span>{" "}
@@ -377,6 +544,77 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      {/* Prints Drawer */}
+      <Dialog open={printsOpen} onOpenChange={setPrintsOpen}>
+        <DialogContent className={isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}>
+          <DialogHeader>
+            <DialogTitle>Prints for {selectedUser?.company_name}</DialogTitle>
+          </DialogHeader>
+          <div className="mb-3 flex items-center gap-2">
+            <button
+              className={`rounded px-2 py-1 text-xs ${printsRange === "today" ? "bg-purple-600 text-white" : isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`}
+              onClick={() => setPrintsRange("today")}
+            >
+              Today
+            </button>
+            <button
+              className={`rounded px-2 py-1 text-xs ${printsRange === "yesterday" ? "bg-purple-600 text-white" : isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`}
+              onClick={() => setPrintsRange("yesterday")}
+            >
+              Yesterday
+            </button>
+            <button
+              className={`rounded px-2 py-1 text-xs ${printsRange === "week" ? "bg-purple-600 text-white" : isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`}
+              onClick={() => setPrintsRange("week")}
+            >
+              This Week
+            </button>
+            <button
+              className={`rounded px-2 py-1 text-xs ${printsRange === "month" ? "bg-purple-600 text-white" : isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`}
+              onClick={() => setPrintsRange("month")}
+            >
+              This Month
+            </button>
+            <button
+              className={`rounded px-2 py-1 text-xs ${printsRange === "all" ? "bg-purple-600 text-white" : isDarkMode ? "bg-gray-700 text-white" : "bg-gray-200 text-gray-900"}`}
+              onClick={() => setPrintsRange("all")}
+            >
+              All Time
+            </button>
+          </div>
+          {printsLoading ? (
+            <div className="text-sm">Loading...</div>
+          ) : printsSummary ? (
+            <div className="space-y-3">
+              <div className="text-lg font-semibold">Total Prints: {printsSummary.totalPrints}</div>
+              <div>
+                <div className="mb-1 text-sm font-medium">By Label Type</div>
+                <ul className="list-disc pl-5 text-sm">
+                  {printsSummary.byLabelType.map((r: any, idx: number) => (
+                    <li key={idx}>
+                      {r.label_type || "unknown"}: {r.prints}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="mb-1 text-sm font-medium">Recent Logs</div>
+                <ul className="max-h-56 space-y-1 overflow-auto text-sm">
+                  {printsSummary.logs.map((l: any) => (
+                    <li key={l.id} className="border-b border-gray-200 pb-1 dark:border-gray-700">
+                      {new Date(l.timestamp).toLocaleString()} — {l.details?.itemName || "Item"} x
+                      {l.details?.quantity} ({l.details?.labelType})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="text-sm">No data</div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

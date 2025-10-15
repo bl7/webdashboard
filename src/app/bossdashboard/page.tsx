@@ -65,6 +65,8 @@ export default function BossDashboard() {
   const [pendingDevices, setPendingDevices] = useState<any[]>([])
   const [recentDevices, setRecentDevices] = useState<any[]>([])
   const [recentLabelOrders, setRecentLabelOrders] = useState<any[]>([])
+  const [printsToday, setPrintsToday] = useState<number>(0)
+  const [printsRange, setPrintsRange] = useState<"today" | "yesterday" | "week">("today")
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,6 +136,8 @@ export default function BossDashboard() {
             )
           })
 
+        // Prints summary fetched in separate effect
+
         setAnalyticsData(analytics)
         setUsers(usersData)
       } catch (err) {
@@ -146,6 +150,39 @@ export default function BossDashboard() {
 
     fetchData()
   }, [])
+
+  // Fetch prints summary separately so range changes only affect this card
+  useEffect(() => {
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+
+    const buildRangeQuery = () => {
+      const todayStr = new Date().toISOString().slice(0, 10)
+      if (printsRange === "today") return `?date=${todayStr}`
+      if (printsRange === "yesterday") {
+        const d = new Date()
+        d.setDate(d.getDate() - 1)
+        const y = d.toISOString().slice(0, 10)
+        return `?date=${y}`
+      }
+      // week: Monday-Sunday based on current week
+      const now = new Date()
+      const day = now.getDay() || 7
+      const monday = new Date(now)
+      monday.setDate(now.getDate() - (day - 1))
+      const sunday = new Date(monday)
+      sunday.setDate(monday.getDate() + 6)
+      const from = monday.toISOString().slice(0, 10)
+      const to = sunday.toISOString().slice(0, 10)
+      return `?date_from=${from}&date_to=${to}`
+    }
+
+    fetch(`/api/logs/summary${buildRangeQuery()}`, {
+      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+    })
+      .then((res) => res.json())
+      .then((data) => setPrintsToday(Number(data.totalPrints || 0)))
+      .catch(() => setPrintsToday(0))
+  }, [printsRange])
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-GB", {
@@ -289,6 +326,39 @@ export default function BossDashboard() {
                 {formatCurrency(analyticsData?.arpu || 0)}
               </div>
               <p className="text-xs text-muted-foreground">Average revenue per user</p>
+            </CardContent>
+          </Card>
+
+          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                Prints
+              </CardTitle>
+              <Activity className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-gray-900 dark:text-white">{printsToday}</div>
+              <div className="mt-2 flex items-center gap-2">
+                <button
+                  className={`rounded px-2 py-1 text-xs ${printsRange === "today" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
+                  onClick={() => setPrintsRange("today")}
+                >
+                  Today
+                </button>
+                <button
+                  className={`rounded px-2 py-1 text-xs ${printsRange === "yesterday" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
+                  onClick={() => setPrintsRange("yesterday")}
+                >
+                  Yesterday
+                </button>
+                <button
+                  className={`rounded px-2 py-1 text-xs ${printsRange === "week" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
+                  onClick={() => setPrintsRange("week")}
+                >
+                  This Week
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-muted-foreground">Sum of printed label quantities</p>
             </CardContent>
           </Card>
 
