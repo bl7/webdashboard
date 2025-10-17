@@ -2,13 +2,13 @@
 import React, { useMemo, useState } from "react"
 import * as XLSX from "xlsx"
 import Image from "next/image"
+import { toast } from "sonner"
 
 type Recipient = { email: string; name?: string }
 
 type TemplateFields = {
   subject: string
-  preheader: string
-  headline: string
+  subheading: string
   bullets: string[]
   testimonialQuote: string
   testimonialAuthor: string
@@ -16,12 +16,16 @@ type TemplateFields = {
   ctaUrl: string
   heroImageUrl?: string
   phoneMockUrl?: string
+  // optional marketing fields
+  discountPercent?: string
+  discountCode?: string
+  offerHeadline?: string
+  offerSubtext?: string
 }
 
 const defaultFields: TemplateFields = {
   subject: "Label smarter. Waste less. Stay compliant.",
-  preheader: "Print food safety labels instantly across your kitchen.",
-  headline: "Label Smarter.\nWaste Less.\nStay Compliant.",
+  subheading: "Simplify food prep labels and stay compliant effortlessly",
   bullets: [
     "Print prep, cook, and allergen labels instantly",
     "Sync menus directly from Square",
@@ -33,8 +37,52 @@ const defaultFields: TemplateFields = {
   testimonialAuthor: "Jonathan L., Owner",
   ctaText: "Start Free Trial",
   ctaUrl: "https://www.instalabel.co",
-  heroImageUrl: "https://www.instalabel.co/email-asset/instaLabel2.png",
-  phoneMockUrl: "https://www.instalabel.co/email-asset/instaLabel2.png",
+  heroImageUrl: "/email-asset/instaLabel2.png",
+  phoneMockUrl: "/email-asset/instaLabel2.png",
+}
+
+// Marketing presets
+const offerTemplateDefaults: TemplateFields = {
+  subject: "Limited-time: Save 20% on InstaLabel",
+  subheading:
+    "Switch to smarter food prep labeling.\n\nSign up today and unlock your discount instantly.",
+  bullets: [
+    "Print compliant labels in seconds",
+    "Sync menus from Square",
+    "Reduce waste with automatic expiries",
+    "Instant setup, works in every kitchen",
+  ],
+  testimonialQuote:
+    "InstaLabel transformed our kitchen ops within days. Staff love how fast it is.",
+  testimonialAuthor: "Sofia M., Ops Manager",
+  ctaText: "Claim Offer",
+  ctaUrl: "https://www.instalabel.co/register",
+  heroImageUrl: "/email-asset/instaLabel2.png",
+  phoneMockUrl: "/email-asset/instaLabel2.png",
+  discountPercent: "20%",
+  discountCode: "SAVE20",
+  offerHeadline: "Sign up today and save",
+  offerSubtext: "Offer ends soon. Terms apply.",
+}
+
+const couponTemplateDefaults: TemplateFields = {
+  subject: "Welcome gift inside: Your InstaLabel coupon",
+  subheading:
+    "Smarter labeling, less waste, faster teams.\n\nUse your coupon below and get started.",
+  bullets: [
+    "Allergen & expiry labels made simple",
+    "Square menu sync in minutes",
+    "Audit trail for EHO inspections",
+    "UK-based support when you need it",
+  ],
+  testimonialQuote: "Rolling out across locations was effortless. It just works.",
+  testimonialAuthor: "Jonathan L., Owner",
+  ctaText: "Start Free Trial",
+  ctaUrl: "https://www.instalabel.co/register",
+  heroImageUrl: "/email-asset/instaLabel2.png",
+  phoneMockUrl: "/email-asset/instaLabel2.png",
+  discountCode: "WELCOME10",
+  offerSubtext: "Valid for new signups only.",
 }
 
 function resolveAbsolute(url: string) {
@@ -50,27 +98,101 @@ function resolveAbsolute(url: string) {
   }
 }
 
-function renderEmailHTML(fields: TemplateFields, previewName?: string) {
-  // Minimal, inlined CSS email using brand tokens (approximate)
-  const headlineHtml = fields.headline
-    .split("\n")
-    .map((line) => `<div>${line}</div>`) // split into lines
-    .join("")
-
+function renderEmailHTML(
+  fields: TemplateFields,
+  previewName?: string,
+  templateId: string = "default"
+) {
   const bulletItems = fields.bullets
     .filter(Boolean)
     .map(
       (b) =>
-        `<tr><td style="padding:6px 0; font-size:15px; line-height:22px; color:#111827"><span style="color:#f97316; font-weight:700;">✓</span> ${b}</td></tr>`
+        `<tr><td style="padding:6px 0; font-size:15px; line-height:22px; color:#111827"><span style="color:#7c3aed; font-weight:700;">✓</span> ${b}</td></tr>`
     )
     .join("")
 
   const greeting = previewName
-    ? `<p style="margin:0 0 12px 0; color:#111827">Hi ${previewName},</p>`
+    ? `<p style="margin:0 0 12px 0; color:#111827; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:16px;">Hi ${previewName},</p>`
     : ""
 
   const logoUrl = "https://www.instalabel.co/email-asset/logo_long.png"
   const heroUrl = fields.heroImageUrl ? resolveAbsolute(fields.heroImageUrl) : ""
+  const subheadingHtml = (fields.subheading || "")
+    .split(/\r?\n\r?\n+/)
+    .map(
+      (paragraph) =>
+        `<p style="margin:0 0 10px 0; font-size:16px; line-height:22px; font-weight:normal;">${paragraph
+          .split(/\r?\n/)
+          .map((line) => line)
+          .join("<br/>")}</p>`
+    )
+    .join("")
+
+  if (templateId === "offer") {
+    const headline = fields.offerHeadline || "Limited-time offer"
+    const discount = fields.discountPercent || "20%"
+    const code = fields.discountCode || "SAVE20"
+    const sub = fields.offerSubtext || "Offer ends soon. Terms apply."
+    return `
+    <!DOCTYPE html>
+    <html><head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head>
+    <body style="margin:0; padding:0; background:#ffffff; color:#111827;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
+      <table role="presentation" width="600" style="width:100%; max-width:600px;">
+        <tr><td style="padding:2px 20px; text-align:center;">
+          <a href="https://www.instalabel.co" target="_blank" rel="noopener noreferrer" style="display:inline-block;">
+            <img src="${logoUrl}" alt="InstaLabel" style="height:250px; display:block; margin:0 auto; border:0;" />
+          </a>
+        </td></tr>
+        <tr><td style="padding:8px 20px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;">
+          ${greeting}
+          <p style="margin:0 0 8px 0; font-size:18px; line-height:26px;">${headline}</p>
+          <div style="margin:0 0 10px 0; padding:14px; background:#f5f3ff; border:1px dashed #c4b5fd; border-radius:10px; text-align:center;">
+            <div style="font-size:28px; font-weight:800; color:#7c3aed;">${discount} OFF</div>
+            <div style="margin-top:6px; font-size:14px; color:#4b5563;">Use code <span style="font-weight:700; color:#111827;">${code}</span> at checkout</div>
+          </div>
+          ${subheadingHtml}
+          <div style="margin-top:12px; text-align:center;">
+            <a href="${fields.ctaUrl}" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText || "Claim Offer"}</a>
+          </div>
+          <div style="margin-top:10px; font-size:12px; color:#6b7280;">${sub}</div>
+        </td></tr>
+        <tr><td style="padding:0 20px 24px 20px;"><img src="https://www.instalabel.co/email-asset/banner.png" alt="Label Smarter. Waste Less. Stay Compliant." style="width:100%; height:auto; display:block; border-radius:12px;" /></td></tr>
+        <tr><td style="background:#7c3aed; color:#ffffff; padding:18px 20px; text-align:center; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; border-radius:12px; margin:0 20px 24px 20px;">Join kitchens across the UK labeling smarter with InstaLabel</td></tr>
+      </table></td></tr></table>
+    </body></html>`
+  }
+
+  if (templateId === "coupon") {
+    const code = fields.discountCode || "WELCOME10"
+    const sub = fields.offerSubtext || "Valid for new signups only."
+    return `
+    <!DOCTYPE html>
+    <html><head><meta charSet="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head>
+    <body style="margin:0; padding:0; background:#ffffff; color:#111827;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center">
+      <table role="presentation" width="600" style="width:100%; max-width:600px;">
+        <tr><td style="padding:2px 20px; text-align:center;">
+          <a href="https://www.instalabel.co" target="_blank" rel="noopener noreferrer" style="display:inline-block;">
+            <img src="${logoUrl}" alt="InstaLabel" style="height:250px; display:block; margin:0 auto; border:0;" />
+          </a>
+        </td></tr>
+        <tr><td style="padding:8px 20px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;">
+          ${greeting}
+          <div style="padding:14px; border:1px solid #e5e7eb; border-radius:10px;">
+            ${subheadingHtml}
+            <div style="margin-top:10px; padding:10px; background:#111827; color:#ffffff; border-radius:8px; text-align:center; font-weight:700; letter-spacing:1px;">CODE: ${code}</div>
+            <div style="margin-top:10px; text-align:center;">
+              <a href="${fields.ctaUrl}" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText || "Start Free Trial"}</a>
+            </div>
+            <div style="margin-top:10px; font-size:12px; color:#6b7280;">${sub}</div>
+          </div>
+        </td></tr>
+        <tr><td style="padding:0 20px 24px 20px;"><img src="https://www.instalabel.co/email-asset/banner.png" alt="Label Smarter. Waste Less. Stay Compliant." style="width:100%; height:auto; display:block; border-radius:12px;" /></td></tr>
+        <tr><td style="background:#7c3aed; color:#ffffff; padding:18px 20px; text-align:center; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; border-radius:12px; margin:0 20px 24px 20px;">Join kitchens across the UK labeling smarter with InstaLabel</td></tr>
+      </table></td></tr></table>
+    </body></html>`
+  }
 
   return `
 	<!DOCTYPE html>
@@ -83,6 +205,14 @@ function renderEmailHTML(fields: TemplateFields, previewName?: string) {
 		/* no external fonts to keep deliverability solid */
 		@media (max-width:600px){
 			.stack { display:block !important; width:100% !important; }
+			.mobile-padding { padding: 16px !important; }
+			.mobile-logo { height: 250px !important; }
+			.mobile-banner { width: 100% !important; }
+			.mobile-content { padding: 16px !important; }
+			.mobile-phone { width: 150px !important; margin: 16px auto !important; }
+			.mobile-cta { padding: 10px 16px !important; font-size: 14px !important; }
+			.mobile-testimonial { padding: 12px !important; font-size: 13px !important; }
+			.mobile-footer { padding: 12px 16px !important; font-size: 13px !important; }
 		}
 	</style>
 	</head>
@@ -92,42 +222,47 @@ function renderEmailHTML(fields: TemplateFields, previewName?: string) {
 				<td align="center">
 					<table role="presentation" width="600" cellspacing="0" cellpadding="0" style="width:100%; max-width:600px;">
 						<tr>
-							<td style="padding:4px 20px;">
-								<img src="${logoUrl}" alt="InstaLabel" style="height:150px; display:block;" />
+							<td style="padding:2px 20px; text-align:center;">
+								<a href="https://www.instalabel.co" target="_blank" rel="noopener noreferrer" style="display:inline-block;">
+									<img src="${logoUrl}" alt="InstaLabel" class="mobile-logo" style="height:250px; display:block; margin:0 auto; border:0;" />
+								</a>
 							</td>
 						</tr>
 						<tr>
-							<td style="padding:0 20px 0 20px;">
-								<img src="https://www.instalabel.co/email-asset/banner.png" alt="Label Smarter. Waste Less. Stay Compliant." style="width:100%; height:auto; display:block; border-radius:12px;" />
-							</td>
-						</tr>
-						<tr>
-							<td style="padding:24px 20px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;">
+							<td style="padding:4px 20px 24px 20px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial;">
 								${greeting}
-								<h2 style="margin:0 0 10px 0; font-size:22px; line-height:28px;">Simplify food prep labels and stay compliant effortlessly</h2>
+								${subheadingHtml}
 								<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-									${fields.bullets
-                    .filter(Boolean)
-                    .map(
-                      (b) => `
-											<tr><td style="padding:6px 0; font-size:15px; line-height:22px; color:#111827"><span style="color:#7c3aed; font-weight:700;">✓</span> ${b}</td></tr>
-										`
-                    )
-                    .join("")}
+									<tr>
+										<td style="width:50%; vertical-align:top; padding-right:20px;">
+											<table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+												${fields.bullets
+                          .filter(Boolean)
+                          .map(
+                            (b) => `
+													<tr><td style="padding:6px 0; font-size:15px; line-height:22px; color:#111827"><span style="color:#7c3aed; font-weight:700;">✓</span> ${b}</td></tr>
+												`
+                          )
+                          .join("")}
+											</table>
+											<div style="margin-top:12px; text-align:left;">
+												<a href="${fields.ctaUrl}" class="mobile-cta" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText}</a>
+											</div>
+										</td>
+										<td style="width:50%; vertical-align:top; text-align:center;" class="stack">
+											${fields.phoneMockUrl ? `<img src="${resolveAbsolute(fields.phoneMockUrl)}" alt="Phone App" class="mobile-phone" style="width:200px; height:auto; display:block; margin:0 auto; border-radius:8px;" />` : "No phone image URL"}
+										</td>
+									</tr>
 								</table>
-								<div style="margin-top:18px; text-align:center;">
-									${fields.phoneMockUrl ? `<img src="${resolveAbsolute(fields.phoneMockUrl)}" alt="Phone App" style="width:200px; height:auto; display:block; margin:0 auto 18px auto; border-radius:8px;" />` : ""}
-									<a href="${fields.ctaUrl}" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText}</a>
-								</div>
 							</td>
 						</tr>
 						<tr>
-							<td style="padding:0 20px 24px 20px;">
+							<td class="mobile-padding" style="padding:0 20px 24px 20px;">
 								<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6; border:1px solid #e5e7eb; border-radius:12px;">
 									<tr>
-										<td style="padding:18px 16px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:14px; line-height:22px; color:#111827;">
+										<td class="mobile-testimonial" style="padding:18px 16px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:14px; line-height:22px; color:#111827;">
 											<strong style="display:block; margin-bottom:6px;">Testimonial</strong>
-											<em>“${fields.testimonialQuote}”</em>
+											<em>"${fields.testimonialQuote}"</em>
 											<div style="margin-top:8px; color:#374151;">${fields.testimonialAuthor}</div>
 										</td>
 									</tr>
@@ -135,7 +270,12 @@ function renderEmailHTML(fields: TemplateFields, previewName?: string) {
 							</td>
 						</tr>
 						<tr>
-							<td style="background:#7c3aed; color:#ffffff; padding:18px 20px; text-align:center; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; border-radius:12px; margin:0 20px 24px 20px;">
+							<td class="mobile-padding" style="padding:0 20px 24px 20px;">
+								<img src="https://www.instalabel.co/email-asset/banner.png" alt="Label Smarter. Waste Less. Stay Compliant." class="mobile-banner" style="width:100%; height:auto; display:block; border-radius:12px;" />
+							</td>
+						</tr>
+						<tr>
+							<td class="mobile-footer" style="background:#7c3aed; color:#ffffff; padding:18px 20px; text-align:center; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; border-radius:12px; margin:0 20px 24px 20px;">
 								Join kitchens across the UK labeling smarter with InstaLabel
 							</td>
 						</tr>
@@ -148,12 +288,14 @@ function renderEmailHTML(fields: TemplateFields, previewName?: string) {
 }
 
 export default function BulkEmailPage() {
+  const [templateId, setTemplateId] = useState<string>("default")
   const [rawRows, setRawRows] = useState<any[]>([])
   const [emailKey, setEmailKey] = useState<string>("email")
   const [nameKey, setNameKey] = useState<string>("name")
   const [fields, setFields] = useState<TemplateFields>(defaultFields)
   const [sending, setSending] = useState(false)
   const [log, setLog] = useState<string[]>([])
+  const [previewName, setPreviewName] = useState<string>("Alex")
 
   const headers = useMemo(() => (rawRows[0] ? Object.keys(rawRows[0]) : []), [rawRows])
 
@@ -194,16 +336,26 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending test to ${testTo}...`])
     try {
-      const html = renderEmailHTML(fields, "Test User")
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject: fields.subject, html, recipients: [{ email: testTo }] }),
+        body: JSON.stringify({
+          subject: fields.subject,
+          fields,
+          templateId,
+          recipients: [{ email: testTo, name: "Test User" }],
+        }),
       })
       const data = await res.json()
       setLog((l) => [...l, `Test result: ${data.status}`])
+      if (res.ok) {
+        toast.success("Test email sent")
+      } else {
+        toast.error("Failed to send test email")
+      }
     } catch (e) {
       setLog((l) => [...l, `Test failed`])
+      toast.error("Test email failed")
     } finally {
       setSending(false)
     }
@@ -214,16 +366,28 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending to ${recipients.length} recipients...`])
     try {
-      const html = renderEmailHTML(fields)
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ subject: fields.subject, html, recipients }),
+        body: JSON.stringify({
+          subject: fields.subject,
+          fields,
+          templateId,
+          recipients,
+        }),
       })
       const data = await res.json()
       setLog((l) => [...l, `Bulk result: ${data.status}, sent=${data.sent}, failed=${data.failed}`])
+      if (res.ok) {
+        toast.success(
+          `Bulk sent: ${data.sent} delivered${data.failed ? `, ${data.failed} failed` : ""}`
+        )
+      } else {
+        toast.error("Bulk send failed")
+      }
     } catch (e) {
       setLog((l) => [...l, `Bulk failed`])
+      toast.error("Bulk send failed")
     } finally {
       setSending(false)
     }
@@ -281,6 +445,25 @@ export default function BulkEmailPage() {
 
           <div className="space-y-3 rounded-lg border p-4">
             <h2 className="font-semibold">2) Template content</h2>
+            <div className="flex items-center gap-2">
+              <label className="text-sm font-medium">Template</label>
+              <select
+                className="rounded border px-2 py-1"
+                value={templateId}
+                onChange={(e) => {
+                  const id = e.target.value
+                  setTemplateId(id)
+                  // Load field presets for selected template
+                  if (id === "default") setFields({ ...defaultFields })
+                  if (id === "offer") setFields({ ...offerTemplateDefaults })
+                  if (id === "coupon") setFields({ ...couponTemplateDefaults })
+                }}
+              >
+                <option value="default">Informational (current)</option>
+                <option value="offer">Limited-time Offer</option>
+                <option value="coupon">Coupon + CTA</option>
+              </select>
+            </div>
             <input
               className="w-full rounded border px-2 py-1"
               placeholder="Subject"
@@ -289,55 +472,119 @@ export default function BulkEmailPage() {
             />
             <input
               className="w-full rounded border px-2 py-1"
-              placeholder="Preheader"
-              value={fields.preheader}
-              onChange={(e) => setFields({ ...fields, preheader: e.target.value })}
+              placeholder="Preview name (for testing)"
+              value={previewName}
+              onChange={(e) => setPreviewName(e.target.value)}
             />
             <textarea
-              className="w-full rounded border px-2 py-1"
+              className="w-full rounded border px-2 py-2"
+              placeholder="Subheading (you can write multiple paragraphs; separate paragraphs with a blank line)"
               rows={3}
-              placeholder="Headline (use line breaks for multiple lines)"
-              value={fields.headline}
-              onChange={(e) => setFields({ ...fields, headline: e.target.value })}
+              value={fields.subheading}
+              onChange={(e) => setFields({ ...fields, subheading: e.target.value })}
             />
-            {fields.bullets.map((b, i) => (
+
+            {templateId === "offer" && (
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Offer headline (e.g., Sign up today and save)"
+                  value={fields.offerHeadline || ""}
+                  onChange={(e) => setFields({ ...fields, offerHeadline: e.target.value })}
+                />
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Discount percent (e.g., 20%)"
+                  value={fields.discountPercent || ""}
+                  onChange={(e) => setFields({ ...fields, discountPercent: e.target.value })}
+                />
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Coupon code (e.g., SAVE20)"
+                  value={fields.discountCode || ""}
+                  onChange={(e) => setFields({ ...fields, discountCode: e.target.value })}
+                />
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Offer subtext (expiry or terms)"
+                  value={fields.offerSubtext || ""}
+                  onChange={(e) => setFields({ ...fields, offerSubtext: e.target.value })}
+                />
+              </div>
+            )}
+
+            {templateId === "coupon" && (
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Coupon code (e.g., WELCOME10)"
+                  value={fields.discountCode || ""}
+                  onChange={(e) => setFields({ ...fields, discountCode: e.target.value })}
+                />
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Coupon subtext (e.g., Valid for new signups only.)"
+                  value={fields.offerSubtext || ""}
+                  onChange={(e) => setFields({ ...fields, offerSubtext: e.target.value })}
+                />
+              </div>
+            )}
+
+            {templateId === "default" &&
+              fields.bullets.map((b, i) => (
+                <input
+                  key={i}
+                  className="w-full rounded border px-2 py-1"
+                  placeholder={`Bullet ${i + 1}`}
+                  value={b}
+                  onChange={(e) => {
+                    const next = [...fields.bullets]
+                    next[i] = e.target.value
+                    setFields({ ...fields, bullets: next })
+                  }}
+                />
+              ))}
+            {templateId === "default" && (
               <input
-                key={i}
                 className="w-full rounded border px-2 py-1"
-                placeholder={`Bullet ${i + 1}`}
-                value={b}
-                onChange={(e) => {
-                  const next = [...fields.bullets]
-                  next[i] = e.target.value
-                  setFields({ ...fields, bullets: next })
-                }}
+                placeholder="CTA Text"
+                value={fields.ctaText}
+                onChange={(e) => setFields({ ...fields, ctaText: e.target.value })}
               />
-            ))}
-            <input
-              className="w-full rounded border px-2 py-1"
-              placeholder="CTA Text"
-              value={fields.ctaText}
-              onChange={(e) => setFields({ ...fields, ctaText: e.target.value })}
-            />
-            <input
-              className="w-full rounded border px-2 py-1"
-              placeholder="CTA URL"
-              value={fields.ctaUrl}
-              onChange={(e) => setFields({ ...fields, ctaUrl: e.target.value })}
-            />
-            <textarea
-              className="w-full rounded border px-2 py-1"
-              rows={3}
-              placeholder="Testimonial quote"
-              value={fields.testimonialQuote}
-              onChange={(e) => setFields({ ...fields, testimonialQuote: e.target.value })}
-            />
-            <input
-              className="w-full rounded border px-2 py-1"
-              placeholder="Testimonial author"
-              value={fields.testimonialAuthor}
-              onChange={(e) => setFields({ ...fields, testimonialAuthor: e.target.value })}
-            />
+            )}
+            {templateId === "default" && (
+              <input
+                className="w-full rounded border px-2 py-1"
+                placeholder="CTA URL"
+                value={fields.ctaUrl}
+                onChange={(e) => setFields({ ...fields, ctaUrl: e.target.value })}
+              />
+            )}
+            {templateId === "default" && (
+              <textarea
+                className="w-full rounded border px-2 py-1"
+                rows={3}
+                placeholder="Testimonial quote"
+                value={fields.testimonialQuote}
+                onChange={(e) => setFields({ ...fields, testimonialQuote: e.target.value })}
+              />
+            )}
+            {templateId === "default" && (
+              <input
+                className="w-full rounded border px-2 py-1"
+                placeholder="Testimonial author"
+                value={fields.testimonialAuthor}
+                onChange={(e) => setFields({ ...fields, testimonialAuthor: e.target.value })}
+              />
+            )}
+            {templateId === "default" && (
+              <input
+                className="w-full rounded border px-2 py-1"
+                placeholder="Phone mockup image URL"
+                value={fields.phoneMockUrl || ""}
+                onChange={(e) => setFields({ ...fields, phoneMockUrl: e.target.value })}
+              />
+            )}
           </div>
 
           <div className="flex gap-2">
@@ -360,7 +607,7 @@ export default function BulkEmailPage() {
 
         <div className="rounded-lg border p-4">
           <h2 className="mb-2 font-semibold">Preview</h2>
-          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <div className="flex justify-center">
             <div className="overflow-hidden rounded border">
               <div className="bg-gray-100 px-3 py-2 text-xs font-medium text-gray-600">
                 Desktop (600px)
@@ -369,25 +616,8 @@ export default function BulkEmailPage() {
                 <iframe
                   title="email-preview-desktop"
                   sandbox="allow-same-origin"
-                  srcDoc={renderEmailHTML(fields, "Alex")}
+                  srcDoc={renderEmailHTML(fields, previewName, templateId)}
                   style={{ width: 600, height: 800, border: "0" }}
-                />
-              </div>
-            </div>
-            <div className="overflow-hidden rounded border">
-              <div className="bg-gray-100 px-3 py-2 text-xs font-medium text-gray-600">
-                Mobile (375px)
-              </div>
-              <div className="flex justify-center bg-gray-50 p-2">
-                <iframe
-                  title="email-preview-mobile"
-                  sandbox="allow-same-origin"
-                  srcDoc={`<html><head><meta name=\"viewport\" content=\"width=375, initial-scale=1\"/><style>body{margin:0; padding:0; overflow-x:hidden;} table{max-width:375px !important; width:375px !important;}</style></head><body>${renderEmailHTML(fields, "Alex")}</body></html>`}
-                  style={{
-                    width: 375,
-                    height: 800,
-                    border: 0,
-                  }}
                 />
               </div>
             </div>
