@@ -29,7 +29,13 @@ interface SidebarProps {
   darkMode: boolean
 }
 
-export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse, darkMode }: SidebarProps) {
+export default function Sidebar({
+  isOpen,
+  isCollapsed,
+  onClose,
+  onToggleCollapse,
+  darkMode,
+}: SidebarProps) {
   const pathname = usePathname()
 
   const navigation = [
@@ -41,9 +47,14 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
     { name: "Notifications", href: "/bossdashboard/notifications", icon: Bell },
+    { name: "Bulk Email", href: "/bossdashboard/bulk-email", icon: FileText },
     { name: "Label Products", href: "/bossdashboard/label-products", icon: Package },
     { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: CalendarClock },
-    { name: "Cancel Requests", href: "/bossdashboard/cancellations", icon: () => <span className="text-lg mr-3">👋</span> },
+    {
+      name: "Cancel Requests",
+      href: "/bossdashboard/cancellations",
+      icon: () => <span className="mr-3 text-lg">👋</span>,
+    },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
     { name: "Waitlist", href: "/bossdashboard/waitlist", icon: List },
   ]
@@ -94,17 +105,17 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
         {/* Sidebar header */}
         <div
           className={cn(
-            "flex h-16 flex-shrink-0 items-center justify-between px-3 border-b",
+            "flex h-16 flex-shrink-0 items-center justify-between border-b px-3",
             darkMode ? "border-gray-700" : "border-gray-200"
           )}
         >
-          <div className="flex items-center justify-center min-w-0">
+          <div className="flex min-w-0 items-center justify-center">
             {!isCollapsed ? (
               <span
                 className={cn(
-                  "font-bold text-2xl tracking-tight select-none ",
+                  "select-none text-2xl font-bold tracking-tight",
                   darkMode
-                    ? "text-white "
+                    ? "text-white"
                     : "bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent"
                 )}
                 style={{ letterSpacing: "-0.03em" }}
@@ -122,7 +133,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
               />
             )}
           </div>
-          
+
           {/* Close button only visible on mobile */}
           <button
             onClick={onClose}
@@ -173,7 +184,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
                       {!isCollapsed && item.name}
                     </Link>
                   </Tooltip.Trigger>
-                  
+
                   {/* Tooltip for collapsed state */}
                   {isCollapsed && (
                     <Tooltip.Portal>
@@ -197,7 +208,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
         {/* Sidebar footer */}
         <div
           className={cn(
-            "flex flex-shrink-0 items-center space-x-3 rounded-lg p-3 border-t",
+            "flex flex-shrink-0 items-center space-x-3 rounded-lg border-t p-3",
             darkMode ? "border-gray-700 bg-gray-700" : "border-gray-200 bg-gray-100"
           )}
         >
@@ -221,7 +232,7 @@ export default function Sidebar({ isOpen, isCollapsed, onClose, onToggleCollapse
               </Tooltip.Portal>
             )}
           </Tooltip.Root>
-          
+
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
               <p className={cn("text-sm font-medium", darkMode ? "text-white" : "text-gray-900")}>
