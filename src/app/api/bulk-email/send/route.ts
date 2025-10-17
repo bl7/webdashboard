@@ -204,7 +204,7 @@ export async function POST(req: Request) {
           try {
             // Use pre-rendered HTML if available, otherwise render with personalization
             const emailHtml = html || (fields ? renderEmailHTML(fields, r.name, templateId) : "")
-            await sendMail({ to: r.email, subject, body: emailHtml })
+            await sendMail({ to: r.email, subject, body: emailHtml, useBulk: true })
             sent++
           } catch (e) {
             failed++

@@ -4,20 +4,25 @@ export async function sendMail({
   to,
   subject,
   body,
+  useBulk = false,
 }: {
   to: string
   subject: string
   body: string
+  useBulk?: boolean
 }) {
-  const { SMTP_EMAIL, SMTP_PASSWORD } = process.env
+  const { SMTP_EMAIL, SMTP_PASSWORD, SMTP_BULK_EMAIL, SMTP_BULK_PASSWORD } = process.env
+
+  const user = useBulk && SMTP_BULK_EMAIL ? SMTP_BULK_EMAIL : SMTP_EMAIL
+  const pass = useBulk && SMTP_BULK_PASSWORD ? SMTP_BULK_PASSWORD : SMTP_PASSWORD
 
   const transport = nodemailer.createTransport({
     host: "smtp.zoho.com", // Zoho SMTP server
     port: 465, // SSL (Use 587 for TLS)
     secure: true, // true for 465 (SSL), false for 587 (TLS)
     auth: {
-      user: SMTP_EMAIL,
-      pass: SMTP_PASSWORD,
+      user,
+      pass,
     },
   })
   try {
@@ -27,14 +32,14 @@ export async function sendMail({
     return
   }
   try {
-    console.log('[MAIL] Sending email:', { to, subject });
+    console.log("[MAIL] Sending email:", { to, subject })
     await transport.sendMail({
-      from: SMTP_EMAIL,
+      from: user,
       to,
       subject,
       html: body,
     })
-    console.log('[MAIL] Email sent:', { to, subject });
+    console.log("[MAIL] Email sent:", { to, subject })
   } catch (error) {
     console.log(error)
   }
