@@ -1203,6 +1203,56 @@ export async function POST(req: NextRequest) {
         }
         break
       }
+      case "setup_intent.succeeded": {
+        const setupIntent = event.data.object as Stripe.SetupIntent
+        console.log("[WEBHOOK] setup_intent.succeeded received:", setupIntent.id)
+
+        if (
+          setupIntent.metadata?.action === "update_payment_method" &&
+          setupIntent.metadata?.user_id
+        ) {
+          const user_id = setupIntent.metadata.user_id
+          const payment_method_id = setupIntent.payment_method as string
+
+          try {
+            client = await pool.connect()
+
+            // Get the customer's subscription
+            const subResult = await client.query(
+              "SELECT stripe_subscription_id FROM subscription_better WHERE user_id = $1",
+              [user_id]
+            )
+
+            if (subResult.rows.length > 0) {
+              const stripe_subscription_id = subResult.rows[0].stripe_subscription_id
+
+              // Update the subscription to use the new payment method
+              await stripe.subscriptions.update(stripe_subscription_id, {
+                default_payment_method: payment_method_id,
+              })
+
+              // Get payment method details
+              const paymentMethod = await stripe.paymentMethods.retrieve(payment_method_id)
+              const card = paymentMethod.card
+
+              if (card) {
+                // Update database with new payment method info
+                await client.query(
+                  `UPDATE subscription_better 
+                   SET card_last4 = $1, card_brand = $2, card_exp_month = $3, card_exp_year = $4, updated_at = NOW()
+                   WHERE user_id = $5`,
+                  [card.last4, card.brand, card.exp_month, card.exp_year, user_id]
+                )
+
+                console.log("[WEBHOOK] Updated payment method for user:", user_id)
+              }
+            }
+          } catch (error) {
+            console.error("[WEBHOOK] Error updating payment method:", error)
+          }
+        }
+        break
+      }
       default:
         // Ignore other events
         console.log("[WEBHOOK] Ignored event type:", event.type)

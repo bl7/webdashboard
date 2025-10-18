@@ -7,9 +7,8 @@ import { verifyAuthToken } from "@/lib/auth"
 
 export async function POST(req: NextRequest) {
   const { role, userUuid } = await verifyAuthToken(req)
-  const body = (await req.json()) as { user_id?: string; immediate?: boolean; reason?: string }
+  const body = (await req.json()) as { user_id?: string; reason?: string }
   let user_id: string | undefined = body?.user_id
-  const immediate: boolean | undefined = body?.immediate
   const reason: string | undefined = body?.reason
 
   // Authorization rules:
@@ -91,45 +90,7 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Immediate cancellation
-    if (immediate === true) {
-      await stripe.subscriptions.cancel(sub.stripe_subscription_id)
-      await client.query(
-        `UPDATE subscription_better
-         SET status = 'canceled',
-             cancel_at_period_end = false,
-             cancel_at = NULL,
-             pending_plan_change = NULL,
-             pending_plan_change_effective = NULL,
-             refund_due_at = NULL,
-             refund_amount = NULL,
-             updated_at = NOW()
-         WHERE user_id = $1`,
-        [user_id]
-      )
-      // Store cancellation reason
-      await client.query(
-        `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
-        [user_id, sub.stripe_subscription_id, reason || null]
-      )
-      // Email sending disabled for subscription cancellations
-      // await sendMail({
-      //   to: userEmail,
-      //   subject: "Subscription Cancellation",
-      //   body: cancellationEmail({
-      //     name: userEmail,
-      //     planName: sub.plan_name || sub.plan_id || "",
-      //     cancellationType: "immediate",
-      //     endDate: new Date().toLocaleDateString(),
-      //   }),
-      // })
-      return NextResponse.json({
-        success: true,
-        message: "Your subscription has been cancelled immediately.",
-      })
-    }
-
-    // Cancel at end of current billing period
+    // Cancel at end of current billing period (policy: no immediate cancellations)
     // Simplified: no refunds
     await stripe.subscriptions.update(sub.stripe_subscription_id, {
       cancel_at_period_end: true,
