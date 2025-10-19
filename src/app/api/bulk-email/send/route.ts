@@ -7,6 +7,7 @@ type TemplateFields = {
   subject: string
   subheading: string
   bullets: string[]
+  additionalContent?: string
   testimonialQuote: string
   testimonialAuthor: string
   ctaText: string
@@ -49,6 +50,51 @@ function renderEmailHTML(
           .map((line) => line)
           .join("<br/>")}</p>`
     )
+    .join("")
+
+  const additionalContentHtml = (fields.additionalContent || "")
+    .split(/\r?\n\r?\n+/)
+    .map((paragraph) => {
+      const trimmedParagraph = paragraph.trim()
+      if (!trimmedParagraph) return ""
+
+      // Check if paragraph contains bullet points (lines starting with - or *)
+      const lines = trimmedParagraph.split(/\r?\n/)
+      const hasBullets = lines.some((line) => line.trim().match(/^[-*]\s/))
+
+      if (hasBullets) {
+        const bulletItems = lines
+          .filter((line) => line.trim().match(/^[-*]\s/))
+          .map((line) => line.replace(/^[-*]\s/, "").trim())
+          .filter(Boolean)
+          .map(
+            (bullet) =>
+              `<li style="padding:4px 0; font-size:15px; line-height:22px; color:#111827;"><span style="color:#7c3aed; font-weight:700;">•</span> ${bullet}</li>`
+          )
+          .join("")
+
+        const nonBulletLines = lines
+          .filter((line) => !line.trim().match(/^[-*]\s/))
+          .filter(Boolean)
+          .map((line) => line.trim())
+          .join(" ")
+
+        let result = ""
+        if (nonBulletLines) {
+          result += `<p style="margin:0 0 8px 0; font-size:16px; line-height:22px; font-weight:normal;">${nonBulletLines}</p>`
+        }
+        if (bulletItems) {
+          result += `<ul style="margin:8px 0; padding-left:0; list-style:none;">${bulletItems}</ul>`
+        }
+        return result
+      } else {
+        return `<p style="margin:0 0 10px 0; font-size:16px; line-height:22px; font-weight:normal;">${trimmedParagraph
+          .split(/\r?\n/)
+          .map((line) => line)
+          .join("<br/>")}</p>`
+      }
+    })
+    .filter(Boolean)
     .join("")
 
   if (templateId === "offer") {
@@ -136,6 +182,15 @@ function renderEmailHTML(
 										</td>
 									</tr>
 								</table>
+								${
+                  additionalContentHtml
+                    ? `
+								<div style="margin-top:20px; padding:16px 0; border-top:1px solid #e5e7eb;">
+									${additionalContentHtml}
+								</div>
+								`
+                    : ""
+                }
 							</td>
 						</tr>
 						<tr>

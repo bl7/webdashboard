@@ -10,6 +10,7 @@ type TemplateFields = {
   subject: string
   subheading: string
   bullets: string[]
+  additionalContent?: string
   testimonialQuote: string
   testimonialAuthor: string
   ctaText: string
@@ -32,6 +33,7 @@ const defaultFields: TemplateFields = {
     "Track expiry dates automatically",
     "Keep a full audit trail for EHO inspections",
   ],
+  additionalContent: "",
   testimonialQuote:
     "We switched from a basic label printer to InstaLabel and immediately saw the difference. Managing our locations became effortless, and inventory insights helped reduce waste.",
   testimonialAuthor: "Jonathan L., Owner",
@@ -126,6 +128,51 @@ function renderEmailHTML(
           .map((line) => line)
           .join("<br/>")}</p>`
     )
+    .join("")
+
+  const additionalContentHtml = (fields.additionalContent || "")
+    .split(/\r?\n\r?\n+/)
+    .map((paragraph) => {
+      const trimmedParagraph = paragraph.trim()
+      if (!trimmedParagraph) return ""
+
+      // Check if paragraph contains bullet points (lines starting with - or *)
+      const lines = trimmedParagraph.split(/\r?\n/)
+      const hasBullets = lines.some((line) => line.trim().match(/^[-*]\s/))
+
+      if (hasBullets) {
+        const bulletItems = lines
+          .filter((line) => line.trim().match(/^[-*]\s/))
+          .map((line) => line.replace(/^[-*]\s/, "").trim())
+          .filter(Boolean)
+          .map(
+            (bullet) =>
+              `<li style="padding:4px 0; font-size:15px; line-height:22px; color:#111827;"><span style="color:#7c3aed; font-weight:700;">•</span> ${bullet}</li>`
+          )
+          .join("")
+
+        const nonBulletLines = lines
+          .filter((line) => !line.trim().match(/^[-*]\s/))
+          .filter(Boolean)
+          .map((line) => line.trim())
+          .join(" ")
+
+        let result = ""
+        if (nonBulletLines) {
+          result += `<p style="margin:0 0 8px 0; font-size:16px; line-height:22px; font-weight:normal;">${nonBulletLines}</p>`
+        }
+        if (bulletItems) {
+          result += `<ul style="margin:8px 0; padding-left:0; list-style:none;">${bulletItems}</ul>`
+        }
+        return result
+      } else {
+        return `<p style="margin:0 0 10px 0; font-size:16px; line-height:22px; font-weight:normal;">${trimmedParagraph
+          .split(/\r?\n/)
+          .map((line) => line)
+          .join("<br/>")}</p>`
+      }
+    })
+    .filter(Boolean)
     .join("")
 
   if (templateId === "offer") {
@@ -254,6 +301,15 @@ function renderEmailHTML(
 										</td>
 									</tr>
 								</table>
+								${
+                  additionalContentHtml
+                    ? `
+								<div style="margin-top:20px; padding:16px 0; border-top:1px solid #e5e7eb;">
+									${additionalContentHtml}
+								</div>
+								`
+                    : ""
+                }
 							</td>
 						</tr>
 						<tr>
@@ -464,25 +520,36 @@ export default function BulkEmailPage() {
                 <option value="coupon">Coupon + CTA</option>
               </select>
             </div>
-            <input
-              className="w-full rounded border px-2 py-1"
-              placeholder="Subject"
-              value={fields.subject}
-              onChange={(e) => setFields({ ...fields, subject: e.target.value })}
-            />
-            <input
-              className="w-full rounded border px-2 py-1"
-              placeholder="Preview name (for testing)"
-              value={previewName}
-              onChange={(e) => setPreviewName(e.target.value)}
-            />
-            <textarea
-              className="w-full rounded border px-2 py-2"
-              placeholder="Subheading (you can write multiple paragraphs; separate paragraphs with a blank line)"
-              rows={3}
-              value={fields.subheading}
-              onChange={(e) => setFields({ ...fields, subheading: e.target.value })}
-            />
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Email Subject</label>
+              <input
+                className="w-full rounded border px-2 py-1"
+                placeholder="Subject"
+                value={fields.subject}
+                onChange={(e) => setFields({ ...fields, subject: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Preview Name (for testing)
+              </label>
+              <input
+                className="w-full rounded border px-2 py-1"
+                placeholder="Preview name (for testing)"
+                value={previewName}
+                onChange={(e) => setPreviewName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">Subheading</label>
+              <textarea
+                className="w-full rounded border px-2 py-2"
+                placeholder="Subheading (you can write multiple paragraphs; separate paragraphs with a blank line)"
+                rows={3}
+                value={fields.subheading}
+                onChange={(e) => setFields({ ...fields, subheading: e.target.value })}
+              />
+            </div>
 
             {templateId === "offer" && (
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
@@ -530,60 +597,105 @@ export default function BulkEmailPage() {
               </div>
             )}
 
-            {templateId === "default" &&
-              fields.bullets.map((b, i) => (
-                <input
-                  key={i}
-                  className="w-full rounded border px-2 py-1"
-                  placeholder={`Bullet ${i + 1}`}
-                  value={b}
-                  onChange={(e) => {
-                    const next = [...fields.bullets]
-                    next[i] = e.target.value
-                    setFields({ ...fields, bullets: next })
-                  }}
+            {templateId === "default" && (
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Feature Bullet Points
+                </label>
+                {fields.bullets.map((b, i) => (
+                  <input
+                    key={i}
+                    className="mb-2 w-full rounded border px-2 py-1"
+                    placeholder={`Bullet ${i + 1}`}
+                    value={b}
+                    onChange={(e) => {
+                      const next = [...fields.bullets]
+                      next[i] = e.target.value
+                      setFields({ ...fields, bullets: next })
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            {templateId === "default" && (
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Additional Content
+                </label>
+                <textarea
+                  className="w-full rounded border px-2 py-2"
+                  rows={4}
+                  placeholder="Additional content (appears below bullet points in full width section). You can use bullet points by starting lines with - or *"
+                  value={fields.additionalContent || ""}
+                  onChange={(e) => setFields({ ...fields, additionalContent: e.target.value })}
                 />
-              ))}
-            {templateId === "default" && (
-              <input
-                className="w-full rounded border px-2 py-1"
-                placeholder="CTA Text"
-                value={fields.ctaText}
-                onChange={(e) => setFields({ ...fields, ctaText: e.target.value })}
-              />
+              </div>
             )}
             {templateId === "default" && (
-              <input
-                className="w-full rounded border px-2 py-1"
-                placeholder="CTA URL"
-                value={fields.ctaUrl}
-                onChange={(e) => setFields({ ...fields, ctaUrl: e.target.value })}
-              />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Call-to-Action Button Text
+                </label>
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="CTA Text"
+                  value={fields.ctaText}
+                  onChange={(e) => setFields({ ...fields, ctaText: e.target.value })}
+                />
+              </div>
             )}
             {templateId === "default" && (
-              <textarea
-                className="w-full rounded border px-2 py-1"
-                rows={3}
-                placeholder="Testimonial quote"
-                value={fields.testimonialQuote}
-                onChange={(e) => setFields({ ...fields, testimonialQuote: e.target.value })}
-              />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Call-to-Action Button URL
+                </label>
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="CTA URL"
+                  value={fields.ctaUrl}
+                  onChange={(e) => setFields({ ...fields, ctaUrl: e.target.value })}
+                />
+              </div>
             )}
             {templateId === "default" && (
-              <input
-                className="w-full rounded border px-2 py-1"
-                placeholder="Testimonial author"
-                value={fields.testimonialAuthor}
-                onChange={(e) => setFields({ ...fields, testimonialAuthor: e.target.value })}
-              />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Customer Testimonial Quote
+                </label>
+                <textarea
+                  className="w-full rounded border px-2 py-1"
+                  rows={3}
+                  placeholder="Testimonial quote"
+                  value={fields.testimonialQuote}
+                  onChange={(e) => setFields({ ...fields, testimonialQuote: e.target.value })}
+                />
+              </div>
             )}
             {templateId === "default" && (
-              <input
-                className="w-full rounded border px-2 py-1"
-                placeholder="Phone mockup image URL"
-                value={fields.phoneMockUrl || ""}
-                onChange={(e) => setFields({ ...fields, phoneMockUrl: e.target.value })}
-              />
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Testimonial Author
+                </label>
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Testimonial author"
+                  value={fields.testimonialAuthor}
+                  onChange={(e) => setFields({ ...fields, testimonialAuthor: e.target.value })}
+                />
+              </div>
+            )}
+            {templateId === "default" && (
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Phone Mockup Image URL (optional)
+                </label>
+                <input
+                  className="w-full rounded border px-2 py-1"
+                  placeholder="Phone mockup image URL"
+                  value={fields.phoneMockUrl || ""}
+                  onChange={(e) => setFields({ ...fields, phoneMockUrl: e.target.value })}
+                />
+              </div>
             )}
           </div>
 
