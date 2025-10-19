@@ -35,7 +35,7 @@ function renderEmailHTML(
   templateId: string = "default"
 ) {
   const greeting = previewName
-    ? `<p style="margin:0 0 12px 0; color:#111827; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:16px;">Hi ${previewName},</p>`
+    ? `<p style="margin:0 0 12px 0; color:#111827; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:16px;">Hi ${previewName} Team,</p>`
     : ""
 
   const logoUrl = "https://www.instalabel.co/email-asset/logo_long.png"
