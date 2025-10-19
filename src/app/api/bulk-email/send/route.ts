@@ -8,6 +8,8 @@ type TemplateFields = {
   subheading: string
   bullets: string[]
   additionalContent?: string
+  additionalCtaText?: string
+  additionalCtaUrl?: string
   testimonialQuote: string
   testimonialAuthor: string
   ctaText: string
@@ -173,20 +175,29 @@ function renderEmailHTML(
                           )
                           .join("")}
 											</table>
-											<div style="margin-top:12px; text-align:left;">
-												<a href="${fields.ctaUrl}" class="mobile-cta" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText}</a>
-											</div>
 										</td>
 										<td style="width:50%; vertical-align:top; text-align:center;" class="stack">
 											${fields.phoneMockUrl ? `<img src="${resolveAbsolute(fields.phoneMockUrl)}" alt="Phone App" class="mobile-phone" style="width:200px; height:auto; display:block; margin:0 auto; border-radius:8px;" />` : ""}
 										</td>
 									</tr>
 								</table>
+								<div style="margin-top:16px; text-align:center;">
+									<a href="${fields.ctaUrl}" class="mobile-cta" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.ctaText}</a>
+								</div>
 								${
-                  additionalContentHtml
+                  additionalContentHtml || (fields.additionalCtaText && fields.additionalCtaUrl)
                     ? `
-								<div style="margin-top:20px; padding:16px 0; border-top:1px solid #e5e7eb;">
+								<div style="margin-top:12px; padding:12px 0 0 0; border-top:1px solid #e5e7eb;">
 									${additionalContentHtml}
+									${
+                    fields.additionalCtaText && fields.additionalCtaUrl
+                      ? `
+									<div style="margin-top:12px; text-align:center;">
+										<a href="${fields.additionalCtaUrl}" class="mobile-cta" style="display:inline-block; background:#7c3aed; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:8px; font-weight:700;">${fields.additionalCtaText}</a>
+									</div>
+									`
+                      : ""
+                  }
 								</div>
 								`
                     : ""
@@ -194,7 +205,7 @@ function renderEmailHTML(
 							</td>
 						</tr>
 						<tr>
-							<td class="mobile-padding" style="padding:0 20px 24px 20px;">
+							<td class="mobile-padding" style="padding:0 20px 12px 20px;">
 								<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f3f4f6; border:1px solid #e5e7eb; border-radius:12px;">
 									<tr>
 										<td class="mobile-testimonial" style="padding:18px 16px; font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial; font-size:14px; line-height:22px; color:#111827;">
