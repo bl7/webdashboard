@@ -4,7 +4,7 @@ import React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui"
-import { ArrowRight, Package, Printer, CreditCard } from "lucide-react"
+import { ArrowRight, Package, Printer, CreditCard, Download } from "lucide-react"
 import { FaLinkedin, FaFacebook, FaXTwitter, FaInstagram } from "react-icons/fa6"
 
 // CTA + Footer
@@ -123,6 +123,21 @@ export const Footer = () => {
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
               one app. Print from web dashboard or mobile devices with real-time analytics.
             </p>
+            {/* App Download Link */}
+            <div className="pt-2">
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.instalabel.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block transition-all duration-300 hover:scale-105"
+              >
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                  alt="Get it on Google Play"
+                  className="h-8 w-auto"
+                />
+              </Link>
+            </div>
           </div>
 
           {/* Learn Links */}

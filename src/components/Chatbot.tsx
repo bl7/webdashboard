@@ -366,103 +366,11 @@ export function Chatbot({ className }: ChatbotProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const currentMessageRef = useRef(0)
 
-  // Array of avatar images (including avatar1 for regular rotation)
-  const avatarImages = [
-    "/avatar1.png",
-    "/avatar2.png",
-    "/avatar3.png",
-    "/avatar4.png",
-    "/avatar5.png",
-    "/avatar6.png",
-    "/avatar7.png",
-    "/avatar8.png",
-    "/avatar9.png",
-    "/avatar10.png",
-  ]
+  // Single avatar image
+  const avatarImages = ["/avatarbot.png"]
 
-  // Multiple messages for each avatar (One Piece characters)
-  const avatarMessages = [
-    // 🏴‍☠️ Luffy (Energetic / Cheerful)
-    [
-      "Hey there! Need a hand? 🏴‍☠️",
-      "Let’s get this done quickly! 🏴‍☠️",
-      "Hi! What can I help you with today? 🏴‍☠️",
-      "Got a question? I’ve got answers! 🏴‍☠️",
-      "Let’s make this simple for you! 🏴‍☠️",
-    ],
-    // ⚔️ Zoro (Calm / Straightforward)
-    [
-      "What do you need? ⚔️",
-      "Tell me directly—I’ll help. ⚔️",
-      "Let’s keep it clear and quick. ⚔️",
-      "Need something solved? ⚔️",
-      "I’ll get you where you need to go. ⚔️",
-    ],
-    // 🗺️ Nami (Friendly / Guiding)
-    [
-      "Hi there! I’ll guide you through. 🗺️",
-      "Looking for something? I’ll help you find it. 🗺️",
-      "Let’s chart the best path for you. 🗺️",
-      "What can I walk you through today? 🗺️",
-      "I’ll make this easy to follow. 🗺️",
-    ],
-    // 🎯 Usopp (Confident / Playful)
-    [
-      "You’re in the right place—I’ve got this! 🎯",
-      "Don’t worry, I can handle it. 🎯",
-      "Need something? I’ll take care of it. 🎯",
-      "Stick with me, and you’ll be sorted in no time. 🎯",
-      "Ready to solve your problem? Let’s go! 🎯",
-    ],
-    // 🍳 Sanji (Polite / Courteous)
-    [
-      "Welcome! How may I assist you today? 🍳",
-      "It’s my pleasure to help—what do you need? 🍳",
-      "I’m here to make this easy for you. 🍳",
-      "Tell me what you’re looking for—I’ll handle the rest. 🍳",
-      "Happy to assist anytime! 🍳",
-    ],
-    // 🩺 Chopper (Kind / Supportive)
-    [
-      "Hi! I’ll do my best to help you. 🩺",
-      "No worries, we’ll figure this out together. 🩺",
-      "What do you need? I’ll take care of it. 🩺",
-      "You’re safe here—just ask! 🩺",
-      "Let’s solve this step by step. 🩺",
-    ],
-    // 📜 Robin (Calm / Knowledgeable)
-    [
-      "Hello. What information do you need? 📜",
-      "I’ll find the right answer for you. 📜",
-      "Let’s uncover the solution together. 📜",
-      "Every question has an answer—let’s find yours. 📜",
-      "Good day. What can I clarify for you? 📜",
-    ],
-    // 🔧 Franky (Energetic / Problem-solver)
-    [
-      "Need a fix? I’m on it! 🔧",
-      "Let’s solve this—fast and smooth! 🔧",
-      "Leave it to me, I’ll handle it! 🔧",
-      "What’s the issue? I’ll patch it up right away! 🔧",
-      "Time for a quick solution—let’s go! 🔧",
-    ],
-    // 🎻 Brook (Quirky / Lighthearted)
-    [
-      "Hello! How may I help you today? 🎻",
-      "Need help? I’ll do my best! 🎻",
-      "Hi there, let’s get things sorted out. 🎻",
-      "I’m always happy to lend a hand! 🎻",
-      "Let’s turn your question into a smooth answer. 🎻",
-    ],
-    // 🌊 Jinbe (Respectful / Reassuring)
-    [
-      "Greetings. What can I do for you today? 🌊",
-      "Calmly now—tell me what you need. 🌊",
-      "I’ll guide you through this. 🌊",
-      "Let’s take it step by step together. 🌊",
-      "The solution is close. How may I help? 🌊",
-    ],
-  ]
+  // Single generic message
+  const avatarMessages = [["Hi! How can I help you today?"]]
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
