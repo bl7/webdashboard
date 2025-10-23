@@ -94,7 +94,15 @@ const Page = () => {
             improve our product. You are responsible for ensuring your data does not violate any
             laws or third-party rights.
           </p>
-          <h3>7. Acceptable Use</h3>
+          <h3>7. Bluetooth & Location Access</h3>
+          <p>
+            Certain features of the InstaLabel mobile application require access to your device's
+            location services in order to enable Bluetooth communication with compatible label
+            printers or other devices. By allowing the app to access location while in use, you
+            enable these functionality features. If you decline or disable this permission, some
+            features may not work.
+          </p>
+          <h3>8. Acceptable Use</h3>
           <ul>
             <li>
               Do not use InstaLabel for unlawful purposes or to violate food safety regulations.
@@ -103,29 +111,29 @@ const Page = () => {
             <li>Do not upload malicious code or interfere with the operation of the service.</li>
             <li>Do not use the service to harass, abuse, or harm others.</li>
           </ul>
-          <h3>8. Limitation of Liability</h3>
+          <h3>9. Limitation of Liability</h3>
           <p>
             InstaLabel is provided "as is" without warranties of any kind. We are not liable for any
             damages arising from your use of the service, including lost profits, data loss, or
             compliance fines. You are responsible for verifying label accuracy and compliance with
             local regulations.
           </p>
-          <h3>9. Termination</h3>
+          <h3>10. Termination</h3>
           <p>
             We may suspend or terminate your account at any time for violation of these Terms or
             misuse of the service. You may cancel your subscription at any time.
           </p>
-          <h3>10. Changes to Terms</h3>
+          <h3>11. Changes to Terms</h3>
           <p>
             We may update these Terms from time to time. Continued use of InstaLabel after changes
             means you accept the new Terms.
           </p>
-          <h3>11. Governing Law</h3>
+          <h3>12. Governing Law</h3>
           <p>
             These Terms are governed by the laws of United Kingdom. Disputes will be resolved in
             Bournemouth, England.
           </p>
-          <h3>12. Contact Us</h3>
+          <h3>13. Contact Us</h3>
           <p>
             If you have questions about these Terms, contact us at{" "}
             <a href="mailto:support@instalabel.co">support@instalabel.co</a>.

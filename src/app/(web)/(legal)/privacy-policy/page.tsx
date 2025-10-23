@@ -81,6 +81,22 @@ const Page = () => {
               for details.
             </li>
           </ul>
+          <h3>Location & Bluetooth Connectivity</h3>
+          <p>
+            Our mobile application uses your device's location services strictly to enable Bluetooth
+            capability with compatible label-printing devices nearby. We access location only while
+            the app is in use for the purpose of discovering and connecting to Bluetooth devices,
+            and we do not use this location data for tracking, advertising, or storing your physical
+            location.
+          </p>
+          <p>
+            You may disable location permissions in your device settings; however, doing so may
+            prevent the app from connecting via Bluetooth and printing.
+          </p>
+          <p>
+            If you have questions about how location and Bluetooth connectivity work in the app,
+            please contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
+          </p>
           <h3>How We Use Your Information</h3>
           <ul>
             <li>To provide and maintain the InstaLabel service</li>
