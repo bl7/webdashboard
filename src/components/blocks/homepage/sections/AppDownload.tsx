@@ -11,6 +11,8 @@ import instaLabel2 from "@/assets/images/instaLabel2.png"
 export const AppDownload = () => {
   return (
     <section className="relative max-h-screen overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 px-6 py-16 text-white">
+      {/* Soft white fade overlay for better text readability */}
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-transparent via-white/5 to-white/10"></div>
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -50,20 +52,37 @@ export const AppDownload = () => {
               </p>
             </div>
 
-            {/* Download Button */}
-            <div className="pt-4">
-              <Link
-                href="https://play.google.com/store/apps/details?id=com.instalabel.app"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block transition-all duration-300 hover:scale-105"
-              >
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-                  alt="Get it on Google Play"
-                  className="h-12 w-auto"
-                />
-              </Link>
+            {/* Download Options */}
+            <div className="pt-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <Link
+                  href="https://play.google.com/store/apps/details?id=com.instalabel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block transition-all duration-300 hover:scale-105"
+                >
+                  <img
+                    src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                    alt="Get it on Google Play"
+                    className="h-12 w-auto drop-shadow-lg"
+                  />
+                </Link>
+
+                {/* QR Code */}
+                <div className="flex items-center gap-3">
+                  <div className="rounded-lg bg-white p-2 shadow-lg">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent("https://play.google.com/store/apps/details?id=com.instalabel.app")}`}
+                      alt="QR Code to download InstaLabel app"
+                      className="h-16 w-16"
+                    />
+                  </div>
+                  <div className="text-sm text-white/80">
+                    <p className="font-medium">Scan to download</p>
+                    <p className="text-xs">Quick & easy</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -76,8 +95,13 @@ export const AppDownload = () => {
             className="flex justify-center lg:justify-end"
           >
             <div className="relative">
-              {/* App screenshot */}
-              <div className="relative h-96 w-56 overflow-hidden">
+              {/* App screenshot with subtle white glow */}
+              <div
+                className="relative h-96 w-56 overflow-hidden"
+                style={{
+                  filter: "drop-shadow(0 0 20px rgba(255, 255, 255, 0.25))",
+                }}
+              >
                 <Image
                   src={instaLabel2}
                   alt="InstaLabel Mobile App Screenshot"
