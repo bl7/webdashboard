@@ -41,8 +41,12 @@ export default function ProfileSetupPage() {
           const { profile } = await profileRes.json()
           const { subscription } = await subRes.json()
 
-          // Only redirect if user has both profile and active subscription
-          if (profile?.company_name && profile?.email && subscription?.status === "active") {
+          // Only redirect if user has both profile and active/trial subscription
+          if (
+            profile?.company_name &&
+            profile?.email &&
+            (subscription?.status === "active" || subscription?.status === "trialing")
+          ) {
             router.replace("/dashboard")
             return
           }

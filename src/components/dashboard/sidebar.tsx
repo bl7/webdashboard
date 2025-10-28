@@ -173,7 +173,13 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
   useEffect(() => {
     if (!dataFetched || isSetupPage || !mounted) return
     const profileComplete = profile?.company_name && profile?.email
-    if (!profileComplete) router.push("/setup")
+    const hasValidSubscription =
+      subscription?.status === "active" || subscription?.status === "trialing"
+
+    // Only redirect to setup if profile is incomplete OR no valid subscription
+    if (!profileComplete || !hasValidSubscription) {
+      router.push("/setup")
+    }
   }, [dataFetched, profile, subscription, pathname, isSetupPage, mounted])
 
   const handleLogout = () => {
