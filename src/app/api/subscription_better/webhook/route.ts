@@ -320,6 +320,13 @@ export async function POST(req: NextRequest) {
           )
           console.log("[WEBHOOK] Upserted subscription for user_id:", user_id)
 
+          // Mark setup as completed when subscription is created
+          await client.query(
+            `UPDATE user_profiles SET setup_completed = true WHERE user_id = $1`,
+            [user_id]
+          )
+          console.log("[WEBHOOK] Marked setup as completed for user_id:", user_id)
+
           // --- DEVICE ASSIGNMENT LOGIC ---
           if (plan_id) {
             // Check if plan includes device

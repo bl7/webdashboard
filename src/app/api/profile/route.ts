@@ -39,6 +39,7 @@ export async function PUT(req: NextRequest) {
       phone = null,
       profile_picture = null,
       avatar = null,
+      setup_completed = null,
     } = await req.json()
 
     if (!user_id) {
@@ -62,8 +63,9 @@ export async function PUT(req: NextRequest) {
           country = COALESCE($8, country),
           postal_code = COALESCE($9, postal_code),
           phone = COALESCE($10, phone),
-          profile_picture = COALESCE($11, profile_picture)
-         WHERE user_id = $12`,
+          profile_picture = COALESCE($11, profile_picture),
+          setup_completed = COALESCE($12, setup_completed)
+         WHERE user_id = $13`,
         [
           full_name,
           email,
@@ -76,14 +78,15 @@ export async function PUT(req: NextRequest) {
           postal_code,
           phone,
           profile_picture,
+          setup_completed,
           user_id,
         ]
       )
     } else {
       await pool.query(
         `INSERT INTO user_profiles (
-          user_id, full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+          user_id, full_name, email, company_name, address_line1, address_line2, city, state, country, postal_code, phone, profile_picture, setup_completed
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)`,
         [
           user_id,
           full_name,
@@ -97,6 +100,7 @@ export async function PUT(req: NextRequest) {
           postal_code,
           phone,
           profile_picture,
+          setup_completed,
         ]
       )
     }

@@ -27,26 +27,13 @@ export default function ProfileSetupPage() {
           return
         }
 
-        const [profileRes, subRes] = await Promise.all([
-          fetch(`/api/profile?user_id=${storedUserId}`),
-          fetch(`/api/subscription_better/status`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }),
-        ])
+        const [profileRes] = await Promise.all([fetch(`/api/profile?user_id=${storedUserId}`)])
 
-        if (profileRes.ok && subRes.ok) {
+        if (profileRes.ok) {
           const { profile } = await profileRes.json()
-          const { subscription } = await subRes.json()
 
-          // Only redirect if user has both profile and active/trial subscription
-          if (
-            profile?.company_name &&
-            profile?.email &&
-            (subscription?.status === "active" || subscription?.status === "trialing")
-          ) {
+          // Only redirect if user has completed setup (ignore subscription checks)
+          if (profile?.setup_completed) {
             router.replace("/dashboard")
             return
           }

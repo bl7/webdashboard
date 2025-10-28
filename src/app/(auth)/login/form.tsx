@@ -69,12 +69,8 @@ export function LoginForm() {
               const { profile } = await profileRes.json()
               const { subscription } = await subRes.json()
 
-              // If user has both profile and active/trial subscription, go to dashboard
-              if (
-                profile?.company_name &&
-                profile?.email &&
-                (subscription?.status === "active" || subscription?.status === "trialing")
-              ) {
+              // If user has completed setup, go to dashboard (ignore subscription status)
+              if (profile?.setup_completed) {
                 router.push("/dashboard")
               } else {
                 // Otherwise, go to setup to complete profile/subscription
