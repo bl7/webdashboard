@@ -123,10 +123,11 @@ export const Footer = () => {
               Smart, simple kitchen labeling for food safety, compliance, and efficiency — all in
               one app. Print from web dashboard or mobile devices with real-time analytics.
             </p>
-            {/* App Download Link */}
+            {/* App Download Link */
+            }
             <div className="pt-2">
               <Link
-                href="https://play.google.com/store/apps/details?id=com.instalabel.app"
+                href="https://play.google.com/store/apps/details?id=com.instalabel.co.app"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-block transition-all duration-300 hover:scale-105"

@@ -56,7 +56,7 @@ export const AppDownload = () => {
             <div className="pt-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
                 <Link
-                  href="https://play.google.com/store/apps/details?id=com.instalabel.app"
+                  href="https://play.google.com/store/apps/details?id=com.instalabel.co.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block transition-all duration-300 hover:scale-105"
@@ -72,7 +72,7 @@ export const AppDownload = () => {
                 <div className="flex items-center gap-3">
                   <div className="rounded-lg bg-white p-2 shadow-lg">
                     <img
-                      src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent("https://play.google.com/store/apps/details?id=com.instalabel.app")}`}
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent("https://play.google.com/store/apps/details?id=com.instalabel.co.app")}`}
                       alt="QR Code to download InstaLabel app"
                       className="h-16 w-16"
                     />

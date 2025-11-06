@@ -68,10 +68,19 @@ export const MobileAppPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
-                <Download className="mr-2 h-4 w-4" />
-                Download on Android
-              </Button>
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.instalabel.co.app"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Button
+                  size="lg"
+                  className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download on Android
+                </Button>
+              </Link>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
@@ -456,13 +465,19 @@ export const MobileAppPage = () => {
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
-              <Button
-                size="lg"
-                className="bg-purple-600 px-8 py-4 text-lg font-semibold text-white hover:bg-purple-700"
+              <Link
+                href="https://play.google.com/store/apps/details?id=com.instalabel.co.app"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                <Download className="mr-2 h-5 w-5" />
-                Download on Android
-              </Button>
+                <Button
+                  size="lg"
+                  className="bg-purple-600 px-8 py-4 text-lg font-semibold text-white hover:bg-purple-700"
+                >
+                  <Download className="mr-2 h-5 w-5" />
+                  Download on Android
+                </Button>
+              </Link>
             </div>
 
             <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
