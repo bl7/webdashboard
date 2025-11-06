@@ -70,12 +70,23 @@ export const AppDownload = () => {
 
                 {/* QR Code */}
                 <div className="flex items-center gap-3">
-                  <div className="rounded-lg bg-white p-2 shadow-lg">
+                  <div className="group relative rounded-lg bg-white p-2 shadow-lg">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent("https://play.google.com/store/apps/details?id=com.instalabel.co.app")}`}
                       alt="QR Code to download InstaLabel app"
                       className="h-16 w-16"
                     />
+                    {/* Hover Popup - Magnified QR */}
+                    <div
+                      className="pointer-events-none absolute -top-3 left-1/2 z-20 h-48 w-48 -translate-x-1/2 -translate-y-full scale-95 rounded-xl bg-white p-3 opacity-0 shadow-2xl ring-1 ring-black/10 transition-all duration-200 ease-out group-hover:scale-100 group-hover:opacity-100"
+                      aria-hidden="true"
+                    >
+                      <img
+                        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent("https://play.google.com/store/apps/details?id=com.instalabel.co.app")}`}
+                        alt=""
+                        className="h-full w-full"
+                      />
+                    </div>
                   </div>
                   <div className="text-sm text-white/80">
                     <p className="font-medium">Scan to download</p>
