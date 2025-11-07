@@ -6,6 +6,7 @@ import PaymentHistory from "./billingcomponents/invoicesList"
 import PaymentMethod from "./billingcomponents/paymentMethod"
 import BillingAddressModal from "./billingcomponents/BillingAddressModal"
 import useBillingData from "./hooks/useBillingData"
+import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +21,8 @@ import {
   AlertTriangle,
   CheckCircle2,
   Settings,
+  RefreshCw,
+  X,
 } from "lucide-react"
 
 // Full-width Trial/Status Banner
@@ -54,7 +57,15 @@ function TrialBanner({ subscription }: { subscription: any }) {
 }
 
 // Subscription Summary Card
-function SubscriptionSummary({ subscription }: { subscription: any }) {
+function SubscriptionSummary({
+  subscription,
+  onReactivate,
+  reactivateLoading,
+}: {
+  subscription: any
+  onReactivate?: () => void
+  reactivateLoading?: boolean
+}) {
   const router = useRouter()
 
   if (!subscription) return null
@@ -67,7 +78,11 @@ function SubscriptionSummary({ subscription }: { subscription: any }) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <CheckCircle2 className="h-5 w-5 text-green-500" />
+          {isCanceled ? (
+            <X className="h-5 w-5 text-red-500" />
+          ) : (
+            <CheckCircle2 className="h-5 w-5 text-green-500" />
+          )}
           Current Plan
         </CardTitle>
         <CardDescription>
@@ -98,6 +113,18 @@ function SubscriptionSummary({ subscription }: { subscription: any }) {
           </div>
         )}
 
+        {isCanceled && (
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3">
+            <div className="flex items-center gap-2">
+              <X className="h-4 w-4 text-red-500" />
+              <span className="text-sm font-medium text-red-800">
+                Subscription canceled. Access will end on{" "}
+                {new Date(subscription.current_period_end).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+        )}
+
         {isScheduledCancel && !isCanceled && (
           <div className="rounded-lg border border-orange-200 bg-orange-50 p-3">
             <div className="flex items-center gap-2">
@@ -110,10 +137,32 @@ function SubscriptionSummary({ subscription }: { subscription: any }) {
           </div>
         )}
 
-        <Button onClick={() => router.push("/dashboard/subscription")} className="w-full">
-          <Settings className="mr-2 h-4 w-4" />
-          Manage Subscription
-        </Button>
+        {isCanceled && onReactivate && (
+          <Button
+            onClick={onReactivate}
+            disabled={reactivateLoading}
+            className="w-full bg-purple-600 hover:bg-purple-700"
+          >
+            {reactivateLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Reactivating...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Reactivate Subscription
+              </>
+            )}
+          </Button>
+        )}
+
+        {!isCanceled && (
+          <Button onClick={() => router.push("/dashboard/subscription")} className="w-full">
+            <Settings className="mr-2 h-4 w-4" />
+            Manage Subscription
+          </Button>
+        )}
       </CardContent>
     </Card>
   )
@@ -122,8 +171,10 @@ function SubscriptionSummary({ subscription }: { subscription: any }) {
 const Billing: React.FC = () => {
   const [isClient, setIsClient] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [reactivateLoading, setReactivateLoading] = useState(false)
   const userid = typeof window !== "undefined" ? localStorage.getItem("userid") || "" : ""
-  const { subscription, loading, error, profile, refreshProfile } = useBillingData(userid)
+  const { subscription, loading, error, profile, refreshProfile, refreshSubscription } =
+    useBillingData(userid)
   const [localProfile, setLocalProfile] = useState<Profile | null>(null)
 
   useEffect(() => {
@@ -151,6 +202,44 @@ const Billing: React.FC = () => {
       setIsModalOpen(false)
     } catch (err) {
       console.error("Error updating profile:", err)
+    }
+  }
+
+  const handleReactivate = async () => {
+    if (!subscription || !userid) return
+
+    setReactivateLoading(true)
+    try {
+      const token = localStorage.getItem("token")
+      if (!token) {
+        throw new Error("No authentication token found")
+      }
+
+      const response = await fetch("/api/subscription_better/reactivate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: userid,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Failed to reactivate subscription")
+      }
+
+      if (refreshSubscription) {
+        await refreshSubscription()
+      }
+      toast.success("Subscription reactivated successfully!")
+    } catch (error: any) {
+      toast.error(error.message || "Failed to reactivate subscription")
+      console.error("Reactivation error:", error)
+    } finally {
+      setReactivateLoading(false)
     }
   }
 
@@ -201,7 +290,11 @@ const Billing: React.FC = () => {
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {/* Subscription Summary */}
-          <SubscriptionSummary subscription={subscription} />
+          <SubscriptionSummary
+            subscription={subscription}
+            onReactivate={handleReactivate}
+            reactivateLoading={reactivateLoading}
+          />
 
           {/* Payment Method Card */}
           <PaymentMethod subscription={subscription} />

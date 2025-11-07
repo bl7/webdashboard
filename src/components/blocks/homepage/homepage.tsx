@@ -3,7 +3,6 @@ import { Hero, TrustedBySection, Services, Pricing, BeforeAfterSection } from ".
 import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
 import { HowItWorks } from "./sections/HowItWorks"
 import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcase"
-import { WaitlistModal } from "./sections/WaitlistModal"
 import { FAQ } from "./sections/FAQ"
 import { AppDownload } from "./sections/AppDownload"
 import {

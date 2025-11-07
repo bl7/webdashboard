@@ -16,7 +16,7 @@ import React from "react"
 import instaLabel3 from "@/assets/images/instalabel3.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { WaitlistModal } from "./WaitlistModal"
+import { DemoRequestModal } from "./WaitlistModal"
 
 export const Hero = () => {
   return (
@@ -178,12 +178,12 @@ export const Hero = () => {
               variant="link"
               className="text-sm text-purple-600 hover:text-purple-800"
               onClick={() => {
-                // Trigger the waitlist modal
-                const event = new CustomEvent("openWaitlistModal")
+                // Trigger the demo modal
+                const event = new CustomEvent("openDemoModal")
                 window.dispatchEvent(event)
               }}
             >
-              Join the waitlist for early access →
+              Request a Demo →
             </Button>
           </div>
         </div>
@@ -194,8 +194,8 @@ export const Hero = () => {
         style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
       />
 
-      {/* Waitlist Modal */}
-      <WaitlistModal />
+      {/* Demo Request Modal */}
+      <DemoRequestModal />
     </section>
   )
 }

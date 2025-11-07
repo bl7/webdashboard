@@ -247,12 +247,12 @@ export const Pricing = () => {
               variant="link"
               className="text-sm text-purple-600 hover:text-purple-800"
               onClick={() => {
-                // Trigger the waitlist modal
-                const event = new CustomEvent("openWaitlistModal")
+                // Trigger the demo modal
+                const event = new CustomEvent("openDemoModal")
                 window.dispatchEvent(event)
               }}
             >
-              Join the waitlist for early access →
+              Request a Demo →
             </Button>
           </div>
         </motion.div>

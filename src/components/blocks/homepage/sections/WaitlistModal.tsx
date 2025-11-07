@@ -3,18 +3,19 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { toast } from "sonner"
-import { CheckCircle, Mail, User, Building, Phone } from "lucide-react"
+import { CheckCircle, Mail, User, Building, Phone, MessageSquare } from "lucide-react"
 
-export const WaitlistModal = () => {
+export const DemoRequestModal = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
-    full_name: "",
-    company_name: "",
+    company: "",
     phone: "",
+    message: "",
   })
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -39,11 +40,11 @@ export const WaitlistModal = () => {
       setIsOpen(true)
     }
 
-    window.addEventListener("openWaitlistModal", handleOpenModal)
-    return () => window.removeEventListener("openWaitlistModal", handleOpenModal)
+    window.addEventListener("openDemoModal", handleOpenModal)
+    return () => window.removeEventListener("openDemoModal", handleOpenModal)
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
       ...prev,
@@ -54,7 +55,7 @@ export const WaitlistModal = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.email || !formData.full_name) {
+    if (!formData.email || !formData.name) {
       toast.error("Please fill in all required fields")
       return
     }
@@ -62,31 +63,39 @@ export const WaitlistModal = () => {
     setIsLoading(true)
 
     try {
-      const response = await fetch("/api/waitlist", {
+      const response = await fetch("/api/bookdemo", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || "",
+          company: formData.company || "",
+          role: "",
+          message: formData.message || "",
+          source: "homepage-popup",
+        }),
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        toast.success(data.message || "Successfully joined the waitlist!")
+        toast.success("Demo request submitted successfully! We'll contact you soon.")
         setIsSubmitted(true)
-        setFormData({ email: "", full_name: "", company_name: "", phone: "" })
-        // Close modal after 2 seconds on success
+        setFormData({ name: "", email: "", company: "", phone: "", message: "" })
+        // Close modal after 3 seconds on success
         setTimeout(() => {
           setIsOpen(false)
           setIsSubmitted(false)
-        }, 2000)
+        }, 3000)
       } else {
-        toast.error(data.error || "Failed to join waitlist")
+        toast.error(data.error || "Failed to submit demo request")
       }
     } catch (error) {
-      console.error("Error joining waitlist:", error)
-      toast.error("Failed to join waitlist. Please try again.")
+      console.error("Error submitting demo request:", error)
+      toast.error("Failed to submit demo request. Please try again.")
     } finally {
       setIsLoading(false)
     }
@@ -99,33 +108,33 @@ export const WaitlistModal = () => {
 
   const resetForm = () => {
     setIsSubmitted(false)
-    setFormData({ email: "", full_name: "", company_name: "", phone: "" })
+    setFormData({ name: "", email: "", company: "", phone: "", message: "" })
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-2xl font-bold text-gray-900">Join the Waitlist</DialogTitle>
+          <DialogTitle className="text-2xl font-bold text-gray-900">Request a Demo</DialogTitle>
         </DialogHeader>
 
         {isSubmitted ? (
           <div className="py-8 text-center">
             <CheckCircle className="mx-auto mb-4 h-16 w-16 text-green-500" />
-            <h3 className="mb-2 text-xl font-bold text-gray-900">You're on the list!</h3>
+            <h3 className="mb-2 text-xl font-bold text-gray-900">Request Received!</h3>
             <p className="mb-4 text-gray-600">
-              Thank you for your interest in InstaLabel. We'll be in touch soon with updates about
-              our launch.
+              Thank you for your interest in InstaLabel. Our team will contact you shortly to
+              schedule your demo.
             </p>
             <Button onClick={resetForm} variant="outline" size="sm">
-              Join Another Email
+              Request Another Demo
             </Button>
           </div>
         ) : (
           <div className="space-y-4">
             <p className="text-center text-gray-600">
-              Be among the first to experience the future of food labeling. Join our waitlist and
-              get early access to InstaLabel when we launch.
+              See InstaLabel in action! Book a free demo and discover how our kitchen labeling
+              solution can streamline your operations.
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,9 +142,9 @@ export const WaitlistModal = () => {
                 <div className="relative">
                   <User className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    name="full_name"
+                    name="name"
                     placeholder="Full Name *"
-                    value={formData.full_name}
+                    value={formData.name}
                     onChange={handleInputChange}
                     className="pl-10"
                     required
@@ -159,9 +168,9 @@ export const WaitlistModal = () => {
                 <div className="relative">
                   <Building className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                   <Input
-                    name="company_name"
+                    name="company"
                     placeholder="Company Name (Optional)"
-                    value={formData.company_name}
+                    value={formData.company}
                     onChange={handleInputChange}
                     className="pl-10"
                   />
@@ -179,17 +188,29 @@ export const WaitlistModal = () => {
                 </div>
               </div>
 
+              <div className="relative">
+                <MessageSquare className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Textarea
+                  name="message"
+                  placeholder="Additional Information (Optional)"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className="min-h-[80px] pl-10"
+                  rows={3}
+                />
+              </div>
+
               <Button
                 type="submit"
                 className="w-full bg-purple-600 text-white hover:bg-purple-700"
                 disabled={isLoading}
               >
-                {isLoading ? "Joining..." : "Join the Waitlist"}
+                {isLoading ? "Submitting..." : "Request Demo"}
               </Button>
             </form>
 
             <p className="text-center text-xs text-gray-500">
-              We'll only use your information to notify you about InstaLabel updates.
+              We'll contact you within 24 hours to schedule your demo.
             </p>
           </div>
         )}
