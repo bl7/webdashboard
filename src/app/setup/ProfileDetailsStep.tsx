@@ -1,11 +1,12 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
 import { saveData } from "@/lib/saveData"
+import { searchPostcodes, lookupPostcode } from "@/lib/postcodesService"
 
 interface ProfileData {
   full_name: string
@@ -39,6 +40,19 @@ export default function ProfileDetailsStep({
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
+  
+  // Postcode autocomplete state
+  const [postcodeSuggestions, setPostcodeSuggestions] = useState<Array<{ postcode: string; originalPostcode: string }>>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [postcodeValid, setPostcodeValid] = useState(false)
+  const [postcodeError, setPostcodeError] = useState<string | null>(null)
+  const [isSearching, setIsSearching] = useState(false)
+  const [lastValidatedPostcode, setLastValidatedPostcode] = useState<string>("")
+  
+  const postcodeInputRef = useRef<HTMLInputElement>(null)
+  const addressLine1Ref = useRef<HTMLInputElement>(null)
+  const suggestionsRef = useRef<HTMLDivElement>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   // Fetch profile data on mount
   useEffect(() => {
@@ -83,6 +97,25 @@ export default function ProfileDetailsStep({
     }
     fetchProfile()
   }, [userId, setProfileData])
+  
+  // Validate postcode when it's initially loaded from API
+  const [hasValidatedInitialPostcode, setHasValidatedInitialPostcode] = useState(false)
+  useEffect(() => {
+    const postcode = profileData.postal_code.trim()
+    if (postcode && postcode.length >= 2 && !hasValidatedInitialPostcode) {
+      lookupPostcode(postcode).then((result) => {
+        if (result) {
+          setPostcodeValid(true)
+          setPostcodeError(null)
+        } else {
+          setPostcodeValid(false)
+        }
+        setHasValidatedInitialPostcode(true)
+      })
+    } else if (!postcode) {
+      setHasValidatedInitialPostcode(true)
+    }
+  }, [profileData.postal_code, hasValidatedInitialPostcode])
 
   const handleAvatarSelect = (index: number) => {
     setProfileData((prev) => ({ ...prev, avatar: index }))
@@ -93,7 +126,182 @@ export default function ProfileDetailsStep({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setProfileData((prev) => ({ ...prev, [name]: value }))
+    
+    // Handle postcode input with autocomplete
+    if (name === "postal_code") {
+      // Normalize the new postcode value for comparison
+      const normalizedNew = value.replace(/\s+/g, "").toUpperCase()
+      const normalizedLast = lastValidatedPostcode.replace(/\s+/g, "").toUpperCase()
+      
+      // If postcode changed and was previously validated, clear auto-filled fields
+      if (lastValidatedPostcode && normalizedNew !== normalizedLast) {
+        setProfileData((prev) => ({
+          ...prev,
+          city: "",
+          state: "",
+          country: "",
+        }))
+      }
+      
+      setPostcodeValid(false)
+      setPostcodeError(null)
+      setLastValidatedPostcode("")
+      
+      // Clear previous debounce timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+      
+      // If less than 2 characters, clear suggestions
+      if (value.length < 2) {
+        setPostcodeSuggestions([])
+        setShowSuggestions(false)
+        return
+      }
+      
+      // Debounce search by 250-300ms
+      setIsSearching(true)
+      debounceTimerRef.current = setTimeout(async () => {
+        try {
+          const suggestions = await searchPostcodes(value)
+          setPostcodeSuggestions(suggestions.slice(0, 10))
+          setShowSuggestions(suggestions.length > 0)
+        } catch (err) {
+          console.error("Error fetching postcode suggestions:", err)
+          setPostcodeSuggestions([])
+          setShowSuggestions(false)
+        } finally {
+          setIsSearching(false)
+        }
+      }, 275) // 275ms debounce
+    }
   }
+  
+  // Handle postcode selection from dropdown
+  const handlePostcodeSelect = useCallback(async (selectedPostcode: string, originalPostcode?: string) => {
+    // Use original postcode for lookup if available, otherwise use the selected one
+    const postcodeForLookup = originalPostcode || selectedPostcode
+    
+    setProfileData((prev) => ({ ...prev, postal_code: selectedPostcode }))
+    setShowSuggestions(false)
+    setPostcodeSuggestions([])
+    
+    // Lookup postcode details using the original postcode from API
+    setIsSearching(true)
+    try {
+      // Try lookup with original postcode first, then fallback to formatted
+      let lookupResult = await lookupPostcode(postcodeForLookup)
+      
+      // If lookup fails with original, try with the formatted version
+      if (!lookupResult && postcodeForLookup !== selectedPostcode) {
+        lookupResult = await lookupPostcode(selectedPostcode)
+      }
+      
+      if (lookupResult) {
+        setPostcodeValid(true)
+        setPostcodeError(null)
+        setLastValidatedPostcode(lookupResult.postcode)
+        
+        // Auto-fill city, state, country (always update, not just if empty)
+        setProfileData((prev) => ({
+          ...prev,
+          postal_code: lookupResult.postcode,
+          city: lookupResult.admin_district || lookupResult.parish || "",
+          state: lookupResult.admin_county || lookupResult.region || "",
+          country: lookupResult.country || "",
+        }))
+        
+        // Auto-focus Address Line 1 after a short delay
+        setTimeout(() => {
+          addressLine1Ref.current?.focus()
+        }, 100)
+      } else {
+        setPostcodeValid(false)
+        setPostcodeError("Postcode not found, please enter address manually.")
+        setLastValidatedPostcode("")
+      }
+    } catch (err) {
+      console.error("Error looking up postcode:", err)
+      setPostcodeValid(false)
+      setPostcodeError("Postcode not found, please enter address manually.")
+      setLastValidatedPostcode("")
+    } finally {
+      setIsSearching(false)
+    }
+  }, [setProfileData])
+  
+  // Validate postcode on blur if it's been entered
+  const handlePostcodeBlur = useCallback(async () => {
+    // Small delay to allow click on suggestion
+    setTimeout(() => {
+      setShowSuggestions(false)
+      
+      const postcode = profileData.postal_code.trim()
+      if (postcode && !postcodeValid) {
+        // Try to validate the postcode
+        lookupPostcode(postcode).then((result) => {
+          if (result) {
+            setPostcodeValid(true)
+            setPostcodeError(null)
+            
+            // Check if this is a different postcode than last validated
+            const normalizedCurrent = postcode.replace(/\s+/g, "").toUpperCase()
+            const normalizedLast = lastValidatedPostcode.replace(/\s+/g, "").toUpperCase()
+            const isDifferentPostcode = normalizedCurrent !== normalizedLast
+            
+            if (isDifferentPostcode) {
+              // Update the last validated postcode
+              setLastValidatedPostcode(result.postcode)
+              
+              // Always auto-fill when postcode changes
+              setProfileData((prev) => ({
+                ...prev,
+                postal_code: result.postcode,
+                city: result.admin_district || result.parish || "",
+                state: result.admin_county || result.region || "",
+                country: result.country || "",
+              }))
+            } else {
+              // Same postcode, just mark as valid
+              setLastValidatedPostcode(result.postcode)
+            }
+          } else if (postcode.length >= 2) {
+            setPostcodeValid(false)
+            setPostcodeError("Postcode not found, please enter address manually.")
+            setLastValidatedPostcode("")
+          }
+        })
+      }
+    }, 200)
+  }, [profileData.postal_code, postcodeValid, lastValidatedPostcode, setProfileData])
+  
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current)
+      }
+    }
+  }, [])
+  
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        suggestionsRef.current &&
+        !suggestionsRef.current.contains(event.target as Node) &&
+        postcodeInputRef.current &&
+        !postcodeInputRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false)
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   const handleSubmit = async () => {
     setSaving(true)
@@ -121,16 +329,15 @@ export default function ProfileDetailsStep({
     setSaving(false)
   }
 
-  // Validation: all required fields must be non-empty (except address_line2, phone)
+  // Validation: Company Name, Address Line 1, and valid Postal Code are required
+  // City can be empty if lookup fails, but postal code must be valid
   const isValid =
     profileData.full_name.trim() !== "" &&
     profileData.email.trim() !== "" &&
     profileData.company_name.trim() !== "" &&
     profileData.address_line1.trim() !== "" &&
-    profileData.city.trim() !== "" &&
-    profileData.state.trim() !== "" &&
-    profileData.country.trim() !== "" &&
-    profileData.postal_code.trim() !== ""
+    profileData.postal_code.trim() !== "" &&
+    postcodeValid
 
   return (
     <div>
@@ -196,8 +403,57 @@ export default function ProfileDetailsStep({
           <Input name="company_name" value={profileData.company_name} onChange={handleChange} placeholder="Enter your company name" />
         </div>
         <div>
+          {/* Empty div to maintain grid layout */}
+        </div>
+        {/* Postal Code moved to first address field in left column, above Address Line 1 */}
+        <div className="relative">
+          <Label>Postal Code</Label>
+          <Input
+            ref={postcodeInputRef}
+            name="postal_code"
+            value={profileData.postal_code}
+            onChange={handleChange}
+            onBlur={handlePostcodeBlur}
+            placeholder="Postal code"
+            className={cn(
+              postcodeError && "border-red-500",
+              postcodeValid && "border-green-500"
+            )}
+          />
+          {isSearching && (
+            <div className="absolute right-3 top-9 text-xs text-gray-400">Searching...</div>
+          )}
+          {postcodeError && (
+            <p className="mt-1 text-xs text-red-600">{postcodeError}</p>
+          )}
+          {/* Postcode suggestions dropdown */}
+          {showSuggestions && postcodeSuggestions.length > 0 && (
+            <div
+              ref={suggestionsRef}
+              className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg"
+            >
+              {postcodeSuggestions.map((suggestion, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => handlePostcodeSelect(suggestion.postcode, suggestion.originalPostcode)}
+                  className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                >
+                  {suggestion.postcode}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div>
           <Label>Address Line 1</Label>
-          <Input name="address_line1" value={profileData.address_line1} onChange={handleChange} placeholder="Address line 1" />
+          <Input
+            ref={addressLine1Ref}
+            name="address_line1"
+            value={profileData.address_line1}
+            onChange={handleChange}
+            placeholder="Address line 1"
+          />
         </div>
         <div>
           <Label>Address Line 2 (optional)</Label>
@@ -214,10 +470,6 @@ export default function ProfileDetailsStep({
         <div>
           <Label>Country</Label>
           <Input name="country" value={profileData.country} onChange={handleChange} placeholder="Country" />
-        </div>
-        <div>
-          <Label>Postal Code</Label>
-          <Input name="postal_code" value={profileData.postal_code} onChange={handleChange} placeholder="Postal code" />
         </div>
         <div>
           <Label>Phone (optional)</Label>

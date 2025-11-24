@@ -34,6 +34,7 @@ import {
   Filter,
   Download,
 } from "lucide-react"
+import { useDarkMode } from "../context/DarkModeContext"
 
 interface WaitlistEntry {
   id: number
@@ -49,6 +50,7 @@ interface WaitlistEntry {
 }
 
 export default function WaitlistPage() {
+  const { isDarkMode } = useDarkMode()
   const router = useRouter()
   const [waitlist, setWaitlist] = useState<WaitlistEntry[]>([])
   const [loading, setLoading] = useState(true)
@@ -214,17 +216,32 @@ export default function WaitlistPage() {
   }
 
   const getStatusColor = (status: string) => {
-    switch (status) {
-      case "pending":
-        return "bg-yellow-100 text-yellow-800"
-      case "contacted":
-        return "bg-blue-100 text-blue-800"
-      case "converted":
-        return "bg-green-100 text-green-800"
-      case "rejected":
-        return "bg-red-100 text-red-800"
-      default:
-        return "bg-gray-100 text-gray-800"
+    if (isDarkMode) {
+      switch (status) {
+        case "pending":
+          return "bg-yellow-900 text-yellow-200"
+        case "contacted":
+          return "bg-blue-900 text-blue-200"
+        case "converted":
+          return "bg-green-900 text-green-200"
+        case "rejected":
+          return "bg-red-900 text-red-200"
+        default:
+          return "bg-gray-700 text-gray-200"
+      }
+    } else {
+      switch (status) {
+        case "pending":
+          return "bg-yellow-100 text-yellow-800"
+        case "contacted":
+          return "bg-blue-100 text-blue-800"
+        case "converted":
+          return "bg-green-100 text-green-800"
+        case "rejected":
+          return "bg-red-100 text-red-800"
+        default:
+          return "bg-gray-100 text-gray-800"
+      }
     }
   }
 
@@ -246,68 +263,68 @@ export default function WaitlistPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className={`flex h-screen items-center justify-center ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
         <div className="text-center">
           <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-purple-600"></div>
-          <p className="text-gray-600">Loading waitlist...</p>
+          <p className={isDarkMode ? "text-gray-400" : "text-gray-600"}>Loading waitlist...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="p-6">
+    <div className={`p-6 min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
       <div className="mb-6">
-        <h1 className="mb-2 text-3xl font-bold text-gray-900">Waitlist Management</h1>
-        <p className="text-gray-600">Manage and track waitlist entries</p>
+        <h1 className={`mb-2 text-3xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Waitlist Management</h1>
+        <p className={isDarkMode ? "text-gray-400" : "text-gray-600"}>Manage and track waitlist entries</p>
       </div>
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
-        <Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardContent className="p-4">
             <div className="flex items-center">
               <User className="mr-3 h-8 w-8 text-purple-600" />
               <div>
-                <p className="text-sm text-gray-600">Total Entries</p>
-                <p className="text-2xl font-bold">{waitlist.length}</p>
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Total Entries</p>
+                <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>{waitlist.length}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardContent className="p-4">
             <div className="flex items-center">
               <Mail className="mr-3 h-8 w-8 text-yellow-600" />
               <div>
-                <p className="text-sm text-gray-600">Pending</p>
-                <p className="text-2xl font-bold">
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Pending</p>
+                <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                   {waitlist.filter((w) => w.status === "pending").length}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardContent className="p-4">
             <div className="flex items-center">
               <Building className="mr-3 h-8 w-8 text-blue-600" />
               <div>
-                <p className="text-sm text-gray-600">Contacted</p>
-                <p className="text-2xl font-bold">
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Contacted</p>
+                <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                   {waitlist.filter((w) => w.status === "contacted").length}
                 </p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardContent className="p-4">
             <div className="flex items-center">
               <Calendar className="mr-3 h-8 w-8 text-green-600" />
               <div>
-                <p className="text-sm text-gray-600">Converted</p>
-                <p className="text-2xl font-bold">
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>Converted</p>
+                <p className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
                   {waitlist.filter((w) => w.status === "converted").length}
                 </p>
               </div>
@@ -350,60 +367,60 @@ export default function WaitlistPage() {
       </div>
 
       {/* Waitlist Table */}
-      <Card>
+      <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
         <CardHeader>
-          <CardTitle>Waitlist Entries ({filteredWaitlist.length})</CardTitle>
+          <CardTitle className={isDarkMode ? "text-white" : ""}>Waitlist Entries ({filteredWaitlist.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="p-3 text-left">Name</th>
-                  <th className="p-3 text-left">Email</th>
-                  <th className="p-3 text-left">Company</th>
-                  <th className="p-3 text-left">Phone</th>
-                  <th className="p-3 text-left">Status</th>
-                  <th className="p-3 text-left">Joined</th>
-                  <th className="p-3 text-left">Actions</th>
+                <tr className={isDarkMode ? "border-b border-gray-700" : "border-b"}>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Name</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Email</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Company</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Phone</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Status</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Joined</th>
+                  <th className={`p-3 text-left ${isDarkMode ? "text-gray-300" : "text-gray-900"}`}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredWaitlist.map((entry) => (
-                  <tr key={entry.id} className="border-b hover:bg-gray-50">
-                    <td className="p-3">
+                  <tr key={entry.id} className={isDarkMode ? "border-b border-gray-700 hover:bg-gray-700" : "border-b hover:bg-gray-50"}>
+                    <td className={`p-3 ${isDarkMode ? "text-gray-100" : ""}`}>
                       <div className="font-medium">{entry.full_name}</div>
                     </td>
-                    <td className="p-3">
+                    <td className={`p-3 ${isDarkMode ? "text-gray-100" : ""}`}>
                       <div className="flex items-center">
-                        <Mail className="mr-2 h-4 w-4 text-gray-400" />
+                        <Mail className={`mr-2 h-4 w-4 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
                         {entry.email}
                       </div>
                     </td>
-                    <td className="p-3">
+                    <td className={`p-3 ${isDarkMode ? "text-gray-100" : ""}`}>
                       {entry.company_name ? (
                         <div className="flex items-center">
-                          <Building className="mr-2 h-4 w-4 text-gray-400" />
+                          <Building className={`mr-2 h-4 w-4 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
                           {entry.company_name}
                         </div>
                       ) : (
-                        <span className="text-gray-400">-</span>
+                        <span className={isDarkMode ? "text-gray-500" : "text-gray-400"}>-</span>
                       )}
                     </td>
-                    <td className="p-3">
+                    <td className={`p-3 ${isDarkMode ? "text-gray-100" : ""}`}>
                       {entry.phone ? (
                         <div className="flex items-center">
-                          <Phone className="mr-2 h-4 w-4 text-gray-400" />
+                          <Phone className={`mr-2 h-4 w-4 ${isDarkMode ? "text-gray-500" : "text-gray-400"}`} />
                           {entry.phone}
                         </div>
                       ) : (
-                        <span className="text-gray-400">-</span>
+                        <span className={isDarkMode ? "text-gray-500" : "text-gray-400"}>-</span>
                       )}
                     </td>
                     <td className="p-3">
                       <Badge className={getStatusColor(entry.status)}>{entry.status}</Badge>
                     </td>
-                    <td className="p-3">{new Date(entry.created_at).toLocaleDateString()}</td>
+                    <td className={`p-3 ${isDarkMode ? "text-gray-100" : ""}`}>{new Date(entry.created_at).toLocaleDateString()}</td>
                     <td className="p-3">
                       <div className="flex gap-2">
                         <Dialog>

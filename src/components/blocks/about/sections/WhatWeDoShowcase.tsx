@@ -8,6 +8,15 @@ import { PPDSLabelRenderer } from "@/app/dashboard/ppds/PPDSLabelRenderer"
 const WhatWeDoShowcase = () => {
   // Device image
 
+  const now = new Date()
+  const twoDaysLater = new Date(now)
+  twoDaysLater.setDate(now.getDate() + 2)
+
+  const isoDateTimeNow = now.toISOString()
+  const isoDateTimePlusTwo = twoDaysLater.toISOString()
+  const isoDateNow = isoDateTimeNow.split("T")[0]
+  const isoDatePlusTwo = isoDateTimePlusTwo.split("T")[0]
+
   // Label sample data (reuse from LabelShowcase)
   const labelSamples = [
     {
@@ -20,10 +29,10 @@ const WhatWeDoShowcase = () => {
           name: "Fresh Basil",
           quantity: 1,
           allergens: [],
-          printedOn: "2024-07-01T08:00:00Z",
-          expiryDate: "2024-07-05T08:00:00Z",
+          printedOn: isoDateTimeNow,
+          expiryDate: isoDateTimePlusTwo,
         },
-        expiry: "2024-07-05T08:00:00Z",
+        expiry: isoDateTimePlusTwo,
         useInitials: true,
         selectedInitial: "BL",
         allergens: [],
@@ -51,11 +60,11 @@ const WhatWeDoShowcase = () => {
               isCustom: false,
             },
           ],
-          printedOn: "2024-07-01T09:00:00Z",
-          expiryDate: "2024-07-01T18:00:00Z",
+          printedOn: isoDateTimeNow,
+          expiryDate: isoDateTimePlusTwo,
           labelType: "prep" as const,
         },
-        expiry: "2024-07-01T18:00:00Z",
+        expiry: isoDateTimePlusTwo,
         useInitials: true,
         selectedInitial: "BL",
         allergens: ["Celery"],
@@ -75,34 +84,35 @@ const WhatWeDoShowcase = () => {
           uid: "3",
           id: "3",
           type: "menu" as "menu",
-          name: "Double Bacon Cheeseburger",
+          name: "Thai Red Curry",
           quantity: 1,
-          ingredients: ["Burger Bun"],
+          ingredients: ["Chicken Thigh", "Red Curry Paste", "Coconut Milk", "Thai Basil"],
           allergens: [
             {
               uuid: 1,
-              allergenName: "Gluten",
-              category: "Gluten",
+              allergenName: "Fish",
+              category: "Seafood",
               status: "Active" as const,
               addedAt: "",
               isCustom: false,
             },
           ],
-          printedOn: "2024-07-01T10:00:00Z",
-          expiryDate: "2024-07-02T10:00:00Z",
+          printedOn: isoDateTimeNow,
+          expiryDate: isoDateTimePlusTwo,
           labelType: "cooked" as const,
         },
-        expiry: "2024-07-02T10:00:00Z",
+        expiry: isoDateTimePlusTwo,
         useInitials: true,
         selectedInitial: "BL",
-        allergens: ["Milk", "Mustard"],
+        allergens: ["Fish"],
         labelHeight: "40mm" as const,
         allIngredients: [
-          { uuid: "1", ingredientName: "Chicken", allergens: [] },
-          { uuid: "2", ingredientName: "Coconut Milk", allergens: [{ allergenName: "Milk" }] },
-          { uuid: "3", ingredientName: "Curry Powder", allergens: [{ allergenName: "Mustard" }] },
-          { uuid: "4", ingredientName: "Onion", allergens: [] },
-          { uuid: "5", ingredientName: "Garlic", allergens: [] },
+          { uuid: "1", ingredientName: "Chicken Thigh", allergens: [] },
+          { uuid: "2", ingredientName: "Coconut Milk", allergens: [] },
+          { uuid: "3", ingredientName: "Red Curry Paste", allergens: [{ allergenName: "Fish" }] },
+          { uuid: "4", ingredientName: "Fish Sauce", allergens: [{ allergenName: "Fish" }] },
+          { uuid: "5", ingredientName: "Thai Basil", allergens: [] },
+          { uuid: "6", ingredientName: "Bamboo Shoots", allergens: [] },
         ],
       },
     },
@@ -122,8 +132,8 @@ const WhatWeDoShowcase = () => {
       "Parmesan Cheese",
       "Croutons",
     ],
-    printedOn: "2024-06-01",
-    expiryDate: "2024-06-03",
+    printedOn: isoDateNow,
+    expiryDate: isoDatePlusTwo,
   }
   const ppdsAllIngredients = [
     { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },

@@ -49,7 +49,15 @@ export default function ProfileSetupPage() {
   }, [router])
 
   if (loading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
+          <h2 className="text-xl font-semibold">Loading InstaLabel...</h2>
+          <p className="text-muted-foreground">Please wait while we prepare your experience</p>
+        </div>
+      </div>
+    )
   }
 
   if (!userId) {

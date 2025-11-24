@@ -1,7 +1,9 @@
 "use client"
 import React, { useState, useEffect } from "react";
+import { useDarkMode } from "../context/DarkModeContext";
 
 export default function BossesPage() {
+  const { isDarkMode } = useDarkMode();
   const [bosses, setBosses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -77,8 +79,8 @@ export default function BossesPage() {
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
 
   return (
-    <div className="p-8 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Add Boss</h1>
+    <div className={`p-8 max-w-2xl mx-auto min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+      <h1 className={`text-2xl font-bold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Add Boss</h1>
       <form onSubmit={handleAdd} className="mb-8 space-y-4 bg-white dark:bg-gray-800 p-4 rounded shadow">
         <input className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" placeholder="Username" value={form.username} onChange={e => setForm(f => ({ ...f, username: e.target.value }))} required />
         <input className="border border-gray-300 dark:border-gray-700 rounded px-3 py-2 w-full bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100" placeholder="Email" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} required />

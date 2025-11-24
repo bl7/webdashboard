@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react"
 import * as XLSX from "xlsx"
 import Image from "next/image"
 import { toast } from "sonner"
+import { useDarkMode } from "../context/DarkModeContext"
 
 type Recipient = { email: string; name?: string }
 
@@ -357,6 +358,7 @@ function renderEmailHTML(
 }
 
 export default function BulkEmailPage() {
+  const { isDarkMode } = useDarkMode()
   const [templateId, setTemplateId] = useState<string>("default")
   const [rawRows, setRawRows] = useState<any[]>([])
   const [emailKey, setEmailKey] = useState<string>("email")
@@ -463,23 +465,28 @@ export default function BulkEmailPage() {
   }
 
   return (
-    <div className="p-6">
-      <h1 className="mb-2 text-2xl font-bold">Bulk Email</h1>
-      <p className="mb-6 text-sm text-muted-foreground">
+    <div className={`p-6 min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
+      <h1 className={`mb-2 text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Bulk Email</h1>
+      <p className={`mb-6 text-sm ${isDarkMode ? "text-gray-400" : "text-muted-foreground"}`}>
         Upload an Excel/CSV, map columns, fill template, preview and send via Zoho.
       </p>
 
       <div className="grid grid-cols-1 gap-6">
         <div className="space-y-4">
-          <div className="rounded-lg border p-4">
-            <h2 className="mb-3 font-semibold">1) Upload list</h2>
-            <input type="file" accept=".xlsx,.xls,.csv" onChange={onFile} />
+          <div className={`rounded-lg border p-4 ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"}`}>
+            <h2 className={`mb-3 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>1) Upload list</h2>
+            <input 
+              type="file" 
+              accept=".xlsx,.xls,.csv" 
+              onChange={onFile}
+              className={`${isDarkMode ? "text-gray-300" : ""}`}
+            />
             {headers.length > 0 && (
               <div className="mt-3 grid grid-cols-2 gap-4">
-                <label className="text-sm">
+                <label className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Email column
                   <select
-                    className="mt-1 block w-full rounded border px-2 py-1"
+                    className={`mt-1 block w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-gray-900"}`}
                     value={emailKey}
                     onChange={(e) => setEmailKey(e.target.value)}
                   >
@@ -490,10 +497,10 @@ export default function BulkEmailPage() {
                     ))}
                   </select>
                 </label>
-                <label className="text-sm">
+                <label className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Name column (optional)
                   <select
-                    className="mt-1 block w-full rounded border px-2 py-1"
+                    className={`mt-1 block w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-gray-900"}`}
                     value={nameKey}
                     onChange={(e) => setNameKey(e.target.value)}
                   >
@@ -507,17 +514,17 @@ export default function BulkEmailPage() {
                 </label>
               </div>
             )}
-            <p className="mt-2 text-xs text-muted-foreground">
+            <p className={`mt-2 text-xs ${isDarkMode ? "text-gray-400" : "text-muted-foreground"}`}>
               Valid recipients: {recipients.length}
             </p>
           </div>
 
-          <div className="space-y-3 rounded-lg border p-4">
-            <h2 className="font-semibold">2) Template content</h2>
+          <div className={`space-y-3 rounded-lg border p-4 ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"}`}>
+            <h2 className={`font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>2) Template content</h2>
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium">Template</label>
+              <label className={`text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Template</label>
               <select
-                className="rounded border px-2 py-1"
+                className={`rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-white text-gray-900"}`}
                 value={templateId}
                 onChange={(e) => {
                   const id = e.target.value
@@ -534,29 +541,29 @@ export default function BulkEmailPage() {
               </select>
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Email Subject</label>
+              <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Email Subject</label>
               <input
-                className="w-full rounded border px-2 py-1"
+                className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                 placeholder="Subject"
                 value={fields.subject}
                 onChange={(e) => setFields({ ...fields, subject: e.target.value })}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">
+              <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                 Preview Name (for testing)
               </label>
               <input
-                className="w-full rounded border px-2 py-1"
+                className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                 placeholder="Preview name (for testing)"
                 value={previewName}
                 onChange={(e) => setPreviewName(e.target.value)}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Subheading</label>
+              <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>Subheading</label>
               <textarea
-                className="w-full rounded border px-2 py-2"
+                className={`w-full rounded border px-2 py-2 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                 placeholder="Subheading (you can write multiple paragraphs; separate paragraphs with a blank line)"
                 rows={3}
                 value={fields.subheading}
@@ -567,25 +574,25 @@ export default function BulkEmailPage() {
             {templateId === "offer" && (
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Offer headline (e.g., Sign up today and save)"
                   value={fields.offerHeadline || ""}
                   onChange={(e) => setFields({ ...fields, offerHeadline: e.target.value })}
                 />
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Discount percent (e.g., 20%)"
                   value={fields.discountPercent || ""}
                   onChange={(e) => setFields({ ...fields, discountPercent: e.target.value })}
                 />
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Coupon code (e.g., SAVE20)"
                   value={fields.discountCode || ""}
                   onChange={(e) => setFields({ ...fields, discountCode: e.target.value })}
                 />
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Offer subtext (expiry or terms)"
                   value={fields.offerSubtext || ""}
                   onChange={(e) => setFields({ ...fields, offerSubtext: e.target.value })}
@@ -596,13 +603,13 @@ export default function BulkEmailPage() {
             {templateId === "coupon" && (
               <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Coupon code (e.g., WELCOME10)"
                   value={fields.discountCode || ""}
                   onChange={(e) => setFields({ ...fields, discountCode: e.target.value })}
                 />
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Coupon subtext (e.g., Valid for new signups only.)"
                   value={fields.offerSubtext || ""}
                   onChange={(e) => setFields({ ...fields, offerSubtext: e.target.value })}
@@ -612,13 +619,13 @@ export default function BulkEmailPage() {
 
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Feature Bullet Points
                 </label>
                 {fields.bullets.map((b, i) => (
                   <input
                     key={i}
-                    className="mb-2 w-full rounded border px-2 py-1"
+                    className={`mb-2 w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                     placeholder={`Bullet ${i + 1}`}
                     value={b}
                     onChange={(e) => {
@@ -632,11 +639,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Call-to-Action Button Text
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="CTA Text"
                   value={fields.ctaText}
                   onChange={(e) => setFields({ ...fields, ctaText: e.target.value })}
@@ -645,11 +652,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Call-to-Action Button URL
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="CTA URL"
                   value={fields.ctaUrl}
                   onChange={(e) => setFields({ ...fields, ctaUrl: e.target.value })}
@@ -658,11 +665,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Additional Content
                 </label>
                 <textarea
-                  className="w-full rounded border px-2 py-2"
+                  className={`w-full rounded border px-2 py-2 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   rows={4}
                   placeholder="Additional content (appears below bullet points in full width section). You can use bullet points by starting lines with - or *"
                   value={fields.additionalContent || ""}
@@ -672,11 +679,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Additional CTA Button Text (optional)
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Additional CTA button text"
                   value={fields.additionalCtaText || ""}
                   onChange={(e) => setFields({ ...fields, additionalCtaText: e.target.value })}
@@ -685,11 +692,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Additional CTA Button URL (optional)
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Additional CTA button URL"
                   value={fields.additionalCtaUrl || ""}
                   onChange={(e) => setFields({ ...fields, additionalCtaUrl: e.target.value })}
@@ -698,11 +705,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Customer Testimonial Quote
                 </label>
                 <textarea
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   rows={3}
                   placeholder="Testimonial quote"
                   value={fields.testimonialQuote}
@@ -712,11 +719,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Testimonial Author
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Testimonial author"
                   value={fields.testimonialAuthor}
                   onChange={(e) => setFields({ ...fields, testimonialAuthor: e.target.value })}
@@ -725,11 +732,11 @@ export default function BulkEmailPage() {
             )}
             {templateId === "default" && (
               <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
+                <label className={`mb-1 block text-sm font-medium ${isDarkMode ? "text-gray-300" : "text-gray-700"}`}>
                   Phone Mockup Image URL (optional)
                 </label>
                 <input
-                  className="w-full rounded border px-2 py-1"
+                  className={`w-full rounded border px-2 py-1 ${isDarkMode ? "border-gray-600 bg-gray-700 text-white placeholder-gray-400" : "border-gray-300 bg-white text-gray-900"}`}
                   placeholder="Phone mockup image URL"
                   value={fields.phoneMockUrl || ""}
                   onChange={(e) => setFields({ ...fields, phoneMockUrl: e.target.value })}
@@ -756,14 +763,14 @@ export default function BulkEmailPage() {
           </div>
         </div>
 
-        <div className="rounded-lg border p-4">
-          <h2 className="mb-2 font-semibold">Preview</h2>
+        <div className={`rounded-lg border p-4 ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"}`}>
+          <h2 className={`mb-2 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Preview</h2>
           <div className="flex justify-center">
             <div className="overflow-hidden rounded border">
-              <div className="bg-gray-100 px-3 py-2 text-xs font-medium text-gray-600">
+              <div className={`px-3 py-2 text-xs font-medium ${isDarkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"}`}>
                 Desktop (600px)
               </div>
-              <div className="flex justify-center bg-gray-50 p-4">
+              <div className={`flex justify-center p-4 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
                 <iframe
                   title="email-preview-desktop"
                   sandbox="allow-same-origin"
@@ -774,8 +781,8 @@ export default function BulkEmailPage() {
             </div>
           </div>
           <div className="mt-4">
-            <h3 className="mb-1 font-semibold">Log</h3>
-            <div className="max-h-40 space-y-1 overflow-auto text-sm text-muted-foreground">
+            <h3 className={`mb-1 font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Log</h3>
+            <div className={`max-h-40 space-y-1 overflow-auto text-sm ${isDarkMode ? "text-gray-400" : "text-muted-foreground"}`}>
               {log.map((l, i) => (
                 <div key={i}>{l}</div>
               ))}

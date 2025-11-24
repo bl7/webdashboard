@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { Download, Users, FileText, BarChart3, AlertTriangle, DollarSign } from "lucide-react"
 import * as XLSX from "xlsx"
+import { useDarkMode } from "../context/DarkModeContext"
 
 const TABS = [
   { key: "users", label: "Users", icon: Users },
@@ -74,6 +75,7 @@ const getTableForExport = (tab: string, data: any) => {
 }
 
 const ReportsPage: React.FC = () => {
+  const { isDarkMode } = useDarkMode()
   const [activeTab, setActiveTab] = useState("users")
   const [dateFrom, setDateFrom] = useState("")
   const [dateTo, setDateTo] = useState("")
@@ -178,10 +180,10 @@ const ReportsPage: React.FC = () => {
   // Render tables for each report type
   const renderSection = () => {
     if (!dateFrom || !dateTo) {
-      return <div className="text-gray-500 dark:text-gray-400 text-center">Select a date range to view reports.</div>
+      return <div className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>Select a date range to view reports.</div>
     }
-    if (loading) return <div>Loading...</div>
-    if (error) return <div className="text-red-500">{error}</div>
+    if (loading) return <div className={isDarkMode ? "text-gray-400" : ""}>Loading...</div>
+    if (error) return <div className={isDarkMode ? "text-red-400" : "text-red-500"}>{error}</div>
     if (!data) return null
     switch (activeTab) {
       case "users":
@@ -189,28 +191,28 @@ const ReportsPage: React.FC = () => {
         const paginatedUsers = data.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4">User Report</h2>
-            <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
+            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>User Report</h2>
+            <div className={`overflow-x-auto rounded p-2 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}>
               <table className="min-w-full text-xs">
                 <thead>
-                  <tr>
-                    <th className="px-2 py-1">User ID</th>
-                    <th className="px-2 py-1">Company</th>
-                    <th className="px-2 py-1">Email</th>
-                    <th className="px-2 py-1">Plan</th>
-                    <th className="px-2 py-1">Status</th>
-                    <th className="px-2 py-1">Signup</th>
+                  <tr className={isDarkMode ? "bg-gray-700" : ""}>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>User ID</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Company</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Email</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Plan</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Status</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Signup</th>
                   </tr>
                 </thead>
                 <tbody>
                   {paginatedUsers.map((u: any) => (
-                    <tr key={u.user_id}>
-                      <td className="px-2 py-1 font-mono">{u.user_id}</td>
-                      <td className="px-2 py-1">{u.company_name}</td>
-                      <td className="px-2 py-1">{u.email}</td>
-                      <td className="px-2 py-1">{u.plan_name}</td>
-                      <td className="px-2 py-1">{u.status}</td>
-                      <td className="px-2 py-1">{u.created_at ? format(new Date(u.created_at), "yyyy-MM-dd") : ""}</td>
+                    <tr key={u.user_id} className={isDarkMode ? "border-b border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"}>
+                      <td className={`px-2 py-1 font-mono ${isDarkMode ? "text-gray-100" : ""}`}>{u.user_id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{u.company_name}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{u.email}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{u.plan_name}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{u.status}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{u.created_at ? format(new Date(u.created_at), "yyyy-MM-dd") : ""}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -219,7 +221,7 @@ const ReportsPage: React.FC = () => {
             {data.length > pageSize && (
               <div className="flex justify-center items-center gap-2 mt-4">
                 <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</Button>
-                <span>Page {page} of {Math.ceil(data.length / pageSize)}</span>
+                <span className={isDarkMode ? "text-gray-300" : ""}>Page {page} of {Math.ceil(data.length / pageSize)}</span>
                 <Button size="sm" variant="outline" disabled={page === Math.ceil(data.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
               </div>
             )}
@@ -390,20 +392,20 @@ const ReportsPage: React.FC = () => {
           </div>
         )
       case "devices":
-        if (!deviceData.length) return <div className="text-gray-500 dark:text-gray-400 text-center">No device data.</div>
+        if (!deviceData.length) return <div className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>No device data.</div>
         const paginatedDevices = deviceData.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Device Report</h2>
+            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Device Report</h2>
             <div className="flex gap-4 mb-4">
               <input
-                className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                className={`border rounded px-2 py-1 ${isDarkMode ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white border-gray-300 text-gray-900"}`}
                 placeholder="Search by user, plan, device, ..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
               <select
-                className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                className={`border rounded px-2 py-1 ${isDarkMode ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white border-gray-300 text-gray-900"}`}
                 value={statusFilter}
                 onChange={e => setStatusFilter(e.target.value)}
               >
@@ -413,21 +415,21 @@ const ReportsPage: React.FC = () => {
                 ))}
               </select>
             </div>
-            <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
+            <div className={`overflow-x-auto rounded p-2 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}>
               <table className="min-w-full text-xs">
                 <thead>
-                  <tr>
-                    <th className="px-2 py-1">Device ID</th>
-                    <th className="px-2 py-1">User</th>
-                    <th className="px-2 py-1">Plan</th>
-                    <th className="px-2 py-1">Type</th>
-                    <th className="px-2 py-1">Identifier</th>
-                    <th className="px-2 py-1">Status</th>
-                    <th className="px-2 py-1">Assigned</th>
-                    <th className="px-2 py-1">Shipped</th>
-                    <th className="px-2 py-1">Delivered</th>
-                    <th className="px-2 py-1">Returned</th>
-                    <th className="px-2 py-1">Notes</th>
+                  <tr className={isDarkMode ? "bg-gray-700" : ""}>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Device ID</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>User</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Plan</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Type</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Identifier</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Status</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Assigned</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Shipped</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Delivered</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Returned</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Notes</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -444,18 +446,18 @@ const ReportsPage: React.FC = () => {
                     const matchesStatus = !statusFilter || d.status === statusFilter
                     return matchesSearch && matchesStatus
                   }).map((d: any) => (
-                    <tr key={d.id}>
-                      <td className="px-2 py-1 font-mono">{d.id}</td>
-                      <td className="px-2 py-1">{d.user_email || d.user_id}</td>
-                      <td className="px-2 py-1">{d.plan_name || d.plan_id}</td>
-                      <td className="px-2 py-1">{d.device_type}</td>
-                      <td className="px-2 py-1">{d.device_identifier}</td>
-                      <td className="px-2 py-1">{d.status}</td>
-                      <td className="px-2 py-1">{d.assigned_at ? new Date(d.assigned_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{d.shipped_at ? new Date(d.shipped_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{d.delivered_at ? new Date(d.delivered_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{d.returned_at ? new Date(d.returned_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{d.notes}</td>
+                    <tr key={d.id} className={isDarkMode ? "border-b border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"}>
+                      <td className={`px-2 py-1 font-mono ${isDarkMode ? "text-gray-100" : ""}`}>{d.id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.user_email || d.user_id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.plan_name || d.plan_id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.device_type}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.device_identifier}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.status}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.assigned_at ? new Date(d.assigned_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.shipped_at ? new Date(d.shipped_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.delivered_at ? new Date(d.delivered_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.returned_at ? new Date(d.returned_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{d.notes}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -471,20 +473,20 @@ const ReportsPage: React.FC = () => {
           </div>
         )
       case "label_orders":
-        if (!labelOrderData.length) return <div className="text-gray-500 dark:text-gray-400 text-center">No label order data.</div>
+        if (!labelOrderData.length) return <div className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>No label order data.</div>
         const paginatedLabelOrders = labelOrderData.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Label Order Report</h2>
+            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Label Order Report</h2>
             <div className="flex gap-4 mb-4">
               <input
-                className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                className={`border rounded px-2 py-1 ${isDarkMode ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white border-gray-300 text-gray-900"}`}
                 placeholder="Search by user, status, ..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
               />
               <select
-                className="border rounded px-2 py-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                className={`border rounded px-2 py-1 ${isDarkMode ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white border-gray-300 text-gray-900"}`}
                 value={statusFilter}
                 onChange={e => setStatusFilter(e.target.value)}
               >
@@ -494,20 +496,20 @@ const ReportsPage: React.FC = () => {
                 ))}
               </select>
             </div>
-            <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
+            <div className={`overflow-x-auto rounded p-2 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}>
               <table className="min-w-full text-xs">
                 <thead>
-                  <tr>
-                    <th className="px-2 py-1">Order ID</th>
-                    <th className="px-2 py-1">User</th>
-                    <th className="px-2 py-1">Bundles</th>
-                    <th className="px-2 py-1">Labels</th>
-                    <th className="px-2 py-1">Amount</th>
-                    <th className="px-2 py-1">Status</th>
-                    <th className="px-2 py-1">Shipping Address</th>
-                    <th className="px-2 py-1">Created</th>
-                    <th className="px-2 py-1">Paid</th>
-                    <th className="px-2 py-1">Shipped</th>
+                  <tr className={isDarkMode ? "bg-gray-700" : ""}>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Order ID</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>User</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Bundles</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Labels</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Amount</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Status</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Shipping Address</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Created</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Paid</th>
+                    <th className={`px-2 py-1 ${isDarkMode ? "text-gray-300" : ""}`}>Shipped</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -521,17 +523,17 @@ const ReportsPage: React.FC = () => {
                     const matchesStatus = !statusFilter || o.status === statusFilter
                     return matchesSearch && matchesStatus
                   }).map((o: any) => (
-                    <tr key={o.id}>
-                      <td className="px-2 py-1 font-mono">{o.id}</td>
-                      <td className="px-2 py-1">{o.user_email || o.user_id}</td>
-                      <td className="px-2 py-1">{o.bundle_count}</td>
-                      <td className="px-2 py-1">{o.label_count}</td>
-                      <td className="px-2 py-1">{o.amount_cents ? `£${(o.amount_cents / 100).toFixed(2)}` : ''}</td>
-                      <td className="px-2 py-1">{o.status}</td>
-                      <td className="px-2 py-1">{o.shipping_address}</td>
-                      <td className="px-2 py-1">{o.created_at ? new Date(o.created_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{o.paid_at ? new Date(o.paid_at).toLocaleDateString() : ''}</td>
-                      <td className="px-2 py-1">{o.shipped_at ? new Date(o.shipped_at).toLocaleDateString() : ''}</td>
+                    <tr key={o.id} className={isDarkMode ? "border-b border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"}>
+                      <td className={`px-2 py-1 font-mono ${isDarkMode ? "text-gray-100" : ""}`}>{o.id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.user_email || o.user_id}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.bundle_count}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.label_count}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.amount_cents ? `£${(o.amount_cents / 100).toFixed(2)}` : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.status}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.shipping_address}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.created_at ? new Date(o.created_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.paid_at ? new Date(o.paid_at).toLocaleDateString() : ''}</td>
+                      <td className={`px-2 py-1 ${isDarkMode ? "text-gray-100" : ""}`}>{o.shipped_at ? new Date(o.shipped_at).toLocaleDateString() : ''}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -552,8 +554,8 @@ const ReportsPage: React.FC = () => {
   }
 
   return (
-    <div className="p-8 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
-      <h1 className="text-2xl font-bold mb-6">Reports</h1>
+    <div className={`p-8 min-h-screen ${isDarkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
+      <h1 className={`text-2xl font-bold mb-6 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Reports</h1>
       {/* Tabs */}
       <div className="flex gap-2 mb-6">
         {TABS.map(tab => (
@@ -571,19 +573,19 @@ const ReportsPage: React.FC = () => {
       {/* Date Range Filter & Download */}
       <div className="flex flex-col sm:flex-row sm:items-end gap-4 mb-6">
         <div className="flex gap-2 items-center">
-          <label className="text-sm">From</label>
+          <label className={`text-sm ${isDarkMode ? "text-gray-300" : ""}`}>From</label>
           <input
             type="date"
             value={dateFrom}
             onChange={e => setDateFrom(e.target.value)}
-            className="rounded border px-2 py-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
+            className={`rounded border px-2 py-1 ${isDarkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-900"}`}
           />
-          <label className="text-sm">To</label>
+          <label className={`text-sm ${isDarkMode ? "text-gray-300" : ""}`}>To</label>
           <input
             type="date"
             value={dateTo}
             onChange={e => setDateTo(e.target.value)}
-            className="rounded border px-2 py-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white"
+            className={`rounded border px-2 py-1 ${isDarkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-900"}`}
           />
         </div>
         <div className="flex gap-2 ml-auto">
