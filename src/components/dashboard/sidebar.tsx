@@ -21,7 +21,6 @@ import { FaLayerGroup } from "react-icons/fa6"
 import { IoLogOutOutline } from "react-icons/io5"
 import { RiAdminLine } from "react-icons/ri"
 import { GoLog } from "react-icons/go"
-import Image from "next/image"
 import { cn } from "@/lib/utils"
 import AdminPinModal from "./adminPinModal"
 import SidebarSkeleton from "./SidebarSkeleton"
@@ -300,25 +299,21 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
           {/* Logo Section */}
           <div className="mb-6 flex">
             {isExpanded ? (
-              <Image
+              <img
                 src="/long_longwhite.png"
                 alt="Logo"
                 width={120}
                 height={40}
                 className="transition-opacity"
-                unoptimized
-                priority
               />
             ) : (
               <div className="flex w-full items-center justify-center">
-                <Image
+                <img
                   src="/logo_sm_white.png"
                   alt="Small Logo"
                   width={40}
                   height={40}
                   className="transition-opacity"
-                  unoptimized
-                  priority
                 />
               </div>
             )}
@@ -396,13 +391,12 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
               <Tooltip.Trigger asChild>
                 <div className="group relative flex cursor-pointer items-center gap-3 rounded-lg bg-white/10 p-3 text-sm text-white">
                   {avatar !== null && (
-                    <Image
+                    <img
                       src={`/avatar${avatar}.png`}
                       width={32}
                       height={32}
                       alt="Avatar"
                       className="rounded-full border border-white"
-                      unoptimized
                     />
                   )}
                   {isExpanded && profile?.company_name && (

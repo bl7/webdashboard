@@ -7,7 +7,6 @@ import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import OrderLabelsTab from "./OrderLabelsTab"
-import Image from "next/image"
 
 const features = [
   "Device Provided",
@@ -421,7 +420,7 @@ const ProfileDashboard = () => {
             <h2 className="mb-4 text-center text-lg font-semibold">Choose your avatar</h2>
             <div className="flex space-x-4">
               {avatarOptions.map((num) => (
-                <Image
+                <img
                   key={num}
                   src={`/avatar${num}.png`}
                   onClick={() => handleAvatarSelect(num)}
@@ -433,7 +432,6 @@ const ProfileDashboard = () => {
                     avatar === num ? "border-primary" : "border-muted"
                   )}
                   style={{ width: 64, height: 64 }}
-                  unoptimized
                 />
               ))}
             </div>
