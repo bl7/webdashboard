@@ -35,12 +35,24 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Logout helper clears storage and context, redirects to login
   const logout = () => {
+    // Clear localStorage
     localStorage.clear()
     setUserid(null)
     setToken(null)
     setName(null)
     setIsAdmin(false)
-    router.push("/login")
+    
+    // Clear cookie so middleware can see logout
+    if (typeof document !== "undefined") {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
+      // Also clear with Secure flag for HTTPS
+      if (window.location.protocol === 'https:') {
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
+      }
+    }
+    
+    // Use replace to prevent back button from going back to dashboard
+    router.replace("/login")
   }
 
   return (

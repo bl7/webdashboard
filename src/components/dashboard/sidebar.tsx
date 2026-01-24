@@ -115,7 +115,29 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
     const loadUserData = async () => {
       const userId = localStorage.getItem("userid")
       const token = localStorage.getItem("token")
-      if (!userId || !token) return setError("User ID or token not found. Please login.")
+      
+      // Check cookie as well
+      const getCookie = (name: string) => {
+        const value = `; ${document.cookie}`
+        const parts = value.split(`; ${name}=`)
+        if (parts.length === 2) return parts.pop()?.split(';').shift()
+        return null
+      }
+      const cookieToken = getCookie("token")
+      
+      // If no token in either localStorage or cookie, redirect to login
+      if (!userId || (!token && !cookieToken)) {
+        // Clear any stale data
+        localStorage.clear()
+        // Clear cookie
+        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
+        if (window.location.protocol === 'https:') {
+          document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
+        }
+        // Redirect to login
+        router.replace("/login")
+        return
+      }
 
       try {
         const [profileRes, subRes, adminRes] = await Promise.all([
@@ -182,11 +204,22 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const handleLogout = () => {
     if (!mounted) return
-    ;["token", "userid", "name", "profilePicture", "adminAccess", "profileData"].forEach((k) =>
+    
+    // Clear localStorage
+    ;["token", "userid", "name", "profilePicture", "adminAccess", "profileData", "email", "full_name"].forEach((k) =>
       localStorage.removeItem(k)
     )
+    
+    // Clear cookie so middleware can see logout
+    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
+    // Also clear with Secure flag for HTTPS
+    if (window.location.protocol === 'https:') {
+      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
+    }
+    
     setIsAdmin(false)
-    router.push("/login")
+    // Use replace to prevent back button from going back to dashboard
+    router.replace("/login")
   }
 
   const toggleSidebar = () => {

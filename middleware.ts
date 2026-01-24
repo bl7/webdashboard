@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from "next/server"
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const token = req.cookies.get("token")?.value
+  const tokenCookie = req.cookies.get("token")
+  // Check if token exists and is not empty/whitespace
+  const token = tokenCookie?.value?.trim() || null
 
   // Define public routes that don't require authentication
   const publicRoutes = [
@@ -48,8 +50,8 @@ export function middleware(req: NextRequest) {
     return response
   }
 
-  // For protected routes, redirect to login if no token
-  if (!token) {
+  // For protected routes (including /dashboard and /setup), redirect to login if no valid token
+  if (!token || token === "") {
     const loginUrl = new URL("/login", req.url)
     return NextResponse.redirect(loginUrl)
   }
