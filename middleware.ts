@@ -2,6 +2,15 @@ import { NextRequest, NextResponse } from "next/server"
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  
+  // Skip middleware for static assets (images, fonts, etc.)
+  const staticFileExtensions = ['.png', '.jpg', '.jpeg', '.svg', '.webp', '.gif', '.ico', '.pdf', '.mp4', '.txt', '.xml', '.json', '.woff', '.woff2', '.ttf', '.eot']
+  const isStaticFile = staticFileExtensions.some(ext => pathname.toLowerCase().endsWith(ext))
+  
+  if (isStaticFile) {
+    return NextResponse.next()
+  }
+  
   const tokenCookie = req.cookies.get("token")
   // Check if token exists and is not empty/whitespace
   const token = tokenCookie?.value?.trim() || null
@@ -91,6 +100,7 @@ export const config = {
      * - favicon.ico (favicon file)
      * - boss (boss routes - handled separately)
      * - public web pages (features, plan, about, etc.)
+     * Note: Static file extensions are handled in the middleware function itself
      */
     "/((?!api|_next/static|_next/image|favicon.ico|boss|features|plan|about|uses|printbridge|square-integration|allergen-compliance|allergen-guide|bookdemo|blog|faqs|privacy-policy|terms|cookie-policy).*)",
   ],

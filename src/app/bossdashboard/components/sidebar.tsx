@@ -2,7 +2,6 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import Image from "next/image"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import { cn } from "@/lib/utils"
 import {
@@ -123,13 +122,12 @@ export default function Sidebar({
                 instaLabel
               </span>
             ) : (
-              <Image
+              <img
                 src={darkMode ? "/logo_sm_white.png" : "/logo_sm.png"}
                 alt="Small Logo"
                 width={darkMode ? 48 : 64}
                 height={darkMode ? 48 : 64}
                 className={darkMode ? "h-12 w-12 object-contain" : "h-16 w-16 object-contain"}
-                priority
               />
             )}
           </div>
