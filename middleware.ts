@@ -6,14 +6,32 @@ export function middleware(req: NextRequest) {
 
   const isAuthRoute = pathname === "/login" || pathname === "/register"
 
-  if (!token && isAuthRoute) {
+  // Allow auth routes to pass through without token (users need to access login/register)
+  if (isAuthRoute) {
+    // If user is already authenticated and tries to access login/register, redirect to dashboard
+    if (token) {
+      const dashboardUrl = new URL("/dashboard", req.url)
+      return NextResponse.redirect(dashboardUrl)
+    }
+    // Otherwise, allow access to login/register pages
+    const response = NextResponse.next()
+    // Add security headers
+    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.set("X-Frame-Options", "DENY")
+    response.headers.set("X-Content-Type-Options", "nosniff")
+    response.headers.set("X-XSS-Protection", "1; mode=block")
+    return response
+  }
+
+  // For protected routes, redirect to login if no token
+  if (!token) {
     const loginUrl = new URL("/login", req.url)
     return NextResponse.redirect(loginUrl)
   }
 
   // Allow authenticated users to access setup and other specific routes
   const allowedAuthenticatedRoutes = ["/setup", "/dashboard"]
-  if (token && !isAuthRoute && !allowedAuthenticatedRoutes.includes(pathname)) {
+  if (token && !allowedAuthenticatedRoutes.some(route => pathname.startsWith(route))) {
     const dashboardUrl = new URL("/dashboard", req.url)
     return NextResponse.redirect(dashboardUrl)
   }
