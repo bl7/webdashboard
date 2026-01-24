@@ -433,6 +433,7 @@ const ProfileDashboard = () => {
                     avatar === num ? "border-primary" : "border-muted"
                   )}
                   style={{ width: 64, height: 64 }}
+                  unoptimized
                 />
               ))}
             </div>

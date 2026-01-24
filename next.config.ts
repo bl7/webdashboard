@@ -17,6 +17,10 @@ const nextConfig = {
     unoptimized: false,
     loader: "default",
     disableStaticImages: false,
+    // Allow images from the same origin (for public folder assets)
+    remotePatterns: [],
+    // Ensure static images work in production
+    domains: [],
   },
 
   // Performance optimizations

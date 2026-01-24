@@ -96,7 +96,7 @@ export default function LoginPage() {
     <section className="flex h-full min-h-fit w-full flex-col justify-between py-12">
       <div className="flex items-center justify-between">
         <div className="flex flex-shrink-0 items-center justify-center">
-          <Image src="/logo_sm.png" width={64} height={64} alt="logo" className="object-contain" />
+          <Image src="/logo_sm.png" width={64} height={64} alt="logo" className="object-contain" unoptimized priority />
         </div>
         <div>
           <h2 className="text-3xl font-semibold text-primary">instalabel</h2>

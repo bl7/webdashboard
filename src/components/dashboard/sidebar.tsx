@@ -306,6 +306,8 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                 width={120}
                 height={40}
                 className="transition-opacity"
+                unoptimized
+                priority
               />
             ) : (
               <div className="flex w-full items-center justify-center">
@@ -315,6 +317,8 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                   width={40}
                   height={40}
                   className="transition-opacity"
+                  unoptimized
+                  priority
                 />
               </div>
             )}
@@ -398,6 +402,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                       height={32}
                       alt="Avatar"
                       className="rounded-full border border-white"
+                      unoptimized
                     />
                   )}
                   {isExpanded && profile?.company_name && (
