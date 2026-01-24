@@ -238,7 +238,7 @@ const ProfileDashboard = () => {
         {[
           { key: "account", label: "Account" },
           { key: "billing", label: "Billing" },
-          { key: "labels", label: "Order Labels" },
+          // { key: "labels", label: "Order Labels" },
         ].map((tab) => (
           <button
             key={tab.key}
@@ -411,8 +411,8 @@ const ProfileDashboard = () => {
       )}
 
       {activeTab === "billing" && userId && <Billing />}
-
-      {activeTab === "labels" && <OrderLabelsTab />}
+{/* 
+      {activeTab === "labels" && <OrderLabelsTab />} */}
 
       {/* Avatar Modal */}
       {showModal && (

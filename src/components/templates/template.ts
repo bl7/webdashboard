@@ -382,9 +382,9 @@ export const template = ({
 <td class="pad">
 <div style="font-family: sans-serif">
 <div class="" style="color: #C0C0C0; font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; line-height: 1.2;">
-<p dir="ltr" style="margin: 0; font-size: 12px; text-align: center; mso-line-height-alt: 14.399999999999999px;"><span style="color:#5d5d5d;">Copyright © 2024 InstaLabel, All rights reserved. <br/><br/>Where to find us:</span> </p>
+<p dir="ltr" style="margin: 0; font-size: 12px; text-align: center; mso-line-height-alt: 14.399999999999999px;"><span style="color:#5d5d5d;">Copyright © 2026 InstaLabel, All rights reserved. <br/><br/>Where to find us:</span> </p>
 <p dir="ltr" style="margin: 0; font-size: 12px; text-align: center; mso-line-height-alt: 14.399999999999999px;"><span style="color:#5d5d5d;"><a href="https://www.instalabel.co" rel="noopener" style="text-decoration:underline;color:#5d5d5d;" target="_blank"></a><a href="http://www.instalabel.co" rel="noopener" style="text-decoration: none; color: #C0C0C0;" target="_blank"></a><a href="https://www.instalabel.co" rel="noopener" style="text-decoration:none;color:#5d5d5d;" target="_blank"> www.instalabel.co</a>      <a href="mailto:support@instalabel.co" rel="noopener" style="text-decoration:none;color:#5d5d5d;" target="_blank" title="support@instalabel.co">support@instalabel.co</a></span></p>
-<p dir="ltr" style="margin: 0; font-size: 12px; text-align: center; mso-line-height-alt: 14.399999999999999px;"><span style="color:#5d5d5d;"><br/>Bournemouth, UK<br/><a href="tel:+447585644204" rel="noopener" style="text-decoration:none;color:#5d5d5d;" target="_blank" title="tel:+977 9766364121">+977 9766364121</a>
+<p dir="ltr" style="margin: 0; font-size: 12px; text-align: center; mso-line-height-alt: 14.399999999999999px;"><span style="color:#5d5d5d;"><br/>Bournemouth, UK<br/><a href="tel:+447585644204" rel="noopener" style="text-decoration:none;color:#5d5d5d;" target="_blank" title="tel:+44 7585 644204">+44 7585 644204</a>
 <br/>
 <br/>
 </span>

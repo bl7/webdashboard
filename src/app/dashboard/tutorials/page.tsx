@@ -19,49 +19,6 @@ const TUTORIALS: Tutorial[] = [
     videoUrl: "https://www.youtube.com/embed/NPSIOvzwJ-s",
     duration: "1:16",
   },
-  {
-    id: "square-sync",
-    title: "Square Sync",
-    description: "Learn how to sync your menu with Square POS and manage inventory seamlessly",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    duration: "6:45",
-  },
-
-  {
-    id: "bulk-print",
-    title: "Bulk Print - How to Use Effectively",
-    description: "Master bulk printing techniques to save time and improve kitchen efficiency",
-    videoUrl: "https://www.youtube.com/embed/jNQXAC9IVRw",
-    duration: "5:20",
-  },
-  {
-    id: "ppds-labels",
-    title: "PPDS for Pre-Packaged Food",
-    description: "Create compliant PPDS labels for pre-packaged direct sale food items",
-    videoUrl: "https://www.youtube.com/embed/9bZkp7q19f0",
-    duration: "4:30",
-  },
-  {
-    id: "mobile-app",
-    title: "Mobile App Navigation and Features",
-    description: "Navigate the mobile app and learn custom print features for on-the-go labeling",
-    videoUrl: "https://www.youtube.com/embed/L_jWHffIx5E",
-    duration: "7:15",
-  },
-  {
-    id: "printer-connection",
-    title: "Bluetooth/USB Printer Connection",
-    description: "Set up and connect your Bluetooth or USB thermal label printer",
-    videoUrl: "https://www.youtube.com/embed/fJ9rUzIMcZQ",
-    duration: "3:50",
-  },
-  {
-    id: "printbridge-install",
-    title: "Installing PrintBridge for Your OS",
-    description: "Step-by-step guide to install PrintBridge on Windows, Mac, and Linux",
-    videoUrl: "https://www.youtube.com/embed/ScMzIvxBSi4",
-    duration: "8:10",
-  },
 ]
 
 export default function TutorialsPage() {

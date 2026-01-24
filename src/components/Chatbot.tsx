@@ -896,7 +896,7 @@ export function Chatbot({ className }: ChatbotProps) {
                           </div>
                           <div className="flex items-center gap-2">
                             <Phone className="h-4 w-4 text-blue-600" />
-                            <span>(0740) 567890</span>
+                            <span>+44 7585 644204</span>
                           </div>
                           <div className="flex items-center gap-2">
                             <MapPin className="h-4 w-4 text-blue-600" />

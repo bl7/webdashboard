@@ -850,7 +850,7 @@ export const cancellationEmail = ({
         </div>
         
         <div class="footer">
-            <p>© 2024 InstaLabel. All rights reserved.</p>
+            <p>© 2026 InstaLabel. All rights reserved.</p>
             <p>This email was sent to you because you cancelled your InstaLabel subscription.</p>
         </div>
     </div>

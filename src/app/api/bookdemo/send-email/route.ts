@@ -158,7 +158,7 @@ export async function POST(req: NextRequest) {
             
             <div style="border-top: 1px solid #374151; padding-top: 16px; margin-top: 16px;">
               <p style="color: #6b7280; margin: 0; font-size: 12px; line-height: 1.5;">
-                © 2025 InstaLabel. All rights reserved.<br/>
+                © 2026 InstaLabel. All rights reserved.<br/>
                 You received this email because you expressed interest in our services.
               </p>
             </div>

@@ -398,7 +398,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="mt-6 border-t border-purple-700/50 py-3">
           <div className="container px-4 text-center text-xs text-white/50">
-            <p>&copy; 2024 InstaLabel. All rights reserved.</p>
+            <p>&copy; 2026 InstaLabel. All rights reserved.</p>
           </div>
         </div>
       </footer>

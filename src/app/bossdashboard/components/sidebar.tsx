@@ -47,7 +47,7 @@ export default function Sidebar({
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
     { name: "Notifications", href: "/bossdashboard/notifications", icon: Bell },
-    { name: "Bulk Email", href: "/bossdashboard/bulk-email", icon: FileText },
+    // { name: "Bulk Email", href: "/bossdashboard/bulk-email", icon: FileText },
     { name: "Label Products", href: "/bossdashboard/label-products", icon: Package },
     { name: "Demo Requests", href: "/bossdashboard/bookdemo", icon: CalendarClock },
     {

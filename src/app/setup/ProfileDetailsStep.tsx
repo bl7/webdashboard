@@ -4,6 +4,13 @@ import React, { useState, useEffect, useRef, useCallback } from "react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { cn } from "@/lib/utils"
 import { saveData } from "@/lib/saveData"
 import { searchPostcodes, lookupPostcode } from "@/lib/postcodesService"
@@ -31,6 +38,31 @@ interface ProfileDetailsStepProps {
 
 const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
+// Country list - UK first, then European countries
+const COUNTRIES = [
+  "United Kingdom",
+  "France",
+  "Germany",
+  "Italy",
+  "Spain",
+  "Netherlands",
+  "Belgium",
+  "Austria",
+  "Switzerland",
+  "Sweden",
+  "Norway",
+  "Denmark",
+  "Finland",
+  "Poland",
+  "Portugal",
+  "Ireland",
+  "Greece",
+  "Czech Republic",
+  "Hungary",
+  "Romania",
+  "Other",
+]
+
 export default function ProfileDetailsStep({
   userId,
   profileData,
@@ -54,6 +86,9 @@ export default function ProfileDetailsStep({
   const suggestionsRef = useRef<HTMLDivElement>(null)
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
 
+  // Check if UK is selected
+  const isUK = profileData.country === "United Kingdom" || profileData.country === ""
+
   // Fetch profile data on mount
   useEffect(() => {
     // Prefill from localStorage
@@ -64,6 +99,8 @@ export default function ProfileDetailsStep({
       full_name,
       email,
       avatar: prev.avatar || 1,
+      // Default to UK if no country set
+      country: prev.country || "United Kingdom",
     }))
     // Fetch from API as before (can overwrite if present)
     async function fetchProfile() {
@@ -80,27 +117,35 @@ export default function ProfileDetailsStep({
             address_line2: data.profile.address_line2 || "",
             city: data.profile.city || "",
             state: data.profile.state || "",
-            country: data.profile.country || "",
+            country: data.profile.country || "United Kingdom",
             postal_code: data.profile.postal_code || "",
             phone: data.profile.phone || "",
             avatar: Number(data.profile.avatar) || 1,
           })
           localStorage.setItem("avatar", String(data.profile.avatar || 1))
         } else {
-          setProfileData((prev) => ({ ...prev, avatar: 1 }))
+          setProfileData((prev) => ({ ...prev, avatar: 1, country: prev.country || "United Kingdom" }))
           localStorage.setItem("avatar", "1")
         }
       } catch {
-        setProfileData((prev) => ({ ...prev, avatar: 1 }))
+        setProfileData((prev) => ({ ...prev, avatar: 1, country: prev.country || "United Kingdom" }))
         localStorage.setItem("avatar", "1")
       }
     }
     fetchProfile()
   }, [userId, setProfileData])
   
-  // Validate postcode when it's initially loaded from API
+  // Validate postcode when it's initially loaded from API (UK only)
   const [hasValidatedInitialPostcode, setHasValidatedInitialPostcode] = useState(false)
   useEffect(() => {
+    const isUKSelected = profileData.country === "United Kingdom" || profileData.country === ""
+    
+    // Only validate for UK
+    if (!isUKSelected) {
+      setHasValidatedInitialPostcode(true)
+      return
+    }
+    
     const postcode = profileData.postal_code.trim()
     if (postcode && postcode.length >= 2 && !hasValidatedInitialPostcode) {
       lookupPostcode(postcode).then((result) => {
@@ -115,7 +160,7 @@ export default function ProfileDetailsStep({
     } else if (!postcode) {
       setHasValidatedInitialPostcode(true)
     }
-  }, [profileData.postal_code, hasValidatedInitialPostcode])
+  }, [profileData.postal_code, profileData.country, hasValidatedInitialPostcode])
 
   const handleAvatarSelect = (index: number) => {
     setProfileData((prev) => ({ ...prev, avatar: index }))
@@ -123,24 +168,64 @@ export default function ProfileDetailsStep({
     setShowModal(false)
   }
 
+  // Handle country change
+  const handleCountryChange = (value: string) => {
+    const isUKSelected = value === "United Kingdom"
+    const wasUK = profileData.country === "United Kingdom" || profileData.country === ""
+    
+    setProfileData((prev) => ({ ...prev, country: value }))
+    
+    // If switching from UK to non-UK, clear postcode validation
+    if (!isUKSelected && wasUK) {
+      setPostcodeValid(false)
+      setPostcodeError(null)
+      setLastValidatedPostcode("")
+      setPostcodeSuggestions([])
+      setShowSuggestions(false)
+      // Clear auto-filled fields if they were from UK postcode lookup
+      setProfileData((prev) => ({
+        ...prev,
+        city: "",
+        state: "",
+      }))
+    }
+    
+    // If switching to UK, clear validation state to allow re-validation
+    if (isUKSelected && !wasUK) {
+      setPostcodeValid(false)
+      setPostcodeError(null)
+    }
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setProfileData((prev) => ({ ...prev, [name]: value }))
     
-    // Handle postcode input with autocomplete
+    // Handle postcode input with autocomplete (only for UK)
     if (name === "postal_code") {
+      const isUKSelected = profileData.country === "United Kingdom" || profileData.country === ""
+      
       // Normalize the new postcode value for comparison
       const normalizedNew = value.replace(/\s+/g, "").toUpperCase()
       const normalizedLast = lastValidatedPostcode.replace(/\s+/g, "").toUpperCase()
       
-      // If postcode changed and was previously validated, clear auto-filled fields
-      if (lastValidatedPostcode && normalizedNew !== normalizedLast) {
+      // If postcode changed and was previously validated, clear auto-filled fields (UK only)
+      if (isUKSelected && lastValidatedPostcode && normalizedNew !== normalizedLast) {
         setProfileData((prev) => ({
           ...prev,
           city: "",
           state: "",
-          country: "",
         }))
+      }
+      
+      // Only validate postcode for UK
+      if (!isUKSelected) {
+        // For non-UK, just clear validation state
+        setPostcodeValid(false)
+        setPostcodeError(null)
+        setPostcodeSuggestions([])
+        setShowSuggestions(false)
+        return
       }
       
       setPostcodeValid(false)
@@ -159,7 +244,7 @@ export default function ProfileDetailsStep({
         return
       }
       
-      // Debounce search by 250-300ms
+      // Debounce search by 250-300ms (UK only)
       setIsSearching(true)
       debounceTimerRef.current = setTimeout(async () => {
         try {
@@ -230,11 +315,18 @@ export default function ProfileDetailsStep({
     }
   }, [setProfileData])
   
-  // Validate postcode on blur if it's been entered
+  // Validate postcode on blur if it's been entered (UK only)
   const handlePostcodeBlur = useCallback(async () => {
     // Small delay to allow click on suggestion
     setTimeout(() => {
       setShowSuggestions(false)
+      
+      const isUKSelected = profileData.country === "United Kingdom" || profileData.country === ""
+      
+      // Only validate for UK
+      if (!isUKSelected) {
+        return
+      }
       
       const postcode = profileData.postal_code.trim()
       if (postcode && !postcodeValid) {
@@ -259,7 +351,7 @@ export default function ProfileDetailsStep({
                 postal_code: result.postcode,
                 city: result.admin_district || result.parish || "",
                 state: result.admin_county || result.region || "",
-                country: result.country || "",
+                country: result.country || "United Kingdom",
               }))
             } else {
               // Same postcode, just mark as valid
@@ -273,7 +365,7 @@ export default function ProfileDetailsStep({
         })
       }
     }, 200)
-  }, [profileData.postal_code, postcodeValid, lastValidatedPostcode, setProfileData])
+  }, [profileData.postal_code, profileData.country, postcodeValid, lastValidatedPostcode, setProfileData])
   
   // Cleanup debounce timer on unmount
   useEffect(() => {
@@ -329,15 +421,18 @@ export default function ProfileDetailsStep({
     setSaving(false)
   }
 
-  // Validation: Company Name, Address Line 1, and valid Postal Code are required
-  // City can be empty if lookup fails, but postal code must be valid
+  // Validation: Company Name, Address Line 1, and Postal Code are required
+  // For UK: postal code must be valid (postcodeValid)
+  // For non-UK: postal code just needs to be filled
+  const isUKSelected = profileData.country === "United Kingdom" || profileData.country === ""
   const isValid =
     profileData.full_name.trim() !== "" &&
     profileData.email.trim() !== "" &&
     profileData.company_name.trim() !== "" &&
     profileData.address_line1.trim() !== "" &&
     profileData.postal_code.trim() !== "" &&
-    postcodeValid
+    profileData.country.trim() !== "" &&
+    (isUKSelected ? postcodeValid : true) // Only require validation for UK
 
   return (
     <div>
@@ -403,31 +498,47 @@ export default function ProfileDetailsStep({
           <Input name="company_name" value={profileData.company_name} onChange={handleChange} placeholder="Enter your company name" />
         </div>
         <div>
-          {/* Empty div to maintain grid layout */}
+          <Label>Country</Label>
+          <Select value={profileData.country || "United Kingdom"} onValueChange={handleCountryChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent>
+              {COUNTRIES.map((country) => (
+                <SelectItem key={country} value={country}>
+                  {country}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
-        {/* Postal Code moved to first address field in left column, above Address Line 1 */}
+        {/* Postal Code - Industry standard: after country, before address */}
         <div className="relative">
-          <Label>Postal Code</Label>
+          <Label>Postal Code {isUKSelected && <span className="text-gray-500">(UK)</span>}</Label>
           <Input
             ref={postcodeInputRef}
             name="postal_code"
             value={profileData.postal_code}
             onChange={handleChange}
             onBlur={handlePostcodeBlur}
-            placeholder="Postal code"
+            placeholder={isUKSelected ? "Postal code" : "Postal/ZIP code"}
             className={cn(
-              postcodeError && "border-red-500",
-              postcodeValid && "border-green-500"
+              postcodeError && isUKSelected && "border-red-500",
+              postcodeValid && isUKSelected && "border-green-500"
             )}
+            disabled={!isUKSelected && false} // Allow input for all countries
           />
-          {isSearching && (
+          {isUKSelected && isSearching && (
             <div className="absolute right-3 top-9 text-xs text-gray-400">Searching...</div>
           )}
-          {postcodeError && (
+          {isUKSelected && postcodeError && (
             <p className="mt-1 text-xs text-red-600">{postcodeError}</p>
           )}
-          {/* Postcode suggestions dropdown */}
-          {showSuggestions && postcodeSuggestions.length > 0 && (
+          {!isUKSelected && (
+            <p className="mt-1 text-xs text-gray-500">Enter your postal/ZIP code manually</p>
+          )}
+          {/* Postcode suggestions dropdown (UK only) */}
+          {isUKSelected && showSuggestions && postcodeSuggestions.length > 0 && (
             <div
               ref={suggestionsRef}
               className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md border border-gray-200 bg-white shadow-lg"
@@ -466,10 +577,6 @@ export default function ProfileDetailsStep({
         <div>
           <Label>State</Label>
           <Input name="state" value={profileData.state} onChange={handleChange} placeholder="State" />
-        </div>
-        <div>
-          <Label>Country</Label>
-          <Input name="country" value={profileData.country} onChange={handleChange} placeholder="Country" />
         </div>
         <div>
           <Label>Phone (optional)</Label>
