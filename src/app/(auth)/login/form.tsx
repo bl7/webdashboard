@@ -43,15 +43,23 @@ export function LoginForm() {
         const response = await loginUser(values)
 
         if (response?.token || response?.success) {
-          localStorage.setItem("token", response.token)
+          const token = response.token
+          
+          // Store in localStorage
+          localStorage.setItem("token", token)
           localStorage.setItem("userid", response.uuid)
           localStorage.setItem("email", response.email)
           localStorage.setItem("full_name", response.name)
-          console.log("full_name", localStorage.getItem("full_name"))
-          console.log("userid", localStorage.getItem("userid"))
-          toast.success("Login successful")
           localStorage.setItem("name", response.name)
-          console.log("receicved data", response)
+          
+          // Also set cookie so middleware can see it
+          // Set cookie with 7 days expiry, secure on HTTPS
+          const maxAge = 7 * 24 * 60 * 60 // 7 days in seconds
+          const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:'
+          document.cookie = `token=${token}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`
+          
+          console.log("Login successful, token stored")
+          toast.success("Login successful")
 
           // Check user status and redirect appropriately
           try {
@@ -59,7 +67,7 @@ export function LoginForm() {
               fetch(`/api/profile?user_id=${response.uuid}`),
               fetch(`/api/subscription_better/status`, {
                 headers: {
-                  Authorization: `Bearer ${response.token}`,
+                  Authorization: `Bearer ${token}`,
                   "Content-Type": "application/json",
                 },
               }),

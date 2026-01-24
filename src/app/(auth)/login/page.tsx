@@ -17,23 +17,71 @@ function getTimeOfDayGreeting() {
 export default function LoginPage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
+  
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem("token")
-      const userId = localStorage.getItem("userid")
-
-      // If user is already logged in, redirect to dashboard
-      if (token && userId) {
-        console.log("User already authenticated, redirecting to dashboard")
-        router.push("/dashboard")
-        return
-      }
-
-      // User is not authenticated, show login form
+    // Safety timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
       setIsLoading(false)
+    }, 1000) // Max 1 second to check auth
+
+    const checkAuthStatus = () => {
+      try {
+        // Check if we're in the browser (not SSR)
+        if (typeof window === "undefined") {
+          setIsLoading(false)
+          return
+        }
+
+        // Check both cookie and localStorage for token
+        const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`
+          const parts = value.split(`; ${name}=`)
+          if (parts.length === 2) return parts.pop()?.split(';').shift()
+          return null
+        }
+
+        const cookieToken = getCookie("token")
+        const localStorageToken = localStorage.getItem("token")
+        const userId = localStorage.getItem("userid")
+
+        // Only redirect if we have BOTH cookie and localStorage token
+        // This ensures middleware and client are in sync
+        if (cookieToken && localStorageToken && userId) {
+          console.log("User already authenticated, redirecting to dashboard")
+          clearTimeout(timeoutId)
+          router.push("/dashboard")
+          return
+        }
+
+        // If we have localStorage token but no cookie, sync them
+        if (localStorageToken && !cookieToken && userId) {
+          const maxAge = 7 * 24 * 60 * 60 // 7 days
+          const isSecure = window.location.protocol === 'https:'
+          document.cookie = `token=${localStorageToken}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`
+          // After setting cookie, redirect will be handled by middleware on next request
+          clearTimeout(timeoutId)
+          router.push("/dashboard")
+          return
+        }
+
+        // User is not authenticated, show login form
+        clearTimeout(timeoutId)
+        setIsLoading(false)
+      } catch (error) {
+        // If localStorage/cookie access fails, just show the form
+        console.error("Error checking auth status:", error)
+        clearTimeout(timeoutId)
+        setIsLoading(false)
+      }
     }
 
-    checkAuthStatus()
+    // Small delay to ensure we're in the browser and DOM is ready
+    const checkId = setTimeout(checkAuthStatus, 100)
+    
+    return () => {
+      clearTimeout(timeoutId)
+      clearTimeout(checkId)
+    }
   }, [router])
 
   // Show loading spinner while checking authentication
