@@ -4,16 +4,41 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   const token = req.cookies.get("token")?.value
 
-  const isAuthRoute = pathname === "/login" || pathname === "/register"
+  // Define public routes that don't require authentication
+  const publicRoutes = [
+    "/",
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/reset-password",
+    "/verify-otp",
+  ]
+  
+  const isPublicRoute = publicRoutes.includes(pathname) || 
+    pathname.startsWith("/features") ||
+    pathname.startsWith("/plan") ||
+    pathname.startsWith("/about") ||
+    pathname.startsWith("/uses") ||
+    pathname.startsWith("/printbridge") ||
+    pathname.startsWith("/square-integration") ||
+    pathname.startsWith("/allergen-compliance") ||
+    pathname.startsWith("/allergen-guide") ||
+    pathname.startsWith("/bookdemo") ||
+    pathname.startsWith("/blog") ||
+    pathname.startsWith("/faqs") ||
+    pathname.startsWith("/privacy-policy") ||
+    pathname.startsWith("/terms") ||
+    pathname.startsWith("/cookie-policy")
 
-  // Allow auth routes to pass through without token (users need to access login/register)
-  if (isAuthRoute) {
-    // If user is already authenticated and tries to access login/register, redirect to dashboard
-    if (token) {
+  // Allow public routes to pass through
+  if (isPublicRoute) {
+    // If user is authenticated and tries to access login/register, redirect to dashboard
+    if (token && (pathname === "/login" || pathname === "/register")) {
       const dashboardUrl = new URL("/dashboard", req.url)
       return NextResponse.redirect(dashboardUrl)
     }
-    // Otherwise, allow access to login/register pages
+    
+    // Otherwise, allow access to public routes
     const response = NextResponse.next()
     // Add security headers
     response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin")
@@ -29,7 +54,7 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(loginUrl)
   }
 
-  // Allow authenticated users to access setup and other specific routes
+  // Allow authenticated users to access setup and dashboard routes
   const allowedAuthenticatedRoutes = ["/setup", "/dashboard"]
   if (token && !allowedAuthenticatedRoutes.some(route => pathname.startsWith(route))) {
     const dashboardUrl = new URL("/dashboard", req.url)
