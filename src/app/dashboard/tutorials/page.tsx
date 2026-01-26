@@ -19,6 +19,13 @@ const TUTORIALS: Tutorial[] = [
     videoUrl: "https://www.youtube.com/embed/NPSIOvzwJ-s",
     duration: "1:16",
   },
+  {
+    id: "tutorial-2",
+    title: "How to Install Print Bridge for Windows",
+    description: "Learn how to use InstaLabel features",
+    videoUrl: "https://www.youtube.com/embed/wmM91-Q3fbw",
+    duration: "TBD",
+  },
 ]
 
 export default function TutorialsPage() {

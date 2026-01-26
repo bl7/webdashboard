@@ -267,7 +267,7 @@ export const newSubscriptionEmail = ({
                 <h3>📋 Subscription Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
                 <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
-                <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
+                <p><strong>Amount:</strong> ${trialDays > 0 ? `${currency.toUpperCase()} 0.00 (Free Trial - No charge during trial period)` : `${currency.toUpperCase()} ${amount.toFixed(2)}`}</p>
                 <p><strong>Status:</strong> Active</p>
             </div>
             
@@ -276,7 +276,7 @@ export const newSubscriptionEmail = ({
                 <h3>🎯 Trial Period Active</h3>
                 <p>You're currently in your <strong>${trialDays}-day free trial</strong> period.</p>
                 <p><strong>Trial expires:</strong> ${trialEndDate}</p>
-                <p>Your first payment will be processed automatically when your trial ends. You can cancel anytime during the trial period without any charges.</p>
+                <p><strong>No charges during trial:</strong> You will not be charged anything during your trial period. Your first payment of <strong>${currency.toUpperCase()} ${amount.toFixed(2)}</strong> will be processed automatically when your trial ends on ${trialEndDate}. You can cancel anytime during the trial period without any charges.</p>
             </div>
             
             <div style="text-align: center;">
@@ -662,7 +662,7 @@ export const planChangeEmail = ({
                 <p><strong>Previous Plan:</strong> ${oldPlan}</p>
                 <p><strong>New Plan:</strong> ${newPlan}</p>
                 <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
-                <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
+                <p><strong>Amount:</strong> ${currency.toUpperCase()} ${amount.toFixed(2)}</p>
                 <p><strong>Effective Date:</strong> ${effectiveDate}</p>
             </div>
             
@@ -1560,7 +1560,7 @@ export const renewalReminderEmail = ({
                 <div class="renewal-badge">Auto-Renewal</div>
                 <h3>🔄 Upcoming Renewal</h3>
                 <p>Your <strong>${planName}</strong> subscription will automatically renew on <strong>${renewalDate}</strong>.</p>
-                ${amount ? `<p><strong>Renewal Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)} (${billingInterval === "month" ? "Monthly" : "Annual"})</p>` : ""}
+                ${amount ? `<p><strong>Renewal Amount:</strong> ${currency.toUpperCase()} ${amount.toFixed(2)} (${billingInterval === "month" ? "Monthly" : "Annual"})</p>` : ""}
                 <p>No action is required on your part - your subscription will continue seamlessly.</p>
             </div>
             
@@ -1900,7 +1900,7 @@ export const renewalConfirmationEmail = ({
                 <h3>📋 Subscription Details</h3>
                 <p><strong>Plan:</strong> ${planName}</p>
                 <p><strong>Billing Cycle:</strong> ${billingInterval === "month" ? "Monthly" : "Annual"}</p>
-                <p><strong>Amount:</strong> ${currency.toUpperCase()} ${(amount / 100).toFixed(2)}</p>
+                <p><strong>Amount:</strong> ${currency.toUpperCase()} ${amount.toFixed(2)}</p>
                 <p><strong>Status:</strong> Active</p>
             </div>
             
