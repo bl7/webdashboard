@@ -8,6 +8,9 @@ interface User {
   id: number
   user_id: string
   company_name: string
+  full_name?: string | null
+  address_line1?: string | null
+  address_line2?: string | null
   plan_name: string
   status: string
   billing_interval?: "month" | "year" | null
@@ -17,6 +20,11 @@ interface User {
   pending_plan_change_effective: string | null
   created_at: string
   email: string
+  country?: string | null
+  city?: string | null
+  state?: string | null
+  postal_code?: string | null
+  phone?: string | null
 }
 
 export default function UsersPage() {
@@ -431,7 +439,7 @@ export default function UsersPage() {
       {showAddModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
           <div
-            className={`relative w-full max-w-md rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
+            className={`relative w-full max-w-3xl rounded-lg p-6 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}
           >
             <div className="mb-4 flex items-center justify-between">
               <h3 className={`text-lg font-medium ${isDarkMode ? "text-white" : "text-gray-900"}`}>
@@ -543,37 +551,91 @@ export default function UsersPage() {
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <div className="space-y-2">
-              <div>
-                <span className="font-semibold">Company:</span> {selectedUser.company_name}
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Left column: subscription details */}
+              <div className="space-y-2 break-words">
+                <h4 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Subscription
+                </h4>
+                <div>
+                  <span className="font-semibold">Company:</span>{" "}
+                  {selectedUser.company_name || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Plan:</span> {selectedUser.plan_name || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Status:</span> {selectedUser.status}
+                </div>
+                <div>
+                  <span className="font-semibold">Billing:</span>{" "}
+                  {selectedUser.billing_interval === "month"
+                    ? "Monthly"
+                    : selectedUser.billing_interval === "year"
+                      ? "Annual"
+                      : "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Renewal Date:</span>{" "}
+                  {selectedUser.current_period_end
+                    ? new Date(selectedUser.current_period_end).toLocaleDateString()
+                    : "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Trial End:</span>{" "}
+                  {selectedUser.trial_end
+                    ? new Date(selectedUser.trial_end).toLocaleDateString()
+                    : "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Pending Change:</span>{" "}
+                  {selectedUser.pending_plan_change
+                    ? `${selectedUser.pending_plan_change} (${selectedUser.pending_plan_change_effective ? new Date(selectedUser.pending_plan_change_effective).toLocaleDateString() : ""})`
+                    : "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Created At:</span>{" "}
+                  {new Date(selectedUser.created_at).toLocaleString()}
+                </div>
               </div>
-              <div>
-                <span className="font-semibold">Plan:</span> {selectedUser.plan_name}
-              </div>
-              <div>
-                <span className="font-semibold">Status:</span> {selectedUser.status}
-              </div>
-              <div>
-                <span className="font-semibold">Renewal Date:</span>{" "}
-                {selectedUser.current_period_end
-                  ? new Date(selectedUser.current_period_end).toLocaleDateString()
-                  : "-"}
-              </div>
-              <div>
-                <span className="font-semibold">Trial End:</span>{" "}
-                {selectedUser.trial_end
-                  ? new Date(selectedUser.trial_end).toLocaleDateString()
-                  : "-"}
-              </div>
-              <div>
-                <span className="font-semibold">Pending Change:</span>{" "}
-                {selectedUser.pending_plan_change
-                  ? `${selectedUser.pending_plan_change} (${selectedUser.pending_plan_change_effective ? new Date(selectedUser.pending_plan_change_effective).toLocaleDateString() : ""})`
-                  : "-"}
-              </div>
-              <div>
-                <span className="font-semibold">Created At:</span>{" "}
-                {new Date(selectedUser.created_at).toLocaleString()}
+
+              {/* Right column: contact & location details */}
+              <div className="space-y-2 break-words">
+                <h4 className="mb-1 text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                  Contact & Location
+                </h4>
+                <div>
+                  <span className="font-semibold">Name:</span> {selectedUser.full_name || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Email:</span>{" "}
+                  <span className="break-all">{selectedUser.email}</span>
+                </div>
+                <div>
+                  <span className="font-semibold">Phone:</span> {selectedUser.phone || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Country:</span>{" "}
+                  {selectedUser.country || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">City:</span> {selectedUser.city || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">State:</span> {selectedUser.state || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Postcode:</span>{" "}
+                  {selectedUser.postal_code || "-"}
+                </div>
+                <div>
+                  <span className="font-semibold">Address:</span>{" "}
+                  {selectedUser.address_line1 || selectedUser.address_line2
+                    ? [selectedUser.address_line1, selectedUser.address_line2]
+                        .filter(Boolean)
+                        .join(", ")
+                    : "-"}
+                </div>
               </div>
             </div>
           </div>

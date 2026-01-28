@@ -12,8 +12,16 @@ export async function GET(req: NextRequest) {
     const { rows } = await client.query(`
       SELECT 
         u.user_id, 
-        u.company_name, 
-        u.email, 
+        u.company_name,
+        u.full_name,
+        u.email,
+        u.address_line1,
+        u.address_line2,
+        u.country,
+        u.city,
+        u.state,
+        u.postal_code,
+        u.phone,
         s.plan_name, 
         s.status, 
         s.billing_interval, 
