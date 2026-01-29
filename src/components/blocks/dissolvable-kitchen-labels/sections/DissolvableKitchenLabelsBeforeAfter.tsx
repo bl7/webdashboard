@@ -184,8 +184,8 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
             <div className="flex items-start gap-3">
               <CheckCircle className="mt-1 h-4 w-4 text-green-600" />
               <div>
-                <div className="font-semibold text-green-800">100% compliance rate</div>
-                <div className="text-sm text-green-600">Zero errors, perfect formatting</div>
+                <div className="font-semibold text-green-800">Consistent compliance workflows</div>
+                <div className="text-sm text-green-600">Structured templates, consistent formatting</div>
               </div>
             </div>
             <div className="flex items-start gap-3">

@@ -38,9 +38,9 @@ export const HaccpLabelsPage = () => {
             </div>
 
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">100% HACCP Compliance</span>
+              <span className="text-purple-600">Built for HACCP Compliance</span>
               <br className="hidden md:block" />
-              <span>Guaranteed with AI</span>
+              <span>Powered by AI</span>
             </h1>
 
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
@@ -235,7 +235,7 @@ export const HaccpLabelsPage = () => {
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
               InstaLabel combines AI intelligence, automatic compliance, and thermal printer support
-              to make HACCP labeling effortless and error-free.
+              to make HACCP labeling effortless with structured templates.
             </p>
           </motion.div>
 
@@ -293,6 +293,13 @@ export const HaccpLabelsPage = () => {
           </div>
         </div>
       </section>
+      <div className="bg-gray-50 border-t border-gray-200 py-6 px-4 sm:px-6 md:px-12 lg:px-16">
+        <div className="max-w-6xl mx-auto text-center">
+          <p className="text-sm text-gray-600">
+            <strong>Note:</strong> InstaLabel helps standardize labeling workflows. Your team remains responsible for compliance and staff training.
+          </p>
+        </div>
+      </div>
     </>
   )
 }

@@ -60,7 +60,7 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 ### Complete Compliance Automation
 
-- 100% Natasha's Law compliance guaranteed
+- Built for Natasha's Law compliance workflows
 - PPDS formatting meets FSA requirements
 - Automatic expiry date calculations
 - Complete audit trail for inspections
@@ -123,7 +123,7 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 - **Automated Creation**: 30 seconds per label (95% time savings)
 - **Minimal Training**: 5-minute staff onboarding
-- **100% Compliance**: Zero compliance errors
+- **Compliance-Focused**: Structured templates reduce compliance errors
 - **No Cleanup**: Automatic dissolution
 
 ## Implementation Guide
@@ -155,7 +155,7 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 - **500+ UK restaurants** trust InstaLabel
 - **95% reduction** in labeling time
-- **100% compliance** rate maintained
+- **Consistent compliance workflows** maintained
 - **14-day free trial** available
 
 ### Technical Excellence
@@ -185,7 +185,7 @@ Ready to transform your dissolvable label printing? InstaLabel makes it simple:
 
 Dissolvable kitchen labels represent the future of food safety and compliance. With InstaLabel's AI-powered software, UK food businesses can achieve:
 
-- **Perfect compliance** with Natasha's Law
+- **Compliance-focused workflows** for Natasha's Law
 - **Massive time savings** in label creation
 - **Professional appearance** for all food containers
 - **Complete audit trail** for inspections

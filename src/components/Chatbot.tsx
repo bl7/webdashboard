@@ -231,7 +231,7 @@ const knowledgeBase = [
       "how does instalabel help with natasha's law",
     ],
     answer:
-      "InstaLabel is specifically designed for Natasha's Law compliance. Our PPDS (Prepacked for Direct Sale) labels automatically include full ingredient lists with allergen warnings. Each ingredient is checked against your allergen database, and allergens are prominently highlighted with asterisks (*) and clear warnings. The system uses FDA/EHO-approved templates and generates complete print logs for easy audits. All labels include auto-calculated prep dates and expiry, ensuring full compliance with food safety regulations.",
+      "InstaLabel is specifically designed for Natasha's Law compliance workflows. Our PPDS (Prepacked for Direct Sale) labels automatically include full ingredient lists with allergen warnings. Each ingredient is checked against your allergen database, and allergens are prominently highlighted with asterisks (*) and clear warnings. The system uses FDA/EHO-approved templates and generates complete print logs for easy audits. All labels include auto-calculated prep dates and expiry, supporting compliance with food safety regulations.",
   },
   {
     keywords: ["allergen accuracy", "how does it ensure allergen accuracy", "allergen compliance"],

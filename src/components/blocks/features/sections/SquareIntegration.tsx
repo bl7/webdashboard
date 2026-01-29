@@ -245,7 +245,7 @@ export const SquareIntegration = () => {
                 Advanced Square Integration Features
               </h3>
               <p className="mx-auto max-w-2xl text-gray-600">
-                Built for production kitchens with enterprise-grade reliability and smart automation
+                Built for production kitchens with reliable infrastructure and smart automation
               </p>
             </div>
 

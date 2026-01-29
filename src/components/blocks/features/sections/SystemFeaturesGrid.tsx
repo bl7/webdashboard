@@ -64,7 +64,7 @@ const softwareFeatures = [
     icon: <Cloud className="h-7 w-7 text-blue-600" />,
     title: "Cloud-First Architecture",
     description:
-      "Unlimited product storage, real-time sync across devices, secure AWS backup with 99.9% uptime, and instant access anywhere.",
+      "Unlimited product storage, real-time sync across devices, secure AWS backup with high availability, and instant access anywhere.",
     technicalDetails: [
       "Menu database stores unlimited items with ingredient and allergen information",
       "Real-time synchronization across web dashboard and Android app",

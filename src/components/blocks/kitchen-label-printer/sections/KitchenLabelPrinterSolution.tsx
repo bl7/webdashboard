@@ -61,7 +61,7 @@ export const KitchenLabelPrinterSolution = () => (
           <h3 className="mb-3 text-xl font-bold text-gray-900">Automatic Compliance</h3>
           <p className="text-gray-600">
             Every label automatically includes required allergen information, ingredients, and
-            expiry dates. Natasha's Law compliance guaranteed every time.
+            expiry dates. Built for Natasha's Law compliance workflows.
           </p>
         </motion.div>
 

@@ -60,7 +60,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
             <Shield className="h-6 w-6 text-purple-600" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">100% Compliance Guarantee</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Built for Compliance</h3>
           <p className="mb-4 text-gray-600">
             Every dissolvable label automatically meets Natasha's Law requirements. No more
             compliance errors, food safety violations, or EHO inspection issues. InstaLabel ensures

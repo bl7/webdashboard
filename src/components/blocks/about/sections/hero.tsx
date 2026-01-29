@@ -135,8 +135,8 @@ export const AboutHero = () => {
                 <div className="text-xs text-gray-600">Labels Printed</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">99.9%</div>
-                <div className="text-xs text-gray-600">Uptime</div>
+                <div className="text-2xl font-bold text-purple-600">High</div>
+                <div className="text-xs text-gray-600">Availability</div>
               </div>
             </div> */}
           </div>

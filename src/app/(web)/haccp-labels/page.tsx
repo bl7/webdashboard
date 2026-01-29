@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "InstaLabel: HACCP Labeling Software | UK Food Safety Compliance",
     description:
-      "InstaLabel ensures 100% HACCP compliance for UK food businesses. AI-powered software automatically generates compliant labels with full traceability for food safety audits. Start your free trial.",
+      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
     url: "https://www.instalabel.co/haccp-labels",
     type: "website",
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "InstaLabel: HACCP Labeling Software | UK Food Safety Compliance",
     description:
-      "InstaLabel ensures 100% HACCP compliance for UK food businesses. AI-powered software automatically generates compliant labels with full traceability for food safety audits. Start your free trial.",
+      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -62,7 +62,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "InstaLabel HACCP Labeling Software",
     description:
-      "InstaLabel ensures 100% HACCP compliance for UK food businesses. AI-powered software automatically generates compliant labels with full traceability for food safety audits. Start your free trial.",
+      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
     url: "https://www.instalabel.co/haccp-labels",
     mainEntity: {
       "@type": "SoftwareApplication",

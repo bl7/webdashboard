@@ -1,11 +1,16 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import LabelRender from "@/app/dashboard/print/LabelRender"
 import { motion } from "framer-motion"
 import { PPDSLabelRenderer } from "@/app/dashboard/ppds/PPDSLabelRenderer"
+import { LabelPreviewModal } from "@/components/LabelPreviewModal"
+import { Button } from "@/components/ui/button"
+import { Sparkles } from "lucide-react"
 
 const WhatWeDoShowcase = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   // Device image
 
   const now = new Date()
@@ -207,9 +212,20 @@ const WhatWeDoShowcase = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           viewport={{ once: true }}
-          className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:justify-start"
-        ></motion.div>
+          className="mt-8 flex flex-col justify-center gap-4 sm:flex-row sm:justify-center"
+        >
+          <Button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-6 text-white hover:from-purple-700 hover:to-pink-700 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+            size="lg"
+          >
+            <Sparkles className="mr-2 h-5 w-5" />
+            Try Label Generator
+          </Button>
+        </motion.div>
       </motion.div>
+
+      <LabelPreviewModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </section>
   )
 }

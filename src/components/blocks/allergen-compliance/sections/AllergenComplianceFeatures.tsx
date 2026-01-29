@@ -29,7 +29,7 @@ export const AllergenComplianceFeatures = () => (
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel combines AI intelligence, automatic compliance, and thermal printer support to
-          make allergen labeling effortless and error-free.
+          make allergen labeling effortless with structured templates.
         </p>
       </motion.div>
 

@@ -253,10 +253,9 @@ export const LabelPrinterUkComparisonPage = () => {
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
                 <Shield className="h-6 w-6 text-purple-600" />
               </div>
-              <h3 className="mb-3 text-xl font-bold text-gray-900">Full Compliance</h3>
+              <h3 className="mb-3 text-xl font-bold text-gray-900">Built for Compliance</h3>
               <p className="text-gray-600">
-                Zero errors, perfect formatting, and guaranteed Natasha's Law compliance. Pass every
-                food safety audit with confidence.
+                Structured templates, consistent formatting, and Natasha's Law labeling workflows. Support your food safety audits with confidence.
               </p>
             </motion.div>
 
@@ -448,7 +447,7 @@ export const LabelPrinterUkComparisonPage = () => {
                   <Shield className="mt-1 h-4 w-4 text-green-600" />
                   <div>
                     <div className="font-semibold text-green-800">0% error rate</div>
-                    <div className="text-sm text-green-600">Perfect compliance every time</div>
+                    <div className="text-sm text-green-600">Consistent compliance workflows</div>
                   </div>
                 </div>
               </div>

@@ -181,7 +181,7 @@ export const KitchenLabelPrinterComparison = () => (
       >
         <h3 className="mb-3 text-xl font-bold text-purple-900">Why Choose InstaLabel?</h3>
         <p className="text-purple-700">
-          <strong>InstaLabel saves 95% of labeling time</strong> while ensuring 100% compliance. Our
+          <strong>InstaLabel saves 95% of labeling time</strong> while supporting compliance workflows. Our
           AI-powered software works with any printer and eliminates manual errors.
           <strong>Start your free trial today and see the difference.</strong>
         </p>

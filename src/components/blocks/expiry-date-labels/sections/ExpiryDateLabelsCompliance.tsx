@@ -19,7 +19,7 @@ export const ExpiryDateLabelsCompliance = () => (
           InstaLabel Compliance Features
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          Natasha's Law & Food Safety Compliance Guaranteed
+          Built for Natasha's Law & Food Safety Compliance
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel's intelligent software automatically ensures every expiry date label meets all
@@ -105,7 +105,7 @@ export const ExpiryDateLabelsCompliance = () => (
       >
         <div className="text-center">
           <h3 className="mb-6 text-2xl font-bold text-gray-900">
-            Why InstaLabel Ensures Perfect Compliance Every Time
+            Why InstaLabel Supports Consistent Compliance Workflows
           </h3>
           <div className="grid gap-6 md:grid-cols-3">
             <div className="text-center">
@@ -135,7 +135,7 @@ export const ExpiryDateLabelsCompliance = () => (
               <h4 className="mb-2 font-semibold text-gray-900">Real-Time Updates</h4>
               <p className="text-sm text-gray-600">
                 InstaLabel automatically updates when UK food safety regulations change, ensuring
-                your labels are always compliant.
+                your labels follow current compliance requirements.
               </p>
             </div>
           </div>

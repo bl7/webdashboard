@@ -114,7 +114,7 @@ export const KitchenLabelPrinterHero = () => {
           >
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
               <span>✓ 500+ UK restaurants trust InstaLabel</span>
-              <span>✓ 99.9% uptime with AWS cloud</span>
+              <span>✓ High availability with AWS cloud</span>
               <span>✓ 14-day free trial, no credit card</span>
             </div>
           </motion.div>

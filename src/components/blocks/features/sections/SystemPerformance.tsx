@@ -89,8 +89,8 @@ export const SystemPerformance = () => {
             Built for Speed & Reliability
           </h3>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
-            InstaLabel delivers enterprise-grade performance with lightning-fast label generation
-            and rock-solid reliability.
+            InstaLabel delivers high-performance label generation
+            and reliable service for busy kitchens.
           </p>
         </motion.div>
 
@@ -180,8 +180,8 @@ export const SystemPerformance = () => {
 
           <div className="grid gap-6 md:grid-cols-3">
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold text-purple-600">99.9%</div>
-              <div className="text-sm text-gray-600">Uptime guarantee</div>
+              <div className="mb-2 text-3xl font-bold text-purple-600">High</div>
+              <div className="text-sm text-gray-600">Availability</div>
             </div>
             <div className="text-center">
               <div className="mb-2 text-3xl font-bold text-green-600">&lt;2s</div>

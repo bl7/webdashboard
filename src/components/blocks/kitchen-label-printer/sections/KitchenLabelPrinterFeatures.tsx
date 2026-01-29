@@ -23,7 +23,7 @@ export const KitchenLabelPrinterFeatures = () => (
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel combines AI intelligence, compliance automation, and universal printer support
-          to make kitchen labeling effortless and error-free.
+          to make kitchen labeling effortless with structured templates.
         </p>
       </motion.div>
 
@@ -169,7 +169,7 @@ export const KitchenLabelPrinterFeatures = () => (
           <h3 className="mb-3 text-xl font-bold text-gray-900">Cloud-First Architecture</h3>
           <p className="text-gray-600">
             Unlimited product storage with real-time sync across devices. AWS cloud infrastructure
-            provides automatic backups every 15 minutes with 99.9% uptime.
+            provides automatic backups every 15 minutes with high availability.
           </p>
         </motion.div>
 
@@ -202,7 +202,7 @@ export const KitchenLabelPrinterFeatures = () => (
       >
         <p className="text-lg font-semibold text-gray-700">
           <span className="font-bold text-purple-700">Pro Tip:</span> InstaLabel's AI reduces
-          labeling time by 95% while ensuring 100% compliance. Start your free trial today.
+          labeling time by 95% while supporting compliance workflows. Start your free trial today.
         </p>
       </motion.div>
     </div>

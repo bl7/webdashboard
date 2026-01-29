@@ -4,7 +4,7 @@ import { LabelPrinterUkComparisonPage } from "@/components/blocks/label-printer-
 export const metadata: Metadata = {
   title: "InstaLabel vs Manual Labeling: Best Kitchen Label Software UK 2025",
   description:
-    "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster, 100% compliant kitchen labels. Start your free trial today.",
+    "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster labeling with compliance-focused workflows. Start your free trial today.",
   keywords: [
     "label printer uk comparison",
     "kitchen label software comparison",
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "InstaLabel vs Manual Labeling: Best Kitchen Label Software UK 2025",
     description:
-      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster, 100% compliant kitchen labels. Start your free trial today.",
+      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster labeling with compliance-focused workflows. Start your free trial today.",
     url: "https://www.instalabel.co/label-printer-uk-comparison",
     type: "website",
     images: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "InstaLabel vs Manual Labeling: Best Kitchen Label Software UK 2025",
     description:
-      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster, 100% compliant kitchen labels. Start your free trial today.",
+      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster labeling with compliance-focused workflows. Start your free trial today.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -62,7 +62,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "InstaLabel vs Manual Labeling Comparison",
     description:
-      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster, 100% compliant kitchen labels. Start your free trial today.",
+      "Compare InstaLabel software vs manual labeling. See why 500+ UK restaurants choose InstaLabel for 95% faster labeling with compliance-focused workflows. Start your free trial today.",
     url: "https://www.instalabel.co/label-printer-uk-comparison",
     mainEntity: {
       "@type": "SoftwareApplication",

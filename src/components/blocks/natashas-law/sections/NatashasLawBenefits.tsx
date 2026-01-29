@@ -13,7 +13,7 @@ const benefits = [
       "Automatic FSA formatting",
       "Built-in compliance checks",
       "No training required",
-      "Error-free every time",
+      "Consistent formatting and compliance checks",
     ],
   },
   {

@@ -56,9 +56,9 @@ export const SquareIntegrationCTA = () => {
               <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-white/20">
                 <Shield className="h-6 w-6 text-white" />
               </div>
-              <h3 className="mb-2 text-lg font-bold text-white">Compliance Guaranteed</h3>
+              <h3 className="mb-2 text-lg font-bold text-white">Built for Compliance</h3>
               <p className="text-sm text-purple-100">
-                Automatic allergen detection and Natasha's Law compliance
+                Automatic allergen detection and Natasha's Law labeling workflows
               </p>
             </div>
 
