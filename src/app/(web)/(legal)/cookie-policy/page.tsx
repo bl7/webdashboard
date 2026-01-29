@@ -53,7 +53,7 @@ const Page = () => {
         </div>
         <article>
           <p>
-            InstaLabel Pvt. Ltd. ("InstaLabel", "we", "us", or "our") uses cookies and similar
+            INSTALABEL LIMITED ("InstaLabel", "we", "us", or "our") uses cookies and similar
             technologies to provide, improve, and secure our kitchen labeling software and website (
             <a href="https://www.instalabel.co">https://www.instalabel.co</a>).
           </p>

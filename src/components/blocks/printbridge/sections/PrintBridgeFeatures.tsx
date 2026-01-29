@@ -9,37 +9,37 @@ export const PrintBridgeFeatures = () => {
     {
       icon: <Shield className="h-6 w-6" />,
       title: "Local & Secure",
-      description: "All printing happens locally on your network, powered by Zentra. No data sent to external servers, ensuring maximum security for your kitchen operations.",
+      description: "All printing happens locally on your network with PrintBridge. No data sent to external servers, ensuring maximum security for your kitchen operations.",
       color: "purple"
     },
     {
       icon: <Zap className="h-6 w-6" />,
       title: "Lightning Fast",
-      description: "Direct local connection via Zentra means instant printing. No delays from cloud processing or network latency.",
+      description: "Direct local connection via PrintBridge means instant printing. No delays from cloud processing or network latency.",
       color: "purple"
     },
     {
       icon: <Wifi className="h-6 w-6" />,
       title: "Auto-Discovery",
-      description: "Zentra automatically finds and connects to your thermal printers. No manual IP configuration needed.",
+      description: "PrintBridge automatically finds and connects to your thermal printers. No manual IP configuration needed.",
       color: "purple"
     },
     {
       icon: <Cpu className="h-6 w-6" />,
       title: "Low Resource Usage",
-      description: "Zentra is a lightweight application that runs efficiently in the background without impacting your computer's performance.",
+      description: "PrintBridge is a lightweight application that runs efficiently in the background without impacting your computer's performance.",
       color: "purple"
     },
     {
       icon: <Download className="h-6 w-6" />,
       title: "One-Click Setup",
-      description: "Download, install Zentra, and start printing in under 2 minutes. No technical expertise required.",
+      description: "Download, install PrintBridge, and start printing in under 2 minutes. No technical expertise required.",
       color: "purple"
     },
     {
       icon: <Settings className="h-6 w-6" />,
       title: "Advanced Configuration",
-      description: "Customize printer settings, label formats, and connection preferences in Zentra’s intuitive interface.",
+      description: "Customize printer settings, label formats, and connection preferences in PrintBridge's intuitive interface.",
       color: "purple"
     }
   ]

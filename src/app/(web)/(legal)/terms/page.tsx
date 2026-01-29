@@ -56,7 +56,7 @@ const Page = () => {
             These Terms and Conditions ("Terms") govern your access to and use of the InstaLabel
             kitchen labeling software, website (
             <a href="https://www.instalabel.co">https://www.instalabel.co</a>), and all associated
-            services provided by InstaLabel Pvt. Ltd. ("InstaLabel", "we", "us", or "our").
+            services provided by INSTALABEL LIMITED ("InstaLabel", "we", "us", or "our").
           </p>
           <h2>1. Acceptance of Terms</h2>
           <p>

@@ -74,7 +74,7 @@ const Page = () => {
       name: "InstaLabel Mobile App",
       description: "Kitchen labelling app for food safety and compliance",
       applicationCategory: "MobileApplication",
-      operatingSystem: "iOS, Android",
+      operatingSystem: "Android",
       offers: {
         "@type": "Offer",
         price: "0",

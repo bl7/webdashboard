@@ -140,15 +140,6 @@ export const Hero = () => {
                 </div>
               </div>
             </div> */}
-            <div className="flex items-start gap-2">
-              <span className="text-lg">🔄</span>
-              <div>
-                <div className="text-sm font-bold text-gray-900">Smart Square Integration</div>
-                <div className="text-xs text-gray-600">
-                  Bidirectional sync with smart allergen detection & safe create-only mode.
-                </div>
-              </div>
-            </div>
           </div>
           {/* CTAs */}
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">

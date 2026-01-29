@@ -1,6 +1,5 @@
 import React from "react"
 import { PrintBridgeHero } from "."
-import { ZentraTechnologySection } from "./ZentraTechnologySection"
 import { PrintBridgeProblem } from "./sections/PrintBridgeProblem"
 import { PrintBridgeAdvantages } from "./sections/PrintBridgeAdvantages"
 import { PrintBridgeTechSpecs } from "./sections/PrintBridgeTechSpecs"

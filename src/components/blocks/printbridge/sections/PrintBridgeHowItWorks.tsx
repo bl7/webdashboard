@@ -3,21 +3,20 @@
 import React from "react"
 import { motion } from "framer-motion"
 import { Globe, Download, Wifi, Printer, CheckCircle } from "lucide-react"
-import { ZentraTechnologySection } from "../ZentraTechnologySection"
 export const PrintBridgeHowItWorks = () => {
   const steps = [
     {
       icon: <Download className="h-8 w-8" />,
-      title: "Download Zentra",
+      title: "Download PrintBridge",
       description:
-        "Download Zentra, our lightweight local bridge app, to your computer or server. It's a small, secure application that runs in the background and powers PrintBridge.",
+        "Download PrintBridge, our lightweight local bridge app, to your computer or server. It's a small, secure application that runs in the background and enables seamless printing.",
       color: "purple",
     },
     {
       icon: <Wifi className="h-8 w-8" />,
       title: "Connect to Printer",
       description:
-        "Zentra automatically detects and connects to your thermal printers. No complex network configuration required—it just works.",
+        "PrintBridge automatically detects and connects to your thermal printers. No complex network configuration required—it just works.",
       color: "purple",
     },
     {
@@ -31,7 +30,7 @@ export const PrintBridgeHowItWorks = () => {
       icon: <Printer className="h-8 w-8" />,
       title: "Print Instantly",
       description:
-        "When you click print, Zentra receives the command and sends it directly to your thermal printer. Labels print in seconds—this is the PrintBridge experience.",
+        "When you click print, PrintBridge receives the command and sends it directly to your thermal printer. Labels print in seconds—this is the PrintBridge experience.",
       color: "purple",
     },
   ]
@@ -48,18 +47,17 @@ export const PrintBridgeHowItWorks = () => {
         >
           <div className="mb-6 space-y-2 text-center">
             <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
-              PrintBridge, powered by Zentra
+              PrintBridge Technology
             </div>
             <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
               The Local Print Solution That Changes Everything
             </h2>
             <div className="mx-auto max-w-2xl text-base text-gray-600">
-              Zentra connects your web dashboard to any USB printer. It bypasses browser
+              PrintBridge connects your web dashboard to any USB printer. It bypasses browser
               limitations. WebSocket bridge, USB auto-discovery, silent printing.
             </div>
           </div>
         </motion.div>
-        <ZentraTechnologySection />
 
         {/* Steps */}
         <motion.div

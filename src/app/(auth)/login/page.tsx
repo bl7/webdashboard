@@ -115,7 +115,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-6 text-sm text-muted-foreground">
-        Copyright © 2026 - current. <Link href="/">InstaLabel Pvt. Ltd.</Link> All rights reserved.
+        Copyright © 2026 - current. <Link href="/">INSTALABEL LIMITED</Link> All rights reserved.
         <div className="mt-2 flex gap-4 text-xs">
           <Link href="/features" className="hover:underline">
             Features

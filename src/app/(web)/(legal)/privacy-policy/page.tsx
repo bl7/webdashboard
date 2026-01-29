@@ -52,7 +52,7 @@ const Page = () => {
           <div className="w-full">
             <h1 className="mb-3 text-5xl font-bold">Privacy Policy</h1>
             <p className="mb-8 text-lg leading-relaxed text-gray-600">
-              Your privacy is important to us. This Privacy Policy explains how InstaLabel Pvt. Ltd.
+              Your privacy is important to us. This Privacy Policy explains how INSTALABEL LIMITED
               ("InstaLabel", "we", "us", or "our") collects, uses, and protects your information
               when you use our kitchen labeling software and related services. If you have any
               questions, <a href="mailto:support@instalabel.co">please get in touch.</a>

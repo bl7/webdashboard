@@ -31,7 +31,7 @@ export const PrintBridgeHero = () => {
           >
             <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
               <Wifi className="mr-2 h-4 w-4" />
-              PrintBridge, powered by Zentra
+              PrintBridge Technology
             </div>
           </motion.div>
 
@@ -49,7 +49,7 @@ export const PrintBridgeHero = () => {
             </h1>
           </motion.div>
 
-          {/* 3. Subheadline: 'Zentra eliminates browser print dialog frustration' as a <p> below the headline */}
+          {/* 3. Subheadline: PrintBridge description as a <p> below the headline */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -57,8 +57,8 @@ export const PrintBridgeHero = () => {
             viewport={{ once: true }}
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              PrintBridge is our simple printing solution. It uses Zentra—a small app for Windows
-              and Mac. Zentra links your web dashboard to your thermal printers. No tricky network
+              PrintBridge is our simple printing solution—a small app for Windows
+              and Mac. PrintBridge links your web dashboard to your thermal printers. No tricky network
               setup. No cloud needed. Just fast, reliable printing for your kitchen labels.
             </p>
           </motion.div>
@@ -86,7 +86,7 @@ export const PrintBridgeHero = () => {
             </div>
           </motion.div>
 
-          {/* 5. CTAs (primary: 'See How Zentra Works', secondary: 'Start Free Trial') */}
+          {/* 5. CTAs (primary: 'Start Free Trial', secondary: 'Learn More About PrintBridge') */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -99,13 +99,9 @@ export const PrintBridgeHero = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <a
-                  href="https://www.zentra-mu-flax.vercel.app/documentation"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  See How Zentra Works
-                </a>
+                <Link href="/printbridge">
+                  Learn More About PrintBridge
+                </Link>
               </Button>
             </div>
           </motion.div>

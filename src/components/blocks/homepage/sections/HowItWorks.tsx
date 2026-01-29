@@ -76,7 +76,7 @@ export const HowItWorks = () => (
       {/* Mobile Device Note */}
       <div className="mt-4 rounded-lg bg-purple-50 p-4 text-center">
         <p className="text-sm text-purple-800">
-          Print directly from mobile devices — InstaLabel app runs on Android and iOS.
+          Print directly from mobile devices — InstaLabel app runs on Android.
         </p>
       </div>
     </div>
