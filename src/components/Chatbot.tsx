@@ -254,7 +254,7 @@ const knowledgeBase = [
   {
     keywords: ["trial", "free trial", "demo", "book demo", "available trial"],
     answer:
-      "Yes! InstaLabel offers a free 14-day trial with no credit card required. You get full access to all features and existing printer support during the trial. We also offer personalized demos where our team shows you exactly how InstaLabel works in your kitchen. You can book a demo through our website, and our team will walk you through the setup process, demonstrate key features, and answer any questions you have about implementation.",
+      "Yes! InstaLabel offers a free 14-day trial with no charges for the trial period. You get full access to all features and existing printer support during the trial. We also offer personalized demos where our team shows you exactly how InstaLabel works in your kitchen. You can book a demo through our website, and our team will walk you through the setup process, demonstrate key features, and answer any questions you have about implementation.",
   },
   {
     keywords: ["request demo", "consultation", "demo consultation", "setup help"],

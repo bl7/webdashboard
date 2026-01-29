@@ -25,21 +25,39 @@ export function middleware(req: NextRequest) {
     "/verify-otp",
   ]
   
-  const isPublicRoute = publicRoutes.includes(pathname) || 
+  const isPublicRoute =
+    publicRoutes.includes(pathname) ||
+    // Core marketing pages
     pathname.startsWith("/features") ||
     pathname.startsWith("/plan") ||
     pathname.startsWith("/about") ||
     pathname.startsWith("/uses") ||
-    pathname.startsWith("/printbridge") ||
-    pathname.startsWith("/square-integration") ||
-    pathname.startsWith("/allergen-compliance") ||
-    pathname.startsWith("/allergen-guide") ||
-    pathname.startsWith("/bookdemo") ||
     pathname.startsWith("/blog") ||
     pathname.startsWith("/faqs") ||
+    // Landing / integration pages
+    pathname.startsWith("/printbridge") ||
+    pathname.startsWith("/square-integration") ||
+    pathname.startsWith("/mobile-app") ||
+    pathname.startsWith("/kitchen-label-printer") ||
+    pathname.startsWith("/label-printer-uk-comparison") ||
+    // Allergen & legal resources
+    pathname.startsWith("/allergen-compliance") ||
+    pathname.startsWith("/allergen-guide") ||
     pathname.startsWith("/privacy-policy") ||
     pathname.startsWith("/terms") ||
-    pathname.startsWith("/cookie-policy")
+    pathname.startsWith("/cookie-policy") ||
+    // Demo / contact entry points
+    pathname.startsWith("/bookdemo") ||
+    pathname.startsWith("/contact") ||
+    // Label-specific landing pages
+    pathname.startsWith("/natashas-law") ||
+    pathname.startsWith("/prep-labels") ||
+    pathname.startsWith("/cooked-labels") ||
+    pathname.startsWith("/defrost-labels") ||
+    pathname.startsWith("/ingredient-labels") ||
+    pathname.startsWith("/expiry-date-labels") ||
+    pathname.startsWith("/haccp-labels") ||
+    pathname.startsWith("/dissolvable-kitchen-labels")
 
   // Allow public routes to pass through
   if (isPublicRoute) {

@@ -229,7 +229,7 @@ export const Pricing = () => {
             </span>
             <span className="flex items-center gap-1">
               <CheckCircle className="h-4 w-4 text-green-600" />
-              No credit card required
+              No charges during trial
             </span>
             <span className="flex items-center gap-1">
               <CheckCircle className="h-4 w-4 text-green-600" />

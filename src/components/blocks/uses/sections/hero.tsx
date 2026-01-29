@@ -72,7 +72,7 @@ export const UsesHero = () => {
             {/* Trust indicators */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <span>✓ Free 14-day trial</span>
-              <span>✓ No credit card required</span>
+              <span>✓ No charges during trial</span>
               <span>✓ Mobile Compatible</span>
             </div>
           </motion.div>

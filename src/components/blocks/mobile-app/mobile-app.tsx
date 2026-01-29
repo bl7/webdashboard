@@ -482,7 +482,7 @@ export const MobileAppPage = () => {
 
             <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
               <span>✓ Free 14-day trial</span>
-              <span>✓ No credit card required</span>
+              <span>✓ No charges during trial</span>
               <span>✓ Works with any thermal printer</span>
             </div>
           </motion.div>
