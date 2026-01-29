@@ -68,7 +68,7 @@ export const Pricing = () => {
               <Shield className="h-8 w-8 text-green-600" />
               <div className="text-left">
                 <div className="font-bold text-gray-900">Zero Fines</div>
-                <div className="text-sm text-gray-600">Compliance guaranteed</div>
+                <div className="text-sm text-gray-600">Built for compliance</div>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-white p-4 shadow-sm">

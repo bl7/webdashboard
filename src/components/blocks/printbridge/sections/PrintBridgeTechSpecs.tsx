@@ -17,12 +17,12 @@ const specs = [
   {
     icon: <Lock className="h-7 w-7 text-green-600" />,
     title: "Security",
-    desc: "All local processing, zero external dependencies, enterprise-grade security.",
+    desc: "All local processing, zero external dependencies, security-first design with controlled local connectivity.",
   },
   {
     icon: <RefreshCw className="h-7 w-7 text-pink-600" />,
     title: "Reliability",
-    desc: "Self-healing connections, automatic updates, 99.9% uptime.",
+    desc: "Self-healing connections, automatic updates, designed for high availability.",
   },
 ]
 
@@ -46,7 +46,7 @@ export const PrintBridgeTechSpecs = () => {
           </h3>
           <div className="mx-auto max-w-xl text-lg text-gray-600 lg:mx-0">
             Native Node.js and .NET apps, WebSocket communication, USB driver integration,
-            enterprise-grade security.
+            security-first design.
           </div>
         </motion.div>
 

@@ -19,7 +19,7 @@ const trustSignals = [
   { icon: Users, value: "500+", label: "locations managed" },
   { icon: TrendingUp, value: "£2.3M", label: "waste reduction tracked" },
   { icon: Star, value: "15,000+", label: "hours saved monthly" },
-  { icon: Award, value: "99.9%", label: "uptime guarantee" },
+  { icon: Award, value: "High", label: "availability" },
 ]
 
 export const TrustedBySection = () => {

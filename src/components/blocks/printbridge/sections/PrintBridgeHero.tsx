@@ -43,9 +43,9 @@ export const PrintBridgeHero = () => {
             viewport={{ once: true }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">No More Print Popups</span>
+              <span className="text-purple-600">One-click printing that stays reliable</span>
               <br className="hidden md:block" />
-              <span>PrintBridge ends browser print dialog frustration</span>
+              <span>in busy kitchens</span>
             </h1>
           </motion.div>
 
@@ -57,9 +57,7 @@ export const PrintBridgeHero = () => {
             viewport={{ once: true }}
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              PrintBridge is our simple printing solution—a small app for Windows
-              and Mac. PrintBridge links your web dashboard to your thermal printers. No tricky network
-              setup. No cloud needed. Just fast, reliable printing for your kitchen labels.
+              PrintBridge sends label jobs directly to your thermal printer, reducing print popups and keeping printing consistent across devices.
             </p>
           </motion.div>
 

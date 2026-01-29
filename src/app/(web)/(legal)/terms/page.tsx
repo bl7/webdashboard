@@ -96,11 +96,13 @@ const Page = () => {
           </p>
           <h3>7. Bluetooth & Location Access</h3>
           <p>
-            Certain features of the InstaLabel mobile application require access to your device's
-            location services in order to enable Bluetooth communication with compatible label
-            printers or other devices. By allowing the app to access location while in use, you
-            enable these functionality features. If you decline or disable this permission, some
-            features may not work.
+            Certain features of the InstaLabel mobile application require Bluetooth permissions to
+            enable communication with compatible label printers or other devices. On some older
+            Android versions, the operating system may prompt for Location permission to enable
+            Bluetooth scanning, but InstaLabel does not use this permission to track or collect your
+            location data. By allowing the app to access Bluetooth (and Location if prompted by your
+            device), you enable these functionality features. If you decline or disable these
+            permissions, some features may not work.
           </p>
           <h3>8. Acceptable Use</h3>
           <ul>
@@ -139,7 +141,7 @@ const Page = () => {
             <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
           </p>
         </article>
-        <div className="py-8 text-sm text-muted-foreground"> As of March 2nd, 2025</div>
+        <div className="py-8 text-sm text-muted-foreground">As of 15 Sep 2025</div>
       </div>
     </section>
   )

@@ -69,7 +69,7 @@ export const FinalCTA = () => {
             <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
               <CheckCircle className="h-8 w-8 text-green-300" />
               <div className="text-left">
-                <div className="font-bold text-white">99.9% Uptime</div>
+                <div className="font-bold text-white">High Availability</div>
                 <div className="text-sm text-white/80">Reliable & secure</div>
               </div>
             </div>

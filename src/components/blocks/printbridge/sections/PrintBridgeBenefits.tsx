@@ -30,7 +30,7 @@ export const PrintBridgeBenefits = () => {
       icon: <Users className="h-6 w-6" />,
       title: "Better Reliability",
       description: "Work without internet interruptions. PrintBridge maintains connection even when web access is limited.",
-      metric: "99.9% uptime"
+      metric: "High availability"
     }
   ]
 

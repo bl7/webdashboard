@@ -110,7 +110,7 @@ const Page = () => {
             <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
           </p>
         </article>
-        <div className="py-8 text-sm text-muted-foreground"> As of March 25th, 2024</div>
+        <div className="py-8 text-sm text-muted-foreground">As of 15 Sep 2025</div>
       </div>
     </section>
   )

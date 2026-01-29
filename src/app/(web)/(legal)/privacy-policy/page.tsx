@@ -83,15 +83,16 @@ const Page = () => {
           </ul>
           <h3>Bluetooth & Nearby Devices</h3>
           <p>
-            Our mobile application may request location permissions to enable Bluetooth
-            functionality for discovering and connecting to nearby label-printing devices. However,
-            we do not collect, store, or track your physical location data. The location permission
-            is used solely for Bluetooth device discovery and does not involve any location tracking
-            or data collection.
+            Our mobile application uses Bluetooth permissions to enable communication with nearby
+            label-printing devices. On some older Android versions, the operating system may prompt
+            for Location permission to enable Bluetooth scanning, but we do not collect, store, or
+            track your physical location data. The location permission (if prompted) is used solely
+            for Bluetooth device discovery and does not involve any location tracking or data
+            collection.
           </p>
           <p>
-            You may disable location permissions in your device settings; however, doing so may
-            prevent the app from connecting via Bluetooth and printing.
+            You may disable Bluetooth or location permissions in your device settings; however,
+            doing so may prevent the app from connecting via Bluetooth and printing.
           </p>
           <p>
             If you have questions about how Bluetooth connectivity works in the app, please contact
@@ -159,7 +160,7 @@ const Page = () => {
             </li>
           </ul>
         </article>
-        <div className="py-8 text-sm text-muted-foreground">As of March 25th, 2024</div>
+        <div className="py-8 text-sm text-muted-foreground">As of 15 Sep 2025</div>
       </div>
     </section>
   )

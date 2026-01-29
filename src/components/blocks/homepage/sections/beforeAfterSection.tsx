@@ -233,14 +233,14 @@ export const BeforeAfterSection = () => {
   const features = [
     {
       icon: CheckCircle2,
-      title: "Zero Manual Errors",
-      description: "Automatic date calculations prevent mistakes",
+      title: "Reduce Manual Errors",
+      description: "Reduce manual labeling errors with structured templates and smart ingredient/allergen data",
     },
 
     {
       icon: Shield,
-      title: "Full Compliance",
-      description: "Natasha's Law & EHO standards met automatically",
+      title: "Built for Compliance",
+      description: "Built for UK kitchen compliance workflows, including PPDS and allergen labeling",
     },
   ]
 

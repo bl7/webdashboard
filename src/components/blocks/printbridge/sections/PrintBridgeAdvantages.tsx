@@ -53,7 +53,7 @@ const advantages = [
       "No popups, no confusion",
       "Silent, local, secure printing",
       "Works offline, no cloud required",
-      "Instant, error-free label printing",
+      "Fast, reliable one-click printing, without the browser print popups",
     ],
     outcome: "Speed, reliability, happy users",
   },

@@ -162,21 +162,6 @@ export const Hero = () => {
               </Button>
             </Link>
           </div>
-
-          {/* Waitlist Link */}
-          <div className="mt-3 text-center md:text-left">
-            <Button
-              variant="link"
-              className="text-sm text-purple-600 hover:text-purple-800"
-              onClick={() => {
-                // Trigger the demo modal
-                const event = new CustomEvent("openDemoModal")
-                window.dispatchEvent(event)
-              }}
-            >
-              Request a Demo →
-            </Button>
-          </div>
         </div>
       </div>
       {/* Bottom fade overlay */}
