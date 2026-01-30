@@ -17,7 +17,6 @@ import {
 import { Button } from "@/components/ui"
 import { ArrowRight, StepForward } from "lucide-react"
 import Link from "next/link"
-import FeatureImage from "@/assets/images/feature.png"
 import { motion } from "framer-motion"
 
 export const Services = () => {

@@ -65,16 +65,9 @@ export const SoftwareFeaturesGrid = () => (
           ))}
         </ul>
       </div>
-      {/* Image */}
+      {/* Image - Removed broken feature.png reference */}
       <div className="flex flex-1 justify-center">
-        <Image
-          src="/assets/images/feature.png"
-          alt="Software screenshot"
-          width={1536}
-          height={1024}
-          className="w-full max-w-xs rounded-xl shadow-lg"
-          sizes="(max-width: 768px) 100vw, 50vw"
-        />
+        {/* Image removed - feature.png was not found */}
       </div>
     </div>
   </section>
