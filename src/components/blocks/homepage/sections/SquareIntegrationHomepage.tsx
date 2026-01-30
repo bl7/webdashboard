@@ -43,11 +43,6 @@ export const SquareIntegrationHomepage = () => {
       description: "Order labels right from your dashboard.",
     },
     {
-      icon: Square,
-      title: "Square Menu Sync",
-      description: "Instant 2-way sync with Square + allergen detection.",
-    },
-    {
       icon: Upload,
       title: "Excel Upload",
       description: "Bulk import menus with smart allergen detection.",

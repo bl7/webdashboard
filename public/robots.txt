@@ -14,7 +14,6 @@ Allow: /printbridge
 Allow: /plan
 Allow: /about
 Allow: /bookdemo
-Allow: /square-integration
 Allow: /faqs
 
 # Block private areas

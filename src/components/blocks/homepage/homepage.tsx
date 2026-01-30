@@ -6,7 +6,6 @@ import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcas
 import { FAQ } from "./sections/FAQ"
 import { AppDownload } from "./sections/AppDownload"
 import {
-  SquareIntegrationHomepage,
   SimplePricing,
   AllergenQuizSection,
 } from "./sections/SquareIntegrationHomepage"
@@ -20,7 +19,6 @@ export const Homepage = () => {
       <Services />
       <BeforeAfterSection />
       <FAQ />
-      <SquareIntegrationHomepage />
       <SimplePricing />
       <HowItWorks />
       {/* <PPDSLabelHomepageSection /> */}

@@ -60,8 +60,8 @@ export const PricingHero = () => {
               <Link href="/register">Start Free Trial</Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg">
-              See All Plans
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/features">See All Features</Link>
             </Button>
           </div>
 

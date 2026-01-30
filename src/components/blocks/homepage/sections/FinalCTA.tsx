@@ -31,16 +31,11 @@ export const FinalCTA = () => {
             </div>
             
             <h3 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-tight text-white">
-              Ready to Transform
-              <br />
-              <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                Your Kitchen?
-              </span>
+              Ready to Get Started?
             </h3>
             
             <p className="mx-auto max-w-3xl text-xl text-white/90 leading-relaxed">
-              Join 500+ kitchens that have eliminated labeling chaos and compliance risks. 
-              Start your free trial today and see the difference in your first week.
+              Join kitchens across the UK using InstaLabel for compliant labeling. Start your free trial today.
             </p>
           </motion.div>
 
@@ -62,8 +57,8 @@ export const FinalCTA = () => {
             <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
               <Star className="h-8 w-8 text-yellow-300" />
               <div className="text-left">
-                <div className="font-bold text-white">4.9/5 Rating</div>
-                <div className="text-sm text-white/80">From verified customers</div>
+                <div className="font-bold text-white">Trusted by Kitchens</div>
+                <div className="text-sm text-white/80">Across the UK</div>
               </div>
             </div>
             <div className="flex items-center gap-3 p-4 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20">
@@ -108,7 +103,7 @@ export const FinalCTA = () => {
             <div className="flex flex-wrap items-center justify-center gap-8 text-sm text-white/80">
               <span className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-300" />
-                No credit card required
+                No charges during trial
               </span>
               <span className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-green-300" />
@@ -126,9 +121,9 @@ export const FinalCTA = () => {
             
             <div className="text-center">
               <p className="text-white/70 text-sm">
-                "We saved £3,200 in the first month alone. The setup was incredibly easy." 
+                "The setup was incredibly easy and our labeling is now consistent and compliant." 
                 <br />
-                <span className="font-semibold">— Sarah Mitchell, Head Chef, Urban Kitchen</span>
+                <span className="font-semibold">— Head Chef, UK Restaurant</span>
               </p>
             </div>
           </motion.div>

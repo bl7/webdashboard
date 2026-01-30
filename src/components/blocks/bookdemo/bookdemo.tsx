@@ -324,13 +324,6 @@ export const BookDemo = () => {
                         Android app functionality
                       </span>
                     </li>
-                    <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-blue-700">
-                        <strong>Square POS Integration:</strong> Watch real-time menu sync and
-                        allergen detection
-                      </span>
-                    </li>
                   </ul>
                 </div>
               </motion.div>

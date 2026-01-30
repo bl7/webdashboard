@@ -97,7 +97,7 @@ const faqsList = [
   },
   {
     q: "Is there a trial available?",
-    a: "Yes! Try InstaLabel free for 14 days—no credit card required—with full access to features and existing printer support.",
+    a: "Yes! Try InstaLabel free for 14 days—no charges during trial—with full access to features and existing printer support.",
   },
 ]
 

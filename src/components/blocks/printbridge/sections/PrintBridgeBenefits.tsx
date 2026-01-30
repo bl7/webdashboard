@@ -97,7 +97,7 @@ export const PrintBridgeBenefits = () => {
             </div>
             <div className="mt-4 text-sm text-gray-500">
               Sign up to get free access to PrintBridge.<br />
-              ✓ 14-day free trial • ✓ No credit card required • ✓ Setup in 2 minutes
+              ✓ 14-day free trial • ✓ No charges during trial • ✓ Setup in 2 minutes
             </div>
           </div>
         </div>

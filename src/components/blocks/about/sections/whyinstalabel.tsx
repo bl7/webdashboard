@@ -18,10 +18,10 @@ export const WhyInstaLabel = () => {
           className="space-y-4 text-center"
         >
           {/* Header */}
-          <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
             Why InstaLabel?
-          </h3>
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
+          </h2>
+          <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
             Born from real kitchen challenges, designed to simplify and secure your food operations.
           </p>
         </motion.div>
@@ -44,7 +44,7 @@ export const WhyInstaLabel = () => {
               </div>
 
               <h3 className="mb-2 text-lg font-semibold text-gray-900">Save Time & Reduce Waste</h3>
-              <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              <p className="mb-4 text-base leading-relaxed text-gray-600">
                 Automate ingredient labeling and expiry tracking, streamlining kitchen workflows and
                 cutting down waste.
               </p>
@@ -65,7 +65,7 @@ export const WhyInstaLabel = () => {
               </div>
 
               <h3 className="mb-2 text-lg font-semibold text-gray-900">Simplify Compliance</h3>
-              <p className="mb-4 text-sm leading-relaxed text-gray-600">
+              <p className="mb-4 text-base leading-relaxed text-gray-600">
                 Ensure accurate allergen and ingredient information with easy-to-use smart labels
                 that meet safety standards.
               </p>
@@ -80,7 +80,7 @@ export const WhyInstaLabel = () => {
         {/* Bottom CTA/Trust Section */}
         <div className="text-center">
           <div className="inline-flex items-center gap-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-            <div className="text-sm text-gray-600">
+            <div className="text-base text-gray-600">
               {/* <span className="font-semibold text-gray-900">Trusted by 500+ restaurants</span> •  */}
               <span className="ml-1 font-semibold">HACCP Compliant</span> •
               <span className="ml-1">No training required</span>

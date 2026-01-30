@@ -35,9 +35,7 @@ export const UsesHero = () => {
             </h1>
 
             <p className="mx-auto max-w-2xl text-lg text-gray-600">
-              We built InstaLabel to remove chaos from food labeling — and help you stay mobile
-              devices. Track usage with live analytics. Get detailed reports to improve your kitchen
-              operations and reduce waste.
+              We built InstaLabel to remove chaos from food labeling. Print from mobile devices, track usage with live analytics, and get detailed reports to improve your kitchen operations and reduce waste.
             </p>
 
             {/* Key Benefits */}
@@ -62,11 +60,9 @@ export const UsesHero = () => {
                 <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Link href="/features">
-                <Button variant="outline" size="lg">
-                  Explore Uses
-                </Button>
-              </Link>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/features">Explore Uses</Link>
+              </Button>
             </div>
 
             {/* Trust indicators */}

@@ -51,11 +51,6 @@ export const CustomerFeedback = () => {
       freeTrial: false,
       fullFeatures: true,
     },
-    {
-      title: "Square POS integration activation",
-      freeTrial: false,
-      fullFeatures: true,
-    },
   ]
 
   const setupSupport = [

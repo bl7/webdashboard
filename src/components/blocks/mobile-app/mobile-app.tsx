@@ -81,6 +81,9 @@ export const MobileAppPage = () => {
                   Download on Android
                 </Button>
               </Link>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/register">Start Free Trial</Link>
+              </Button>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">

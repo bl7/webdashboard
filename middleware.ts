@@ -36,7 +36,6 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/faqs") ||
     // Landing / integration pages
     pathname.startsWith("/printbridge") ||
-    pathname.startsWith("/square-integration") ||
     pathname.startsWith("/mobile-app") ||
     pathname.startsWith("/kitchen-label-printer") ||
     pathname.startsWith("/label-printer-uk-comparison") ||
@@ -120,7 +119,7 @@ export const config = {
      * - public web pages (features, plan, about, etc.)
      * Note: Static file extensions are handled in the middleware function itself
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|boss|features|plan|about|uses|printbridge|square-integration|allergen-compliance|allergen-guide|bookdemo|blog|faqs|privacy-policy|terms|cookie-policy).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|boss|features|plan|about|uses|printbridge|allergen-compliance|allergen-guide|bookdemo|blog|faqs|privacy-policy|terms|cookie-policy).*)",
   ],
 }
 

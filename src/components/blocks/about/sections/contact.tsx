@@ -34,10 +34,10 @@ export const Contact = () => {
           viewport={{ once: true }}
           className="mb-12 text-center sm:mb-16"
         >
-          <h3 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
             Get in Touch
-          </h3>
-          <p className="mx-auto max-w-3xl text-xl leading-relaxed text-gray-600">
+          </h2>
+          <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
             Tell us a little bit about who you are, and we'll tell you a whole lot more about who we
             are.
           </p>
@@ -59,8 +59,8 @@ export const Contact = () => {
                     <MapPin className="h-6 w-6" />
                   </div>
                   <div>
-                    <dt className="mb-1 text-lg font-bold text-gray-900">Address</dt>
-                    <dd className="text-gray-600">Bournemouth, UK</dd>
+                    <dt className="mb-1 text-base font-semibold text-gray-900">Address</dt>
+                    <dd className="text-base text-gray-600">Bournemouth, UK</dd>
                   </div>
                 </div>
 

@@ -97,9 +97,7 @@ export const PrintBridgeHero = () => {
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="outline" size="lg" asChild>
-                <Link href="/printbridge">
-                  Learn More About PrintBridge
-                </Link>
+                <Link href="/bookdemo">Book Demo</Link>
               </Button>
             </div>
           </motion.div>

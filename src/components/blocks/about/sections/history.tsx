@@ -54,7 +54,7 @@ export const History = () => {
         >
           {/* Header */}
           <div className="mb-12 text-center sm:mb-16">
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
               From Kitchen Chaos to Labeling Clarity
             </h2>
             <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
@@ -68,7 +68,7 @@ export const History = () => {
                 🚀
               </div>
               <div className="ml-20">
-                <p className="text-lg leading-relaxed text-gray-700 sm:text-xl">
+                <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
                   InstaLabel wasn't born out of a startup incubator or a pitch deck — it started
                   behind a prep counter, during a lunch rush. We were there when the labels smudged,
                   the expiry dates faded, and nobody could remember if the sauce tub was opened
@@ -87,7 +87,7 @@ export const History = () => {
                     <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 text-lg text-white">
                       🎯
                     </div>
-                    <p className="text-sm leading-relaxed text-gray-600">
+                    <p className="text-base leading-relaxed text-gray-600">
                       We knew kitchens needed a better way to track what's fresh, what's safe, and
                       what's compliant. So we built it — not with flashy tech jargon, but with real
                       kitchen problems in mind. InstaLabel began as a tool for auto-calculating
@@ -147,7 +147,7 @@ export const History = () => {
           {/* Call to Action */}
           <div className="mt-16 text-center">
             <Link href="/register">
-              <button className="rounded-xl bg-primary px-8 py-4 text-base font-semibold text-white shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl">
+              <button className="rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl">
                 <span className="mr-2">✨</span>
                 Ready to Transform Your Kitchen?
               </button>

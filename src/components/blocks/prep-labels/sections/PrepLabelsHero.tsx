@@ -94,7 +94,7 @@ export const PrepLabelsHero = () => {
           >
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
-                <Link href="/uses">See Prep Labels in Action</Link>
+                <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
               <Button variant="outline" size="lg" asChild>

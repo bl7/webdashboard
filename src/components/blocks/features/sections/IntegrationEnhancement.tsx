@@ -21,18 +21,7 @@ export const IntegrationEnhancement = () => {
             InstaLabel works with your existing systems and scales with your business growth.
           </p>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-green-100">
-                <Link className="h-6 w-6 text-green-600" />
-              </div>
-              <h4 className="mb-2 text-lg font-semibold text-gray-900">Square POS Integration</h4>
-              <p className="text-sm text-gray-600">
-                One-click connection with automatic menu import, AI-powered allergen detection, and
-                real-time sync.
-              </p>
-            </div>
-
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-1">
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
                 <Shield className="h-6 w-6 text-blue-600" />

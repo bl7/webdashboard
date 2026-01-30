@@ -292,7 +292,7 @@ const knowledgeBase = [
       "work with current systems",
     ],
     answer:
-      "InstaLabel is designed to work alongside your existing systems. You can import your menu items and ingredients by uploading an Excel file formatted properly, or even import directly by integrating with Square POS. We're actively developing additional POS integrations and multi-system connectivity. The system is built with open APIs and can export data for use in other systems. For now, you can manually import your menu items and ingredients, which typically takes just a few minutes.",
+      "InstaLabel is designed to work alongside your existing systems. You can import your menu items and ingredients by uploading an Excel file formatted properly. The system is built with open APIs and can export data for use in other systems. You can manually import your menu items and ingredients, which typically takes just a few minutes.",
   },
   {
     keywords: [

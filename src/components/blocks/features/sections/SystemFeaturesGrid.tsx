@@ -51,11 +51,10 @@ const softwareFeatures = [
     icon: <Zap className="h-7 w-7 text-yellow-500" />,
     title: "Lightning Fast Setup",
     description:
-      "Get started in minutes with automatic printer detection, one-click Square POS integration, and intuitive guided onboarding.",
+      "Get started in minutes with automatic printer detection and intuitive guided onboarding.",
     technicalDetails: [
       "PrintBridge software automatically detects USB thermal printers on Windows/Mac",
       "Android app pairs with Bluetooth printers in under 30 seconds",
-      "Square connection uses OAuth authentication for secure one-click linking",
       "Menu import wizard guides you through ingredient and allergen mapping",
       "Test print feature verifies printer compatibility before going live",
     ],

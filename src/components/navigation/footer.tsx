@@ -178,12 +178,6 @@ export const Footer = () => {
                 Label Printer UK Comparison
               </Link>
               <Link
-                href="/square-integration"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
-              >
-                Square Integration
-              </Link>
-              <Link
                 href="/allergen-compliance"
                 className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
               >

@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "Kitchen Labeling Software Features | Food Safety & Technical Specifications",
   description:
-    "Explore InstaLabel's complete kitchen labeling software features. Thermal printing, HACCP compliance, allergen tracking, multi-location management, and Square POS integration. Technical specs included.",
+    "Explore InstaLabel's complete kitchen labeling software features. Thermal printing, HACCP compliance, allergen tracking, and multi-location management. Technical specs included.",
   keywords: [
     "kitchen label printer software",
     "best kitchen label software",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Kitchen Labeling Software Features | Food Safety & Technical Specifications",
     description:
-      "Explore InstaLabel's complete kitchen labeling software features. Thermal printing, HACCP compliance, allergen tracking, multi-location management, and Square POS integration. Technical specs included.",
+      "Explore InstaLabel's complete kitchen labeling software features. Thermal printing, HACCP compliance, allergen tracking, and multi-location management. Technical specs included.",
     url: "https://www.instalabel.co/features",
     type: "website",
     images: [
@@ -117,7 +117,7 @@ const Page = () => {
           name: "What are the main features of InstaLabel kitchen labeling software?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "InstaLabel features include AI-powered allergen detection, Natasha's Law compliance, thermal printer support, mobile compatibility, real-time analytics, HACCP compliance, and Square POS integration.",
+            text: "InstaLabel features include AI-powered allergen detection, Natasha's Law compliance, thermal printer support, mobile compatibility, real-time analytics, and HACCP compliance.",
           },
         },
         {

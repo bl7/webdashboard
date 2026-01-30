@@ -117,7 +117,7 @@ export const AllergenGuideHero = () => {
                 <Link href="#quiz">Jump to the Quiz ↓</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg">
+              <Button variant="outline" size="lg" asChild>
                 <Link href="#allergens-list">View All Allergens</Link>
               </Button>
             </div>

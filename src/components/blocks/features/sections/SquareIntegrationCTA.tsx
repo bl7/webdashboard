@@ -110,7 +110,7 @@ export const SquareIntegrationCTA = () => {
           >
             <p className="mb-4 text-sm text-purple-200">Trusted by restaurants across the UK</p>
             <div className="flex items-center justify-center space-x-8 text-xs text-purple-200">
-              <span>✓ No credit card required</span>
+              <span>✓ No charges during trial</span>
               <span>✓ 14-day free trial</span>
               <span>✓ Cancel anytime</span>
             </div>

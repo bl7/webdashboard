@@ -34,9 +34,7 @@ export const FeaturesHero = () => {
           </h2>
 
           <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-            We built InstaLabel to remove chaos from food labeling — and help you stay
-            inspection-ready. Print from web dashboard or mobile devices, track usage with real-time
-            analytics, and optimize your kitchen operations with comprehensive reporting.
+            We built InstaLabel to remove chaos from food labeling and help you stay inspection-ready. Print from web dashboard or mobile devices, track usage with real-time analytics, and optimize your kitchen operations with comprehensive reporting.
           </p>
 
           {/* Key Benefits */}
@@ -57,16 +55,18 @@ export const FeaturesHero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-            <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
-              <Link href="/register">Start Free Trial</Link>
-              <ArrowRight className="ml-2 h-4 w-4" />
+            <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700" asChild>
+              <Link href="/register">
+                Start Free Trial
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </Button>
-            <Link href="/printbridge">
-              <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/printbridge">
                 <Wifi className="mr-2 h-4 w-4" />
                 Learn About PrintBridge
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
 
           {/* Trust indicators */}
@@ -125,7 +125,9 @@ export const FeaturesHero = () => {
       {/* Bottom fade overlay */}
       <div
         className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
-        style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
+        style={{
+          background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)",
+        }}
       />
     </section>
   )

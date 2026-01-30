@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
 import BridgeDownload from "@/components/BridgeDownload"
-import SquareIntegration from "@/components/SquareIntegration"
 
 const labelTypes = [
   { label: "Cooked", key: "cooked" },
@@ -309,82 +308,6 @@ export default function Settings() {
         </div>
       </div>
 
-      {/* Square POS Integration - Top Row */}
-      <div className="bg-white rounded-xl shadow-lg border p-6">
-        <SquareIntegration userId={userId} onSyncComplete={(result) => {
-          showFeedback(`Square sync completed! ${result.itemsCreated} items created`, "success")
-        }} />
-      </div>
-
-      {/* Square Integration Setup - Bottom Row */}
-      <div className="bg-white rounded-xl shadow-lg border p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Square Integration Setup</h2>
-        
-        <div className="space-y-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-900 mb-3">📋 How to Store Ingredients in Square Dashboard</h3>
-            <div className="space-y-3 text-sm text-blue-800">
-              <div className="flex items-start gap-2">
-                <span className="font-bold">1.</span>
-                <div>
-                  <strong>Create Modifier Lists for Ingredients:</strong>
-                  <ul className="mt-1 ml-4 space-y-1">
-                    <li>• Go to Square Dashboard → Items → Modifier Lists</li>
-                    <li>• Create a new modifier list named "Ingredients - [Ingredient Name]"</li>
-                    <li>• Example: "Ingredients - Chicken", "Ingredients - Tomato"</li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <span className="font-bold">2.</span>
-                <div>
-                  <strong>Add Ingredients as Modifiers:</strong>
-                  <ul className="mt-1 ml-4 space-y-1">
-                    <li>• Inside each modifier list, add the ingredient name as a modifier</li>
-                    <li>• Example: In "Ingredients - Chicken" list, add "Chicken" as a modifier</li>
-                    <li>• This allows InstaLabel to extract ingredients automatically</li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <span className="font-bold">3.</span>
-                <div>
-                  <strong>Add Allergen Information to Descriptions:</strong>
-                  <ul className="mt-1 ml-4 space-y-1">
-                    <li>• In the modifier description, include allergen info</li>
-                    <li>• Example: "Contains Chicken. Allergens: None"</li>
-                    <li>• For menu items: "Menu item: Caesar Salad. Allergens: Gluten, Eggs"</li>
-                  </ul>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <span className="font-bold">4.</span>
-                <div>
-                  <strong>Link Modifier Lists to Menu Items:</strong>
-                  <ul className="mt-1 ml-4 space-y-1">
-                    <li>• When creating menu items, add the ingredient modifier lists</li>
-                    <li>• This creates the ingredient structure InstaLabel needs</li>
-                    <li>• Example: Caesar Salad → Add "Ingredients - Romaine", "Ingredients - Parmesan"</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h3 className="font-semibold text-green-900 mb-3">✅ Best Practices</h3>
-            <ul className="space-y-2 text-sm text-green-800">
-              <li>• <strong>Use consistent naming:</strong> "Ingredients - [Ingredient Name]" format</li>
-              <li>• <strong>Include allergens in descriptions:</strong> Square API doesn't support custom allergen fields</li>
-              <li>• <strong>One ingredient per modifier list:</strong> Keeps data clean and structured</li>
-              <li>• <strong>Update descriptions when ingredients change:</strong> Ensures accurate allergen detection</li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
       {/* Feedback message */}
       {feedbackMsg && (
