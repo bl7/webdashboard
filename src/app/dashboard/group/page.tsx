@@ -251,9 +251,9 @@ export default function GroupsDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Groups Dashboard</h2>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold sm:text-2xl">Groups Dashboard</h2>
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={handleExportExcel}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>

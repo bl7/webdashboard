@@ -193,10 +193,10 @@ export default function AllergenDashboard() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Allergen Dashboard</h2>
-        <div>
-          <Button variant="outline" className="mr-5" onClick={handleExportExcel}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold sm:text-2xl">Allergen Dashboard</h2>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={handleExportExcel}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
           <Button onClick={() => setShowAddModal(true)} variant="default">
@@ -206,7 +206,7 @@ export default function AllergenDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="rounded-xl border bg-card p-6 shadow">
           <p className="text-muted-foreground">Custom Allergens</p>
           <h3 className="text-2xl font-bold">{customCount}</h3>
@@ -218,10 +218,10 @@ export default function AllergenDashboard() {
       </div>
 
       <div className="mt-4 overflow-x-auto rounded-2xl border bg-card shadow-sm">
-        <div className="mt-4 flex items-center justify-between gap-4 p-5">
+        <div className="mt-4 flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
           <Input
             placeholder="Search allergens..."
-            className="max-w-sm"
+            className="w-full max-w-sm"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -230,7 +230,7 @@ export default function AllergenDashboard() {
             value={filterType}
             onValueChange={(value) => setFilterType(value as "All" | "Custom" | "Standard")}
           >
-            <SelectTrigger className="w-[150px]">
+            <SelectTrigger className="w-full sm:w-[150px]">
               <SelectValue placeholder="Filter by Type" />
             </SelectTrigger>
             <SelectContent>

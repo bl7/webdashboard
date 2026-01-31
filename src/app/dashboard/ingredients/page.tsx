@@ -291,16 +291,16 @@ export default function IngredientsTable() {
   }
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Ingredients Dashboard</h2>
-        <div>
-          <Button variant="outline" className="mr-5" onClick={exportToXLSX}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold sm:text-2xl">Ingredients Dashboard</h2>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={exportToXLSX}>
             <FileDown className="mr-2 h-4 w-4" /> Export Data
           </Button>
 
           {/* Bulk Delete Button */}
           {selectedIngredients.length > 0 && (
-            <Button variant="destructive" className="mr-5" onClick={() => setBulkDeleteOpen(true)}>
+            <Button variant="destructive" onClick={() => setBulkDeleteOpen(true)}>
               <Trash className="mr-2 h-4 w-4" />
               Delete {selectedIngredients.length} Selected
             </Button>

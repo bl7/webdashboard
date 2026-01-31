@@ -218,11 +218,11 @@ export default function DashboardPage() {
                 >
                   <div className={`relative min-h-[500px] p-8 ${CARD_STYLES[activeList].bg} `}>
                     {/* Header */}
-                    <div className="mb-8 flex items-center justify-between">
+                    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="text-3xl">{CARD_STYLES[activeList].icon}</div>
+                        <div className="text-2xl sm:text-3xl">{CARD_STYLES[activeList].icon}</div>
                         <div>
-                          <h2 className={`text-2xl font-bold ${CARD_STYLES[activeList].text}`}>
+                          <h2 className={`text-xl font-bold sm:text-2xl ${CARD_STYLES[activeList].text}`}>
                             {listTitle}
                           </h2>
                           <p className="mt-1 text-sm text-slate-600">
@@ -234,7 +234,7 @@ export default function DashboardPage() {
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="rounded-xl border border-white/50 bg-white/80 px-6 py-3 font-medium text-slate-700 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow-lg"
+                        className="w-full rounded-xl border border-white/50 bg-white/80 px-6 py-3 font-medium text-slate-700 shadow-md backdrop-blur-sm transition-all duration-200 hover:bg-white hover:shadow-lg sm:w-auto"
                         onClick={() => setActiveList(null)}
                       >
                         ← Back to Overview

@@ -869,9 +869,9 @@ export default function PrintSessionsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold">Print Logs</h2>
-        <Button variant="outline" className="mr-5" onClick={exportToXLSX}>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xl font-semibold sm:text-2xl">Print Logs</h2>
+        <Button variant="outline" onClick={exportToXLSX}>
           <FileDown className="mr-2 h-4 w-4" /> Export Data
         </Button>
       </div>
