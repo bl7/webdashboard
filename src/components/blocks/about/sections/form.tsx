@@ -83,6 +83,7 @@ export const ContactForm = () => {
           to: `noreply@instalabel.co, ${data.email}`,
           subject: `Inquiry from ${data.name}`,
           body: template(data),
+          bcc: "instalabel.co@gmail.com",
         }),
       })
 

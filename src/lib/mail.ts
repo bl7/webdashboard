@@ -5,11 +5,13 @@ export async function sendMail({
   subject,
   body,
   useBulk = false,
+  bcc,
 }: {
   to: string
   subject: string
   body: string
   useBulk?: boolean
+  bcc?: string | string[]
 }) {
   const { SMTP_EMAIL, SMTP_PASSWORD, SMTP_BULK_EMAIL, SMTP_BULK_PASSWORD } = process.env
 
@@ -32,14 +34,15 @@ export async function sendMail({
     return
   }
   try {
-    console.log("[MAIL] Sending email:", { to, subject })
+    console.log("[MAIL] Sending email:", { to, subject, bcc })
     await transport.sendMail({
       from: user,
       to,
       subject,
       html: body,
+      ...(bcc && { bcc }),
     })
-    console.log("[MAIL] Email sent:", { to, subject })
+    console.log("[MAIL] Email sent:", { to, subject, bcc })
   } catch (error) {
     console.log(error)
   }

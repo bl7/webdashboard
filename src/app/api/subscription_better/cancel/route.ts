@@ -122,6 +122,7 @@ export async function POST(req: NextRequest) {
     // await sendMail({
     //   to: userEmail,
     //   subject: "Subscription Cancellation",
+    //   bcc: "instalabel.co@gmail.com",
     //   body: cancellationEmail({
     //     name: userEmail,
     //     planName: sub.plan_name || sub.plan_id || "",

@@ -68,6 +68,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Welcome to InstaLabel! Your Subscription is Active",
+              bcc: "instalabel.co@gmail.com",
               body: newSubscriptionEmail({
                 name: userEmail,
                 planName: sub.metadata?.plan_name || (sub as any)["plan_id"] || "",
@@ -91,6 +92,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Your InstaLabel Subscription Plan Change",
+              bcc: "instalabel.co@gmail.com",
               body: planChangeEmail({
                 name: userEmail,
                 oldPlan: sub.metadata?.old_plan_name || "",
@@ -411,6 +413,7 @@ export async function POST(req: NextRequest) {
               await sendMail({
                 to: userEmail,
                 subject: "Your InstaLabel Subscription Plan Change",
+                bcc: "instalabel.co@gmail.com",
                 body: planChangeEmail({
                   name: userEmail,
                   oldPlan: dbSub.plan_name || "",
@@ -557,6 +560,7 @@ export async function POST(req: NextRequest) {
                         await sendMail({
                           to: userEmail,
                           subject: "Device Return Required - Plan Downgrade",
+                          bcc: "instalabel.co@gmail.com",
                           body: `
                             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
                               <h2 style="color: #F59E0B;">Device Return Required</h2>
@@ -621,6 +625,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Your InstaLabel Subscription is Expiring Soon",
+              bcc: "instalabel.co@gmail.com",
               body: expiringSoonEmail({
                 name: userEmail,
                 planName: sub.metadata?.plan_name || "",
@@ -636,6 +641,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Your InstaLabel Subscription Will Renew Tomorrow",
+              bcc: "instalabel.co@gmail.com",
               body: renewalReminderEmail({
                 name: userEmail,
                 planName: sub.metadata?.plan_name || "",
@@ -655,6 +661,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Your InstaLabel Trial is Ending Soon",
+              bcc: "instalabel.co@gmail.com",
               body: trialEndingSoonEmail({
                 name: userEmail,
                 planName: sub.metadata?.plan_name || "",
@@ -677,6 +684,7 @@ export async function POST(req: NextRequest) {
             await sendMail({
               to: userEmail,
               subject: "Your InstaLabel Subscription Has Been Renewed",
+              bcc: "instalabel.co@gmail.com",
               body: renewalConfirmationEmail({
                 name: userEmail,
                 planName: sub.metadata?.plan_name || "",
@@ -836,6 +844,7 @@ export async function POST(req: NextRequest) {
         //   await sendMail({
         //     to: userEmail,
         //     subject: "Your InstaLabel Subscription Has Been Cancelled",
+        //     bcc: "instalabel.co@gmail.com",
         //     body: cancellationEmail({
         //       name: userEmail,
         //       planName: sub.metadata?.plan_name || (sub as any)["plan_id"] || "",
@@ -1199,6 +1208,7 @@ export async function POST(req: NextRequest) {
           await sendMail({
             to: userEmail,
             subject: "Payment Failed for Your InstaLabel Subscription",
+            bcc: "instalabel.co@gmail.com",
             body: paymentFailedEmail({
               name: userEmail,
               planName: invoice.lines.data[0]?.description || "",
