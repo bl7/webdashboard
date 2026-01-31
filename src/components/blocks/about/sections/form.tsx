@@ -80,7 +80,7 @@ export const ContactForm = () => {
       const response = await fetch("/api/contact", {
         method: "POST",
         body: JSON.stringify({
-          to: `noreply@instalabel.co, ${data.email}`,
+          to: data.email,
           subject: `Inquiry from ${data.name}`,
           body: template(data),
           bcc: "instalabel.co@gmail.com",
