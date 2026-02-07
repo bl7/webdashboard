@@ -7,6 +7,6 @@
       "maxDuration": 60
     }
   },
-  "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "buildCommand": "npm run install:playwright && npm run build",
+  "installCommand": "npm install && npm run install:playwright"
 }
