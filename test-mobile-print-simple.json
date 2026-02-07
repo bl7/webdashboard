@@ -1,0 +1,47 @@
+{
+  "type": "menu",
+  "labelType": "prep",
+  "name": "Thai Red Curry",
+  "ingredients": [
+    "Chicken Thigh",
+    "Red Curry Paste",
+    "Coconut Milk",
+    "Thai Basil"
+  ],
+  "allIngredients": [
+    {
+      "uuid": "1",
+      "ingredientName": "Chicken Thigh",
+      "allergens": []
+    },
+    {
+      "uuid": "2",
+      "ingredientName": "Red Curry Paste",
+      "allergens": []
+    },
+    {
+      "uuid": "3",
+      "ingredientName": "Coconut Milk",
+      "allergens": []
+    },
+    {
+      "uuid": "4",
+      "ingredientName": "Thai Basil",
+      "allergens": []
+    }
+  ],
+  "printedOn": "2024-01-15",
+  "expiryDate": "2024-01-17",
+  "useInitials": true,
+  "selectedInitial": "BL",
+  "labelHeight": "40mm",
+  "printer": {
+    "dpi": 203,
+    "labelSizeMm": {
+      "width": 60,
+      "height": 40
+    }
+  },
+  "copies": 1
+}
+
