@@ -1,6 +1,7 @@
 /**
  * Server-side rendering utility for label components
- * Uses Playwright to render React components to PNG with pixel-identical output
+ * Uses Playwright Core with @sparticuz/chromium for serverless-friendly rendering
+ * This ensures pixel-identical output to web labels
  */
 
 import React from "react"
@@ -16,34 +17,30 @@ interface RenderOptions {
 }
 
 /**
- * Renders a label component to PNG using Playwright
- * This ensures pixel-identical output to web labels
+ * Renders a label component to PNG using Playwright Core with @sparticuz/chromium
+ * This ensures pixel-identical output to web labels and works in serverless environments
  */
 export async function renderLabelToPng(
   request: MobilePrintRequest,
   options: RenderOptions
 ): Promise<Buffer> {
-  // Dynamically import Playwright (only when needed)
-  const { chromium } = await import("playwright")
+  // Dynamically import Playwright Core and Chromium (only when needed)
+  const { chromium: playwrightChromium } = await import("playwright-core")
+  const chromium = (await import("@sparticuz/chromium")).default
 
-  // Launch browser with error handling
+  // Launch browser with serverless-friendly Chromium
   let browser
   try {
-    browser = await chromium.launch({
-      headless: true,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Required for some environments
+    // Use @sparticuz/chromium for serverless environments (Vercel, AWS Lambda, etc.)
+    browser = await playwrightChromium.launch({
+      executablePath: await chromium.executablePath(),
+      args: chromium.args,
+      headless: chromium.headless,
     })
   } catch (error: any) {
-    // Check if it's a browser installation error
-    if (
-      error?.message?.includes("Executable doesn't exist") ||
-      error?.message?.includes("browserType.launch")
-    ) {
-      throw new Error(
-        "Playwright browsers not installed. Please run: npx playwright install chromium"
-      )
-    }
-    throw error
+    throw new Error(
+      `Failed to launch browser: ${error?.message || String(error)}`
+    )
   }
 
   try {
