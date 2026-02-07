@@ -26,11 +26,23 @@ export async function renderLabelToPng(
   // Dynamically import Playwright (only when needed)
   const { chromium } = await import("playwright")
 
-  // Launch browser
-  const browser = await chromium.launch({
-    headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"], // Required for some environments
-  })
+  // Launch browser with error handling
+  let browser
+  try {
+    browser = await chromium.launch({
+      headless: true,
+      args: ["--no-sandbox", "--disable-setuid-sandbox"], // Required for some environments
+    })
+  } catch (error: any) {
+    // Check if it's a browser installation error
+    if (error?.message?.includes("Executable doesn't exist") || error?.message?.includes("browserType.launch")) {
+      throw new Error(
+        "Playwright browsers not installed. Please run: npx playwright install chromium\n" +
+        "Or ensure the postinstall script runs during deployment."
+      )
+    }
+    throw error
+  }
 
   try {
     const page = await browser.newPage()

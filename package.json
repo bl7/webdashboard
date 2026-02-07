@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postinstall": "npx playwright install --with-deps chromium || true",
     "start": "next start",
     "lint": "next lint",
     "test-db": "tsx test.ts",
