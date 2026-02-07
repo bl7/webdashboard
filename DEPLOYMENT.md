@@ -30,11 +30,22 @@ npx playwright install --with-deps chromium
 
 #### Vercel / Serverless
 
-Playwright browsers are large (~170MB). For serverless deployments:
+**✅ Configured for Vercel**: The `postinstall` script automatically installs Playwright browsers during Vercel's build process.
 
-1. **Option 1**: Use Vercel's Playwright support (if available)
-2. **Option 2**: Use a Docker container with browsers pre-installed
-3. **Option 3**: Use a separate rendering service
+**Configuration:**
+- `postinstall` script runs after `npm install` → installs Playwright browsers
+- `build` script includes browser installation as backup
+- `vercel.json` configured with 60s timeout for the print API route
+
+**Vercel Build Process:**
+1. Vercel runs `npm install` → triggers `postinstall` → installs Playwright browsers
+2. Vercel runs `npm run build` → includes browser installation as backup
+3. Browsers are cached in `/home/sbx_user1051/.cache/ms-playwright/` (Vercel's cache)
+
+**If browsers still don't install:**
+- Check Vercel build logs for Playwright installation errors
+- Ensure build has sufficient disk space (Playwright needs ~170MB)
+- Consider using Vercel's Edge Functions or a separate rendering service for very high traffic
 
 #### Docker
 
