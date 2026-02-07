@@ -35,7 +35,7 @@ export async function renderLabelToPng(
     browser = await playwrightChromium.launch({
       executablePath: await chromium.executablePath(),
       args: chromium.args,
-      headless: chromium.headless,
+      headless: chromium.headless === true || chromium.headless === "shell",
     })
   } catch (error: any) {
     throw new Error(
