@@ -19,9 +19,6 @@ interface RenderOptions {
  * Renders a label component to PNG using Playwright
  * This ensures pixel-identical output to web labels
  */
-// Cache for browser installation attempt (to avoid multiple attempts)
-let browserInstallAttempted = false
-
 export async function renderLabelToPng(
   request: MobilePrintRequest,
   options: RenderOptions
@@ -29,7 +26,7 @@ export async function renderLabelToPng(
   // Dynamically import Playwright (only when needed)
   const { chromium } = await import("playwright")
 
-  // Launch browser with error handling and runtime installation fallback
+  // Launch browser with error handling
   let browser
   try {
     browser = await chromium.launch({
@@ -38,51 +35,15 @@ export async function renderLabelToPng(
     })
   } catch (error: any) {
     // Check if it's a browser installation error
-    const isInstallationError =
+    if (
       error?.message?.includes("Executable doesn't exist") ||
-      error?.message?.includes("browserType.launch") ||
-      error?.message?.includes("chromium") ||
-      error?.code === "ENOENT"
-
-    if (isInstallationError && !browserInstallAttempted) {
-      // Try to install browsers at runtime (fallback for Vercel/serverless)
-      console.log("⚠️ Playwright browsers not found, attempting runtime installation...")
-      browserInstallAttempted = true
-
-      try {
-        // Try to install browsers at runtime (fallback for Vercel/serverless)
-        // Note: This may not work in all serverless environments
-        const { execSync } = await import("child_process")
-        console.log("Attempting to install Playwright browsers...")
-        execSync("npx playwright install chromium", {
-          stdio: "pipe",
-          timeout: 120000, // 2 minutes timeout
-          env: { ...process.env, PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: "0" },
-        })
-        console.log("✅ Playwright browsers installed successfully")
-
-        // Retry launching browser
-        browser = await chromium.launch({
-          headless: true,
-          args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        })
-      } catch (installError: any) {
-        console.error("❌ Runtime browser installation failed:", installError)
-        throw new Error(
-          "Playwright browsers not installed and runtime installation failed.\n" +
-            "Vercel Build Logs: Check if 'npx playwright install chromium' ran during build.\n" +
-            "If not, ensure postinstall script is working: npm run install:playwright"
-        )
-      }
-    } else if (isInstallationError) {
+      error?.message?.includes("browserType.launch")
+    ) {
       throw new Error(
-        "Playwright browsers not installed. Runtime installation already attempted.\n" +
-          "Vercel Build: Check build logs for 'npx playwright install chromium' output.\n" +
-          "The postinstall script should run automatically during 'npm install'."
+        "Playwright browsers not installed. Please run: npx playwright install chromium"
       )
-    } else {
-      throw error
     }
+    throw error
   }
 
   try {

@@ -4,9 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run install:playwright && next build",
-    "install:playwright": "npx playwright install --with-deps chromium || true",
-    "postinstall": "npm run install:playwright",
+    "build": "next build",
+    "postinstall": "npx playwright install chromium",
     "start": "next start",
     "lint": "next lint",
     "test-db": "tsx test.ts",
