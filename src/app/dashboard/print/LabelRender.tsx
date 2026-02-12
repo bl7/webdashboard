@@ -15,6 +15,13 @@ interface LabelRenderProps {
     ingredientName: string
     allergens: { allergenName: string }[]
   }>
+  ppdsMeta?: {
+    storageInfo?: string
+    showNetWt?: boolean
+    showPrice?: boolean
+    netWt?: string
+    price?: string
+  }
 }
 
 function fitText(text: string, maxLen: number) {
@@ -30,6 +37,7 @@ export default function LabelRender({
   maxIngredients = 5,
   labelHeight = "40mm",
   allIngredients = [],
+  ppdsMeta,
 }: LabelRenderProps) {
   // --- Sizing and layout configuration ---
   const labelConfig = {
@@ -198,8 +206,9 @@ export default function LabelRender({
   // --- Special USE FIRST label ---
   const isUseFirst = item.name === "USE FIRST"
   if (isUseFirst) {
-    const circleSize = "2.8cm"
-    const circleFont = 18
+    // Scale circle and font based on label height
+    const circleSize = labelHeight === "80mm" ? "4.5cm" : "2.8cm"
+    const circleFont = labelHeight === "80mm" ? 28 : 18
 
     return (
       <div
@@ -221,8 +230,8 @@ export default function LabelRender({
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            border: "3px solid white",
-            boxShadow: "0 0 0 2px black",
+            border: labelHeight === "80mm" ? "4px solid white" : "3px solid white",
+            boxShadow: labelHeight === "80mm" ? "0 0 0 3px black" : "0 0 0 2px black",
           }}
         >
           <div
@@ -234,7 +243,7 @@ export default function LabelRender({
               letterSpacing: 1,
               textTransform: "uppercase",
               lineHeight: 1.2,
-              padding: "4px",
+              padding: labelHeight === "80mm" ? "6px" : "4px",
             }}
           >
             USE
@@ -390,6 +399,54 @@ export default function LabelRender({
           </span>
           {ingredientsLine}
         </div>
+        {(ppdsMeta?.storageInfo || ppdsMeta?.showNetWt || ppdsMeta?.showPrice) && <div style={{ flex: 1 }} />}
+        {ppdsMeta?.storageInfo && (
+          <div
+            style={{
+              marginTop: "auto",
+              marginBottom: 2,
+              fontSize: Math.max(7.5, config.metaFontSize - 1),
+              fontWeight: 500,
+              lineHeight: 1.15,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+          >
+            {ppdsMeta.storageInfo}
+          </div>
+        )}
+        {(ppdsMeta?.showNetWt || ppdsMeta?.showPrice) && (
+          <div
+            style={{
+              borderTop: "1px solid #000",
+              paddingTop: 2,
+              fontSize: Math.max(8, config.metaFontSize - 0.5),
+              fontWeight: 700,
+              display: "flex",
+              justifyContent: "space-between",
+              gap: 8,
+            }}
+          >
+            <span style={{ maxWidth: "60%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {ppdsMeta?.showNetWt && ppdsMeta?.netWt ? `Net Wt: ${ppdsMeta.netWt}` : ""}
+            </span>
+            <span
+              style={{
+                marginLeft: "auto",
+                maxWidth: "40%",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                textAlign: "right",
+              }}
+            >
+              {ppdsMeta?.showPrice && ppdsMeta?.price ? `Price: ${ppdsMeta.price}` : ""}
+            </span>
+          </div>
+        )}
       </div>
     )
   }

@@ -25,7 +25,13 @@ interface PrinterContextType {
   print: (
     imageData: string,
     printer?: Printer,
-    options?: { widthPx?: number; heightPx?: number; labelHeight?: "40mm" | "80mm" }
+    options?: {
+      widthPx?: number
+      heightPx?: number
+      labelHeight?: "40mm" | "80mm"
+      labelWidthMm?: number
+      labelHeightMm?: number
+    }
   ) => Promise<void>
   selectPrinter: (printer: Printer | null) => void
 }
@@ -70,7 +76,13 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
   const print = async (
     imageData: string,
     printer?: Printer,
-    options?: { widthPx?: number; heightPx?: number; labelHeight?: "40mm" | "80mm" }
+    options?: {
+      widthPx?: number
+      heightPx?: number
+      labelHeight?: "40mm" | "80mm"
+      labelWidthMm?: number
+      labelHeightMm?: number
+    }
   ) => {
     if (!isConnected) {
       throw new Error("Printer not connected. Please connect first.")
@@ -82,19 +94,19 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
       throw new Error("No printer selected. Please select a printer first.")
     }
 
-    // Map labelHeight string to mm
-    let labelHeightMm = 40 // Default to 40mm
-    if (options && options.labelHeight) {
-      if (options.labelHeight === "40mm") labelHeightMm = 40
-      else if (options.labelHeight === "80mm") labelHeightMm = 80
+    // Map label dimensions to mm, with defaults for legacy callers
+    let labelHeightMm = options?.labelHeightMm ?? 40
+    if (options?.labelHeight) {
+      labelHeightMm = options.labelHeight === "80mm" ? 80 : 40
     }
+    const labelWidthMm = options?.labelWidthMm ?? 56
 
     try {
       // Remove data URL prefix if present
       const cleanImageData = imageData.includes(",") ? imageData.split(",")[1] : imageData
 
       // Send print job using PrintBridge
-      const success = sendPrintJob(imageData, targetPrinter.name, 56, labelHeightMm)
+      const success = sendPrintJob(imageData, targetPrinter.name, labelWidthMm, labelHeightMm)
 
       if (success) {
         console.log("✅ Print job sent successfully via PrintBridge", {

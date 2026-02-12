@@ -13,9 +13,7 @@ const sampleItem = {
   labelType: "ppds",
   ingredients: [
     "Chicken Breast",
-    "Romaine Lettuce",
     "Caesar Dressing",
-    "Parmesan Cheese",
     "Croutons",
   ],
   printedOn: "2024-06-01",
@@ -24,14 +22,12 @@ const sampleItem = {
 
 const allIngredients = [
   { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },
-  { uuid: "a2", ingredientName: "Romaine Lettuce", allergens: [] },
   {
-    uuid: "a3",
+    uuid: "a2",
     ingredientName: "Caesar Dressing",
     allergens: [{ allergenName: "Egg" }, { allergenName: "Fish" }],
   },
-  { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [{ allergenName: "Milk" }] },
-  { uuid: "a5", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
+  { uuid: "a3", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
 ]
 
 const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
@@ -85,6 +81,10 @@ export const NatashasLawExampleLabel = () => (
               storageInfo={storageInfo}
               businessName={businessName}
               allIngredients={allIngredients}
+              showNetWt
+              showPrice
+              netWt="220g"
+              price="£4.99"
             />
           </div>
           <div className="mt-4 text-center">

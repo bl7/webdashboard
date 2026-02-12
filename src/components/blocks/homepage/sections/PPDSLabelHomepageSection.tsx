@@ -10,16 +10,14 @@ const sampleItem = {
   name: "Chicken Caesar Salad",
   quantity: 1,
   labelType: "ppds",
-  ingredients: ["Chicken Breast", "Romaine Lettuce", "Caesar Dressing", "Parmesan Cheese", "Croutons"],
+  ingredients: ["Chicken Breast", "Caesar Dressing", "Croutons"],
   printedOn: "2024-06-01",
   expiryDate: "2024-06-03"
 }
 const allIngredients = [
   { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },
-  { uuid: "a2", ingredientName: "Romaine Lettuce", allergens: [] },
-  { uuid: "a3", ingredientName: "Caesar Dressing", allergens: [ { allergenName: "Egg" }, { allergenName: "Fish" } ] },
-  { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [ { allergenName: "Milk" } ] },
-  { uuid: "a5", ingredientName: "Croutons", allergens: [ { allergenName: "Wheat" } ] },
+  { uuid: "a2", ingredientName: "Caesar Dressing", allergens: [ { allergenName: "Egg" }, { allergenName: "Fish" } ] },
+  { uuid: "a3", ingredientName: "Croutons", allergens: [ { allergenName: "Wheat" } ] },
 ]
 const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
 const businessName = "InstaLabel Ltd"
@@ -55,13 +53,17 @@ export const PPDSLabelHomepageSection = () => (
         viewport={{ once: true }}
         className="flex-1 flex flex-col items-center justify-center"
       >
-        {/* 60mm x 80mm at 96dpi: 60mm = ~227px, 80mm = ~303px */}
+        {/* 56mm x 80mm at 96dpi: 56mm ~= 212px, 80mm ~= 303px */}
         <div style={{ width: 227, height: 303, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <PPDSLabelRenderer
             item={sampleItem}
             storageInfo={storageInfo}
             businessName={businessName}
             allIngredients={allIngredients}
+            showNetWt
+            showPrice
+            netWt="220g"
+            price="£4.99"
           />
         </div>
         <div className="text-xs text-gray-400 mt-2">Example: Chicken Caesar Salad (PPDS)</div>

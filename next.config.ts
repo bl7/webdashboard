@@ -4,7 +4,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ["stripe", "playwright-core", "@sparticuz/chromium"],
+  serverExternalPackages: ["stripe"],
 
   // Image optimization
   images: {

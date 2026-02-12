@@ -379,6 +379,10 @@ export function LabelPreviewModal({ open, onOpenChange }: LabelPreviewModalProps
                   storageInfo={storageInfo}
                   businessName={companyName}
                   allIngredients={allIngredients}
+                  showNetWt
+                  showPrice
+                  netWt="220g"
+                  price="£4.99"
                 />
               ) : (
                 <LabelRender

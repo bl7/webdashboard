@@ -13,6 +13,8 @@ import { usePrinter } from "@/context/PrinterContext"
 import { logAction } from "@/lib/logAction"
 import { Button } from "@/components/ui/button"
 import useBillingData from "../profile/hooks/useBillingData"
+import { useLabelSize } from "@/context/LabelSizeContext"
+import { useAuth } from "@/context/AuthContext"
 
 // Define Printer type locally to match PrinterContext
 interface Printer {
@@ -134,8 +136,6 @@ function getBestAvailablePrinter(
 }
 
 export default function LabelDemo() {
-  // Unify printer selection logic: use selectedPrinterName and getPrinterName
-  const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [allergens, setAllergens] = useState<Allergen[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
@@ -165,7 +165,16 @@ export default function LabelDemo() {
     error: printerError,
     print,
   } = usePrinter()
-  const [labelHeight, setLabelHeight] = useState<LabelHeight>("40mm")
+  const { profile } = useAuth()
+  const businessName = profile?.company_name || "InstaLabel Ltd"
+  // Use universal label size from context
+  const { selectedSize } = useLabelSize()
+  const labelHeight: LabelHeight = selectedSize.heightKey // Convert to LabelHeight type
+  const [ppdsStorageInfo, setPpdsStorageInfo] = useState("")
+  const [ppdsShowNetWt, setPpdsShowNetWt] = useState(false)
+  const [ppdsShowPrice, setPpdsShowPrice] = useState(false)
+  const [ppdsNetWt, setPpdsNetWt] = useState("")
+  const [ppdsPrice, setPpdsPrice] = useState("")
   const [showDefrostModal, setShowDefrostModal] = useState(false)
   const [showUseFirstModal, setShowUseFirstModal] = useState(false)
   const [useFirstQuantity, setUseFirstQuantity] = useState(1)
@@ -204,6 +213,13 @@ export default function LabelDemo() {
       setFeedbackMsg("")
       setFeedbackType("")
     }, 3000)
+  }
+
+  const getDisplayPrice = (raw: string) => {
+    const trimmed = raw.trim()
+    if (!trimmed) return ""
+    if (trimmed.startsWith("£") || trimmed.startsWith("$") || trimmed.startsWith("€")) return trimmed
+    return `£${trimmed}`
   }
 
   useEffect(() => {
@@ -444,12 +460,9 @@ export default function LabelDemo() {
     }
 
     console.log("🖨️ Starting print process for", printQueue.length, "items")
-    // Find printer by name
-    const selectedPrinterObj =
-      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
-      availablePrinters[0]
+    // Use selected printer from context (set in Print Manager header)
     const printerSelection = getBestAvailablePrinter(
-      selectedPrinterObj,
+      selectedPrinter,
       defaultPrinter,
       availablePrinters
     )
@@ -491,7 +504,15 @@ export default function LabelDemo() {
                 uuid: String(ing.id),
                 ingredientName: ing.name,
                 allergens: ing.allergens || [],
-              }))
+              })),
+              {
+                storageInfo: ppdsStorageInfo,
+                businessName,
+                showNetWt: ppdsShowNetWt,
+                showPrice: ppdsShowPrice,
+                netWt: ppdsNetWt,
+                price: getDisplayPrice(ppdsPrice),
+              }
             )
 
             console.log(
@@ -528,6 +549,20 @@ export default function LabelDemo() {
               ),
             initial: selectedInitial,
             labelHeight: labelHeight,
+            ppdsStorageInfo:
+              item.labelType === "ppds" && item.type === "menu" ? ppdsStorageInfo : undefined,
+            ppdsShowNetWt:
+              item.labelType === "ppds" && item.type === "menu" ? ppdsShowNetWt : undefined,
+            ppdsShowPrice:
+              item.labelType === "ppds" && item.type === "menu" ? ppdsShowPrice : undefined,
+            ppdsNetWt:
+              item.labelType === "ppds" && item.type === "menu" && ppdsShowNetWt
+                ? ppdsNetWt
+                : undefined,
+            ppdsPrice:
+              item.labelType === "ppds" && item.type === "menu" && ppdsShowPrice
+                ? getDisplayPrice(ppdsPrice)
+                : undefined,
             printerUsed: printerSelection.printer || "Debug Mode",
             sessionId,
           })
@@ -580,12 +615,9 @@ export default function LabelDemo() {
       // Don't return, continue with printing for debug
     }
 
-    // Find printer by name (same logic as main print functionality)
-    const selectedPrinterObj =
-      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
-      availablePrinters[0]
+    // Use selected printer from context (set in Print Manager header)
     const printerToUse = getBestAvailablePrinter(
-      selectedPrinterObj,
+      selectedPrinter,
       defaultPrinter,
       availablePrinters
     )
@@ -677,12 +709,9 @@ export default function LabelDemo() {
       // Don't return, continue with printing for debug
     }
 
-    // Find printer by name (same logic as main print functionality)
-    const selectedPrinterObj =
-      availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName) ||
-      availablePrinters[0]
+    // Use selected printer from context (set in Print Manager header)
     const printerToUse = getBestAvailablePrinter(
-      selectedPrinterObj,
+      selectedPrinter,
       defaultPrinter,
       availablePrinters
     )
@@ -746,6 +775,7 @@ export default function LabelDemo() {
   const totalItems =
     activeTab === "ingredients" ? filteredIngredients.length : filteredMenuItems.length
   const totalPages = Math.ceil(totalItems / itemsPerPage)
+  const hasPpdsInQueue = printQueue.some((item) => item.labelType === "ppds" && item.type === "menu")
 
   // Show skeleton if loading and no data loaded yet
   const initialDataLoading = isLoading && ingredients.length === 0 && menuItems.length === 0
@@ -796,66 +826,8 @@ export default function LabelDemo() {
       )}
 
       <div className="flex flex-col gap-10 md:flex-row">
-        {/* Left Section: Label Printer & List */}
+        {/* Left Section: Item List */}
         <div className="min-w-[340px] flex-1">
-          <div className="mb-8 rounded-xl border bg-white p-6 shadow-lg">
-            <div className="mb-6 flex items-center justify-between">
-              <h1 className="text-2xl font-bold tracking-tight">Label Printer</h1>
-              {isConnected ? (
-                <>
-                  {console.log("Available printers:", availablePrinters)}
-                  <div className="mb-4 rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-white p-4 shadow-sm">
-                    <div className="mb-2 font-semibold text-purple-900">Available Printers</div>
-                    {availablePrinters.length > 0 ? (
-                      <div className="flex flex-col gap-2">
-                        <select
-                          value={selectedPrinterName}
-                          onChange={(e) => {
-                            setSelectedPrinterName(e.target.value)
-                            const printer = availablePrinters.find(
-                              (p: any) => getPrinterName(p) === e.target.value
-                            )
-                            selectPrinter(printer || null)
-                          }}
-                          className="rounded border border-purple-300 bg-white px-2 py-1 text-sm text-black"
-                        >
-                          <option value="">Select Printer</option>
-                          {availablePrinters.map((printer: any) => {
-                            const printerName = getPrinterName(printer)
-                            return (
-                              <option key={printerName} value={printerName}>
-                                {printerName} {printer.isDefault ? "(Default)" : ""}
-                              </option>
-                            )
-                          })}
-                        </select>
-                        <div className="mt-1 text-xs text-gray-700">
-                          {availablePrinters.length} printer(s) detected
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="text-xs text-gray-500">No printers detected</div>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <div className="mb-4 rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-4 text-red-700 shadow-sm">
-                  No printers detected
-                </div>
-              )}
-            </div>
-            <div className="mb-4 rounded-xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-4 shadow-sm">
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700">Label Size:</label>
-                <div className="flex rounded-lg bg-gray-100 p-1">
-                  <span className="rounded-md bg-white px-3 py-1 text-sm font-medium text-purple-700 shadow-sm">
-                    60mm × 40mm
-                  </span>
-                </div>
-                <span className="text-xs text-gray-500">Standard label size</span>
-              </div>
-            </div>
-          </div>
           <div className="rounded-xl border bg-white p-6 shadow-lg">
             {/* Tab Switcher */}
             <div className="mb-6 flex w-fit items-center space-x-2 rounded-full bg-gray-100 p-1">
@@ -995,6 +967,66 @@ export default function LabelDemo() {
               </span>
             </div>
           )}
+          {hasPpdsInQueue && (
+            <div className="mb-6 rounded-xl border bg-white px-6 py-4 shadow-sm">
+              <div className="mb-3 text-base font-semibold text-gray-800">PPDS Fields</div>
+              <div className="mb-3">
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Storage Instruction
+                </label>
+                <input
+                  type="text"
+                  value={ppdsStorageInfo}
+                  onChange={(e) => setPpdsStorageInfo(e.target.value)}
+                  maxLength={60}
+                  placeholder="e.g. Keep refrigerated below 5°C"
+                  className="w-full rounded border px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <div className="rounded border p-3">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <input
+                      type="checkbox"
+                      checked={ppdsShowNetWt}
+                      onChange={(e) => setPpdsShowNetWt(e.target.checked)}
+                    />
+                    Show Net Wt
+                  </label>
+                  {ppdsShowNetWt && (
+                    <input
+                      type="text"
+                      value={ppdsNetWt}
+                      onChange={(e) => setPpdsNetWt(e.target.value)}
+                      maxLength={20}
+                      placeholder="e.g. 250g"
+                      className="mt-2 w-full rounded border px-2 py-1 text-sm"
+                    />
+                  )}
+                </div>
+                <div className="rounded border p-3">
+                  <label className="flex items-center gap-2 text-sm font-medium">
+                    <input
+                      type="checkbox"
+                      checked={ppdsShowPrice}
+                      onChange={(e) => setPpdsShowPrice(e.target.checked)}
+                    />
+                    Show Price
+                  </label>
+                  {ppdsShowPrice && (
+                    <input
+                      type="text"
+                      value={ppdsPrice}
+                      onChange={(e) => setPpdsPrice(e.target.value)}
+                      maxLength={20}
+                      placeholder="e.g. 4.99"
+                      className="mt-2 w-full rounded border px-2 py-1 text-sm"
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
           <div className="mb-8 max-h-[700px] w-full overflow-y-auto rounded-2xl border-2 border-purple-300 bg-white shadow-xl">
             <div className="sticky top-0 flex items-center justify-between rounded-t-2xl border-b-2 border-purple-200 bg-white px-8 pb-4 pt-8">
               <h2 className="text-2xl font-bold tracking-tight text-purple-800">Print Queue</h2>
@@ -1005,7 +1037,7 @@ export default function LabelDemo() {
                     printQueue.length === 0 ||
                     subBlocked ||
                     availablePrinters.length === 0 ||
-                    !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                    !selectedPrinter
                   }
                   variant="purple"
                   title={
@@ -1118,6 +1150,14 @@ export default function LabelDemo() {
               ingredientName: ing.name,
               allergens: ing.allergens || [],
             }))}
+            ppdsBusinessName={businessName}
+            ppdsOptions={{
+              storageInfo: ppdsStorageInfo,
+              showNetWt: ppdsShowNetWt,
+              showPrice: ppdsShowPrice,
+              netWt: ppdsNetWt,
+              price: getDisplayPrice(ppdsPrice),
+            }}
           />
         </div>
       </div>
@@ -1131,14 +1171,14 @@ export default function LabelDemo() {
           disabled={
             subBlocked ||
             availablePrinters.length === 0 ||
-            !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+            !selectedPrinter
           }
           title={
             subBlocked
               ? "Printing is disabled due to your subscription status."
               : availablePrinters.length === 0
                 ? "No printers available"
-                : !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                : !selectedPrinter
                   ? "No printer selected"
                   : "Print USE FIRST label"
           }
@@ -1153,14 +1193,14 @@ export default function LabelDemo() {
           disabled={
             subBlocked ||
             availablePrinters.length === 0 ||
-            !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+            !selectedPrinter
           }
           title={
             subBlocked
               ? "Printing is disabled due to your subscription status."
               : availablePrinters.length === 0
                 ? "No printers available"
-                : !availablePrinters.find((p) => getPrinterName(p) === selectedPrinterName)
+                : !selectedPrinter
                   ? "No printer selected"
                   : "Print Defrosted label"
           }

@@ -6,11 +6,19 @@ export function PPDSLabelRenderer({
   storageInfo,
   businessName,
   allIngredients,
+  showNetWt = false,
+  showPrice = false,
+  netWt = "",
+  price = "",
 }: {
   item: any
   storageInfo: string
   businessName: string
   allIngredients: any[]
+  showNetWt?: boolean
+  showPrice?: boolean
+  netWt?: string
+  price?: string
 }) {
   // For each ingredient name, look up the full ingredient object
   const ingredientObjs = (item.ingredients || []).map(function (ing: string) {
@@ -32,7 +40,7 @@ export function PPDSLabelRenderer({
   return (
     <div
       style={{
-        width: "60mm",
+        width: "56mm",
         height: "80mm",
         boxSizing: "border-box",
         padding: "1mm", // Add a little padding inside the border
@@ -123,6 +131,45 @@ export function PPDSLabelRenderer({
       </div>
       {/* Spacer to push storage info and company info to bottom */}
       <div style={{ flex: 1 }} />
+      {/* Optional bottom meta row for Net Wt and Price */}
+      {(showNetWt || showPrice) && (
+        <div
+          style={{
+            fontSize: "8pt",
+            marginBottom: "1mm",
+            fontWeight: 600,
+            borderTop: "1px solid #000",
+            paddingTop: "1mm",
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "2mm",
+            minHeight: "12px",
+          }}
+        >
+          <span
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              maxWidth: "60%",
+            }}
+          >
+            {showNetWt && netWt ? `Net Wt: ${netWt}` : ""}
+          </span>
+          <span
+            style={{
+              marginLeft: "auto",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              textAlign: "right",
+              maxWidth: "40%",
+            }}
+          >
+            {showPrice && price ? `Price: ${price}` : ""}
+          </span>
+        </div>
+      )}
       {/* Storage Instruction always just above company name */}
       <div style={{ fontSize: "8pt", marginBottom: "1mm", fontWeight: 400, minHeight: "10px" }}>
         {storageInfo}

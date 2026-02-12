@@ -9,11 +9,13 @@ import {
   FaCog,
   FaUser,
   FaPrint,
+  FaTag,
   FaBars,
   FaChevronLeft,
   FaUpload,
   FaList,
   FaPlay,
+  FaRegDotCircle,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
 import { MdRestaurantMenu } from "react-icons/md"
@@ -29,7 +31,8 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
   { label: "Analytics", icon: <FaChartPie />, href: "/dashboard/analytics" },
-  { label: "Print", icon: <FaPrint />, href: "/dashboard/print-manager" },
+  { label: "Labels", icon: <FaTag />, href: "/dashboard/print-manager" },
+  { label: "Stickers", icon: <FaRegDotCircle />, href: "/dashboard/stickers" },
   // { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
   // { label: "Bulk Print", icon: <FaList />, href: "/dashboard/bulk-print" },
   { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
@@ -45,7 +48,7 @@ const NAV_ITEMS = [
 ]
 
 const ADMIN_ROUTES = NAV_ITEMS.filter(
-  (i) => !["Dashboard", "Print", "PrintBridge Test"].includes(i.label)
+  (i) => !["Dashboard", "Labels", "Stickers", "PrintBridge Test"].includes(i.label)
 ).map((i) => i.href)
 
 interface SidebarProps {
@@ -80,7 +83,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const filteredNavItems = isAdmin
     ? NAV_ITEMS
-    : NAV_ITEMS.filter((i) => ["Dashboard", "Print"].includes(i.label))
+    : NAV_ITEMS.filter((i) => ["Dashboard", "Labels", "Stickers"].includes(i.label))
   const isExpanded = sidebarOpen || sidebarMobile
 
   // PPDS is now accessible through Print Manager tabs, no separate sidebar link needed

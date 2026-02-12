@@ -62,6 +62,10 @@ export default function PPDSPage() {
   const [error, setError] = useState<string | null>(null)
   const [expiryDays, setExpiryDays] = useState<number>(2)
   const [storageInfo, setStorageInfo] = useState("")
+  const [showNetWt, setShowNetWt] = useState(false)
+  const [showPrice, setShowPrice] = useState(false)
+  const [netWt, setNetWt] = useState("")
+  const [price, setPrice] = useState("")
   const [allIngredients, setAllIngredients] = useState<any[]>([])
   const itemsPerPage = 8
   const { printers, selectedPrinter, selectPrinter, print, isConnected } = usePrinter()
@@ -70,6 +74,13 @@ export default function PPDSPage() {
   // Replace selectedPrinterSystemName with selectedPrinterName
   const [selectedPrinterName, setSelectedPrinterName] = useState<string>("")
   const [osType, setOsType] = useState<"mac" | "windows" | "other">("other")
+
+  const getDisplayPrice = (raw: string) => {
+    const trimmed = raw.trim()
+    if (!trimmed) return ""
+    if (trimmed.startsWith("£") || trimmed.startsWith("$") || trimmed.startsWith("€")) return trimmed
+    return `£${trimmed}`
+  }
 
   // Print logic (now real PNG generation and print)
   async function handlePrint() {
@@ -123,6 +134,10 @@ export default function PPDSPage() {
                 storageInfo={storageInfo}
                 businessName={businessName}
                 allIngredients={allIngredients}
+                showNetWt={showNetWt}
+                showPrice={showPrice}
+                netWt={netWt}
+                price={getDisplayPrice(price)}
               />
             )
 
@@ -171,6 +186,10 @@ export default function PPDSPage() {
             expiryDate: item.expiryDate || calculateExpiryDate(expiryDays),
             initial: "", // No initials in PPDS
             labelHeight: "80mm",
+            showNetWt,
+            showPrice,
+            netWt: showNetWt ? netWt : "",
+            price: showPrice ? getDisplayPrice(price) : "",
             printerUsed: printerSelection.printer || "Debug Mode",
             sessionId,
           })
@@ -452,6 +471,48 @@ export default function PPDSPage() {
                 className="w-full rounded border px-2 py-1 text-sm"
               />
             </div>
+            <div className="mb-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="rounded border p-3">
+                <label className="flex items-center gap-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={showNetWt}
+                    onChange={(e) => setShowNetWt(e.target.checked)}
+                  />
+                  Show Net Wt
+                </label>
+                {showNetWt && (
+                  <input
+                    type="text"
+                    value={netWt}
+                    onChange={(e) => setNetWt(e.target.value)}
+                    maxLength={20}
+                    placeholder="e.g. 250g"
+                    className="mt-2 w-full rounded border px-2 py-1 text-sm"
+                  />
+                )}
+              </div>
+              <div className="rounded border p-3">
+                <label className="flex items-center gap-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={showPrice}
+                    onChange={(e) => setShowPrice(e.target.checked)}
+                  />
+                  Show Price
+                </label>
+                {showPrice && (
+                  <input
+                    type="text"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    maxLength={20}
+                    placeholder="e.g. 4.99"
+                    className="mt-2 w-full rounded border px-2 py-1 text-sm"
+                  />
+                )}
+              </div>
+            </div>
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-2xl font-bold tracking-tight text-purple-800">Print Queue</h2>
               <div className="flex gap-2">
@@ -551,6 +612,10 @@ export default function PPDSPage() {
                 storageInfo={storageInfo}
                 businessName={businessName}
                 allIngredients={allIngredients}
+                showNetWt={showNetWt}
+                showPrice={showPrice}
+                netWt={netWt}
+                price={getDisplayPrice(price)}
               />
             ))}
           </div>

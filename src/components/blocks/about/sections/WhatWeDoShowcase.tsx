@@ -132,9 +132,7 @@ const WhatWeDoShowcase = () => {
     labelType: "ppds",
     ingredients: [
       "Chicken Breast",
-      "Romaine Lettuce",
       "Caesar Dressing",
-      "Parmesan Cheese",
       "Croutons",
     ],
     printedOn: isoDateNow,
@@ -142,14 +140,12 @@ const WhatWeDoShowcase = () => {
   }
   const ppdsAllIngredients = [
     { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },
-    { uuid: "a2", ingredientName: "Romaine Lettuce", allergens: [] },
     {
-      uuid: "a3",
+      uuid: "a2",
       ingredientName: "Caesar Dressing",
       allergens: [{ allergenName: "Egg" }, { allergenName: "Fish" }],
     },
-    { uuid: "a4", ingredientName: "Parmesan Cheese", allergens: [{ allergenName: "Milk" }] },
-    { uuid: "a5", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
+    { uuid: "a3", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
   ]
   const ppdsStorageInfo = "Keep refrigerated below 5°C. Consume within 2 days of opening."
   const ppdsBusinessName = "InstaLabel Ltd"
@@ -164,6 +160,10 @@ const WhatWeDoShowcase = () => {
           storageInfo={ppdsStorageInfo}
           businessName={ppdsBusinessName}
           allIngredients={ppdsAllIngredients}
+          showNetWt
+          showPrice
+          netWt="220g"
+          price="£4.99"
         />
       ),
     },
