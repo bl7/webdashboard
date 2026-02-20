@@ -74,10 +74,12 @@ export function RoundStickerRenderer({
 
   // Determine dynamic font size based on character count for more accurate scaling
   const nameLength = (item.name || "").trim().length
-  const nameFontSize = nameLength > 25 ? "8pt" : nameLength > 15 ? "9.5pt" : "11.5pt"
+  const nameFontSize = nameLength > 25 ? "9pt" : nameLength > 15 ? "10pt" : "12pt"
 
   const ingredientsCount = (item.ingredients || []).length
-  const ingFontSize = ingredientsCount > 8 ? "5pt" : ingredientsCount > 4 ? "5.5pt" : "6pt"
+  const showContainsOnly = ingredientsCount > 6
+  const ingFontSize = showContainsOnly ? "8.5pt" : ingredientsCount > 4 ? "8pt" : "8.5pt"
+  const sectionMargin = showContainsOnly ? "2mm" : ingredientsCount > 4 ? "1mm" : "2mm"
 
   return (
     <div
@@ -92,7 +94,7 @@ export function RoundStickerRenderer({
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "2mm 4mm", // Reduced padding to allow content to utilize the full width of the circle
+        padding: "1mm 3mm", // Reduced padding further to fit the safely readable font sizes
         boxSizing: "border-box",
         fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
         position: "relative",
@@ -106,7 +108,7 @@ export function RoundStickerRenderer({
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          width: "92%",
+          width: "96%",
         }}
       >
         {/* Item Name - Centered at top */}
@@ -115,7 +117,7 @@ export function RoundStickerRenderer({
             fontSize: nameFontSize,
             fontWeight: 900,
             textAlign: "center",
-            marginBottom: "3mm",
+            marginBottom: sectionMargin,
             lineHeight: 1.1,
             textTransform: "uppercase",
             letterSpacing: 0.5,
@@ -127,7 +129,7 @@ export function RoundStickerRenderer({
           {item.name}
         </div>
 
-        {/* Ingredients List - Centered in middle */}
+        {/* Ingredients List or Contains Summary - Centered in middle */}
         {item.ingredients && item.ingredients.length > 0 ? (
           <div
             style={{
@@ -137,30 +139,47 @@ export function RoundStickerRenderer({
               lineHeight: 1.25,
               width: "100%",
               wordBreak: "break-word",
-              marginBottom: "3mm",
+              marginBottom: sectionMargin,
             }}
           >
-            <span style={{ fontWeight: 900 }}>Ingredients: </span>
-            {item.ingredients.map((ing, idx) => {
-              const ingObj = allIngredients.find(
-                (i) => i.ingredientName && ing && i.ingredientName.trim().toLowerCase() === ing.trim().toLowerCase()
-              )
-              const allergenList = (ingObj?.allergens || [])
-                .map((a: any) => a.allergenName?.toUpperCase?.() || "")
-                .filter(Boolean)
-              
-              const isLast = idx === item.ingredients!.length - 1
-              
-              return (
-                <span key={`${ing}-${idx}`}>
-                  {ing}
-                  {allergenList.length > 0 && (
-                    <strong style={{ fontWeight: 900 }}> ({allergenList.join(", ")})</strong>
-                  )}
-                  {!isLast && ", "}
-                </span>
-              )
-            })}
+            {showContainsOnly ? (
+              <>
+                {uniqueAllergens.length > 0 ? (
+                  <>
+                    <span style={{ fontWeight: 900 }}>Contains: </span>
+                    <span style={{ fontWeight: 800 }}>{uniqueAllergens.join(", ")}</span>
+                  </>
+                ) : (
+                  <span style={{ fontWeight: 500, fontStyle: "italic", color: "#666" }}>
+                    No allergens
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <span style={{ fontWeight: 900 }}>Ingredients: </span>
+                {item.ingredients.map((ing, idx) => {
+                  const ingObj = allIngredients.find(
+                    (i) => i.ingredientName && ing && i.ingredientName.trim().toLowerCase() === ing.trim().toLowerCase()
+                  )
+                  const allergenList = (ingObj?.allergens || [])
+                    .map((a: any) => a.allergenName?.toUpperCase?.() || "")
+                    .filter(Boolean)
+                  
+                  const isLast = idx === item.ingredients!.length - 1
+                  
+                  return (
+                    <span key={`${ing}-${idx}`}>
+                      {ing}
+                      {allergenList.length > 0 && (
+                        <strong style={{ fontWeight: 900 }}> ({allergenList.join(", ")})</strong>
+                      )}
+                      {!isLast && ", "}
+                    </span>
+                  )
+                })}
+              </>
+            )}
           </div>
         ) : (
           <div
@@ -180,14 +199,14 @@ export function RoundStickerRenderer({
         {/* Net Weight and Best Before - Centered at bottom sequentially */}
         <div
           style={{
-            fontSize: "6pt",
+            fontSize: "8pt",
             fontWeight: 700,
             textAlign: "center",
             color: "#000",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: "0.5mm",
+            gap: 0,
             width: "100%",
           }}
         >
