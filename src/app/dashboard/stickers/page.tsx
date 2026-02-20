@@ -32,7 +32,9 @@ async function renderStickerToPng(
     uuid: string
     ingredientName: string
     allergens: { allergenName: string }[]
-  }>
+  }>,
+  showNetWt: boolean,
+  netWt: string
 ): Promise<string> {
   const container = document.createElement("div")
   container.style.position = "absolute"
@@ -47,7 +49,14 @@ async function renderStickerToPng(
 
   const root = ReactDOM.createRoot(container)
   root.render(
-    <RoundStickerRenderer item={item} expiry={expiry} allergens={[]} allIngredients={allIngredients} />
+    <RoundStickerRenderer
+      item={item}
+      expiry={expiry}
+      allergens={[]}
+      allIngredients={allIngredients}
+      showNetWt={showNetWt}
+      netWt={netWt}
+    />
   )
 
   await new Promise((resolve) => setTimeout(resolve, 250))
@@ -80,6 +89,8 @@ export default function StickersPage() {
   const [error, setError] = useState<string | null>(null)
   const [printQueue, setPrintQueue] = useState<PrintQueueItem[]>([])
   const [customExpiry, setCustomExpiry] = useState<Record<string, string>>({})
+  const [showNetWt, setShowNetWt] = useState(false)
+  const [netWt, setNetWt] = useState("")
 
   const { isConnected, selectedPrinter, print } = usePrinter()
 
@@ -206,7 +217,7 @@ export default function StickersPage() {
       for (const item of printQueue) {
         const expiry = customExpiry[item.uid] || item.expiryDate || ""
         for (let i = 0; i < item.quantity; i++) {
-          const imageData = await renderStickerToPng(item, expiry, allIngredients)
+          const imageData = await renderStickerToPng(item, expiry, allIngredients, showNetWt, netWt)
           await print(imageData, undefined, { labelWidthMm: 50, labelHeightMm: 50 })
         }
 
@@ -218,6 +229,8 @@ export default function StickersPage() {
           expiryDate: expiry,
           shape: "round",
           dimensionsMm: { width: 50, height: 50 },
+          showNetWt,
+          netWt: showNetWt ? netWt : "",
           sessionId,
         })
       }
@@ -236,7 +249,7 @@ export default function StickersPage() {
       <div className="rounded-xl border bg-white p-6 shadow-lg">
         <h1 className="text-2xl font-bold tracking-tight">Round Stickers</h1>
         <p className="mt-2 text-sm text-gray-600">
-          50mm x 50mm thermal round stickers for menu items. Prints item name, expiry date, and
+          50mm x 50mm thermal round stickers for menu items. Prints item name, expiry date, net weight, and
           allergens.
         </p>
       </div>
@@ -334,6 +347,30 @@ export default function StickersPage() {
                 </Button>
               </div>
             </div>
+
+            <div className="border-b-2 border-purple-200 bg-gray-50 px-8 py-4">
+              <div className="rounded border bg-white p-3">
+                <label className="flex items-center gap-2 text-sm font-medium">
+                  <input
+                    type="checkbox"
+                    checked={showNetWt}
+                    onChange={(e) => setShowNetWt(e.target.checked)}
+                  />
+                  Show Net Wt
+                </label>
+                {showNetWt && (
+                  <input
+                    type="text"
+                    value={netWt}
+                    onChange={(e) => setNetWt(e.target.value)}
+                    maxLength={20}
+                    placeholder="e.g. 250g"
+                    className="mt-2 w-full rounded border px-2 py-1 text-sm text-gray-700"
+                  />
+                )}
+              </div>
+            </div>
+
             <div className="px-8 pb-8 pt-4">
               {printQueue.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-16 text-gray-400">
@@ -361,7 +398,7 @@ export default function StickersPage() {
                   >
                     <div className="whitespace-normal break-words font-semibold text-gray-900">{item.name}</div>
                     <div className="text-xs text-gray-500">
-                      Expires: {customExpiry[item.uid] || item.expiryDate || ""}
+                      Best Before: {customExpiry[item.uid] || item.expiryDate || ""}
                     </div>
                     <div className="mt-1 flex items-center gap-2">
                       <input
@@ -405,6 +442,9 @@ export default function StickersPage() {
                     expiry={customExpiry[item.uid] || item.expiryDate || ""}
                     allergens={[]}
                     allIngredients={allIngredients}
+                    isPreview={true}
+                    showNetWt={showNetWt}
+                    netWt={netWt}
                   />
                 ))}
               </div>

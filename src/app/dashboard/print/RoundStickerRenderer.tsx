@@ -10,6 +10,9 @@ interface RoundStickerRendererProps {
     ingredientName: string
     allergens: { allergenName: string }[]
   }>
+  isPreview?: boolean
+  showNetWt?: boolean
+  netWt?: string
 }
 
 export function RoundStickerRenderer({
@@ -17,6 +20,9 @@ export function RoundStickerRenderer({
   expiry,
   allergens,
   allIngredients = [],
+  isPreview = false,
+  showNetWt = false,
+  netWt = "",
 }: RoundStickerRendererProps) {
   // Helper to get ingredient object by name or uuid
   const getIngredientObj = (ing: string) => {
@@ -52,7 +58,7 @@ export function RoundStickerRenderer({
       const d = new Date(date)
       return d.toLocaleDateString("en-GB", {
         day: "2-digit",
-        month: "short",
+        month: "2-digit",
         year: "numeric",
       })
     } catch {
@@ -66,6 +72,13 @@ export function RoundStickerRenderer({
   const DIAMETER_CM = 5.0 // 50mm = 5cm
   const DIAMETER_PX = 189 // Approximate pixels at 96 DPI
 
+  // Determine dynamic font size based on character count for more accurate scaling
+  const nameLength = (item.name || "").trim().length
+  const nameFontSize = nameLength > 25 ? "8pt" : nameLength > 15 ? "9.5pt" : "11.5pt"
+
+  const ingredientsCount = (item.ingredients || []).length
+  const ingFontSize = ingredientsCount > 8 ? "5pt" : ingredientsCount > 4 ? "5.5pt" : "6pt"
+
   return (
     <div
       style={{
@@ -73,77 +86,116 @@ export function RoundStickerRenderer({
         height: `${DIAMETER_CM}cm`,
         borderRadius: "50%",
         backgroundColor: "white",
-        border: "2px solid black",
+        border: isPreview ? "2px dashed #999" : "none",
+        boxShadow: isPreview ? "0 4px 6px -1px rgb(0 0 0 / 0.1)" : "none",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "4mm",
+        padding: "2mm 4mm", // Reduced padding to allow content to utilize the full width of the circle
         boxSizing: "border-box",
         fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
         position: "relative",
         overflow: "hidden",
       }}
     >
-      {/* Item Name - Centered at top */}
+      {/* Inner container to restrict width slightly more to account for circle curvature */}
       <div
         style={{
-          fontSize: "11pt",
-          fontWeight: 900,
-          textAlign: "center",
-          marginBottom: "2mm",
-          lineHeight: 1.2,
-          textTransform: "uppercase",
-          letterSpacing: 0.5,
-          maxWidth: "100%",
-          wordBreak: "break-word",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "92%",
         }}
       >
-        {item.name}
-      </div>
-
-      {/* Expiry Date - Centered in middle */}
-      <div
-        style={{
-          fontSize: "9pt",
-          fontWeight: 700,
-          textAlign: "center",
-          marginBottom: "2mm",
-          color: "#000",
-        }}
-      >
-        Expires: {shortExpiry}
-      </div>
-
-      {/* Allergens - Centered at bottom */}
-      {uniqueAllergens.length > 0 ? (
+        {/* Item Name - Centered at top */}
         <div
           style={{
-            fontSize: "8pt",
-            fontWeight: 700,
+            fontSize: nameFontSize,
+            fontWeight: 900,
             textAlign: "center",
-            color: "#000",
-            lineHeight: 1.3,
-            maxWidth: "100%",
+            marginBottom: "3mm",
+            lineHeight: 1.1,
+            textTransform: "uppercase",
+            letterSpacing: 0.5,
+            width: "100%",
+            maxWidth: "85%", // Force the title to wrap earlier to avoid bleeding on the top curve
             wordBreak: "break-word",
           }}
         >
-          <div style={{ fontWeight: 900, marginBottom: "1mm" }}>Contains:</div>
-          <div>{uniqueAllergens.join(", ")}</div>
+          {item.name}
         </div>
-      ) : (
+
+        {/* Ingredients List - Centered in middle */}
+        {item.ingredients && item.ingredients.length > 0 ? (
+          <div
+            style={{
+              fontSize: ingFontSize,
+              textAlign: "center",
+              color: "#000",
+              lineHeight: 1.25,
+              width: "100%",
+              wordBreak: "break-word",
+              marginBottom: "3mm",
+            }}
+          >
+            <span style={{ fontWeight: 900 }}>Ingredients: </span>
+            {item.ingredients.map((ing, idx) => {
+              const ingObj = allIngredients.find(
+                (i) => i.ingredientName && ing && i.ingredientName.trim().toLowerCase() === ing.trim().toLowerCase()
+              )
+              const allergenList = (ingObj?.allergens || [])
+                .map((a: any) => a.allergenName?.toUpperCase?.() || "")
+                .filter(Boolean)
+              
+              const isLast = idx === item.ingredients!.length - 1
+              
+              return (
+                <span key={`${ing}-${idx}`}>
+                  {ing}
+                  {allergenList.length > 0 && (
+                    <strong style={{ fontWeight: 900 }}> ({allergenList.join(", ")})</strong>
+                  )}
+                  {!isLast && ", "}
+                </span>
+              )
+            })}
+          </div>
+        ) : (
+          <div
+            style={{
+              fontSize: "6pt",
+              fontWeight: 500,
+              textAlign: "center",
+              color: "#666",
+              fontStyle: "italic",
+              marginBottom: "3mm",
+            }}
+          >
+            No ingredients listed
+          </div>
+        )}
+
+        {/* Net Weight and Best Before - Centered at bottom sequentially */}
         <div
           style={{
-            fontSize: "8pt",
-            fontWeight: 500,
+            fontSize: "6pt",
+            fontWeight: 700,
             textAlign: "center",
-            color: "#666",
-            fontStyle: "italic",
+            color: "#000",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.5mm",
+            width: "100%",
           }}
         >
-          No allergens
+          <span>Best Before:</span>
+          <span>{shortExpiry}</span>
+          {showNetWt && netWt && <span>{netWt}</span>}
         </div>
-      )}
+      </div>
     </div>
   )
 }
