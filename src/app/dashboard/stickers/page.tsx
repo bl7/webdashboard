@@ -64,6 +64,7 @@ async function renderStickerToPng(
 
   const imageData = await toPng(container, {
     cacheBust: true,
+    pixelRatio: 5, // Greatly increased for sharp thermal printing
     width: container.offsetWidth,
     height: container.offsetHeight,
   })
