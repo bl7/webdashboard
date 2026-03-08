@@ -57,7 +57,7 @@ export const AllergenComplianceHero = () => {
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
               InstaLabel automatically generates compliant labels with all 14 UK allergens, ensures
-              Natasha's Law compliance, and works with any thermal printer. Start your free trial
+              Natasha's Law compliance, and works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended). Start your free trial
               today.
             </p>
           </motion.div>

@@ -21,7 +21,7 @@ export const KitchenLabelPrinterCTAs = () => (
         </h2>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
           Join 500+ UK restaurants that trust InstaLabel for intelligent, compliant kitchen
-          labeling. Our AI-powered software works with any printer and eliminates manual errors.
+          labeling. Our AI-powered software works with USB and Bluetooth label printers (PC: any USB; mobile: Munbyn RW114B recommended) and eliminates manual errors.
         </p>
 
         {/* Primary CTAs */}

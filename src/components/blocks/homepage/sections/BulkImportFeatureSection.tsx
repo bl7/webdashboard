@@ -67,7 +67,7 @@ export const BulkImportFeatureSection = () => {
                 </div>
                 <h4 className="text-lg font-bold text-gray-900">2. Connect Printer</h4>
               </div>
-              <p className="text-gray-600">Plug in your label printer or connect via WiFi. Works with any thermal printer.</p>
+              <p className="text-gray-600">Plug in your USB label printer or connect via Bluetooth. PC: any USB label printer. Mobile: Munbyn RW114B recommended.</p>
             </div>
 
             <div className="bg-white rounded-xl p-6 border border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">

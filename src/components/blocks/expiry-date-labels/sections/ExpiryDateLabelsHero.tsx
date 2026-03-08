@@ -59,7 +59,7 @@ export const ExpiryDateLabelsHero = () => {
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
               InstaLabel's AI automatically calculates expiry dates, generates compliant labels, 
               and ensures Natasha's Law compliance. Print expiry date labels in seconds, not minutes, 
-              with any thermal printer.
+              with USB or Bluetooth thermal printers (PC: any USB; mobile: Munbyn RW114B recommended).
             </p>
           </motion.div>
 
@@ -81,7 +81,7 @@ export const ExpiryDateLabelsHero = () => {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <CheckCircle className="h-4 w-4 text-purple-600" />
-                <span>Works with Any Thermal Printer</span>
+                <span>USB & Bluetooth Printers</span>
               </div>
             </div>
           </motion.div>

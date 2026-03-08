@@ -25,7 +25,7 @@ export const PrintingSetup = () => {
       icon: <Smartphone className="h-8 w-8 text-green-600" />,
       features: [
         "Download InstaLabel app from Google Play Store",
-        "Connect any Bluetooth thermal printer to your Android tablet",
+        "Munbyn RW114B recommended for best results; connect via Bluetooth to your Android tablet",
         "Print directly from the app without additional software",
         "Perfect for food trucks, catering, or space-limited kitchens",
         "Works offline once labels are created",
@@ -52,7 +52,7 @@ export const PrintingSetup = () => {
         "USB thermal printers for desktop/laptop use",
         "Bluetooth thermal printers for Android devices",
         "No network or WiFi printing required",
-        "Works with any TSPL compliant thermal printer",
+        "PC: any USB thermal printer. Mobile: Munbyn RW114B recommended (TSPL compliant)",
         "Automatic printer detection and configuration",
       ],
     },

@@ -69,7 +69,7 @@ export const EnhancedSquareIntegration = () => {
       icon: <Bluetooth className="h-6 w-6 text-green-600" />,
       requirement: "Android App",
       printers: [
-        "Any Bluetooth 4.0+ thermal printer ✓",
+        "Munbyn RW114B recommended; Bluetooth 4.0+ thermal printers ✓",
         "Connection range: 10 meters typical",
         "Offline printing queue: Up to 50 labels",
         "Pairing time: Under 30 seconds",
@@ -160,7 +160,7 @@ export const EnhancedSquareIntegration = () => {
                     <li className="flex items-start gap-3">
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                       <span className="text-sm text-gray-700">
-                        Modern web browser (Chrome, Firefox, Safari, Edge)
+                        Chrome browser recommended
                       </span>
                     </li>
                     <li className="flex items-start gap-3">

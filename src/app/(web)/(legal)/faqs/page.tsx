@@ -81,7 +81,7 @@ const faqsList = [
   },
   {
     q: "What equipment do I need?",
-    a: "Just any USB thermal label printer for web printing—or Android devices for mobile printing. Any TSPL compliant hardware will work.",
+    a: "PC: any USB thermal label printer for web printing. Mobile: Munbyn RW114B recommended for best results. Bluetooth (TSPL) also supported.",
   },
   {
     q: "How fast is setup and printing?",

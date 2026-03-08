@@ -22,7 +22,7 @@ const useCases = [
   {
     icon: <Factory className="h-7 w-7 text-pink-600" />,
     title: "Manufacturing",
-    desc: "Product labels, quality control, compliance tracking—works with any USB printer."
+    desc: "Product labels, quality control, compliance tracking—works with any USB label printer."
   }
 ]
 

@@ -136,8 +136,8 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ### Printer Compatibility
 
-- **Thermal Printers**: Works with any thermal label printer
-- **Connectivity**: USB, Bluetooth, or network support
+- **Thermal Printers**: Works with USB and Bluetooth thermal label printers (PC: any USB; mobile: Munbyn RW114B recommended)
+- **Connectivity**: USB and Bluetooth support
 - **No Special Drivers**: Plug-and-play operation
 - **PrintBridge Technology**: Seamless integration
 
@@ -191,7 +191,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ### Q: Does InstaLabel work with my existing printer?
 
-**A**: Yes! InstaLabel works with any thermal label printer via USB, Bluetooth, or network connection. No special drivers or hardware required.
+**A**: Yes! InstaLabel works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. No special drivers or hardware required.
 
 ### Q: How long does staff training take?
 

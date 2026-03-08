@@ -58,7 +58,7 @@ export const WhyChooseUs = () => {
               <li className="flex items-start gap-3">
                 <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-500" />
                 <span className="text-sm text-gray-700">
-                  Modern web browser (Chrome, Firefox, Safari, Edge)
+                  Chrome browser recommended
                 </span>
               </li>
               <li className="flex items-start gap-3">

@@ -53,7 +53,7 @@ export const PrintBridgeHowItWorks = () => {
               The Local Print Solution That Changes Everything
             </h2>
             <div className="mx-auto max-w-2xl text-base text-gray-600">
-              PrintBridge connects your web dashboard to any USB printer. It bypasses browser
+              PrintBridge connects your web dashboard to any USB label printer. It bypasses browser
               limitations. WebSocket bridge, USB auto-discovery, silent printing.
             </div>
           </div>

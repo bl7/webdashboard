@@ -28,7 +28,7 @@ export const ExpiryDateLabelsSolution = () => (
           InstaLabel Solution
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          AI-Powered Expiry Date Labeling That Works with Any Thermal Printer
+          AI-Powered Expiry Date Labeling That Works with USB & Bluetooth Printers
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel's intelligent software automatically calculates expiry dates, generates
@@ -141,7 +141,7 @@ export const ExpiryDateLabelsSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Compatibility</h3>
           <p className="text-gray-600">
-            Works with any thermal label printer via USB, Bluetooth, or network. PrintBridge
+            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge
             technology ensures seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

@@ -44,7 +44,7 @@ Focus on cooking, not labeling headaches.
 Every feature of InstaLabel is designed with speed and accuracy in mind:
 
 - **Print multiple labels at once**, or just one if needed
-- **Works with any USB label printer**
+- **Works with USB and Bluetooth label printers** (PC: any USB; mobile: Munbyn RW114B recommended)
 - **Access label data from any device**, anytime
 
 It's like having an extra set of eyes in your kitchen—without hiring more staff.

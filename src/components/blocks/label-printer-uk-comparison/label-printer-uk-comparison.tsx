@@ -46,7 +46,7 @@ export const LabelPrinterUkComparisonPage = () => {
 
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
               See why UK restaurants choose InstaLabel over manual labeling. Significantly faster,
-              fully compliant, and works with any thermal printer.
+              fully compliant, and works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended).
             </p>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -60,7 +60,7 @@ export const LabelPrinterUkComparisonPage = () => {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <CheckCircle className="h-4 w-4 text-purple-600" />
-                <span>Any Thermal Printer</span>
+                <span>USB & Bluetooth</span>
               </div>
             </div>
 

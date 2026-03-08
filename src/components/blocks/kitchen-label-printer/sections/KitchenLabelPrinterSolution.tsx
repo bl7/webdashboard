@@ -19,7 +19,7 @@ export const KitchenLabelPrinterSolution = () => (
           InstaLabel Solution
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          Intelligent Software That Works with Any Printer
+          Intelligent Software That Works with USB & Bluetooth Printers
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel's AI-powered software automatically generates compliant labels, calculates
@@ -78,7 +78,7 @@ export const KitchenLabelPrinterSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
-            Works with any thermal label printer - the industry standard for kitchen labeling. PrintBridge technology ensures
+            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge technology ensures
             seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

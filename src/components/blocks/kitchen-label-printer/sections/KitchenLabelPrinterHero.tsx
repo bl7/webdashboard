@@ -57,8 +57,7 @@ export const KitchenLabelPrinterHero = () => {
             viewport={{ once: true }}
           >
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              InstaLabel works with any thermal label printer - the industry standard for kitchen
-              labeling. Our intelligent software automatically generates compliant labels,
+              InstaLabel works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. Our intelligent software automatically generates compliant labels,
               calculates expiry dates, and ensures Natasha's Law compliance. No more manual labeling
               errors.
             </p>
@@ -78,7 +77,7 @@ export const KitchenLabelPrinterHero = () => {
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <Zap className="h-4 w-4 text-purple-600" />
-                <span>Works with Any Printer</span>
+                <span>PC & Mobile Printing</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
                 <CheckCircle className="h-4 w-4 text-purple-600" />
@@ -145,7 +144,7 @@ export const KitchenLabelPrinterHero = () => {
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium text-gray-700">Printer Compatibility:</span>
-                    <span className="text-gray-900">Any Thermal Label Printer</span>
+                    <span className="text-gray-900">USB & Bluetooth</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="font-medium text-gray-700">Compliance:</span>
@@ -160,7 +159,7 @@ export const KitchenLabelPrinterHero = () => {
                 {/* Feature Badge */}
                 <div className="mt-4 rounded bg-purple-100 p-2 text-center">
                   <span className="text-xs font-semibold text-purple-800">
-                    ✓ Works with Your Existing Printer
+                    ✓ PC: any USB printer. Mobile: Munbyn RW114B
                   </span>
                 </div>
               </div>

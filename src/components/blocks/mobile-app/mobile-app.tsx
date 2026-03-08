@@ -88,7 +88,7 @@ export const MobileAppPage = () => {
 
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
               <span>✓ Growing community of UK restaurants</span>
-              <span>✓ Works with any thermal printer</span>
+              <span>✓ Munbyn RW114B recommended for best results</span>
               <span>✓ 14-day free trial, no credit card</span>
             </div>
           </motion.div>
@@ -404,7 +404,7 @@ export const MobileAppPage = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900">Print Workflow</h3>
               <p className="text-sm text-gray-600">
-                Simple printing process with any thermal printer
+                Simple printing process with Munbyn RW114B or Bluetooth thermal printer
               </p>
             </motion.div>
           </div>
@@ -486,7 +486,7 @@ export const MobileAppPage = () => {
             <div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
               <span>✓ Free 14-day trial</span>
               <span>✓ No charges during trial</span>
-              <span>✓ Works with any thermal printer</span>
+              <span>✓ Munbyn RW114B recommended for best results</span>
             </div>
           </motion.div>
         </div>
@@ -519,8 +519,7 @@ export const MobileAppPage = () => {
                 Which printers work with the mobile app?
               </h3>
               <p className="text-gray-600">
-                The InstaLabel mobile app supports all USB label printers and Sunmi devices for
-                instant label printing.
+                The InstaLabel mobile app works best with Munbyn RW114B label printer. Sunmi devices also supported.
               </p>
             </motion.div>
 

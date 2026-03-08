@@ -115,9 +115,9 @@ export const Hero = () => {
             <div className="flex items-start gap-2">
               <span className="text-lg">🔌</span>
               <div>
-                <div className="text-sm font-bold text-gray-900">Works With Any USB Printer</div>
+                <div className="text-sm font-bold text-gray-900">Works With USB Label Printers</div>
                 <div className="text-xs text-gray-600">
-                  No fancy hardware needed — plug in and go.
+                  PC: any USB label printer. Mobile: Munbyn RW114B recommended for best results.
                 </div>
               </div>
             </div>

@@ -182,7 +182,7 @@ export const KitchenLabelPrinterComparison = () => (
         <h3 className="mb-3 text-xl font-bold text-purple-900">Why Choose InstaLabel?</h3>
         <p className="text-purple-700">
           <strong>InstaLabel saves 95% of labeling time</strong> while supporting compliance workflows. Our
-          AI-powered software works with any printer and eliminates manual errors.
+          AI-powered software works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended) and eliminates manual errors.
           <strong>Start your free trial today and see the difference.</strong>
         </p>
       </motion.div>

@@ -59,7 +59,7 @@ export const FeaturesGridUses = () => {
                 icon: <span className="text-2xl">🖨️</span>,
                 title: "Universal Printer Support",
                 description:
-                  "Works out of the box with any USB label printer or mobile device — no locked-in hardware or special drivers required.",
+                  "Works with USB and Bluetooth label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended — no locked-in hardware or special drivers required.",
               },
               {
                 icon: <span className="text-2xl">🧾</span>,
@@ -131,7 +131,7 @@ export const FeaturesGridUses = () => {
                   step: "03",
                   title: "Cross-Platform Simplicity",
                   description:
-                    "Whether you're using Windows or Mac, InstaLabel works with the printers you already have. Set it up once and print labels from any modern browser or Android device.",
+                    "Whether you're using Windows or Mac, InstaLabel works with USB label printers (PC: any USB). Mobile: Munbyn RW114B recommended. Set it up once and print from any modern browser or Android device.",
                   icon: <span className="text-3xl">💻</span>,
                 },
               ].map((step, index) => (

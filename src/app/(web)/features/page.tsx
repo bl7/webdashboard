@@ -125,7 +125,7 @@ const Page = () => {
           name: "Does InstaLabel work with all thermal printers?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Yes, InstaLabel works with any thermal label printer via USB, Bluetooth, or network connectivity. No special drivers or setup required.",
+            text: "Yes, InstaLabel works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. No special drivers or setup required.",
           },
         },
         {

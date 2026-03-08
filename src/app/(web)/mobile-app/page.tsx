@@ -112,7 +112,7 @@ const Page = () => {
           name: "Which printers work with the mobile app?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The InstaLabel mobile app supports all USB label printers.",
+            text: "The InstaLabel mobile app works best with Munbyn RW114B label printer. Sunmi devices also supported.",
           },
         },
         {

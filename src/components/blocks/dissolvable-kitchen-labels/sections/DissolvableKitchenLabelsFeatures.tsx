@@ -186,7 +186,7 @@ export const DissolvableKitchenLabelsFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
-            Works with any thermal label printer via USB, Bluetooth, or network. PrintBridge
+            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge
             technology ensures seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

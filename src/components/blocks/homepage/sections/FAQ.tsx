@@ -18,7 +18,7 @@ export const FAQ = () => {
     },
     {
       question: "Do I need a label printer?",
-      answer: "Yes — InstaLabel works with most USB and Bluetooth label printers.",
+      answer: "Yes — PC: any USB label printer. Mobile: Munbyn RW114B recommended for best results. Bluetooth (TSPL) also supported.",
     },
     {
       question: "How do I print from the Android app?",

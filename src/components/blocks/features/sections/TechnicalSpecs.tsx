@@ -25,7 +25,7 @@ export const TechnicalSpecs = () => (
             <li>203 DPI resolution for crisp, clear text and graphics</li>
             <li>Print speed up to 152mm per second</li>
             <li>Label width support: 60mm x 40mm (standard) and 56mm x 80mm (PPDS labels)</li>
-            <li>Compatible with any USB thermal printer</li>
+            <li>PC: any USB thermal printer. Mobile: Munbyn RW114B recommended</li>
             <li>
               PrintBridge technology for USB printing on Mac and Windows, Bluetooth for Android
               devices

@@ -101,8 +101,7 @@ export const Feature = () => {
                 <span className="text-xl">✅</span>Allergen highlighting built-in
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-xl">✅</span>Works with USB & TSPL bluetooth label printers
-                through android
+                <span className="text-xl">✅</span>Works with USB & TSPL Bluetooth label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended.
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-xl">✅</span>Print logs for traceability & audits

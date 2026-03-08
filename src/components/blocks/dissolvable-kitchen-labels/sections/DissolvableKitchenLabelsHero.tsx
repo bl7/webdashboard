@@ -59,7 +59,7 @@ export const DissolvableKitchenLabelsHero = () => {
             <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
               InstaLabel's AI automatically generates compliant dissolvable labels for food 
               containers, ensuring Natasha's Law compliance and perfect water-soluble printing 
-              on any thermal printer.
+              on USB or Bluetooth thermal printers (PC: any USB; mobile: Munbyn RW114B recommended).
             </p>
           </motion.div>
 

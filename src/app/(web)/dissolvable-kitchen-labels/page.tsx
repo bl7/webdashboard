@@ -4,7 +4,7 @@ import { DissolvableKitchenLabelsPage } from "@/components/blocks/dissolvable-ki
 export const metadata: Metadata = {
   title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
   description:
-    "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on any thermal printer. Start your free trial.",
+    "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
   keywords: [
     "dissolvable kitchen labels",
     "dissolvable food labels",
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
     description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
     url: "https://www.instalabel.co/dissolvable-kitchen-labels",
     type: "website",
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
     description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -64,7 +64,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "InstaLabel Dissolvable Kitchen Label Software",
     description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
     url: "https://www.instalabel.co/dissolvable-kitchen-labels",
     mainEntity: {
       "@type": "SoftwareApplication",

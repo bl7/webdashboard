@@ -110,7 +110,7 @@ export const PrintBridgeHero = () => {
             viewport={{ once: true }}
           >
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
-              <span>✓ Works with any thermal printer</span>
+              <span>✓ Works with any USB label printer</span>
               <span>✓ No internet required for printing</span>
               <span>✓ Automatic reconnection</span>
             </div>

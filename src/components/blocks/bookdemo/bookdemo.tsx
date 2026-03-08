@@ -867,8 +867,7 @@ export const BookDemo = () => {
                       Q: Do you support our existing printers?
                     </h4>
                     <p className="text-sm text-gray-700">
-                      A: InstaLabel works with any USB thermal printer. We'll verify compatibility
-                      for your specific models during the demo.
+                      A: InstaLabel works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. We'll verify compatibility during the demo.
                     </p>
                   </div>
                   <div>

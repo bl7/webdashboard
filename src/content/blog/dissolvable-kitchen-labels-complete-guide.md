@@ -53,8 +53,8 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 ### Thermal Printer Compatibility
 
-- Works with any thermal label printer
-- USB, Bluetooth, or network connectivity
+- Works with USB and Bluetooth thermal label printers (PC: any USB; mobile: Munbyn RW114B recommended)
+- USB and Bluetooth connectivity
 - No special drivers or setup required
 - PrintBridge technology ensures seamless operation
 

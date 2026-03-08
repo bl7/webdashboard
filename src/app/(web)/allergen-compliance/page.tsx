@@ -5,7 +5,7 @@ import React from "react"
 export const metadata: Metadata = {
   title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
   description:
-    "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
+    "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with USB and Bluetooth thermal printers. Start your free trial.",
   keywords: [
     "allergen label printer",
     "allergen label software",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
     description:
-      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with USB and Bluetooth thermal printers. Start your free trial.",
     url: "https://www.instalabel.co/allergen-compliance",
     type: "website",
     images: [
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "InstaLabel: Best Allergen Label Software | UK 14 Allergens Compliance",
     description:
-      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with USB and Bluetooth thermal printers. Start your free trial.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -94,7 +94,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "InstaLabel Allergen Label Software",
     description:
-      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with any thermal printer. Start your free trial.",
+      "InstaLabel is the #1 software for allergen labeling and compliance. Automatically generate compliant labels with all 14 UK allergens, Natasha's Law compliance, and work with USB and Bluetooth thermal printers. Start your free trial.",
     url: "https://www.instalabel.co/allergen-compliance",
     mainEntity: {
       "@type": "SoftwareApplication",
@@ -149,7 +149,7 @@ const Page = () => {
           name: "How can InstaLabel software help with allergen compliance?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "InstaLabel software automatically generates compliant labels with all 14 UK allergens, ensures Natasha's Law compliance, provides AI-powered allergen detection, and works with any thermal printer. It reduces labeling time by 95% and eliminates compliance errors.",
+            text: "InstaLabel software automatically generates compliant labels with all 14 UK allergens, ensures Natasha's Law compliance, provides AI-powered allergen detection, and works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended). It reduces labeling time by 95% and eliminates compliance errors.",
           },
         },
         {

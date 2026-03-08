@@ -189,17 +189,17 @@ const knowledgeBase = [
       "hardware compatibility",
     ],
     answer:
-      "InstaLabel supports multiple printing methods: **USB thermal printers** for desktop use, **Bluetooth thermal printers** for mobile use, and **mobile devices** with thermal printing capabilities. We have native mobile support - no additional hardware needed. For USB/Bluetooth printing, we use PrintBridge technology that works on both Windows (.NET) and macOS (Node.js). Any thermal printer commonly used in commercial kitchens will work.",
+      "InstaLabel supports **USB thermal printers** for desktop (any USB label printer) and **Bluetooth thermal printers** for mobile (Munbyn RW114B recommended for best results). We use PrintBridge technology for USB on Windows (.NET) and macOS (Node.js). No network printing.",
   },
   {
     keywords: ["special hardware", "equipment needed", "what equipment", "hardware requirements"],
     answer:
-      "You don't need any special hardware! InstaLabel works with standard thermal label printers that most commercial kitchens already have. For web printing, just plug in any USB thermal printer. For mobile printing, use our Android app on mobile devices (which have thermal printing capabilities). For Bluetooth printing, any TSPL compliant thermal printer will work. The system automatically detects and connects to available printers. No expensive proprietary hardware required.",
+      "You don't need any special hardware! InstaLabel works with standard thermal label printers. For web printing, plug in any USB thermal printer. For mobile printing, use our Android app with Munbyn RW114B recommended for best results. Bluetooth (TSPL) also supported. The system automatically detects and connects to available printers. No expensive proprietary hardware required.",
   },
   {
     keywords: ["existing printer", "current printer", "use my printer", "printer compatibility"],
     answer:
-      "Yes, you can absolutely use your existing printer! InstaLabel is designed to work with the thermal printers you already have in your kitchen. As long as your printer is TSPL compliant (which most commercial thermal printers are), it will work seamlessly. The system automatically detects USB, Bluetooth, and network-connected printers. If you're upgrading from handwritten labels or a basic labeling system, you can continue using your current printer while getting all the benefits of InstaLabel's smart labeling features.",
+      "Yes, you can absolutely use your existing printer! InstaLabel works with USB and Bluetooth thermal printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended for best results. The system automatically detects USB and Bluetooth printers. If you're upgrading from handwritten labels or a basic labeling system, you can continue using your current printer while getting all the benefits of InstaLabel's smart labeling features.",
   },
 
   {
