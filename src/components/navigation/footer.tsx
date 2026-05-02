@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui"
 import { ArrowRight, Package, Printer, CreditCard, Download } from "lucide-react"
 import { FaLinkedin, FaFacebook, FaXTwitter, FaInstagram } from "react-icons/fa6"
+import { SiWhatsapp } from "react-icons/si"
 
 // CTA + Footer
 export const Footer = () => {
@@ -339,11 +340,23 @@ export const Footer = () => {
                   contact@instalabel.co
                 </Link>
                 <Link
-                  href="tel:+447585644204"
+                  href="tel:+447845447586"
                   className="block transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
                 >
-                  +44 7585 644204
+                  +44 7845 447586
                 </Link>
+                <a
+                  href="https://wa.me/447845447586"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group mt-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-purple-800/50 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  aria-label="Message InstaLabel on WhatsApp"
+                >
+                  <SiWhatsapp
+                    className="h-[22px] w-[22px] text-[#25D366] transition-colors duration-300 group-hover:text-[#20bd5a]"
+                    aria-hidden
+                  />
+                </a>
               </div>
             </div>
 

@@ -70,7 +70,7 @@ export const Contact = () => {
                   </div>
                   <div>
                     <dt className="mb-1 text-lg font-bold text-gray-900">Phone</dt>
-                    <dd className="text-gray-600">+44 7585 644204</dd>
+                    <dd className="text-gray-600">+44 7845 447586</dd>
                   </div>
                 </div>
 

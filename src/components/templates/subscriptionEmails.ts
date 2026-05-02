@@ -301,7 +301,7 @@ export const newSubscriptionEmail = ({
                 <p>Our customer success team is here to help you get the most out of InstaLabel.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -729,7 +729,7 @@ export const planChangeEmail = ({
                 <p>Our customer success team is here to help you make the most of your updated subscription.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -845,7 +845,7 @@ export const cancellationEmail = ({
             <p>If you have any questions about your cancellation, please contact us:</p>
             <ul>
                 <li>📧 Email: support@instalabel.co</li>
-                <li>📱 Phone: +44 (0) 123 456 7890</li>
+                <li>📱 Phone: +44 7845 447586</li>
             </ul>
         </div>
         
@@ -1203,7 +1203,7 @@ export const expiringSoonEmail = ({
                 <p>Our customer support team is here to assist you with any questions about renewing your subscription.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -1614,7 +1614,7 @@ export const renewalReminderEmail = ({
                 <p>Our customer support team is here to help with any questions about your subscription or renewal process.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -1934,7 +1934,7 @@ export const renewalConfirmationEmail = ({
                 <p>Our customer success team is here to help you get the most out of InstaLabel.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -2274,7 +2274,7 @@ export const paymentFailedEmail = ({
                 <p>Our support team is ready to assist you with any payment or billing questions.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -2633,7 +2633,7 @@ export const trialEndingSoonEmail = ({
                 <p>Our team is here to help you choose the right plan and ensure a smooth transition.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -2975,7 +2975,7 @@ export const labelOrderConfirmationEmail = ({
                 <p>Our support team is ready to assist you with any questions about your order or our products.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>
@@ -3396,7 +3396,7 @@ export const labelOrderShippedEmail = ({
                 <p>Our support team can help with tracking, delivery questions, or any concerns about your order.</p>
                 <div class="support-links">
                     <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
-                    <a href="tel:+441234567890" class="support-link">📞 Phone Support</a>
+                    <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
             </div>

@@ -161,7 +161,7 @@ export default function RootLayout({
     name: "InstaLabel",
     description: "Professional kitchen labeling system for restaurants and food businesses",
     url: "https://www.instalabel.co",
-    telephone: "+44-20-1234-5678",
+    telephone: "+447845447586",
     email: "contact@instalabel.co",
     address: {
       "@type": "PostalAddress",
