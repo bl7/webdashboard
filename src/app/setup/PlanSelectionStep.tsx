@@ -2,6 +2,17 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 
 interface Plan {
   id: string
@@ -49,6 +60,8 @@ export default function PlanSelectionStep({
   const [plansLoading, setPlansLoading] = useState(true)
   const [plansError, setPlansError] = useState<string | null>(null)
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null)
+  const [checkoutConfirmOpen, setCheckoutConfirmOpen] = useState(false)
+  const [planPendingCheckout, setPlanPendingCheckout] = useState<Plan | null>(null)
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -96,8 +109,41 @@ export default function PlanSelectionStep({
     fetchPlans()
   }, [])
 
-  const handlePlanSelect = async (plan: Plan) => {
+  const requestPlanCheckout = (plan: Plan) => {
     if (isLoading || processingPlanId) return
+    setError(null)
+
+    const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
+    const userEmail = localStorage.getItem("email")
+
+    if (!userEmail) {
+      setError("Authentication required. Please log in again.")
+      return
+    }
+
+    if (!priceId) {
+      setError(
+        `Price information not available for ${plan.name} (${billingPeriod} billing). Please contact support.`
+      )
+      return
+    }
+
+    if (!userId) {
+      setError("User ID is required. Please refresh and try again.")
+      return
+    }
+
+    setPlanPendingCheckout(plan)
+    setCheckoutConfirmOpen(true)
+  }
+
+  const handleCheckoutConfirmOpenChange = (open: boolean) => {
+    setCheckoutConfirmOpen(open)
+    if (!open) setPlanPendingCheckout(null)
+  }
+
+  const executePlanCheckout = async (plan: Plan): Promise<boolean> => {
+    if (isLoading || processingPlanId) return false
 
     setIsLoading(true)
     setProcessingPlanId(plan.id)
@@ -107,7 +153,6 @@ export default function PlanSelectionStep({
       const priceId = billingPeriod === "monthly" ? plan.price_id_monthly : plan.price_id_yearly
       const userEmail = localStorage.getItem("email")
 
-      // Comprehensive validation
       if (!userEmail) {
         throw new Error("Authentication required. Please log in again.")
       }
@@ -127,7 +172,7 @@ export default function PlanSelectionStep({
         planName: plan.name,
         priceId,
         billingPeriod,
-        userId: userId.substring(0, 8) + "...", // Log partial ID for debugging
+        userId: userId.substring(0, 8) + "...",
       })
 
       const response = await fetch("/api/subscription_better/create-checkout-session", {
@@ -162,17 +207,27 @@ export default function PlanSelectionStep({
       }
 
       console.log("Redirecting to Stripe checkout...")
-
-      // Use window.location.assign for better error handling
       window.location.assign(data.url)
+      return true
     } catch (err) {
       console.error("Checkout error:", err)
       setError(
         err instanceof Error ? err.message : "An unexpected error occurred. Please try again."
       )
+      return false
     } finally {
       setIsLoading(false)
       setProcessingPlanId(null)
+    }
+  }
+
+  const confirmPlanCheckout = async () => {
+    const plan = planPendingCheckout
+    if (!plan) return
+    const ok = await executePlanCheckout(plan)
+    if (ok) {
+      setCheckoutConfirmOpen(false)
+      setPlanPendingCheckout(null)
     }
   }
 
@@ -281,8 +336,40 @@ export default function PlanSelectionStep({
     )
   }
 
+  const pendingBillingLabel = billingPeriod === "yearly" ? "yearly" : "monthly"
+
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-12">
+    <>
+      <AlertDialog open={checkoutConfirmOpen} onOpenChange={handleCheckoutConfirmOpenChange}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Continue to checkout?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to subscribe to{" "}
+              <span className="font-semibold text-foreground">
+                {planPendingCheckout?.name ?? "this plan"}
+              </span>{" "}
+              on <span className="font-semibold text-foreground">{pendingBillingLabel}</span>{" "}
+              billing? You will be redirected to our secure payment page.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isLoading}>No, go back</AlertDialogCancel>
+            <Button onClick={confirmPlanCheckout} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Redirecting…
+                </>
+              ) : (
+                "Yes, continue"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <div className="min-h-screen bg-gray-50 px-4 py-12">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="mb-12 text-center">
@@ -434,7 +521,7 @@ export default function PlanSelectionStep({
                       <button
                         onClick={(e) => {
                           e.stopPropagation()
-                          handlePlanSelect(plan)
+                          requestPlanCheckout(plan)
                         }}
                         disabled={isLoading || isPlanProcessing}
                         className={`w-full rounded-xl px-6 py-3 font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 ${
@@ -569,5 +656,6 @@ export default function PlanSelectionStep({
         </div>
       </div>
     </div>
+    </>
   )
 }

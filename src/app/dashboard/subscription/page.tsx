@@ -16,6 +16,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import {
   ArrowLeft,
   Calendar,
   CreditCard,
@@ -61,11 +70,11 @@ function TrialBanner({ subscription }: { subscription: any }) {
 // Current Plan Card
 function CurrentPlanCard({
   subscription,
-  onBillingCycleChange,
+  onBillingCycleChangeRequest,
   loading,
 }: {
   subscription: any
-  onBillingCycleChange: (cycle: "monthly" | "yearly") => void
+  onBillingCycleChangeRequest: (cycle: "monthly" | "yearly") => void
   loading: boolean
 }) {
   if (!subscription) return null
@@ -151,7 +160,7 @@ function CurrentPlanCard({
                 size="sm"
                 onClick={() => {
                   console.log("[DEBUG] Monthly button clicked")
-                  onBillingCycleChange("monthly")
+                  onBillingCycleChangeRequest("monthly")
                 }}
                 disabled={loading || isMonthly}
               >
@@ -160,7 +169,7 @@ function CurrentPlanCard({
               <Button
                 variant={!isMonthly ? "default" : "outline"}
                 size="sm"
-                onClick={() => onBillingCycleChange("yearly")}
+                onClick={() => onBillingCycleChangeRequest("yearly")}
                 disabled={loading || !isMonthly}
               >
                 Annual (Save 10%)
@@ -516,6 +525,8 @@ export default function SubscriptionManagementPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [reactivateLoading, setReactivateLoading] = useState(false)
+  const [billingConfirmOpen, setBillingConfirmOpen] = useState(false)
+  const [pendingBillingCycle, setPendingBillingCycle] = useState<"monthly" | "yearly" | null>(null)
 
   const userid = typeof window !== "undefined" ? localStorage.getItem("userid") || "" : ""
   const {
@@ -561,18 +572,17 @@ export default function SubscriptionManagementPage() {
     )
   }
 
-  const handleBillingCycleChange = async (newCycle: "monthly" | "yearly") => {
+  const handleBillingCycleChange = async (newCycle: "monthly" | "yearly"): Promise<boolean> => {
     console.log("[DEBUG] handleBillingCycleChange called with:", newCycle)
 
     if (!subscription) {
       console.log("[DEBUG] No subscription found, returning")
-      return
+      return false
     }
 
     console.log("[DEBUG] Setting loading to true")
     setLoading(true)
     try {
-      // This would call a simplified API endpoint
       const token = localStorage.getItem("token")
       if (!token) {
         throw new Error("No authentication token found")
@@ -609,11 +619,32 @@ export default function SubscriptionManagementPage() {
 
       await refreshSubscription()
       toast.success(`Switched to ${newCycle} billing`)
+      return true
     } catch (error: any) {
       console.error("[FRONTEND] Billing cycle change error:", error)
       toast.error(error.message || "Failed to update billing cycle")
+      return false
     } finally {
       setLoading(false)
+    }
+  }
+
+  const requestBillingCycleChange = (cycle: "monthly" | "yearly") => {
+    setPendingBillingCycle(cycle)
+    setBillingConfirmOpen(true)
+  }
+
+  const handleBillingConfirmOpenChange = (open: boolean) => {
+    setBillingConfirmOpen(open)
+    if (!open) setPendingBillingCycle(null)
+  }
+
+  const confirmBillingCycleChange = async () => {
+    if (!pendingBillingCycle) return
+    const ok = await handleBillingCycleChange(pendingBillingCycle)
+    if (ok) {
+      setBillingConfirmOpen(false)
+      setPendingBillingCycle(null)
     }
   }
 
@@ -652,8 +683,36 @@ export default function SubscriptionManagementPage() {
     }
   }
 
+  const pendingLabel =
+    pendingBillingCycle === "yearly" ? "annual (yearly)" : "monthly"
+
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <AlertDialog open={billingConfirmOpen} onOpenChange={handleBillingConfirmOpenChange}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Switch billing cycle?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to switch to {pendingLabel} billing? This will update how you
+              are charged going forward (timing may follow your current billing period).
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>No, keep current billing</AlertDialogCancel>
+            <Button onClick={confirmBillingCycleChange} disabled={loading}>
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Updating…
+                </>
+              ) : (
+                "Yes, switch billing"
+              )}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="mb-6">
@@ -676,7 +735,7 @@ export default function SubscriptionManagementPage() {
           <div className="space-y-6">
             <CurrentPlanCard
               subscription={subscription}
-              onBillingCycleChange={handleBillingCycleChange}
+              onBillingCycleChangeRequest={requestBillingCycleChange}
               loading={loading}
             />
             <PaymentMethodCard subscription={subscription} />
