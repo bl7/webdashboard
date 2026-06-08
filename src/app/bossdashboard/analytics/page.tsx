@@ -660,6 +660,9 @@ export default function AnalyticsDashboard() {
       <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardHeader>
             <CardTitle>Top Customers</CardTitle>
+            <p className="text-xs text-muted-foreground">
+              Ranked by total Stripe payments (all paid invoices)
+            </p>
           </CardHeader>
           <CardContent>
             {data.topCustomers?.length ? (

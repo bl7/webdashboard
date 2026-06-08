@@ -49,17 +49,24 @@ async function getCustomerTotalPaidPounds(stripeCustomerId: string): Promise<num
   }
 }
 
-async function enrichTopCustomers(
+async function enrichWithTotalPaid(
   customers: SubscriptionRow[]
 ): Promise<SubscriptionRow[]> {
-  return Promise.all(
-    customers.map(async (sub) => ({
-      ...sub,
-      totalPaid: sub.stripe_customer_id
-        ? await getCustomerTotalPaidPounds(sub.stripe_customer_id)
-        : 0,
-    }))
-  )
+  const results: SubscriptionRow[] = []
+  const batchSize = 10
+  for (let i = 0; i < customers.length; i += batchSize) {
+    const batch = customers.slice(i, i + batchSize)
+    const batchResults = await Promise.all(
+      batch.map(async (sub) => ({
+        ...sub,
+        totalPaid: sub.stripe_customer_id
+          ? await getCustomerTotalPaidPounds(sub.stripe_customer_id)
+          : 0,
+      }))
+    )
+    results.push(...batchResults)
+  }
+  return results
 }
 
 async function fetchOperationalMetrics(client: Awaited<ReturnType<typeof pool.connect>>) {
@@ -243,11 +250,18 @@ export async function GET(req: NextRequest) {
       )
       .slice(0, 10)
 
-    const topCustomersRaw = [...subs]
-      .sort((a, b) => (b.amount || 0) - (a.amount || 0))
-      .slice(0, 10)
-    const topCustomers =
-      role === "boss" ? await enrichTopCustomers(topCustomersRaw) : topCustomersRaw
+    let topCustomers: SubscriptionRow[] = []
+    if (role === "boss") {
+      const withStripe = subs.filter((s) => s.stripe_customer_id)
+      const enriched = await enrichWithTotalPaid(withStripe)
+      topCustomers = enriched
+        .sort((a, b) => (b.totalPaid ?? 0) - (a.totalPaid ?? 0))
+        .slice(0, 10)
+    } else {
+      topCustomers = [...subs]
+        .sort((a, b) => (b.amount || 0) - (a.amount || 0))
+        .slice(0, 10)
+    }
 
     const upcomingRenewals = subs
       .filter(

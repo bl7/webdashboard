@@ -1,6 +1,15 @@
 "use client"
 import React, { useState, useEffect } from "react"
-import { Search, Plus, Users, X, Eye, BarChart2 } from "lucide-react"
+import { Search, Plus, Users, X, Eye, BarChart2, DollarSign } from "lucide-react"
+import {
+  Bar,
+  BarChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
+import { formatCurrencyGBP } from "@/lib/bossAnalytics"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useDarkMode } from "../context/DarkModeContext"
 
@@ -56,6 +65,13 @@ export default function UsersPage() {
     entries: number
     byLabelType: any[]
     logs: any[]
+  } | null>(null)
+  const [billingOpen, setBillingOpen] = useState(false)
+  const [billingLoading, setBillingLoading] = useState(false)
+  const [billingData, setBillingData] = useState<{
+    totalPaid: number
+    chartData: { month: string; amount: number }[]
+    invoices: { id: string; date: string; amount: number; status: string }[]
   } | null>(null)
   const [newUser, setNewUser] = useState({
     email: "",
@@ -134,6 +150,46 @@ export default function UsersPage() {
     setPrintsOpen(true)
   }
 
+  const openBillingDrawer = (user: User) => {
+    setSelectedUser(user)
+    setBillingOpen(true)
+  }
+
+  function processInvoices(invoices: any[]) {
+    const paid = (invoices || []).filter((inv) => inv.status === "paid")
+    const totalPaid = paid.reduce((sum, inv) => sum + (inv.amount_paid || 0), 0) / 100
+
+    const byMonth: Record<string, number> = {}
+    paid.forEach((inv) => {
+      const d = new Date((inv.created || 0) * 1000)
+      const key = d.toLocaleDateString("en-GB", { month: "short", year: "2-digit" })
+      byMonth[key] = (byMonth[key] || 0) + (inv.amount_paid || 0) / 100
+    })
+
+    const chartData = Object.entries(byMonth)
+      .map(([month, amount]) => ({ month, amount }))
+      .sort((a, b) => {
+        const [am, ay] = a.month.split(" ")
+        const [bm, by] = b.month.split(" ")
+        const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+        const ayFull = 2000 + parseInt(ay)
+        const byFull = 2000 + parseInt(by)
+        if (ayFull !== byFull) return ayFull - byFull
+        return months.indexOf(am) - months.indexOf(bm)
+      })
+
+    const invoiceList = [...paid]
+      .sort((a, b) => (b.created || 0) - (a.created || 0))
+      .map((inv) => ({
+        id: inv.id,
+        date: new Date((inv.created || 0) * 1000).toLocaleDateString("en-GB"),
+        amount: (inv.amount_paid || 0) / 100,
+        status: inv.status,
+      }))
+
+    return { totalPaid, chartData, invoices: invoiceList }
+  }
+
   useEffect(() => {
     if (!printsOpen || !selectedUser) return
     const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
@@ -174,6 +230,19 @@ export default function UsersPage() {
       .then(setPrintsSummary)
       .finally(() => setPrintsLoading(false))
   }, [printsOpen, printsRange, selectedUser])
+
+  useEffect(() => {
+    if (!billingOpen || !selectedUser) return
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    setBillingLoading(true)
+    fetch(`/api/subscription_better/invoices?user_id=${selectedUser.user_id}`, {
+      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+    })
+      .then((r) => r.json())
+      .then((data) => setBillingData(processInvoices(data.invoices || [])))
+      .catch(() => setBillingData({ totalPaid: 0, chartData: [], invoices: [] }))
+      .finally(() => setBillingLoading(false))
+  }, [billingOpen, selectedUser])
 
   if (loading) {
     return (
@@ -363,6 +432,13 @@ export default function UsersPage() {
                         Cancel
                       </button>
                     )}
+                    <button
+                      className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                      onClick={() => openBillingDrawer(user)}
+                      title="View payment history"
+                    >
+                      <DollarSign className="h-4 w-4" /> Billing
+                    </button>
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                       onClick={() => openPrintsDrawer(user)}
@@ -852,6 +928,60 @@ export default function UsersPage() {
           </div>
         </div>
       )}
+
+      {/* Billing Drawer */}
+      <Dialog open={billingOpen} onOpenChange={setBillingOpen}>
+        <DialogContent className={isDarkMode ? "max-w-lg bg-gray-900 text-white" : "max-w-lg bg-white text-gray-900"}>
+          <DialogHeader>
+            <DialogTitle>Payments — {selectedUser?.company_name}</DialogTitle>
+          </DialogHeader>
+          {billingLoading ? (
+            <div className="text-sm">Loading payment history...</div>
+          ) : billingData ? (
+            <div className="space-y-4">
+              <div className="text-lg font-semibold">
+                Total paid: {formatCurrencyGBP(billingData.totalPaid)}
+              </div>
+              {billingData.chartData.length > 0 ? (
+                <div>
+                  <div className="mb-2 text-sm font-medium">Payments over time</div>
+                  <ResponsiveContainer width="100%" height={180}>
+                    <BarChart data={billingData.chartData}>
+                      <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
+                      <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" tickFormatter={(v) => `£${v}`} />
+                      <Tooltip
+                        formatter={(value) => [formatCurrencyGBP(Number(value ?? 0)), "Paid"]}
+                        contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 8 }}
+                      />
+                      <Bar dataKey="amount" fill="#a259ff" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No paid invoices yet.</p>
+              )}
+              {billingData.invoices.length > 0 && (
+                <div>
+                  <div className="mb-1 text-sm font-medium">Invoice history</div>
+                  <ul className="max-h-48 space-y-1 overflow-auto text-sm">
+                    {billingData.invoices.map((inv) => (
+                      <li
+                        key={inv.id}
+                        className="flex justify-between border-b border-gray-200 pb-1 dark:border-gray-700"
+                      >
+                        <span>{inv.date}</span>
+                        <span>{formatCurrencyGBP(inv.amount)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="text-sm">No billing data available.</div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Prints Drawer */}
       <Dialog open={printsOpen} onOpenChange={setPrintsOpen}>
