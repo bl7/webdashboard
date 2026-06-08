@@ -63,6 +63,8 @@ export interface OperationalMetrics {
   mostActiveKitchen: string | null
   mostActiveKitchenPrints: number
   avgLabelsPerCustomer: number
+  activeKitchensLast30Days: number
+  activeKitchensUsagePercent: number
   printsTrend: PrintsTrendPoint[]
 }
 

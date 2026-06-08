@@ -1,14 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { Search, Plus, Users, X, Eye, BarChart2, DollarSign } from "lucide-react"
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts"
 import { formatCurrencyGBP } from "@/lib/bossAnalytics"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useDarkMode } from "../context/DarkModeContext"
@@ -37,6 +31,7 @@ interface User {
 }
 
 export default function UsersPage() {
+  const searchParams = useSearchParams()
   const [users, setUsers] = useState<User[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
@@ -73,6 +68,11 @@ export default function UsersPage() {
     chartData: { month: string; amount: number }[]
     invoices: { id: string; date: string; amount: number; status: string }[]
   } | null>(null)
+  const [userDevice, setUserDevice] = useState<{
+    device_identifier?: string
+    status?: string
+    device_type?: string
+  } | null>(null)
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -91,7 +91,6 @@ export default function UsersPage() {
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
       const data = await res.json()
-      console.log("Users API response:", data)
       if (data.error) {
         setUsers([])
       } else {
@@ -101,6 +100,30 @@ export default function UsersPage() {
     }
     fetchUsers()
   }, [])
+
+  useEffect(() => {
+    const q = searchParams.get("q")
+    if (q) setSearchTerm(q)
+  }, [searchParams])
+
+  useEffect(() => {
+    if (!showViewModal || !selectedUser) {
+      setUserDevice(null)
+      return
+    }
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    fetch("/api/devices", {
+      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const match = (data.devices || []).find(
+          (d: { user_id: string }) => String(d.user_id) === String(selectedUser.user_id)
+        )
+        setUserDevice(match || null)
+      })
+      .catch(() => setUserDevice(null))
+  }, [showViewModal, selectedUser])
 
   // Filtering logic
   const filteredUsers = users
@@ -673,6 +696,12 @@ export default function UsersPage() {
                   <span className="font-semibold">Created At:</span>{" "}
                   {new Date(selectedUser.created_at).toLocaleString()}
                 </div>
+                <div>
+                  <span className="font-semibold">Assigned Device:</span>{" "}
+                  {userDevice
+                    ? `${userDevice.device_identifier || userDevice.device_type || "Device"} (${userDevice.status})`
+                    : "None"}
+                </div>
               </div>
 
               {/* Right column: contact & location details */}
@@ -939,23 +968,31 @@ export default function UsersPage() {
             <div className="text-sm">Loading payment history...</div>
           ) : billingData ? (
             <div className="space-y-4">
-              <div className="text-lg font-semibold">
-                Total paid: {formatCurrencyGBP(billingData.totalPaid)}
+              <div className="flex items-center justify-between">
+                <div className="text-lg font-semibold">
+                  Total paid: {formatCurrencyGBP(billingData.totalPaid)}
+                </div>
+                <Link
+                  href="/bossdashboard/reports?tab=invoices"
+                  className="text-xs text-primary hover:underline"
+                >
+                  Export invoices →
+                </Link>
               </div>
               {billingData.chartData.length > 0 ? (
                 <div>
-                  <div className="mb-2 text-sm font-medium">Payments over time</div>
-                  <ResponsiveContainer width="100%" height={180}>
-                    <BarChart data={billingData.chartData}>
-                      <XAxis dataKey="month" tick={{ fontSize: 11 }} stroke="#9ca3af" />
-                      <YAxis tick={{ fontSize: 11 }} stroke="#9ca3af" tickFormatter={(v) => `£${v}`} />
-                      <Tooltip
-                        formatter={(value) => [formatCurrencyGBP(Number(value ?? 0)), "Paid"]}
-                        contentStyle={{ backgroundColor: "#1f2937", border: "1px solid #374151", borderRadius: 8 }}
-                      />
-                      <Bar dataKey="amount" fill="#a259ff" radius={[4, 4, 0, 0]} />
-                    </BarChart>
-                  </ResponsiveContainer>
+                  <div className="mb-2 text-sm font-medium">Payments by month</div>
+                  <ul className="space-y-1 text-sm">
+                    {billingData.chartData.map((row) => (
+                      <li
+                        key={row.month}
+                        className="flex justify-between border-b border-gray-200 pb-1 dark:border-gray-700"
+                      >
+                        <span>{row.month}</span>
+                        <span>{formatCurrencyGBP(row.amount)}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ) : (
                 <p className="text-sm text-gray-500">No paid invoices yet.</p>

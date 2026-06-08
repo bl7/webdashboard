@@ -1,185 +1,190 @@
 "use client"
 
-import React, { useState, useEffect } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import React, { useEffect, useState } from "react"
+import Link from "next/link"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Users,
-  TrendingUp,
   AlertTriangle,
   Calendar,
   DollarSign,
-  Activity,
-  BarChart3,
-  PieChart,
   Truck,
   FileText,
+  CalendarClock,
+  ArrowRight,
+  Printer,
 } from "lucide-react"
 import { useDarkMode } from "./context/DarkModeContext"
+import { formatCurrencyGBP } from "@/lib/bossAnalytics"
 
-interface AnalyticsData {
-  total: number
-  active: number
-  trialing: number
-  canceled: number
-  mrr: number
-  arr: number
-  arpu: number
-  churnRate: number
-  trialConversion: number
-  planDistribution: Array<{ name: string; value: number }>
-  statusDistribution: Array<{ name: string; value: number }>
-  recentSignups: Array<any>
-  topCustomers: Array<any>
-  upcomingRenewals: Array<any>
-  pendingChanges: Array<any>
-  failedPayments: Array<any>
+interface SubscriptionRow {
+  company_name?: string
+  email?: string
+  plan_name?: string
+  created_at?: string
+  current_period_end?: string
+  pending_plan_change?: string
+  pending_plan_change_effective?: string
+  amount?: number
+  billing_interval?: string
+  status?: string
 }
 
-interface User {
-  user_id: string
-  company_name: string
-  plan_name: string
-  status: string
-  current_period_end: string
-  trial_end: string
-  pending_plan_change: string | null
-  pending_plan_change_effective: string | null
-  created_at: string
+interface ActionData {
+  total: number
+  active: number
+  mrr: number
+  recentSignups: SubscriptionRow[]
+  upcomingRenewals: SubscriptionRow[]
+  pendingChanges: SubscriptionRow[]
+  failedPayments: SubscriptionRow[]
+}
+
+function SectionHeading({ title, subtitle }: { title: string; subtitle?: string }) {
+  return (
+    <div className="mb-3">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">{title}</h2>
+      {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+    </div>
+  )
+}
+
+function ActionList({
+  title,
+  icon,
+  href,
+  hrefLabel,
+  isDarkMode,
+  empty,
+  children,
+}: {
+  title: string
+  icon: React.ReactNode
+  href: string
+  hrefLabel: string
+  isDarkMode?: boolean
+  empty: string
+  children: React.ReactNode
+}) {
+  return (
+    <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="flex items-center gap-2 text-base">
+          {icon}
+          {title}
+        </CardTitle>
+        <Link href={href} className="flex items-center gap-1 text-xs text-primary hover:underline">
+          {hrefLabel} <ArrowRight className="h-3 w-3" />
+        </Link>
+      </CardHeader>
+      <CardContent>
+        {children || <p className="text-sm text-muted-foreground">{empty}</p>}
+      </CardContent>
+    </Card>
+  )
 }
 
 export default function BossDashboard() {
   const { isDarkMode } = useDarkMode()
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null)
-  const [users, setUsers] = useState<User[]>([])
-
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [activeTab, setActiveTab] = useState("overview")
-  const [showAddUserModal, setShowAddUserModal] = useState(false)
-  const [showPlanModal, setShowPlanModal] = useState(false)
-  const [editPlan, setEditPlan] = useState<any | null>(null)
-  const [pendingDevices, setPendingDevices] = useState<any[]>([])
-  const [recentLabelOrders, setRecentLabelOrders] = useState<any[]>([])
-  const [printsToday, setPrintsToday] = useState<number>(0)
-  const [printsRange, setPrintsRange] = useState<"today" | "yesterday" | "week">("today")
+  const [actionData, setActionData] = useState<ActionData | null>(null)
+  const [printsToday, setPrintsToday] = useState(0)
+  const [printsWeek, setPrintsWeek] = useState(0)
+  const [pendingDevices, setPendingDevices] = useState<{ id: string; customer_name?: string; status: string }[]>([])
+  const [returnRequiredDevices, setReturnRequiredDevices] = useState<{ id: string; customer_name?: string; customer_email?: string }[]>([])
+  const [recentLabelOrders, setRecentLabelOrders] = useState<
+    { id: string; email?: string; full_name?: string; bundle_count?: number; status?: string; amount_cents?: number; label_product_name?: string }[]
+  >([])
+  const [pendingDemos, setPendingDemos] = useState<{ id: string; name?: string; company?: string; created_at?: string }[]>([])
+  const [recentCancellations, setRecentCancellations] = useState<
+    { id: string; company_name?: string; email?: string; user_id?: string; cancelled_at?: string }[]
+  >([])
 
   useEffect(() => {
-    const fetchData = async () => {
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
+
+    const today = new Date().toISOString().slice(0, 10)
+    const now = new Date()
+    const day = now.getDay() || 7
+    const monday = new Date(now)
+    monday.setDate(now.getDate() - (day - 1))
+    const sunday = new Date(monday)
+    sunday.setDate(monday.getDate() + 6)
+    const weekFrom = monday.toISOString().slice(0, 10)
+    const weekTo = sunday.toISOString().slice(0, 10)
+
+    const load = async () => {
+      setLoading(true)
+      setError(null)
       try {
-        setLoading(true)
+        const [analyticsRes, devicesRes, ordersRes, demosRes, cancelRes, printsTodayRes, printsWeekRes] =
+          await Promise.all([
+            fetch("/api/subscription_better/analytics", { headers }),
+            fetch("/api/devices", { headers }),
+            fetch("/api/label-orders/all", { headers }),
+            fetch("/api/bookdemo", { headers }),
+            fetch("/api/subscription_better/cancel?page=1&pageSize=5", { headers }),
+            fetch(`/api/logs/summary?date=${today}`, { headers }),
+            fetch(`/api/logs/summary?date_from=${weekFrom}&date_to=${weekTo}`, { headers }),
+          ])
 
-        // Fetch analytics data
-        const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
-        const analyticsResponse = await fetch("/api/subscription_better/analytics", {
-          headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-        })
-        if (!analyticsResponse.ok) {
-          throw new Error("Failed to fetch analytics data")
+        if (!analyticsRes.ok) throw new Error("Failed to fetch dashboard data")
+        setActionData(await analyticsRes.json())
+
+        if (devicesRes.ok) {
+          const devices = (await devicesRes.json()).devices || []
+          setPendingDevices(devices.filter((d: { status: string }) => d.status === "pending"))
+          setReturnRequiredDevices(
+            devices.filter((d: { status: string }) => d.status === "return_requested")
+          )
         }
-        const analytics = await analyticsResponse.json()
 
-        // Fetch users data
-        const usersResponse = await fetch("/api/subscription_better/users", {
-          headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-        })
-        if (!usersResponse.ok) {
-          throw new Error("Failed to fetch users data")
+        if (ordersRes.ok) {
+          const orders = (await ordersRes.json()).orders || []
+          setRecentLabelOrders(
+            orders
+              .slice()
+              .sort(
+                (a: { created_at: string }, b: { created_at: string }) =>
+                  new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+              )
+              .slice(0, 5)
+          )
         }
-        const usersData = await usersResponse.json()
 
-        // Fetch plans data
-        const plansResponse = await fetch("/api/plans", {
-          headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-        })
-        if (!plansResponse.ok) {
-          throw new Error("Failed to fetch plans data")
+        if (demosRes.ok) {
+          const demos = await demosRes.json()
+          setPendingDemos(
+            (Array.isArray(demos) ? demos : []).filter((d: { attended?: boolean }) => !d.attended).slice(0, 5)
+          )
         }
-        const plansData = await plansResponse.json()
 
-        // Fetch device and label order data
-        fetch("/api/devices", {
-          headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setPendingDevices((data.devices || []).filter((d: any) => d.status === "pending"))
-          })
-        fetch("/api/label-orders/all", {
-          headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-        })
-          .then((res) => res.json())
-          .then((data) => {
-            setRecentLabelOrders(
-              (data.orders || [])
-                .slice()
-                .sort((a: any, b: any) => {
-                  const dateA = a.created_at ? new Date(a.created_at).getTime() : 0
-                  const dateB = b.created_at ? new Date(b.created_at).getTime() : 0
-                  return dateB - dateA
-                })
-                .slice(0, 5)
-            )
-          })
+        if (cancelRes.ok) {
+          setRecentCancellations((await cancelRes.json()).cancellations || [])
+        }
 
-        // Prints summary fetched in separate effect
-
-        setAnalyticsData(analytics)
-        setUsers(usersData)
+        if (printsTodayRes.ok) {
+          setPrintsToday(Number((await printsTodayRes.json()).totalPrints || 0))
+        }
+        if (printsWeekRes.ok) {
+          setPrintsWeek(Number((await printsWeekRes.json()).totalPrints || 0))
+        }
       } catch (err) {
-        console.error("Error fetching data:", err)
-        setError(err instanceof Error ? err.message : "Failed to fetch data")
+        setError(err instanceof Error ? err.message : "Failed to load dashboard")
       } finally {
         setLoading(false)
       }
     }
 
-    fetchData()
+    load()
   }, [])
 
-  // Fetch prints summary separately so range changes only affect this card
-  useEffect(() => {
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
-
-    const buildRangeQuery = () => {
-      const todayStr = new Date().toISOString().slice(0, 10)
-      if (printsRange === "today") return `?date=${todayStr}`
-      if (printsRange === "yesterday") {
-        const d = new Date()
-        d.setDate(d.getDate() - 1)
-        const y = d.toISOString().slice(0, 10)
-        return `?date=${y}`
-      }
-      // week: Monday-Sunday based on current week
-      const now = new Date()
-      const day = now.getDay() || 7
-      const monday = new Date(now)
-      monday.setDate(now.getDate() - (day - 1))
-      const sunday = new Date(monday)
-      sunday.setDate(monday.getDate() + 6)
-      const from = monday.toISOString().slice(0, 10)
-      const to = sunday.toISOString().slice(0, 10)
-      return `?date_from=${from}&date_to=${to}`
-    }
-
-    fetch(`/api/logs/summary${buildRangeQuery()}`, {
-      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-    })
-      .then((res) => res.json())
-      .then((data) => setPrintsToday(Number(data.totalPrints || 0)))
-      .catch(() => setPrintsToday(0))
-  }, [printsRange])
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-GB", {
-      style: "currency",
-      currency: "GBP",
-    }).format(amount)
-  }
-
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "—"
     return new Date(dateString).toLocaleDateString("en-GB", {
       year: "numeric",
       month: "short",
@@ -187,521 +192,368 @@ export default function BossDashboard() {
     })
   }
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-      case "trialing":
-        return "bg-purple-100 text-blue-800 dark:bg-blue-900 dark:text-purple-200"
-      case "canceled":
-        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-      case "past_due":
-        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-    }
+  const formatOrderAmount = (cents?: number) =>
+    cents != null ? formatCurrencyGBP(cents / 100) : "—"
+
+  const formatSubAmount = (row: SubscriptionRow) => {
+    if (!row.amount) return ""
+    const amt = formatCurrencyGBP(row.amount / 100)
+    return row.billing_interval === "year" ? `${amt}/yr` : `${amt}/mo`
   }
 
-  const getPlanColor = (planName: string) => {
-    switch (planName?.toLowerCase()) {
-      case "basic":
-      case "basic plan":
-        return "bg-purple-100 text-blue-800 dark:bg-blue-900 dark:text-purple-200"
-      case "pro":
-      case "pro kitchen":
-      case "pro_kitchen":
-        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
-      case "multi-kitchen":
-      case "multi_site":
-      case "multi-site mastery":
-        return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
-      default:
-        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200"
-    }
-  }
-
-  // Quick link handlers
-  const handleQuickLink = (tab: string, action?: string) => {
-    setActiveTab(tab)
-    if (tab === "users" && action === "add") setShowAddUserModal(true)
-    if (tab === "plans" && action === "add") setShowPlanModal(true)
-  }
+  const cardClass = isDarkMode ? "border-gray-700 bg-gray-800" : ""
+  const needsAttentionCount =
+    (actionData?.failedPayments?.length ?? 0) +
+    pendingDevices.length +
+    recentCancellations.length +
+    pendingDemos.length +
+    returnRequiredDevices.length
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-          <p className="mt-4 text-muted-foreground">Loading dashboard...</p>
-        </div>
+      <div className="flex h-64 items-center justify-center">
+        <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <AlertTriangle className="mx-auto mb-4 h-12 w-12 text-red-500" />
-          <h2 className="mb-2 text-xl font-semibold">Error Loading Dashboard</h2>
-          <p className="text-muted-foreground">{error}</p>
-          <Button onClick={() => window.location.reload()} className="mt-4" variant="purple">
-            Retry
-          </Button>
-        </div>
+      <div className="flex h-64 flex-col items-center justify-center gap-3">
+        <AlertTriangle className="h-10 w-10 text-red-500" />
+        <p className="text-muted-foreground">{error}</p>
+        <Button onClick={() => window.location.reload()} variant="purple">
+          Retry
+        </Button>
       </div>
     )
   }
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "dark bg-gray-900" : "bg-gray-50"}`}>
-      <div className="container mx-auto space-y-6 p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Boss Dashboard</h1>
-            <p className="text-gray-600 dark:text-gray-400">
-              Manage your SaaS business and monitor performance
-            </p>
-          </div>
+    <div className="space-y-8 p-6 md:p-10">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Daily Action Centre</h1>
+          <p className="text-sm text-muted-foreground">What needs your attention today</p>
         </div>
+        <Link href="/bossdashboard/analytics">
+          <Button variant="outline" size="sm">
+            Full analytics <ArrowRight className="ml-1 h-3 w-3" />
+          </Button>
+        </Link>
+      </div>
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Total Users
-              </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+      {/* Snapshot */}
+      <section>
+        <SectionHeading title="Today's snapshot" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <Card className={cardClass}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {analyticsData?.total || 0}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {analyticsData?.active || 0} active subscriptions
-              </p>
+              <div className="text-2xl font-bold">{actionData?.total ?? 0}</div>
+              <p className="text-xs text-muted-foreground">{actionData?.active ?? 0} active</p>
             </CardContent>
           </Card>
-
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Monthly Revenue
-              </CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+          <Card className={cardClass}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">MRR</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(analyticsData?.mrr || 0)}
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {formatCurrency(analyticsData?.arr || 0)} annually
-              </p>
+              <div className="text-2xl font-bold">{formatCurrencyGBP(actionData?.mrr ?? 0)}</div>
+              <Link href="/bossdashboard/analytics" className="text-xs text-primary hover:underline">
+                Revenue analytics →
+              </Link>
             </CardContent>
           </Card>
-
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                ARPU
-              </CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+          <Card className={cardClass}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Prints Today</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {formatCurrency(analyticsData?.arpu || 0)}
-              </div>
-              <p className="text-xs text-muted-foreground">Average revenue per user</p>
+              <div className="text-2xl font-bold">{printsToday.toLocaleString()}</div>
+              <Link
+                href="/bossdashboard/analytics#platform-usage"
+                className="text-xs text-primary hover:underline"
+              >
+                Usage trends →
+              </Link>
             </CardContent>
           </Card>
-
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Prints
-              </CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+          <Card className={cardClass}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Prints This Week</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">{printsToday}</div>
-              <div className="mt-2 flex items-center gap-2">
-                <button
-                  className={`rounded px-2 py-1 text-xs ${printsRange === "today" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
-                  onClick={() => setPrintsRange("today")}
-                >
-                  Today
-                </button>
-                <button
-                  className={`rounded px-2 py-1 text-xs ${printsRange === "yesterday" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
-                  onClick={() => setPrintsRange("yesterday")}
-                >
-                  Yesterday
-                </button>
-                <button
-                  className={`rounded px-2 py-1 text-xs ${printsRange === "week" ? "bg-purple-600 text-white" : "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200"}`}
-                  onClick={() => setPrintsRange("week")}
-                >
-                  This Week
-                </button>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground">Sum of printed label quantities</p>
+              <div className="text-2xl font-bold">{printsWeek.toLocaleString()}</div>
+              <Link
+                href="/bossdashboard/analytics#platform-usage"
+                className="text-xs text-primary hover:underline"
+              >
+                Usage trends →
+              </Link>
             </CardContent>
           </Card>
-
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Churn Rate
-              </CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+          <Card className={cardClass}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Pending Devices</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {((analyticsData?.churnRate || 0) * 100).toFixed(1)}%
-              </div>
-              <p className="text-xs text-muted-foreground">
-                {analyticsData?.canceled || 0} canceled subscriptions
-              </p>
+              <div className="text-2xl font-bold">{pendingDevices.length}</div>
+              <Link href="/bossdashboard/devices" className="text-xs text-primary hover:underline">
+                Device management →
+              </Link>
             </CardContent>
           </Card>
         </div>
+      </section>
 
-        {/* New Widgets */}
-        <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {/* Pending Device Shipments */}
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Pending Device Shipments
-              </CardTitle>
-              <Truck className="h-5 w-5 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                {pendingDevices.length}
-              </div>
-              <p className="text-xs text-muted-foreground">Devices to ship</p>
-            </CardContent>
-          </Card>
-          {/* Recent Label Orders */}
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Recent Label Orders
-              </CardTitle>
-              <FileText className="h-5 w-5 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-1 text-xs text-gray-900 dark:text-white">
-                {recentLabelOrders.map((o: any) => (
-                  <li key={o.id}>
-                    {o.email || o.full_name || "Unknown User"} - {o.bundle_count} bundles (
-                    {o.status})
+      {/* Needs Attention */}
+      <section>
+        <SectionHeading
+          title="Needs attention"
+          subtitle={
+            needsAttentionCount > 0
+              ? `${needsAttentionCount} item(s) may need action`
+              : "Nothing urgent right now"
+          }
+        />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <ActionList
+            title="Failed Payments"
+            icon={<AlertTriangle className="h-4 w-4 text-red-500" />}
+            href="/bossdashboard/users"
+            hrefLabel="All users"
+            isDarkMode={isDarkMode}
+            empty="No failed payments."
+          >
+            {actionData?.failedPayments?.length ? (
+              <ul className="space-y-2">
+                {actionData.failedPayments.slice(0, 5).map((p, i) => (
+                  <li
+                    key={i}
+                    className="flex items-center justify-between rounded border border-red-200 bg-red-50 p-2 text-sm dark:border-red-900 dark:bg-red-950/30"
+                  >
+                    <span className="font-medium">{p.company_name || "Unknown"}</span>
+                    <Badge variant="outline" className="border-red-500 text-red-600">
+                      {p.status}
+                    </Badge>
                   </li>
                 ))}
               </ul>
-            </CardContent>
-          </Card>
+            ) : null}
+          </ActionList>
+
+          <ActionList
+            title="Pending Device Shipments"
+            icon={<Truck className="h-4 w-4 text-primary" />}
+            href="/bossdashboard/devices"
+            hrefLabel="Devices"
+            isDarkMode={isDarkMode}
+            empty="No devices awaiting shipment."
+          >
+            {pendingDevices.length ? (
+              <ul className="space-y-2 text-sm">
+                {pendingDevices.slice(0, 5).map((d) => (
+                  <li key={d.id} className="flex justify-between">
+                    <span>{d.customer_name || "Unknown"}</span>
+                    <Badge variant="outline">pending</Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+
+          <ActionList
+            title="Devices Return Required"
+            icon={<Truck className="h-4 w-4 text-orange-500" />}
+            href="/bossdashboard/devices"
+            hrefLabel="Devices"
+            isDarkMode={isDarkMode}
+            empty="No returns required."
+          >
+            {returnRequiredDevices.length ? (
+              <ul className="space-y-2 text-sm">
+                {returnRequiredDevices.slice(0, 5).map((d) => (
+                  <li key={d.id} className="flex justify-between">
+                    <span>{d.customer_name || d.customer_email || "Unknown"}</span>
+                    <Badge variant="outline">return required</Badge>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+
+          <ActionList
+            title="Cancellation Requests"
+            icon={<AlertTriangle className="h-4 w-4 text-orange-500" />}
+            href="/bossdashboard/cancellations"
+            hrefLabel="Cancellations"
+            isDarkMode={isDarkMode}
+            empty="No recent cancellations."
+          >
+            {recentCancellations.length ? (
+              <ul className="space-y-2 text-sm">
+                {recentCancellations.map((c) => (
+                  <li key={c.id} className="flex justify-between">
+                    <span className="font-medium">{c.company_name || c.email || c.user_id}</span>
+                    <span className="text-muted-foreground">{formatDate(c.cancelled_at)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+
+          <ActionList
+            title="Demo Requests Waiting"
+            icon={<CalendarClock className="h-4 w-4 text-primary" />}
+            href="/bossdashboard/bookdemo"
+            hrefLabel="All demos"
+            isDarkMode={isDarkMode}
+            empty="No pending demo requests."
+          >
+            {pendingDemos.length ? (
+              <ul className="space-y-2 text-sm">
+                {pendingDemos.map((d) => (
+                  <li key={d.id} className="flex justify-between">
+                    <span className="font-medium">{d.company || d.name}</span>
+                    <span className="text-muted-foreground">{formatDate(d.created_at)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+        </div>
+      </section>
+
+      {/* Renewals & signups */}
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div>
+          <SectionHeading title="Upcoming renewals" subtitle="Next 30 days" />
+          <ActionList
+            title="Renewals"
+            icon={<Calendar className="h-4 w-4 text-yellow-500" />}
+            href="/bossdashboard/users"
+            hrefLabel="All users"
+            isDarkMode={isDarkMode}
+            empty="No renewals in the next 30 days."
+          >
+            {actionData?.upcomingRenewals?.length ? (
+              <ul className="space-y-2 text-sm">
+                {actionData.upcomingRenewals.slice(0, 5).map((r, i) => (
+                  <li key={i} className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-medium">{r.company_name || "Unknown"}</div>
+                      <div className="text-xs text-muted-foreground">{r.plan_name || "—"}</div>
+                    </div>
+                    <div className="text-right text-xs">
+                      <div>{formatDate(r.current_period_end)}</div>
+                      {formatSubAmount(r) && (
+                        <div className="text-muted-foreground">{formatSubAmount(r)}</div>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
         </div>
 
-        {/* Main Content */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          </TabsList>
+        <div>
+          <SectionHeading title="Recent signups" subtitle="Last 30 days" />
+          <ActionList
+            title="New customers"
+            icon={<Users className="h-4 w-4 text-primary" />}
+            href="/bossdashboard/users"
+            hrefLabel="All users"
+            isDarkMode={isDarkMode}
+            empty="No recent signups."
+          >
+            {actionData?.recentSignups?.length ? (
+              <ul className="space-y-2 text-sm">
+                {actionData.recentSignups.slice(0, 5).map((u, i) => (
+                  <li key={i} className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-medium">{u.company_name || "Unknown"}</div>
+                      <div className="text-xs text-muted-foreground">{u.plan_name || "—"}</div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{formatDate(u.created_at)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+        </div>
+      </section>
 
-          <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Plan Distribution */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <PieChart className="h-5 w-5" />
-                    Plan Distribution
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {analyticsData?.planDistribution?.map((plan, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`h-3 w-3 rounded-full ${
-                              index === 0
-                                ? "bg-purple-500"
-                                : index === 1
-                                  ? "bg-purple-500"
-                                  : "bg-orange-500"
-                            }`}
-                          ></div>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            {plan.name}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {plan.value} users
-                        </span>
+      {/* Orders & plan changes */}
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div>
+          <SectionHeading title="Recent label orders" />
+          <ActionList
+            title="Label orders"
+            icon={<FileText className="h-4 w-4 text-primary" />}
+            href="/bossdashboard/orders"
+            hrefLabel="All orders"
+            isDarkMode={isDarkMode}
+            empty="No recent label orders."
+          >
+            {recentLabelOrders.length ? (
+              <ul className="space-y-2 text-sm">
+                {recentLabelOrders.map((o) => (
+                  <li key={o.id} className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-medium">#{o.id}</div>
+                      <div className="text-xs text-muted-foreground">
+                        {o.full_name || o.email || "Unknown"} · {o.label_product_name || "Labels"}
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Status Distribution */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <BarChart3 className="h-5 w-5" />
-                    Subscription Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {analyticsData?.statusDistribution?.map((status, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`h-3 w-3 rounded-full ${
-                              status.name === "active"
-                                ? "bg-green-500"
-                                : status.name === "trialing"
-                                  ? "bg-purple-500"
-                                  : status.name === "canceled"
-                                    ? "bg-red-500"
-                                    : "bg-gray-500"
-                            }`}
-                          ></div>
-                          <span className="text-sm font-medium capitalize text-gray-900 dark:text-white">
-                            {status.name}
-                          </span>
-                        </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {status.value} users
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Activity */}
-            <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-5 w-5" />
-                  Recent Signups
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {analyticsData?.recentSignups?.slice(0, 5).map((user: any, index: number) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700"
-                    >
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-                          <span className="text-sm font-medium text-white">
-                            {user.company_name?.charAt(0) || "U"}
-                          </span>
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            {user.company_name || "Unknown Company"}
-                          </p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {formatDate(user.created_at)}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge className={getPlanColor(user.plan_name)}>
-                        {user.plan_name || "No Plan"}
+                    </div>
+                    <div className="text-right text-xs">
+                      <div>{formatOrderAmount(o.amount_cents)}</div>
+                      <Badge variant="outline" className="mt-0.5">
+                        {o.status}
                       </Badge>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+        </div>
 
-          <TabsContent value="analytics" className="space-y-6">
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Top Customers */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5" />
-                    Top Customers
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {analyticsData?.topCustomers
-                      ?.slice(0, 5)
-                      .map((customer: any, index: number) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary">
-                              <span className="text-sm font-medium text-white">
-                                {customer.company_name?.charAt(0) || "C"}
-                              </span>
-                            </div>
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {customer.company_name || "Unknown Company"}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {customer.plan_name || "No Plan"}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm font-medium text-gray-900 dark:text-white">
-                              {formatCurrency((customer.amount || 0) / 100)}
-                              {customer.billing_interval === "year" ? "/yr" : "/mo"}
-                            </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                              {formatCurrency(customer.totalPaid ?? 0)} total paid
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Upcoming Renewals */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Upcoming Renewals
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {analyticsData?.upcomingRenewals
-                      ?.slice(0, 5)
-                      .map((renewal: any, index: number) => (
-                        <div key={index} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-yellow-500">
-                              <Calendar className="h-4 w-4 text-white" />
-                            </div>
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {renewal.company_name || "Unknown Company"}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {formatDate(renewal.current_period_end)}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge className={getPlanColor(renewal.plan_name)}>
-                            {renewal.plan_name || "No Plan"}
-                          </Badge>
-                        </div>
-                      ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Alerts */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Pending Changes */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-yellow-500" />
-                    Pending Plan Changes
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {(analyticsData?.pendingChanges?.length || 0) > 0 ? (
-                      analyticsData!
-                        .pendingChanges!.slice(0, 5)
-                        .map((change: any, index: number) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20"
-                          >
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {change.company_name || "Unknown Company"}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Changing to: {change.pending_plan_change}
-                              </p>
-                            </div>
-                            <Badge
-                              variant="outline"
-                              className="border-yellow-500 text-yellow-700 dark:text-yellow-300"
-                            >
-                              Pending
-                            </Badge>
-                          </div>
-                        ))
-                    ) : (
-                      <p className="py-4 text-center text-gray-600 dark:text-gray-400">
-                        No pending plan changes
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Failed Payments */}
-              <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <AlertTriangle className="h-5 w-5 text-red-500" />
-                    Failed Payments
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {(analyticsData?.failedPayments?.length || 0) > 0 ? (
-                      analyticsData!
-                        .failedPayments!.slice(0, 5)
-                        .map((payment: any, index: number) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20"
-                          >
-                            <div>
-                              <p className="font-medium text-gray-900 dark:text-white">
-                                {payment.company_name || "Unknown Company"}
-                              </p>
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Status: {payment.status}
-                              </p>
-                            </div>
-                            <Badge
-                              variant="outline"
-                              className="border-red-500 text-red-700 dark:text-red-300"
-                            >
-                              Failed
-                            </Badge>
-                          </div>
-                        ))
-                    ) : (
-                      <p className="py-4 text-center text-gray-600 dark:text-gray-400">
-                        No failed payments
-                      </p>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+        <div>
+          <SectionHeading title="Pending plan changes" />
+          <ActionList
+            title="Plan changes"
+            icon={<DollarSign className="h-4 w-4 text-yellow-500" />}
+            href="/bossdashboard/users"
+            hrefLabel="All users"
+            isDarkMode={isDarkMode}
+            empty="No pending plan changes."
+          >
+            {actionData?.pendingChanges?.length ? (
+              <ul className="space-y-2 text-sm">
+                {actionData.pendingChanges.slice(0, 5).map((c, i) => (
+                  <li key={i} className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-medium">{c.company_name || "Unknown"}</div>
+                      <div className="text-xs text-muted-foreground">
+                        → {c.pending_plan_change || "—"}
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">
+                      {c.pending_plan_change_effective
+                        ? formatDate(c.pending_plan_change_effective)
+                        : "—"}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </ActionList>
+        </div>
+      </section>
     </div>
   )
 }

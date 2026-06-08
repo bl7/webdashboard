@@ -43,8 +43,12 @@ async function getCustomerTotalPaidPounds(stripeCustomerId: string): Promise<num
     }
 
     return totalCents / 100
-  } catch (e) {
-    console.error("Failed to fetch customer total paid:", e)
+  } catch (e: unknown) {
+    const code = (e as { code?: string })?.code
+    // Stale or deleted Stripe customer IDs in DB — treat as £0, don't spam logs
+    if (code !== "resource_missing") {
+      console.error("Failed to fetch customer total paid:", e)
+    }
     return 0
   }
 }
@@ -69,7 +73,10 @@ async function enrichWithTotalPaid(
   return results
 }
 
-async function fetchOperationalMetrics(client: Awaited<ReturnType<typeof pool.connect>>) {
+async function fetchOperationalMetrics(
+  client: Awaited<ReturnType<typeof pool.connect>>,
+  activeSubscribers: number
+) {
   const today = new Date().toISOString().slice(0, 10)
   const monthStart = new Date()
   monthStart.setDate(1)
@@ -128,8 +135,17 @@ async function fetchOperationalMetrics(client: Awaited<ReturnType<typeof pool.co
     [monthStartStr]
   )
 
+  const active30Res = await client.query(
+    `SELECT COUNT(DISTINCT user_id) AS count
+     FROM activity_logs
+     WHERE action = 'print_label' AND timestamp >= NOW() - INTERVAL '30 days'`
+  )
+
   const labelsPrintedThisMonth = Number(monthRes.rows[0]?.total || 0)
   const activePrintCustomers = Number(activeCustomersRes.rows[0]?.count || 0)
+  const activeKitchensLast30Days = Number(active30Res.rows[0]?.count || 0)
+  const activeKitchensUsagePercent =
+    activeSubscribers > 0 ? (activeKitchensLast30Days / activeSubscribers) * 100 : 0
 
   const printsTrend: PrintsTrendPoint[] = trendRes.rows.map((row: { day: Date; prints: string }) => {
     const date = new Date(row.day)
@@ -148,6 +164,8 @@ async function fetchOperationalMetrics(client: Awaited<ReturnType<typeof pool.co
     mostActiveKitchenPrints: Number(topKitchenRes.rows[0]?.total_prints || 0),
     avgLabelsPerCustomer:
       activePrintCustomers > 0 ? labelsPrintedThisMonth / activePrintCustomers : 0,
+    activeKitchensLast30Days,
+    activeKitchensUsagePercent,
     printsTrend,
   }
 }
@@ -282,12 +300,14 @@ export async function GET(req: NextRequest) {
       mostActiveKitchen: null as string | null,
       mostActiveKitchenPrints: 0,
       avgLabelsPerCustomer: 0,
+      activeKitchensLast30Days: 0,
+      activeKitchensUsagePercent: 0,
       printsTrend: [] as PrintsTrendPoint[],
     }
 
     if (role === "boss") {
       try {
-        operational = await fetchOperationalMetrics(client)
+        operational = await fetchOperationalMetrics(client, active)
       } catch (e) {
         console.error("Operational metrics error:", e)
       }

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useMemo, useState } from "react"
+import Link from "next/link"
 import {
   Area,
   AreaChart,
@@ -42,6 +43,29 @@ import {
 import type { BossAnalyticsData, KpiTrend } from "@/types/bossAnalytics"
 
 const COLORS = ["#a259ff", "#f7b801", "#00c49a", "#ff6b6b", "#8884d8", "#82ca9d"]
+function SectionHeader({
+  id,
+  title,
+  linkHref,
+  linkLabel,
+}: {
+  id?: string
+  title: string
+  linkHref?: string
+  linkLabel?: string
+}) {
+  return (
+    <div id={id} className="flex flex-wrap items-center justify-between gap-2">
+      <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">{title}</h2>
+      {linkHref && linkLabel && (
+        <Link href={linkHref} className="text-xs text-primary hover:underline">
+          {linkLabel} →
+        </Link>
+      )}
+    </div>
+  )
+}
+
 const CHART_TOOLTIP_STYLE = {
   backgroundColor: "#1f2937",
   border: "1px solid #374151",
@@ -151,8 +175,20 @@ export default function AnalyticsDashboard() {
     mostActiveKitchen: null,
     mostActiveKitchenPrints: 0,
     avgLabelsPerCustomer: 0,
+    activeKitchensLast30Days: 0,
+    activeKitchensUsagePercent: 0,
     printsTrend: [],
   }
+
+  const kitchensSubtitle =
+    op.activeKitchensLast30Days > 0
+      ? `${op.activeKitchensLast30Days} kitchen${op.activeKitchensLast30Days === 1 ? "" : "s"} printed in the last 30 days`
+      : "No print activity in the last 30 days"
+
+  const kitchensPercentSubtitle =
+    data.active > 0 && op.activeKitchensLast30Days > 0
+      ? `${op.activeKitchensUsagePercent.toFixed(0)}% of active customers used printing`
+      : undefined
 
   const printsMonthChange =
     op.labelsPrintedLastMonth > 0
@@ -267,10 +303,13 @@ export default function AnalyticsDashboard() {
 
       {/* Operational metrics */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">
-          Platform Usage
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <SectionHeader
+          id="platform-usage"
+          title="Platform Usage"
+          linkHref="/bossdashboard/reports?tab=label_orders"
+          linkLabel="Export label orders"
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <KpiCard
             isDarkMode={isDarkMode}
             title="Labels This Month"
@@ -299,19 +338,30 @@ export default function AnalyticsDashboard() {
           />
           <KpiCard
             isDarkMode={isDarkMode}
-            title="Avg Labels / Customer"
+            title="Avg Labels / Kitchen"
             value={Math.round(op.avgLabelsPerCustomer).toLocaleString()}
             subtitle="Labels per active kitchen this month"
             icon={<Activity className="h-5 w-5" />}
+          />
+          <KpiCard
+            isDarkMode={isDarkMode}
+            title="Active Kitchens (30d)"
+            value={String(op.activeKitchensLast30Days)}
+            subtitle={kitchensPercentSubtitle || kitchensSubtitle}
+            tooltip="Distinct customers with at least one print_label activity in the last 30 days."
+            icon={<Users className="h-5 w-5" />}
           />
         </div>
       </section>
 
       {/* Revenue analytics */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">
-          Revenue Analytics
-        </h2>
+        <SectionHeader
+          id="revenue-analytics"
+          title="Revenue Analytics"
+          linkHref="/bossdashboard/reports?tab=revenue"
+          linkLabel="Export revenue report"
+        />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ChartCard
             isDarkMode={isDarkMode}
@@ -443,9 +493,7 @@ export default function AnalyticsDashboard() {
 
       {/* Customer analytics */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">
-          Customer Analytics
-        </h2>
+        <SectionHeader title="Customer Analytics" />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ChartCard
             isDarkMode={isDarkMode}
@@ -557,9 +605,11 @@ export default function AnalyticsDashboard() {
 
       {/* Distribution & usage charts */}
       <section className="space-y-3">
-        <h2 className="text-sm font-semibold uppercase tracking-wider text-primary">
-          Distribution & Usage
-        </h2>
+        <SectionHeader
+          title="Distribution & Usage"
+          linkHref="/bossdashboard/devices"
+          linkLabel="Device management"
+        />
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ChartCard
             isDarkMode={isDarkMode}
@@ -658,35 +708,45 @@ export default function AnalyticsDashboard() {
       </section>
 
       <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-          <CardHeader>
+        <CardHeader className="flex flex-row items-start justify-between">
+          <div>
             <CardTitle>Top Customers</CardTitle>
             <p className="text-xs text-muted-foreground">
-              Ranked by total Stripe payments (all paid invoices)
+              Ranked by total Stripe payments — click a customer to investigate
             </p>
-          </CardHeader>
-          <CardContent>
-            {data.topCustomers?.length ? (
-              <ul className="space-y-2">
-                {data.topCustomers.map((user, i) => (
-                  <li
-                    key={user.user_id || i}
-                    className="flex items-center justify-between border-b border-gray-700/50 pb-2 last:border-0"
-                  >
-                    <span className="font-medium">{user.company_name || "Unknown"}</span>
-                    <div className="text-right text-xs text-muted-foreground">
-                      <div>
-                        {formatCurrencyGBP((user.amount || 0) / 100)}
-                        {user.billing_interval === "year" ? "/yr" : "/mo"}
+          </div>
+          <Link href="/bossdashboard/users" className="text-xs text-primary hover:underline">
+            All users →
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {data.topCustomers?.length ? (
+            <ul className="space-y-2">
+              {data.topCustomers.map((user, i) => {
+                const q = encodeURIComponent(user.company_name || "")
+                return (
+                  <li key={user.user_id || i} className="border-b border-gray-700/50 pb-2 last:border-0">
+                    <Link
+                      href={q ? `/bossdashboard/users?q=${q}` : "/bossdashboard/users"}
+                      className="flex items-center justify-between rounded-md p-1 transition-colors hover:bg-gray-700/30"
+                    >
+                      <span className="font-medium">{user.company_name || "Unknown"}</span>
+                      <div className="text-right text-xs text-muted-foreground">
+                        <div>
+                          {formatCurrencyGBP((user.amount || 0) / 100)}
+                          {user.billing_interval === "year" ? "/yr" : "/mo"}
+                        </div>
+                        <div>{formatCurrencyGBP(user.totalPaid ?? 0)} total paid</div>
                       </div>
-                      <div>{formatCurrencyGBP(user.totalPaid ?? 0)} total paid</div>
-                    </div>
+                    </Link>
                   </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-muted-foreground">No customer data yet.</p>
-            )}
-          </CardContent>
+                )
+              })}
+            </ul>
+          ) : (
+            <p className="text-sm text-muted-foreground">No customer data yet.</p>
+          )}
+        </CardContent>
       </Card>
 
       {deviceShipments.length > 0 && (

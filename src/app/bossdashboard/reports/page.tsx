@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
 import { Download, Users, FileText, BarChart3, AlertTriangle, DollarSign } from "lucide-react"
@@ -47,9 +48,9 @@ const getTableForExport = (tab: string, data: any) => {
       return {
         header: ["MRR", "ARR", "ARPU", "Churn Rate", "Trial Conversion", "Active Subs", "Canceled Subs", "Total Subs"],
         rows: [[
-          `£${((data.mrr || 0) / 100).toFixed(2)}`,
-          `£${((data.arr || 0) / 100).toFixed(2)}`,
-          `£${((data.arpu || 0) / 100).toFixed(2)}`,
+          `£${(data.mrr || 0).toFixed(2)}`,
+          `£${(data.arr || 0).toFixed(2)}`,
+          `£${(data.arpu || 0).toFixed(2)}`,
           `${((data.churnRate || 0) * 100).toFixed(2)}%`,
           `${((data.trialConversion || 0) * 100).toFixed(2)}%`,
           data.active || 0,
@@ -76,6 +77,7 @@ const getTableForExport = (tab: string, data: any) => {
 
 const ReportsPage: React.FC = () => {
   const { isDarkMode } = useDarkMode()
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("users")
   const [dateFrom, setDateFrom] = useState("")
   const [dateTo, setDateTo] = useState("")
@@ -88,6 +90,13 @@ const ReportsPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState('')
   const [page, setPage] = useState(1)
   const pageSize = 20
+
+  useEffect(() => {
+    const tab = searchParams.get("tab")
+    if (tab && TABS.some((t) => t.key === tab)) {
+      setActiveTab(tab)
+    }
+  }, [searchParams])
 
   useEffect(() => {
     if (!dateFrom || !dateTo) return
@@ -353,19 +362,23 @@ const ReportsPage: React.FC = () => {
         return (
           <div>
             <h2 className="text-xl font-semibold mb-4">Revenue Report</h2>
+            <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+              Export summary for the selected date range. For charts and trends, see{" "}
+              <a href="/bossdashboard/analytics" className="text-primary hover:underline">Analytics</a>.
+            </p>
             <div className="rounded bg-gray-100 dark:bg-gray-800 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div className="p-4 rounded bg-white dark:bg-gray-900 shadow">
                   <div className="text-sm text-gray-500 dark:text-gray-400">MRR</div>
-                  <div className="text-2xl font-bold">£{((data.mrr || 0) / 100).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">£{(data.mrr || 0).toFixed(2)}</div>
                 </div>
                 <div className="p-4 rounded bg-white dark:bg-gray-900 shadow">
                   <div className="text-sm text-gray-500 dark:text-gray-400">ARR</div>
-                  <div className="text-2xl font-bold">£{((data.arr || 0) / 100).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">£{(data.arr || 0).toFixed(2)}</div>
                 </div>
                 <div className="p-4 rounded bg-white dark:bg-gray-900 shadow">
                   <div className="text-sm text-gray-500 dark:text-gray-400">ARPU</div>
-                  <div className="text-2xl font-bold">£{((data.arpu || 0) / 100).toFixed(2)}</div>
+                  <div className="text-2xl font-bold">£{(data.arpu || 0).toFixed(2)}</div>
                 </div>
                 <div className="p-4 rounded bg-white dark:bg-gray-900 shadow">
                   <div className="text-sm text-gray-500 dark:text-gray-400">Churn Rate</div>
