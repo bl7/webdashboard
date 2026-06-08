@@ -15,7 +15,6 @@ import {
   BarChart3,
   PieChart,
   Truck,
-  Package,
   FileText,
 } from "lucide-react"
 import { useDarkMode } from "./context/DarkModeContext"
@@ -63,7 +62,6 @@ export default function BossDashboard() {
   const [showPlanModal, setShowPlanModal] = useState(false)
   const [editPlan, setEditPlan] = useState<any | null>(null)
   const [pendingDevices, setPendingDevices] = useState<any[]>([])
-  const [recentDevices, setRecentDevices] = useState<any[]>([])
   const [recentLabelOrders, setRecentLabelOrders] = useState<any[]>([])
   const [printsToday, setPrintsToday] = useState<number>(0)
   const [printsRange, setPrintsRange] = useState<"today" | "yesterday" | "week">("today")
@@ -108,16 +106,6 @@ export default function BossDashboard() {
           .then((res) => res.json())
           .then((data) => {
             setPendingDevices((data.devices || []).filter((d: any) => d.status === "pending"))
-            setRecentDevices(
-              (data.devices || [])
-                .slice()
-                .sort((a: any, b: any) => {
-                  const dateA = a.assigned_at ? new Date(a.assigned_at).getTime() : 0
-                  const dateB = b.assigned_at ? new Date(b.assigned_at).getTime() : 0
-                  return dateB - dateA
-                })
-                .slice(0, 5)
-            )
           })
         fetch("/api/label-orders/all", {
           headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
@@ -397,25 +385,6 @@ export default function BossDashboard() {
               <p className="text-xs text-muted-foreground">Devices to ship</p>
             </CardContent>
           </Card>
-          {/* Recent Device Assignments */}
-          <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Recent Device Assignments
-              </CardTitle>
-              <Package className="h-5 w-5 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-1 text-xs text-gray-900 dark:text-white">
-                {recentDevices.map((d: any) => (
-                  <li key={d.id}>
-                    {d.customer_name || d.customer_email || "Unknown User"} -{" "}
-                    {d.device_type || "Mobile Device"} ({d.status})
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
           {/* Recent Label Orders */}
           <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -590,9 +559,15 @@ export default function BossDashboard() {
                               </p>
                             </div>
                           </div>
-                          <span className="text-sm font-medium text-gray-900 dark:text-white">
-                            {formatCurrency(customer.amount || 0)}
-                          </span>
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {formatCurrency((customer.amount || 0) / 100)}
+                              {customer.billing_interval === "year" ? "/yr" : "/mo"}
+                            </p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400">
+                              {formatCurrency(customer.totalPaid ?? 0)} total paid
+                            </p>
+                          </div>
                         </div>
                       ))}
                   </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { verifyAuthToken } from "@/lib/auth"
+import { stripe } from "@/lib/stripe"
 import {
   buildPlanDistribution,
   buildRevenueByBillingCycle,
@@ -18,6 +19,48 @@ import {
   calculateTrialConversion,
 } from "@/lib/bossAnalytics"
 import type { CancellationRow, PrintsTrendPoint, SubscriptionRow } from "@/types/bossAnalytics"
+
+async function getCustomerTotalPaidPounds(stripeCustomerId: string): Promise<number> {
+  try {
+    let totalCents = 0
+    let startingAfter: string | undefined
+    let hasMore = true
+
+    while (hasMore) {
+      const page = await stripe.invoices.list({
+        customer: stripeCustomerId,
+        limit: 100,
+        status: "paid",
+        ...(startingAfter ? { starting_after: startingAfter } : {}),
+      })
+      totalCents += page.data.reduce((sum, inv) => sum + (inv.amount_paid || 0), 0)
+      hasMore = page.has_more
+      if (page.data.length > 0) {
+        startingAfter = page.data[page.data.length - 1].id
+      } else {
+        hasMore = false
+      }
+    }
+
+    return totalCents / 100
+  } catch (e) {
+    console.error("Failed to fetch customer total paid:", e)
+    return 0
+  }
+}
+
+async function enrichTopCustomers(
+  customers: SubscriptionRow[]
+): Promise<SubscriptionRow[]> {
+  return Promise.all(
+    customers.map(async (sub) => ({
+      ...sub,
+      totalPaid: sub.stripe_customer_id
+        ? await getCustomerTotalPaidPounds(sub.stripe_customer_id)
+        : 0,
+    }))
+  )
+}
 
 async function fetchOperationalMetrics(client: Awaited<ReturnType<typeof pool.connect>>) {
   const today = new Date().toISOString().slice(0, 10)
@@ -121,7 +164,7 @@ export async function GET(req: NextRequest) {
 
     if (role === "boss") {
         const result = await client.query(
-          `SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status,
+          `SELECT u.user_id, u.company_name, s.stripe_customer_id, s.plan_id, s.plan_name, s.status,
                   s.billing_interval, s.amount, s.current_period_end, s.trial_end,
                   s.pending_plan_change, s.pending_plan_change_effective,
                   s.created_at, s.updated_at, s.cancel_at
@@ -138,7 +181,7 @@ export async function GET(req: NextRequest) {
         cancellations = cancelRes.rows
       } else if (role === "user") {
         const result = await client.query(
-          `SELECT u.user_id, u.company_name, s.plan_id, s.plan_name, s.status,
+          `SELECT u.user_id, u.company_name, s.stripe_customer_id, s.plan_id, s.plan_name, s.status,
                   s.billing_interval, s.amount, s.current_period_end, s.trial_end,
                   s.pending_plan_change, s.pending_plan_change_effective,
                   s.created_at, s.updated_at, s.cancel_at
@@ -200,9 +243,11 @@ export async function GET(req: NextRequest) {
       )
       .slice(0, 10)
 
-    const topCustomers = [...subs]
+    const topCustomersRaw = [...subs]
       .sort((a, b) => (b.amount || 0) - (a.amount || 0))
       .slice(0, 10)
+    const topCustomers =
+      role === "boss" ? await enrichTopCustomers(topCustomersRaw) : topCustomersRaw
 
     const upcomingRenewals = subs
       .filter(

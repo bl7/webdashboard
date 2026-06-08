@@ -657,36 +657,7 @@ export default function AnalyticsDashboard() {
         </div>
       </section>
 
-      {/* Lists */}
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
-          <CardHeader>
-            <CardTitle>Recent Signups</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {data.recentSignups?.length ? (
-              <ul className="space-y-2">
-                {data.recentSignups.map((user, i) => (
-                  <li
-                    key={user.user_id || i}
-                    className="flex items-center justify-between border-b border-gray-700/50 pb-2 last:border-0"
-                  >
-                    <span className="font-medium">{user.company_name || "Unknown"}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {user.created_at
-                        ? new Date(user.created_at).toLocaleDateString("en-GB")
-                        : "—"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-sm text-muted-foreground">No recent signups.</p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
+      <Card className={isDarkMode ? "border-gray-700 bg-gray-800" : ""}>
           <CardHeader>
             <CardTitle>Top Customers</CardTitle>
           </CardHeader>
@@ -699,10 +670,13 @@ export default function AnalyticsDashboard() {
                     className="flex items-center justify-between border-b border-gray-700/50 pb-2 last:border-0"
                   >
                     <span className="font-medium">{user.company_name || "Unknown"}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {formatCurrencyGBP((user.amount || 0) / 100)}
-                      {user.billing_interval === "year" ? "/yr" : "/mo"}
-                    </span>
+                    <div className="text-right text-xs text-muted-foreground">
+                      <div>
+                        {formatCurrencyGBP((user.amount || 0) / 100)}
+                        {user.billing_interval === "year" ? "/yr" : "/mo"}
+                      </div>
+                      <div>{formatCurrencyGBP(user.totalPaid ?? 0)} total paid</div>
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -710,8 +684,7 @@ export default function AnalyticsDashboard() {
               <p className="text-sm text-muted-foreground">No customer data yet.</p>
             )}
           </CardContent>
-        </Card>
-      </div>
+      </Card>
 
       {deviceShipments.length > 0 && (
         <ChartCard

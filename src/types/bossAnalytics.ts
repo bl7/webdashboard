@@ -1,6 +1,8 @@
 export interface SubscriptionRow {
   user_id: string
   company_name?: string
+  stripe_customer_id?: string | null
+  totalPaid?: number
   plan_id?: string
   plan_name?: string
   status: string
