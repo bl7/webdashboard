@@ -301,7 +301,7 @@ export default function AnalyticsDashboard() {
             isDarkMode={isDarkMode}
             title="Avg Labels / Customer"
             value={Math.round(op.avgLabelsPerCustomer).toLocaleString()}
-            subtitle="Active printers this month"
+            subtitle="Labels per active kitchen this month"
             icon={<Activity className="h-5 w-5" />}
           />
         </div>
