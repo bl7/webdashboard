@@ -18,7 +18,12 @@ import {
   calculateRevenueGrowth,
   calculateTrialConversion,
 } from "@/lib/bossAnalytics"
-import type { CancellationRow, PrintsTrendPoint, SubscriptionRow } from "@/types/bossAnalytics"
+import type {
+  CancellationRow,
+  PlatformPrintBreakdown,
+  PrintsTrendPoint,
+  SubscriptionRow,
+} from "@/types/bossAnalytics"
 
 async function getCustomerTotalPaidPounds(stripeCustomerId: string): Promise<number> {
   try {
@@ -180,7 +185,7 @@ async function fetchOperationalMetrics(
     unknown: "Unknown",
   }
 
-  const printsByPlatformThisMonth = platformMonthRes.rows.map(
+  const printsByPlatformThisMonth: PlatformPrintBreakdown[] = platformMonthRes.rows.map(
     (row: { platform: string; prints: string }) => {
       const platform = row.platform === "web" || row.platform === "mobile" ? row.platform : "unknown"
       return {
