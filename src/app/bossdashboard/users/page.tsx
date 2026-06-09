@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Search, Plus, Users, X, Eye, BarChart2, DollarSign } from "lucide-react"
 import { formatCurrencyGBP } from "@/lib/bossAnalytics"
+import { formatPrintPlatform } from "@/lib/logAction"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useDarkMode } from "../context/DarkModeContext"
 
@@ -59,6 +60,7 @@ export default function UsersPage() {
     totalPrints: number
     entries: number
     byLabelType: any[]
+    byPlatform?: { platform: string; name: string; prints: number }[]
     logs: any[]
   } | null>(null)
   const [billingOpen, setBillingOpen] = useState(false)
@@ -1073,13 +1075,26 @@ export default function UsersPage() {
                   ))}
                 </ul>
               </div>
+              {printsSummary.byPlatform?.length ? (
+                <div>
+                  <div className="mb-1 text-sm font-medium">By Platform</div>
+                  <ul className="list-disc pl-5 text-sm">
+                    {printsSummary.byPlatform.map((r, idx) => (
+                      <li key={idx}>
+                        {r.name}: {r.prints}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
               <div>
                 <div className="mb-1 text-sm font-medium">Recent Logs</div>
                 <ul className="max-h-56 space-y-1 overflow-auto text-sm">
                   {printsSummary.logs.map((l: any) => (
                     <li key={l.id} className="border-b border-gray-200 pb-1 dark:border-gray-700">
                       {new Date(l.timestamp).toLocaleString()} — {l.details?.itemName || "Item"} x
-                      {l.details?.quantity} ({l.details?.labelType})
+                      {l.details?.quantity} ({l.details?.labelType}) ·{" "}
+                      {formatPrintPlatform(l.details?.platform)}
                     </li>
                   ))}
                 </ul>

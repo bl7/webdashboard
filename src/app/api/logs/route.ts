@@ -15,6 +15,24 @@ export async function OPTIONS(req: NextRequest) {
   return withCORS(new Response(null, { status: 204 }))
 }
 
+const PRINT_PLATFORMS = new Set(["web", "mobile"])
+
+function normalizePrintLabelDetails(details: unknown): Record<string, unknown> {
+  const normalized =
+    details && typeof details === "object" && !Array.isArray(details)
+      ? { ...(details as Record<string, unknown>) }
+      : {}
+
+  const platform = normalized.platform
+  if (platform === undefined || platform === null || platform === "") {
+    normalized.platform = "web"
+  } else if (!PRINT_PLATFORMS.has(String(platform))) {
+    throw new Error('Invalid platform for print_label. Must be "web" or "mobile".')
+  }
+
+  return normalized
+}
+
 // CREATE log
 export async function POST(req: NextRequest) {
   try {
@@ -31,11 +49,25 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing action" }, { status: 400 })
     }
 
+    let logDetails = details || {}
+    if (action === "print_label") {
+      try {
+        logDetails = normalizePrintLabelDetails(details)
+      } catch (err) {
+        return withCORS(
+          NextResponse.json(
+            { error: err instanceof Error ? err.message : "Invalid print_label details" },
+            { status: 400 }
+          )
+        )
+      }
+    }
+
     const result = await pool.query(
       `INSERT INTO activity_logs (user_id, action, details)
        VALUES ($1, $2, $3)
        RETURNING *`,
-      [userUuid, action, details || {}]
+      [userUuid, action, logDetails]
     )
 
     console.log("Inserted log:", result.rows[0])

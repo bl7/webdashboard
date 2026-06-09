@@ -23,6 +23,7 @@ import { LabelHeight } from "../print/LabelHeightChooser"
 import { usePrinter } from "@/context/PrinterContext"
 import useBillingData from "../profile/hooks/useBillingData"
 import { getAllIngredients, getAllMenuItems } from "@/lib/api"
+import { formatPrintPlatform, normalizePrintPlatform } from "@/lib/logAction"
 
 // Helper function for expiry date calculation
 function calculateExpiryDate(labelType: "cooked" | "prep" | "ppds" | "ppd" | "default"): string {
@@ -64,6 +65,7 @@ interface PrintLog {
     sessionId?: string
     bulkPrintListId?: string
     bulkPrintListName?: string
+    platform?: string
   }
   timestamp: string
 }
@@ -811,11 +813,18 @@ export default function PrintSessionsPage() {
     }
   }
 
+  function platformBadgeClass(platform: ReturnType<typeof normalizePrintPlatform>) {
+    if (platform === "mobile") return "bg-green-100 text-green-800"
+    if (platform === "web") return "bg-purple-100 text-purple-800"
+    return "bg-gray-100 text-gray-700"
+  }
+
   function exportToXLSX() {
     const dataForExport = filteredLogs.map((log) => ({
       "Log ID": log.id,
       "Item Name": log.details.itemName,
       Quantity: log.details.quantity,
+      Platform: formatPrintPlatform(log.details.platform),
       "Label Type":
         log.details.labelType === "ppd"
           ? "PPDS 40mm"
@@ -981,6 +990,7 @@ export default function PrintSessionsPage() {
                 <TableHead className="whitespace-nowrap">Item Name</TableHead>
                 <TableHead className="whitespace-nowrap">Quantity</TableHead>
                 <TableHead className="whitespace-nowrap">Label Type</TableHead>
+                <TableHead className="whitespace-nowrap">Platform</TableHead>
                 <TableHead className="whitespace-nowrap">Printed At</TableHead>
                 <TableHead className="whitespace-nowrap">Logged At</TableHead>
                 <TableHead className="whitespace-nowrap">Printer</TableHead>
@@ -1016,6 +1026,15 @@ export default function PrintSessionsPage() {
                         : log.details.labelType === "ppds"
                           ? "PPDS 80mm"
                           : log.details.labelType.toUpperCase()}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <span
+                      className={`rounded-full px-2 py-1 text-xs font-semibold ${platformBadgeClass(
+                        normalizePrintPlatform(log.details.platform)
+                      )}`}
+                    >
+                      {formatPrintPlatform(log.details.platform)}
                     </span>
                   </TableCell>
                   <TableCell>{formatPrintedAt(log.details.printedAt)}</TableCell>

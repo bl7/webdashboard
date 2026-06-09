@@ -109,11 +109,38 @@ async function fetchOperationalMetrics(
 
   const trendRes = await client.query(
     `SELECT timestamp::date AS day,
-            COALESCE(SUM((details->>'quantity')::int), 0) AS prints
+            COALESCE(SUM((details->>'quantity')::int), 0) AS prints,
+            COALESCE(SUM((details->>'quantity')::int) FILTER (
+              WHERE COALESCE(details->>'platform', '') = 'web'
+            ), 0) AS web,
+            COALESCE(SUM((details->>'quantity')::int) FILTER (
+              WHERE details->>'platform' = 'mobile'
+            ), 0) AS mobile,
+            COALESCE(SUM((details->>'quantity')::int) FILTER (
+              WHERE COALESCE(details->>'platform', '') NOT IN ('web', 'mobile')
+            ), 0) AS unknown
      FROM activity_logs
      WHERE action = 'print_label' AND timestamp >= NOW() - INTERVAL '30 days'
      GROUP BY 1
      ORDER BY 1`
+  )
+
+  const platformMonthRes = await client.query(
+    `SELECT COALESCE(NULLIF(details->>'platform', ''), 'unknown') AS platform,
+            COALESCE(SUM((details->>'quantity')::int), 0) AS prints
+     FROM activity_logs
+     WHERE action = 'print_label' AND timestamp::date BETWEEN $1::date AND $2::date
+     GROUP BY 1
+     ORDER BY prints DESC`,
+    [monthStartStr, today]
+  )
+
+  const mobileKitchens30Res = await client.query(
+    `SELECT COUNT(DISTINCT user_id) AS count
+     FROM activity_logs
+     WHERE action = 'print_label'
+       AND timestamp >= NOW() - INTERVAL '30 days'
+       AND details->>'platform' = 'mobile'`
   )
 
   const topKitchenRes = await client.query(
@@ -147,14 +174,47 @@ async function fetchOperationalMetrics(
   const activeKitchensUsagePercent =
     activeSubscribers > 0 ? (activeKitchensLast30Days / activeSubscribers) * 100 : 0
 
-  const printsTrend: PrintsTrendPoint[] = trendRes.rows.map((row: { day: Date; prints: string }) => {
-    const date = new Date(row.day)
-    return {
-      date: date.toISOString().slice(0, 10),
-      label: date.toLocaleDateString("en-GB", { day: "numeric", month: "short" }),
-      prints: Number(row.prints || 0),
+  const platformLabels: Record<string, string> = {
+    web: "Web",
+    mobile: "Mobile",
+    unknown: "Unknown",
+  }
+
+  const printsByPlatformThisMonth = platformMonthRes.rows.map(
+    (row: { platform: string; prints: string }) => {
+      const platform = row.platform === "web" || row.platform === "mobile" ? row.platform : "unknown"
+      return {
+        platform,
+        name: platformLabels[platform],
+        prints: Number(row.prints || 0),
+      }
     }
-  })
+  )
+
+  const mobileLabelsThisMonth = printsByPlatformThisMonth
+    .filter((row) => row.platform === "mobile")
+    .reduce((sum, row) => sum + row.prints, 0)
+
+  const taggedLabelsThisMonth = printsByPlatformThisMonth
+    .filter((row) => row.platform !== "unknown")
+    .reduce((sum, row) => sum + row.prints, 0)
+
+  const mobilePrintSharePercent =
+    taggedLabelsThisMonth > 0 ? (mobileLabelsThisMonth / taggedLabelsThisMonth) * 100 : 0
+
+  const printsTrend: PrintsTrendPoint[] = trendRes.rows.map(
+    (row: { day: Date; prints: string; web: string; mobile: string; unknown: string }) => {
+      const date = new Date(row.day)
+      return {
+        date: date.toISOString().slice(0, 10),
+        label: date.toLocaleDateString("en-GB", { day: "numeric", month: "short" }),
+        prints: Number(row.prints || 0),
+        web: Number(row.web || 0),
+        mobile: Number(row.mobile || 0),
+        unknown: Number(row.unknown || 0),
+      }
+    }
+  )
 
   return {
     labelsPrintedToday: Number(todayRes.rows[0]?.total || 0),
@@ -167,6 +227,10 @@ async function fetchOperationalMetrics(
     activeKitchensLast30Days,
     activeKitchensUsagePercent,
     printsTrend,
+    printsByPlatformThisMonth,
+    mobileLabelsThisMonth,
+    mobilePrintSharePercent,
+    mobileActiveKitchensLast30Days: Number(mobileKitchens30Res.rows[0]?.count || 0),
   }
 }
 

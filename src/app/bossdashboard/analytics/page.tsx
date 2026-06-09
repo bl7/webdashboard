@@ -25,6 +25,7 @@ import {
   ArrowUpRight,
   DollarSign,
   Printer,
+  Smartphone,
   TrendingUp,
   UserMinus,
   UserPlus,
@@ -178,7 +179,16 @@ export default function AnalyticsDashboard() {
     activeKitchensLast30Days: 0,
     activeKitchensUsagePercent: 0,
     printsTrend: [],
+    printsByPlatformThisMonth: [],
+    mobileLabelsThisMonth: 0,
+    mobilePrintSharePercent: 0,
+    mobileActiveKitchensLast30Days: 0,
   }
+
+  const platformChartData = (op.printsByPlatformThisMonth || []).filter((row) => row.prints > 0)
+  const hasPlatformTrendData = (op.printsTrend || []).some(
+    (row) => row.web > 0 || row.mobile > 0
+  )
 
   const kitchensSubtitle =
     op.activeKitchensLast30Days > 0
@@ -327,6 +337,30 @@ export default function AnalyticsDashboard() {
           />
           <KpiCard
             isDarkMode={isDarkMode}
+            title="Mobile Labels (MTD)"
+            value={op.mobileLabelsThisMonth.toLocaleString()}
+            subtitle={
+              op.mobilePrintSharePercent > 0
+                ? `${op.mobilePrintSharePercent.toFixed(0)}% of tagged prints`
+                : "No mobile prints tagged yet"
+            }
+            tooltip="Labels logged with platform=mobile this month. Older logs without a platform tag are excluded from the share."
+            icon={<Smartphone className="h-5 w-5" />}
+          />
+          <KpiCard
+            isDarkMode={isDarkMode}
+            title="Mobile Kitchens (30d)"
+            value={String(op.mobileActiveKitchensLast30Days)}
+            subtitle={
+              op.mobileActiveKitchensLast30Days > 0
+                ? `${op.mobileActiveKitchensLast30Days} customer${op.mobileActiveKitchensLast30Days === 1 ? "" : "s"} used the app`
+                : "No mobile prints in the last 30 days"
+            }
+            tooltip="Distinct customers with at least one mobile print in the last 30 days."
+            icon={<Smartphone className="h-5 w-5" />}
+          />
+          <KpiCard
+            isDarkMode={isDarkMode}
             title="Most Active Kitchen"
             value={op.mostActiveKitchen || "—"}
             subtitle={
@@ -351,6 +385,103 @@ export default function AnalyticsDashboard() {
             tooltip="Distinct customers with at least one print_label activity in the last 30 days."
             icon={<Users className="h-5 w-5" />}
           />
+        </div>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <ChartCard
+            isDarkMode={isDarkMode}
+            title="Prints by Platform (MTD)"
+            description="Web vs mobile labels this month"
+            isEmpty={!platformChartData.length}
+            emptyMessage="No platform-tagged prints this month yet."
+          >
+            <ResponsiveContainer width="100%" height={260}>
+              <PieChart>
+                <Pie
+                  data={platformChartData}
+                  dataKey="prints"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={90}
+                  label={({ name, percent }) =>
+                    `${name} ${((percent ?? 0) * 100).toFixed(0)}%`
+                  }
+                >
+                  {platformChartData.map((row, i) => (
+                    <Cell
+                      key={row.platform}
+                      fill={
+                        row.platform === "mobile"
+                          ? "#00c49a"
+                          : row.platform === "web"
+                            ? "#a259ff"
+                            : COLORS[i % COLORS.length]
+                      }
+                    />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard
+            isDarkMode={isDarkMode}
+            title="Labels Printed Over Time"
+            description="Last 30 days — web, mobile, and untagged prints"
+            isEmpty={!op.printsTrend?.length}
+          >
+            <ResponsiveContainer width="100%" height={260}>
+              <AreaChart data={op.printsTrend}>
+                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+                <XAxis dataKey="label" stroke={axisColor} fontSize={12} />
+                <YAxis stroke={axisColor} fontSize={12} allowDecimals={false} />
+                <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
+                <Legend />
+                {hasPlatformTrendData ? (
+                  <>
+                    <Area
+                      type="monotone"
+                      dataKey="web"
+                      name="Web"
+                      stackId="platform"
+                      stroke="#a259ff"
+                      fill="#a259ff55"
+                      strokeWidth={2}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="mobile"
+                      name="Mobile"
+                      stackId="platform"
+                      stroke="#00c49a"
+                      fill="#00c49a55"
+                      strokeWidth={2}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="unknown"
+                      name="Unknown"
+                      stackId="platform"
+                      stroke="#8884d8"
+                      fill="#8884d855"
+                      strokeWidth={2}
+                    />
+                  </>
+                ) : (
+                  <Area
+                    type="monotone"
+                    dataKey="prints"
+                    name="Labels"
+                    stroke="#f7b801"
+                    fill="#f7b80133"
+                    strokeWidth={2}
+                  />
+                )}
+              </AreaChart>
+            </ResponsiveContainer>
+          </ChartCard>
         </div>
       </section>
 
@@ -651,30 +782,6 @@ export default function AnalyticsDashboard() {
                 <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
                 <Bar dataKey="value" fill="#a259ff" radius={[6, 6, 0, 0]} />
               </BarChart>
-            </ResponsiveContainer>
-          </ChartCard>
-
-          <ChartCard
-            isDarkMode={isDarkMode}
-            title="Labels Printed Over Time"
-            description="Last 30 days of platform print activity"
-            isEmpty={!op.printsTrend?.length}
-          >
-            <ResponsiveContainer width="100%" height={260}>
-              <AreaChart data={op.printsTrend}>
-                <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                <XAxis dataKey="label" stroke={axisColor} fontSize={12} />
-                <YAxis stroke={axisColor} fontSize={12} allowDecimals={false} />
-                <Tooltip contentStyle={CHART_TOOLTIP_STYLE} />
-                <Area
-                  type="monotone"
-                  dataKey="prints"
-                  name="Labels"
-                  stroke="#f7b801"
-                  fill="#f7b80133"
-                  strokeWidth={2}
-                />
-              </AreaChart>
             </ResponsiveContainer>
           </ChartCard>
 

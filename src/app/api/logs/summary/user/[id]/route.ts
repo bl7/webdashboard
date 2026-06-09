@@ -50,6 +50,16 @@ export async function GET(req: NextRequest, context: { params: Promise<{ id: str
     `
     const breakdownRes = await pool.query(breakdownSql, paramsArr)
 
+    const platformSql = `
+      SELECT COALESCE(NULLIF(al.details->>'platform', ''), 'unknown') AS platform,
+             COALESCE(SUM((al.details->>'quantity')::int), 0) AS prints
+      FROM activity_logs al
+      WHERE ${where}
+      GROUP BY platform
+      ORDER BY prints DESC NULLS LAST
+    `
+    const platformRes = await pool.query(platformSql, paramsArr)
+
     const logsSql = `
       SELECT id, user_id, action, details, timestamp
       FROM activity_logs al
@@ -64,10 +74,21 @@ export async function GET(req: NextRequest, context: { params: Promise<{ id: str
       details: typeof row.details === "string" ? JSON.parse(row.details) : row.details,
     }))
 
+    const platformLabels: Record<string, string> = {
+      web: "Web",
+      mobile: "Mobile",
+      unknown: "Unknown",
+    }
+
     return NextResponse.json({
       totalPrints: Number(totalsRes.rows[0]?.total_prints || 0),
       entries: Number(totalsRes.rows[0]?.entries || 0),
       byLabelType: breakdownRes.rows,
+      byPlatform: platformRes.rows.map((row: { platform: string; prints: string }) => ({
+        platform: row.platform,
+        name: platformLabels[row.platform] || "Unknown",
+        prints: Number(row.prints || 0),
+      })),
       logs,
       pagination: { page, limit },
     })

@@ -54,6 +54,15 @@ export interface PrintsTrendPoint {
   date: string
   label: string
   prints: number
+  web: number
+  mobile: number
+  unknown: number
+}
+
+export interface PlatformPrintBreakdown {
+  platform: "web" | "mobile" | "unknown"
+  name: string
+  prints: number
 }
 
 export interface OperationalMetrics {
@@ -66,6 +75,10 @@ export interface OperationalMetrics {
   activeKitchensLast30Days: number
   activeKitchensUsagePercent: number
   printsTrend: PrintsTrendPoint[]
+  printsByPlatformThisMonth: PlatformPrintBreakdown[]
+  mobileLabelsThisMonth: number
+  mobilePrintSharePercent: number
+  mobileActiveKitchensLast30Days: number
 }
 
 export interface BossAnalyticsData {

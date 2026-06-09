@@ -1,5 +1,25 @@
+export type PrintPlatform = "web" | "mobile"
+export type PrintPlatformBucket = PrintPlatform | "unknown"
+
+export function normalizePrintPlatform(value: unknown): PrintPlatformBucket {
+  if (value === "web" || value === "mobile") return value
+  return "unknown"
+}
+
+export function formatPrintPlatform(value: unknown): string {
+  const platform = normalizePrintPlatform(value)
+  if (platform === "web") return "Web"
+  if (platform === "mobile") return "Mobile"
+  return "Unknown"
+}
+
 export async function logAction(action: string, details: any = {}) {
-  console.log("logAction triggered:", action, details)
+  const payload =
+    action === "print_label"
+      ? { ...details, platform: (details?.platform as PrintPlatform) || "web" }
+      : details
+
+  console.log("logAction triggered:", action, payload)
 
   let token: string | null = null
 
@@ -19,7 +39,7 @@ export async function logAction(action: string, details: any = {}) {
   try {
     console.log("Sending log to /api/logs", {
       action,
-      details,
+      details: payload,
     })
 
     const res = await fetch(
@@ -34,7 +54,7 @@ export async function logAction(action: string, details: any = {}) {
         },
         body: JSON.stringify({
           action,
-          details,
+          details: payload,
         }),
       }
     )
