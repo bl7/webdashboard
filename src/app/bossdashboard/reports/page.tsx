@@ -108,6 +108,7 @@ const ReportsPage: React.FC = () => {
     if (!dateFrom || !dateTo) return
     setLoading(true)
     setError(null)
+    setData(null)
     let url = ""
     switch (activeTab) {
       case "users":
@@ -134,7 +135,12 @@ const ReportsPage: React.FC = () => {
       headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
     })
       .then(res => res.json())
-      .then(setData)
+      .then(json => {
+        if (json.error && activeTab === "invoices" && !json.invoices?.length) {
+          setError(json.error)
+        }
+        setData(json)
+      })
       .catch(() => setError("Failed to fetch data"))
       .finally(() => setLoading(false))
   }, [activeTab, dateFrom, dateTo])
@@ -290,11 +296,18 @@ const ReportsPage: React.FC = () => {
           </div>
         )
       case "invoices":
-        if (!data.invoices) return null
-        const paginatedInvoices = data.invoices.slice((page - 1) * pageSize, page * pageSize)
+        const invoices = data.invoices ?? []
+        const paginatedInvoices = invoices.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Invoice Report</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Invoice Report <span className="text-sm font-normal text-muted-foreground">({dateFrom} to {dateTo})</span>
+            </h2>
+            {invoices.length === 0 ? (
+              <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                No invoices found for this date range.
+              </p>
+            ) : (
             <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
               <table className="min-w-full text-xs">
                 <thead>
@@ -319,11 +332,12 @@ const ReportsPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            {data.invoices.length > pageSize && (
+            )}
+            {invoices.length > pageSize && (
               <div className="flex justify-center items-center gap-2 mt-4">
                 <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</Button>
-                <span>Page {page} of {Math.ceil(data.invoices.length / pageSize)}</span>
-                <Button size="sm" variant="outline" disabled={page === Math.ceil(data.invoices.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
+                <span>Page {page} of {Math.ceil(invoices.length / pageSize)}</span>
+                <Button size="sm" variant="outline" disabled={page === Math.ceil(invoices.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
               </div>
             )}
           </div>

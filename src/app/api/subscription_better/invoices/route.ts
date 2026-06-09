@@ -53,13 +53,34 @@ export async function GET(req: NextRequest) {
     }
     let allInvoices: any[] = []
     for (const customerId of stripeCustomerIds) {
-      const invoices = await stripe.invoices.list({ customer: customerId, limit: 100 })
-      allInvoices = allInvoices.concat(invoices.data)
+      try {
+        let hasMore = true
+        let startingAfter: string | undefined
+        while (hasMore) {
+          const page = await stripe.invoices.list({
+            customer: customerId,
+            limit: 100,
+            ...(startingAfter ? { starting_after: startingAfter } : {}),
+          })
+          allInvoices = allInvoices.concat(page.data)
+          hasMore = page.has_more
+          if (page.data.length > 0) {
+            startingAfter = page.data[page.data.length - 1].id
+          } else {
+            hasMore = false
+          }
+        }
+      } catch (e: unknown) {
+        const code = (e as { code?: string })?.code
+        if (code !== "resource_missing") {
+          console.error("Failed to fetch invoices for customer:", customerId, e)
+        }
+      }
     }
-    // Filter by date if provided
+    // Filter by date if provided (inclusive end of "To" day)
     if (dateFrom && dateTo) {
-      const fromTs = new Date(dateFrom).getTime() / 1000
-      const toTs = new Date(dateTo).getTime() / 1000
+      const fromTs = new Date(`${dateFrom}T00:00:00`).getTime() / 1000
+      const toTs = new Date(`${dateTo}T23:59:59`).getTime() / 1000
       allInvoices = allInvoices.filter((inv) => inv.created >= fromTs && inv.created <= toTs)
     }
     // Sort by date desc
