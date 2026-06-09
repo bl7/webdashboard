@@ -171,7 +171,7 @@ export default function AnalyticsDashboard() {
   const op = data.operational || {
     labelsPrintedToday: 0,
     labelsPrintedThisMonth: 0,
-    labelsPrintedLastMonth: 0,
+    labelsPrintedLastMonthToDate: 0,
     mostActiveKitchen: null,
     mostActiveKitchenPrints: 0,
     avgLabelsPerCustomer: 0,
@@ -191,9 +191,9 @@ export default function AnalyticsDashboard() {
       : undefined
 
   const printsMonthChange =
-    op.labelsPrintedLastMonth > 0
-      ? ((op.labelsPrintedThisMonth - op.labelsPrintedLastMonth) /
-          op.labelsPrintedLastMonth) *
+    op.labelsPrintedLastMonthToDate > 0
+      ? ((op.labelsPrintedThisMonth - op.labelsPrintedLastMonthToDate) /
+          op.labelsPrintedLastMonthToDate) *
         100
       : op.labelsPrintedThisMonth > 0
         ? 100
@@ -315,7 +315,7 @@ export default function AnalyticsDashboard() {
             title="Labels This Month"
             value={op.labelsPrintedThisMonth.toLocaleString()}
             subtitle="Across all kitchens"
-            trend={growthTrend(printsMonthChange, "vs last month")}
+            trend={growthTrend(printsMonthChange, "vs this time last month")}
             icon={<Printer className="h-5 w-5" />}
           />
           <KpiCard

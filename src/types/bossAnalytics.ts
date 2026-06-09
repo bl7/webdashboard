@@ -59,7 +59,7 @@ export interface PrintsTrendPoint {
 export interface OperationalMetrics {
   labelsPrintedToday: number
   labelsPrintedThisMonth: number
-  labelsPrintedLastMonth: number
+  labelsPrintedLastMonthToDate: number
   mostActiveKitchen: string | null
   mostActiveKitchenPrints: number
   avgLabelsPerCustomer: number

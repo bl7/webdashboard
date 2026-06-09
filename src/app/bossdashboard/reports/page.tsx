@@ -34,8 +34,27 @@ const getTableForExport = (tab: string, data: any) => {
     case "invoices":
       if (!data.invoices) return { header: [], rows: [] }
       return {
-        header: ["Invoice ID", "Customer", "Amount", "Status", "Created"],
-        rows: data.invoices.map((inv: any) => [inv.id, inv.customer, inv.amount_due ? `£${(inv.amount_due / 100).toFixed(2)}` : "", inv.status, inv.created ? format(new Date(inv.created * 1000), "yyyy-MM-dd") : ""]),
+        header: ["Invoice #", "Company", "Email", "Plan", "Description", "Amount", "Status", "Created"],
+        rows: data.invoices.map((inv: {
+          number?: string
+          id: string
+          company_name?: string
+          email?: string
+          plan_name?: string
+          description?: string
+          amount_cents?: number
+          status?: string
+          created?: number
+        }) => [
+          inv.number || inv.id,
+          inv.company_name || "",
+          inv.email || "",
+          inv.plan_name || "",
+          inv.description || "",
+          inv.amount_cents ? `£${(inv.amount_cents / 100).toFixed(2)}` : "",
+          inv.status || "",
+          inv.created ? format(new Date(inv.created * 1000), "yyyy-MM-dd") : "",
+        ]),
       }
     case "cancellations":
       if (!data.cancellations) return { header: [], rows: [] }
@@ -312,21 +331,43 @@ const ReportsPage: React.FC = () => {
               <table className="min-w-full text-xs">
                 <thead>
                   <tr>
-                    <th className="px-2 py-1">Invoice ID</th>
-                    <th className="px-2 py-1">Customer</th>
+                    <th className="px-2 py-1">Invoice #</th>
+                    <th className="px-2 py-1">Company</th>
+                    <th className="px-2 py-1">Email</th>
+                    <th className="px-2 py-1">Plan</th>
+                    <th className="px-2 py-1">Description</th>
                     <th className="px-2 py-1">Amount</th>
                     <th className="px-2 py-1">Status</th>
                     <th className="px-2 py-1">Created</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedInvoices.map((inv: any) => (
+                  {paginatedInvoices.map((inv: {
+                    id: string
+                    number?: string
+                    company_name?: string
+                    email?: string
+                    plan_name?: string
+                    description?: string
+                    amount_cents?: number
+                    status?: string
+                    created?: number
+                  }) => (
                     <tr key={inv.id}>
-                      <td className="px-2 py-1 font-mono">{inv.id}</td>
-                      <td className="px-2 py-1 font-mono">{inv.customer}</td>
-                      <td className="px-2 py-1">{inv.amount_due ? `£${(inv.amount_due / 100).toFixed(2)}` : ""}</td>
-                      <td className="px-2 py-1">{inv.status}</td>
-                      <td className="px-2 py-1">{inv.created ? format(new Date(inv.created * 1000), "yyyy-MM-dd") : ""}</td>
+                      <td className="px-2 py-1 font-mono">{inv.number || inv.id}</td>
+                      <td className="px-2 py-1">{inv.company_name || "—"}</td>
+                      <td className="px-2 py-1">{inv.email || "—"}</td>
+                      <td className="px-2 py-1">{inv.plan_name || "—"}</td>
+                      <td className="max-w-[200px] truncate px-2 py-1" title={inv.description || ""}>
+                        {inv.description || "—"}
+                      </td>
+                      <td className="px-2 py-1">
+                        {inv.amount_cents != null ? `£${(inv.amount_cents / 100).toFixed(2)}` : "—"}
+                      </td>
+                      <td className="px-2 py-1 capitalize">{inv.status || "—"}</td>
+                      <td className="px-2 py-1">
+                        {inv.created ? format(new Date(inv.created * 1000), "yyyy-MM-dd") : "—"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

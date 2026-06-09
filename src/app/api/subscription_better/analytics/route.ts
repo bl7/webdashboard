@@ -78,13 +78,13 @@ async function fetchOperationalMetrics(
   activeSubscribers: number
 ) {
   const today = new Date().toISOString().slice(0, 10)
-  const monthStart = new Date()
-  monthStart.setDate(1)
+  const now = new Date()
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
   const monthStartStr = monthStart.toISOString().slice(0, 10)
-  const lastMonthStart = new Date(monthStart.getFullYear(), monthStart.getMonth() - 1, 1)
-  const lastMonthEnd = new Date(monthStart.getFullYear(), monthStart.getMonth(), 0)
+  const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1)
+  const lastMonthSameDay = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate())
   const lastMonthStartStr = lastMonthStart.toISOString().slice(0, 10)
-  const lastMonthEndStr = lastMonthEnd.toISOString().slice(0, 10)
+  const lastMonthSameDayStr = lastMonthSameDay.toISOString().slice(0, 10)
 
   const todayRes = await client.query(
     `SELECT COALESCE(SUM((details->>'quantity')::int), 0) AS total
@@ -96,15 +96,15 @@ async function fetchOperationalMetrics(
   const monthRes = await client.query(
     `SELECT COALESCE(SUM((details->>'quantity')::int), 0) AS total
      FROM activity_logs
-     WHERE action = 'print_label' AND timestamp::date >= $1::date`,
-    [monthStartStr]
+     WHERE action = 'print_label' AND timestamp::date BETWEEN $1::date AND $2::date`,
+    [monthStartStr, today]
   )
 
   const lastMonthRes = await client.query(
     `SELECT COALESCE(SUM((details->>'quantity')::int), 0) AS total
      FROM activity_logs
      WHERE action = 'print_label' AND timestamp::date BETWEEN $1::date AND $2::date`,
-    [lastMonthStartStr, lastMonthEndStr]
+    [lastMonthStartStr, lastMonthSameDayStr]
   )
 
   const trendRes = await client.query(
@@ -159,7 +159,7 @@ async function fetchOperationalMetrics(
   return {
     labelsPrintedToday: Number(todayRes.rows[0]?.total || 0),
     labelsPrintedThisMonth,
-    labelsPrintedLastMonth: Number(lastMonthRes.rows[0]?.total || 0),
+    labelsPrintedLastMonthToDate: Number(lastMonthRes.rows[0]?.total || 0),
     mostActiveKitchen: topKitchenRes.rows[0]?.company_name || null,
     mostActiveKitchenPrints: Number(topKitchenRes.rows[0]?.total_prints || 0),
     avgLabelsPerCustomer:
@@ -296,7 +296,7 @@ export async function GET(req: NextRequest) {
     let operational = {
       labelsPrintedToday: 0,
       labelsPrintedThisMonth: 0,
-      labelsPrintedLastMonth: 0,
+      labelsPrintedLastMonthToDate: 0,
       mostActiveKitchen: null as string | null,
       mostActiveKitchenPrints: 0,
       avgLabelsPerCustomer: 0,
