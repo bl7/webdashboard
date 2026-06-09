@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Search, Plus, Users, X, Eye, BarChart2, DollarSign } from "lucide-react"
+import { Search, Plus, Users, X, Eye, BarChart2, DollarSign, Smartphone } from "lucide-react"
 import { formatCurrencyGBP } from "@/lib/bossAnalytics"
 import { formatPrintPlatform } from "@/lib/logAction"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -75,6 +75,27 @@ export default function UsersPage() {
     status?: string
     device_type?: string
   } | null>(null)
+  const [appDevicesSummary, setAppDevicesSummary] = useState<{
+    activeNow: number
+    activeLast30Days: number
+    totalRegistered: number
+    devices: {
+      deviceId: string
+      platform: string
+      deviceModel?: string | null
+      appVersion?: string | null
+      firstSeenAt: string
+      lastSeenAt: string
+      isActiveNow: boolean
+    }[]
+  } | null>(null)
+  const [appDevicesByUser, setAppDevicesByUser] = useState<
+    Record<string, { activeNow: number; activeLast30Days: number; totalRegistered: number }>
+  >({})
+  const [appDevicesOpen, setAppDevicesOpen] = useState(false)
+  const [appDevicesLoading, setAppDevicesLoading] = useState(false)
+  const [appDevicesDetail, setAppDevicesDetail] = useState<typeof appDevicesSummary>(null)
+  const [multiDeviceFilter, setMultiDeviceFilter] = useState(false)
   const [newUser, setNewUser] = useState({
     email: "",
     password: "",
@@ -89,14 +110,22 @@ export default function UsersPage() {
     const fetchUsers = async () => {
       setLoading(true)
       const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
-      const res = await fetch("/api/subscription_better/users", {
-        headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-      })
-      const data = await res.json()
+      const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
+      const [usersRes, devicesSummaryRes] = await Promise.all([
+        fetch("/api/subscription_better/users", { headers }),
+        fetch("/api/app-devices/summary", { headers }),
+      ])
+      const data = await usersRes.json()
       if (data.error) {
         setUsers([])
       } else {
         setUsers(Array.isArray(data) ? data : [])
+      }
+      if (devicesSummaryRes.ok) {
+        const summaryData = await devicesSummaryRes.json()
+        setAppDevicesByUser(summaryData.byUserId || {})
+      } else {
+        setAppDevicesByUser({})
       }
       setLoading(false)
     }
@@ -106,17 +135,19 @@ export default function UsersPage() {
   useEffect(() => {
     const q = searchParams.get("q")
     if (q) setSearchTerm(q)
+    setMultiDeviceFilter(searchParams.get("multi_device") === "1")
   }, [searchParams])
 
   useEffect(() => {
     if (!showViewModal || !selectedUser) {
       setUserDevice(null)
+      setAppDevicesSummary(null)
       return
     }
     const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
-    fetch("/api/devices", {
-      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
-    })
+    const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
+
+    fetch("/api/devices", { headers })
       .then((r) => r.json())
       .then((data) => {
         const match = (data.devices || []).find(
@@ -125,6 +156,11 @@ export default function UsersPage() {
         setUserDevice(match || null)
       })
       .catch(() => setUserDevice(null))
+
+    fetch(`/api/app-devices/summary/user/${selectedUser.user_id}`, { headers })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setAppDevicesSummary(data))
+      .catch(() => setAppDevicesSummary(null))
   }, [showViewModal, selectedUser])
 
   // Filtering logic
@@ -143,7 +179,11 @@ export default function UsersPage() {
       const matchesBilling = billingFilter
         ? (user.billing_interval || "").toLowerCase() === billingFilter
         : true
-      return matchesSearch && matchesPlan && matchesStatus && matchesBilling
+      const deviceSummary = appDevicesByUser[user.user_id]
+      const matchesMultiDevice = multiDeviceFilter
+        ? (deviceSummary?.activeLast30Days || 0) >= 2
+        : true
+      return matchesSearch && matchesPlan && matchesStatus && matchesBilling && matchesMultiDevice
     })
 
   // Pagination
@@ -178,6 +218,21 @@ export default function UsersPage() {
   const openBillingDrawer = (user: User) => {
     setSelectedUser(user)
     setBillingOpen(true)
+  }
+
+  const openAppDevicesDrawer = (user: User) => {
+    setSelectedUser(user)
+    setAppDevicesOpen(true)
+  }
+
+  function formatAppDeviceCounts(userId: string) {
+    const summary = appDevicesByUser[userId]
+    if (!summary || summary.activeLast30Days === 0) return "—"
+    const active =
+      summary.activeNow > 0 ? `${summary.activeNow} active` : String(summary.activeLast30Days)
+    return summary.activeLast30Days >= 2
+      ? `${active} · ${summary.activeLast30Days} (30d)`
+      : active
   }
 
   function processInvoices(invoices: any[]) {
@@ -269,6 +324,19 @@ export default function UsersPage() {
       .finally(() => setBillingLoading(false))
   }, [billingOpen, selectedUser])
 
+  useEffect(() => {
+    if (!appDevicesOpen || !selectedUser) return
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    setAppDevicesLoading(true)
+    fetch(`/api/app-devices/summary/user/${selectedUser.user_id}`, {
+      headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then(setAppDevicesDetail)
+      .catch(() => setAppDevicesDetail(null))
+      .finally(() => setAppDevicesLoading(false))
+  }, [appDevicesOpen, selectedUser])
+
   if (loading) {
     return (
       <div className="flex h-64 items-center justify-center">
@@ -353,6 +421,19 @@ export default function UsersPage() {
             </option>
           ))}
         </select>
+        <label
+          className={`flex cursor-pointer items-center gap-2 rounded border px-3 py-2 text-sm ${isDarkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"}`}
+        >
+          <input
+            type="checkbox"
+            checked={multiDeviceFilter}
+            onChange={(e) => {
+              setMultiDeviceFilter(e.target.checked)
+              setCurrentPage(1)
+            }}
+          />
+          Multi-device only (2+ in 30d)
+        </label>
       </div>
 
       {/* Users Table */}
@@ -385,6 +466,9 @@ export default function UsersPage() {
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Pending Change
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                App Devices
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Actions
@@ -457,6 +541,13 @@ export default function UsersPage() {
                         Cancel
                       </button>
                     )}
+                    <button
+                      className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                      onClick={() => openAppDevicesDrawer(user)}
+                      title="View mobile app devices"
+                    >
+                      <Smartphone className="h-4 w-4" /> App Devices
+                    </button>
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                       onClick={() => openBillingDrawer(user)}
@@ -704,6 +795,23 @@ export default function UsersPage() {
                     ? `${userDevice.device_identifier || userDevice.device_type || "Device"} (${userDevice.status})`
                     : "None"}
                 </div>
+                <div>
+                  <span className="font-semibold">Mobile App Devices:</span>{" "}
+                  {appDevicesSummary
+                    ? `${appDevicesSummary.activeNow} active now · ${appDevicesSummary.activeLast30Days} in last 30 days`
+                    : "—"}
+                </div>
+                {appDevicesSummary?.devices?.length ? (
+                  <ul className="mt-1 space-y-1 text-xs text-gray-600 dark:text-gray-300">
+                    {appDevicesSummary.devices.slice(0, 5).map((device) => (
+                      <li key={device.deviceId}>
+                        {device.deviceModel || "Android device"} ·{" "}
+                        {device.isActiveNow ? "active" : "idle"} · last seen{" "}
+                        {new Date(device.lastSeenAt).toLocaleString()}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
 
               {/* Right column: contact & location details */}
@@ -1102,6 +1210,86 @@ export default function UsersPage() {
             </div>
           ) : (
             <div className="text-sm">No data</div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* App Devices Drawer */}
+      <Dialog open={appDevicesOpen} onOpenChange={setAppDevicesOpen}>
+        <DialogContent
+          className={`max-w-2xl ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
+        >
+          <DialogHeader>
+            <DialogTitle>Mobile app devices — {selectedUser?.company_name}</DialogTitle>
+          </DialogHeader>
+          {appDevicesLoading ? (
+            <div className="text-sm">Loading...</div>
+          ) : appDevicesDetail ? (
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+                <div className="rounded border p-3 dark:border-gray-700">
+                  <div className="text-xs text-muted-foreground">Active now</div>
+                  <div className="text-lg font-semibold">{appDevicesDetail.activeNow}</div>
+                  <div className="text-xs text-muted-foreground">Last 30 min</div>
+                </div>
+                <div className="rounded border p-3 dark:border-gray-700">
+                  <div className="text-xs text-muted-foreground">Last 30 days</div>
+                  <div className="text-lg font-semibold">{appDevicesDetail.activeLast30Days}</div>
+                </div>
+                <div className="rounded border p-3 dark:border-gray-700">
+                  <div className="text-xs text-muted-foreground">Total registered</div>
+                  <div className="text-lg font-semibold">{appDevicesDetail.totalRegistered}</div>
+                </div>
+              </div>
+              {appDevicesDetail.devices?.length ? (
+                <div className="overflow-x-auto rounded border dark:border-gray-700">
+                  <table className="min-w-full text-sm">
+                    <thead className={isDarkMode ? "bg-gray-800" : "bg-gray-100"}>
+                      <tr>
+                        <th className="px-3 py-2 text-left">Device</th>
+                        <th className="px-3 py-2 text-left">App</th>
+                        <th className="px-3 py-2 text-left">Status</th>
+                        <th className="px-3 py-2 text-left">Last seen</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y dark:divide-gray-700">
+                      {appDevicesDetail.devices.map((device) => (
+                        <tr key={device.deviceId}>
+                          <td className="px-3 py-2">
+                            {device.deviceModel || "Android device"}
+                            <div className="font-mono text-xs text-muted-foreground">
+                              {device.deviceId.slice(0, 12)}…
+                            </div>
+                          </td>
+                          <td className="px-3 py-2">{device.appVersion || "—"}</td>
+                          <td className="px-3 py-2">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                                device.isActiveNow
+                                  ? "bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200"
+                                  : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300"
+                              }`}
+                            >
+                              {device.isActiveNow ? "Active" : "Idle"}
+                            </span>
+                          </td>
+                          <td className="px-3 py-2 whitespace-nowrap">
+                            {new Date(device.lastSeenAt).toLocaleString()}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  No mobile heartbeats yet. Devices appear after the app logs in and sends a
+                  heartbeat.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="text-sm">No app device data available.</div>
           )}
         </DialogContent>
       </Dialog>
