@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   let where = ''
   let values: any[] = []
   if (dateFrom && dateTo) {
-    where = 'WHERE s.created_at BETWEEN $1 AND $2'
+    where = `WHERE s.created_at >= $1::date AND s.created_at < ($2::date + interval '1 day')`
     values = [dateFrom, dateTo]
   }
   const query = `

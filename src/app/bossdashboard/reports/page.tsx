@@ -75,6 +75,12 @@ const getTableForExport = (tab: string, data: any) => {
   }
 }
 
+function inDateRange(value: string | undefined | null, from: string, to: string): boolean {
+  if (!value) return false
+  const day = value.slice(0, 10)
+  return day >= from && day <= to
+}
+
 const ReportsPage: React.FC = () => {
   const { isDarkMode } = useDarkMode()
   const searchParams = useSearchParams()
@@ -105,7 +111,7 @@ const ReportsPage: React.FC = () => {
     let url = ""
     switch (activeTab) {
       case "users":
-        url = `/api/subscription_better/users` // No date filter for users
+        url = `/api/subscription_better/users?date_from=${dateFrom}&date_to=${dateTo}`
         break
       case "subscriptions":
         url = `/api/subscription_better?date_from=${dateFrom}&date_to=${dateTo}`
@@ -114,7 +120,7 @@ const ReportsPage: React.FC = () => {
         url = `/api/subscription_better/invoices?date_from=${dateFrom}&date_to=${dateTo}`
         break
       case "cancellations":
-        url = `/api/subscription_better/cancel?date_from=${dateFrom}&date_to=${dateTo}`
+        url = `/api/subscription_better/cancel?date_from=${dateFrom}&date_to=${dateTo}&page=1&pageSize=1000`
         break
       case "revenue":
         url = `/api/subscription_better/analytics?date_from=${dateFrom}&date_to=${dateTo}`
@@ -200,7 +206,9 @@ const ReportsPage: React.FC = () => {
         const paginatedUsers = data.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>User Report</h2>
+            <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+              User Report <span className="text-sm font-normal text-muted-foreground">({dateFrom} to {dateTo})</span>
+            </h2>
             <div className={`overflow-x-auto rounded p-2 ${isDarkMode ? "bg-gray-800" : "bg-gray-100"}`}>
               <table className="min-w-full text-xs">
                 <thead>
@@ -325,7 +333,9 @@ const ReportsPage: React.FC = () => {
         const paginatedCancellations = data.cancellations.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
-            <h2 className="text-xl font-semibold mb-4">Cancellation Report</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              Cancellation Report <span className="text-sm font-normal text-muted-foreground">({dateFrom} to {dateTo})</span>
+            </h2>
             <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
               <table className="min-w-full text-xs">
                 <thead>
@@ -406,7 +416,10 @@ const ReportsPage: React.FC = () => {
         )
       case "devices":
         if (!deviceData.length) return <div className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>No device data.</div>
-        const paginatedDevices = deviceData.slice((page - 1) * pageSize, page * pageSize)
+        const filteredDevices = deviceData.filter((d: { assigned_at?: string; created_at?: string }) =>
+          inDateRange(d.assigned_at || d.created_at, dateFrom, dateTo)
+        )
+        const paginatedDevices = filteredDevices.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
             <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Device Report</h2>
@@ -476,18 +489,21 @@ const ReportsPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            {deviceData.length > pageSize && (
+            {filteredDevices.length > pageSize && (
               <div className="flex justify-center items-center gap-2 mt-4">
                 <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</Button>
-                <span>Page {page} of {Math.ceil(deviceData.length / pageSize)}</span>
-                <Button size="sm" variant="outline" disabled={page === Math.ceil(deviceData.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
+                <span>Page {page} of {Math.ceil(filteredDevices.length / pageSize)}</span>
+                <Button size="sm" variant="outline" disabled={page === Math.ceil(filteredDevices.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
               </div>
             )}
           </div>
         )
       case "label_orders":
         if (!labelOrderData.length) return <div className={`text-center ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>No label order data.</div>
-        const paginatedLabelOrders = labelOrderData.slice((page - 1) * pageSize, page * pageSize)
+        const filteredLabelOrders = labelOrderData.filter((o: { created_at?: string }) =>
+          inDateRange(o.created_at, dateFrom, dateTo)
+        )
+        const paginatedLabelOrders = filteredLabelOrders.slice((page - 1) * pageSize, page * pageSize)
         return (
           <div>
             <h2 className={`text-xl font-semibold mb-4 ${isDarkMode ? "text-white" : "text-gray-900"}`}>Label Order Report</h2>
@@ -552,11 +568,11 @@ const ReportsPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
-            {labelOrderData.length > pageSize && (
+            {filteredLabelOrders.length > pageSize && (
               <div className="flex justify-center items-center gap-2 mt-4">
                 <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</Button>
-                <span>Page {page} of {Math.ceil(labelOrderData.length / pageSize)}</span>
-                <Button size="sm" variant="outline" disabled={page === Math.ceil(labelOrderData.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
+                <span>Page {page} of {Math.ceil(filteredLabelOrders.length / pageSize)}</span>
+                <Button size="sm" variant="outline" disabled={page === Math.ceil(filteredLabelOrders.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
               </div>
             )}
           </div>

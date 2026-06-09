@@ -8,8 +8,23 @@ export async function GET(req: NextRequest) {
     if (role !== "boss") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
+    const { searchParams } = new URL(req.url)
+    const dateFrom = searchParams.get("date_from")
+    const dateTo = searchParams.get("date_to")
+
+    const conditions: string[] = []
+    const values: string[] = []
+    if (dateFrom && dateTo) {
+      conditions.push(
+        `s.created_at >= $${values.length + 1}::date AND s.created_at < ($${values.length + 2}::date + interval '1 day')`
+      )
+      values.push(dateFrom, dateTo)
+    }
+    const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : ""
+
     const client = await pool.connect()
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       SELECT 
         u.user_id, 
         u.company_name,
@@ -32,7 +47,11 @@ export async function GET(req: NextRequest) {
         s.created_at
       FROM user_profiles u
       LEFT JOIN subscription_better s ON u.user_id::text = s.user_id::text
-    `)
+      ${where}
+      ORDER BY s.created_at DESC NULLS LAST
+    `,
+      values
+    )
     client.release()
     return NextResponse.json(rows)
   } catch (e) {

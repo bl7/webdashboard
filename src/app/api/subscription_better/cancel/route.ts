@@ -153,16 +153,27 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const search = searchParams.get("search") || ""
+    const dateFrom = searchParams.get("date_from")
+    const dateTo = searchParams.get("date_to")
     const page = parseInt(searchParams.get("page") || "1", 10)
     const pageSize = parseInt(searchParams.get("pageSize") || "20", 10)
     const offset = (page - 1) * pageSize
 
-    let whereClause = ""
-    let values: any[] = []
+    const conditions: string[] = []
+    const values: (string | number)[] = []
     if (search) {
-      whereClause = `WHERE c.user_id ILIKE $1 OR c.subscription_id ILIKE $1 OR c.reason ILIKE $1 OR p.email ILIKE $1`
+      conditions.push(
+        `(c.user_id ILIKE $${values.length + 1} OR c.subscription_id ILIKE $${values.length + 1} OR c.reason ILIKE $${values.length + 1} OR p.email ILIKE $${values.length + 1})`
+      )
       values.push(`%${search}%`)
     }
+    if (dateFrom && dateTo) {
+      conditions.push(
+        `c.cancelled_at >= $${values.length + 1}::date AND c.cancelled_at < ($${values.length + 2}::date + interval '1 day')`
+      )
+      values.push(dateFrom, dateTo)
+    }
+    const whereClause = conditions.length ? `WHERE ${conditions.join(" AND ")}` : ""
 
     // Get total count
     const countResult = await client.query(
@@ -172,7 +183,7 @@ export async function GET(req: NextRequest) {
     const total = parseInt(countResult.rows[0].count, 10)
 
     // Get paginated results with user profile info
-    let query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
+    const query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
     values.push(pageSize, offset)
     const { rows } = await client.query(query, values)
 
