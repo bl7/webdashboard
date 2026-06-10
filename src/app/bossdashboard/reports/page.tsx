@@ -168,12 +168,44 @@ function inDateRange(value: string | undefined | null, from: string, to: string)
   return day >= from && day <= to
 }
 
+function toDateStr(d: Date) {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
+type DatePreset = "this_month" | "this_year" | "last_year"
+
+function getDatePreset(preset: DatePreset) {
+  const now = new Date()
+  if (preset === "this_month") {
+    return { from: toDateStr(new Date(now.getFullYear(), now.getMonth(), 1)), to: toDateStr(now) }
+  }
+  if (preset === "this_year") {
+    return { from: toDateStr(new Date(now.getFullYear(), 0, 1)), to: toDateStr(now) }
+  }
+  return {
+    from: toDateStr(new Date(now.getFullYear() - 1, 0, 1)),
+    to: toDateStr(new Date(now.getFullYear() - 1, 11, 31)),
+  }
+}
+
+const DATE_PRESETS: { key: DatePreset; label: string }[] = [
+  { key: "this_month", label: "This month" },
+  { key: "this_year", label: "This year" },
+  { key: "last_year", label: "Last year" },
+]
+
+const defaultRange = getDatePreset("this_month")
+
 const ReportsPage: React.FC = () => {
   const { isDarkMode } = useDarkMode()
   const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState("users")
-  const [dateFrom, setDateFrom] = useState("")
-  const [dateTo, setDateTo] = useState("")
+  const [dateFrom, setDateFrom] = useState(defaultRange.from)
+  const [dateTo, setDateTo] = useState(defaultRange.to)
+  const [datePreset, setDatePreset] = useState<DatePreset | "custom">("this_month")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [data, setData] = useState<any>(null)
@@ -922,30 +954,55 @@ const ReportsPage: React.FC = () => {
         ))}
       </div>
       {/* Date Range Filter & Download */}
-      <div className="flex flex-col sm:flex-row sm:items-end gap-4 mb-6">
+      <div className="flex flex-col gap-3 mb-6">
+        <div className="flex flex-wrap gap-2">
+          {DATE_PRESETS.map((p) => (
+            <Button
+              key={p.key}
+              size="sm"
+              variant={datePreset === p.key ? "purple" : "outline"}
+              onClick={() => {
+                const range = getDatePreset(p.key)
+                setDateFrom(range.from)
+                setDateTo(range.to)
+                setDatePreset(p.key)
+              }}
+            >
+              {p.label}
+            </Button>
+          ))}
+        </div>
+        <div className="flex flex-col sm:flex-row sm:items-end gap-4">
         <div className="flex gap-2 items-center">
           <label className={`text-sm ${isDarkMode ? "text-gray-300" : ""}`}>From</label>
           <input
             type="date"
             value={dateFrom}
-            onChange={e => setDateFrom(e.target.value)}
+            onChange={e => {
+              setDateFrom(e.target.value)
+              setDatePreset("custom")
+            }}
             className={`rounded border px-2 py-1 ${isDarkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-900"}`}
           />
           <label className={`text-sm ${isDarkMode ? "text-gray-300" : ""}`}>To</label>
           <input
             type="date"
             value={dateTo}
-            onChange={e => setDateTo(e.target.value)}
+            onChange={e => {
+              setDateTo(e.target.value)
+              setDatePreset("custom")
+            }}
             className={`rounded border px-2 py-1 ${isDarkMode ? "bg-gray-800 border-gray-700 text-white" : "bg-white border-gray-300 text-gray-900"}`}
           />
         </div>
-        <div className="flex gap-2 ml-auto">
+        <div className="flex gap-2 sm:ml-auto">
           <Button variant="outline" onClick={() => handleDownload(activeTab, "csv")}> 
             <Download className="h-4 w-4 mr-2" /> Download CSV
           </Button>
           <Button variant="outline" onClick={() => handleDownload(activeTab, "excel")}> 
             <Download className="h-4 w-4 mr-2" /> Download Excel
           </Button>
+        </div>
         </div>
       </div>
       {/* Report Section */}
