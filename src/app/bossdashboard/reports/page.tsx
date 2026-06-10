@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { format } from "date-fns"
-import { Download, Users, FileText, BarChart3, AlertTriangle, DollarSign } from "lucide-react"
+import { Download, Users, FileText, BarChart3, AlertTriangle, DollarSign, Wallet } from "lucide-react"
 import * as XLSX from "xlsx"
 import { useDarkMode } from "../context/DarkModeContext"
 
@@ -11,6 +11,7 @@ const TABS = [
   { key: "users", label: "Users", icon: Users },
   { key: "subscriptions", label: "Subscriptions", icon: FileText },
   { key: "invoices", label: "Invoices", icon: BarChart3 },
+  { key: "collections", label: "Collections", icon: Wallet },
   { key: "cancellations", label: "Cancellations", icon: AlertTriangle },
   { key: "revenue", label: "Revenue", icon: DollarSign },
   { key: "devices", label: "Devices", icon: BarChart3 },
@@ -56,6 +57,73 @@ const getTableForExport = (tab: string, data: any) => {
           inv.created ? format(new Date(inv.created * 1000), "yyyy-MM-dd") : "",
         ]),
       }
+    case "collections": {
+      if (!data?.by_customer) return { header: [], rows: [] }
+      const fmt = (c: number) => `£${(c / 100).toFixed(2)}`
+      const summary = [
+        ["Gross Collected", fmt(data.collected_cents || 0)],
+        ["Subscriptions", fmt(data.subscription_cents || 0)],
+        ["Label Orders", fmt(data.label_orders_cents || 0)],
+        ["Refunded", fmt(data.refunded_cents || 0)],
+        ["Net Collected", fmt(data.net_cents || 0)],
+      ]
+      const customerRows = data.by_customer.map((c: {
+        company_name?: string
+        email?: string
+        plan_name?: string
+        subscription_cents: number
+        label_orders_cents: number
+        collected_cents: number
+        refunded_cents: number
+        net_cents: number
+        percent_of_collected: number
+        invoice_count: number
+        label_order_count: number
+        refund_count: number
+      }) => [
+        c.company_name || "",
+        c.email || "",
+        c.plan_name || "",
+        fmt(c.subscription_cents),
+        fmt(c.label_orders_cents),
+        fmt(c.collected_cents),
+        fmt(c.refunded_cents),
+        fmt(c.net_cents),
+        `${c.percent_of_collected.toFixed(1)}%`,
+        c.invoice_count,
+        c.label_order_count,
+        c.refund_count,
+      ])
+      const refundRows = (data.refunds || []).map((r: {
+        created: number
+        company_name?: string
+        email?: string
+        amount_cents: number
+        reason?: string
+        id: string
+      }) => [
+        format(new Date(r.created * 1000), "yyyy-MM-dd"),
+        r.company_name || "",
+        r.email || "",
+        fmt(r.amount_cents),
+        r.reason || "",
+        r.id,
+      ])
+      return {
+        header: ["Section", "Value"],
+        rows: [
+          ...summary,
+          [],
+          ["--- By Customer ---", ""],
+          ["Company", "Email", "Plan", "Subscriptions", "Label Orders", "Collected", "Refunded", "Net", "% of Total", "Invoices", "Orders", "Refunds"],
+          ...customerRows,
+          [],
+          ["--- Refunds ---", ""],
+          ["Date", "Company", "Email", "Amount", "Reason", "Refund ID"],
+          ...refundRows,
+        ],
+      }
+    }
     case "cancellations":
       if (!data.cancellations) return { header: [], rows: [] }
       return {
@@ -139,6 +207,9 @@ const ReportsPage: React.FC = () => {
       case "invoices":
         url = `/api/subscription_better/invoices?date_from=${dateFrom}&date_to=${dateTo}`
         break
+      case "collections":
+        url = `/api/subscription_better/collections?date_from=${dateFrom}&date_to=${dateTo}`
+        break
       case "cancellations":
         url = `/api/subscription_better/cancel?date_from=${dateFrom}&date_to=${dateTo}&page=1&pageSize=1000`
         break
@@ -148,7 +219,10 @@ const ReportsPage: React.FC = () => {
       default:
         break
     }
-    if (!url) return
+    if (!url) {
+      setLoading(false)
+      return
+    }
     const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
     fetch(url, {
       headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
@@ -156,6 +230,9 @@ const ReportsPage: React.FC = () => {
       .then(res => res.json())
       .then(json => {
         if (json.error && activeTab === "invoices" && !json.invoices?.length) {
+          setError(json.error)
+        }
+        if (json.error && activeTab === "collections") {
           setError(json.error)
         }
         setData(json)
@@ -224,7 +301,7 @@ const ReportsPage: React.FC = () => {
     }
     if (loading) return <div className={isDarkMode ? "text-gray-400" : ""}>Loading...</div>
     if (error) return <div className={isDarkMode ? "text-red-400" : "text-red-500"}>{error}</div>
-    if (!data) return null
+    if (!data && !["devices", "label_orders"].includes(activeTab)) return null
     switch (activeTab) {
       case "users":
         if (!Array.isArray(data)) return null
@@ -383,6 +460,196 @@ const ReportsPage: React.FC = () => {
             )}
           </div>
         )
+      case "collections": {
+        const fmt = (c: number) => `£${((c || 0) / 100).toFixed(2)}`
+        const customers = (data.by_customer || []) as {
+          company_name?: string
+          email?: string
+          plan_name?: string
+          subscription_cents: number
+          label_orders_cents: number
+          collected_cents: number
+          refunded_cents: number
+          net_cents: number
+          percent_of_collected: number
+          invoice_count: number
+          label_order_count: number
+          refund_count: number
+        }[]
+        const refunds = (data.refunds || []) as {
+          id: string
+          created: number
+          company_name?: string
+          email?: string
+          amount_cents: number
+          reason?: string
+        }[]
+        const q = search.toLowerCase()
+        const filteredCustomers = customers.filter((c) => {
+          if (!q) return true
+          return (
+            (c.company_name && c.company_name.toLowerCase().includes(q)) ||
+            (c.email && c.email.toLowerCase().includes(q))
+          )
+        })
+        const paginatedCustomers = filteredCustomers.slice((page - 1) * pageSize, page * pageSize)
+        return (
+          <div className="space-y-8">
+            <div>
+              <h2 className="text-xl font-semibold mb-1">
+                Collections Report{" "}
+                <span className="text-sm font-normal text-muted-foreground">
+                  ({dateFrom} to {dateTo})
+                </span>
+              </h2>
+              <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+                Cash collected and refunded in this period (by payment / refund date). For recurring
+                subscription metrics, see{" "}
+                <a href="/bossdashboard/analytics" className="text-primary hover:underline">
+                  Analytics
+                </a>
+                .
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+                <div className="p-4 rounded bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Gross Collected</div>
+                  <div className="text-2xl font-bold">{fmt(data.collected_cents)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {(data.invoice_count || 0) + (data.label_order_count || 0)} payments
+                  </div>
+                </div>
+                <div className="p-4 rounded bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Subscriptions</div>
+                  <div className="text-2xl font-bold">{fmt(data.subscription_cents)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {data.invoice_count || 0} invoices
+                  </div>
+                </div>
+                <div className="p-4 rounded bg-white dark:bg-gray-900 shadow border border-gray-200 dark:border-gray-700">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Label Orders</div>
+                  <div className="text-2xl font-bold">{fmt(data.label_orders_cents)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {data.label_order_count || 0} orders
+                  </div>
+                </div>
+                <div className="p-4 rounded bg-white dark:bg-gray-900 shadow border border-red-200 dark:border-red-900">
+                  <div className="text-sm text-red-600 dark:text-red-400">Refunded</div>
+                  <div className="text-2xl font-bold text-red-600 dark:text-red-400">
+                    {fmt(data.refunded_cents)}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {data.refund_count || 0} refunds
+                  </div>
+                </div>
+                <div className="p-4 rounded bg-white dark:bg-gray-900 shadow border border-primary/30">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">Net Collected</div>
+                  <div className="text-2xl font-bold text-primary">{fmt(data.net_cents)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">Collected minus refunded</div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3">By customer</h3>
+              <div className="flex gap-4 mb-4">
+                <input
+                  className={`border rounded px-2 py-1 ${isDarkMode ? "bg-gray-800 text-gray-100 border-gray-700" : "bg-white border-gray-300 text-gray-900"}`}
+                  placeholder="Search by company or email..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+              {filteredCustomers.length === 0 ? (
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  No collections in this period.
+                </p>
+              ) : (
+                <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
+                  <table className="min-w-full text-xs">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1 text-left">Company</th>
+                        <th className="px-2 py-1 text-left">Email</th>
+                        <th className="px-2 py-1 text-left">Plan</th>
+                        <th className="px-2 py-1 text-right">Subscriptions</th>
+                        <th className="px-2 py-1 text-right">Label Orders</th>
+                        <th className="px-2 py-1 text-right">Collected</th>
+                        <th className="px-2 py-1 text-right">Refunded</th>
+                        <th className="px-2 py-1 text-right">Net</th>
+                        <th className="px-2 py-1 text-right">% of Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {paginatedCustomers.map((c, i) => (
+                        <tr key={i}>
+                          <td className="px-2 py-1">{c.company_name || "—"}</td>
+                          <td className="px-2 py-1">{c.email || "—"}</td>
+                          <td className="px-2 py-1">{c.plan_name || "—"}</td>
+                          <td className="px-2 py-1 text-right">{fmt(c.subscription_cents)}</td>
+                          <td className="px-2 py-1 text-right">{fmt(c.label_orders_cents)}</td>
+                          <td className="px-2 py-1 text-right font-medium">{fmt(c.collected_cents)}</td>
+                          <td className="px-2 py-1 text-right text-red-600 dark:text-red-400">
+                            {c.refunded_cents > 0 ? fmt(c.refunded_cents) : "—"}
+                          </td>
+                          <td className="px-2 py-1 text-right font-medium">{fmt(c.net_cents)}</td>
+                          <td className="px-2 py-1 text-right">
+                            {c.percent_of_collected.toFixed(1)}%
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {filteredCustomers.length > pageSize && (
+                <div className="flex justify-center items-center gap-2 mt-4">
+                  <Button size="sm" variant="outline" disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</Button>
+                  <span>Page {page} of {Math.ceil(filteredCustomers.length / pageSize)}</span>
+                  <Button size="sm" variant="outline" disabled={page === Math.ceil(filteredCustomers.length / pageSize)} onClick={() => setPage(page + 1)}>Next</Button>
+                </div>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Refunds in period</h3>
+              {refunds.length === 0 ? (
+                <p className={`text-sm ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}>
+                  No refunds in this period.
+                </p>
+              ) : (
+                <div className="overflow-x-auto rounded bg-gray-100 dark:bg-gray-800 p-2">
+                  <table className="min-w-full text-xs">
+                    <thead>
+                      <tr>
+                        <th className="px-2 py-1 text-left">Date</th>
+                        <th className="px-2 py-1 text-left">Company</th>
+                        <th className="px-2 py-1 text-left">Email</th>
+                        <th className="px-2 py-1 text-right">Amount</th>
+                        <th className="px-2 py-1 text-left">Reason</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {refunds.map((r) => (
+                        <tr key={r.id}>
+                          <td className="px-2 py-1">
+                            {format(new Date(r.created * 1000), "yyyy-MM-dd")}
+                          </td>
+                          <td className="px-2 py-1">{r.company_name || "—"}</td>
+                          <td className="px-2 py-1">{r.email || "—"}</td>
+                          <td className="px-2 py-1 text-right text-red-600 dark:text-red-400">
+                            {fmt(r.amount_cents)}
+                          </td>
+                          <td className="px-2 py-1 capitalize">{r.reason || "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      }
       case "cancellations":
         if (!data.cancellations) return null
         const paginatedCancellations = data.cancellations.slice((page - 1) * pageSize, page * pageSize)
