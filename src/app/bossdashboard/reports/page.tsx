@@ -175,7 +175,10 @@ function toDateStr(d: Date) {
   return `${y}-${m}-${day}`
 }
 
-type DatePreset = "this_month" | "this_year" | "last_year"
+/** Earliest date for "All time" — before first InstaLabel customer/payment */
+const ALL_TIME_START = "2020-01-01"
+
+type DatePreset = "this_month" | "this_year" | "last_year" | "all_time"
 
 function getDatePreset(preset: DatePreset) {
   const now = new Date()
@@ -185,16 +188,20 @@ function getDatePreset(preset: DatePreset) {
   if (preset === "this_year") {
     return { from: toDateStr(new Date(now.getFullYear(), 0, 1)), to: toDateStr(now) }
   }
-  return {
-    from: toDateStr(new Date(now.getFullYear() - 1, 0, 1)),
-    to: toDateStr(new Date(now.getFullYear() - 1, 11, 31)),
+  if (preset === "last_year") {
+    return {
+      from: toDateStr(new Date(now.getFullYear() - 1, 0, 1)),
+      to: toDateStr(new Date(now.getFullYear() - 1, 11, 31)),
+    }
   }
+  return { from: ALL_TIME_START, to: toDateStr(now) }
 }
 
 const DATE_PRESETS: { key: DatePreset; label: string }[] = [
   { key: "this_month", label: "This month" },
   { key: "this_year", label: "This year" },
   { key: "last_year", label: "Last year" },
+  { key: "all_time", label: "All time" },
 ]
 
 const defaultRange = getDatePreset("this_month")
