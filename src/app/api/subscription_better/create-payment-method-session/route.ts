@@ -41,8 +41,8 @@ export async function POST(req: NextRequest) {
         customer: stripeCustomerId,
         mode: "setup",
         payment_method_types: ["card"],
-        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?payment_method_updated=true`,
-        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/subscription?payment_method_cancelled=true`,
+        success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&payment_method_updated=true`,
+        cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&payment_method_cancelled=true`,
         metadata: {
           user_id: user_id,
           action: "update_payment_method",

@@ -182,13 +182,69 @@ export async function GET(req: NextRequest) {
     )
     const total = parseInt(countResult.rows[0].count, 10)
 
-    // Get paginated results with user profile info
-    const query = `SELECT c.id, c.user_id, c.subscription_id, c.reason, c.cancelled_at, p.email, p.company_name FROM subscription_cancellations c LEFT JOIN user_profiles p ON c.user_id = p.user_id ${whereClause} ORDER BY c.cancelled_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`
+    // Join subscription to distinguish pending requests vs processed cancellations
+    const query = `
+      SELECT
+        c.id,
+        c.user_id,
+        c.subscription_id,
+        c.reason,
+        c.cancelled_at AS requested_at,
+        p.email,
+        p.company_name,
+        s.status AS subscription_status,
+        s.cancel_at_period_end,
+        s.cancel_at,
+        s.current_period_end
+      FROM subscription_cancellations c
+      LEFT JOIN user_profiles p ON c.user_id::text = p.user_id::text
+      LEFT JOIN subscription_better s ON s.user_id::text = c.user_id::text
+        AND (c.subscription_id IS NULL OR s.stripe_subscription_id = c.subscription_id)
+      ${whereClause}
+      ORDER BY c.cancelled_at DESC
+      LIMIT $${values.length + 1} OFFSET $${values.length + 2}
+    `
     values.push(pageSize, offset)
     const { rows } = await client.query(query, values)
 
+    const cancellations = rows.map((row: Record<string, unknown>) => {
+      const subStatus = row.subscription_status as string | null
+      const cancelAtPeriodEnd = Boolean(row.cancel_at_period_end)
+      const cancelAt = row.cancel_at as string | null
+      const periodEnd = row.current_period_end as string | null
+      const requestedAt = row.requested_at as string
+
+      let cancellation_status: "pending" | "scheduled" | "canceled" = "pending"
+      let status_label = "Action required"
+      let effective_at: string | null = null
+
+      if (subStatus === "canceled") {
+        cancellation_status = "canceled"
+        status_label = "Cancelled"
+        effective_at = periodEnd || requestedAt
+      } else if (cancelAtPeriodEnd || cancelAt) {
+        cancellation_status = "scheduled"
+        status_label = "Scheduled"
+        effective_at = periodEnd || cancelAt
+      }
+
+      return {
+        id: row.id,
+        user_id: row.user_id,
+        subscription_id: row.subscription_id,
+        reason: row.reason,
+        requested_at: requestedAt,
+        cancelled_at: requestedAt,
+        email: row.email,
+        company_name: row.company_name,
+        cancellation_status,
+        status_label,
+        effective_at,
+      }
+    })
+
     return NextResponse.json({
-      cancellations: rows,
+      cancellations,
       total,
       page,
       pageSize,

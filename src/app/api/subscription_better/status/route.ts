@@ -23,9 +23,24 @@ export async function GET(req: NextRequest) {
     try {
       const result = await client.query("SELECT * FROM subscription_better WHERE user_id = $1", [userUuid])
       if (result.rows.length === 0) {
-        return withCORS(NextResponse.json({ subscription: null }))
+        return withCORS(NextResponse.json({ subscription: null, cancellation_request_pending: false }))
       }
-      return withCORS(NextResponse.json({ subscription: result.rows[0] }))
+      const subscription = result.rows[0]
+      let cancellation_request_pending = false
+      if (
+        subscription.stripe_subscription_id &&
+        !subscription.cancel_at_period_end &&
+        !subscription.cancel_at &&
+        subscription.status !== "canceled"
+      ) {
+        const cancelReq = await client.query(
+          `SELECT 1 FROM subscription_cancellations
+           WHERE user_id = $1 AND subscription_id = $2 LIMIT 1`,
+          [userUuid, subscription.stripe_subscription_id]
+        )
+        cancellation_request_pending = cancelReq.rows.length > 0
+      }
+      return withCORS(NextResponse.json({ subscription, cancellation_request_pending }))
     } finally {
       client.release()
     }

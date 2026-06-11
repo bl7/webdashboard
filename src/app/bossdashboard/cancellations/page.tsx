@@ -9,9 +9,38 @@ interface Cancellation {
   user_id: string
   subscription_id: string | null
   reason: string
+  requested_at: string
   cancelled_at: string
   email?: string
   company_name?: string
+  cancellation_status: "pending" | "scheduled" | "canceled"
+  status_label: string
+  effective_at: string | null
+}
+
+function CancellationStatusCell({ c, isDarkMode }: { c: Cancellation; isDarkMode: boolean }) {
+  if (c.cancellation_status === "pending") {
+    return (
+      <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
+        Action required
+      </span>
+    )
+  }
+  const date = c.effective_at ? format(new Date(c.effective_at), "yyyy-MM-dd HH:mm") : "—"
+  const color =
+    c.cancellation_status === "canceled"
+      ? isDarkMode
+        ? "text-gray-400"
+        : "text-gray-600"
+      : isDarkMode
+        ? "text-blue-300"
+        : "text-blue-700"
+  return (
+    <div className="text-xs">
+      <span className={`font-medium ${color}`}>{c.status_label}</span>
+      <div className={isDarkMode ? "text-gray-400" : "text-gray-500"}>{date}</div>
+    </div>
+  )
 }
 
 const PAGE_SIZE = 20
@@ -105,7 +134,8 @@ const CancellationsPage: React.FC = () => {
                   <th className="px-4 py-2 border-b">Company</th>
                   <th className="px-4 py-2 border-b">Subscription ID</th>
                   <th className="px-4 py-2 border-b">Reason</th>
-                  <th className="px-4 py-2 border-b">Cancelled At</th>
+                  <th className="px-4 py-2 border-b">Status</th>
+                  <th className="px-4 py-2 border-b">Requested</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,12 +148,17 @@ const CancellationsPage: React.FC = () => {
                     <td className="px-4 py-2 max-w-xs truncate cursor-pointer text-xs text-purple-600 hover:underline" title={c.reason} onClick={() => { setModalReason(c.reason); setModalCancellation(c); }}>
                       {c.reason}
                     </td>
-                    <td className="px-4 py-2 text-xs">{format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm")}</td>
+                    <td className="px-4 py-2">
+                      <CancellationStatusCell c={c} isDarkMode={isDarkMode} />
+                    </td>
+                    <td className="px-4 py-2 text-xs">
+                      {format(new Date(c.requested_at || c.cancelled_at), "yyyy-MM-dd HH:mm")}
+                    </td>
                   </tr>
                 ))}
                 {cancellations.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="text-center py-8 text-gray-400">No cancellations found.</td>
+                    <td colSpan={7} className="text-center py-8 text-gray-400">No cancellations found.</td>
                   </tr>
                 )}
               </tbody>
@@ -140,7 +175,16 @@ const CancellationsPage: React.FC = () => {
                       <>
                         <div><span className="font-semibold">Email:</span> {modalCancellation.email || <span className="text-gray-400">N/A</span>}</div>
                         <div><span className="font-semibold">Company:</span> {modalCancellation.company_name || <span className="text-gray-400">N/A</span>}</div>
-                        <div><span className="font-semibold">Created At:</span> {format(new Date(modalCancellation.cancelled_at), "yyyy-MM-dd HH:mm")}</div>
+                        <div>
+                          <span className="font-semibold">Status:</span>{" "}
+                          {modalCancellation.cancellation_status === "pending"
+                            ? "Action required"
+                            : `${modalCancellation.status_label}${modalCancellation.effective_at ? ` · ${format(new Date(modalCancellation.effective_at), "yyyy-MM-dd HH:mm")}` : ""}`}
+                        </div>
+                        <div>
+                          <span className="font-semibold">Requested:</span>{" "}
+                          {format(new Date(modalCancellation.requested_at || modalCancellation.cancelled_at), "yyyy-MM-dd HH:mm")}
+                        </div>
                         <div><span className="font-semibold">Reason:</span> <span className="whitespace-pre-line">{modalCancellation.reason}</span></div>
                       </>
                     )}

@@ -1,61 +1,18 @@
 "use client"
 
 import React, { useEffect, useState, useRef } from "react"
+import { useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
 import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import OrderLabelsTab from "./OrderLabelsTab"
-
-const features = [
-  "Device Provided",
-  "Unlimited Label Printing",
-  "Access to Web Dashboard",
-  "Mobile App Access",
-  "Weekly Free Prints",
-]
-
-const plans = [
-  {
-    name: "Basic Plan",
-    monthly: "£20/mo",
-    yearly: "£216/yr (10% off)",
-    features: {
-      "Device Provided": "Epson TM-M30 Included",
-      "Unlimited Label Printing": true,
-      "Access to Web Dashboard": false,
-      "Mobile App Access": false,
-      "Weekly Free Prints": false,
-    },
-    description:
-      "For growing kitchens. Get an Epson device included and enjoy unlimited print volume.",
-    highlight: true,
-    cta: "Start Basic Plan",
-  },
-  {
-    name: "Premium Plan",
-    monthly: "£25/mo",
-    yearly: "£270/yr",
-    features: {
-      "Device Provided": "Mobile Device or Epson Included",
-      "Unlimited Label Printing": true,
-      "Access to Web Dashboard": true,
-      "Mobile App Access": true,
-      "Weekly Free Prints": false,
-    },
-    description:
-      "Everything in Basic plus Web Dashboard access and support for mobile devices and touchscreen printers.",
-    highlight: false,
-    cta: "Go Premium",
-  },
-]
 
 const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 const ProfileDashboard = () => {
+  const searchParams = useSearchParams()
   const [activeTab, setActiveTab] = useState<"account" | "billing" | "labels">("account")
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const [companyName, setCompanyName] = useState("")
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState("")
@@ -70,6 +27,11 @@ const ProfileDashboard = () => {
   const [pinSuccess, setPinSuccess] = useState<string | null>(null)
   const currentPinRefs = useRef<(HTMLInputElement | null)[]>([])
   const newPinRefs = useRef<(HTMLInputElement | null)[]>([])
+
+  useEffect(() => {
+    const tab = searchParams.get("tab")
+    if (tab === "billing") setActiveTab("billing")
+  }, [searchParams])
 
   useEffect(() => {
     const storedName = localStorage.getItem("name") || ""

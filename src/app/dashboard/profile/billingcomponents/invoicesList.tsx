@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { DownloadIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { formatMoney, formatInvoiceStatus } from "@/lib/billing"
+import { toast } from "sonner"
 
 interface Props {
   userId: string
@@ -60,31 +62,28 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
       return newSet
     })
   }
-  const downloadSelected = async () => {
+  const downloadSelected = () => {
     if (selectedIds.size === 0) {
-      alert("Please select at least one invoice to download.")
+      toast.error("Please select at least one invoice to download.")
       return
     }
     const invoicesToDownload = invoices.filter((inv) => selectedIds.has(inv.id) && inv.invoice_pdf)
     if (invoicesToDownload.length === 0) {
-      alert("Selected invoices do not have downloadable PDFs.")
+      toast.error("Selected invoices do not have downloadable PDFs.")
       return
     }
     for (const inv of invoicesToDownload) {
       if (inv.invoice_pdf) {
-        const planName = inv.description || inv.lines?.data?.[0]?.description || `Invoice ${inv.id}`
-        const proceed = confirm(`Download invoice: ${planName}?`)
-        if (proceed) {
-          const link = document.createElement("a")
-          link.href = inv.invoice_pdf
-          link.download = `invoice-${inv.id}.pdf`
-          link.target = "_blank"
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
+        const link = document.createElement("a")
+        link.href = inv.invoice_pdf
+        link.download = `invoice-${inv.id}.pdf`
+        link.target = "_blank"
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     }
+    toast.success(`Downloaded ${invoicesToDownload.length} invoice(s)`)
   }
   const allCurrentSelected =
     currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
@@ -121,7 +120,7 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
       ) : (
         <div className="space-y-2">
           {currentInvoices.map((entry) => {
-            const amountFormatted = (entry.total / 100).toFixed(2)
+            const amountFormatted = formatMoney(entry.total, "gbp")
             const dateFormatted = new Date(entry.created * 1000).toLocaleDateString(undefined, {
               month: "short",
               day: "numeric",
@@ -138,8 +137,8 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
                   <Checkbox checked={isSelected} onCheckedChange={() => toggleSelect(entry.id)} />
                 </div>
                 <div className="col-span-4 text-sm font-medium">{planName}</div>
-                <div className="col-span-2 text-sm">${amountFormatted}</div>
-                <div className="col-span-2 text-sm">{entry.status}</div>
+                <div className="col-span-2 text-sm">{amountFormatted}</div>
+                <div className="col-span-2 text-sm">{formatInvoiceStatus(entry.status)}</div>
                 <div className="col-span-2 text-sm">{dateFormatted}</div>
                 <div className="col-span-1 text-right">
                   {entry.invoice_pdf ? (

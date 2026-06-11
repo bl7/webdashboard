@@ -65,8 +65,8 @@ export async function POST(req: NextRequest) {
         ...(trialEligible ? { trial_period_days: 14 } : {}),
       },
       metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=true&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/billing?canceled=true&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&success=true&session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&canceled=true&session_id={CHECKOUT_SESSION_ID}`,
       allow_promotion_codes: true,
       billing_address_collection: "auto" as const,
     }

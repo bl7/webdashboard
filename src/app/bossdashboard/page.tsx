@@ -100,7 +100,17 @@ export default function BossDashboard() {
   >([])
   const [pendingDemos, setPendingDemos] = useState<{ id: string; name?: string; company?: string; created_at?: string }[]>([])
   const [recentCancellations, setRecentCancellations] = useState<
-    { id: string; company_name?: string; email?: string; user_id?: string; cancelled_at?: string }[]
+    {
+      id: string
+      company_name?: string
+      email?: string
+      user_id?: string
+      cancellation_status?: string
+      status_label?: string
+      effective_at?: string
+      requested_at?: string
+      cancelled_at?: string
+    }[]
   >([])
 
   useEffect(() => {
@@ -398,7 +408,11 @@ export default function BossDashboard() {
                 {recentCancellations.map((c) => (
                   <li key={c.id} className="flex justify-between">
                     <span className="font-medium">{c.company_name || c.email || c.user_id}</span>
-                    <span className="text-muted-foreground">{formatDate(c.cancelled_at)}</span>
+                    <span className="text-muted-foreground">
+                      {c.cancellation_status === "pending"
+                        ? "Action required"
+                        : formatDate(c.effective_at || c.requested_at || c.cancelled_at)}
+                    </span>
                   </li>
                 ))}
               </ul>
