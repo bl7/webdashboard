@@ -7,6 +7,26 @@ import { Download, Users, FileText, BarChart3, AlertTriangle, DollarSign, Wallet
 import * as XLSX from "xlsx"
 import { useDarkMode } from "../context/DarkModeContext"
 
+function formatCancellationStatus(c: {
+  cancellation_status?: string
+  status_label?: string
+  effective_at?: string | null
+}): string {
+  if (c.cancellation_status === "pending") return "Action required"
+  if (c.effective_at) {
+    return `${c.status_label || "Cancelled"} · ${format(new Date(c.effective_at), "yyyy-MM-dd HH:mm")}`
+  }
+  return c.status_label || "—"
+}
+
+function formatCancellationRequested(c: {
+  requested_at?: string
+  cancelled_at?: string
+}): string {
+  const at = c.requested_at || c.cancelled_at
+  return at ? format(new Date(at), "yyyy-MM-dd HH:mm") : ""
+}
+
 const TABS = [
   { key: "users", label: "Users", icon: Users },
   { key: "subscriptions", label: "Subscriptions", icon: FileText },
@@ -127,8 +147,14 @@ const getTableForExport = (tab: string, data: any) => {
     case "cancellations":
       if (!data.cancellations) return { header: [], rows: [] }
       return {
-        header: ["User ID", "Subscription ID", "Reason", "Cancelled At"],
-        rows: data.cancellations.map((c: any) => [c.user_id, c.subscription_id, c.reason, c.cancelled_at ? format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm") : ""]),
+        header: ["User ID", "Subscription ID", "Reason", "Status", "Requested"],
+        rows: data.cancellations.map((c: any) => [
+          c.user_id,
+          c.subscription_id,
+          c.reason,
+          formatCancellationStatus(c),
+          formatCancellationRequested(c),
+        ]),
       }
     case "revenue":
       if (!data) return { header: [], rows: [] }
@@ -704,7 +730,8 @@ const ReportsPage: React.FC = () => {
                     <th className="px-2 py-1">User ID</th>
                     <th className="px-2 py-1">Subscription ID</th>
                     <th className="px-2 py-1">Reason</th>
-                    <th className="px-2 py-1">Cancelled At</th>
+                    <th className="px-2 py-1">Status</th>
+                    <th className="px-2 py-1">Requested</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -713,7 +740,14 @@ const ReportsPage: React.FC = () => {
                       <td className="px-2 py-1 font-mono">{c.user_id}</td>
                       <td className="px-2 py-1 font-mono">{c.subscription_id}</td>
                       <td className="px-2 py-1 max-w-xs break-words whitespace-pre-line">{c.reason}</td>
-                      <td className="px-2 py-1">{c.cancelled_at ? format(new Date(c.cancelled_at), "yyyy-MM-dd HH:mm") : ""}</td>
+                      <td className="px-2 py-1">
+                        {c.cancellation_status === "pending" ? (
+                          <span className="font-medium text-amber-700 dark:text-amber-400">Action required</span>
+                        ) : (
+                          formatCancellationStatus(c)
+                        )}
+                      </td>
+                      <td className="px-2 py-1">{formatCancellationRequested(c)}</td>
                     </tr>
                   ))}
                 </tbody>
