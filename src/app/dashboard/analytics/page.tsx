@@ -4,8 +4,7 @@ import React, { useState } from "react"
 import useSWR from "swr"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Printer, Users, CalendarDays, AlertTriangle, Package } from "lucide-react"
-import AboutToExpireList from "./AboutToExpireList"
-import NextToExpireList from "./NextToExpireList"
+import PrintAnalytics from "@/components/dashboard/PrintAnalytics"
 import {
   LineChart,
   Line,
@@ -341,7 +340,10 @@ const AnalyticsDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-100 px-2 py-10 md:px-8">
-     
+      <section className="mx-auto mb-10 max-w-6xl">
+        <PrintAnalytics />
+      </section>
+
       <div className="mx-auto mb-6 flex max-w-6xl justify-end">
         <div className="inline-flex rounded-lg bg-white/70 shadow">
           {RANGE_OPTIONS.map((opt) => (
