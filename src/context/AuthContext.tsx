@@ -2,7 +2,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { logoutToLogin } from "@/lib/client-auth"
 
 interface Profile {
   company_name: string | null
@@ -31,7 +31,6 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
   const [token, setToken] = useState<string | null>(null)
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
@@ -75,9 +74,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         // Check if any of the responses indicate authentication failure
         if (profileRes.status === 401 || subscriptionRes.status === 401 || adminRes.status === 401) {
-          // Token is expired or invalid, redirect to login
-          localStorage.clear()
-          router.push("/login")
+          logoutToLogin()
           return
         }
 
@@ -119,27 +116,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     fetchData()
-  }, [router])
+  }, [])
 
   const logout = () => {
-    // Clear localStorage
-    localStorage.clear()
     setToken(null)
     setUserId(null)
     setName(null)
     setIsAdmin(false)
-    
-    // Clear cookie so middleware can see logout
-    if (typeof document !== "undefined") {
-      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
-      // Also clear with Secure flag for HTTPS
-      if (window.location.protocol === 'https:') {
-        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
-      }
-    }
-    
-    // Use replace to prevent back button from going back to dashboard
-    router.replace("/login")
+    logoutToLogin()
   }
 
   return (

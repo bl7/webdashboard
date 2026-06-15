@@ -27,6 +27,7 @@ import { cn } from "@/lib/utils"
 import AdminPinModal from "./adminPinModal"
 import SidebarSkeleton from "./SidebarSkeleton"
 import * as Tooltip from "@radix-ui/react-tooltip"
+import { logoutToLogin } from "@/lib/client-auth"
 
 const NAV_ITEMS = [
   { label: "Dashboard", icon: <FaHome />, href: "/dashboard" },
@@ -129,15 +130,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
       
       // If no token in either localStorage or cookie, redirect to login
       if (!userId || (!token && !cookieToken)) {
-        // Clear any stale data
-        localStorage.clear()
-        // Clear cookie
-        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
-        if (window.location.protocol === 'https:') {
-          document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
-        }
-        // Redirect to login
-        router.replace("/login")
+        logoutToLogin()
         return
       }
 
@@ -155,9 +148,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
         // Check if any of the responses indicate authentication failure
         if (profileRes.status === 401 || subRes.status === 401 || adminRes.status === 401) {
-          // Token is expired or invalid, redirect to login
-          localStorage.clear()
-          router.push("/login")
+          logoutToLogin()
           return
         }
 
@@ -206,22 +197,8 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   const handleLogout = () => {
     if (!mounted) return
-    
-    // Clear localStorage
-    ;["token", "userid", "name", "profilePicture", "adminAccess", "profileData", "email", "full_name"].forEach((k) =>
-      localStorage.removeItem(k)
-    )
-    
-    // Clear cookie so middleware can see logout
-    document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
-    // Also clear with Secure flag for HTTPS
-    if (window.location.protocol === 'https:') {
-      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
-    }
-    
     setIsAdmin(false)
-    // Use replace to prevent back button from going back to dashboard
-    router.replace("/login")
+    logoutToLogin()
   }
 
   const toggleSidebar = () => {

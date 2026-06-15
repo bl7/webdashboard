@@ -2,7 +2,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react"
-import { useRouter } from "next/navigation"
+import { logoutToLogin } from "@/lib/client-auth"
 
 interface UserContextType {
   userid: string | null
@@ -19,7 +19,6 @@ interface UserContextType {
 const UserContext = createContext<UserContextType | undefined>(undefined)
 
 export function UserProvider({ children }: { children: ReactNode }) {
-  const router = useRouter()
   const [userid, setUserid] = useState<string | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
@@ -35,24 +34,11 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   // Logout helper clears storage and context, redirects to login
   const logout = () => {
-    // Clear localStorage
-    localStorage.clear()
     setUserid(null)
     setToken(null)
     setName(null)
     setIsAdmin(false)
-    
-    // Clear cookie so middleware can see logout
-    if (typeof document !== "undefined") {
-      document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax"
-      // Also clear with Secure flag for HTTPS
-      if (window.location.protocol === 'https:') {
-        document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax; Secure"
-      }
-    }
-    
-    // Use replace to prevent back button from going back to dashboard
-    router.replace("/login")
+    logoutToLogin()
   }
 
   return (
