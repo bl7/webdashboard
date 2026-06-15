@@ -5,6 +5,10 @@ export interface AppDeviceSummaryCounts {
   activeNow: number
   activeLast30Days: number
   totalRegistered: number
+  mobileActiveNow: number
+  mobileActiveLast30Days: number
+  webActiveNow: number
+  webActiveLast30Days: number
 }
 
 export interface AppDeviceRow {

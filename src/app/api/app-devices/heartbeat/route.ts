@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
         NextResponse.json(
           {
             error:
-              "Invalid deviceId. Send a stable 16–128 character hashed ANDROID_ID (letters, numbers, _ or -).",
+              "Invalid deviceId. Send a stable 16–128 character device id (letters, numbers, _ or -).",
           },
           { status: 400 }
         )

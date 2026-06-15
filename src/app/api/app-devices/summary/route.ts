@@ -6,6 +6,44 @@ import {
   APP_DEVICE_RECENT_WINDOW_DAYS,
 } from "@/lib/appDevices"
 
+function mapSummaryRow(row: Record<string, unknown>) {
+  return {
+    activeNow: Number(row.active_now || 0),
+    activeLast30Days: Number(row.active_last_30_days || 0),
+    totalRegistered: Number(row.total_registered || 0),
+    mobileActiveNow: Number(row.mobile_active_now || 0),
+    mobileActiveLast30Days: Number(row.mobile_active_last_30_days || 0),
+    webActiveNow: Number(row.web_active_now || 0),
+    webActiveLast30Days: Number(row.web_active_last_30_days || 0),
+  }
+}
+
+const SUMMARY_COUNT_SQL = `
+  COUNT(*) FILTER (
+    WHERE last_seen_at >= NOW() - ($ACTIVE_MIN::text || ' minutes')::interval
+  ) AS active_now,
+  COUNT(*) FILTER (
+    WHERE last_seen_at >= NOW() - ($RECENT_DAYS::text || ' days')::interval
+  ) AS active_last_30_days,
+  COUNT(*) AS total_registered,
+  COUNT(*) FILTER (
+    WHERE platform = 'mobile'
+      AND last_seen_at >= NOW() - ($ACTIVE_MIN::text || ' minutes')::interval
+  ) AS mobile_active_now,
+  COUNT(*) FILTER (
+    WHERE platform = 'mobile'
+      AND last_seen_at >= NOW() - ($RECENT_DAYS::text || ' days')::interval
+  ) AS mobile_active_last_30_days,
+  COUNT(*) FILTER (
+    WHERE platform = 'web'
+      AND last_seen_at >= NOW() - ($ACTIVE_MIN::text || ' minutes')::interval
+  ) AS web_active_now,
+  COUNT(*) FILTER (
+    WHERE platform = 'web'
+      AND last_seen_at >= NOW() - ($RECENT_DAYS::text || ' days')::interval
+  ) AS web_active_last_30_days
+`
+
 // GET /api/app-devices/summary — boss-only bulk counts per user
 export async function GET(req: NextRequest) {
   try {
@@ -14,32 +52,21 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    const activeMin = String(APP_DEVICE_ACTIVE_WINDOW_MINUTES)
+    const recentDays = String(APP_DEVICE_RECENT_WINDOW_DAYS)
+
     const result = await pool.query(
       `SELECT
          user_id::text AS user_id,
-         COUNT(*) FILTER (
-           WHERE last_seen_at >= NOW() - ($1::text || ' minutes')::interval
-         ) AS active_now,
-         COUNT(*) FILTER (
-           WHERE last_seen_at >= NOW() - ($2::text || ' days')::interval
-         ) AS active_last_30_days,
-         COUNT(*) AS total_registered
+         ${SUMMARY_COUNT_SQL.replace(/\$ACTIVE_MIN/g, "$1").replace(/\$RECENT_DAYS/g, "$2")}
        FROM user_app_devices
        GROUP BY user_id`,
-      [String(APP_DEVICE_ACTIVE_WINDOW_MINUTES), String(APP_DEVICE_RECENT_WINDOW_DAYS)]
+      [activeMin, recentDays]
     )
 
-    const byUserId: Record<
-      string,
-      { activeNow: number; activeLast30Days: number; totalRegistered: number }
-    > = {}
-
+    const byUserId: Record<string, ReturnType<typeof mapSummaryRow>> = {}
     for (const row of result.rows) {
-      byUserId[row.user_id] = {
-        activeNow: Number(row.active_now || 0),
-        activeLast30Days: Number(row.active_last_30_days || 0),
-        totalRegistered: Number(row.total_registered || 0),
-      }
+      byUserId[row.user_id] = mapSummaryRow(row)
     }
 
     return NextResponse.json({

@@ -3,6 +3,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react"
 import { logoutToLogin } from "@/lib/client-auth"
+import { startWebHeartbeat, stopWebHeartbeat } from "@/lib/webHeartbeat"
 
 interface Profile {
   company_name: string | null
@@ -118,7 +119,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchData()
   }, [])
 
+  useEffect(() => {
+    if (!token || loading) {
+      stopWebHeartbeat()
+      return
+    }
+    startWebHeartbeat(token)
+    return () => stopWebHeartbeat()
+  }, [token, loading])
+
   const logout = () => {
+    stopWebHeartbeat()
     setToken(null)
     setUserId(null)
     setName(null)

@@ -79,6 +79,10 @@ export default function UsersPage() {
     activeNow: number
     activeLast30Days: number
     totalRegistered: number
+    mobileActiveNow: number
+    mobileActiveLast30Days: number
+    webActiveNow: number
+    webActiveLast30Days: number
     devices: {
       deviceId: string
       platform: string
@@ -90,7 +94,18 @@ export default function UsersPage() {
     }[]
   } | null>(null)
   const [appDevicesByUser, setAppDevicesByUser] = useState<
-    Record<string, { activeNow: number; activeLast30Days: number; totalRegistered: number }>
+    Record<
+      string,
+      {
+        activeNow: number
+        activeLast30Days: number
+        totalRegistered: number
+        mobileActiveNow: number
+        mobileActiveLast30Days: number
+        webActiveNow: number
+        webActiveLast30Days: number
+      }
+    >
   >({})
   const [appDevicesOpen, setAppDevicesOpen] = useState(false)
   const [appDevicesLoading, setAppDevicesLoading] = useState(false)
@@ -228,11 +243,18 @@ export default function UsersPage() {
   function formatAppDeviceCounts(userId: string) {
     const summary = appDevicesByUser[userId]
     if (!summary || summary.activeLast30Days === 0) return "—"
-    const active =
-      summary.activeNow > 0 ? `${summary.activeNow} active` : String(summary.activeLast30Days)
-    return summary.activeLast30Days >= 2
-      ? `${active} · ${summary.activeLast30Days} (30d)`
-      : active
+    const parts: string[] = []
+    if (summary.mobileActiveLast30Days > 0) {
+      parts.push(`${summary.mobileActiveLast30Days} mob`)
+    }
+    if (summary.webActiveLast30Days > 0) {
+      parts.push(`${summary.webActiveLast30Days} web`)
+    }
+    const label = parts.length ? parts.join(" · ") : String(summary.activeLast30Days)
+    if (summary.activeLast30Days >= 2) {
+      return summary.activeNow > 0 ? `${summary.activeNow} active · ${label}` : label
+    }
+    return summary.activeNow > 0 ? `${summary.activeNow} active` : label
   }
 
   function processInvoices(invoices: any[]) {
@@ -468,7 +490,7 @@ export default function UsersPage() {
                 Pending Change
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
-                App Devices
+                Sessions
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Actions
@@ -544,9 +566,9 @@ export default function UsersPage() {
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                       onClick={() => openAppDevicesDrawer(user)}
-                      title="View mobile app devices"
+                      title="View mobile and web sessions"
                     >
-                      <Smartphone className="h-4 w-4" /> App Devices
+                      <Smartphone className="h-4 w-4" /> Sessions
                     </button>
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
@@ -796,16 +818,17 @@ export default function UsersPage() {
                     : "None"}
                 </div>
                 <div>
-                  <span className="font-semibold">Mobile App Devices:</span>{" "}
+                  <span className="font-semibold">Sessions (mobile / web):</span>{" "}
                   {appDevicesSummary
-                    ? `${appDevicesSummary.activeNow} active now · ${appDevicesSummary.activeLast30Days} in last 30 days`
+                    ? `${appDevicesSummary.mobileActiveLast30Days} mobile · ${appDevicesSummary.webActiveLast30Days} web (30d)`
                     : "—"}
                 </div>
                 {appDevicesSummary?.devices?.length ? (
                   <ul className="mt-1 space-y-1 text-xs text-gray-600 dark:text-gray-300">
                     {appDevicesSummary.devices.slice(0, 5).map((device) => (
                       <li key={device.deviceId}>
-                        {device.deviceModel || "Android device"} ·{" "}
+                        {device.platform === "web" ? "Web" : "Mobile"} —{" "}
+                        {device.deviceModel || "Device"} ·{" "}
                         {device.isActiveNow ? "active" : "idle"} · last seen{" "}
                         {new Date(device.lastSeenAt).toLocaleString()}
                       </li>
@@ -1220,21 +1243,26 @@ export default function UsersPage() {
           className={`max-w-2xl ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-900"}`}
         >
           <DialogHeader>
-            <DialogTitle>Mobile app devices — {selectedUser?.company_name}</DialogTitle>
+            <DialogTitle>Sessions — {selectedUser?.company_name}</DialogTitle>
           </DialogHeader>
           {appDevicesLoading ? (
             <div className="text-sm">Loading...</div>
           ) : appDevicesDetail ? (
             <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+              <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
                 <div className="rounded border p-3 dark:border-gray-700">
                   <div className="text-xs text-muted-foreground">Active now</div>
                   <div className="text-lg font-semibold">{appDevicesDetail.activeNow}</div>
-                  <div className="text-xs text-muted-foreground">Last 30 min</div>
                 </div>
                 <div className="rounded border p-3 dark:border-gray-700">
-                  <div className="text-xs text-muted-foreground">Last 30 days</div>
-                  <div className="text-lg font-semibold">{appDevicesDetail.activeLast30Days}</div>
+                  <div className="text-xs text-muted-foreground">Mobile (30d)</div>
+                  <div className="text-lg font-semibold">
+                    {appDevicesDetail.mobileActiveLast30Days}
+                  </div>
+                </div>
+                <div className="rounded border p-3 dark:border-gray-700">
+                  <div className="text-xs text-muted-foreground">Web (30d)</div>
+                  <div className="text-lg font-semibold">{appDevicesDetail.webActiveLast30Days}</div>
                 </div>
                 <div className="rounded border p-3 dark:border-gray-700">
                   <div className="text-xs text-muted-foreground">Total registered</div>
@@ -1246,8 +1274,9 @@ export default function UsersPage() {
                   <table className="min-w-full text-sm">
                     <thead className={isDarkMode ? "bg-gray-800" : "bg-gray-100"}>
                       <tr>
-                        <th className="px-3 py-2 text-left">Device</th>
-                        <th className="px-3 py-2 text-left">App</th>
+                        <th className="px-3 py-2 text-left">Platform</th>
+                        <th className="px-3 py-2 text-left">Device / browser</th>
+                        <th className="px-3 py-2 text-left">Version</th>
                         <th className="px-3 py-2 text-left">Status</th>
                         <th className="px-3 py-2 text-left">Last seen</th>
                       </tr>
@@ -1255,8 +1284,10 @@ export default function UsersPage() {
                     <tbody className="divide-y dark:divide-gray-700">
                       {appDevicesDetail.devices.map((device) => (
                         <tr key={device.deviceId}>
+                          <td className="px-3 py-2 capitalize">{device.platform}</td>
                           <td className="px-3 py-2">
-                            {device.deviceModel || "Android device"}
+                            {device.deviceModel ||
+                              (device.platform === "web" ? "Web browser" : "Android device")}
                             <div className="font-mono text-xs text-muted-foreground">
                               {device.deviceId.slice(0, 12)}…
                             </div>
@@ -1283,8 +1314,8 @@ export default function UsersPage() {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  No mobile heartbeats yet. Devices appear after the app logs in and sends a
-                  heartbeat.
+                  No session heartbeats yet. Devices appear after the mobile app or web dashboard
+                  logs in.
                 </p>
               )}
             </div>
