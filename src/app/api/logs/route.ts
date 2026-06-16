@@ -15,7 +15,7 @@ export async function OPTIONS(req: NextRequest) {
   return withCORS(new Response(null, { status: 204 }))
 }
 
-const PRINT_PLATFORMS = new Set(["web", "mobile"])
+const PRINT_PLATFORMS = new Set(["web", "mobile", "unknown"])
 
 function normalizePrintLabelDetails(details: unknown): Record<string, unknown> {
   const normalized =
@@ -24,12 +24,10 @@ function normalizePrintLabelDetails(details: unknown): Record<string, unknown> {
       : {}
 
   const platform = normalized.platform
-  // Web dashboard always sends platform: "web" via logAction(). Mobile (incl. older
-  // app builds) often omits it — treat missing as mobile so web-only traffic stays accurate.
   if (platform === undefined || platform === null || platform === "") {
-    normalized.platform = "mobile"
+    normalized.platform = "unknown"
   } else if (!PRINT_PLATFORMS.has(String(platform))) {
-    throw new Error('Invalid platform for print_label. Must be "web" or "mobile".')
+    throw new Error('Invalid platform for print_label. Must be "web", "mobile", or "unknown".')
   }
 
   return normalized
