@@ -4,6 +4,7 @@ import React, { useEffect, useState, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { logoutToLogin } from "@/lib/client-auth"
 import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,6 +18,9 @@ const ProfileDashboard = () => {
   const [userId, setUserId] = useState<string | null>(null)
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
+  const [originalName, setOriginalName] = useState("")
+  const [originalEmail, setOriginalEmail] = useState("")
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null)
   const [avatar, setAvatar] = useState<number>(1)
   const [showModal, setShowModal] = useState(false)
 
@@ -71,6 +75,33 @@ const ProfileDashboard = () => {
         }
       })
       .catch(() => toast.error("Failed to load profile"))
+
+    // Load real name/email from the auth backend (don't trust the JWT/localStorage).
+    const token = localStorage.getItem("token")
+    if (token) {
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then(async (res) => {
+          if (res.status === 401 || res.status === 403) {
+            logoutToLogin()
+            return null
+          }
+          return res.json()
+        })
+        .then((data) => {
+          if (data?.data) {
+            setName(data.data.name || "")
+            setEmail(data.data.email || "")
+            setOriginalName(data.data.name || "")
+            setOriginalEmail(data.data.email || "")
+            setPendingEmail(data.data.pendingEmail || null)
+            localStorage.setItem("name", data.data.name || "")
+            localStorage.setItem("email", data.data.email || "")
+          }
+        })
+        .catch(() => {})
+    }
   }, [])
 
   const handleSave = async () => {
@@ -78,10 +109,6 @@ const ProfileDashboard = () => {
     const avatarIndex = localStorage.getItem("avatar") || "1"
 
     if (!userId) return toast.error("Missing user ID")
-
-    // Save name and email to localStorage
-    localStorage.setItem("name", name)
-    localStorage.setItem("email", email)
 
     const res = await fetch("/api/profile", {
       method: "PUT",
@@ -93,10 +120,57 @@ const ProfileDashboard = () => {
       }),
     })
 
-    if (res.ok) {
-      toast.success("Profile updated")
-    } else {
+    if (!res.ok) {
       toast.error("Failed to update profile")
+      return
+    }
+
+    // Persist name/email changes to the auth backend (email triggers re-verification).
+    const payload: { name?: string; email?: string } = {}
+    if (name.trim() && name.trim() !== originalName) payload.name = name.trim()
+    if (email.trim() && email.trim() !== originalEmail) payload.email = email.trim()
+
+    if (Object.keys(payload).length === 0) {
+      toast.success("Profile updated")
+      return
+    }
+
+    try {
+      const token = localStorage.getItem("token")
+      const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      })
+
+      if (r.status === 401 || r.status === 403) {
+        logoutToLogin()
+        return
+      }
+
+      const data = await r.json()
+      if (!r.ok) {
+        toast.error(data?.message || "Failed to update profile")
+        return
+      }
+
+      // Name applies immediately.
+      setName(data.data.name)
+      setOriginalName(data.data.name)
+      localStorage.setItem("name", data.data.name)
+
+      // Email change is pending until confirmed: keep the active email visible.
+      setEmail(data.data.email)
+      setOriginalEmail(data.data.email)
+      setPendingEmail(data.data.pendingEmail || null)
+      if (!data.data.pendingEmail) localStorage.setItem("email", data.data.email)
+
+      toast.success(data.message || "Profile updated")
+    } catch {
+      toast.error("Network error. Please try again.")
     }
   }
 
@@ -273,6 +347,13 @@ const ProfileDashboard = () => {
                   className="text-sm"
                 />
               </div>
+
+              {pendingEmail && (
+                <p className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
+                  Confirmation sent to <span className="font-medium">{pendingEmail}</span>. Your
+                  current email ({email}) stays active until you confirm.
+                </p>
+              )}
 
               <Button onClick={handleSave} className="w-full text-sm">
                 Save Changes
