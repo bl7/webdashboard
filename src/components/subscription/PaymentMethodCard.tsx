@@ -99,7 +99,7 @@ export function PaymentMethodCard({
           onClick={onUpdate}
           disabled={loading}
           variant="outline"
-          className="w-full border-white text-white hover:bg-white hover:text-blue-700"
+          className="w-full border-white bg-transparent text-white hover:bg-white hover:text-blue-700"
         >
           {loading ? (
             <>

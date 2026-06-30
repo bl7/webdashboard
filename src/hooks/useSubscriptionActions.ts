@@ -116,13 +116,15 @@ export function useSubscriptionActions(
         headers: authHeaders(),
         body: JSON.stringify({ user_id: userId }),
       })
-      if (!response.ok) throw new Error("Failed to create payment method update session")
-      const data = await response.json()
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create payment method update session")
+      }
       if (!data.url) throw new Error("No redirect URL received")
       window.location.href = data.url
       return true
     } catch (error: unknown) {
-      toast.error("Failed to open payment method settings")
+      toast.error(error instanceof Error ? error.message : "Failed to open payment method settings")
       console.error(error)
       return false
     } finally {
