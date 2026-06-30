@@ -39,7 +39,9 @@ export async function loginUser(data: any) {
   if (!response.ok) {
     if (contentType && contentType.includes("application/json")) {
       const errorData = await response.json()
-      throw new Error(errorData.message || "Login failed")
+      const err = new Error(errorData.message || "Login failed")
+      ;(err as any).status = response.status
+      throw err
     } else {
       const errorText = await response.text()
       console.error("Server responded with non-JSON:", errorText)
@@ -48,6 +50,26 @@ export async function loginUser(data: any) {
   }
 
   return await response.json()
+}
+
+export async function resendVerification(email: string) {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/resend-verification`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ email }),
+  })
+
+  const contentType = response.headers.get("content-type")
+  const data =
+    contentType && contentType.includes("application/json") ? await response.json() : {}
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to resend verification email")
+  }
+
+  return data
 }
 
 // Allergen

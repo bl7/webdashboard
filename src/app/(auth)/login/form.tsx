@@ -17,7 +17,7 @@ import { useState, useCallback } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { toast } from "sonner"
-import { loginUser } from "@/lib/api"
+import { loginUser, resendVerification } from "@/lib/api"
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -27,6 +27,21 @@ const loginSchema = z.object({
 export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null)
+  const [isResending, setIsResending] = useState(false)
+
+  const handleResendVerification = useCallback(async () => {
+    if (!unverifiedEmail) return
+    try {
+      setIsResending(true)
+      const res = await resendVerification(unverifiedEmail)
+      toast.success(res?.message || "Verification email sent")
+    } catch (error: any) {
+      toast.error(error?.message || "Failed to resend verification email")
+    } finally {
+      setIsResending(false)
+    }
+  }, [unverifiedEmail])
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -40,6 +55,7 @@ export function LoginForm() {
     async (values: z.infer<typeof loginSchema>) => {
       try {
         setIsLoading(true)
+        setUnverifiedEmail(null)
         const response = await loginUser(values)
 
         if (response?.token || response?.success) {
@@ -99,6 +115,11 @@ export function LoginForm() {
       } catch (error: any) {
         console.error("Login error:", error)
         const msg = error?.response?.data?.message || error.message || "Failed to login"
+        const isUnverified =
+          error?.status === 403 || /not\s*verified/i.test(msg)
+        if (isUnverified) {
+          setUnverifiedEmail(values.email)
+        }
         toast.error(msg)
       } finally {
         setIsLoading(false)
@@ -163,6 +184,21 @@ export function LoginForm() {
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? "Signing in..." : "Sign In"}
         </Button>
+
+        {unverifiedEmail && (
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+            <p className="mb-2">Your email isn&apos;t verified yet.</p>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full"
+              onClick={handleResendVerification}
+              disabled={isResending}
+            >
+              {isResending ? "Sending..." : "Resend verification email"}
+            </Button>
+          </div>
+        )}
 
         <div className="mt-6 flex items-center justify-end gap-2">
           <p className="text-sm text-muted-foreground">Don't have an account?</p>
