@@ -18,6 +18,7 @@ import {
   Package,
   Bell,
   List,
+  Quote,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -56,6 +57,7 @@ export default function Sidebar({
     },
     { name: "Reports", href: "/bossdashboard/reports", icon: FileText },
     { name: "Waitlist", href: "/bossdashboard/waitlist", icon: List },
+    { name: "Testimonials", href: "/bossdashboard/testimonials", icon: Quote },
   ]
 
   const isActive = (href: string) => {
