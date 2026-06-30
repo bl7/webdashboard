@@ -61,7 +61,16 @@ const Billing: React.FC = () => {
     if (!success && !canceled && !paymentUpdated && !paymentCancelled) return
 
     if (success || paymentUpdated) {
-      refreshSubscription().then(() => {
+      // The new card is written by the async Stripe webhook (setup_intent.succeeded),
+      // which usually lands a few seconds after this redirect. Poll a few times so the
+      // updated card is reflected instead of showing the stale one.
+      let attempts = 0
+      const poll = async () => {
+        await refreshSubscription()
+        attempts++
+        if (attempts < 4) setTimeout(poll, 2000)
+      }
+      poll().finally(() => {
         toast.success(
           paymentUpdated
             ? "Payment method updated successfully!"
