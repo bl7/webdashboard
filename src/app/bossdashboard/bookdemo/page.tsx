@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react"
+import { EmailPreview } from "@/components/boss/EmailPreview"
 import {
   Dialog,
   DialogContent,
@@ -348,39 +349,49 @@ export default function BossBookDemoPage() {
                 if (!open) setEmailDialog(null)
               }}
             >
-              <DialogContent className="max-w-lg">
+              <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Send Email</DialogTitle>
                   <DialogDescription asChild>
-                    <div className="mt-2 space-y-4 text-base text-foreground">
+                    <div className="mt-2 grid grid-cols-1 gap-6 text-base text-foreground md:grid-cols-2">
                       {emailDialog && (
                         <>
-                          <div className="text-sm text-muted-foreground">
-                            <span className="font-semibold text-foreground">To:</span>{" "}
-                            {emailDialog.name} &lt;{emailDialog.email}&gt;
+                          <div className="space-y-4">
+                            <div className="text-sm text-muted-foreground">
+                              <span className="font-semibold text-foreground">To:</span>{" "}
+                              {emailDialog.name} &lt;{emailDialog.email}&gt;
+                            </div>
+                            <div>
+                              <label className="mb-1 block font-semibold">Subject</label>
+                              <input
+                                type="text"
+                                className="w-full rounded border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+                                value={emailSubject}
+                                onChange={(e) => setEmailSubject(e.target.value)}
+                              />
+                            </div>
+                            <div>
+                              <label className="mb-1 block font-semibold">Body</label>
+                              <textarea
+                                className="min-h-[220px] w-full rounded border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
+                                value={emailBody}
+                                onChange={(e) => setEmailBody(e.target.value)}
+                                placeholder="Write your message here. It will be wrapped in the InstaLabel email template."
+                              />
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Sent from contact@instalabel.co with InstaLabel branding, banner, and
+                              footer.
+                            </p>
                           </div>
                           <div>
-                            <label className="mb-1 block font-semibold">Subject</label>
-                            <input
-                              type="text"
-                              className="w-full rounded border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
-                              value={emailSubject}
-                              onChange={(e) => setEmailSubject(e.target.value)}
+                            <label className="mb-2 block font-semibold">Preview</label>
+                            <EmailPreview
+                              subject={emailSubject}
+                              body={emailBody}
+                              recipientName={emailDialog.name}
                             />
                           </div>
-                          <div>
-                            <label className="mb-1 block font-semibold">Body</label>
-                            <textarea
-                              className="min-h-[180px] w-full rounded border px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900"
-                              value={emailBody}
-                              onChange={(e) => setEmailBody(e.target.value)}
-                              placeholder="Write your message here. It will be wrapped in the InstaLabel email template."
-                            />
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            Sent from contact@instalabel.co with InstaLabel branding, banner, and
-                            footer.
-                          </p>
                         </>
                       )}
                     </div>

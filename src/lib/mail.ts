@@ -5,12 +5,14 @@ export async function sendMail({
   subject,
   body,
   useBulk = false,
+  cc,
   bcc,
 }: {
-  to: string
+  to: string | string[]
   subject: string
   body: string
   useBulk?: boolean
+  cc?: string | string[]
   bcc?: string | string[]
 }) {
   const { SMTP_EMAIL, SMTP_PASSWORD, SMTP_BULK_EMAIL, SMTP_BULK_PASSWORD } = process.env
@@ -34,15 +36,16 @@ export async function sendMail({
     throw error
   }
   try {
-    console.log("[MAIL] Sending email:", { to, subject, bcc })
+    console.log("[MAIL] Sending email:", { to, cc, subject, bcc })
     await transport.sendMail({
       from: user,
       to,
       subject,
       html: body,
+      ...(cc && { cc }),
       ...(bcc && { bcc }),
     })
-    console.log("[MAIL] Email sent:", { to, subject, bcc })
+    console.log("[MAIL] Email sent:", { to, cc, subject, bcc })
   } catch (error) {
     console.error("[MAIL] Send failed:", error)
     throw error
