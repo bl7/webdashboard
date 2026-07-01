@@ -31,7 +31,7 @@ export async function sendMail({
     const testResult = await transport.verify()
   } catch (error) {
     console.error({ error })
-    return
+    throw error
   }
   try {
     console.log("[MAIL] Sending email:", { to, subject, bcc })
@@ -44,6 +44,7 @@ export async function sendMail({
     })
     console.log("[MAIL] Email sent:", { to, subject, bcc })
   } catch (error) {
-    console.log(error)
+    console.error("[MAIL] Send failed:", error)
+    throw error
   }
 }

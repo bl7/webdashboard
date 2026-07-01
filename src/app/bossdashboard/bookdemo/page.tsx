@@ -29,6 +29,10 @@ export default function BossBookDemoPage() {
   const [demoTime, setDemoTime] = useState('')
   const [sendingEmail, setSendingEmail] = useState(false)
   const [sendEmail, setSendEmail] = useState(false)
+  const [emailDialog, setEmailDialog] = useState<BookDemoRequest | null>(null)
+  const [emailSubject, setEmailSubject] = useState('')
+  const [emailBody, setEmailBody] = useState('')
+  const [sendingCustomEmail, setSendingCustomEmail] = useState(false)
 
   const fetchRequests = async () => {
     setLoading(true)
@@ -100,6 +104,44 @@ export default function BossBookDemoPage() {
     setAttendDialog(null)
   }
 
+  const openEmailDialog = (request: BookDemoRequest) => {
+    setEmailDialog(request)
+    setEmailSubject(`Following up on your InstaLabel demo request`)
+    setEmailBody(
+      `Thank you for your interest in InstaLabel${request.company ? ` and for reaching out from ${request.company}` : ''}.\n\nWe wanted to follow up on your demo request and see if you have any questions we can help with.`
+    )
+  }
+
+  const handleSendCustomEmail = async () => {
+    if (!emailDialog || !emailSubject.trim() || !emailBody.trim()) return
+    setSendingCustomEmail(true)
+    try {
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null
+      const res = await fetch('/api/bookdemo/send-custom-email', {
+        method: 'POST',
+        headers: bossToken
+          ? { 'Content-Type': 'application/json', Authorization: `Bearer ${bossToken}` }
+          : { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: emailDialog.email,
+          name: emailDialog.name,
+          subject: emailSubject.trim(),
+          body: emailBody.trim(),
+        }),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to send email')
+      }
+      setEmailDialog(null)
+      alert('Email sent successfully')
+    } catch (err: any) {
+      alert(err.message || 'Failed to send email')
+    } finally {
+      setSendingCustomEmail(false)
+    }
+  }
+
   const handleDelete = async (id: number) => {
     if (!window.confirm('Delete this request?')) return
     setDeletingId(id)
@@ -163,7 +205,13 @@ export default function BossBookDemoPage() {
                         {updatingId === r.id ? '...' : r.attended ? 'Reschedule' : 'Mark Attended'}
                       </button>
                     </td>
-                    <td className="p-2">
+                    <td className="p-2 whitespace-nowrap space-x-2">
+                      <button
+                        className="text-purple-600 hover:underline dark:text-purple-400 text-xs"
+                        onClick={() => openEmailDialog(r)}
+                      >
+                        Email
+                      </button>
                       <button
                         className="text-red-600 hover:underline dark:text-red-400 text-xs"
                         onClick={() => handleDelete(r.id)}
@@ -201,6 +249,62 @@ export default function BossBookDemoPage() {
                     </div>
                   </DialogDescription>
                 </DialogHeader>
+              </DialogContent>
+            </Dialog>
+            {/* Custom email dialog */}
+            <Dialog open={!!emailDialog} onOpenChange={open => { if (!open) setEmailDialog(null) }}>
+              <DialogContent className="max-w-lg">
+                <DialogHeader>
+                  <DialogTitle>Send Email</DialogTitle>
+                  <DialogDescription asChild>
+                    <div className="space-y-4 text-base text-foreground mt-2">
+                      {emailDialog && (
+                        <>
+                          <div className="text-sm text-muted-foreground">
+                            <span className="font-semibold text-foreground">To:</span> {emailDialog.name} &lt;{emailDialog.email}&gt;
+                          </div>
+                          <div>
+                            <label className="font-semibold block mb-1">Subject</label>
+                            <input
+                              type="text"
+                              className="w-full border rounded px-3 py-2 text-sm dark:bg-gray-900 dark:border-gray-700"
+                              value={emailSubject}
+                              onChange={e => setEmailSubject(e.target.value)}
+                            />
+                          </div>
+                          <div>
+                            <label className="font-semibold block mb-1">Body</label>
+                            <textarea
+                              className="w-full border rounded px-3 py-2 text-sm min-h-[180px] dark:bg-gray-900 dark:border-gray-700"
+                              value={emailBody}
+                              onChange={e => setEmailBody(e.target.value)}
+                              placeholder="Write your message here. It will be wrapped in the InstaLabel email template."
+                            />
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            Sent from contact@instalabel.co with InstaLabel branding, banner, and footer.
+                          </p>
+                        </>
+                      )}
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <button
+                    className="px-4 py-2 rounded bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    onClick={() => setEmailDialog(null)}
+                    disabled={sendingCustomEmail}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="px-4 py-2 rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50"
+                    onClick={handleSendCustomEmail}
+                    disabled={sendingCustomEmail || !emailSubject.trim() || !emailBody.trim()}
+                  >
+                    {sendingCustomEmail ? 'Sending...' : 'Send Email'}
+                  </button>
+                </DialogFooter>
               </DialogContent>
             </Dialog>
             {/* Attended status dialog */}
