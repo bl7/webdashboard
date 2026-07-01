@@ -13,7 +13,10 @@ export async function POST(req: NextRequest) {
     const { to, name, subject, body } = await req.json()
 
     if (!to || !subject?.trim() || !body?.trim()) {
-      return NextResponse.json({ error: "Recipient, subject, and body are required" }, { status: 400 })
+      return NextResponse.json(
+        { error: "Recipient, subject, and body are required" },
+        { status: 400 }
+      )
     }
 
     const bodyHtml = formatEmailBody(body.trim())
