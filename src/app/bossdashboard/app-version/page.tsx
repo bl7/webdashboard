@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { AlertTriangle, Save, Smartphone } from "lucide-react"
+import { Save, Smartphone } from "lucide-react"
 import { useDarkMode } from "../context/DarkModeContext"
 
 interface AppVersionForm {
@@ -129,15 +129,13 @@ export default function BossAppVersionPage() {
           ) : (
             <form onSubmit={handleSave} className="space-y-4">
               <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-100">
-                <div className="mb-1 flex items-center gap-2 font-medium">
-                  <AlertTriangle className="h-4 w-4" />
-                  Rollout order
-                </div>
-                <ol className="list-decimal space-y-1 pl-5">
-                  <li>Ship new APK to Play Store (higher versionCode)</li>
-                  <li>Wait until rollout is live</li>
-                  <li>Then raise min supported version code here</li>
-                </ol>
+                <ul className="space-y-1">
+                  <li><strong>Min supported version code</strong> — blocks the app if a user&apos;s installed versionCode is lower. Raise this to force an update.</li>
+                  <li><strong>Min supported version</strong> — display label for the minimum version (e.g. 6.1.0).</li>
+                  <li><strong>Latest version code / version</strong> — display only; shown on the update screen.</li>
+                  <li><strong>Play Store update URL</strong> — link opened when the user taps update.</li>
+                  <li><strong>Blocking screen message</strong> — text shown when the app is blocked.</li>
+                </ul>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
