@@ -20,6 +20,7 @@ import {
   Bell,
   List,
   Quote,
+  Smartphone,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -47,6 +48,7 @@ export default function Sidebar({
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
+    { name: "App Version", href: "/bossdashboard/app-version", icon: Smartphone },
     { name: "Notifications", href: "/bossdashboard/notifications", icon: Bell },
     { name: "Send Email", href: "/bossdashboard/send-email", icon: Mail },
     // { name: "Bulk Email", href: "/bossdashboard/bulk-email", icon: FileText },
