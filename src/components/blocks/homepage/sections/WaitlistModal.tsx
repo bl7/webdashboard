@@ -20,20 +20,6 @@ export const DemoRequestModal = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Show modal after 2 seconds on each page visit
-  useEffect(() => {
-    // Wait for page to fully load first, then show modal after 2 seconds
-    const pageLoadTimer = setTimeout(() => {
-      const timer = setTimeout(() => {
-        setIsOpen(true)
-      }, 2000)
-
-      return () => clearTimeout(timer)
-    }, 1000) // Wait 1 second for page load, then 2 seconds for modal
-
-    return () => clearTimeout(pageLoadTimer)
-  }, []) // Empty dependency array means this runs on every page visit
-
   // Listen for manual open event
   useEffect(() => {
     const handleOpenModal = () => {
