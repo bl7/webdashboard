@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { verifyAuthToken } from "@/lib/auth"
+import { sendMail } from "@/lib/mail"
+import {
+  cancellationRequestReceivedEmail,
+  cancellationRequestAdminEmail,
+} from "@/components/templates/subscriptionEmails"
 
 export async function POST(req: NextRequest) {
   const { role, userUuid } = await verifyAuthToken(req)
@@ -61,11 +66,58 @@ export async function POST(req: NextRequest) {
       )
     }
 
+    const trimmedReason = reason.trim()
+
     // Create cancellation request (NOT actual cancellation)
     await client.query(
       `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
-      [user_id, sub.stripe_subscription_id, reason.trim()]
+      [user_id, sub.stripe_subscription_id, trimmedReason]
     )
+
+    // Fetch user profile for email notifications
+    const profileResult = await client.query(
+      "SELECT full_name, email, company_name FROM user_profiles WHERE user_id = $1",
+      [user_id]
+    )
+    const profile = profileResult.rows[0]
+    const userEmail = profile?.email as string | undefined
+    const userName = (profile?.full_name as string | undefined) || userEmail || "Customer"
+    const planName = (sub.plan_name as string | undefined) || (sub.plan_id as string | undefined) || ""
+
+    if (userEmail) {
+      try {
+        await sendMail({
+          to: userEmail,
+          subject: "We've Received Your Cancellation Request - InstaLabel",
+          bcc: "instalabel.co@gmail.com",
+          body: cancellationRequestReceivedEmail({
+            name: userName,
+            planName,
+            reason: trimmedReason,
+          }),
+        })
+
+        await sendMail({
+          to: "contact@instalabel.co",
+          subject: `URGENT: Cancellation Request from ${userName}`,
+          body: cancellationRequestAdminEmail({
+            name: userName,
+            email: userEmail,
+            companyName: profile?.company_name,
+            planName,
+            reason: trimmedReason,
+            userId: user_id,
+            subscriptionId: sub.stripe_subscription_id,
+          }),
+        })
+      } catch (emailError) {
+        console.error("[CANCELLATION REQUEST] Failed to send notification emails:", emailError)
+      }
+    } else {
+      console.error(
+        `[CANCELLATION REQUEST] No email found for user ${user_id}; skipping notifications`
+      )
+    }
 
     return NextResponse.json({
       success: true,

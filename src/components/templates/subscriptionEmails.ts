@@ -857,6 +857,458 @@ export const cancellationEmail = ({
 </body>
 </html>`
 
+export const cancellationRequestReceivedEmail = ({
+  name,
+  planName,
+  reason,
+}: {
+  name: string
+  planName: string
+  reason: string
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancellation Request Received - InstaLabel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+        .header-content { position: relative; z-index: 1; }
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 8px;
+            filter: brightness(0) invert(1);
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+            color: #fff;
+        }
+        .content { padding: 40px 30px; }
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .intro-text {
+            font-size: 16px;
+            margin-bottom: 32px;
+            color: #333;
+            line-height: 1.7;
+        }
+        .info-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            border-left: 4px solid #667eea;
+        }
+        .info-card h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .info-card p {
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 15px;
+        }
+        .info-card p strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .next-steps { margin: 32px 0; }
+        .next-steps h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .steps-list {
+            list-style: none;
+            padding: 0;
+        }
+        .steps-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            color: #555;
+            font-size: 15px;
+            position: relative;
+            padding-left: 24px;
+        }
+        .steps-list li:last-child { border-bottom: none; }
+        .steps-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .support-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .support-section h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .support-section p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+        .support-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .support-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer p { margin-bottom: 8px; }
+        .footer a { color: #667eea; text-decoration: none; }
+        .footer .divider {
+            margin: 16px 0;
+            height: 1px;
+            background: #34495e;
+        }
+        @media (max-width: 600px) {
+            .email-container { margin: 0; border-radius: 0; }
+            .header, .content { padding: 30px 20px; }
+            .header h1 { font-size: 24px; }
+            .support-links { flex-direction: column; gap: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="header-content">
+                <img src="/long_longwhite.png" alt="InstaLabel" class="logo">
+                <h1>Cancellation Request Received</h1>
+                <p>We've received your request and will be in touch shortly</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="greeting">Hello ${name},</div>
+
+            <div class="intro-text">
+                Thank you for contacting us. We have received your subscription cancellation request and a member of our team will review it and get in touch with you soon.
+            </div>
+
+            <div class="info-card">
+                <h3>Request Summary</h3>
+                <p><strong>Plan:</strong> ${planName || "Your current plan"}</p>
+                <p><strong>Status:</strong> Pending review</p>
+                <p><strong>Reason provided:</strong> ${reason}</p>
+            </div>
+
+            <div class="next-steps">
+                <h3>What happens next</h3>
+                <ul class="steps-list">
+                    <li>Your subscription remains active while we review your request</li>
+                    <li>Our team will contact you within 1–2 business days</li>
+                    <li>No changes will be made until we have spoken with you</li>
+                </ul>
+            </div>
+
+            <div class="support-section">
+                <h3>Need to speak with us sooner?</h3>
+                <p>If you have any questions in the meantime, our team is happy to help.</p>
+                <div class="support-links">
+                    <a href="mailto:support@instalabel.co" class="support-link">Email Support</a>
+                    <a href="tel:+447845447586" class="support-link">Phone Support</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
+            <div class="divider"></div>
+            <p>This email was sent because you submitted a cancellation request.</p>
+            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
+                © ${new Date().getFullYear()} InstaLabel. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>`
+
+export const cancellationRequestAdminEmail = ({
+  name,
+  email,
+  companyName,
+  planName,
+  reason,
+  userId,
+  subscriptionId,
+}: {
+  name: string
+  email: string
+  companyName?: string | null
+  planName: string
+  reason: string
+  userId: string
+  subscriptionId: string
+}) => `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancellation Request - Immediate Attention Required</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+        }
+        .header-content { position: relative; z-index: 1; }
+        .urgent-badge {
+            display: inline-block;
+            background: #ffc107;
+            color: #212529;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+            color: #fff;
+        }
+        .content { padding: 40px 30px; }
+        .alert-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ffc107;
+        }
+        .alert-section h3 {
+            color: #856404;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        .alert-section p {
+            color: #856404;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .info-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 24px 0;
+            border-left: 4px solid #dc3545;
+        }
+        .info-card h3 {
+            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .info-card p {
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 15px;
+        }
+        .info-card p strong {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        .reason-box {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #2c3e50;
+            white-space: pre-wrap;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 24px 0;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+        }
+        .footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 30px;
+            text-align: center;
+            font-size: 14px;
+        }
+        .footer p { margin-bottom: 8px; }
+        .footer .divider {
+            margin: 16px 0;
+            height: 1px;
+            background: #34495e;
+        }
+        @media (max-width: 600px) {
+            .email-container { margin: 0; border-radius: 0; }
+            .header, .content { padding: 30px 20px; }
+            .header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <div class="header-content">
+                <div class="urgent-badge">Immediate Attention</div>
+                <h1>Cancellation Request</h1>
+                <p>A customer has requested to cancel their subscription</p>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="alert-section">
+                <h3>Action required</h3>
+                <p>This user has submitted a cancellation request and needs immediate attention. Please follow up promptly via the Cancellations queue or Users page.</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Customer Details</h3>
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Company:</strong> ${companyName || "N/A"}</p>
+                <p><strong>User ID:</strong> ${userId}</p>
+            </div>
+
+            <div class="info-card">
+                <h3>Subscription Details</h3>
+                <p><strong>Plan:</strong> ${planName || "N/A"}</p>
+                <p><strong>Subscription ID:</strong> ${subscriptionId}</p>
+                <p><strong>Reason:</strong></p>
+                <div class="reason-box">${reason}</div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://app.instalabel.co"}/bossdashboard/cancellations" class="cta-button">
+                    View Cancellation Requests
+                </a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>InstaLabel</strong> - Internal Admin Notification</p>
+            <div class="divider"></div>
+            <p>This email was sent because a customer submitted a cancellation request.</p>
+            <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
+                © ${new Date().getFullYear()} InstaLabel. All rights reserved.
+            </p>
+        </div>
+    </div>
+</body>
+</html>`
+
 // Helper function to format dates consistently
 export const formatDate = (date: Date | string): string => {
   const d = new Date(date)
