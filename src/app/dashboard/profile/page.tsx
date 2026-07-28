@@ -8,6 +8,7 @@ import { logoutToLogin } from "@/lib/client-auth"
 import Billing from "./Billing"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import AdminPinModal from "@/components/dashboard/adminPinModal"
 
 const avatarOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -23,6 +24,7 @@ const ProfileDashboard = () => {
   const [pendingEmail, setPendingEmail] = useState<string | null>(null)
   const [avatar, setAvatar] = useState<number>(1)
   const [showModal, setShowModal] = useState(false)
+  const [showForgotPinModal, setShowForgotPinModal] = useState(false)
 
   // Change PIN states
   const [currentPinDigits, setCurrentPinDigits] = useState<string[]>(["", "", "", ""])
@@ -444,13 +446,33 @@ const ProfileDashboard = () => {
                   {pinError && <p className="mb-4 text-sm text-red-600">{pinError}</p>}
                   {pinSuccess && <p className="mb-4 text-sm text-green-600">{pinSuccess}</p>}
 
-                  <Button onClick={handleChangePin}>Change PIN</Button>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <Button onClick={handleChangePin}>Change PIN</Button>
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPinModal(true)}
+                      className="text-sm font-medium text-primary hover:underline"
+                    >
+                      Forgot PIN?
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <AdminPinModal
+        isOpen={showForgotPinModal}
+        onClose={() => setShowForgotPinModal(false)}
+        startOnForgot
+        onSuccess={() => {
+          setShowForgotPinModal(false)
+          setPinSuccess("PIN reset successful. You can use your new PIN for admin access.")
+          setPinError(null)
+        }}
+      />
 
       {activeTab === "billing" && userId && <Billing />}
 {/* 
