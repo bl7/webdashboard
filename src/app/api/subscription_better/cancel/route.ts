@@ -4,6 +4,10 @@ import { stripe } from "@/lib/stripe"
 import { sendMail } from "@/lib/mail"
 import { cancellationEmail } from "@/components/templates/subscriptionEmails"
 import { verifyAuthToken } from "@/lib/auth"
+import {
+  ensureCancellationStatusColumn,
+  PENDING_CANCELLATION_SQL,
+} from "@/lib/cancellationRequest"
 
 export async function POST(req: NextRequest) {
   const { role, userUuid } = await verifyAuthToken(req)
@@ -112,9 +116,17 @@ export async function POST(req: NextRequest) {
       [user_id]
     )
 
-    // Store cancellation reason
+    // Store cancellation reason; mark any pending requests as processed
+    await ensureCancellationStatusColumn(client)
     await client.query(
-      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
+      `UPDATE subscription_cancellations
+       SET status = 'processed'
+       WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
+      [user_id, sub.stripe_subscription_id]
+    )
+    await client.query(
+      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason, status)
+       VALUES ($1, $2, $3, 'processed')`,
       [user_id, sub.stripe_subscription_id, reason || null]
     )
 
@@ -183,6 +195,7 @@ export async function GET(req: NextRequest) {
     const total = parseInt(countResult.rows[0].count, 10)
 
     // Join subscription to distinguish pending requests vs processed cancellations
+    await ensureCancellationStatusColumn(client)
     const query = `
       SELECT
         c.id,
@@ -190,6 +203,7 @@ export async function GET(req: NextRequest) {
         c.subscription_id,
         c.reason,
         c.cancelled_at AS requested_at,
+        c.status AS request_status,
         p.email,
         p.company_name,
         s.status AS subscription_status,
@@ -213,12 +227,17 @@ export async function GET(req: NextRequest) {
       const cancelAt = row.cancel_at as string | null
       const periodEnd = row.current_period_end as string | null
       const requestedAt = row.requested_at as string
+      const requestStatus = (row.request_status as string | null) || "pending"
 
-      let cancellation_status: "pending" | "scheduled" | "canceled" = "pending"
+      let cancellation_status: "pending" | "scheduled" | "canceled" | "withdrawn" = "pending"
       let status_label = "Action required"
       let effective_at: string | null = null
 
-      if (subStatus === "canceled") {
+      if (requestStatus === "withdrawn") {
+        cancellation_status = "withdrawn"
+        status_label = "Withdrawn"
+        effective_at = requestedAt
+      } else if (subStatus === "canceled") {
         cancellation_status = "canceled"
         status_label = "Cancelled"
         effective_at = periodEnd || requestedAt
@@ -226,6 +245,10 @@ export async function GET(req: NextRequest) {
         cancellation_status = "scheduled"
         status_label = "Scheduled"
         effective_at = periodEnd || cancelAt
+      } else if (requestStatus === "processed") {
+        cancellation_status = "canceled"
+        status_label = "Processed"
+        effective_at = periodEnd || requestedAt
       }
 
       return {

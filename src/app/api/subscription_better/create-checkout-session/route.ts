@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
       [user_id]
     )
     const trialEligible = subCheck.rows.length === 0
-    // Create checkout session with detailed metadata
+    // Billing address is collected on Stripe Checkout / Portal — not from local DB
     const sessionData = {
       customer: customer.id,
       mode: "subscription" as const,
@@ -68,7 +68,11 @@ export async function POST(req: NextRequest) {
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&canceled=true&session_id={CHECKOUT_SESSION_ID}`,
       allow_promotion_codes: true,
-      billing_address_collection: "auto" as const,
+      billing_address_collection: "required" as const,
+      customer_update: {
+        address: "auto" as const,
+        name: "auto" as const,
+      },
     }
     console.log("[CHECKOUT] Creating session with data:", sessionData)
     const session = await stripe.checkout.sessions.create(sessionData)

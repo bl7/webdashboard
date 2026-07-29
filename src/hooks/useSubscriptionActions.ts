@@ -9,7 +9,9 @@ type ActionType =
   | "billing-cycle"
   | "change-plan"
   | "payment-method"
+  | "customer-portal"
   | "cancellation"
+  | "withdraw-cancellation"
   | "cancel-pending"
 
 export function useSubscriptionActions(
@@ -38,13 +40,13 @@ export function useSubscriptionActions(
       })
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || "Failed to reactivate subscription")
+        throw new Error(errorData.error || "Failed to keep subscription")
       }
       await refreshSubscription()
-      toast.success("Subscription reactivated successfully!")
+      toast.success("Subscription kept — you'll continue to be billed as normal.")
       return true
     } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : "Failed to reactivate subscription")
+      toast.error(error instanceof Error ? error.message : "Failed to keep subscription")
       return false
     } finally {
       setActiveAction(null)
@@ -132,6 +134,31 @@ export function useSubscriptionActions(
     }
   }, [userId, authHeaders])
 
+  const openCustomerPortal = useCallback(async () => {
+    if (!userId) return false
+    setActiveAction("customer-portal")
+    try {
+      const response = await fetch("/api/subscription_better/customer-portal", {
+        method: "POST",
+        headers: authHeaders(),
+        body: JSON.stringify({ user_id: userId }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to open Stripe billing portal")
+      }
+      if (!data.url) throw new Error("No portal URL received")
+      window.location.href = data.url
+      return true
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : "Failed to open Stripe billing portal")
+      console.error(error)
+      return false
+    } finally {
+      setActiveAction(null)
+    }
+  }, [userId, authHeaders])
+
   const submitCancellationRequest = useCallback(
     async (reason: string) => {
       if (!userId) return false
@@ -162,6 +189,33 @@ export function useSubscriptionActions(
     },
     [userId, authHeaders, refreshSubscription]
   )
+
+  const withdrawCancellationRequest = useCallback(async () => {
+    if (!userId) return false
+    setActiveAction("withdraw-cancellation")
+    try {
+      const response = await fetch("/api/subscription_better/cancellation-request", {
+        method: "DELETE",
+        headers: authHeaders(),
+        body: JSON.stringify({ user_id: userId }),
+      })
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || "Failed to withdraw cancellation request")
+      }
+      const result = await response.json()
+      await refreshSubscription()
+      toast.success(result.message || "Cancellation request withdrawn. Your plan stays active.")
+      return true
+    } catch (error: unknown) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to withdraw cancellation request"
+      )
+      return false
+    } finally {
+      setActiveAction(null)
+    }
+  }, [userId, authHeaders, refreshSubscription])
 
   const cancelPendingBillingChange = useCallback(async () => {
     if (!userId) return false
@@ -195,7 +249,9 @@ export function useSubscriptionActions(
     changeBillingCycle,
     changePlan,
     openPaymentMethodUpdate,
+    openCustomerPortal,
     submitCancellationRequest,
+    withdrawCancellationRequest,
     cancelPendingBillingChange,
   }
 }

@@ -40,9 +40,8 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
   const endIndex = startIndex + itemsPerPage
   const currentInvoices = invoices.slice(startIndex, endIndex)
 
-  const goToPage = (page: number) => setCurrentPage(Math.max(1, Math.min(page, totalPages)))
   const goToPreviousPage = () => setCurrentPage((prev) => Math.max(1, prev - 1))
-  const goToNextPage = () => setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+  const goToNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages))
 
   const toggleSelect = (id: string) => {
     setSelectedIds((prev) => {
@@ -87,6 +86,7 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
   }
   const allCurrentSelected =
     currentInvoices.length > 0 && currentInvoices.every((inv) => selectedIds.has(inv.id))
+
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
@@ -105,16 +105,18 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
           Download Selected
         </Button>
       </div>
-      <div className="hidden grid-cols-12 px-4 py-2 text-sm font-medium text-muted-foreground md:grid">
+
+      <div className="hidden grid-cols-12 items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground md:grid">
         <div className="col-span-1">
           <Checkbox checked={allCurrentSelected} onCheckedChange={toggleSelectAll} />
         </div>
-        <div className="col-span-4">Plan</div>
-        <div className="col-span-2">Amount</div>
-        <div className="col-span-2">Status</div>
         <div className="col-span-2">Date</div>
-        <div className="col-span-1 text-right"></div>
+        <div className="col-span-4">Description</div>
+        <div className="col-span-2">Status</div>
+        <div className="col-span-2">Amount</div>
+        <div className="col-span-1 text-right">Invoice</div>
       </div>
+
       {invoices.length === 0 ? (
         <div className="text-sm text-muted-foreground">No invoices found.</div>
       ) : (
@@ -131,16 +133,18 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
             return (
               <div
                 key={entry.id}
-                className="grid grid-cols-12 items-center rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow"
+                className="grid grid-cols-12 items-center gap-3 rounded-xl bg-white px-4 py-3 shadow-sm transition hover:shadow"
               >
                 <div className="col-span-1">
                   <Checkbox checked={isSelected} onCheckedChange={() => toggleSelect(entry.id)} />
                 </div>
-                <div className="col-span-4 text-sm font-medium">{planName}</div>
-                <div className="col-span-2 text-sm">{amountFormatted}</div>
-                <div className="col-span-2 text-sm">{formatInvoiceStatus(entry.status)}</div>
-                <div className="col-span-2 text-sm">{dateFormatted}</div>
-                <div className="col-span-1 text-right">
+                <div className="col-span-2 min-w-0 text-sm">{dateFormatted}</div>
+                <div className="col-span-4 min-w-0 truncate text-sm font-medium" title={planName}>
+                  {planName}
+                </div>
+                <div className="col-span-2 min-w-0 text-sm">{formatInvoiceStatus(entry.status)}</div>
+                <div className="col-span-2 min-w-0 text-sm">{amountFormatted}</div>
+                <div className="col-span-1 flex justify-end">
                   {entry.invoice_pdf ? (
                     <a
                       href={entry.invoice_pdf}
@@ -159,7 +163,7 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
           })}
         </div>
       )}
-      {/* Pagination */}
+
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-center gap-2">
           <Button

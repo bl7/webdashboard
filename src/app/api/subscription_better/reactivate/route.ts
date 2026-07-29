@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { stripe } from "@/lib/stripe"
 import { verifyAuthToken } from "@/lib/auth"
+import {
+  ensureCancellationStatusColumn,
+  PENDING_CANCELLATION_SQL,
+} from "@/lib/cancellationRequest"
 
 export async function POST(req: NextRequest) {
   try {
@@ -55,6 +59,14 @@ export async function POST(req: NextRequest) {
       await client.query(
         `UPDATE subscription_better SET cancel_at_period_end = false, cancel_at = NULL, updated_at = NOW() WHERE user_id = $1`,
         [user_id]
+      )
+
+      await ensureCancellationStatusColumn(client)
+      await client.query(
+        `UPDATE subscription_cancellations
+         SET status = 'withdrawn'
+         WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
+        [user_id, sub.stripe_subscription_id]
       )
 
       return NextResponse.json({

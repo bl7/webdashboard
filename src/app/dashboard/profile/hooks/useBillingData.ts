@@ -44,6 +44,20 @@ export interface Subscription {
   created_at?: string
   updated_at?: string
   cancel_at?: string | null
+  stripe_billing?: {
+    name?: string | null
+    email?: string | null
+    phone?: string | null
+    address?: {
+      line1?: string | null
+      line2?: string | null
+      city?: string | null
+      state?: string | null
+      postal_code?: string | null
+      country?: string | null
+      formatted?: string | null
+    } | null
+  } | null
 }
 
 interface UseBillingDataReturn {

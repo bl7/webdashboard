@@ -6,25 +6,39 @@ import {
   cancellationRequestReceivedEmail,
   cancellationRequestAdminEmail,
 } from "@/components/templates/subscriptionEmails"
+import {
+  ensureCancellationStatusColumn,
+  PENDING_CANCELLATION_SQL,
+} from "@/lib/cancellationRequest"
+
+function resolveUserId(
+  role: string,
+  userUuid: unknown,
+  bodyUserId?: string
+): { user_id?: string; error?: NextResponse } {
+  if (role === "user") return { user_id: String(userUuid) }
+  if (role === "boss") {
+    if (!bodyUserId) {
+      return {
+        user_id: undefined,
+        error: NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 }),
+      }
+    }
+    return { user_id: bodyUserId }
+  }
+  return {
+    user_id: undefined,
+    error: NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 }),
+  }
+}
 
 export async function POST(req: NextRequest) {
   const { role, userUuid } = await verifyAuthToken(req)
   const body = (await req.json()) as { user_id?: string; reason?: string }
-  let user_id: string | undefined = body?.user_id
+  const resolved = resolveUserId(role, userUuid, body?.user_id)
+  if (resolved.error) return resolved.error
+  const user_id = resolved.user_id
   const reason: string | undefined = body?.reason
-
-  // Authorization rules:
-  // - boss: may create cancellation request for any user_id (must be provided)
-  // - user: may create cancellation request only for themselves; ignore/override provided user_id
-  if (role === "user") {
-    user_id = String(userUuid)
-  } else if (role === "boss") {
-    if (!user_id) {
-      return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
-    }
-  } else {
-    return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 })
-  }
 
   if (!user_id) {
     return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
@@ -40,7 +54,8 @@ export async function POST(req: NextRequest) {
   const client = await pool.connect()
 
   try {
-    // Get user's subscription
+    await ensureCancellationStatusColumn(client)
+
     const { rows } = await client.query("SELECT * FROM subscription_better WHERE user_id = $1", [
       user_id,
     ])
@@ -50,9 +65,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "No subscription found" }, { status: 404 })
     }
 
-    // Check if there's already a pending cancellation request
     const existingRequest = await client.query(
-      "SELECT id FROM subscription_cancellations WHERE user_id = $1 AND subscription_id = $2",
+      `SELECT id FROM subscription_cancellations
+       WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
       [user_id, sub.stripe_subscription_id]
     )
 
@@ -68,9 +83,9 @@ export async function POST(req: NextRequest) {
 
     const trimmedReason = reason.trim()
 
-    // Create cancellation request (NOT actual cancellation)
     await client.query(
-      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason) VALUES ($1, $2, $3)`,
+      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason, status)
+       VALUES ($1, $2, $3, 'pending')`,
       [user_id, sub.stripe_subscription_id, trimmedReason]
     )
 
@@ -126,6 +141,69 @@ export async function POST(req: NextRequest) {
     })
   } catch (error: any) {
     console.error("Cancellation request error:", error)
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 })
+  } finally {
+    client.release()
+  }
+}
+
+/** Withdraw a pending cancellation request (does not touch Stripe). */
+export async function DELETE(req: NextRequest) {
+  const { role, userUuid } = await verifyAuthToken(req)
+  const body = (await req.json().catch(() => ({}))) as { user_id?: string }
+  const resolved = resolveUserId(role, userUuid, body?.user_id)
+  if (resolved.error) return resolved.error
+  const user_id = resolved.user_id
+
+  if (!user_id) {
+    return NextResponse.json({ success: false, error: "Missing user_id" }, { status: 400 })
+  }
+
+  const client = await pool.connect()
+  try {
+    await ensureCancellationStatusColumn(client)
+
+    const { rows } = await client.query(
+      "SELECT stripe_subscription_id, cancel_at_period_end, cancel_at, status FROM subscription_better WHERE user_id = $1",
+      [user_id]
+    )
+    const sub = rows[0]
+    if (!sub) {
+      return NextResponse.json({ success: false, error: "No subscription found" }, { status: 404 })
+    }
+
+    if (sub.cancel_at_period_end || sub.cancel_at || sub.status === "canceled") {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Cancellation is already scheduled. Use Keep subscription to resume billing instead.",
+        },
+        { status: 400 }
+      )
+    }
+
+    const result = await client.query(
+      `UPDATE subscription_cancellations
+       SET status = 'withdrawn'
+       WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}
+       RETURNING id`,
+      [user_id, sub.stripe_subscription_id]
+    )
+
+    if (result.rows.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "No pending cancellation request to withdraw" },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "Cancellation request withdrawn. Your plan stays active.",
+    })
+  } catch (error: any) {
+    console.error("Withdraw cancellation request error:", error)
     return NextResponse.json({ success: false, error: error.message }, { status: 500 })
   } finally {
     client.release()

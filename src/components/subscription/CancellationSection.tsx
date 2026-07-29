@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Dialog,
@@ -10,30 +9,42 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
-import { X, MessageSquare, Loader2 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Loader2 } from "lucide-react"
 import type { Subscription } from "@/app/dashboard/profile/hooks/useBillingData"
 
 interface Props {
   subscription: Subscription | null
   cancellationRequestPending?: boolean
   onSubmitRequest: (reason: string) => Promise<boolean>
+  onWithdrawRequest?: () => Promise<boolean>
   loading?: boolean
+  withdrawLoading?: boolean
 }
 
 export function CancellationSection({
   subscription,
   cancellationRequestPending = false,
   onSubmitRequest,
+  onWithdrawRequest,
   loading = false,
+  withdrawLoading = false,
 }: Props) {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [withdrawConfirmOpen, setWithdrawConfirmOpen] = useState(false)
   const [reason, setReason] = useState("")
 
   if (!subscription || subscription.status === "canceled") return null
   if (subscription.cancel_at_period_end || subscription.cancel_at) return null
-  if (cancellationRequestPending) return null
 
   const handleSubmit = async () => {
     if (!reason.trim()) return
@@ -44,76 +55,125 @@ export function CancellationSection({
     }
   }
 
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-red-600">
-          <X className="h-5 w-5" />
-          Request Cancellation
-        </CardTitle>
-        <CardDescription>
-          Submit a cancellation request. We&apos;ll review it and process it within 1–2 business
-          days.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogTrigger asChild>
-            <Button variant="destructive" className="w-full">
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Request Cancellation
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Request Subscription Cancellation</DialogTitle>
-              <DialogDescription>
-                Please tell us why you&apos;d like to cancel. This helps us improve our service.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="space-y-2">
-                <label htmlFor="cancel-reason" className="text-sm font-medium">
-                  Reason for cancellation *
-                </label>
-                <Textarea
-                  id="cancel-reason"
-                  placeholder="Please provide your reason for cancelling..."
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  className="min-h-[100px]"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsDialogOpen(false)
-                  setReason("")
-                }}
-                disabled={loading}
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleSubmit}
-                disabled={loading || !reason.trim()}
-                variant="destructive"
-              >
-                {loading ? (
+  const handleWithdraw = async () => {
+    if (!onWithdrawRequest) return
+    const ok = await onWithdrawRequest()
+    if (ok) setWithdrawConfirmOpen(false)
+  }
+
+  if (cancellationRequestPending) {
+    return (
+      <>
+        <AlertDialog open={withdrawConfirmOpen} onOpenChange={setWithdrawConfirmOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Withdraw cancellation request?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Your request will be cancelled and your plan stays active. Billing continues as
+                normal — nothing changes in Stripe.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={withdrawLoading}>Keep request</AlertDialogCancel>
+              <Button onClick={handleWithdraw} disabled={withdrawLoading}>
+                {withdrawLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Submitting...
+                    Withdrawing…
                   </>
                 ) : (
-                  "Submit Request"
+                  "Withdraw request"
                 )}
               </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <section className="rounded-xl border border-zinc-200 bg-white px-5 py-5">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-base font-semibold text-zinc-900">Cancel</h2>
+              <p className="mt-1 text-sm text-zinc-500">
+                Cancellation request pending review. Nothing changes until we process it.
+              </p>
             </div>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+            {onWithdrawRequest && (
+              <Button
+                variant="outline"
+                className="shrink-0"
+                onClick={() => setWithdrawConfirmOpen(true)}
+                disabled={withdrawLoading}
+              >
+                Withdraw request
+              </Button>
+            )}
+          </div>
+        </section>
+      </>
+    )
+  }
+
+  return (
+    <>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Cancel subscription</DialogTitle>
+            <DialogDescription>
+              Tell us why you&apos;re leaving. We&apos;ll review your request within 1–2 business
+              days. Your plan stays active until then.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-2">
+            <div className="space-y-2">
+              <label htmlFor="cancel-reason" className="text-sm font-medium text-zinc-900">
+                Reason *
+              </label>
+              <Textarea
+                id="cancel-reason"
+                placeholder="What made you decide to cancel?"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
+          </div>
+          <div className="flex justify-end gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsDialogOpen(false)
+                setReason("")
+              }}
+              disabled={loading}
+            >
+              Keep subscription
+            </Button>
+            <Button onClick={handleSubmit} disabled={loading || !reason.trim()} variant="outline">
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Submitting…
+                </>
+              ) : (
+                "Submit request"
+              )}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <section className="rounded-xl border border-zinc-200 bg-white px-5 py-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-zinc-900">Cancel</h2>
+            <p className="mt-1 text-sm text-zinc-500">We&apos;ll be sad to see you go.</p>
+          </div>
+          <Button variant="outline" className="shrink-0" onClick={() => setIsDialogOpen(true)}>
+            Cancel
+          </Button>
+        </div>
+      </section>
+    </>
   )
 }
