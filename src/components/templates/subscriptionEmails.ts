@@ -284,6 +284,27 @@ export const newSubscriptionEmail = ({
                     Access Your Dashboard
                 </a>
             </div>
+
+            <div class="info-card">
+                <h3>Getting Started — Recommended Tutorials</h3>
+                <p style="margin-bottom: 16px;">
+                    To help you get started quickly, we recommend reviewing the short video guides below.
+                    These walk through the most important first steps: importing your menu data and connecting your printer with PrintBridge.
+                </p>
+                <p style="margin-bottom: 12px;">
+                    <strong>1. Import your menu from Excel</strong><br>
+                    Learn how to upload menu items and ingredients so your kitchen data is ready for labeling.<br>
+                    <a href="https://www.youtube.com/watch?v=NPSIOvzwJ-s" style="color: #667eea; font-weight: 600; text-decoration: none;">Watch Excel Upload Tutorial →</a>
+                </p>
+                <p style="margin-bottom: 0;">
+                    <strong>2. Set up PrintBridge (Mac / Windows)</strong><br>
+                    If you will be printing from a Mac or Windows computer, watch this guide to install and configure PrintBridge so your thermal printer connects seamlessly to InstaLabel.<br>
+                    <a href="https://www.youtube.com/watch?v=wmM91-Q3fbw" style="color: #667eea; font-weight: 600; text-decoration: none;">Watch PrintBridge Setup →</a>
+                </p>
+                <p style="margin-top: 12px; margin-bottom: 0;">
+                    You can also find these guides anytime under <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/tutorials" style="color: #667eea; font-weight: 600; text-decoration: none;">Dashboard → Tutorials</a>.
+                </p>
+            </div>
             
             <div class="next-steps">
                 <h3>🚀 Quick Start Guide</h3>

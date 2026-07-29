@@ -21,8 +21,8 @@ const TUTORIALS: Tutorial[] = [
   },
   {
     id: "tutorial-2",
-    title: "How to Install Print Bridge for Windows",
-    description: "Learn how to use InstaLabel features",
+    title: "How to Install PrintBridge (Mac / Windows)",
+    description: "Learn how to install and set up PrintBridge on Mac or Windows",
     videoUrl: "https://www.youtube.com/embed/wmM91-Q3fbw",
     duration: "TBD",
   },
