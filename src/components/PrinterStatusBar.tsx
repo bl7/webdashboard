@@ -78,7 +78,10 @@ export default function PrinterStatusBar() {
         {/* Test Server Button for Disconnected State */}
         {!connectionInfo.isConnected && (
           <button
-            onClick={() => window.open(`http://localhost:8080`, '_blank', 'noopener,noreferrer')}
+            onClick={() => {
+              window.open("http://localhost:5000", "_blank", "noopener,noreferrer")
+              connectionInfo.reconnect()
+            }}
             className="rounded bg-purple-600 px-3 py-1 text-xs text-white hover:bg-purple-700"
           >
             Test Connection
