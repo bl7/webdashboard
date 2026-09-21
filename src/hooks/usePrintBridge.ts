@@ -22,6 +22,27 @@ interface PrintBridgePrinter {
   isDefault: boolean;
 }
 
+const PRINTBRIDGE_DASHBOARD = "http://127.0.0.1:5000"
+const PRINTBRIDGE_WS_WINDOWS = "ws://127.0.0.1:8080/ws"
+const PRINTBRIDGE_WS_MAC = "ws://127.0.0.1:8080"
+
+async function requestLoopbackAccess() {
+  if (typeof window === "undefined" || window.location.protocol !== "https:") {
+    return
+  }
+
+  try {
+    await fetch(`${PRINTBRIDGE_DASHBOARD}/api/printers`, {
+      mode: "no-cors",
+      cache: "no-store",
+      // Chrome Local Network Access: required so an HTTPS site may talk to loopback.
+      targetAddressSpace: "loopback",
+    } as RequestInit)
+  } catch {
+    // Permission denied or PrintBridge not running — WebSocket connect will surface the error.
+  }
+}
+
 export const usePrintBridge = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [printers, setPrinters] = useState<PrintBridgePrinter[]>([]);
@@ -31,7 +52,9 @@ export const usePrintBridge = () => {
   const [error, setError] = useState<string | null>(null);
   const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
   const wsRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
+  const everConnectedRef = useRef(false)
+  const connectGenRef = useRef(0)
 
   // Detect OS on mount
   useEffect(() => {
@@ -49,110 +72,117 @@ export const usePrintBridge = () => {
   }, []);
 
   const getWebSocketUrl = () => {
-    // Mac users connect to ws://localhost:8080 (legacy endpoint)
-    // Windows users connect to ws://localhost:8080/ws (PrintBridge endpoint)
-    if (osType === 'mac') {
-      return 'ws://localhost:8080';
-    } else {
-      return 'ws://localhost:8080/ws';
+    // Dashboard UI is :5000. Print jobs go over WebSocket on :8080.
+    if (osType === "mac") {
+      return PRINTBRIDGE_WS_MAC
     }
-  };
+    return PRINTBRIDGE_WS_WINDOWS
+  }
 
   const connect = () => {
+    const gen = ++connectGenRef.current
     try {
-      setLoading(true);
-      setError(null);
-      
-      // Close existing connection if any
+      setLoading(true)
+      setError(null)
+
+      // Fire in parallel. Do not await: Chrome needs the WebSocket to open
+      // on the same user-gesture stack as Test Connection.
+      void requestLoopbackAccess()
+
       if (wsRef.current) {
-        wsRef.current.close();
+        wsRef.current.close()
       }
 
-      const wsUrl = getWebSocketUrl();
-      console.log(`🔌 Connecting to ${osType} endpoint: ${wsUrl}`);
-      
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
+      const wsUrl = getWebSocketUrl()
+      console.log(`🔌 Connecting to ${osType} endpoint: ${wsUrl}`)
+
+      const ws = new WebSocket(wsUrl)
+      wsRef.current = ws
 
       ws.onopen = () => {
+        if (gen !== connectGenRef.current) return
         console.log(`✅ Connected to ${osType} server at ${wsUrl}`);
+        everConnectedRef.current = true
         setIsConnected(true);
         setError(null);
         setLoading(false);
       };
 
-      ws.onmessage = (event) => {
-        try {
-          const data: PrintBridgeMessage = JSON.parse(event.data);
-          console.log(`📨 Received from ${osType} server:`, data);
+        ws.onmessage = (event) => {
+          try {
+            const data: PrintBridgeMessage = JSON.parse(event.data);
+            console.log(`📨 Received from ${osType} server:`, data);
 
-          if (data.type === 'connection' || data.type === 'status') {
-            // Handle both PrintBridge and legacy server responses
-            let printerNames: string[] = [];
-            
-            if (data.printers && Array.isArray(data.printers)) {
-              // PrintBridge format: array of printer names
-              printerNames = data.printers;
-            } else if (data.status && typeof data.status === 'object' && 'printers' in data.status) {
-              // Legacy format: nested printers object
-              const statusPrinters = (data.status as any).printers;
-              if (Array.isArray(statusPrinters)) {
-                printerNames = statusPrinters.map((p: any) => p.name || p);
+            if (data.type === 'connection' || data.type === 'status') {
+              // Handle both PrintBridge and legacy server responses
+              let printerNames: string[] = [];
+              
+              if (data.printers && Array.isArray(data.printers)) {
+                // PrintBridge format: array of printer names
+                printerNames = data.printers;
+              } else if (data.status && typeof data.status === 'object' && 'printers' in data.status) {
+                // Legacy format: nested printers object
+                const statusPrinters = (data.status as any).printers;
+                if (Array.isArray(statusPrinters)) {
+                  printerNames = statusPrinters.map((p: any) => p.name || p);
+                }
               }
+
+              // Convert printer names to PrintBridgePrinter objects
+              const printerObjects: PrintBridgePrinter[] = printerNames.map((name, index) => ({
+                name,
+                systemName: name,
+                driverName: name,
+                state: 'Ready',
+                location: 'Local',
+                isDefault: index === 0 // First printer is default
+              }));
+              
+              setPrinters(printerObjects);
+              
+              if (data.defaultPrinter) {
+                const defaultPrinterObj = printerObjects.find(p => p.name === data.defaultPrinter) || printerObjects[0];
+                setDefaultPrinter(defaultPrinterObj || null);
+              } else if (printerObjects.length > 0) {
+                setDefaultPrinter(printerObjects[0]);
+              }
+              
+              console.log(`🖨️ Printers discovered on ${osType}:`, printerObjects);
             }
 
-            // Convert printer names to PrintBridgePrinter objects
-            const printerObjects: PrintBridgePrinter[] = printerNames.map((name, index) => ({
-              name,
-              systemName: name,
-              driverName: name,
-              state: 'Ready',
-              location: 'Local',
-              isDefault: index === 0 // First printer is default
-            }));
-            
-            setPrinters(printerObjects);
-            
-            if (data.defaultPrinter) {
-              const defaultPrinterObj = printerObjects.find(p => p.name === data.defaultPrinter) || printerObjects[0];
-              setDefaultPrinter(defaultPrinterObj || null);
-            } else if (printerObjects.length > 0) {
-              setDefaultPrinter(printerObjects[0]);
+            if (data.success !== undefined) {
+              setLastPrintResult(data);
+              console.log(`🖨️ Print job result on ${osType}:`, data);
             }
-            
-            console.log(`🖨️ Printers discovered on ${osType}:`, printerObjects);
+
+            if (data.type === 'error') {
+              setError(data.message || `${osType} server error`);
+            }
+          } catch (error) {
+            console.error(`❌ Error parsing ${osType} server message:`, error);
           }
+        };
 
-          if (data.success !== undefined) {
-            setLastPrintResult(data);
-            console.log(`🖨️ Print job result on ${osType}:`, data);
+        ws.onclose = () => {
+          if (gen !== connectGenRef.current) return
+          console.log(`🔌 Disconnected from ${osType} server`);
+          setIsConnected(false);
+          setPrinters([]);
+          setDefaultPrinter(null);
+          setLoading(false);
+
+          if (everConnectedRef.current) {
+            reconnectTimeoutRef.current = setTimeout(connect, 3000);
           }
+        };
 
-          if (data.type === 'error') {
-            setError(data.message || `${osType} server error`);
-          }
-        } catch (error) {
-          console.error(`❌ Error parsing ${osType} server message:`, error);
-        }
-      };
-
-      ws.onclose = () => {
-        console.log(`🔌 Disconnected from ${osType} server`);
-        setIsConnected(false);
-        setPrinters([]);
-        setDefaultPrinter(null);
-        setLoading(false);
-        
-        // Auto-reconnect after 3 seconds
-        reconnectTimeoutRef.current = setTimeout(connect, 3000);
-      };
-
-      ws.onerror = (error) => {
-        console.error(`❌ ${osType} WebSocket error:`, error);
-        setIsConnected(false);
-        setError(`Failed to connect to ${osType} server`);
-        setLoading(false);
-      };
+        ws.onerror = (error) => {
+          if (gen !== connectGenRef.current) return
+          console.error(`❌ ${osType} WebSocket error:`, error);
+          setIsConnected(false);
+          setError(`Failed to connect to ${osType} server`);
+          setLoading(false);
+        };
     } catch (error) {
       console.error(`❌ ${osType} connection error:`, error);
       setIsConnected(false);
@@ -205,8 +235,11 @@ export const usePrintBridge = () => {
   };
 
   const reconnect = () => {
-    disconnect();
-    setTimeout(connect, 1000);
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current);
+    }
+    // Keep this on the click stack so Chrome can show the local-network permission prompt.
+    connect();
   };
 
   useEffect(() => {
@@ -230,4 +263,4 @@ export const usePrintBridge = () => {
     disconnect,
     reconnect
   };
-}; 
+};
