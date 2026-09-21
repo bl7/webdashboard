@@ -205,10 +205,6 @@ const nextConfig = {
             key: "Referrer-Policy",
             value: "no-referrer-when-downgrade",
           },
-          {
-            key: "Permissions-Policy",
-            value: "loopback-network=(self), local-network=(self)",
-          },
         ],
       },
       // Asset caching headers

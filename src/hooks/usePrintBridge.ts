@@ -22,9 +22,9 @@ interface PrintBridgePrinter {
   isDefault: boolean;
 }
 
-const PRINTBRIDGE_DASHBOARD = "http://127.0.0.1:5000"
-const PRINTBRIDGE_WS_WINDOWS = "ws://127.0.0.1:8080/ws"
-const PRINTBRIDGE_WS_MAC = "ws://127.0.0.1:8080"
+const PRINTBRIDGE_DASHBOARD = "http://localhost:5000"
+const PRINTBRIDGE_WS_WINDOWS = "ws://localhost:8080/ws"
+const PRINTBRIDGE_WS_MAC = "ws://localhost:8080"
 
 async function requestLoopbackAccess() {
   if (typeof window === "undefined" || window.location.protocol !== "https:") {
@@ -53,6 +53,7 @@ export const usePrintBridge = () => {
   const [osType, setOsType] = useState<'mac' | 'windows' | 'other'>('other');
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
+  const retryTimeoutsRef = useRef<NodeJS.Timeout[]>([])
   const everConnectedRef = useRef(false)
   const connectGenRef = useRef(0)
 
@@ -195,6 +196,8 @@ export const usePrintBridge = () => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
+    retryTimeoutsRef.current.forEach(clearTimeout)
+    retryTimeoutsRef.current = []
     if (wsRef.current) {
       wsRef.current.close();
     }
@@ -238,8 +241,20 @@ export const usePrintBridge = () => {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
+    retryTimeoutsRef.current.forEach(clearTimeout)
+    retryTimeoutsRef.current = []
     // Keep this on the click stack so Chrome can show the local-network permission prompt.
     connect();
+    // Chrome 147+ often fails the first localhost WebSocket if the user takes a
+    // few seconds to allow local-network access. Retry after the prompt.
+    retryTimeoutsRef.current.push(
+      setTimeout(() => {
+        if (wsRef.current?.readyState !== WebSocket.OPEN) connect()
+      }, 2500),
+      setTimeout(() => {
+        if (wsRef.current?.readyState !== WebSocket.OPEN) connect()
+      }, 6000)
+    )
   };
 
   useEffect(() => {

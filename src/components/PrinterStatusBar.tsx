@@ -79,9 +79,8 @@ export default function PrinterStatusBar() {
         {!connectionInfo.isConnected && (
           <button
             onClick={() => {
-              // Must stay on this origin: opening :5000 in a new tab does not grant
-              // the hosted dashboard permission to use PrintBridge on :8080.
               connectionInfo.reconnect()
+              window.open("http://localhost:5000", "_blank", "noopener,noreferrer")
             }}
             className="rounded bg-purple-600 px-3 py-1 text-xs text-white hover:bg-purple-700"
           >
