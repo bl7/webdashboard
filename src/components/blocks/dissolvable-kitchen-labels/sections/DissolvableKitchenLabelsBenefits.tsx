@@ -37,8 +37,8 @@ export const DissolvableKitchenLabelsBenefits = () => (
           transition={{ duration: 0.7, delay: 0.1 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Clock className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Clock className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Massive Time Savings</h3>
           <p className="mb-4 text-gray-600">
@@ -46,7 +46,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
             That's a 95% reduction in labeling time, allowing your kitchen staff to focus on food
             preparation instead of manual labeling.
           </p>
-          <div className="text-sm font-semibold text-purple-600">✓ 95% faster label generation</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ 95% faster label generation</div>
         </motion.div>
 
         {/* Benefit 2 */}
@@ -57,8 +57,8 @@ export const DissolvableKitchenLabelsBenefits = () => (
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Shield className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Built for Compliance</h3>
           <p className="mb-4 text-gray-600">
@@ -66,7 +66,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
             compliance errors, food safety violations, or EHO inspection issues. InstaLabel ensures
             perfect formatting every single time.
           </p>
-          <div className="text-sm font-semibold text-purple-600">✓ Zero compliance errors</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ Zero compliance errors</div>
         </motion.div>
 
         {/* Benefit 3 */}
@@ -77,8 +77,8 @@ export const DissolvableKitchenLabelsBenefits = () => (
           transition={{ duration: 0.7, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <DollarSign className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <DollarSign className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Reduced Food Waste</h3>
           <p className="mb-4 text-gray-600">
@@ -86,7 +86,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
             incorrect labeling. InstaLabel's AI ensures every dissolvable label contains precise,
             legible information.
           </p>
-          <div className="text-sm font-semibold text-purple-600">✓ 20-30% less food waste</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ 20-30% less food waste</div>
         </motion.div>
 
         {/* Benefit 4 */}
@@ -97,8 +97,8 @@ export const DissolvableKitchenLabelsBenefits = () => (
           transition={{ duration: 0.7, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Users className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Users className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Staff Efficiency</h3>
           <p className="mb-4 text-gray-600">
@@ -106,7 +106,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
             error prevention and guidance ensure consistent, high-quality dissolvable labels
             regardless of staff experience.
           </p>
-          <div className="text-sm font-semibold text-purple-600">✓ 5-minute staff training</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ 5-minute staff training</div>
         </motion.div>
       </div>
 
@@ -118,10 +118,10 @@ export const DissolvableKitchenLabelsBenefits = () => (
         transition={{ duration: 0.7, delay: 0.5 }}
         viewport={{ once: true }}
       >
-        <div className="rounded-lg bg-purple-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-purple-600">95%</div>
-          <div className="text-sm font-medium text-purple-800">Time Saved</div>
-          <div className="mt-1 text-xs text-purple-600">From 35 minutes to 30 seconds</div>
+        <div className="rounded-lg bg-mkt-canvas p-6 text-center">
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">95%</div>
+          <div className="text-sm font-medium text-mkt-ink">Time Saved</div>
+          <div className="mt-1 text-xs text-mkt-teal">From 35 minutes to 30 seconds</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
           <div className="mb-2 text-3xl font-bold text-green-600">100%</div>

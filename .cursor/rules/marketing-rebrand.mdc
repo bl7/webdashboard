@@ -1,0 +1,38 @@
+---
+description: Marketing rebrand — source of truth
+alwaysApply: true
+---
+
+# Marketing rebrand — source of truth
+
+Before any marketing change, even a minor one, read and cross-check:
+
+`docs/InstaLabel_Professional_Rebrand_and_Cursor_Implementation_Brief.md`
+
+That brief is the only source of truth for this overhaul.
+
+## Hard scope
+
+- Marketing / public pages only.
+- **Do not change the customer dashboard, boss dashboard, authentication, billing/checkout, or application behaviour.**
+- Preserve existing public URLs where practical; retired URLs get a one-hop 301.
+- Do not invent product capabilities, stats, compliance outcomes, printer support, testimonials or `[VERIFY]` facts.
+
+## Do not ruin the site
+
+Never change these unless a human explicitly asks:
+
+- **Logo files and markup:** `/logo_long.svg`, `/long_longwhite.png`, `/logo_sm.png`. Do not replace with a wordmark placeholder.
+- **Existing image `src`s and renderer labels.** Restyle around them. No stock, AI, or invented label graphics.
+- **Hero composition:** image/video position, text-to-media relationship, CTA count/placement, responsive flex direction.
+- **Evidence sections:** before/after, customer logos, label galleries, product screenshots, printer photos.
+- **Dashboard, auth, billing, checkout, `button.tsx` default variants, and global `--primary`.** Marketing tokens must be scoped (e.g. `.marketing`).
+
+## Product truth
+
+- Positioning: professional kitchen labelling that works with equipment businesses already have.
+- Desktop: PrintBridge uses OS-installed printers. Android: model-specific (verified **MUNBYN RW411B**, **Born4Ship DB403**; Rongta only with exact model).
+- Correct **RW114B → RW411B** after confirming RW114B is not a separate model.
+- Pricing and trial terms must come from the live billing source. UK English. One primary CTA: **Start free trial**.
+
+If a requested change conflicts with the brief, follow the brief and refuse the conflicting part.

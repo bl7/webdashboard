@@ -6,7 +6,7 @@ import { CheckCircle, Clock, Shield, Users, Zap } from "lucide-react"
 export const DefrostLabelsBenefits = () => {
   const benefits = [
     {
-      icon: <Shield className="h-8 w-8 text-blue-600" />,
+      icon: <Shield className="h-8 w-8 text-mkt-teal" />,
       title: "HACCP Compliance",
       description:
         "Meet all HACCP requirements with automated defrost tracking and proper documentation for food safety audits.",
@@ -18,7 +18,7 @@ export const DefrostLabelsBenefits = () => {
         "Automatically track defrost start times, duration, and responsible staff to ensure proper food handling procedures.",
     },
     {
-      icon: <Users className="h-8 w-8 text-purple-600" />,
+      icon: <Users className="h-8 w-8 text-mkt-teal" />,
       title: "Staff Accountability",
       description:
         "Clear staff identification on every label ensures proper responsibility tracking and training opportunities.",
@@ -59,7 +59,7 @@ export const DefrostLabelsBenefits = () => {
           ))}
         </div>
 
-        <div className="mt-16 rounded-lg bg-blue-50 p-8">
+        <div className="mt-16 rounded-lg bg-mkt-canvas p-8">
           <div className="text-center">
             <h3 className="mb-4 text-2xl font-bold text-gray-900">
               Ready to Improve Your Defrost Process?
@@ -68,12 +68,20 @@ export const DefrostLabelsBenefits = () => {
               Start creating compliant defrost labels in minutes with InstaLabel's automated system.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <button className="rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
+              <a
+                href="/register"
+                className="rounded-lg px-8 py-3 text-center font-semibold text-white"
+                style={{ backgroundColor: "#142124" }}
+              >
                 Start Free Trial
-              </button>
-              <button className="rounded-lg border border-blue-600 px-8 py-3 font-semibold text-blue-600 transition-colors hover:bg-blue-50">
+              </a>
+              <a
+                href="/bookdemo"
+                className="rounded-lg border px-8 py-3 text-center font-semibold"
+                style={{ borderColor: "#142124", color: "#142124" }}
+              >
                 Book Demo
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/components/ui"
 import Image from "next/image"
-import { Menu as MenuIcon, X as CloseIcon } from "lucide-react"
+import { Menu as MenuIcon } from "lucide-react"
 import { MobileMenu } from "@/components/navigation/mobile-menu"
 
 const navItems = [
@@ -40,8 +39,8 @@ export const Header = () => {
       className={cn(
         "fixed left-0 right-0 top-0 z-50 w-full border-b transition-all duration-500 ease-out",
         isScrolled
-          ? "border-purple-200/30 bg-white/95 shadow-xl backdrop-blur-xl"
-          : "border-purple-200/20 bg-white/85 backdrop-blur-lg"
+          ? "border-mkt-steel1 bg-white/95 shadow-sm backdrop-blur-xl"
+          : "border-mkt-steel1/60 bg-white/90 backdrop-blur-lg"
       )}
     >
       <div className="container flex h-16 items-center justify-between px-2 sm:h-20 sm:px-4 md:px-12 lg:px-16">
@@ -76,13 +75,13 @@ export const Header = () => {
                 className={cn(
                   "relative transition-all duration-300 hover:scale-105",
                   isActive(item.href)
-                    ? "font-bold text-purple-700"
-                    : "text-gray-700 hover:text-purple-600"
+                    ? "font-bold text-mkt-ink"
+                    : "text-mkt-ink8 hover:text-mkt-teal"
                 )}
               >
                 {item.label}
                 {isActive(item.href) && (
-                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600" />
+                  <div className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full" style={{ backgroundColor: "#142124" }} />
                 )}
               </Link>
             ))}
@@ -90,31 +89,26 @@ export const Header = () => {
           <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/register"
-              className={cn(
-                buttonVariants({ variant: "default", size: "sm" }),
-                "h-9 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 text-sm font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl sm:h-11 sm:px-6 sm:text-base"
-              )}
+              className="inline-flex h-9 items-center rounded-md px-4 text-sm font-semibold text-white sm:h-11 sm:px-6 sm:text-base"
+              style={{ backgroundColor: "#142124", backgroundImage: "none" }}
             >
-              Free Trial
+              Start free trial
             </Link>
             <Link
               href="/login"
-              className={cn(
-                buttonVariants({ variant: "outline", size: "sm" }),
-                "h-9 rounded-full border-2 border-purple-200 px-3 text-sm font-semibold text-purple-700 transition-all duration-300 hover:scale-105 hover:border-purple-300 hover:bg-purple-50 hover:text-purple-800 sm:h-11 sm:px-5 sm:text-base"
-              )}
+              className="inline-flex h-9 items-center px-3 text-sm font-semibold text-mkt-ink hover:text-mkt-teal sm:h-11 sm:px-5 sm:text-base"
             >
-              Sign In
+              Sign in
             </Link>
           </div>
         </div>
         {/* Hamburger for mobile */}
         <button
-          className="flex items-center justify-center rounded-lg p-2 hover:bg-purple-100 focus:outline-none md:hidden"
+          className="flex items-center justify-center rounded-lg p-2 hover:bg-mkt-canvas focus:outline-none md:hidden"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
         >
-          <MenuIcon className="h-7 w-7 text-purple-700" />
+          <MenuIcon className="h-7 w-7 text-mkt-ink" />
         </button>
       </div>
       {/* Mobile Drawer */}

@@ -124,9 +124,9 @@ export const IndustryUseCases = () => {
                   </div>
 
                   {/* Key Benefit */}
-                  <div className="rounded-lg border border-purple-100 bg-gradient-to-r from-purple-50 to-pink-50 p-4">
+                  <div className="rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
                     <div className="mb-2 flex items-center gap-2">
-                      <TrendingUp className="h-5 w-5 text-purple-600" />
+                      <TrendingUp className="h-5 w-5 text-mkt-teal" />
                       <span className="font-semibold text-gray-900">Key Benefit</span>
                     </div>
                     <p className="text-sm text-gray-700">{business.keyBenefit}</p>
@@ -136,7 +136,7 @@ export const IndustryUseCases = () => {
                 {/* Primary Applications */}
                 <div className="lg:col-span-2">
                   <h4 className="mb-4 flex items-center gap-2 text-lg font-semibold text-gray-900">
-                    <Shield className="h-5 w-5 text-purple-600" />
+                    <Shield className="h-5 w-5 text-mkt-teal" />
                     Primary Applications
                   </h4>
                   <div className="grid gap-3 md:grid-cols-2">
@@ -168,7 +168,7 @@ export const IndustryUseCases = () => {
           viewport={{ once: true }}
           className="mt-16 text-center"
         >
-          <div className="rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+          <div className="rounded-2xl border border-mkt-steel1 bg-mkt-canvas p-8">
             <h3 className="mb-4 text-2xl font-bold text-gray-900">
               Ready to See InstaLabel in Your Kitchen?
             </h3>
@@ -177,10 +177,10 @@ export const IndustryUseCases = () => {
               ensure compliance.
             </p>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <button className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-purple-700">
+              <button className="inline-flex items-center gap-2 rounded-lg bg-mkt-ink px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-mkt-ink">
                 Start Free Trial
               </button>
-              <button className="inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-colors duration-200 hover:bg-purple-50">
+              <button className="inline-flex items-center gap-2 rounded-lg border border-mkt-steel1 bg-white px-6 py-3 font-semibold text-mkt-ink transition-colors duration-200 hover:bg-mkt-canvas">
                 Book Demo
               </button>
             </div>

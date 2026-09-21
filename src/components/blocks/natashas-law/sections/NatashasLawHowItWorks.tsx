@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 const solutions = [
   {
-    icon: <Search className="h-7 w-7 text-purple-600" />,
+    icon: <Search className="h-7 w-7 text-mkt-teal" />,
     title: "Automatic Allergen Detection & Highlighting",
     description:
       "InstaLabel automatically identifies allergens in your ingredients and highlights them in red for maximum visibility and compliance.",
@@ -41,7 +41,7 @@ const solutions = [
     ],
   },
   {
-    icon: <Ruler className="h-7 w-7 text-pink-600" />,
+    icon: <Ruler className="h-7 w-7 text-mkt-teal" />,
     title: "80mm Layouts for Maximum Clarity",
     description:
       "Optimized 80mm thermal printer layouts ensure all information is clearly readable and professionally formatted.",
@@ -55,7 +55,7 @@ const solutions = [
 ]
 
 export const NatashasLawHowItWorks = () => (
-  <section className="relative w-full bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto max-w-6xl">
       <motion.div
         className="mb-10 text-center"
@@ -64,7 +64,7 @@ export const NatashasLawHowItWorks = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+        <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
           <Zap className="mr-2 h-4 w-4" />
           How InstaLabel Solves It
         </div>
@@ -120,27 +120,27 @@ export const NatashasLawHowItWorks = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="rounded-xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+        <div className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-8">
           <h4 className="mb-6 text-center text-xl font-bold text-gray-900">
             Simple 3-Step Process
           </h4>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             <div className="text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 font-bold text-white">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                 1
               </div>
               <h5 className="font-semibold text-gray-900">Add Ingredients</h5>
               <p className="text-sm text-gray-600">Enter your recipe ingredients</p>
             </div>
             <div className="text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 font-bold text-white">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                 2
               </div>
               <h5 className="font-semibold text-gray-900">Auto-Format</h5>
               <p className="text-sm text-gray-600">System highlights allergens & formats</p>
             </div>
             <div className="text-center">
-              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 font-bold text-white">
+              <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                 3
               </div>
               <h5 className="font-semibold text-gray-900">Print & Go</h5>

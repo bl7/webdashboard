@@ -6,7 +6,7 @@ import { CheckCircle, Shield, Clock, Users, TrendingUp, Award } from "lucide-rea
 
 export const CookedLabelsBenefits = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -15,7 +15,7 @@ export const CookedLabelsBenefits = () => {
           viewport={{ once: true }}
           className="mb-10 text-center"
         >
-          <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <Award className="mr-2 h-4 w-4" />
             Benefits
           </div>
@@ -151,7 +151,7 @@ export const CookedLabelsBenefits = () => {
           >
             <div className="mb-4 flex items-center gap-3">
               <div className="flex-shrink-0">
-                <Users className="h-7 w-7 text-purple-600" />
+                <Users className="h-7 w-7 text-mkt-teal" />
               </div>
               <h4 className="text-lg font-bold text-gray-900">Staff Accountability & Training</h4>
             </div>
@@ -215,14 +215,14 @@ export const CookedLabelsBenefits = () => {
           viewport={{ once: true }}
           className="mt-12"
         >
-          <div className="rounded-xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+          <div className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-8">
             <h4 className="mb-6 text-center text-xl font-bold text-gray-900">
               Additional Benefits
             </h4>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <TrendingUp className="mt-1 h-5 w-5 text-purple-600" />
+                  <TrendingUp className="mt-1 h-5 w-5 text-mkt-teal" />
                   <div>
                     <h5 className="font-semibold text-gray-900">Improved Kitchen Efficiency</h5>
                     <p className="text-sm text-gray-600">
@@ -231,7 +231,7 @@ export const CookedLabelsBenefits = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Award className="mt-1 h-5 w-5 text-purple-600" />
+                  <Award className="mt-1 h-5 w-5 text-mkt-teal" />
                   <div>
                     <h5 className="font-semibold text-gray-900">Professional Standards</h5>
                     <p className="text-sm text-gray-600">
@@ -242,7 +242,7 @@ export const CookedLabelsBenefits = () => {
               </div>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
-                  <Shield className="mt-1 h-5 w-5 text-purple-600" />
+                  <Shield className="mt-1 h-5 w-5 text-mkt-teal" />
                   <div>
                     <h5 className="font-semibold text-gray-900">Regulatory Compliance</h5>
                     <p className="text-sm text-gray-600">
@@ -251,7 +251,7 @@ export const CookedLabelsBenefits = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Clock className="mt-1 h-5 w-5 text-purple-600" />
+                  <Clock className="mt-1 h-5 w-5 text-mkt-teal" />
                   <div>
                     <h5 className="font-semibold text-gray-900">Time Savings</h5>
                     <p className="text-sm text-gray-600">

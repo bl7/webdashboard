@@ -27,7 +27,7 @@ export const FeatureIntro = () => {
         >
           {/* Image 1 – Natasha's Law */}
           <div className="group relative">
-            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-blue-600/20 to-purple-600/20 opacity-0 blur-xl transition-all duration-700 group-hover:opacity-100" />
+            <div className="absolute -inset-4 rounded-3xl bg-mkt-steel1/40 opacity-0 blur-xl transition-all duration-700 group-hover:opacity-100" />
             <div className="relative rounded-2xl border border-white/20 bg-white/80 p-2 shadow-lg backdrop-blur-sm transition-all duration-500 group-hover:shadow-2xl">
               <div className="relative aspect-[3/2] h-64 w-full sm:h-80 lg:h-96">
                 <Image
@@ -71,9 +71,9 @@ export const FeatureIntro = () => {
           {/* Text 1 – Natasha's Law */}
           <div className="space-y-6">
             <div className="space-y-3">
-              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 lg:mx-0">
+              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-mkt-steel1 bg-mkt-canvas px-4 py-2 lg:mx-0">
                 <span className="text-2xl">📋</span>
-                <span className="text-sm font-medium uppercase tracking-wider text-purple-700">
+                <span className="text-sm font-medium uppercase tracking-wider text-mkt-ink">
                   Regulatory Compliance
                 </span>
               </div>
@@ -88,25 +88,25 @@ export const FeatureIntro = () => {
             </p>
             <div className="grid grid-cols-1 gap-3 pt-4">
               <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-white/60 p-3 backdrop-blur-sm">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-sm text-gray-700">
                   Automatic allergen detection from ingredient database
                 </span>
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-white/60 p-3 backdrop-blur-sm">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-sm text-gray-700">
                   Real-time compliance monitoring and reporting
                 </span>
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-white/60 p-3 backdrop-blur-sm">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-sm text-gray-700">
                   Audit-ready documentation for EHO inspections
                 </span>
               </div>
               <div className="flex items-center gap-3 rounded-lg border border-gray-100 bg-white/60 p-3 backdrop-blur-sm">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-sm text-gray-700">
                   Future-proof against evolving food safety regulations
                 </span>

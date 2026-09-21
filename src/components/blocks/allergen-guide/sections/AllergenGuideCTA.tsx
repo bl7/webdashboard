@@ -38,7 +38,7 @@ export const AllergenGuideCTA = () => {
           >
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
               <div className="mb-3 flex items-center gap-3">
-                <Shield className="h-6 w-6 text-purple-600" />
+                <Shield className="h-6 w-6 text-mkt-teal" />
                 <h3 className="font-semibold text-gray-900">Visual Reference Cards</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -48,7 +48,7 @@ export const AllergenGuideCTA = () => {
 
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
               <div className="mb-3 flex items-center gap-3">
-                <CheckCircle2 className="h-6 w-6 text-purple-600" />
+                <CheckCircle2 className="h-6 w-6 text-mkt-teal" />
                 <h3 className="font-semibold text-gray-900">HACCP Checklists</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -58,7 +58,7 @@ export const AllergenGuideCTA = () => {
 
             <div className="rounded-xl border border-gray-200 bg-gray-50 p-6">
               <div className="mb-3 flex items-center gap-3">
-                <Download className="h-6 w-6 text-purple-600" />
+                <Download className="h-6 w-6 text-mkt-teal" />
                 <h3 className="font-semibold text-gray-900">Training Templates</h3>
               </div>
               <p className="text-sm text-gray-600">
@@ -75,7 +75,7 @@ export const AllergenGuideCTA = () => {
             viewport={{ once: true }}
             className="flex flex-wrap items-center justify-center gap-4"
           >
-            <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+            <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink">
               <Link href="/allergen-compliance">Download Free Toolkit</Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>

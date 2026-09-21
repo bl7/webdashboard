@@ -266,7 +266,7 @@ export const AllergenGuideQuiz = () => {
   }
 
   return (
-    <section id="quiz" className="bg-gradient-to-br from-purple-50 to-pink-50 py-16">
+    <section id="quiz" className="bg-mkt-canvas py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -275,9 +275,9 @@ export const AllergenGuideQuiz = () => {
           viewport={{ once: true }}
           className="mb-12 text-center"
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-purple-100 px-4 py-2">
-            <Brain className="h-5 w-5 text-purple-600" />
-            <span className="text-sm font-medium text-purple-800">Interactive Quiz</span>
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-mkt-canvas px-4 py-2">
+            <Brain className="h-5 w-5 text-mkt-teal" />
+            <span className="text-sm font-medium text-mkt-ink">Interactive Quiz</span>
           </div>
           <h3 className="mb-4 font-accent text-3xl font-bold text-gray-900 sm:text-4xl">
             🍽️ UK Food Safety & Allergen Quiz (10 Questions)
@@ -308,7 +308,7 @@ export const AllergenGuideQuiz = () => {
               </div>
               <div className="h-2 w-full rounded-full bg-gray-200">
                 <div
-                  className="h-2 rounded-full bg-purple-600 transition-all duration-300"
+                  className="h-2 rounded-full bg-mkt-ink transition-all duration-300"
                   style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }}
                 ></div>
               </div>
@@ -327,15 +327,15 @@ export const AllergenGuideQuiz = () => {
                     onClick={() => handleAnswerSelect(currentQuestion, index)}
                     className={`w-full rounded-lg border-2 p-4 text-left transition-all duration-200 ${
                       selectedAnswers[currentQuestion] === index
-                        ? "border-purple-500 bg-purple-50"
-                        : "border-gray-200 hover:border-purple-300 hover:bg-gray-50"
+                        ? "border-mkt-ink bg-mkt-canvas"
+                        : "border-gray-200 hover:border-mkt-steel1 hover:bg-gray-50"
                     }`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`flex h-6 w-6 items-center justify-center rounded-full border-2 ${
                           selectedAnswers[currentQuestion] === index
-                            ? "border-purple-500 bg-purple-500"
+                            ? "border-mkt-ink bg-mkt-canvas0"
                             : "border-gray-300"
                         }`}
                       >
@@ -363,7 +363,7 @@ export const AllergenGuideQuiz = () => {
                   <Button
                     onClick={() => setCurrentQuestion(currentQuestion + 1)}
                     disabled={selectedAnswers[currentQuestion] === -1}
-                    className="bg-purple-600 hover:bg-purple-700"
+                    className="bg-mkt-ink hover:bg-mkt-ink"
                   >
                     Next Question
                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -372,7 +372,7 @@ export const AllergenGuideQuiz = () => {
                   <Button
                     onClick={() => setShowResults(true)}
                     disabled={selectedAnswers[currentQuestion] === -1}
-                    className="bg-purple-600 hover:bg-purple-700"
+                    className="bg-mkt-ink hover:bg-mkt-ink"
                   >
                     See Results
                     <Trophy className="ml-2 h-4 w-4" />
@@ -391,8 +391,8 @@ export const AllergenGuideQuiz = () => {
             {/* Results */}
             <div className="mb-8 rounded-lg bg-white p-8 shadow-lg">
               <div className="mb-8 text-center">
-                <div className="mb-4 inline-flex h-20 w-20 items-center justify-center rounded-full bg-purple-100">
-                  <Trophy className="h-10 w-10 text-purple-600" />
+                <div className="mb-4 inline-flex h-20 w-20 items-center justify-center rounded-full bg-mkt-canvas">
+                  <Trophy className="h-10 w-10 text-mkt-teal" />
                 </div>
                 <h3 className="mb-2 text-2xl font-bold text-gray-900">Quiz Complete!</h3>
                 <div className={`text-4xl font-bold ${getScoreColor()} mb-2`}>
@@ -402,14 +402,14 @@ export const AllergenGuideQuiz = () => {
               </div>
 
               {/* Download CTA */}
-              <div className="mb-8 rounded-lg border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-6 text-center">
+              <div className="mb-8 rounded-lg border border-mkt-steel1 bg-mkt-canvas p-6 text-center">
                 <h4 className="mb-2 font-semibold text-gray-900">
                   Score {score}/10? Your staff should too!
                 </h4>
                 <p className="mb-4 text-gray-600">
                   Download this quiz as a training handout for your team
                 </p>
-                <Button onClick={generatePDF} className="bg-purple-600 hover:bg-purple-700">
+                <Button onClick={generatePDF} className="bg-mkt-ink hover:bg-mkt-ink">
                   <Download className="mr-2 h-4 w-4" />
                   Download Quiz PDF
                 </Button>
@@ -473,7 +473,7 @@ export const AllergenGuideQuiz = () => {
 
                     <button
                       onClick={() => setShowExplanation(showExplanation === index ? null : index)}
-                      className="text-sm font-medium text-purple-600 hover:text-purple-700"
+                      className="text-sm font-medium text-mkt-teal hover:text-mkt-ink"
                     >
                       {showExplanation === index ? "Hide" : "Show"} Explanation
                     </button>

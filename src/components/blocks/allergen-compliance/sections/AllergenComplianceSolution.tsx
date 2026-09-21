@@ -17,7 +17,7 @@ export const AllergenComplianceSolution = () => {
       icon: Shield,
       title: "14 Allergens Visual Reference Card",
       description: "Kitchen-ready poster",
-      color: "purple",
+      color: "teal",
     },
     {
       icon: BookOpen,
@@ -35,7 +35,7 @@ export const AllergenComplianceSolution = () => {
       icon: Users,
       title: "Staff Training Template",
       description: "Customize for your team",
-      color: "purple",
+      color: "teal",
     },
     {
       icon: FileText,
@@ -53,8 +53,8 @@ export const AllergenComplianceSolution = () => {
 
   const getIconColor = (color: string) => {
     switch (color) {
-      case "purple":
-        return "text-purple-600 bg-purple-100"
+      case "teal":
+        return "text-mkt-allergen bg-mkt-allergen1"
       case "blue":
         return "text-blue-600 bg-blue-100"
       case "green":

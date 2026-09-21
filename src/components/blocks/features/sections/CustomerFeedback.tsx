@@ -67,7 +67,7 @@ export const CustomerFeedback = () => {
     {
       title: "15-minute staff training session",
       description: "Via video call",
-      icon: <Zap className="h-5 w-5 text-purple-600" />,
+      icon: <Zap className="h-5 w-5 text-mkt-teal" />,
     },
     {
       title: "First-week check-in",
@@ -102,7 +102,7 @@ export const CustomerFeedback = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+          <div className="rounded-2xl border border-mkt-steel1 bg-mkt-canvas p-8">
             <h4 className="mb-4 text-lg font-semibold text-gray-900">
               Ready to Experience All Features?
             </h4>
@@ -113,14 +113,14 @@ export const CustomerFeedback = () => {
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Link
                 href="/plan"
-                className="inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-purple-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-mkt-ink px-6 py-3 font-semibold text-white transition-colors duration-200 hover:bg-mkt-ink"
               >
                 Start Free Trial - Test All Features
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/bookdemo"
-                className="inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-colors duration-200 hover:bg-purple-50"
+                className="inline-flex items-center gap-2 rounded-lg border border-mkt-steel1 bg-white px-6 py-3 font-semibold text-mkt-ink transition-colors duration-200 hover:bg-mkt-canvas"
               >
                 Book Feature Demo
                 <ArrowRight className="h-4 w-4" />
@@ -129,7 +129,7 @@ export const CustomerFeedback = () => {
             <div className="mt-6">
               <Link
                 href="/printbridge"
-                className="inline-flex items-center gap-2 text-sm text-purple-600 hover:text-purple-700"
+                className="inline-flex items-center gap-2 text-sm text-mkt-teal hover:text-mkt-ink"
               >
                 <Download className="h-4 w-4" />
                 Download PrintBridge

@@ -3,10 +3,10 @@ import { Printer, Wifi, Smartphone, Barcode, Flashlight, Shield } from "lucide-r
 import Image from "next/image"
 
 const hardwareFeatures = [
-  { icon: <Printer className="h-7 w-7 text-purple-600" />, title: "Integrated Printer", description: "Prints directly onto thermal labels—no ink or cartridges needed." },
+  { icon: <Printer className="h-7 w-7 text-mkt-teal" />, title: "Integrated Printer", description: "Prints directly onto thermal labels—no ink or cartridges needed." },
   { icon: <Wifi className="h-7 w-7 text-blue-600" />, title: "Remote Connectivity", description: "WiFi and 4G SIM support for use anywhere—ideal for events and outdoor catering." },
   { icon: <Smartphone className="h-7 w-7 text-green-600" />, title: "Wipeclean Touchscreen", description: "5.99\" HD+ display, easy to clean and hygienic for kitchen use." },
-  { icon: <Barcode className="h-7 w-7 text-pink-600" />, title: "2D Barcode Scanner", description: "Instantly reprint labels—scan barcodes even if damaged or stained." },
+  { icon: <Barcode className="h-7 w-7 text-mkt-teal" />, title: "2D Barcode Scanner", description: "Instantly reprint labels—scan barcodes even if damaged or stained." },
   { icon: <Flashlight className="h-7 w-7 text-yellow-500" />, title: "In-built Flashlight", description: "Find items in walk-in fridges or low light with a super-bright flashlight." },
   { icon: <Shield className="h-7 w-7 text-gray-600" />, title: "Rugged & Hygienic", description: "Protective rubber surround, drop-tested, built for hospitality environments." },
 ]

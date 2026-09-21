@@ -84,7 +84,7 @@ export const KitchenLabelPrinterImageSection = () => {
           viewport={{ once: true }}
         >
           <p className="text-lg font-semibold text-gray-700">
-            <span className="font-bold text-purple-700">Ready to transform your kitchen labeling?</span>
+            <span className="font-bold text-mkt-ink">Ready to transform your kitchen labeling?</span>
             Start your free trial and see the difference InstaLabel makes.
           </p>
         </motion.div>

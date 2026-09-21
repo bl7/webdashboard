@@ -4,7 +4,7 @@ import { AlertTriangle, FileText, Clock, DollarSign } from "lucide-react"
 import { motion } from "framer-motion"
 
 export const NatashasLawWhyMatters = () => (
-  <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row">
       {/* Visual: Problem illustration */}
       <motion.div
@@ -73,27 +73,27 @@ export const NatashasLawWhyMatters = () => (
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <Clock className="h-4 w-4 text-purple-600" />
+              <Clock className="h-4 w-4 text-mkt-teal" />
               <span>Time-consuming manual process</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <DollarSign className="h-4 w-4 text-purple-600" />
+              <DollarSign className="h-4 w-4 text-mkt-teal" />
               <span>Risk of costly compliance fines</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <AlertTriangle className="h-4 w-4 text-purple-600" />
+              <AlertTriangle className="h-4 w-4 text-mkt-teal" />
               <span>Customer safety concerns</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <FileText className="h-4 w-4 text-purple-600" />
+              <FileText className="h-4 w-4 text-mkt-teal" />
               <span>Inconsistent formatting</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
-          <div className="text-sm font-semibold text-purple-800">
-            <span className="font-bold text-purple-700">Natasha's Law Impact:</span> Since October
+        <div className="mt-6 rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+          <div className="text-sm font-semibold text-mkt-ink">
+            <span className="font-bold text-mkt-ink">Natasha's Law Impact:</span> Since October
             2021, all food businesses selling prepacked for direct sale (PPDS) products must include
             full ingredient lists and allergen information on labels.
           </div>

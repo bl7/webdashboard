@@ -117,7 +117,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
   return (
     <div
       ref={containerRef}
-      className="relative aspect-[4/5] w-full select-none overflow-hidden rounded-3xl border-2 border-purple-200 shadow-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+      className="relative aspect-[4/5] w-full select-none overflow-hidden rounded-3xl border-2 border-mkt-steel1 shadow-2xl focus:outline-none focus:ring-2 focus:ring-mkt-ink focus:ring-offset-2"
       onMouseDown={onDragStart}
       onTouchStart={onDragStart}
       onKeyDown={handleKeyDown}
@@ -172,11 +172,11 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
       >
         {/* Slider Handle */}
         <div
-          className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border-2 border-purple-600 bg-white shadow-2xl transition-transform hover:scale-110 active:scale-95"
+          className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize items-center justify-center rounded-full border-2 border-mkt-ink bg-white shadow-2xl transition-transform hover:scale-110 active:scale-95"
           onMouseDown={onDragStart}
           onTouchStart={onDragStart}
         >
-          <div className="h-5 w-1.5 rounded-full bg-purple-600"></div>
+          <div className="h-5 w-1.5 rounded-full bg-mkt-ink"></div>
         </div>
       </div>
 
@@ -184,7 +184,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
       <div className="absolute left-6 top-6 rounded-xl bg-black/70 px-4 py-2 text-sm font-bold text-white shadow-lg backdrop-blur-sm">
         Before
       </div>
-      <div className="absolute right-6 top-6 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-bold text-white shadow-lg backdrop-blur-sm">
+      <div className="absolute right-6 top-6 rounded-xl text-white px-4 py-2 text-sm font-bold text-white shadow-lg backdrop-blur-sm">
         After
       </div>
 
@@ -196,7 +196,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           animate={{ opacity: [1, 0.7, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-bold text-white shadow-xl backdrop-blur-sm">
+          <div className="rounded-full text-white px-6 py-3 text-sm font-bold text-white shadow-xl backdrop-blur-sm">
             Swipe to compare
           </div>
         </motion.div>
@@ -210,7 +210,7 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
           animate={{ opacity: [1, 0.7, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-base font-bold text-white shadow-xl backdrop-blur-sm">
+          <div className="rounded-full text-white px-6 py-3 text-base font-bold text-white shadow-xl backdrop-blur-sm">
             Drag to compare
           </div>
         </motion.div>
@@ -245,11 +245,11 @@ export const BeforeAfterSection = () => {
   ]
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/40 to-white px-4 py-16 text-foreground">
+    <section className="relative overflow-hidden bg-gradient-to-br from-white via-white/40 to-white px-4 py-16 text-foreground">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
-        <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-purple-200/20 blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-pink-200/20 blur-3xl"></div>
+        <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-mkt-steel1/20 blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-mkt-steel1/30 blur-3xl"></div>
       </div>
 
       <div className="relative mx-auto max-w-6xl">
@@ -269,7 +269,7 @@ export const BeforeAfterSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
                 viewport={{ once: true }}
-                className="mx-auto inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-6 py-3 text-sm font-bold text-purple-800 shadow-sm ring-1 ring-purple-200 lg:mx-0"
+                className="mx-auto inline-flex items-center rounded-full bg-mkt-canvas px-6 py-3 text-sm font-bold text-mkt-ink shadow-sm ring-1 ring-mkt-steel1 lg:mx-0"
               >
                 <Zap className="mr-2 h-4 w-4" />
                 The Kitchen Transformation
@@ -282,7 +282,7 @@ export const BeforeAfterSection = () => {
                 viewport={{ once: true }}
                 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-left lg:text-5xl"
               >
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-mkt-ink">
                   From Chaos to
                 </span>
                 <br />
@@ -323,9 +323,9 @@ export const BeforeAfterSection = () => {
                   whileInView="visible"
                   viewport={{ once: true }}
                   transition={{ delay: 0.5 + index * 0.1 }}
-                  className="flex items-start gap-3 rounded-xl bg-white/60 p-4 shadow-sm ring-1 ring-purple-100 backdrop-blur-sm"
+                  className="flex items-start gap-3 rounded-xl bg-white/60 p-4 shadow-sm ring-1 ring-mkt-steel1 backdrop-blur-sm"
                 >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-sm">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full text-white text-white shadow-sm">
                     <feature.icon className="h-4 w-4" />
                   </div>
                   <div>
@@ -343,7 +343,7 @@ export const BeforeAfterSection = () => {
               variants={buttonVariant}
             >
               <Button
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-2xl sm:w-auto"
+                className="w-full text-white px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:opacity-90 hover:shadow-2xl sm:w-auto"
                 asChild
               >
                 <Link href="/bookdemo">
@@ -369,7 +369,7 @@ export const BeforeAfterSection = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 blur-2xl"></div>
+              <div className="absolute -inset-4 rounded-3xl bg-mkt-steel1/40 blur-2xl"></div>
               <div className="relative">
                 <BeforeAfterSlider beforeImage={beforeImage} afterImage={afterImage} />
               </div>

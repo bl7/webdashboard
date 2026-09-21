@@ -31,13 +31,13 @@ export const Pricing = () => {
           viewport={{ once: true }}
           className="mx-auto max-w-3xl space-y-6"
         >
-          <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <Zap className="mr-2 h-4 w-4" />
             ROI-Focused Pricing
           </div>
 
           <h3 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-mkt-ink">
               Save £2,000+ Monthly
             </span>
             <br />
@@ -57,21 +57,21 @@ export const Pricing = () => {
             viewport={{ once: true }}
             className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-3"
           >
-            <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-white p-4 shadow-sm">
-              <Clock className="h-8 w-8 text-purple-600" />
+            <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
+              <Clock className="h-8 w-8 text-mkt-teal" />
               <div className="text-left">
                 <div className="font-bold text-gray-900">15+ Hours Saved</div>
                 <div className="text-sm text-gray-600">Per week on labeling</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
               <Shield className="h-8 w-8 text-green-600" />
               <div className="text-left">
                 <div className="font-bold text-gray-900">Zero Fines</div>
                 <div className="text-sm text-gray-600">Built for compliance</div>
               </div>
             </div>
-            <div className="flex items-center gap-3 rounded-xl border border-purple-100 bg-white p-4 shadow-sm">
+            <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
               <TrendingUp className="h-8 w-8 text-blue-600" />
               <div className="text-left">
                 <div className="font-bold text-gray-900">30% Less Waste</div>
@@ -81,7 +81,7 @@ export const Pricing = () => {
           </motion.div>
 
           {/* Enhanced Toggle */}
-          <div className="mt-8 inline-flex rounded-full border border-purple-200 bg-white p-1 shadow-lg">
+          <div className="mt-8 inline-flex rounded-full border border-mkt-steel1 bg-white p-1 shadow-lg">
             {["monthly", "yearly"].map((type) => (
               <button
                 key={type}
@@ -89,8 +89,8 @@ export const Pricing = () => {
                 className={cn(
                   "rounded-full px-6 py-2 text-sm font-semibold transition-all duration-300",
                   billingCycle === type
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md"
-                    : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
+                    ? "text-white text-white shadow-md"
+                    : "text-gray-600 hover:bg-mkt-canvas hover:text-mkt-ink"
                 )}
               >
                 {type === "monthly" ? "Monthly Billing" : "Yearly Billing (Save 20%)"}
@@ -125,8 +125,8 @@ export const Pricing = () => {
                   className={cn(
                     "relative flex flex-col rounded-2xl border bg-white p-8 text-left shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl",
                     index === 1
-                      ? "scale-105 border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 ring-2 ring-purple-200"
-                      : "border-gray-200 hover:border-purple-300"
+                      ? "scale-105 border-mkt-ink bg-mkt-canvas ring-2 ring-mkt-steel1"
+                      : "border-gray-200 hover:border-mkt-steel1"
                   )}
                 >
                   {index === 1 && (
@@ -180,7 +180,7 @@ export const Pricing = () => {
                     className={cn(
                       "w-full py-3 font-semibold transition-all duration-300",
                       index === 1
-                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+                        ? "text-white text-white shadow-lg hover:opacity-90 hover:shadow-xl"
                         : "bg-gray-900 text-white hover:bg-gray-800"
                     )}
                     asChild
@@ -206,7 +206,8 @@ export const Pricing = () => {
           <div className="space-y-4">
             <Button
               size="lg"
-              className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+              className="border-0 px-8 py-4 text-lg font-semibold text-white shadow-lg"
+              style={{ backgroundColor: "#142124", backgroundImage: "none" }}
               asChild
             >
               <Link href="/bookdemo">Book Demo</Link>
@@ -215,7 +216,7 @@ export const Pricing = () => {
             <Button
               variant="outline"
               size="lg"
-              className="mx-3 border-2 border-purple-200 px-8 py-4 text-lg font-semibold text-purple-700 transition-all duration-300 hover:bg-purple-50 hover:text-purple-800"
+              className="mx-3 border-2 border-mkt-steel1 px-8 py-4 text-lg font-semibold text-mkt-ink transition-all duration-300 hover:bg-mkt-canvas hover:text-mkt-ink"
               asChild
             >
               <Link href="/register">Start Trial</Link>
@@ -245,7 +246,7 @@ export const Pricing = () => {
           <div className="text-center">
             <Button
               variant="link"
-              className="text-sm text-purple-600 hover:text-purple-800"
+              className="text-sm text-mkt-teal hover:text-mkt-ink"
               onClick={() => {
                 // Trigger the demo modal
                 const event = new CustomEvent("openDemoModal")

@@ -201,7 +201,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-12 sm:px-8 md:px-16">
+      <div className="min-h-screen bg-mkt-canvas px-4 py-12 sm:px-8 md:px-16">
         <div className="mx-auto flex max-w-5xl flex-col gap-8 rounded-xl border border-gray-200 bg-white p-4 shadow-lg md:flex-row md:p-8">
           {/* Related Articles Sidebar */}
           {related.length > 0 && (
@@ -213,7 +213,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                     <Link
                       key={r.slug}
                       href={`/blog/${r.slug}`}
-                      className="block rounded-lg border border-gray-200 bg-purple-50 p-3 shadow-sm transition hover:bg-purple-100"
+                      className="block rounded-lg border border-gray-200 bg-mkt-canvas p-3 shadow-sm transition hover:bg-mkt-canvas"
                     >
                       <div className="mb-1 text-xs font-medium text-primary">{r.category}</div>
                       <div className="mb-1 line-clamp-2 font-semibold text-gray-900">{r.title}</div>
@@ -289,7 +289,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {prevPost ? (
                   <Link
                     href={`/blog/${prevPost.slug}`}
-                    className="group block flex-1 rounded-lg border border-gray-200 bg-purple-50 p-4 text-left shadow-sm transition hover:bg-purple-100"
+                    className="group block flex-1 rounded-lg border border-gray-200 bg-mkt-canvas p-4 text-left shadow-sm transition hover:bg-mkt-canvas"
                   >
                     <div className="mb-1 text-xs font-medium text-primary">Previous</div>
                     <div className="mb-1 line-clamp-2 font-semibold text-gray-900 group-hover:underline">
@@ -305,7 +305,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {nextPost ? (
                   <Link
                     href={`/blog/${nextPost.slug}`}
-                    className="group block flex-1 rounded-lg border border-gray-200 bg-purple-50 p-4 text-right shadow-sm transition hover:bg-purple-100"
+                    className="group block flex-1 rounded-lg border border-gray-200 bg-mkt-canvas p-4 text-right shadow-sm transition hover:bg-mkt-canvas"
                   >
                     <div className="mb-1 text-xs font-medium text-primary">Next</div>
                     <div className="mb-1 line-clamp-2 font-semibold text-gray-900 group-hover:underline">
@@ -321,7 +321,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             )}
             {/* Author Bio Box */}
-            <div className="mt-16 flex items-center gap-4 rounded-lg border border-gray-200 bg-purple-50 p-4">
+            <div className="mt-16 flex items-center gap-4 rounded-lg border border-gray-200 bg-mkt-canvas p-4">
               <Image
                 src={post.meta.author === "InstaLabel Team" ? "/avatar1.png" : "/avatar2.png"}
                 alt={post.meta.author}
@@ -341,7 +341,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
             </div>
             <div className="mt-6">
-              <Link href="/blog" className="text-xs text-purple-500 hover:underline">
+              <Link href="/blog" className="text-xs text-mkt-teal hover:underline">
                 ← Back to Blog
               </Link>
             </div>

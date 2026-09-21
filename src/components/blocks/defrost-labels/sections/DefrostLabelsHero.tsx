@@ -4,11 +4,11 @@ import { motion } from "framer-motion"
 
 export const DefrostLabelsHero = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50 px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
       {/* Background Elements */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-blue-400 opacity-10 blur-3xl"></div>
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-blue-600 opacity-10 blur-3xl"></div>
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-cyan-300 opacity-10 blur-3xl"></div>
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-10 blur-3xl"></div>
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl"></div>
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-10 blur-3xl"></div>
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         {/* Left Content */}
@@ -17,7 +17,7 @@ export const DefrostLabelsHero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center rounded-full bg-blue-100 px-4 py-2 text-sm font-medium text-blue-800 ring-1 ring-blue-200"
+            className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +45,7 @@ export const DefrostLabelsHero = () => {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-blue-600">Defrost Labels</span>
+              <span className="text-mkt-teal">Defrost Labels</span>
               <br className="hidden md:block" />
               <span>That Ensure Food Safety</span>
             </h1>
@@ -79,7 +79,7 @@ export const DefrostLabelsHero = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-4 w-4 text-blue-600"
+                className="h-4 w-4 text-mkt-teal"
               >
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12 6 12 12 16 14"></polyline>
@@ -97,7 +97,7 @@ export const DefrostLabelsHero = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-4 w-4 text-blue-600"
+                className="h-4 w-4 text-mkt-teal"
               >
                 <path d="M8 2v4"></path>
                 <path d="M16 2v4"></path>
@@ -117,7 +117,7 @@ export const DefrostLabelsHero = () => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-4 w-4 text-blue-600"
+                className="h-4 w-4 text-mkt-teal"
               >
                 <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
                 <path d="M12 9v4"></path>
@@ -135,7 +135,7 @@ export const DefrostLabelsHero = () => {
           >
             <a
               href="/register"
-              className="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-blue-600 bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-lg ring-offset-background transition-all hover:bg-blue-700 hover:from-purple-700 hover:to-pink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+              className="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-mkt-ink px-6 py-3 text-sm font-semibold text-white shadow-lg ring-offset-background transition-all hover:bg-mkt-ink8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             >
               Try Defrost Labels
               <svg
@@ -156,7 +156,7 @@ export const DefrostLabelsHero = () => {
             </a>
             <a
               href="/uses"
-              className="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md border-2 border-purple-600 bg-white px-8 py-2 text-sm font-semibold text-purple-600 ring-offset-background transition-all hover:bg-purple-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-purple-400 dark:bg-gray-900 dark:text-purple-300 dark:hover:bg-purple-600 dark:hover:text-white [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+              className="inline-flex h-11 items-center justify-center gap-2 whitespace-nowrap rounded-md border-2 border-mkt-ink bg-white px-8 py-2 text-sm font-semibold text-mkt-teal ring-offset-background transition-all hover:bg-mkt-ink hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:border-mkt-steel1 dark:bg-gray-900 dark:text-[#E4F1EE] dark:hover:bg-mkt-ink dark:hover:text-white [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             >
               See All Label Types
             </a>
@@ -207,7 +207,7 @@ export const DefrostLabelsHero = () => {
               </div>
 
               {/* Right Card - Solution */}
-              <div className="flex flex-1 flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50 p-4">
+              <div className="flex flex-1 flex-col items-center justify-center bg-mkt-canvas p-4">
                 <div className="mb-2 flex items-center justify-center">
                   <svg
                     className="h-8 w-8 text-green-500"

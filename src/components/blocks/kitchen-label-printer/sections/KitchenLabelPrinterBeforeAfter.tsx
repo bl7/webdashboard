@@ -173,10 +173,10 @@ export const KitchenLabelPrinterBeforeAfter = () => (
           <div className="text-sm font-medium text-red-800">Before: Manual Creation</div>
           <div className="mt-1 text-xs text-red-600">Staff typing each label manually</div>
         </div>
-        <div className="rounded-lg bg-purple-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-purple-600">Couple clicks</div>
-          <div className="text-sm font-medium text-purple-800">After: InstaLabel</div>
-          <div className="mt-1 text-xs text-purple-600">Select template and print</div>
+        <div className="rounded-lg bg-mkt-canvas p-6 text-center">
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">Couple clicks</div>
+          <div className="text-sm font-medium text-mkt-ink">After: InstaLabel</div>
+          <div className="mt-1 text-xs text-mkt-teal">Select template and print</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
           <div className="mb-2 text-3xl font-bold text-green-600">90%</div>
@@ -194,7 +194,7 @@ export const KitchenLabelPrinterBeforeAfter = () => (
         viewport={{ once: true }}
       >
         <p className="text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">
+          <span className="font-bold text-mkt-ink">
             Ready to transform your kitchen labeling?
           </span>
           Start your free trial and see the difference InstaLabel makes.

@@ -36,9 +36,9 @@ export const WhyInstaLabel = () => {
           {/* Benefits Grid */}
           {/* Card 1 - Save Time */}
           <div className="group">
-            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 text-center transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 text-center transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
               <div className="mb-4 flex justify-center">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   <Clock className="h-6 w-6" />
                 </div>
               </div>
@@ -49,7 +49,7 @@ export const WhyInstaLabel = () => {
                 cutting down waste.
               </p>
 
-              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
+              <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
                 50+ labels saved daily
               </div>
             </div>
@@ -57,9 +57,9 @@ export const WhyInstaLabel = () => {
 
           {/* Card 2 - Compliance */}
           <div className="group">
-            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 text-center transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 text-center transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
               <div className="mb-4 flex justify-center">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   <ClipboardList className="h-6 w-6" />
                 </div>
               </div>
@@ -70,7 +70,7 @@ export const WhyInstaLabel = () => {
                 that meet safety standards.
               </p>
 
-              <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-semibold text-purple-700 ring-1 ring-purple-200">
+              <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
                 HACCP & EHO Compliant
               </div>
             </div>

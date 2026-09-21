@@ -39,9 +39,9 @@ export const GalleryFeature = () => {
         >
           <div className="space-y-6 md:w-1/2">
             <div className="space-y-3">
-              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-purple-200 bg-purple-50 px-4 py-2 lg:mx-0">
+              <div className="mx-auto inline-flex items-center gap-3 rounded-full border border-mkt-steel1 bg-mkt-canvas px-4 py-2 lg:mx-0">
                 <span className="text-2xl">⚙️</span>
-                <span className="text-sm font-medium uppercase tracking-wider text-purple-700">
+                <span className="text-sm font-medium uppercase tracking-wider text-mkt-ink">
                   Advanced Customization
                 </span>
               </div>
@@ -57,25 +57,25 @@ export const GalleryFeature = () => {
 
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-gray-700">
                   AI-powered ingredient analysis and allergen detection
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-gray-700">
                   Custom allergen database for regional requirements
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-gray-700">
                   Flexible highlighting styles (bold, italic, underline, color)
                 </span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-gray-700">
                   Multi-language support for international kitchens
                 </span>
@@ -102,7 +102,7 @@ export const GalleryFeature = () => {
                 {customAllergens.map((item, i) => (
                   <span
                     key={item}
-                    className="mx-1 inline-block rounded-full bg-pink-100 px-2 py-0.5 font-medium text-pink-700"
+                    className="mx-1 inline-block rounded-full bg-mkt-canvas px-2 py-0.5 font-medium text-mkt-ink"
                   >
                     {item}
                   </span>

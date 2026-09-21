@@ -7,7 +7,7 @@ import Link from "next/link"
 
 export const SquareIntegrationCTA = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 py-20">
+    <section className="relative overflow-hidden py-20 text-white" style={{ backgroundColor: "#142124" }}>
       {/* Background Elements */}
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-white opacity-10 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-white opacity-10 blur-3xl" />
@@ -29,7 +29,7 @@ export const SquareIntegrationCTA = () => {
               Ready to Transform Your Restaurant?
             </h3>
 
-            <p className="mx-auto mb-8 max-w-3xl text-xl text-purple-100">
+            <p className="mx-auto mb-8 max-w-3xl text-xl text-white/80">
               Join the restaurants already using InstaLabel with Square integration. Get compliant
               labels in minutes, not hours.
             </p>
@@ -47,7 +47,7 @@ export const SquareIntegrationCTA = () => {
                 <Clock className="h-6 w-6 text-white" />
               </div>
               <h3 className="mb-2 text-lg font-bold text-white">Setup in 5 Minutes</h3>
-              <p className="text-sm text-purple-100">
+              <p className="text-sm text-white/80">
                 Connect your Square account and start syncing immediately
               </p>
             </div>
@@ -57,7 +57,7 @@ export const SquareIntegrationCTA = () => {
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <h3 className="mb-2 text-lg font-bold text-white">Built for Compliance</h3>
-              <p className="text-sm text-purple-100">
+              <p className="text-sm text-white/80">
                 Automatic allergen detection and Natasha's Law labeling workflows
               </p>
             </div>
@@ -67,7 +67,7 @@ export const SquareIntegrationCTA = () => {
                 <CheckCircle className="h-6 w-6 text-white" />
               </div>
               <h3 className="mb-2 text-lg font-bold text-white">Zero Manual Work</h3>
-              <p className="text-sm text-purple-100">
+              <p className="text-sm text-white/80">
                 No data entry required - everything syncs automatically
               </p>
             </div>
@@ -83,7 +83,7 @@ export const SquareIntegrationCTA = () => {
             <Link href="/bookdemo">
               <Button
                 size="lg"
-                className="bg-white font-bold text-purple-700 shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-100"
+                className="bg-white font-bold text-mkt-ink shadow-lg transition-all duration-300 hover:scale-105 hover:bg-gray-100"
               >
                 Book a Demo
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -94,7 +94,7 @@ export const SquareIntegrationCTA = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-white font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-purple-700"
+                className="border-2 border-white font-bold text-white transition-all duration-300 hover:scale-105 hover:bg-white hover:text-mkt-ink"
               >
                 Start Free Trial
               </Button>
@@ -108,8 +108,8 @@ export const SquareIntegrationCTA = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="mt-12 border-t border-white/20 pt-8"
           >
-            <p className="mb-4 text-sm text-purple-200">Trusted by restaurants across the UK</p>
-            <div className="flex items-center justify-center space-x-8 text-xs text-purple-200">
+            <p className="mb-4 text-sm text-white/70">Trusted by restaurants across the UK</p>
+            <div className="flex items-center justify-center space-x-8 text-xs text-white/70">
               <span>✓ No charges during trial</span>
               <span>✓ 14-day free trial</span>
               <span>✓ Cancel anytime</span>

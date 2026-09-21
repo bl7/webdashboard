@@ -53,11 +53,11 @@ export const TrustedBySection = () => {
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-purple-50/50 to-white px-4 py-24 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative overflow-hidden bg-gradient-to-br from-white via-white/50 to-white px-4 py-24 sm:px-6 md:px-12 lg:px-16">
       {/* Background decorative elements */}
       <div className="absolute inset-0">
-        <div className="absolute left-1/3 top-1/3 h-32 w-32 rounded-full bg-purple-200/30 blur-2xl"></div>
-        <div className="absolute bottom-1/3 right-1/3 h-24 w-24 rounded-full bg-pink-200/30 blur-2xl"></div>
+        <div className="absolute left-1/3 top-1/3 h-32 w-32 rounded-full bg-mkt-steel1/30 blur-2xl"></div>
+        <div className="absolute bottom-1/3 right-1/3 h-24 w-24 rounded-full bg-mkt-steel1/40 blur-2xl"></div>
       </div>
 
       <div className="relative mx-auto max-w-6xl">
@@ -76,7 +76,7 @@ export const TrustedBySection = () => {
               viewport={{ once: true }}
               className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl"
             >
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-mkt-ink">
                 Real Results
               </span>
               <br />
@@ -92,10 +92,10 @@ export const TrustedBySection = () => {
             viewport={{ once: true }}
             className="mx-auto max-w-4xl"
           >
-            <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-purple-100">
+            <div className="rounded-2xl bg-white p-8 shadow-lg ring-1 ring-mkt-steel1">
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-purple-600 to-pink-600">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full text-white">
                     <Quote className="h-6 w-6 text-white" />
                   </div>
                 </div>
@@ -106,7 +106,7 @@ export const TrustedBySection = () => {
                     insights helped us reduce waste by 40% in the first quarter."
                   </blockquote>
                   <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mkt-canvas">
                       <img
                         src="/noodlebar.png"
                         alt="Noodle Bar logo"
@@ -208,7 +208,7 @@ export const TrustedBySection = () => {
                       key={index}
                       onClick={() => setCurrentIndex(index)}
                       className={`h-2 w-2 rounded-full transition-all ${
-                        index === currentIndex ? "bg-purple-600" : "bg-gray-300"
+                        index === currentIndex ? "bg-mkt-ink" : "bg-gray-300"
                       }`}
                       type="button"
                     />

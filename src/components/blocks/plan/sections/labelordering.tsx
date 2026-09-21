@@ -31,9 +31,9 @@ export const LabelOrdering = () => {
             className="space-y-6"
           >
             <div className="grid gap-4">
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <Package className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -48,9 +48,9 @@ export const LabelOrdering = () => {
                 </div>
               </div>
 
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <Truck className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -63,9 +63,9 @@ export const LabelOrdering = () => {
                 </div>
               </div>
 
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <CreditCard className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -78,9 +78,9 @@ export const LabelOrdering = () => {
                 </div>
               </div>
 
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <Shield className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -108,7 +108,7 @@ export const LabelOrdering = () => {
               <h3 className="mb-4 text-xl font-semibold text-gray-900">How to Order</h3>
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-sm font-bold text-white">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-mkt-ink text-sm font-bold text-white">
                     1
                   </div>
                   <span className="text-gray-700">
@@ -116,7 +116,7 @@ export const LabelOrdering = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-sm font-bold text-white">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-mkt-ink text-sm font-bold text-white">
                     2
                   </div>
                   <span className="text-gray-700">
@@ -124,7 +124,7 @@ export const LabelOrdering = () => {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-purple-600 text-sm font-bold text-white">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-mkt-ink text-sm font-bold text-white">
                     3
                   </div>
                   <span className="text-gray-700">
@@ -138,7 +138,7 @@ export const LabelOrdering = () => {
             <div className="grid grid-cols-2 gap-4">
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
-                  <Zap className="h-6 w-6 text-purple-600" />
+                  <Zap className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">24h</div>
                 <div className="text-sm text-gray-600">Delivery Time</div>
@@ -146,7 +146,7 @@ export const LabelOrdering = () => {
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
-                  <CheckCircle className="h-6 w-6 text-purple-600" />
+                  <CheckCircle className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">99.9%</div>
                 <div className="text-sm text-gray-600">On-Time Delivery</div>
@@ -154,7 +154,7 @@ export const LabelOrdering = () => {
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
-                  <Star className="h-6 w-6 text-purple-600" />
+                  <Star className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">4.9/5</div>
                 <div className="text-sm text-gray-600">Customer Rating</div>
@@ -162,7 +162,7 @@ export const LabelOrdering = () => {
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
-                  <Clock className="h-6 w-6 text-purple-600" />
+                  <Clock className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">2min</div>
                 <div className="text-sm text-gray-600">Order Time</div>
@@ -171,7 +171,7 @@ export const LabelOrdering = () => {
 
             {/* CTA */}
             <div className="text-center">
-              <Button asChild className="w-full sm:w-auto">
+              <Button asChild className="w-full border-0 text-white sm:w-auto" style={{ backgroundColor: "#142124", backgroundImage: "none" }}>
                 <Link href="/register">Start Free Trial</Link>
               </Button>
               <p className="mt-2 text-sm text-gray-500">No commitment required • Cancel anytime</p>

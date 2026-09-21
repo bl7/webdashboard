@@ -46,7 +46,7 @@ export const WorkflowIntegration = () => {
     },
     {
       title: "Compliance Documentation",
-      icon: <FileText className="h-8 w-8 text-purple-600" />,
+      icon: <FileText className="h-8 w-8 text-mkt-teal" />,
       challenge: "Maintaining records for EHO inspections and audits",
       solution: "InstaLabel Solution",
       features: [
@@ -56,7 +56,7 @@ export const WorkflowIntegration = () => {
         "Exportable reports for inspection preparation",
       ],
       result: "98% first-time pass rate for EHO inspections",
-      color: "purple",
+      color: "teal",
     },
   ]
 
@@ -83,7 +83,7 @@ export const WorkflowIntegration = () => {
         {/* Workflow Areas - Timeline Style Layout */}
         <div className="relative mb-20">
           {/* Connection Line */}
-          <div className="absolute bottom-0 left-1/2 top-0 hidden w-1 -translate-x-1/2 transform bg-gradient-to-b from-blue-200 via-green-200 to-purple-200 lg:block" />
+          <div className="absolute bottom-0 left-1/2 top-0 hidden w-1 -translate-x-1/2 transform bg-mkt-steel1 lg:block" />
 
           <div className="space-y-16">
             {workflowAreas.map((area, index) => (
@@ -112,7 +112,7 @@ export const WorkflowIntegration = () => {
                     {/* Header */}
                     <div className="mb-6">
                       <h3 className="mb-2 text-2xl font-bold text-gray-900">{area.title}</h3>
-                      <div className="h-1 w-16 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                      <div className="h-1 w-16 rounded-full bg-gradient-to-r from-mkt-ink to-mkt-teal"></div>
                     </div>
 
                     {/* Challenge & Solution Grid */}
@@ -176,7 +176,7 @@ export const WorkflowIntegration = () => {
                     viewport={{ once: true }}
                     className="hidden lg:block"
                   >
-                    <ArrowRight className="h-8 w-8 text-purple-400" />
+                    <ArrowRight className="h-8 w-8 text-mkt-teal1" />
                   </motion.div>
                 )}
               </motion.div>
@@ -192,7 +192,7 @@ export const WorkflowIntegration = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="rounded-2xl border border-purple-200 bg-white p-8 shadow-sm">
+          <div className="rounded-2xl border border-mkt-steel1 bg-white p-8 shadow-sm">
             <h3 className="mb-6 text-2xl font-bold text-gray-900">Why Integration Matters</h3>
             <div className="grid gap-6 md:grid-cols-3">
               <motion.div
@@ -232,8 +232,8 @@ export const WorkflowIntegration = () => {
                 viewport={{ once: true }}
                 className="group text-center"
               >
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 transition-colors duration-200 group-hover:bg-purple-200">
-                  <TrendingUp className="h-6 w-6 text-purple-600" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-canvas transition-colors duration-200 group-hover:bg-mkt-steel1">
+                  <TrendingUp className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <h4 className="font-semibold text-gray-900">Efficiency Gains</h4>
                 <p className="text-sm text-gray-600">

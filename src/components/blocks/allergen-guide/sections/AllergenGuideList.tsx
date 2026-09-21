@@ -167,7 +167,7 @@ export const AllergenGuideList = () => {
               <div className="mb-6 flex items-center gap-4">
                 {/* Number Badge */}
                 <div className="flex-shrink-0">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold text-white" style={{ backgroundColor: "#68409A" }}>
                     {allergen.number}
                   </div>
                 </div>

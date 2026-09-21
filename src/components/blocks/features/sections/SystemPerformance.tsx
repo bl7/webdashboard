@@ -71,7 +71,7 @@ export const SystemPerformance = () => {
   ]
 
   return (
-    <section className="relative bg-gradient-to-br from-purple-50 via-white to-pink-50 py-20">
+    <section className="relative bg-mkt-canvas py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -81,8 +81,8 @@ export const SystemPerformance = () => {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <div className="mb-3 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
-            <Zap className="mr-2 h-4 w-4 text-purple-600" />
+          <div className="mb-3 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
+            <Zap className="mr-2 h-4 w-4 text-mkt-teal" />
             Performance & Reliability
           </div>
           <h3 className="text-2xl font-bold text-gray-900 md:text-3xl">
@@ -121,7 +121,7 @@ export const SystemPerformance = () => {
                       <p className="text-sm text-gray-600">{metric.description}</p>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-purple-600">{metric.value}</div>
+                      <div className="text-2xl font-bold text-mkt-teal">{metric.value}</div>
                     </div>
                   </motion.div>
                 ))}
@@ -180,7 +180,7 @@ export const SystemPerformance = () => {
 
           <div className="grid gap-6 md:grid-cols-3">
             <div className="text-center">
-              <div className="mb-2 text-3xl font-bold text-purple-600">High</div>
+              <div className="mb-2 text-3xl font-bold text-mkt-teal">High</div>
               <div className="text-sm text-gray-600">Availability</div>
             </div>
             <div className="text-center">

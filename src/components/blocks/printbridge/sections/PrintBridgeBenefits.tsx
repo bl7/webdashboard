@@ -61,7 +61,7 @@ export const PrintBridgeBenefits = () => {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="bg-purple-50 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-purple-600">
+              <div className="bg-mkt-canvas rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 text-mkt-teal">
                 {benefit.icon}
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -70,7 +70,7 @@ export const PrintBridgeBenefits = () => {
               <p className="text-gray-600 text-sm leading-relaxed mb-3">
                 {benefit.description}
               </p>
-              <div className="text-sm font-semibold text-purple-600">
+              <div className="text-sm font-semibold text-mkt-teal">
                 {benefit.metric}
               </div>
             </motion.div>
@@ -79,7 +79,7 @@ export const PrintBridgeBenefits = () => {
 
         {/* CTA Section */}
         <div className="text-center">
-          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 sm:p-8 border border-purple-200">
+          <div className="bg-mkt-canvas rounded-2xl p-6 sm:p-8 border border-mkt-steel1">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">
               Ready to Experience Seamless Printing?
             </h3>
@@ -88,7 +88,7 @@ export const PrintBridgeBenefits = () => {
               Start your free trial today and see the difference local printing technology makes.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink">
                 <Link href="/register">
                   Start Free Trial
                 </Link>

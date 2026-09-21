@@ -65,7 +65,7 @@ export const SquareIntegrationHomepage = () => {
   ]
 
   return (
-    <section className="relative bg-gradient-to-br from-white via-purple-50/30 to-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative bg-gradient-to-br from-white via-white/30 to-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Content */}
@@ -76,13 +76,13 @@ export const SquareIntegrationHomepage = () => {
             className="space-y-4"
           >
             <div>
-              <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+              <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
                 <Zap className="mr-2 h-4 w-4" />
                 Smart Kitchen Features
               </div>
 
               <h3 className="mb-4 text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-left lg:text-5xl">
-                <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-mkt-ink">
                   Everything kitchens
                 </span>
                 <br />
@@ -100,8 +100,8 @@ export const SquareIntegrationHomepage = () => {
                   transition={{ duration: 0.6, delay: index * 0.05 }}
                   className="flex items-start space-x-3 rounded-lg p-2 transition-colors hover:bg-white/50"
                 >
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-purple-100 to-pink-100">
-                    <feature.icon className="h-4 w-4 text-purple-600" />
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas">
+                    <feature.icon className="h-4 w-4 text-mkt-teal" />
                   </div>
                   <div>
                     <h4 className="mb-1 text-sm font-bold text-gray-900">{feature.title}</h4>
@@ -121,7 +121,8 @@ export const SquareIntegrationHomepage = () => {
               <Link href="/features">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
+                  className="border-0 font-semibold text-white shadow-lg"
+                  style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                 >
                   See the Full List of Features
                   <ArrowRight className="ml-2 h-5 w-5" />
@@ -159,7 +160,7 @@ export const SquareIntegrationHomepage = () => {
 // Simple Pricing Section Component
 export const SimplePricing = () => {
   return (
-    <section className="relative bg-gradient-to-br from-purple-50/30 via-white to-pink-50/30 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Left Content */}
@@ -170,7 +171,7 @@ export const SimplePricing = () => {
             className="space-y-6"
           >
             <h3 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-left lg:text-5xl">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-mkt-ink">
                 Simple pricing, built
               </span>
               <br />
@@ -188,7 +189,8 @@ export const SimplePricing = () => {
               <Link href="/plan">
                 <Button
                   size="lg"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
+                  className="border-0 font-semibold text-white shadow-lg"
+                  style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                 >
                   FIND A PLAN THAT SUITS YOU
                 </Button>
@@ -234,9 +236,9 @@ export const AllergenQuizSection = () => {
           viewport={{ once: true }}
           className="text-center"
         >
-          <div className="rounded-2xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
-              <Brain className="h-8 w-8 text-purple-600" />
+          <div className="rounded-2xl border border-mkt-steel1 bg-mkt-canvas p-8">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-mkt-canvas">
+              <Brain className="h-8 w-8 text-mkt-teal" />
             </div>
             <h3 className="mb-3 text-lg font-bold text-gray-900">Test Your Allergen Knowledge</h3>
             <p className="mx-auto mb-6 max-w-2xl text-sm text-gray-600">
@@ -246,7 +248,7 @@ export const AllergenQuizSection = () => {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Button
                 size="lg"
-                className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700"
+                className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink"
                 asChild
               >
                 <Link href="/allergen-guide">
@@ -254,7 +256,7 @@ export const AllergenQuizSection = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <p className="text-sm font-medium text-purple-600">
+              <p className="text-sm font-medium text-mkt-teal">
                 Free • 5 minutes • Instant results
               </p>
             </div>

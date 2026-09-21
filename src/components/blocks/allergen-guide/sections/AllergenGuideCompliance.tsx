@@ -137,8 +137,8 @@ export const AllergenGuideCompliance = () => {
         >
           <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-lg">
             <div className="mb-4 flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100">
-                <FileText className="h-5 w-5 text-purple-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-mkt-canvas">
+                <FileText className="h-5 w-5 text-mkt-teal" />
               </div>
               <h4 className="font-semibold text-gray-900">Documentation</h4>
             </div>

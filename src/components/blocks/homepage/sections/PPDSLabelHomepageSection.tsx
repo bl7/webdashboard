@@ -23,7 +23,7 @@ const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of open
 const businessName = "InstaLabel Ltd"
 
 export const PPDSLabelHomepageSection = () => (
-  <section className="bg-gradient-to-br from-purple-50 via-white to-pink-50 py-16 px-4 sm:px-6 md:px-12 lg:px-16">
+  <section className="bg-mkt-canvas py-16 px-4 sm:px-6 md:px-12 lg:px-16">
     <div className="container mx-auto max-w-6xl flex flex-col md:flex-row items-center gap-12 md:gap-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -32,11 +32,11 @@ export const PPDSLabelHomepageSection = () => (
         viewport={{ once: true }}
         className="flex-1 space-y-6 text-center md:text-left"
       >
-        <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+        <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
           <span role="img" aria-label="label">🏷️</span> Professional Labeling Made Simple
         </div>
         <h3 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight">
-          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="text-mkt-ink">
             PPDS & Natasha's Law Labels
           </span>
           <br />

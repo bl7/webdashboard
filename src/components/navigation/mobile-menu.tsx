@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import { X as CloseIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -8,7 +8,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerOverlay,
   DrawerClose
 } from '@/components/ui/drawer'
 
@@ -28,19 +27,20 @@ interface MobileMenuProps {
 export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose, navItems, isActive }) => {
   return (
     <Drawer open={open} onOpenChange={open => !open ? onClose() : undefined}>
-      <DrawerContent className="p-0 max-w-sm w-full bg-white">
-        <DrawerHeader className="flex flex-row items-center justify-between border-b border-purple-100 p-6">
-          <DrawerTitle className="text-xl font-bold text-purple-700">Menu</DrawerTitle>
+      <DrawerContent className="marketing w-full max-w-sm bg-white p-0">
+        <DrawerHeader className="flex flex-row items-center justify-between border-b border-mkt-steel1 p-6">
+          <DrawerTitle className="text-xl font-bold text-mkt-ink">Menu</DrawerTitle>
           <DrawerClose asChild>
             <button
               onClick={onClose}
               className={cn(
-                "p-2 rounded-full hover:bg-purple-50 transition-colors duration-200",
-                "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                "p-2 rounded-md hover:bg-mkt-canvas transition-colors duration-200",
+                "focus:outline-none focus:ring-2 focus:ring-offset-2"
               )}
+              style={{ outlineColor: "#142124" }}
               aria-label="Close menu"
             >
-              <CloseIcon className="h-6 w-6 text-purple-700" />
+              <CloseIcon className="h-6 w-6 text-mkt-ink" />
             </button>
           </DrawerClose>
         </DrawerHeader>
@@ -54,12 +54,11 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose, navItems,
                     href={item.href}
                     className={cn(
                       "block text-lg font-semibold transition-all duration-200",
-                      "hover:text-purple-600 hover:translate-x-1",
-                      "focus:outline-none focus:text-purple-600",
+                      "hover:text-mkt-teal",
                       "relative py-2",
-                      isActive(item.href) 
-                        ? "text-purple-700" 
-                        : "text-gray-700"
+                      isActive(item.href)
+                        ? "text-mkt-ink"
+                        : "text-mkt-ink8"
                     )}
                     onClick={onClose}
                     style={{
@@ -68,40 +67,28 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ open, onClose, navItems,
                   >
                     {item.label}
                     {isActive(item.href) && (
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-600 to-pink-600 rounded-full" />
+                      <div className="absolute left-0 top-0 bottom-0 w-1 rounded-full" style={{ backgroundColor: "#142124" }} />
                     )}
                   </Link>
                 </li>
               ))}
           </ul>
         </nav>
-        <div className="px-6 py-8 border-t border-purple-100 space-y-4">
+        <div className="px-6 py-8 border-t border-mkt-steel1 space-y-4">
           <Link
             href="/register"
-            className={cn(
-              "block w-full rounded-full px-6 py-3 text-center font-bold",
-              "bg-gradient-to-r from-purple-600 to-pink-600 text-white",
-              "hover:from-purple-700 hover:to-pink-700",
-              "transform transition-all duration-200 hover:scale-105",
-              "shadow-lg hover:shadow-xl",
-              "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-            )}
+            className="block w-full rounded-md px-6 py-3 text-center font-semibold text-white"
+            style={{ backgroundColor: "#142124", backgroundImage: "none" }}
             onClick={onClose}
           >
-            Free Trial
+            Start free trial
           </Link>
           <Link
             href="/login"
-            className={cn(
-              "block w-full rounded-full px-6 py-3 text-center font-semibold",
-              "border-2 border-purple-200 text-purple-700",
-              "hover:bg-purple-50 hover:border-purple-300 hover:text-purple-800",
-              "transform transition-all duration-200 hover:scale-105",
-              "focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-            )}
+            className="block w-full rounded-md px-6 py-3 text-center font-semibold text-mkt-ink"
             onClick={onClose}
           >
-            Sign In
+            Sign in
           </Link>
         </div>
       </DrawerContent>

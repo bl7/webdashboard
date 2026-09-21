@@ -17,7 +17,7 @@ export const TestedInKitchens = () => {
           viewport={{ once: true }}
           className="space-y-4 text-center"
         >
-          <div className="inline-flex items-center rounded-full bg-purple-50 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+          <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
             <span className="mr-2">🧪</span>
             Kitchen Tested & Chef Approved
           </div>
@@ -41,9 +41,9 @@ export const TestedInKitchens = () => {
         >
           {/* Feature 1 */}
           <div className="group">
-            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
               <div className="flex items-start space-x-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   <span className="text-2xl">⚡</span>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -61,9 +61,9 @@ export const TestedInKitchens = () => {
 
           {/* Feature 2 */}
           <div className="group">
-            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
               <div className="flex items-start space-x-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   <span className="text-2xl">👨‍🍳</span>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -81,9 +81,9 @@ export const TestedInKitchens = () => {
 
           {/* Feature 3 */}
           <div className="group">
-            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+            <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
               <div className="flex items-start space-x-4">
-                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   <span className="text-2xl">🔒</span>
                 </div>
                 <div className="min-w-0 flex-1">
@@ -109,25 +109,25 @@ export const TestedInKitchens = () => {
           className="mx-auto grid max-w-4xl grid-cols-2 gap-8 text-center sm:grid-cols-4"
         >
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-purple-600 sm:text-4xl">500+</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">500+</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
               UK Kitchens
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-purple-600 sm:text-4xl">10min</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">10min</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
               Setup Time
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-purple-600 sm:text-4xl">100%</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">100%</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
               EHO Compliant
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-purple-600 sm:text-4xl">24/7</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">24/7</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
               Always Ready
             </div>

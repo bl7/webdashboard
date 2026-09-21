@@ -14,7 +14,7 @@ export const KitchenLabelPrinterFeatures = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="mb-4 inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-700 ring-1 ring-purple-200">
+        <div className="mb-4 inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
           <Star className="mr-2 h-4 w-4" />
           InstaLabel Software Features
         </div>
@@ -37,8 +37,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.1 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Zap className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Zap className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered Ingredient Analysis</h3>
           <p className="text-gray-600">
@@ -55,8 +55,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Shield className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Natasha's Law Compliance</h3>
           <p className="text-gray-600">
@@ -73,8 +73,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Clock className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Clock className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Smart Expiry Management</h3>
           <p className="text-gray-600">
@@ -91,8 +91,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Users className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Users className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
@@ -109,8 +109,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.5 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Smartphone className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Smartphone className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Mobile-First Design</h3>
           <p className="text-gray-600">
@@ -127,8 +127,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <BarChart3 className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <BarChart3 className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Analytics & Reporting</h3>
           <p className="text-gray-600">
@@ -145,8 +145,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.7 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <FileText className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <FileText className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Bulk Operations</h3>
           <p className="text-gray-600">
@@ -163,8 +163,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.8 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Star className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Star className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Cloud-First Architecture</h3>
           <p className="text-gray-600">
@@ -181,8 +181,8 @@ export const KitchenLabelPrinterFeatures = () => (
           transition={{ duration: 0.7, delay: 0.9 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Shield className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Enterprise Security</h3>
           <p className="text-gray-600">
@@ -201,7 +201,7 @@ export const KitchenLabelPrinterFeatures = () => (
         viewport={{ once: true }}
       >
         <p className="text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">Pro Tip:</span> InstaLabel's AI reduces
+          <span className="font-bold text-mkt-ink">Pro Tip:</span> InstaLabel's AI reduces
           labeling time by 95% while supporting compliance workflows. Start your free trial today.
         </p>
       </motion.div>

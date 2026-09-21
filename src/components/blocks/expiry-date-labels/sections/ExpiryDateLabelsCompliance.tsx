@@ -110,7 +110,7 @@ export const ExpiryDateLabelsCompliance = () => (
           <div className="grid gap-6 md:grid-cols-3">
             <div className="text-center">
               <div className="mb-3 flex justify-center">
-                <Zap className="h-8 w-8 text-purple-500" />
+                <Zap className="h-8 w-8 text-mkt-teal" />
               </div>
               <h4 className="mb-2 font-semibold text-gray-900">AI-Powered Accuracy</h4>
               <p className="text-sm text-gray-600">
@@ -150,10 +150,10 @@ export const ExpiryDateLabelsCompliance = () => (
         transition={{ duration: 0.7, delay: 0.4 }}
         viewport={{ once: true }}
       >
-        <div className="rounded-lg bg-purple-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-purple-600">100%</div>
-          <div className="text-sm font-medium text-purple-800">Compliance Rate</div>
-          <div className="mt-1 text-xs text-purple-600">Every label meets FSA standards</div>
+        <div className="rounded-lg bg-mkt-canvas p-6 text-center">
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">100%</div>
+          <div className="text-sm font-medium text-mkt-ink">Compliance Rate</div>
+          <div className="mt-1 text-xs text-mkt-teal">Every label meets FSA standards</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
           <div className="mb-2 text-3xl font-bold text-green-600">95%</div>

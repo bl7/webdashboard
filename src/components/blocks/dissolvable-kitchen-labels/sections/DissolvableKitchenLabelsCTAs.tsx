@@ -27,7 +27,7 @@ export const DissolvableKitchenLabelsCTAs = () => (
         
         {/* Primary CTAs */}
         <div className="flex flex-wrap items-center justify-center gap-4">
-          <Button size="lg" className="bg-purple-600 px-8 py-4 text-lg text-white hover:bg-purple-700">
+          <Button size="lg" className="bg-mkt-ink px-8 py-4 text-lg text-white hover:bg-mkt-ink">
             <Link href="/register">Start Free Trial</Link>
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
@@ -50,7 +50,7 @@ export const DissolvableKitchenLabelsCTAs = () => (
         {/* Download Guide */}
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
           <div className="mb-4 flex justify-center">
-            <Download className="h-12 w-12 text-purple-600" />
+            <Download className="h-12 w-12 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Download Dissolvable Label Guide</h3>
           <p className="mb-4 text-gray-600">
@@ -67,7 +67,7 @@ export const DissolvableKitchenLabelsCTAs = () => (
         {/* Mobile App */}
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
           <div className="mb-4 flex justify-center">
-            <Smartphone className="h-12 w-12 text-purple-600" />
+            <Smartphone className="h-12 w-12 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Try Mobile App</h3>
           <p className="mb-4 text-gray-600">

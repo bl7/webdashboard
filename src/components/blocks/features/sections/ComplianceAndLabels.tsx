@@ -98,7 +98,7 @@ export const ComplianceAndLabels = () => {
           viewport={{ once: true }}
           className="mb-8"
         >
-          <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-1 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             Stay Compliant, Print with Confidence
           </div>
           <h3 className="text-center text-2xl font-bold text-gray-900 md:text-3xl">
@@ -148,7 +148,7 @@ export const ComplianceAndLabels = () => {
                     className="flex flex-col items-center"
                   >
                     <span className="mb-1 text-sm text-gray-700">PPDS Label</span>
-                    <div className="rounded-2xl border border-purple-100 bg-white p-2 shadow">
+                    <div className="rounded-2xl border border-mkt-steel1 bg-white p-2 shadow">
                       <PPDSLabelRenderer
                         item={samplePPDS}
                         storageInfo={storageInfo}
@@ -169,7 +169,7 @@ export const ComplianceAndLabels = () => {
                     className="flex flex-col items-center"
                   >
                     <span className="mb-1 text-sm text-gray-700">Prep Label</span>
-                    <div className="rounded-2xl border border-purple-100 bg-white p-2 shadow">
+                    <div className="rounded-2xl border border-mkt-steel1 bg-white p-2 shadow">
                       <LabelRender
                         item={samplePrep}
                         expiry={samplePrep.expiryDate}

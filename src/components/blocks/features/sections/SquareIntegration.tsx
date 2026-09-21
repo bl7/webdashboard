@@ -28,7 +28,7 @@ export const SquareIntegration = () => {
           transition={{ duration: 0.6 }}
           className="mb-16 text-center"
         >
-          <div className="mb-4 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-4 inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <SquareLogo size="sm" className="mr-2" />
             Exclusive Square Integration
           </div>
@@ -70,7 +70,7 @@ export const SquareIntegration = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-center"
             >
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-r from-purple-500 to-purple-600">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full text-white">
                 <span className="text-xl font-bold text-white">2</span>
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">Smart Import</h3>
@@ -147,15 +147,15 @@ export const SquareIntegration = () => {
               <div className="space-y-4">
                 <h4 className="mb-3 font-semibold text-gray-900">InstaLabel Dashboard</h4>
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between rounded-lg border border-purple-200 bg-purple-50 p-3">
+                  <div className="flex items-center justify-between rounded-lg border border-mkt-steel1 bg-mkt-canvas p-3">
                     <div className="flex items-center space-x-3">
-                      <Upload className="h-5 w-5 text-purple-600" />
+                      <Upload className="h-5 w-5 text-mkt-teal" />
                       <div>
                         <div className="font-semibold text-gray-900">Caesar Salad</div>
                         <div className="text-sm text-gray-600">Menu Item Ready for Square</div>
                       </div>
                     </div>
-                    <div className="text-xs font-medium text-purple-600">Export Ready</div>
+                    <div className="text-xs font-medium text-mkt-teal">Export Ready</div>
                   </div>
 
                   <div className="flex items-center justify-between rounded-lg border border-orange-200 bg-orange-50 p-3">
@@ -209,24 +209,24 @@ export const SquareIntegration = () => {
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="rounded-xl border border-purple-200 bg-gradient-to-br from-purple-50 to-purple-100 p-6"
+              className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-6"
             >
-              <h3 className="mb-4 text-xl font-bold text-purple-800">Menu Compliance</h3>
-              <ul className="space-y-3 text-purple-700">
+              <h3 className="mb-4 text-xl font-bold text-mkt-ink">Menu Compliance</h3>
+              <ul className="space-y-3 text-mkt-ink">
                 <li className="flex items-start">
-                  <span className="mr-2 text-purple-500">✓</span>
+                  <span className="mr-2 text-mkt-teal">✓</span>
                   <strong>Natasha's Law</strong> compliant menu items
                 </li>
                 <li className="flex items-start">
-                  <span className="mr-2 text-purple-500">✓</span>
+                  <span className="mr-2 text-mkt-teal">✓</span>
                   <strong>Bidirectional sync</strong> with Square POS
                 </li>
                 <li className="flex items-start">
-                  <span className="mr-2 text-purple-500">✓</span>
+                  <span className="mr-2 text-mkt-teal">✓</span>
                   <strong>Real-time menu updates</strong> with perfect structure
                 </li>
                 <li className="flex items-start">
-                  <span className="mr-2 text-purple-500">✓</span>
+                  <span className="mr-2 text-mkt-teal">✓</span>
                   <strong>Audit-ready menu system</strong> with full traceability
                 </li>
               </ul>
@@ -238,7 +238,7 @@ export const SquareIntegration = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.5 }}
-            className="mb-16 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 to-purple-50 p-8"
+            className="mb-16 rounded-2xl border border-blue-200 bg-mkt-canvas p-8"
           >
             <div className="mb-8 text-center">
               <h3 className="mb-4 text-2xl font-bold text-gray-900">
@@ -273,8 +273,8 @@ export const SquareIntegration = () => {
               </div>
 
               <div className="p-4 text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-                  <Database className="h-6 w-6 text-purple-600" />
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-canvas">
+                  <Database className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <h4 className="mb-2 font-semibold text-gray-900">Bidirectional Sync</h4>
                 <p className="text-sm text-gray-600">
@@ -295,7 +295,8 @@ export const SquareIntegration = () => {
             <Link href="/bookdemo">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
+                className="border-0 font-semibold text-white shadow-lg"
+                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
               >
                 Start Your Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />

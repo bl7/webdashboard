@@ -10,9 +10,9 @@ export const ExpiryDateLabelsHero = () => {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-white px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
       {/* Background elements - subtle, no gradients */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-5 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-5 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-5 blur-3xl" />
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-40 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-5 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         {/* Hero Content */}
@@ -29,7 +29,7 @@ export const ExpiryDateLabelsHero = () => {
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               <Calendar className="mr-2 h-4 w-4" />
               #1 Expiry Date Labeling Software
             </div>
@@ -43,7 +43,7 @@ export const ExpiryDateLabelsHero = () => {
             viewport={{ once: true }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">Automate Expiry Date</span>
+              <span className="text-mkt-teal">Automate Expiry Date</span>
               <br className="hidden md:block" />
               <span>Labeling with AI</span>
             </h1>
@@ -72,15 +72,15 @@ export const ExpiryDateLabelsHero = () => {
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Shield className="h-4 w-4 text-purple-600" />
+                <Shield className="h-4 w-4 text-mkt-teal" />
                 <span>100% Natasha's Law Compliant</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Zap className="h-4 w-4 text-purple-600" />
+                <Zap className="h-4 w-4 text-mkt-teal" />
                 <span>AI-Powered Expiry Calculation</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <CheckCircle className="h-4 w-4 text-purple-600" />
+                <CheckCircle className="h-4 w-4 text-mkt-teal" />
                 <span>USB & Bluetooth Printers</span>
               </div>
             </div>
@@ -94,7 +94,7 @@ export const ExpiryDateLabelsHero = () => {
             viewport={{ once: true }}
           >
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
+              <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink">
                 <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -132,7 +132,7 @@ export const ExpiryDateLabelsHero = () => {
             {/* InstaLabel expiry date software interface mockup */}
             <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
               {/* Software Header */}
-              <div className="bg-purple-600 p-4 text-center text-white">
+              <div className="bg-mkt-ink p-4 text-center text-white">
                 <div className="text-lg font-bold">InstaLabel Expiry Date Manager</div>
                 <div className="text-sm opacity-90">AI-Powered Food Safety Compliance</div>
               </div>

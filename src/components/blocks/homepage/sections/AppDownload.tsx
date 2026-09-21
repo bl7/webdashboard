@@ -10,7 +10,7 @@ import instaLabel2 from "@/assets/images/instaLabel2.png"
 
 export const AppDownload = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 px-4 py-12 text-white sm:px-6 sm:py-16 md:py-20">
+    <section className="relative overflow-hidden px-4 py-12 text-white sm:px-6 sm:py-16 md:py-20" style={{ backgroundColor: "#142124" }}>
       {/* Soft white fade overlay for better text readability */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-transparent via-white/5 to-white/10"></div>
       {/* Background pattern */}
@@ -26,7 +26,7 @@ export const AppDownload = () => {
 
       {/* Background blobs */}
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-white opacity-10 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-pink-300 opacity-20 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
       <div className="container relative z-10 mx-auto h-full max-w-6xl">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
@@ -42,7 +42,7 @@ export const AppDownload = () => {
               <h2 className="text-3xl font-black leading-tight sm:text-4xl md:text-5xl lg:text-6xl">
                 Download Our
                 <br />
-                <span className="bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
+                <span className="text-white">
                   Mobile App
                 </span>
               </h2>
@@ -157,12 +157,12 @@ export const AppDownload = () => {
               <motion.div
                 animate={{ y: [-10, 10, -10] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -right-4 top-8 hidden h-8 w-8 rounded-full bg-pink-400 shadow-lg md:block"
+                className="absolute -right-4 top-8 hidden h-8 w-8 rounded-full bg-mkt-teal shadow-lg md:block"
               />
               <motion.div
                 animate={{ y: [10, -10, 10] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -left-4 bottom-16 hidden h-6 w-6 rounded-full bg-purple-400 shadow-lg md:block"
+                className="absolute -left-4 bottom-16 hidden h-6 w-6 rounded-full bg-mkt-ink shadow-lg md:block"
               />
             </div>
           </motion.div>

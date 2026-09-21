@@ -8,11 +8,11 @@ import Link from "next/link"
 
 export const PrepLabelsHero = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
       {/* Background elements */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-10 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-10 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-10 blur-3xl" />
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         {/* Hero Content */}
@@ -29,7 +29,7 @@ export const PrepLabelsHero = () => {
             transition={{ duration: 0.7 }}
             viewport={{ once: true }}
           >
-            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               <Package className="mr-2 h-4 w-4" />
               Prep Labels
             </div>
@@ -43,7 +43,7 @@ export const PrepLabelsHero = () => {
             viewport={{ once: true }}
           >
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">Prep Labels</span>
+              <span className="text-mkt-teal">Prep Labels</span>
               <br className="hidden md:block" />
               <span>That Keep Kitchens Running Smooth</span>
             </h1>
@@ -71,15 +71,15 @@ export const PrepLabelsHero = () => {
           >
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Calendar className="h-4 w-4 text-purple-600" />
+                <Calendar className="h-4 w-4 text-mkt-teal" />
                 <span>Auto Expiry Dates</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <AlertTriangle className="h-4 w-4 text-purple-600" />
+                <AlertTriangle className="h-4 w-4 text-mkt-teal" />
                 <span>Allergen Info</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Users className="h-4 w-4 text-purple-600" />
+                <Users className="h-4 w-4 text-mkt-teal" />
                 <span>Staff Initials</span>
               </div>
             </div>
@@ -93,7 +93,7 @@ export const PrepLabelsHero = () => {
             viewport={{ once: true }}
           >
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
+              <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink">
                 <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -151,7 +151,7 @@ export const PrepLabelsHero = () => {
                 </div>
               </div>
               {/* Right: Automated Success */}
-              <div className="flex flex-1 flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-pink-50 p-4">
+              <div className="flex flex-1 flex-col items-center justify-center bg-mkt-canvas p-4">
                 <div className="mb-2 flex items-center justify-center">
                   <svg
                     className="h-8 w-8 text-green-500"

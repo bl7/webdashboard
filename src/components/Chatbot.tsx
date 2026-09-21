@@ -777,6 +777,7 @@ export function Chatbot({ className }: ChatbotProps) {
             onClick={toggleChat}
             className="h-16 w-16 rounded-full border-4 border-white shadow-lg transition-all duration-300 hover:scale-110"
             size="icon"
+            style={{ backgroundColor: "#142124", backgroundImage: "none" }}
           >
             <Image
               src={avatarImages[currentAvatarIndex]}
@@ -793,7 +794,7 @@ export function Chatbot({ className }: ChatbotProps) {
             <div
               className={`absolute z-10 transition-all duration-500 ${showSpeechBubble ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
             >
-              <div className="min-w-[200px] max-w-[320px] rounded-lg border border-white/20 bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 shadow-lg">
+              <div className="min-w-[200px] max-w-[320px] rounded-lg border border-white/20 bg-gradient-to-r from-mkt-ink to-mkt-ink8 px-4 py-2 shadow-lg">
                 <div className="text-sm font-medium leading-relaxed text-white">
                   {typedText}
                   {showSpeechBubble && typedText.length < 50 && (
@@ -801,7 +802,7 @@ export function Chatbot({ className }: ChatbotProps) {
                   )}
                 </div>
                 {/* Speech bubble arrow pointing right to the button */}
-                <div className="absolute -right-2 top-3 h-0 w-0 border-b-4 border-l-4 border-t-4 border-transparent border-l-blue-600"></div>
+                <div className="absolute -right-2 top-3 h-0 w-0 border-b-4 border-l-4 border-t-4 border-transparent border-l-[#142124]"></div>
               </div>
             </div>
           </div>
@@ -815,7 +816,7 @@ export function Chatbot({ className }: ChatbotProps) {
         }`}
       >
         <Card className="border-0 shadow-2xl">
-          <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 pb-3 text-white">
+          <CardHeader className="bg-gradient-to-r from-mkt-ink to-mkt-ink8 pb-3 text-white">
             <div className="flex items-center gap-3">
               <div className="relative">
                 <Image
@@ -829,7 +830,7 @@ export function Chatbot({ className }: ChatbotProps) {
               </div>
               <div className="flex-1">
                 <CardTitle className="text-lg">InstaLabel Assistant</CardTitle>
-                <p className="text-sm text-blue-100">Ask me anything!</p>
+                <p className="text-sm text-white/80">Ask me anything!</p>
               </div>
               <Button
                 variant="ghost"
@@ -850,8 +851,9 @@ export function Chatbot({ className }: ChatbotProps) {
                     <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
                       <div
                         className={`max-w-[80%] rounded-lg px-3 py-2 ${
-                          message.isUser ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-800"
+                          message.isUser ? "text-white" : "bg-gray-100 text-gray-800"
                         }`}
+                        style={message.isUser ? { backgroundColor: "#142124" } : undefined}
                       >
                         <p className="text-sm">{message.text}</p>
                         <p className="mt-1 text-xs opacity-70">
@@ -891,24 +893,25 @@ export function Chatbot({ className }: ChatbotProps) {
                         </p>
                         <div className="space-y-2 text-sm text-gray-600">
                           <div className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 text-blue-600" />
+                            <Mail className="h-4 w-4 text-mkt-teal" />
                             <span>contact@instalabel.co</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Phone className="h-4 w-4 text-blue-600" />
+                            <Phone className="h-4 w-4 text-mkt-teal" />
                             <span>+44 7845 447586</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <MapPin className="h-4 w-4 text-blue-600" />
+                            <MapPin className="h-4 w-4 text-mkt-teal" />
                             <span>Bournemouth, UK</span>
                           </div>
                           <div className="flex items-center gap-2">
-                            <Clock className="h-4 w-4 text-blue-600" />
+                            <Clock className="h-4 w-4 text-mkt-teal" />
                             <span>Response within 24 hours</span>
                           </div>
                         </div>
                         <Button
-                          className="mt-3 w-full bg-blue-600 hover:bg-blue-700"
+                          className="mt-3 w-full border-0 text-white"
+                          style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                           onClick={() => window.open("/about#contact", "_blank")}
                         >
                           Fill Contact Form
@@ -947,7 +950,8 @@ export function Chatbot({ className }: ChatbotProps) {
                   onClick={handleSendMessage}
                   disabled={!inputValue.trim()}
                   size="icon"
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="border-0 text-white"
+                  style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                 >
                   <Send className="h-4 w-4" />
                 </Button>

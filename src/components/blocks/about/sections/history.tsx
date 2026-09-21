@@ -8,11 +8,11 @@ import { motion } from "framer-motion"
 
 export const History = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-purple-50/30 py-12 sm:py-16">
+    <section className="relative overflow-hidden bg-mkt-canvas/30 py-12 sm:py-16">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-purple-200/20 blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 h-80 w-80 rounded-full bg-pink-200/15 blur-3xl" />
+        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-mkt-steel1/20 blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 h-80 w-80 rounded-full bg-mkt-steel1/20 blur-3xl" />
       </div>
 
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -57,14 +57,14 @@ export const History = () => {
             <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
               From Kitchen Chaos to Labeling Clarity
             </h2>
-            <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-purple-500 to-pink-500" />
+            <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-mkt-ink to-mkt-teal" />
           </div>
 
           {/* Story Content */}
           <div className="space-y-8">
             {/* Opening paragraph - highlighted */}
             <div className="relative rounded-2xl bg-white/80 p-8 shadow-lg ring-1 ring-gray-200/50 backdrop-blur-sm">
-              <div className="absolute left-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-xl text-white shadow-lg">
+              <div className="absolute left-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-mkt-ink to-mkt-ink8 text-xl text-white shadow-lg">
                 🚀
               </div>
               <div className="ml-20">
@@ -82,9 +82,9 @@ export const History = () => {
             <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
               <div className="space-y-6">
                 <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-pink-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-teal/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 text-lg text-white">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-mkt-teal to-mkt-ink8 text-lg text-white">
                       🎯
                     </div>
                     <p className="text-base leading-relaxed text-gray-600">
@@ -97,9 +97,9 @@ export const History = () => {
                 </div>
 
                 <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-ink/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-lg text-white">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-lg text-white" style={{ backgroundColor: "#142124" }}>
                       ⚙️
                     </div>
                     <p className="text-sm leading-relaxed text-gray-600">
@@ -114,9 +114,9 @@ export const History = () => {
 
               <div className="space-y-6">
                 <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-teal/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-green-500 to-green-600 text-lg text-white">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-lg text-white" style={{ backgroundColor: "#17675F" }}>
                       🏪
                     </div>
                     <p className="text-sm leading-relaxed text-gray-600">
@@ -129,9 +129,9 @@ export const History = () => {
                 </div>
 
                 <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-ink/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 text-lg text-white">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-mkt-ink to-mkt-ink8 text-lg text-white">
                       🚀
                     </div>
                     <p className="text-sm leading-relaxed text-gray-600">
@@ -147,7 +147,10 @@ export const History = () => {
           {/* Call to Action */}
           <div className="mt-16 text-center">
             <Link href="/register">
-              <button className="rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl">
+              <button
+                className="rounded-xl px-8 py-4 text-lg font-semibold text-white shadow-lg"
+                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
+              >
                 <span className="mr-2">✨</span>
                 Ready to Transform Your Kitchen?
               </button>

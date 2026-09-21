@@ -32,9 +32,9 @@ export const AllergenGuideHACCP = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <div className="rounded-lg border border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6">
+            <div className="rounded-lg border border-mkt-steel1 bg-mkt-canvas p-6">
               <div className="mb-4 flex items-center gap-3">
-                <Shield className="h-6 w-6 text-purple-600" />
+                <Shield className="h-6 w-6 text-mkt-teal" />
                 <h3 className="text-xl font-bold text-gray-900">What is HACCP?</h3>
               </div>
               <p className="mb-4 text-gray-700">
@@ -97,7 +97,7 @@ export const AllergenGuideHACCP = () => {
           >
             <div className="rounded-lg border border-gray-200 bg-white p-6 shadow-lg">
               <div className="mb-4 flex items-center gap-3">
-                <FileText className="h-6 w-6 text-purple-600" />
+                <FileText className="h-6 w-6 text-mkt-teal" />
                 <h3 className="text-xl font-bold text-gray-900">How Labels Fit Into Compliance</h3>
               </div>
 
@@ -112,14 +112,14 @@ export const AllergenGuideHACCP = () => {
                   </ul>
                 </div>
 
-                <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
+                <div className="rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
                   <div className="mb-2 flex items-center gap-2">
-                    <Zap className="h-4 w-4 text-purple-600" />
-                    <span className="font-semibold text-purple-800">
+                    <Zap className="h-4 w-4 text-mkt-teal" />
+                    <span className="font-semibold text-mkt-ink">
                       InstaLabel Simplifies This
                     </span>
                   </div>
-                  <p className="text-sm text-purple-700">
+                  <p className="text-sm text-mkt-ink">
                     Create compliant allergen labels in seconds with our automated system. No more
                     manual errors or missing information.
                   </p>

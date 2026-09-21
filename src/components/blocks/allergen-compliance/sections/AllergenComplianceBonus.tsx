@@ -45,7 +45,7 @@ export const AllergenComplianceBonus = () => {
               viewport={{ once: true }}
               className="rounded-xl bg-white p-6 shadow-sm"
             >
-              <feature.icon className="mx-auto mb-4 h-8 w-8 text-purple-600" />
+              <feature.icon className="mx-auto mb-4 h-8 w-8 text-mkt-teal" />
               <h3 className="mb-2 font-semibold text-gray-900">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
             </motion.div>

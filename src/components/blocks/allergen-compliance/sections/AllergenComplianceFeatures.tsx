@@ -42,8 +42,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.1 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Shield className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">14 Allergens Auto-Detection</h3>
           <p className="text-gray-600">
@@ -59,8 +59,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Zap className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Zap className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">30-Second Allergen Labels</h3>
           <p className="text-gray-600">
@@ -76,8 +76,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <CheckCircle className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <CheckCircle className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">100% Natasha's Law Compliance</h3>
           <p className="text-gray-600">
@@ -93,8 +93,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Users className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Users className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">5-Minute Staff Training</h3>
           <p className="text-gray-600">
@@ -110,8 +110,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.5 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <FileText className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <FileText className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Complete Audit Trail</h3>
           <p className="text-gray-600">
@@ -127,8 +127,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.6 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Smartphone className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Smartphone className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Mobile & Web Access</h3>
           <p className="text-gray-600">
@@ -144,8 +144,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.7 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <BarChart3 className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <BarChart3 className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Allergen Analytics</h3>
           <p className="text-gray-600">
@@ -161,8 +161,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.8 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <AlertTriangle className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <AlertTriangle className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Hidden Allergen Detection</h3>
           <p className="text-gray-600">
@@ -178,8 +178,8 @@ export const AllergenComplianceFeatures = () => (
           transition={{ duration: 0.7, delay: 0.9 }}
           viewport={{ once: true }}
         >
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-            <Clock className="h-6 w-6 text-purple-600" />
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+            <Clock className="h-6 w-6 text-mkt-teal" />
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Real-Time Updates</h3>
           <p className="text-gray-600">

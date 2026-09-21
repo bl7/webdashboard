@@ -33,9 +33,9 @@ export const AllergenComplianceBeforeAfter = () => (
       >
         <div className="mx-auto max-w-4xl rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12">
           <div className="text-center">
-            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-purple-100 p-3">
+            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-mkt-canvas p-3">
               <svg
-                className="h-10 w-10 text-purple-600"
+                className="h-10 w-10 text-mkt-teal"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -209,10 +209,10 @@ export const AllergenComplianceBeforeAfter = () => (
           <div className="text-sm font-medium text-red-800">Before: Manual Creation</div>
           <div className="mt-1 text-xs text-red-600">Staff checking allergens manually</div>
         </div>
-        <div className="rounded-lg bg-purple-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-purple-600">30 sec</div>
-          <div className="text-sm font-medium text-purple-800">After: InstaLabel</div>
-          <div className="mt-1 text-xs text-purple-600">AI-powered automation</div>
+        <div className="rounded-lg bg-mkt-canvas p-6 text-center">
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">30 sec</div>
+          <div className="text-sm font-medium text-mkt-ink">After: InstaLabel</div>
+          <div className="mt-1 text-xs text-mkt-teal">AI-powered automation</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
           <div className="mb-2 text-3xl font-bold text-green-600">95%</div>

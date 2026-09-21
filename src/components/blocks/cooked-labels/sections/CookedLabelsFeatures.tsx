@@ -6,7 +6,7 @@ import { Clock, Thermometer, AlertTriangle, Users, Zap } from "lucide-react"
 
 export const CookedLabelsFeatures = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -15,7 +15,7 @@ export const CookedLabelsFeatures = () => {
           viewport={{ once: true }}
           className="mb-10 text-center"
         >
-          <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <Zap className="mr-2 h-4 w-4" />
             Features
           </div>
@@ -185,7 +185,7 @@ export const CookedLabelsFeatures = () => {
           viewport={{ once: true }}
           className="mt-12"
         >
-          <div className="rounded-xl border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+          <div className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-8">
             <h4 className="mb-6 text-center text-xl font-bold text-gray-900">
               Simple 3-Step Process
             </h4>

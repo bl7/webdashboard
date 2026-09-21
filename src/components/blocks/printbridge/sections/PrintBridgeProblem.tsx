@@ -4,7 +4,7 @@ import { AlertTriangle } from "lucide-react"
 import { motion } from "framer-motion"
 
 export const PrintBridgeProblem = () => (
-  <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row">
       {/* Visual: Browser Print Dialog (reuse hero left visual) */}
       <motion.div
@@ -29,7 +29,7 @@ export const PrintBridgeProblem = () => (
           <div className="mb-2 text-xs text-gray-400">
             Select Printer: <span className="text-gray-600">HP LaserJet (Offline)</span>
           </div>
-          <button className="mt-2 w-full rounded bg-purple-200 py-1 text-xs font-semibold text-purple-700 shadow">
+          <button className="mt-2 w-full rounded bg-mkt-steel1 py-1 text-xs font-semibold text-mkt-ink shadow">
             Print
           </button>
           <div className="mt-2 text-[10px] text-red-400">
@@ -58,12 +58,12 @@ export const PrintBridgeProblem = () => (
           <li>Wasted time, support tickets</li>
         </ul>
         <div className="mt-4 text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">Average print job:</span> 6 clicks, 15
+          <span className="font-bold text-mkt-ink">Average print job:</span> 6 clicks, 15
           seconds, 23% error rate
         </div>
         <div className="mt-2 text-base text-gray-500">
           Web browsers can't talk to USB printers.{" "}
-          <span className="font-bold text-purple-700">Until now.</span>
+          <span className="font-bold text-mkt-ink">Until now.</span>
         </div>
       </motion.div>
     </div>

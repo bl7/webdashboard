@@ -13,13 +13,13 @@ export const Footer = () => {
   return (
     <>
       {/* Redesigned CTA Section with lighter purple and label ordering feature */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-purple-100 via-purple-50 to-pink-50 px-6 py-24 text-gray-900">
+      <section className="relative overflow-hidden px-6 py-24 text-mkt-ink8" style={{ backgroundColor: "#F6F5F1" }}>
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div
             className="absolute inset-0"
             style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, purple 1px, transparent 1px)`,
+              backgroundImage: `radial-gradient(circle at 25% 25%, #C9D1CF 1px, transparent 1px)`,
               backgroundSize: "60px 60px",
             }}
           ></div>
@@ -28,11 +28,11 @@ export const Footer = () => {
         <div className="container relative z-10 mx-auto max-w-6xl space-y-12 text-center">
           <div className="space-y-8">
             <h3 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-              <span className="bg-gradient-to-r from-purple-700 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-mkt-ink">
                 Ready to simplify
               </span>
               <br />
-              <span className="text-gray-900">your kitchen labeling?</span>
+              <span className="text-mkt-ink8">your kitchen labeling?</span>
             </h3>
             <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-700">
               EHO-compliant labels. Natasha's Law ready. No training required. Works with your
@@ -41,10 +41,10 @@ export const Footer = () => {
           </div>
 
           {/* Label Ordering Feature Highlight */}
-          <div className="rounded-3xl border border-purple-200/50 bg-white/60 p-8 shadow-xl backdrop-blur-sm">
+          <div className="rounded-3xl border border-mkt-steel1 bg-white p-8 shadow-sm">
             <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-3">
               <div className="space-y-4">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: "#142124" }}>
                   <Package className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Order Labels Directly</h3>
@@ -54,7 +54,7 @@ export const Footer = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: "#142124" }}>
                   <Printer className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Print Instantly</h3>
@@ -64,7 +64,7 @@ export const Footer = () => {
               </div>
 
               <div className="space-y-4">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl" style={{ backgroundColor: "#142124" }}>
                   <CreditCard className="h-8 w-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Secure Payment</h3>
@@ -76,7 +76,7 @@ export const Footer = () => {
           </div>
 
           {/* Enhanced testimonial */}
-          <blockquote className="mx-auto max-w-xl rounded-2xl border border-purple-200/50 bg-white/60 p-6 text-lg italic text-gray-700 backdrop-blur-sm">
+          <blockquote className="mx-auto max-w-xl rounded-2xl border border-mkt-steel1 bg-white p-6 text-lg italic text-mkt-steel">
             "InstaLabel changed the way our kitchen runs. We're more compliant, more efficient, and
             wasting less."
             <br />
@@ -88,7 +88,10 @@ export const Footer = () => {
           {/* Enhanced CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4 pt-8">
             <Link href="/register">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl">
+              <Button
+                className="border-0 px-8 py-4 text-lg font-semibold text-white"
+                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
+              >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -97,7 +100,8 @@ export const Footer = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-purple-300 px-8 py-4 text-lg font-semibold text-purple-700 transition-all duration-300 hover:scale-105 hover:border-purple-400 hover:bg-purple-50 hover:text-purple-800"
+                className="border-2 px-8 py-4 text-lg font-semibold"
+                style={{ borderColor: "#142124", color: "#142124", backgroundColor: "#ffffff", backgroundImage: "none" }}
               >
                 Contact Us
               </Button>
@@ -107,7 +111,7 @@ export const Footer = () => {
       </section>
 
       {/* Enhanced Footer Section */}
-      <footer className="bg-gradient-to-br from-purple-950 via-purple-900 to-purple-800 pt-10 text-sm text-white">
+      <footer className="pt-10 text-sm text-white" style={{ backgroundColor: "#142124" }}>
         <div className="container grid grid-cols-1 gap-8 px-4 pb-8 md:grid-cols-6">
           {/* Logo + Description */}
           <div className="space-y-3">
@@ -144,67 +148,67 @@ export const Footer = () => {
 
           {/* Learn Links */}
           <div className="space-y-3">
-            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+            <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
               Learn
             </h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link
                 href="/uses"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Kitchen Labeling Uses
               </Link>
               <Link
                 href="/features"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Features & Benefits
               </Link>
               <Link
                 href="/printbridge"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 PrintBridge Technology
               </Link>
               <Link
                 href="/kitchen-label-printer"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Kitchen Label Printer Software
               </Link>
               <Link
                 href="/label-printer-uk-comparison"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Label Printer UK Comparison
               </Link>
               <Link
                 href="/allergen-compliance"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Allergen Compliance Kit
               </Link>
               <Link
                 href="/mobile-app"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Mobile App
               </Link>
               <Link
                 href="/allergen-guide"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 UK 14 Allergens Guide
               </Link>
               <Link
                 href="/faqs"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Frequently Asked Questions
               </Link>
               <Link
                 href="/blog"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Blog
               </Link>
@@ -213,25 +217,25 @@ export const Footer = () => {
 
           {/* Business Links */}
           <div className="space-y-3">
-            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+            <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
               Business
             </h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link
                 href="/plan"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Pricing Plans
               </Link>
               <Link
                 href="/bookdemo"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Book Free Demo
               </Link>
               <Link
                 href="/about"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 About InstaLabel
               </Link>
@@ -240,55 +244,55 @@ export const Footer = () => {
 
           {/* Labels Links */}
           <div className="space-y-3">
-            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+            <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
               Labels
             </h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link
                 href="/natashas-law"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Natasha's Law Labels
               </Link>
               <Link
                 href="/prep-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Prep Labels
               </Link>
               <Link
                 href="/cooked-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Cooked Labels
               </Link>
               <Link
                 href="/defrost-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Defrost Labels
               </Link>
               <Link
                 href="/ingredient-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Ingredient Labels
               </Link>
               <Link
                 href="/expiry-date-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Expiry Date Labels
               </Link>
               <Link
                 href="/haccp-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 HACCP Labels
               </Link>
               <Link
                 href="/dissolvable-kitchen-labels"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Dissolvable Labels
               </Link>
@@ -297,25 +301,25 @@ export const Footer = () => {
 
           {/* Legal Links */}
           <div className="space-y-3">
-            <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+            <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
               Legal
             </h3>
             <nav className="flex flex-col gap-2 text-xs text-white/80">
               <Link
                 href="/privacy-policy"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Privacy Policy
               </Link>
               <Link
                 href="/cookie-policy"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Cookie Policy
               </Link>
               <Link
                 href="/terms"
-                className="transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                className="transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
               >
                 Terms of Service
               </Link>
@@ -325,23 +329,23 @@ export const Footer = () => {
           {/* Contact + Socials */}
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+              <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
                 Contact
               </h3>
               <div className="space-y-1 text-xs text-white/80">
                 <p className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-purple-400"></span>
+                  <span className="h-2 w-2 rounded-full bg-[#17675F]"></span>
                   Bournemouth, England
                 </p>
                 <Link
                   href="mailto:contact@instalabel.co"
-                  className="block transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                  className="block transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
                 >
                   contact@instalabel.co
                 </Link>
                 <Link
                   href="tel:+447845447586"
-                  className="block transition-all duration-300 hover:translate-x-1 hover:text-purple-300"
+                  className="block transition-all duration-300 hover:translate-x-1 hover:text-[#E4F1EE]"
                 >
                   +44 7845 447586
                 </Link>
@@ -349,7 +353,7 @@ export const Footer = () => {
                   href="https://wa.me/447845447586"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group mt-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-purple-800/50 transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                  className="group mt-2 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:bg-white/20"
                   aria-label="Message InstaLabel on WhatsApp"
                 >
                   <SiWhatsapp
@@ -361,7 +365,7 @@ export const Footer = () => {
             </div>
 
             <div className="space-y-2">
-              {/* <h3 className="border-b border-purple-400/30 pb-1 text-base font-semibold text-white">
+              {/* <h3 className="border-b border-white/15 pb-1 text-base font-semibold text-white">
                 Follow Us
               </h3> */}
               <div className="flex gap-3">
@@ -403,7 +407,7 @@ export const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-6 border-t border-purple-700/50 py-3">
+        <div className="mt-6 border-t border-white/15 py-3">
           <div className="container px-4 text-center text-xs text-white/50">
             <p>&copy; 2026 InstaLabel. All rights reserved.</p>
           </div>

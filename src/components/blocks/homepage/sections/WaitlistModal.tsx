@@ -99,7 +99,7 @@ export const DemoRequestModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="marketing sm:max-w-md">
         <DialogHeader className="text-center">
           <DialogTitle className="text-2xl font-bold text-gray-900">Request a Demo</DialogTitle>
         </DialogHeader>
@@ -188,7 +188,7 @@ export const DemoRequestModal = () => {
 
               <Button
                 type="submit"
-                className="w-full bg-purple-600 text-white hover:bg-purple-700"
+                className="w-full bg-mkt-ink text-white hover:bg-mkt-ink"
                 disabled={isLoading}
               >
                 {isLoading ? "Submitting..." : "Request Demo"}

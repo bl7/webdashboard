@@ -8,7 +8,7 @@ import Link from "next/link"
 
 export const FinalCTA = () => {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-700 to-pink-600 px-4 py-24 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative overflow-hidden px-4 py-24 text-white sm:px-6 md:px-12 lg:px-16" style={{ backgroundColor: "#142124" }}>
       {/* Background decorative elements */}
       <div className="absolute inset-0">
         <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
@@ -78,7 +78,7 @@ export const FinalCTA = () => {
             viewport={{ once: true }}
             className="flex flex-wrap items-center justify-center gap-6"
           >
-            <Button size="lg" className="bg-white text-purple-600 hover:bg-gray-100 px-10 py-5 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300" asChild>
+            <Button size="lg" className="bg-white text-mkt-teal hover:bg-gray-100 px-10 py-5 text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300" asChild>
               <Link href="/bookdemo">
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5" />

@@ -35,7 +35,7 @@ const softwareFeatures = [
     ],
   },
   {
-    icon: <ShieldCheck className="h-7 w-7 text-purple-600" />,
+    icon: <ShieldCheck className="h-7 w-7 text-mkt-teal" />,
     title: "Compliance & Safety",
     description:
       "Built-in Natasha's Law compliance, automatic FSA updates, comprehensive audit trails, and food safety regulation adherence.",
@@ -86,7 +86,7 @@ const softwareFeatures = [
     ],
   },
   {
-    icon: <Smartphone className="h-7 w-7 text-pink-600" />,
+    icon: <Smartphone className="h-7 w-7 text-mkt-teal" />,
     title: "Mobile-First Design",
     description:
       "Responsive web app optimized for mobile devices, Android app for thermal printing, and seamless cross-device experience.",
@@ -155,7 +155,7 @@ const softwareFeatures = [
 ]
 
 const SystemFeaturesGrid = () => (
-  <section className="relative bg-gradient-to-br from-white via-purple-50/30 to-white py-20">
+  <section className="relative bg-gradient-to-br from-white via-white/30 to-white py-20">
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Header */}
       <motion.div
@@ -165,8 +165,8 @@ const SystemFeaturesGrid = () => (
         viewport={{ once: true }}
         className="mb-16 text-center"
       >
-        <div className="mb-3 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
-          <Zap className="mr-2 h-4 w-4 text-purple-600" />
+        <div className="mb-3 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
+          <Zap className="mr-2 h-4 w-4 text-mkt-teal" />
           Comprehensive Software Solution
         </div>
         <h3 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
@@ -200,14 +200,14 @@ const SystemFeaturesGrid = () => (
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               viewport={{ once: true }}
-              className="group border-l-4 border-purple-200 pl-6 transition-colors duration-300 hover:border-purple-400"
+              className="group border-l-4 border-mkt-steel1 pl-6 transition-colors duration-300 hover:border-mkt-steel1"
             >
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 rounded-lg bg-purple-50 p-2 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                <div className="flex-shrink-0 rounded-lg bg-mkt-canvas p-2 text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                   {item.icon}
                 </div>
                 <div className="flex-1">
-                  <h5 className="text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-purple-700">
+                  <h5 className="text-lg font-semibold text-gray-900 transition-colors duration-200 group-hover:text-mkt-ink">
                     {item.title}
                   </h5>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600">{item.description}</p>

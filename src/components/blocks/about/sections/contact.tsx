@@ -8,17 +8,17 @@ export const Contact = () => {
   return (
     <section
       id="contact"
-      className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-purple-50/30 py-12 sm:py-16"
+      className="relative overflow-hidden bg-mkt-canvas/30 py-12 sm:py-16"
     >
       {/* Enhanced background decoration */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/4 top-1/4 h-72 w-72 animate-pulse rounded-full bg-purple-200/20 blur-3xl" />
+        <div className="absolute left-1/4 top-1/4 h-72 w-72 animate-pulse rounded-full bg-mkt-steel1/20 blur-3xl" />
         <div
-          className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-pink-200/20 blur-3xl"
+          className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-mkt-steel1/30 blur-3xl"
           style={{ animationDelay: "1s" }}
         />
         <div
-          className="absolute left-3/4 top-1/2 h-64 w-64 animate-pulse rounded-full bg-purple-200/20 blur-3xl"
+          className="absolute left-3/4 top-1/2 h-64 w-64 animate-pulse rounded-full bg-mkt-steel1/20 blur-3xl"
           style={{ animationDelay: "2s" }}
         />
         <div className="absolute left-1/2 top-10 h-32 w-32 rounded-full bg-green-200/30 blur-2xl" />
@@ -55,7 +55,7 @@ export const Contact = () => {
             <div className="relative">
               <div className="ml-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-600 text-white shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#142124" }}>
                     <MapPin className="h-6 w-6" />
                   </div>
                   <div>
@@ -65,7 +65,7 @@ export const Contact = () => {
                 </div>
 
                 <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 to-pink-600 text-white shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#17675F" }}>
                     <Phone className="h-6 w-6" />
                   </div>
                   <div>
@@ -75,7 +75,7 @@ export const Contact = () => {
                 </div>
 
                 <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#142124" }}>
                     <Mail className="h-6 w-6" />
                   </div>
                   <div>
@@ -85,7 +85,7 @@ export const Contact = () => {
                 </div>
 
                 <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white shadow-lg transition-all duration-300 group-hover:scale-110">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#17675F" }}>
                     <Clock className="h-6 w-6" />
                   </div>
                   <div>
@@ -105,8 +105,8 @@ export const Contact = () => {
                   <div className="text-sm text-gray-600">Trust InstaLabel</div>
                 </div>
               </div> */}
-              {/* <div className="group flex transform items-center gap-4 rounded-2xl bg-gradient-to-r from-purple-50 to-purple-100 p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                <CheckCircle className="h-8 w-8 text-purple-500 transition-transform duration-300 group-hover:scale-110" />
+              {/* <div className="group flex transform items-center gap-4 rounded-2xl bg-mkt-canvas p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <CheckCircle className="h-8 w-8 text-mkt-teal transition-transform duration-300 group-hover:scale-110" />
                 <div>
                   <div className="text-lg font-semibold text-gray-900">EHO Compliant</div>
                   <div className="text-sm text-gray-600">Certified Solution</div>

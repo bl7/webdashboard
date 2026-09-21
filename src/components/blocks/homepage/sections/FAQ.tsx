@@ -55,7 +55,7 @@ export const FAQ = () => {
   const rightColumnFAQs = faqs.slice(Math.ceil(faqs.length / 2))
 
   return (
-    <section className="relative bg-gradient-to-br from-white via-purple-50/30 to-pink-50/30 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative bg-gradient-to-br from-white via-white/30 to-mkt-canvas/30 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
@@ -65,13 +65,13 @@ export const FAQ = () => {
           viewport={{ once: true }}
           className="mb-12 text-center"
         >
-          <div className="mb-4 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-4 inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <HelpCircle className="mr-2 h-4 w-4" />
             Frequently Asked Questions
           </div>
 
           <h3 className="mb-4 text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-mkt-ink">
               Got questions?
             </span>
             <br />
@@ -96,7 +96,7 @@ export const FAQ = () => {
                   value={`item-${index}`}
                   className="rounded-lg border border-gray-200 bg-white/50 px-4 transition-all duration-300 hover:bg-white hover:shadow-sm"
                 >
-                  <AccordionTrigger className="text-left text-sm font-semibold text-gray-900 hover:text-purple-600 [&[data-state=open]]:text-purple-600">
+                  <AccordionTrigger className="text-left text-sm font-semibold text-gray-900 hover:text-mkt-teal [&[data-state=open]]:text-mkt-teal">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-sm leading-relaxed text-gray-600">
@@ -116,7 +116,7 @@ export const FAQ = () => {
                   value={`item-${index + leftColumnFAQs.length}`}
                   className="rounded-lg border border-gray-200 bg-white/50 px-4 transition-all duration-300 hover:bg-white hover:shadow-sm"
                 >
-                  <AccordionTrigger className="text-left text-sm font-semibold text-gray-900 hover:text-purple-600 [&[data-state=open]]:text-purple-600">
+                  <AccordionTrigger className="text-left text-sm font-semibold text-gray-900 hover:text-mkt-teal [&[data-state=open]]:text-mkt-teal">
                     {faq.question}
                   </AccordionTrigger>
                   <AccordionContent className="text-sm leading-relaxed text-gray-600">

@@ -47,7 +47,7 @@ const advantages = [
     outcome: "Inefficiency, mistakes, lost productivity",
   },
   {
-    icon: <Shield className="h-7 w-7 text-purple-600" />,
+    icon: <Shield className="h-7 w-7 text-mkt-teal" />,
     title: "PrintBridge",
     points: [
       "No popups, no confusion",
@@ -60,7 +60,7 @@ const advantages = [
 ]
 
 export const PrintBridgeAdvantages = () => (
-  <section className="relative w-full bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto max-w-6xl">
       <motion.div
         className="mb-10 text-center"
@@ -69,7 +69,7 @@ export const PrintBridgeAdvantages = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+        <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
           Why PrintBridge Beats Every Alternative
         </div>
         <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl">
@@ -103,7 +103,7 @@ export const PrintBridgeAdvantages = () => (
                 <li key={j}>{pt}</li>
               ))}
             </ul>
-            <div className="mt-auto text-xs font-semibold text-purple-700">{adv.outcome}</div>
+            <div className="mt-auto text-xs font-semibold text-mkt-ink">{adv.outcome}</div>
           </motion.div>
         ))}
       </motion.div>

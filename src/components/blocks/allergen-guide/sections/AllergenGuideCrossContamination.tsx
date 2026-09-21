@@ -79,36 +79,36 @@ export const AllergenGuideCrossContamination = () => {
             {/* Staff Training */}
             <div>
               <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                  <Users className="h-6 w-6 text-purple-600" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                  <Users className="h-6 w-6 text-mkt-teal" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900">Staff Training</h3>
               </div>
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">Train all staff on allergen awareness</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">Regular updates on allergen procedures</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">
                     Clear communication about allergen requirements
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">Emergency procedures for allergic reactions</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">How to handle customer allergen inquiries</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-purple-600" />
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 flex-shrink-0 text-mkt-teal" />
                   <span className="text-gray-700">Documentation and record-keeping procedures</span>
                 </li>
               </ul>
@@ -124,7 +124,7 @@ export const AllergenGuideCrossContamination = () => {
           viewport={{ once: true }}
           className="mt-12 grid gap-6 md:grid-cols-3"
         >
-          <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-pink-50 p-6">
+          <div className="rounded-xl border border-red-200 bg-gradient-to-br from-red-50 to-mkt-canvas p-6">
             <div className="mb-4 flex items-center gap-3">
               <AlertTriangle className="h-6 w-6 text-red-600" />
               <h4 className="font-semibold text-red-800">High Risk Areas</h4>

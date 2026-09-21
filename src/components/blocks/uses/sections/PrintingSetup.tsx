@@ -81,7 +81,7 @@ export const PrintingSetup = () => {
         {/* Printing Methods - Step-by-Step Flow */}
         <div className="relative mb-20">
           {/* Connection Line */}
-          <div className="absolute bottom-0 left-1/2 top-0 hidden w-0.5 -translate-x-1/2 transform bg-gradient-to-b from-blue-200 via-purple-200 to-green-200 lg:block" />
+          <div className="absolute bottom-0 left-1/2 top-0 hidden w-0.5 -translate-x-1/2 transform bg-gradient-to-b from-blue-200 via-mkt-steel1 to-green-200 lg:block" />
 
           <div className="space-y-12">
             {printingMethods.map((method, index) => (
@@ -142,7 +142,7 @@ export const PrintingSetup = () => {
                     viewport={{ once: true }}
                     className="hidden lg:block"
                   >
-                    <ArrowRight className="h-8 w-8 text-purple-400" />
+                    <ArrowRight className="h-8 w-8 text-mkt-teal1" />
                   </motion.div>
                 )}
               </motion.div>
@@ -159,8 +159,8 @@ export const PrintingSetup = () => {
           className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm"
         >
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
-              <Printer className="h-8 w-8 text-purple-600" />
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-mkt-canvas">
+              <Printer className="h-8 w-8 text-mkt-teal" />
             </div>
             <h3 className="text-2xl font-bold text-gray-900">Label Specifications</h3>
             <p className="text-gray-600">
@@ -182,7 +182,7 @@ export const PrintingSetup = () => {
                 <ul className="space-y-2">
                   {spec.items.map((item, idx) => (
                     <li key={idx} className="flex items-start gap-3">
-                      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-500" />
+                      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                       <span className="text-sm text-gray-700">{item}</span>
                     </li>
                   ))}

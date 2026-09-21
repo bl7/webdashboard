@@ -45,7 +45,7 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <section className="bg-white">
-      <div className="prose max-w-none break-words text-base prose-h2:my-6 prose-p:my-2 prose-a:text-purple-700 prose-a:no-underline hover:prose-a:text-purple-500">
+      <div className="prose max-w-none break-words text-base prose-h2:my-6 prose-p:my-2 prose-a:text-mkt-ink prose-a:no-underline hover:prose-a:text-mkt-teal">
         <div className="flex w-full">
           <div className="w-full">
             <h1 className="mb-3 text-5xl font-bold">Cookie Policy</h1>

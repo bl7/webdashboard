@@ -113,10 +113,10 @@ export const ContactForm = () => {
           {/* Form Card with shadow effect */}
           <div className="relative">
             {/* 3D Shadow */}
-            <div className="absolute inset-0 translate-x-2 translate-y-2 transform rounded-2xl bg-primary/20"></div>
+            <div className="absolute inset-0 translate-x-2 translate-y-2 transform rounded-2xl" style={{ backgroundColor: "rgba(20, 33, 36, 0.12)" }}></div>
 
             {/* Main Form Card */}
-            <div className="relative rounded-2xl border border-primary/20 bg-primary/10 p-8 backdrop-blur-sm">
+            <div className="relative rounded-2xl border p-8 backdrop-blur-sm" style={{ borderColor: "#E3E7E4", backgroundColor: "#F6F5F1" }}>
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
                   {/* Name Field */}
@@ -130,7 +130,7 @@ export const ContactForm = () => {
                         </label>
                         <FormControl>
                           <Input
-                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-primary/50"
+                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-[#142124]/50"
                             placeholder="Fullname"
                             {...field}
                           />
@@ -151,7 +151,7 @@ export const ContactForm = () => {
                         </label>
                         <FormControl>
                           <Input
-                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-primary/50"
+                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-[#142124]/50"
                             placeholder="Email Address"
                             {...field}
                           />
@@ -172,7 +172,7 @@ export const ContactForm = () => {
                         </label>
                         <FormControl>
                           <Input
-                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-primary/50"
+                            className="h-12 rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-[#142124]/50"
                             placeholder="Contact Number (optional)"
                             {...field}
                           />
@@ -193,7 +193,7 @@ export const ContactForm = () => {
                         </label>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
-                            <SelectTrigger className="h-12 rounded-lg border-0 bg-background/90 text-base text-muted-foreground shadow-sm focus:ring-2 focus:ring-primary/50">
+                            <SelectTrigger className="h-12 rounded-lg border-0 bg-background/90 text-base text-muted-foreground shadow-sm focus:ring-2 focus:ring-[#142124]/50">
                               <SelectValue placeholder="How did you find us?" />
                             </SelectTrigger>
                           </FormControl>
@@ -243,7 +243,7 @@ export const ContactForm = () => {
                         </label>
                         <FormControl>
                           <Textarea
-                            className="min-h-36 resize-none rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-primary/50"
+                            className="min-h-36 resize-none rounded-lg border-0 bg-background/90 text-base shadow-sm focus:ring-2 focus:ring-[#142124]/50"
                             placeholder="Write your message here .."
                             {...field}
                           />
@@ -257,7 +257,8 @@ export const ContactForm = () => {
                   <Button
                     disabled={loading}
                     type="submit"
-                    className="h-14 gap-5 rounded-lg bg-accent font-medium uppercase tracking-wide text-accent-foreground shadow-sm transition-all duration-200 hover:bg-accent/90"
+                    className="h-14 gap-5 rounded-lg font-medium uppercase tracking-wide text-white shadow-sm"
+                    style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                   >
                     {loading && <FaSpinner className="animate-spin" />}
                     Send Enquiry

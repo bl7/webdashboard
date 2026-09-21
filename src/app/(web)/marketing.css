@@ -1,0 +1,155 @@
+/* Scheme A — scoped to public marketing. Does not change dashboard tokens. */
+
+.marketing {
+  --mkt-ink: #142124;
+  --mkt-ink8: #243438;
+  --mkt-steel: #5f6d70;
+  --mkt-steel3: #c9d1cf;
+  --mkt-steel1: #e3e7e4;
+  --mkt-canvas: #f6f5f1;
+  --mkt-teal: #17675f;
+  --mkt-teal1: #e4f1ee;
+  --mkt-allergen: #68409a;
+  --mkt-allergen1: #eee7f6;
+  --mkt-amber: #a95709;
+  --mkt-red: #a93a35;
+  --mkt-info: #2c5f87;
+  --primary: 189 29% 11%;
+  --ring: 189 29% 11%;
+  background-color: var(--mkt-canvas);
+  color: var(--mkt-ink8);
+}
+
+/* Flatten leftover shared Button gradients inside marketing only */
+.marketing [class*="from-purple-"],
+.marketing [class*="to-pink-"],
+.marketing [class*="from-pink-"] {
+  background-image: none !important;
+}
+
+.marketing a[class*="from-purple-"]:not([class*="bg-white"]),
+.marketing button[class*="from-purple-"]:not([class*="bg-white"]),
+.marketing a[class*="to-pink-"]:not([class*="bg-white"]),
+.marketing button[class*="to-pink-"]:not([class*="bg-white"]) {
+  background-color: var(--mkt-ink) !important;
+  color: #ffffff !important;
+}
+
+.marketing [class*="border-purple-"]:not([class*="border-white"]) {
+  border-color: var(--mkt-ink) !important;
+}
+
+.marketing [class*="text-purple-"]:not([class*="text-white"]) {
+  color: var(--mkt-ink) !important;
+}
+
+.marketing [class*="hover:bg-purple-"]:not([class*="hover:bg-white"]):hover {
+  background-color: var(--mkt-canvas) !important;
+}
+
+.marketing .bg-mkt-ink {
+  background-color: #142124 !important;
+}
+.marketing .bg-mkt-ink8 {
+  background-color: #243438 !important;
+}
+.marketing .bg-mkt-canvas {
+  background-color: #f6f5f1 !important;
+}
+.marketing .bg-mkt-teal {
+  background-color: #17675f !important;
+}
+.marketing .text-mkt-ink {
+  color: #142124 !important;
+}
+.marketing .text-mkt-ink8 {
+  color: #243438 !important;
+}
+.marketing .text-mkt-steel {
+  color: #5f6d70 !important;
+}
+.marketing .text-mkt-teal {
+  color: #17675f !important;
+}
+.marketing .text-mkt-allergen {
+  color: #68409a !important;
+}
+.marketing .bg-mkt-allergen1 {
+  background-color: #eee7f6 !important;
+}
+.marketing .border-mkt-ink {
+  border-color: #142124 !important;
+}
+.marketing .border-mkt-steel1 {
+  border-color: #e3e7e4 !important;
+}
+.marketing .hover\:bg-mkt-ink:hover {
+  background-color: #142124 !important;
+  color: #ffffff !important;
+}
+.marketing .hover\:text-mkt-teal:hover {
+  color: #17675f !important;
+}
+
+/* Portaled dialogs/drawers render outside .marketing. Scope by page, not dashboard. */
+body:has(.marketing) {
+  --mkt-ink: #142124;
+  --mkt-ink8: #243438;
+  --mkt-teal: #17675f;
+  --mkt-canvas: #f6f5f1;
+}
+
+body:has(.marketing) :is(a, button)[class*="from-purple-"]:not([class*="bg-white"]),
+body:has(.marketing) :is(a, button)[class*="to-pink-"]:not([class*="bg-white"]),
+body:has(.marketing) :is(a, button)[class*="from-pink-"]:not([class*="bg-white"]),
+body:has(.marketing) :is(a, button)[class*="bg-purple-"]:not([class*="bg-white"]),
+body:has(.marketing) :is(a, button)[class*="bg-blue-600"]:not([class*="bg-white"]) {
+  background-image: none !important;
+  background-color: #142124 !important;
+  color: #ffffff !important;
+}
+
+body:has(.marketing) :is(a, button)[class*="border-purple-"]:not([class*="border-white"]),
+body:has(.marketing) :is(a, button)[class*="border-blue-600"] {
+  border-color: #142124 !important;
+  color: #142124 !important;
+  background-image: none !important;
+}
+
+body:has(.marketing) :is(a, button)[class*="border-purple-"]:not([class*="border-white"]):hover,
+body:has(.marketing) :is(a, button)[class*="border-blue-600"]:hover {
+  background-color: #142124 !important;
+  color: #ffffff !important;
+}
+
+body:has(.marketing) :is(a, button)[class*="text-purple-"]:not([class*="from-purple"]):not([class*="text-white"]) {
+  color: #142124 !important;
+}
+
+body:has(.marketing) :is(a, button)[class*="hover:bg-purple-50"]:hover,
+body:has(.marketing) :is(a, button)[class*="hover:bg-purple-100"]:hover {
+  background-color: #f6f5f1 !important;
+}
+
+body:has(.marketing) :is(a, button)[class*="hover:bg-purple-600"]:hover,
+body:has(.marketing) :is(a, button)[class*="hover:from-purple"]:hover {
+  background-image: none !important;
+  background-color: #243438 !important;
+  color: #ffffff !important;
+}
+
+body:has(.marketing) .bg-accent {
+  background-color: #142124 !important;
+  color: #ffffff !important;
+}
+
+.marketing .text-primary {
+  color: #17675f !important;
+}
+
+.marketing .text-transparent.bg-clip-text,
+.marketing [class*="bg-clip-text"][class*="text-transparent"] {
+  -webkit-text-fill-color: #142124;
+  color: #142124 !important;
+  background-image: none !important;
+}

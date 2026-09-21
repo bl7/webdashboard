@@ -7,7 +7,7 @@ import LabelRender from "@/app/dashboard/print/LabelRender"
 
 export const CookedLabelsExample = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
           className="mb-10 text-center"
@@ -16,7 +16,7 @@ export const CookedLabelsExample = () => {
           transition={{ duration: 0.7 }}
           viewport={{ once: true }}
         >
-          <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+          <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <Eye className="mr-2 h-4 w-4" />
             Example Label
           </div>

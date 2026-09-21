@@ -12,8 +12,8 @@ export const HowToUploadSteps = () => (
     </div>
     <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-4">
       <div className="flex flex-col items-center">
-        <div className="mb-4 rounded-full bg-purple-100 p-4">
-          <FaDownload className="h-8 w-8 text-purple-600" />
+        <div className="mb-4 rounded-full bg-mkt-canvas p-4">
+          <FaDownload className="h-8 w-8 text-mkt-teal" />
         </div>
         <h3 className="mb-1 text-lg font-semibold">1. Download Template</h3>
         <p className="text-sm text-gray-600">
@@ -21,8 +21,8 @@ export const HowToUploadSteps = () => (
         </p>
       </div>
       <div className="flex flex-col items-center">
-        <div className="mb-4 rounded-full bg-purple-100 p-4">
-          <FaEdit className="h-8 w-8 text-purple-600" />
+        <div className="mb-4 rounded-full bg-mkt-canvas p-4">
+          <FaEdit className="h-8 w-8 text-mkt-teal" />
         </div>
         <h3 className="mb-1 text-lg font-semibold">2. Fill in Your Data</h3>
         <p className="text-sm text-gray-600">

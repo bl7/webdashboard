@@ -41,7 +41,7 @@ export const EnhancedSquareIntegration = () => {
     },
     {
       step: "Step 3: Ongoing Synchronization",
-      icon: <Zap className="h-6 w-6 text-purple-600" />,
+      icon: <Zap className="h-6 w-6 text-mkt-teal" />,
       title: "Choose real-time sync or scheduled updates (daily/weekly)",
       details: [
         "Safe create-only mode prevents overwriting existing Square data",
@@ -88,7 +88,7 @@ export const EnhancedSquareIntegration = () => {
           viewport={{ once: true }}
           className="mb-16 text-center"
         >
-          <div className="mb-3 inline-flex items-center rounded-full bg-gradient-to-r from-blue-100 to-purple-100 px-3 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-200">
+          <div className="mb-3 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-200">
             <Database className="mr-2 h-4 w-4 text-blue-600" />
             Square POS Integration
           </div>
@@ -213,7 +213,7 @@ export const EnhancedSquareIntegration = () => {
                       <div className="rounded-lg bg-gray-100 p-2">{printer.icon}</div>
                       <div>
                         <h6 className="font-semibold text-gray-900">{printer.type}</h6>
-                        <div className="text-sm text-purple-600">{printer.requirement}</div>
+                        <div className="text-sm text-mkt-teal">{printer.requirement}</div>
                       </div>
                     </div>
 

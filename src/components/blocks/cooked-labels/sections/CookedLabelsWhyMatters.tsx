@@ -6,7 +6,7 @@ import { AlertTriangle, Clock, FileText, Thermometer } from "lucide-react"
 
 export const CookedLabelsWhyMatters = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row">
         {/* Left: Problem Visual */}
         <div className="mx-auto w-full max-w-md flex-1">
@@ -74,26 +74,26 @@ export const CookedLabelsWhyMatters = () => {
               </div>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <Clock className="h-4 w-4 text-purple-600" />
+                  <Clock className="h-4 w-4 text-mkt-teal" />
                   <span>Missing cook times</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <Thermometer className="h-4 w-4 text-purple-600" />
+                  <Thermometer className="h-4 w-4 text-mkt-teal" />
                   <span>No temperature records</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <FileText className="h-4 w-4 text-purple-600" />
+                  <FileText className="h-4 w-4 text-mkt-teal" />
                   <span>Incomplete logs</span>
                 </div>
                 <div className="flex items-center gap-3 text-sm text-gray-700">
-                  <AlertTriangle className="h-4 w-4 text-purple-600" />
+                  <AlertTriangle className="h-4 w-4 text-mkt-teal" />
                   <span>HACCP violations</span>
                 </div>
               </div>
             </div>
-            <div className="mt-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
-              <div className="text-sm font-semibold text-purple-800">
-                <span className="font-bold text-purple-700">The Solution:</span> Automated cook
+            <div className="mt-6 rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+              <div className="text-sm font-semibold text-mkt-ink">
+                <span className="font-bold text-mkt-ink">The Solution:</span> Automated cook
                 labels with temperature tracking, cook times, and allergen information ensure HACCP
                 compliance and food safety.
               </div>

@@ -31,7 +31,7 @@ const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of open
 const businessName = "InstaLabel Ltd"
 
 export const PPDSLabelShowcaseSection = () => (
-  <section className="relative border-b border-t border-purple-100 bg-white px-4 py-16 sm:px-6">
+  <section className="relative border-b border-t border-mkt-steel1 bg-white px-4 py-16 sm:px-6">
     <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row md:gap-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -40,7 +40,7 @@ export const PPDSLabelShowcaseSection = () => (
         viewport={{ once: true }}
         className="flex-1 space-y-6"
       >
-        <div className="mx-auto inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200 lg:mx-0">
+        <div className="mx-auto inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1 lg:mx-0">
           <span role="img" aria-label="label">
             🏷️
           </span>{" "}

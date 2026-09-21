@@ -43,9 +43,9 @@ export const KitchenLabelPrinterComparison = () => (
           <div className="bg-gray-50 p-6 text-center">
             <h3 className="text-lg font-bold text-gray-900">Feature</h3>
           </div>
-          <div className="bg-purple-50 p-6 text-center">
-            <h3 className="text-lg font-bold text-purple-900">InstaLabel Software</h3>
-            <p className="mt-2 text-sm text-purple-600">Best for modern kitchens</p>
+          <div className="bg-mkt-canvas p-6 text-center">
+            <h3 className="text-lg font-bold text-mkt-ink">InstaLabel Software</h3>
+            <p className="mt-2 text-sm text-mkt-teal">Best for modern kitchens</p>
           </div>
           <div className="bg-red-50 p-6 text-center">
             <h3 className="text-lg font-bold text-red-900">Manual Labeling</h3>
@@ -173,14 +173,14 @@ export const KitchenLabelPrinterComparison = () => (
 
       {/* Recommendation */}
       <motion.div
-        className="mt-12 rounded-lg bg-purple-50 p-6 text-center"
+        className="mt-12 rounded-lg bg-mkt-canvas p-6 text-center"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4 }}
         viewport={{ once: true }}
       >
-        <h3 className="mb-3 text-xl font-bold text-purple-900">Why Choose InstaLabel?</h3>
-        <p className="text-purple-700">
+        <h3 className="mb-3 text-xl font-bold text-mkt-ink">Why Choose InstaLabel?</h3>
+        <p className="text-mkt-ink">
           <strong>InstaLabel saves 95% of labeling time</strong> while supporting compliance workflows. Our
           AI-powered software works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended) and eliminates manual errors.
           <strong>Start your free trial today and see the difference.</strong>

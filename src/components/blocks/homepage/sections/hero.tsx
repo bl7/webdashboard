@@ -21,14 +21,14 @@ import { DemoRequestModal } from "./WaitlistModal"
 export const Hero = () => {
   return (
     <section
-      className="relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 pb-16 pt-32 sm:px-6 md:flex-row md:px-12 lg:px-16"
+      className="relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:flex-row md:px-12 lg:px-16"
       style={{ minHeight: "100vh" }}
     >
       {/* Enhanced Background blobs */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-20 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-20 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-20 blur-3xl" />
-      <div className="absolute right-[20%] top-[60%] isolate -z-10 h-64 w-64 rounded-full bg-purple-400 opacity-15 blur-3xl" />
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-20 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+      <div className="absolute right-[20%] top-[60%] isolate -z-10 h-64 w-64 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex h-full flex-col-reverse items-center justify-between gap-6 md:flex-row md:gap-10">
         {/* Left: Product Image (unchanged) */}
@@ -53,14 +53,14 @@ export const Hero = () => {
             <motion.div
               animate={{ y: [-10, 10, -10] }}
               transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -right-4 -top-4 rounded-full border border-purple-200 bg-white p-3 shadow-lg"
+              className="absolute -right-4 -top-4 rounded-full border border-mkt-steel1 bg-white p-3 shadow-lg"
             >
-              <Zap className="h-6 w-6 text-purple-600" />
+              <Zap className="h-6 w-6 text-mkt-teal" />
             </motion.div>
             <motion.div
               animate={{ y: [10, -10, 10] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-4 -left-4 rounded-full border border-purple-200 bg-white p-3 shadow-lg"
+              className="absolute -bottom-4 -left-4 rounded-full border border-mkt-steel1 bg-white p-3 shadow-lg"
             >
               <Shield className="h-6 w-6 text-green-600" />
             </motion.div>
@@ -70,17 +70,17 @@ export const Hero = () => {
         <div className="w-full max-w-xl flex-1 space-y-6 text-center md:text-left">
           {/* Headline block with tagline */}
           <div>
-            <div className="mb-1 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+            <div className="mb-1 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
               Fast, Compliant, Hassle-Free
             </div>
             <h1 className="mt-0 font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-mkt-ink">
                 Fast, Compliant Kitchen Labels — Without the Hassle
               </span>
             </h1>
           </div>
           {/* Power Statement */}
-          <div className="mb-1 mt-2 text-sm font-semibold text-purple-700 sm:text-base">
+          <div className="mb-1 mt-2 text-sm font-semibold text-mkt-ink sm:text-base">
             From PPDS to prep — get EHO and Food Safety compliant labels in seconds, not hours.
           </div>
           {/* Key Benefits (Visual with Icons) */}
@@ -146,7 +146,8 @@ export const Hero = () => {
             <Link href="/bookdemo">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-purple-600 to-pink-600 font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700"
+                className="border-0 font-semibold text-white shadow-lg"
+                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
               >
                 Book Demo
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -156,7 +157,7 @@ export const Hero = () => {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-2 border-purple-200 font-semibold text-purple-700 transition-all duration-300 hover:border-purple-600 hover:bg-purple-600 hover:text-white"
+                className="border-2 border-mkt-steel1 font-semibold text-mkt-ink transition-all duration-300 hover:border-mkt-ink hover:bg-mkt-ink hover:text-white"
               >
                 Start Trial
               </Button>

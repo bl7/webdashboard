@@ -1,5 +1,5 @@
 import { Footer, Header } from "@/components/navigation"
-import { Chatbot } from "@/components/Chatbot"
+import "./marketing.css"
 
 export default function WebLayout({
   children,
@@ -7,11 +7,10 @@ export default function WebLayout({
   children: React.ReactNode
 }>) {
   return (
-    <main className="min-h-screen overflow-x-hidden scroll-smooth">
+    <main className="marketing min-h-screen overflow-x-hidden scroll-smooth">
       <Header />
       {children}
       <Footer />
-      <Chatbot />
     </main>
   )
 }

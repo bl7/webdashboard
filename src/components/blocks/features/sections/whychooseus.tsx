@@ -18,7 +18,7 @@ const setupSupport = [
   {
     title: "15-minute staff training session",
     description: "Via video call",
-    icon: <Zap className="h-5 w-5 text-purple-600" />,
+    icon: <Zap className="h-5 w-5 text-mkt-teal" />,
   },
   {
     title: "First-week check-in",

@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 const benefits = [
   {
-    icon: <Shield className="h-8 w-8 text-purple-600" />,
+    icon: <Shield className="h-8 w-8 text-mkt-teal" />,
     title: "Stay Compliant with Zero Training",
     description:
       "InstaLabel handles all FSA requirements automatically. No need to learn complex compliance rules or worry about missing information.",
@@ -66,7 +66,7 @@ const stats = [
 ]
 
 export const NatashasLawBenefits = () => (
-  <section className="relative w-full bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto max-w-6xl">
       <motion.div
         className="mb-10 text-center"
@@ -75,7 +75,7 @@ export const NatashasLawBenefits = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+        <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
           <Zap className="mr-2 h-4 w-4" />
           Key Benefits
         </div>
@@ -126,7 +126,7 @@ export const NatashasLawBenefits = () => (
 
       {/* Stats Section */}
       <motion.div
-        className="rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-white"
+        className="rounded-xl text-white p-8 text-white"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -134,7 +134,7 @@ export const NatashasLawBenefits = () => (
       >
         <div className="mb-6 text-center">
           <h4 className="text-2xl font-bold">The Numbers Don't Lie</h4>
-          <p className="text-purple-100">
+          <p className="text-white/80">
             See why 500+ UK kitchens trust InstaLabel for PPDS compliance
           </p>
         </div>
@@ -150,8 +150,8 @@ export const NatashasLawBenefits = () => (
               viewport={{ once: true }}
             >
               <div className="mb-1 text-3xl font-bold text-white">{stat.number}</div>
-              <div className="mb-1 text-sm font-semibold text-purple-100">{stat.label}</div>
-              <div className="text-xs text-purple-200">{stat.description}</div>
+              <div className="mb-1 text-sm font-semibold text-white/80">{stat.label}</div>
+              <div className="text-xs text-white/70">{stat.description}</div>
             </motion.div>
           ))}
         </div>

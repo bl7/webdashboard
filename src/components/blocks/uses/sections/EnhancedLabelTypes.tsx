@@ -70,9 +70,9 @@ export const EnhancedLabelTypes = () => {
     },
     {
       type: "PPDS Labels",
-      icon: <FileText className="h-8 w-8 text-purple-600" />,
+      icon: <FileText className="h-8 w-8 text-mkt-teal" />,
       current: "Full ingredient lists, allergen warnings",
-      color: "purple",
+      color: "teal",
       scenarios: [
         {
           title: "Cafe Display Case",
@@ -153,9 +153,9 @@ export const EnhancedLabelTypes = () => {
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.6, delay: idx * 0.1 }}
                       viewport={{ once: true }}
-                      className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-purple-200 hover:shadow-md"
+                      className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-mkt-steel1 hover:shadow-md"
                     >
-                      <h5 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-purple-700">
+                      <h5 className="mb-2 font-semibold text-gray-900 transition-colors group-hover:text-mkt-ink">
                         {scenario.title}
                       </h5>
                       <p className="mb-2 text-sm text-gray-600">{scenario.description}</p>
@@ -171,7 +171,7 @@ export const EnhancedLabelTypes = () => {
               <div className={`${index % 2 === 0 ? "lg:order-2" : "lg:order-1"}`}>
                 <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-8 shadow-sm">
                   <h4 className="mb-6 flex items-center gap-2 text-lg font-semibold text-gray-900">
-                    <Shield className="h-6 w-6 text-purple-600" />
+                    <Shield className="h-6 w-6 text-mkt-teal" />
                     Compliance Benefits
                   </h4>
                   <div className="space-y-4">
@@ -185,7 +185,7 @@ export const EnhancedLabelTypes = () => {
                         className="flex items-start gap-3 rounded-lg p-3 transition-colors duration-200 hover:bg-white"
                       >
                         <div className="mt-1 flex-shrink-0">
-                          <div className="h-2 w-2 rounded-full bg-purple-500" />
+                          <div className="h-2 w-2 rounded-full bg-mkt-canvas0" />
                         </div>
                         <span className="text-sm leading-relaxed text-gray-700">{benefit}</span>
                       </motion.div>
@@ -204,7 +204,7 @@ export const EnhancedLabelTypes = () => {
                               ? "/natashas-law"
                               : "#"
                       }
-                      className="inline-flex items-center text-sm font-medium text-purple-600 transition-colors hover:text-purple-800"
+                      className="inline-flex items-center text-sm font-medium text-mkt-teal transition-colors hover:text-mkt-ink"
                     >
                       Learn more about {labelType.type}
                       <ArrowRight className="ml-1 h-4 w-4" />

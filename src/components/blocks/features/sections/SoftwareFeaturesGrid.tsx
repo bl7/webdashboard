@@ -9,7 +9,7 @@ const softwareFeatures = [
     description: "Print EHO and Natasha’s Law compliant labels in seconds—no handwriting needed.",
   },
   {
-    icon: <ShieldCheck className="h-7 w-7 text-purple-600" />,
+    icon: <ShieldCheck className="h-7 w-7 text-mkt-teal" />,
     title: "Compliance Built In",
     description: "Stay inspection-ready with built-in compliance for food safety laws.",
   },
@@ -25,7 +25,7 @@ const softwareFeatures = [
       "Unlimited saved products, secure AWS cloud backup, instant reprints from any device.",
   },
   {
-    icon: <Repeat className="h-7 w-7 text-pink-600" />,
+    icon: <Repeat className="h-7 w-7 text-mkt-teal" />,
     title: "Easy Label Re-Order",
     description: "Re-order labels in-app with one click—free shipping, always.",
   },

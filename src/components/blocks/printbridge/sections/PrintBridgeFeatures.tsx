@@ -10,37 +10,37 @@ export const PrintBridgeFeatures = () => {
       icon: <Shield className="h-6 w-6" />,
       title: "Local & Secure",
       description: "All printing happens locally on your network with PrintBridge. No data sent to external servers, ensuring maximum security for your kitchen operations.",
-      color: "purple"
+      color: "teal"
     },
     {
       icon: <Zap className="h-6 w-6" />,
       title: "Lightning Fast",
       description: "Direct local connection via PrintBridge means instant printing. No delays from cloud processing or network latency.",
-      color: "purple"
+      color: "teal"
     },
     {
       icon: <Wifi className="h-6 w-6" />,
       title: "Auto-Discovery",
       description: "PrintBridge automatically finds and connects to your thermal printers. No manual IP configuration needed.",
-      color: "purple"
+      color: "teal"
     },
     {
       icon: <Cpu className="h-6 w-6" />,
       title: "Low Resource Usage",
       description: "PrintBridge is a lightweight application that runs efficiently in the background without impacting your computer's performance.",
-      color: "purple"
+      color: "teal"
     },
     {
       icon: <Download className="h-6 w-6" />,
       title: "One-Click Setup",
       description: "Download, install PrintBridge, and start printing in under 2 minutes. No technical expertise required.",
-      color: "purple"
+      color: "teal"
     },
     {
       icon: <Settings className="h-6 w-6" />,
       title: "Advanced Configuration",
       description: "Customize printer settings, label formats, and connection preferences in PrintBridge's intuitive interface.",
-      color: "purple"
+      color: "teal"
     }
   ]
 
@@ -68,9 +68,9 @@ export const PrintBridgeFeatures = () => {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-purple-200 hover:shadow-md transition-all duration-200">
+              <div className="bg-white border border-gray-200 rounded-lg p-6 h-full hover:border-mkt-steel1 hover:shadow-md transition-all duration-200">
                 <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-12 h-12 bg-purple-50 rounded-lg flex items-center justify-center text-purple-600 group-hover:bg-purple-100 transition-colors duration-200">
+                  <div className="flex-shrink-0 w-12 h-12 bg-mkt-canvas rounded-lg flex items-center justify-center text-mkt-teal group-hover:bg-mkt-canvas transition-colors duration-200">
                     {feature.icon}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -95,19 +95,19 @@ export const PrintBridgeFeatures = () => {
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 text-center">
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-purple-600">2MB</div>
+                <div className="text-3xl font-bold text-mkt-teal">2MB</div>
                 <div className="text-sm text-gray-600">File Size</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-purple-600">Windows</div>
+                <div className="text-3xl font-bold text-mkt-teal">Windows</div>
                 <div className="text-sm text-gray-600">macOS</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-purple-600">USB</div>
+                <div className="text-3xl font-bold text-mkt-teal">USB</div>
                 <div className="text-sm text-gray-600">Network</div>
               </div>
               <div className="space-y-2">
-                <div className="text-3xl font-bold text-purple-600">24/7</div>
+                <div className="text-3xl font-bold text-mkt-teal">24/7</div>
                 <div className="text-sm text-gray-600">Uptime</div>
               </div>
             </div>

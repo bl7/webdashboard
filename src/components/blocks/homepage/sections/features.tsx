@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 export const Feature = () => {
   return (
-    <section className="-mt-10 bg-gradient-to-br from-white via-purple-50/30 to-white px-4 py-16 text-foreground sm:px-6 md:px-12 lg:px-16">
+    <section className="-mt-10 bg-gradient-to-br from-white via-white/30 to-white px-4 py-16 text-foreground sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         {/* Header */}
         <motion.div
@@ -16,7 +16,7 @@ export const Feature = () => {
           className="mb-12 space-y-4 text-center"
         >
           <h3 className="text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+            <span className="text-mkt-ink">
               Why Smart Kitchens Choose
             </span>
             <br />
@@ -75,7 +75,7 @@ export const Feature = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-8 shadow-lg"
+            className="rounded-2xl border-2 border-mkt-steel1 bg-mkt-canvas p-8 shadow-lg"
           >
             <div className="mb-6 text-center">
               <div className="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
@@ -128,7 +128,7 @@ export const Feature = () => {
           viewport={{ once: true }}
           className="mt-12 text-center"
         >
-          <div className="rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 p-8">
+          <div className="rounded-2xl bg-mkt-canvas p-8">
             <h3 className="mb-4 text-2xl font-bold text-gray-900">
               Ready to Upgrade Your Kitchen Labeling?
             </h3>
@@ -139,19 +139,19 @@ export const Feature = () => {
             <div className="flex flex-wrap justify-center gap-4">
               <a
                 href="/features"
-                className="inline-flex items-center rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-purple-700"
+                className="inline-flex items-center rounded-lg bg-mkt-ink px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-mkt-ink"
               >
                 Explore All Features
               </a>
               <a
                 href="/plan"
-                className="inline-flex items-center rounded-lg border-2 border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-all duration-300 hover:border-purple-600 hover:bg-purple-50"
+                className="inline-flex items-center rounded-lg border-2 border-mkt-steel1 bg-white px-6 py-3 font-semibold text-mkt-ink transition-all duration-300 hover:border-mkt-ink hover:bg-mkt-canvas"
               >
                 View Pricing Plans
               </a>
               <a
                 href="/bookdemo"
-                className="inline-flex items-center rounded-lg border-2 border-purple-200 bg-white px-6 py-3 font-semibold text-purple-700 transition-all duration-300 hover:border-purple-600 hover:bg-purple-50"
+                className="inline-flex items-center rounded-lg border-2 border-mkt-steel1 bg-white px-6 py-3 font-semibold text-mkt-ink transition-all duration-300 hover:border-mkt-ink hover:bg-mkt-canvas"
               >
                 Book Free Demo
               </a>

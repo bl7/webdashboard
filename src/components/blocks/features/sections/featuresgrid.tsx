@@ -5,7 +5,7 @@ import { motion } from "framer-motion"
 
 const pillars = [
   {
-    icon: <Zap className="h-8 w-8 text-purple-600" />,
+    icon: <Zap className="h-8 w-8 text-mkt-teal" />,
     title: "Instant Setup",
     description: "Plug in and print in minutes. No IT support or drivers required.",
   },
@@ -15,7 +15,7 @@ const pillars = [
     description: "Natasha’s Law, HACCP, and EHO compliance built in.",
   },
   {
-    icon: <BarChart3 className="h-8 w-8 text-pink-600" />,
+    icon: <BarChart3 className="h-8 w-8 text-mkt-teal" />,
     title: "Real-Time Analytics",
     description: "Track label usage, staff activity, and expiry alerts live.",
   },

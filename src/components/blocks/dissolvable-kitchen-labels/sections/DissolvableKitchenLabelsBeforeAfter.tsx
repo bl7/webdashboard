@@ -33,9 +33,9 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
       >
         <div className="mx-auto max-w-4xl rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12">
           <div className="text-center">
-            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-purple-100 p-3">
+            <div className="mx-auto mb-4 h-16 w-16 rounded-full bg-mkt-canvas p-3">
               <svg
-                className="h-10 w-10 text-purple-600"
+                className="h-10 w-10 text-mkt-teal"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -214,10 +214,10 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
           <div className="text-sm font-medium text-red-800">Before: Manual Creation</div>
           <div className="mt-1 text-xs text-red-600">Staff typing each label manually</div>
         </div>
-        <div className="rounded-lg bg-purple-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-purple-600">Couple clicks</div>
-          <div className="text-sm font-medium text-purple-800">After: InstaLabel</div>
-          <div className="mt-1 text-xs text-purple-600">Select template and print</div>
+        <div className="rounded-lg bg-mkt-canvas p-6 text-center">
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">Couple clicks</div>
+          <div className="text-sm font-medium text-mkt-ink">After: InstaLabel</div>
+          <div className="mt-1 text-xs text-mkt-teal">Select template and print</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
           <div className="mb-2 text-3xl font-bold text-green-600">90%</div>
@@ -235,7 +235,7 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
         viewport={{ once: true }}
       >
         <p className="text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">
+          <span className="font-bold text-mkt-ink">
             Ready to transform your dissolvable label printing?
           </span>
           Start your free trial and see the difference InstaLabel makes.

@@ -44,7 +44,7 @@ export const PricingGrid = () => {
   if (loading) {
     return (
       <div className="py-24 text-center">
-        <div className="mb-4 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full bg-purple-500">
+        <div className="mb-4 inline-flex h-16 w-16 animate-spin items-center justify-center rounded-full bg-mkt-canvas0">
           <div className="h-8 w-8 rounded-full border-2 border-white border-t-transparent"></div>
         </div>
         <p className="text-lg font-medium text-slate-600">Loading plans...</p>
@@ -61,7 +61,7 @@ export const PricingGrid = () => {
   return (
     <section
       id="pricing"
-      className="relative bg-gradient-to-br from-purple-50 via-white to-pink-50 py-24 sm:py-32"
+      className="relative bg-mkt-canvas py-24 sm:py-32"
     >
       <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
         {/* Enhanced Header */}
@@ -73,7 +73,7 @@ export const PricingGrid = () => {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
               <Star className="mr-2 h-4 w-4" />
               Start Free Trial
             </div>
@@ -96,7 +96,7 @@ export const PricingGrid = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="mt-8 inline-flex items-center rounded-full border border-purple-200 bg-white p-1 shadow-lg"
+            className="mt-8 inline-flex items-center rounded-full border border-mkt-steel1 bg-white p-1 shadow-lg"
           >
             {["monthly", "yearly"].map((type) => (
               <button
@@ -105,8 +105,8 @@ export const PricingGrid = () => {
                 className={cn(
                   "relative rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300",
                   billingCycle === type
-                    ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                    : "text-gray-600 hover:bg-purple-50 hover:text-purple-800"
+                    ? "text-white text-white shadow-lg"
+                    : "text-gray-600 hover:bg-mkt-canvas hover:text-mkt-ink"
                 )}
               >
                 {type === "monthly" ? "Monthly" : "Yearly"}
@@ -141,8 +141,8 @@ export const PricingGrid = () => {
                 className={cn(
                   "relative flex flex-col rounded-2xl border bg-white p-8 text-left shadow-lg transition-all hover:-translate-y-2 hover:shadow-2xl",
                   index === 1
-                    ? "scale-105 border-purple-500 bg-gradient-to-br from-purple-50 to-pink-50 ring-2 ring-purple-200"
-                    : "border-gray-200 hover:border-purple-300"
+                    ? "scale-105 border-mkt-ink bg-mkt-canvas ring-2 ring-mkt-steel1"
+                    : "border-gray-200 hover:border-mkt-steel1"
                 )}
               >
                 {index === 1 && (
@@ -189,7 +189,7 @@ export const PricingGrid = () => {
                     className={cn(
                       "w-full py-3 font-semibold transition-all duration-300",
                       index === 1
-                        ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+                        ? "text-white text-white shadow-lg hover:opacity-90 hover:shadow-xl"
                         : "bg-gray-900 text-white hover:bg-gray-800"
                     )}
                   >

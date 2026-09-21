@@ -71,9 +71,9 @@ export const AllergenGuideFAQ = () => {
           viewport={{ once: true }}
           className="mb-12 text-center"
         >
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-purple-100 px-4 py-2">
-            <HelpCircle className="h-5 w-5 text-purple-600" />
-            <span className="text-sm font-medium text-purple-800">Frequently Asked Questions</span>
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-mkt-canvas px-4 py-2">
+            <HelpCircle className="h-5 w-5 text-mkt-teal" />
+            <span className="text-sm font-medium text-mkt-ink">Frequently Asked Questions</span>
           </div>
           <h3 className="mb-4 font-accent text-3xl font-bold text-gray-900 sm:text-4xl">
             Common Questions About Allergen Compliance

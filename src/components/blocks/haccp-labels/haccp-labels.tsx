@@ -21,8 +21,8 @@ export const HaccpLabelsPage = () => {
       {/* Hero Section */}
       <section className="relative flex min-h-screen items-center overflow-hidden bg-white px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
         {/* Background elements */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-5 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-40 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-5 blur-3xl" />
 
         <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
           {/* Hero Content */}
@@ -32,13 +32,13 @@ export const HaccpLabelsPage = () => {
             transition={{ duration: 0.8 }}
             className="w-full max-w-2xl space-y-6 text-center md:text-left"
           >
-            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               <Shield className="mr-2 h-4 w-4" />
               #1 HACCP Compliance Software
             </div>
 
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">Built for HACCP Compliance</span>
+              <span className="text-mkt-teal">Built for HACCP Compliance</span>
               <br className="hidden md:block" />
               <span>Powered by AI</span>
             </h1>
@@ -50,21 +50,21 @@ export const HaccpLabelsPage = () => {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Shield className="h-4 w-4 text-purple-600" />
+                <Shield className="h-4 w-4 text-mkt-teal" />
                 <span>HACCP Compliant</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Zap className="h-4 w-4 text-purple-600" />
+                <Zap className="h-4 w-4 text-mkt-teal" />
                 <span>AI-Powered Labels</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <CheckCircle className="h-4 w-4 text-purple-600" />
+                <CheckCircle className="h-4 w-4 text-mkt-teal" />
                 <span>Full Traceability</span>
               </div>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-purple-600 px-6 py-3 text-white hover:bg-purple-700">
+              <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink">
                 <Link href="/register">Start Free Trial</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -88,7 +88,7 @@ export const HaccpLabelsPage = () => {
             className="w-full max-w-[500px]"
           >
             <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg">
-              <div className="bg-purple-600 p-4 text-center text-white">
+              <div className="bg-mkt-ink p-4 text-center text-white">
                 <div className="text-lg font-bold">InstaLabel HACCP System</div>
                 <div className="text-sm opacity-90">AI-Powered Food Safety Compliance</div>
               </div>
@@ -173,8 +173,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <Zap className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <Zap className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered HACCP Labels</h3>
               <p className="text-gray-600">
@@ -190,8 +190,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <FileText className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <FileText className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">Complete Traceability</h3>
               <p className="text-gray-600">
@@ -207,8 +207,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <Clock className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <Clock className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">Quick Compliance</h3>
               <p className="text-gray-600">
@@ -247,8 +247,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.1 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <Shield className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <Shield className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">HACCP Templates</h3>
               <p className="text-gray-600">
@@ -264,8 +264,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <Users className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <Users className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">Staff Training</h3>
               <p className="text-gray-600">
@@ -281,8 +281,8 @@ export const HaccpLabelsPage = () => {
               transition={{ duration: 0.7, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                <BarChart3 className="h-6 w-6 text-purple-600" />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
+                <BarChart3 className="h-6 w-6 text-mkt-teal" />
               </div>
               <h3 className="mb-3 text-xl font-bold text-gray-900">Audit Reports</h3>
               <p className="text-gray-600">

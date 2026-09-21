@@ -5,7 +5,7 @@ import { ShoppingCart, Stethoscope, Truck, Factory } from "lucide-react"
 
 const useCases = [
   {
-    icon: <ShoppingCart className="h-7 w-7 text-purple-600" />,
+    icon: <ShoppingCart className="h-7 w-7 text-mkt-teal" />,
     title: "Retail",
     desc: "Price tags, shelf labels, receipt printing—reliable USB printing for any retail environment."
   },
@@ -20,17 +20,17 @@ const useCases = [
     desc: "Shipping labels, inventory tags, warehouse management—no cloud dependency, always on."
   },
   {
-    icon: <Factory className="h-7 w-7 text-pink-600" />,
+    icon: <Factory className="h-7 w-7 text-mkt-teal" />,
     title: "Manufacturing",
     desc: "Product labels, quality control, compliance tracking—works with any USB label printer."
   }
 ]
 
 export const PrintBridgeUseCases = () => (
-  <section className="relative w-full py-16 px-4 sm:px-6 md:px-12 lg:px-16 bg-gradient-to-br from-purple-50 via-white to-pink-50">
+  <section className="relative w-full py-16 px-4 sm:px-6 md:px-12 lg:px-16 bg-mkt-canvas">
     <div className="max-w-6xl mx-auto">
       <div className="text-center mb-10">
-        <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200 mb-2">
+        <div className="inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1 mb-2">
           Beyond Kitchen Labels: Where PrintBridge Excels
         </div>
         <h3 className="text-3xl sm:text-4xl font-black leading-tight tracking-tight text-gray-900">

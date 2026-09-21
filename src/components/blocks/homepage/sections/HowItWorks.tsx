@@ -15,12 +15,12 @@ export const HowItWorks = () => (
         viewport={{ once: true }}
         className="mb-12 flex flex-col items-center justify-center text-center"
       >
-        <span className="mb-3 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
-          <BadgeCheck className="mr-1 h-4 w-4 text-purple-600" />
+        <span className="mb-3 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
+          <BadgeCheck className="mr-1 h-4 w-4 text-mkt-teal" />
           100% Natasha’s Law & EHO Compliant
         </span>
         <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <span className="text-mkt-ink">
             How InstaLabel Works
           </span>
           <br />
@@ -31,14 +31,14 @@ export const HowItWorks = () => (
       <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4">
         {[
           {
-            icon: <Upload className="h-8 w-8 text-purple-600" />,
-            bg: "bg-purple-100",
+            icon: <Upload className="h-8 w-8 text-mkt-teal" />,
+            bg: "bg-mkt-canvas",
             title: "Upload or Enter Menu",
             desc: "Import your menu and ingredients, or enter them manually in minutes.",
           },
           {
-            icon: <Printer className="h-8 w-8 text-purple-600" />,
-            bg: "bg-purple-100",
+            icon: <Printer className="h-8 w-8 text-mkt-teal" />,
+            bg: "bg-mkt-canvas",
             title: "Print Labels",
             desc: "Print from the dashboard or directly on mobile devices with our app.",
           },
@@ -74,8 +74,8 @@ export const HowItWorks = () => (
         ))}
       </div>
       {/* Mobile Device Note */}
-      <div className="mt-4 rounded-lg bg-purple-50 p-4 text-center">
-        <p className="text-sm text-purple-800">
+      <div className="mt-4 rounded-lg bg-mkt-canvas p-4 text-center">
+        <p className="text-sm text-mkt-ink">
           Print directly from mobile devices — InstaLabel app runs on Android.
         </p>
       </div>

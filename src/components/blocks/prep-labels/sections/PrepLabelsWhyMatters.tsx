@@ -5,7 +5,7 @@ import { AlertTriangle, Clock, XCircle, FileText } from "lucide-react"
 import { motion } from "framer-motion"
 
 export const PrepLabelsWhyMatters = () => (
-  <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row">
       {/* Visual: Problem illustration */}
       <motion.div
@@ -75,27 +75,27 @@ export const PrepLabelsWhyMatters = () => (
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <XCircle className="h-4 w-4 text-purple-600" />
+              <XCircle className="h-4 w-4 text-mkt-teal" />
               <span>Illegible handwriting</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <FileText className="h-4 w-4 text-purple-600" />
+              <FileText className="h-4 w-4 text-mkt-teal" />
               <span>Missing allergen info</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <Clock className="h-4 w-4 text-purple-600" />
+              <Clock className="h-4 w-4 text-mkt-teal" />
               <span>No batch tracking</span>
             </div>
             <div className="flex items-center gap-3 text-sm text-gray-700">
-              <AlertTriangle className="h-4 w-4 text-purple-600" />
+              <AlertTriangle className="h-4 w-4 text-mkt-teal" />
               <span>EHO violations</span>
             </div>
           </div>
         </div>
 
-        <div className="mt-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
-          <div className="text-sm font-semibold text-purple-800">
-            <span className="font-bold text-purple-700">The Solution:</span> Automated prep labels
+        <div className="mt-6 rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+          <div className="text-sm font-semibold text-mkt-ink">
+            <span className="font-bold text-mkt-ink">The Solution:</span> Automated prep labels
             with expiry dates, allergen information, and batch details keep your kitchen compliant
             and efficient.
           </div>

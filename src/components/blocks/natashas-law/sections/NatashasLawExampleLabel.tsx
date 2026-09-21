@@ -34,7 +34,7 @@ const storageInfo = "Keep refrigerated below 5°C. Consume within 2 days of open
 const businessName = "InstaLabel Ltd"
 
 export const NatashasLawExampleLabel = () => (
-  <section className="relative w-full bg-gradient-to-br from-white via-purple-50 to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative w-full bg-gradient-to-br from-white via-white to-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="mx-auto max-w-6xl">
       <motion.div
         className="mb-10 text-center"
@@ -43,7 +43,7 @@ export const NatashasLawExampleLabel = () => (
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1 text-xs font-semibold text-purple-800 ring-1 ring-purple-200">
+        <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
           <Eye className="mr-2 h-4 w-4" />
           Example PPDS Label
         </div>
@@ -161,9 +161,9 @@ export const NatashasLawExampleLabel = () => (
             </div>
           </div>
 
-          <div className="rounded-lg border border-purple-200 bg-purple-50 p-4">
-            <h5 className="mb-2 font-semibold text-purple-800">FSA Compliance Checklist ✓</h5>
-            <ul className="space-y-1 text-sm text-purple-700">
+          <div className="rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+            <h5 className="mb-2 font-semibold text-mkt-ink">FSA Compliance Checklist ✓</h5>
+            <ul className="space-y-1 text-sm text-mkt-ink">
               <li>• Full ingredient list with allergens highlighted</li>
               <li>• Storage and handling instructions</li>
               <li>• Business name and contact details</li>

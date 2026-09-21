@@ -59,12 +59,12 @@ export const KitchenLabelPrinterProblem = () => (
           <li>No audit trail for food safety inspections</li>
         </ul>
         <div className="mt-4 text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">Average time per label:</span> 2-3 minutes,
-          <span className="font-bold text-purple-700"> 34% compliance errors</span>
+          <span className="font-bold text-mkt-ink">Average time per label:</span> 2-3 minutes,
+          <span className="font-bold text-mkt-ink"> 34% compliance errors</span>
         </div>
         <div className="mt-2 text-base text-gray-500">
           Manual kitchen labeling puts your food safety at risk and wastes valuable prep time.{" "}
-          <span className="font-bold text-purple-700">InstaLabel automates everything.</span>
+          <span className="font-bold text-mkt-ink">InstaLabel automates everything.</span>
         </div>
       </motion.div>
     </div>

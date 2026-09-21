@@ -8,11 +8,11 @@ import { motion } from "framer-motion"
 
 export const AboutHero = () => {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
       {/* Background blobs (standardized) */}
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         {/* Hero Content */}
@@ -22,13 +22,13 @@ export const AboutHero = () => {
           transition={{ duration: 0.8 }}
           className="w-full max-w-2xl space-y-6 text-center md:text-left"
         >
-          <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+          <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
             <Heart className="mr-2 h-4 w-4" />
             Built by Kitchen Staff, for Kitchen Staff
           </div>
 
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-            <span className="text-purple-600">Smart Labeling That</span>
+            <span className="text-mkt-teal">Smart Labeling That</span>
             <br className="hidden md:block" />
             <span className="">Works.</span>
           </h1>
@@ -40,26 +40,32 @@ export const AboutHero = () => {
           {/* Key Benefits */}
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-              <Users className="h-4 w-4 text-purple-600" />
+              <Users className="h-4 w-4 text-mkt-teal" />
               <span>Kitchen-Tested</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-              <Smartphone className="h-4 w-4 text-purple-600" />
+              <Smartphone className="h-4 w-4 text-mkt-teal" />
               <span>Mobile Compatible</span>
             </div>
             <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-              <BarChart3 className="h-4 w-4 text-purple-600" />
+              <BarChart3 className="h-4 w-4 text-mkt-teal" />
               <span>Smart Analytics</span>
             </div>
           </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-            <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+            <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink">
               <Link href="/register">Start Free Trial</Link>
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="outline" size="lg" asChild>
+            <Button
+              variant="outline"
+              size="lg"
+              className="border-2 bg-white"
+              style={{ borderColor: "#142124", color: "#142124", backgroundImage: "none" }}
+              asChild
+            >
               <Link href="/features">Learn More</Link>
             </Button>
           </div>
@@ -83,10 +89,10 @@ export const AboutHero = () => {
             {/* Team Members */}
             <div className="space-y-4">
               {/* Chef */}
-              <div className="rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-lg">
+              <div className="rounded-lg border-l-4 border-mkt-ink bg-white p-4 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-                    <Users className="h-6 w-6 text-purple-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mkt-canvas">
+                    <Users className="h-6 w-6 text-mkt-teal" />
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">Head Chef</h4>
@@ -96,10 +102,10 @@ export const AboutHero = () => {
               </div>
 
               {/* Kitchen Manager */}
-              <div className="ml-4 rounded-lg border-l-4 border-purple-500 bg-white p-4 shadow-lg">
+              <div className="ml-4 rounded-lg border-l-4 border-mkt-ink bg-white p-4 shadow-lg">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
-                    <Target className="h-6 w-6 text-purple-600" />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-mkt-canvas">
+                    <Target className="h-6 w-6 text-mkt-teal" />
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">Kitchen Manager</h4>
@@ -125,15 +131,15 @@ export const AboutHero = () => {
             {/* Stats */}
             {/* <div className="mt-6 grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-bold text-purple-600">500+</div>
+                <div className="text-2xl font-bold text-mkt-teal">500+</div>
                 <div className="text-xs text-gray-600">Kitchens</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">1M+</div>
+                <div className="text-2xl font-bold text-mkt-teal">1M+</div>
                 <div className="text-xs text-gray-600">Labels Printed</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-purple-600">High</div>
+                <div className="text-2xl font-bold text-mkt-teal">High</div>
                 <div className="text-xs text-gray-600">Availability</div>
               </div>
             </div> */}

@@ -58,8 +58,8 @@ export const AllergenComplianceSocialProof = () => {
               className="rounded-xl bg-white p-6 shadow-sm"
             >
               <div className="mb-4 flex items-center gap-2">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
-                  <Users className="h-5 w-5 text-purple-600" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mkt-canvas">
+                  <Users className="h-5 w-5 text-mkt-teal" />
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">{testimonial.author}</p>
@@ -80,12 +80,12 @@ export const AllergenComplianceSocialProof = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
               viewport={{ once: true }}
-              className="rounded-xl bg-purple-50 p-6"
+              className="rounded-xl bg-mkt-canvas p-6"
             >
               <div className="mb-3 flex items-center justify-center">
-                <stat.icon className="h-8 w-8 text-purple-600" />
+                <stat.icon className="h-8 w-8 text-mkt-teal" />
               </div>
-              <div className="mb-2 text-3xl font-bold text-purple-600">{stat.number}</div>
+              <div className="mb-2 text-3xl font-bold text-mkt-teal">{stat.number}</div>
               <p className="text-gray-700">{stat.label}</p>
             </motion.div>
           ))}

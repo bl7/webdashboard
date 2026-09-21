@@ -5,7 +5,7 @@ import LabelRender from "@/app/dashboard/print/LabelRender"
 
 export const DefrostLabelsExample = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-white via-blue-50 to-cyan-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -14,7 +14,7 @@ export const DefrostLabelsExample = () => {
           viewport={{ once: true }}
           className="mb-10 text-center"
         >
-          <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 px-3 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-200">
+          <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -88,7 +88,7 @@ export const DefrostLabelsExample = () => {
               />
             </motion.div>
             <div className="mt-4 text-center">
-              <div className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
+              <div className="inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-medium text-mkt-ink">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -248,9 +248,9 @@ export const DefrostLabelsExample = () => {
               </div>
             </motion.div>
 
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-              <h5 className="mb-2 font-semibold text-blue-800">HACCP Compliance Checklist ✓</h5>
-              <ul className="space-y-1 text-sm text-blue-700">
+            <div className="rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+              <h5 className="mb-2 font-semibold text-mkt-ink">HACCP Compliance Checklist ✓</h5>
+              <ul className="space-y-1 text-sm text-mkt-ink8">
                 <li>• Clear product identification</li>
                 <li>• Defrost date for traceability</li>
                 <li>• Expiry date for food safety</li>

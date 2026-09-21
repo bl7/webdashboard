@@ -60,14 +60,14 @@ export const ExpiryDateLabelsProblem = () => (
           <li>Food waste increases due to incorrect expiry date calculations</li>
         </ul>
         <div className="mt-4 text-lg font-semibold text-gray-700">
-          <span className="font-bold text-purple-700">Average time per expiry label:</span> 2-3
+          <span className="font-bold text-mkt-ink">Average time per expiry label:</span> 2-3
           minutes,
-          <span className="font-bold text-purple-700"> 45% compliance errors</span>
+          <span className="font-bold text-mkt-ink"> 45% compliance errors</span>
         </div>
         <div className="mt-2 text-base text-gray-500">
           Manual expiry date labeling puts your customers' health at risk and wastes valuable
           kitchen time.{" "}
-          <span className="font-bold text-purple-700">InstaLabel automates everything.</span>
+          <span className="font-bold text-mkt-ink">InstaLabel automates everything.</span>
         </div>
       </motion.div>
     </div>

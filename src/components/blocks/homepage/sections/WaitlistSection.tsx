@@ -63,7 +63,7 @@ export default function WaitlistSection() {
 
   if (isSubmitted) {
     return (
-      <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-16">
+      <section className="bg-mkt-canvas py-16">
         <div className="container mx-auto px-4">
           <div className="mx-auto max-w-2xl text-center">
             <div className="mb-8">
@@ -84,7 +84,7 @@ export default function WaitlistSection() {
   }
 
   return (
-    <section className="bg-gradient-to-br from-purple-50 to-blue-50 py-16">
+    <section className="bg-mkt-canvas py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-4xl">
           <div className="mb-12 text-center">
@@ -156,7 +156,7 @@ export default function WaitlistSection() {
 
                 <Button
                   type="submit"
-                  className="w-full bg-purple-600 text-white hover:bg-purple-700"
+                  className="w-full bg-mkt-ink text-white hover:bg-mkt-ink"
                   disabled={isLoading}
                 >
                   {isLoading ? "Joining..." : "Join the Waitlist"}

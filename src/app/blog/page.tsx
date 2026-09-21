@@ -89,22 +89,22 @@ export default async function BlogPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         {/* Background blobs */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
         <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
           {/* Hero Content */}
           <div className="w-full max-w-2xl space-y-6 text-center md:text-left">
-            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               <Calendar className="mr-2 h-4 w-4" />
               Blog & Insights
             </div>
 
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">Kitchen Labeling</span>
+              <span className="text-mkt-teal">Kitchen Labeling</span>
               <br className="hidden md:block" />
               <span className="">Blog & Resources</span>
             </h1>
@@ -118,25 +118,29 @@ export default async function BlogPage() {
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button
                 variant="outline"
-                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                className="rounded-full border-2 bg-white px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                style={{ borderColor: "#142124", color: "#142124", backgroundImage: "none" }}
               >
                 Food Safety
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                className="rounded-full border-2 bg-white px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                style={{ borderColor: "#142124", color: "#142124", backgroundImage: "none" }}
               >
                 Technology
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                className="rounded-full border-2 bg-white px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                style={{ borderColor: "#142124", color: "#142124", backgroundImage: "none" }}
               >
                 Case Studies
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                className="rounded-full border-2 bg-white px-3 py-1.5 text-xs sm:px-6 sm:py-2 sm:text-base"
+                style={{ borderColor: "#142124", color: "#142124", backgroundImage: "none" }}
               >
                 Best Practices
               </Button>
@@ -170,7 +174,7 @@ export default async function BlogPage() {
             {featuredPosts.map((post) => (
               <div
                 key={post.slug}
-                className="flex flex-col justify-between rounded-xl border border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6 shadow-lg"
+                className="flex flex-col justify-between rounded-xl border border-gray-200 bg-mkt-canvas p-6 shadow-lg"
               >
                 <div>
                   <div className="mb-2 flex items-center gap-2">
@@ -191,7 +195,12 @@ export default async function BlogPage() {
                     <Clock className="h-3 w-3" />
                     {post.meta.readTime}
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-mkt-ink hover:bg-mkt-canvas hover:text-mkt-ink"
+                    asChild
+                  >
                     <Link href={`/blog/${post.slug}`}>
                       Read Article <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>
@@ -232,7 +241,12 @@ export default async function BlogPage() {
                     <Clock className="h-3 w-3" />
                     {post.meta.readTime}
                   </div>
-                  <Button variant="ghost" size="sm" asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-mkt-ink hover:bg-mkt-canvas hover:text-mkt-ink"
+                    asChild
+                  >
                     <Link href={`/blog/${post.slug}`}>
                       Read Article <ArrowRight className="ml-1 h-3 w-3" />
                     </Link>

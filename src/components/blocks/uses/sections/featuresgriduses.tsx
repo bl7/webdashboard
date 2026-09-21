@@ -76,9 +76,9 @@ export const FeaturesGridUses = () => {
                 transition={{ delay: index * 0.1 }}
                 viewport={{ once: true }}
               >
-                <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+                <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                   <div className="flex items-start space-x-4">
-                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                    <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                       {benefit.icon}
                     </div>
                     <div className="min-w-0 flex-1">
@@ -143,9 +143,9 @@ export const FeaturesGridUses = () => {
                   transition={{ delay: index * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-8 text-center transition-all duration-200 hover:border-purple-200 hover:shadow-lg">
+                  <div className="flex h-full flex-col rounded-xl border border-gray-200 bg-white p-8 text-center transition-all duration-200 hover:border-mkt-steel1 hover:shadow-lg">
                     {/* Step number */}
-                    <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-purple-600 text-lg font-bold text-white">
+                    <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-mkt-ink text-lg font-bold text-white">
                       {step.step}
                     </div>
                     {/* Icon */}

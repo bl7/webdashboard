@@ -92,9 +92,9 @@ export const Services = () => {
       icon: Users,
       title: "Zero Training Required",
       desc: "Intuitive interface means new staff can start printing compliant labels on day one.",
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
+      color: "text-mkt-teal",
+      bgColor: "bg-mkt-canvas",
+      borderColor: "border-mkt-steel1",
     },
     {
       icon: CheckCircle,
@@ -116,9 +116,9 @@ export const Services = () => {
       icon: Smartphone,
       title: "Mobile Printing Anywhere",
       desc: "Print from any device - desktop, tablet, or smartphone for ultimate kitchen flexibility.",
-      color: "text-purple-600",
-      bgColor: "bg-purple-50",
-      borderColor: "border-purple-200",
+      color: "text-mkt-teal",
+      bgColor: "bg-mkt-canvas",
+      borderColor: "border-mkt-steel1",
     },
   ]
 
@@ -140,13 +140,13 @@ export const Services = () => {
             viewport={{ once: true }}
             className="space-y-4"
           >
-            <div className="inline-flex items-center rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-4 py-2 text-sm font-semibold text-purple-800 ring-1 ring-purple-200">
-              <AlertTriangle className="mr-2 h-4 w-4 text-purple-600" />
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
+              <AlertTriangle className="mr-2 h-4 w-4 text-mkt-teal" />
               The Kitchen Labeling Crisis
             </div>
 
             <h3 className="font-accent text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <span className="text-mkt-ink">
                 Problems Every Kitchen
               </span>
               <br />
@@ -254,7 +254,8 @@ export const Services = () => {
         >
           <Button
             size="lg"
-            className="bg-gradient-to-r from-purple-600 to-pink-600 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all duration-300 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl"
+            className="border-0 px-8 py-4 text-lg font-semibold text-white shadow-lg"
+            style={{ backgroundColor: "#142124", backgroundImage: "none" }}
             asChild
           >
             <Link href="/bookdemo">
@@ -265,7 +266,7 @@ export const Services = () => {
           <Button
             variant="outline"
             size="lg"
-            className="border-2 border-purple-200 px-8 py-4 text-lg font-semibold text-purple-700 transition-all duration-300 hover:bg-purple-50 hover:text-purple-800"
+            className="border-2 border-mkt-steel1 px-8 py-4 text-lg font-semibold text-mkt-ink transition-all duration-300 hover:bg-mkt-canvas hover:text-mkt-ink"
             asChild
           >
             <Link href="/register">Start Trial</Link>

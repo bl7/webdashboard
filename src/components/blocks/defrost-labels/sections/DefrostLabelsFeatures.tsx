@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 export const DefrostLabelsFeatures = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-blue-50 via-white to-cyan-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
@@ -13,7 +13,7 @@ export const DefrostLabelsFeatures = () => {
           viewport={{ once: true }}
           className="mb-10 text-center"
         >
-          <div className="mb-2 inline-flex items-center rounded-full bg-gradient-to-r from-blue-100 to-cyan-100 px-3 py-1 text-xs font-semibold text-blue-800 ring-1 ring-blue-200">
+          <div className="mb-2 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -59,7 +59,7 @@ export const DefrostLabelsFeatures = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-7 w-7 text-blue-600"
+                  className="h-7 w-7 text-mkt-teal"
                 >
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
@@ -215,7 +215,7 @@ export const DefrostLabelsFeatures = () => {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="h-7 w-7 text-purple-600"
+                  className="h-7 w-7 text-mkt-teal"
                 >
                   <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
                   <circle cx="9" cy="7" r="4"></circle>
@@ -257,27 +257,27 @@ export const DefrostLabelsFeatures = () => {
           viewport={{ once: true }}
           className="mt-12"
         >
-          <div className="rounded-xl border border-blue-200 bg-gradient-to-r from-blue-50 to-cyan-50 p-8">
+          <div className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-8">
             <h4 className="mb-6 text-center text-xl font-bold text-gray-900">
               Simple 3-Step Process
             </h4>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div className="text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                   1
                 </div>
                 <h5 className="font-semibold text-gray-900">Select Frozen Item</h5>
                 <p className="text-sm text-gray-600">Choose from your frozen food database</p>
               </div>
               <div className="text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                   2
                 </div>
                 <h5 className="font-semibold text-gray-900">Record Defrost Time</h5>
                 <p className="text-sm text-gray-600">Enter defrost start & end times</p>
               </div>
               <div className="text-center">
-                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 font-bold text-white">
+                <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-mkt-ink font-bold text-white">
                   3
                 </div>
                 <h5 className="font-semibold text-gray-900">Print & Apply</h5>

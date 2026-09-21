@@ -241,19 +241,19 @@ export const LabelShowcase = () => {
               </h3>
               <div className="grid grid-cols-2 gap-4 text-center">
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-purple-600">40/80mm</div>
+                  <div className="text-2xl font-bold text-mkt-teal">40/80mm</div>
                   <div className="text-xs text-gray-600">Label Height</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-purple-600">Thermal</div>
+                  <div className="text-2xl font-bold text-mkt-teal">Thermal</div>
                   <div className="text-xs text-gray-600">Printer Type</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-purple-600">HACCP</div>
+                  <div className="text-2xl font-bold text-mkt-teal">HACCP</div>
                   <div className="text-xs text-gray-600">Compliant</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-2xl font-bold text-purple-600">24/7</div>
+                  <div className="text-2xl font-bold text-mkt-teal">24/7</div>
                   <div className="text-xs text-gray-600">Printing</div>
                 </div>
               </div>
@@ -269,7 +269,7 @@ export const LabelShowcase = () => {
             className="space-y-6"
           >
             <div className="grid gap-4">
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors duration-200 group-hover:bg-blue-100">
                     <span className="text-lg">📦</span>
@@ -314,7 +314,7 @@ export const LabelShowcase = () => {
                 </div>
               </div>
 
-              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="group rounded-lg border border-gray-200 bg-white p-4 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
                   <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-orange-50 text-orange-600 transition-colors duration-200 group-hover:bg-orange-100">
                     <span className="text-lg">🍳</span>

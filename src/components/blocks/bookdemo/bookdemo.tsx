@@ -65,11 +65,11 @@ export const BookDemo = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative flex min-h-screen items-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-pink-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         {/* Background blobs */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-15 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-purple-600 opacity-15 blur-3xl" />
-        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-pink-300 opacity-15 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
         <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
           {/* Hero Content */}
@@ -79,13 +79,13 @@ export const BookDemo = () => {
             transition={{ duration: 0.8 }}
             className="w-full max-w-2xl space-y-6 text-center md:text-left"
           >
-            <div className="inline-flex items-center rounded-full bg-purple-100 px-4 py-2 text-sm font-medium text-purple-800 ring-1 ring-purple-200">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               <Calendar className="mr-2 h-4 w-4" />
               See InstaLabel in Action
             </div>
 
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-purple-600">Book Your</span>
+              <span className="text-mkt-teal">Book Your</span>
               <br className="hidden md:block" />
               <span className="">Free Demo.</span>
             </h1>
@@ -99,22 +99,22 @@ export const BookDemo = () => {
             {/* Key Benefits */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Video className="h-4 w-4 text-purple-600" />
+                <Video className="h-4 w-4 text-mkt-teal" />
                 <span>Live Demo</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Smartphone className="h-4 w-4 text-purple-600" />
+                <Smartphone className="h-4 w-4 text-mkt-teal" />
                 <span>Mobile Devices</span>
               </div>
               <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <BarChart3 className="h-4 w-4 text-purple-600" />
+                <BarChart3 className="h-4 w-4 text-mkt-teal" />
                 <span>Analytics Demo</span>
               </div>
             </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700">
+              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink">
                 <Link href="#demo-form">Book Demo Now</Link>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -144,8 +144,8 @@ export const BookDemo = () => {
                 {/* Video Call */}
                 <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-lg">
                   <div className="mb-3 flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
-                      <Video className="h-5 w-5 text-purple-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-mkt-canvas">
+                      <Video className="h-5 w-5 text-mkt-teal" />
                     </div>
                     <div>
                       <h4 className="font-bold text-gray-900">Live Demo</h4>
@@ -160,19 +160,19 @@ export const BookDemo = () => {
                 {/* Demo Features */}
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-lg border border-gray-200 bg-white p-3 text-center shadow-sm">
-                    <Clock className="mx-auto mb-1 h-6 w-6 text-purple-600" />
+                    <Clock className="mx-auto mb-1 h-6 w-6 text-mkt-teal" />
                     <p className="text-xs font-medium text-gray-700">30 min session</p>
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-3 text-center shadow-sm">
-                    <Smartphone className="mx-auto mb-1 h-6 w-6 text-purple-600" />
+                    <Smartphone className="mx-auto mb-1 h-6 w-6 text-mkt-teal" />
                     <p className="text-xs font-medium text-gray-700">Device setup</p>
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-3 text-center shadow-sm">
-                    <BarChart3 className="mx-auto mb-1 h-6 w-6 text-purple-600" />
+                    <BarChart3 className="mx-auto mb-1 h-6 w-6 text-mkt-teal" />
                     <p className="text-xs font-medium text-gray-700">Analytics walkthrough</p>
                   </div>
                   <div className="rounded-lg border border-gray-200 bg-white p-3 text-center shadow-sm">
-                    <Calendar className="mx-auto mb-1 h-6 w-6 text-purple-600" />
+                    <Calendar className="mx-auto mb-1 h-6 w-6 text-mkt-teal" />
                     <p className="text-xs font-medium text-gray-700">Q&A included</p>
                   </div>
                 </div>
@@ -190,8 +190,8 @@ export const BookDemo = () => {
       {/* Demo Overview Section */}
       <section className="relative overflow-hidden bg-white py-20">
         {/* Background Elements */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-pink-300 opacity-5 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-40 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
           <motion.div
@@ -207,7 +207,7 @@ export const BookDemo = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-6 inline-flex items-center rounded-full bg-purple-100 px-6 py-3 text-sm font-medium text-purple-800 ring-1 ring-purple-200"
+                className="mb-6 inline-flex items-center rounded-full bg-mkt-canvas px-6 py-3 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1"
               >
                 <Video className="mr-2 h-4 w-4" />
                 Interactive Demo Experience
@@ -240,11 +240,11 @@ export const BookDemo = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.5 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative overflow-hidden rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50 via-white to-pink-50 p-8 shadow-lg transition-all duration-300 hover:border-purple-300 hover:shadow-2xl"
+                className="group relative overflow-hidden rounded-3xl border border-mkt-steel1 bg-mkt-canvas p-8 shadow-lg transition-all duration-300 hover:border-mkt-steel1 hover:shadow-2xl"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-mkt-canvas opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-lg">
                     <Video className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -255,26 +255,26 @@ export const BookDemo = () => {
                   </p>
                   <ul className="space-y-3 text-sm text-gray-700">
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Morning prep labeling workflow from ingredient arrival to storage
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Lunch rush label printing with time-sensitive items
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         End-of-day stock rotation and expiry management
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Emergency allergen response and re-labeling procedures
                       </span>
                     </li>
@@ -382,10 +382,10 @@ export const BookDemo = () => {
       </section>
 
       {/* Demo Preparation Guide */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-purple-50 py-20">
+      <section className="relative overflow-hidden bg-mkt-canvas py-20">
         {/* Background Elements */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-pink-300 opacity-5 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-40 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
           <motion.div
@@ -401,7 +401,7 @@ export const BookDemo = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-6 inline-flex items-center rounded-full bg-purple-100 px-6 py-3 text-sm font-medium text-purple-800 ring-1 ring-purple-200"
+                className="mb-6 inline-flex items-center rounded-full bg-mkt-canvas px-6 py-3 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1"
               >
                 <Calendar className="mr-2 h-4 w-4" />
                 Demo Preparation
@@ -436,7 +436,7 @@ export const BookDemo = () => {
                 className="group"
               >
                 <div className="mb-8">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-lg">
                     <BarChart3 className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -445,93 +445,93 @@ export const BookDemo = () => {
                 </div>
                 <div className="space-y-8">
                   <div className="group/item">
-                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-purple-700">
+                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-mkt-ink">
                       Current Setup Details
                     </h4>
                     <ul className="space-y-3 text-gray-700">
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Number of kitchen locations
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Existing printer models (Epson, Brother, etc.)
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Current labeling methods (handwritten, pre-printed, etc.)
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Staff size and shift patterns
                         </span>
                       </li>
                     </ul>
                   </div>
                   <div className="group/item">
-                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-purple-700">
+                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-mkt-ink">
                       Menu Information
                     </h4>
                     <ul className="space-y-3 text-gray-700">
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Approximate number of menu items
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Common allergens in your dishes
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Prep-ahead items and storage times
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Special dietary offerings (vegan, gluten-free, etc.)
                         </span>
                       </li>
                     </ul>
                   </div>
                   <div className="group/item">
-                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-purple-700">
+                    <h4 className="mb-4 text-xl font-semibold text-gray-800 transition-colors duration-300 group-hover/item:text-mkt-ink">
                       Pain Points to Discuss
                     </h4>
                     <ul className="space-y-3 text-gray-700">
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Biggest labeling challenges
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Compliance concerns
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Time-consuming manual processes
                         </span>
                       </li>
                       <li className="group/bullet flex items-center">
-                        <span className="mr-3 h-2 w-2 rounded-full bg-purple-600 transition-all duration-300 group-hover/bullet:scale-150"></span>
-                        <span className="transition-colors duration-300 group-hover/bullet:text-purple-700">
+                        <span className="mr-3 h-2 w-2 rounded-full bg-mkt-ink transition-all duration-300 group-hover/bullet:scale-150"></span>
+                        <span className="transition-colors duration-300 group-hover/bullet:text-mkt-ink">
                           Staff training difficulties
                         </span>
                       </li>
@@ -554,11 +554,11 @@ export const BookDemo = () => {
                 <div className="space-y-6">
                   <motion.div
                     whileHover={{ y: -4, scale: 1.02 }}
-                    className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-300 hover:border-purple-300 hover:shadow-2xl"
+                    className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-300 hover:border-mkt-steel1 hover:shadow-2xl"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-mkt-canvas opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="relative">
-                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-white">
                         <BarChart3 className="h-6 w-6 text-white" />
                       </div>
                       <h4 className="mb-4 text-xl font-semibold text-gray-800">
@@ -566,23 +566,23 @@ export const BookDemo = () => {
                       </h4>
                       <ul className="space-y-4 text-gray-700">
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">Setup time:</strong> Exact setup
+                            <strong className="text-mkt-ink">Setup time:</strong> Exact setup
                             time for your kitchen configuration
                           </div>
                         </li>
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">Training requirements:</strong>{" "}
+                            <strong className="text-mkt-ink">Training requirements:</strong>{" "}
                             Training needs for your team size
                           </div>
                         </li>
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">Integration possibilities:</strong>{" "}
+                            <strong className="text-mkt-ink">Integration possibilities:</strong>{" "}
                             With your current systems
                           </div>
                         </li>
@@ -591,33 +591,33 @@ export const BookDemo = () => {
                   </motion.div>
                   <motion.div
                     whileHover={{ y: -4, scale: 1.02 }}
-                    className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-300 hover:border-purple-300 hover:shadow-2xl"
+                    className="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-300 hover:border-mkt-steel1 hover:shadow-2xl"
                   >
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                    <div className="absolute inset-0 bg-mkt-canvas opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="relative">
-                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600">
+                      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl text-white">
                         <BarChart3 className="h-6 w-6 text-white" />
                       </div>
                       <h4 className="mb-4 text-xl font-semibold text-gray-800">Pricing & ROI</h4>
                       <ul className="space-y-4 text-gray-700">
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">Pricing options:</strong> For your
+                            <strong className="text-mkt-ink">Pricing options:</strong> For your
                             business size
                           </div>
                         </li>
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">Implementation timeline:</strong>{" "}
+                            <strong className="text-mkt-ink">Implementation timeline:</strong>{" "}
                             And support process
                           </div>
                         </li>
                         <li className="group/item flex items-start">
-                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
+                          <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
                           <div>
-                            <strong className="text-purple-700">ROI expectations:</strong> Based on
+                            <strong className="text-mkt-ink">ROI expectations:</strong> Based on
                             your current setup
                           </div>
                         </li>
@@ -634,8 +634,8 @@ export const BookDemo = () => {
       {/* Live Demo Experience */}
       <section className="relative overflow-hidden bg-white py-20">
         {/* Background Elements */}
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-purple-400 opacity-5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-pink-300 opacity-5 blur-3xl" />
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-40 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
         <div className="container mx-auto px-4 sm:px-6 md:px-12 lg:px-16">
           <motion.div
@@ -651,7 +651,7 @@ export const BookDemo = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="mb-6 inline-flex items-center rounded-full bg-purple-100 px-6 py-3 text-sm font-medium text-purple-800 ring-1 ring-purple-200"
+                className="mb-6 inline-flex items-center rounded-full bg-mkt-canvas px-6 py-3 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1"
               >
                 <Video className="mr-2 h-4 w-4" />
                 Live Demo Experience
@@ -691,11 +691,11 @@ export const BookDemo = () => {
                     whileHover={{ x: 8 }}
                     className="flex items-center gap-4 transition-all duration-300"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg">
                       <Video className="h-6 w-6 text-white" />
                     </div>
                     <span className="text-lg text-gray-700">
-                      <strong className="text-purple-700">Format:</strong> Live screen sharing
+                      <strong className="text-mkt-ink">Format:</strong> Live screen sharing
                       session via Zoom/Teams
                     </span>
                   </motion.div>
@@ -703,11 +703,11 @@ export const BookDemo = () => {
                     whileHover={{ x: 8 }}
                     className="flex items-center gap-4 transition-all duration-300"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg">
                       <Clock className="h-6 w-6 text-white" />
                     </div>
                     <span className="text-lg text-gray-700">
-                      <strong className="text-purple-700">Duration:</strong> 30 minutes with time
+                      <strong className="text-mkt-ink">Duration:</strong> 30 minutes with time
                       for questions
                     </span>
                   </motion.div>
@@ -715,11 +715,11 @@ export const BookDemo = () => {
                     whileHover={{ x: 8 }}
                     className="flex items-center gap-4 transition-all duration-300"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg">
                       <BarChart3 className="h-6 w-6 text-white" />
                     </div>
                     <span className="text-lg text-gray-700">
-                      <strong className="text-purple-700">Led by:</strong> InstaLabel product
+                      <strong className="text-mkt-ink">Led by:</strong> InstaLabel product
                       specialist
                     </span>
                   </motion.div>
@@ -727,11 +727,11 @@ export const BookDemo = () => {
                     whileHover={{ x: 8 }}
                     className="flex items-center gap-4 transition-all duration-300"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg">
                       <Smartphone className="h-6 w-6 text-white" />
                     </div>
                     <span className="text-lg text-gray-700">
-                      <strong className="text-purple-700">Interactive:</strong> Ask questions and
+                      <strong className="text-mkt-ink">Interactive:</strong> Ask questions and
                       see custom examples
                     </span>
                   </motion.div>
@@ -741,45 +741,45 @@ export const BookDemo = () => {
                 <div className="space-y-4">
                   <motion.div
                     whileHover={{ x: 8, scale: 1.02 }}
-                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
+                    className="group flex items-center justify-between rounded-xl bg-mkt-canvas p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
                   >
-                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-purple-700">
+                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-mkt-ink">
                       Quick overview of your current labeling challenges
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-purple-600 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-mkt-teal shadow-sm">
                       5 min
                     </span>
                   </motion.div>
                   <motion.div
                     whileHover={{ x: 8, scale: 1.02 }}
-                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
+                    className="group flex items-center justify-between rounded-xl bg-mkt-canvas p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
                   >
-                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-purple-700">
+                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-mkt-ink">
                       Live walkthrough of InstaLabel dashboard and printing
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-purple-600 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-mkt-teal shadow-sm">
                       15 min
                     </span>
                   </motion.div>
                   <motion.div
                     whileHover={{ x: 8, scale: 1.02 }}
-                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
+                    className="group flex items-center justify-between rounded-xl bg-mkt-canvas p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
                   >
-                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-purple-700">
+                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-mkt-ink">
                       Device setup demonstration (web and mobile)
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-purple-600 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-mkt-teal shadow-sm">
                       5 min
                     </span>
                   </motion.div>
                   <motion.div
                     whileHover={{ x: 8, scale: 1.02 }}
-                    className="group flex items-center justify-between rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
+                    className="group flex items-center justify-between rounded-xl bg-mkt-canvas p-4 shadow-sm transition-all duration-300 hover:shadow-lg"
                   >
-                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-purple-700">
+                    <span className="text-gray-700 transition-colors duration-300 group-hover:text-mkt-ink">
                       Q&A and next steps discussion
                     </span>
-                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-purple-600 shadow-sm">
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-bold text-mkt-teal shadow-sm">
                       5 min
                     </span>
                   </motion.div>
@@ -792,36 +792,36 @@ export const BookDemo = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, delay: 0.6 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="group relative overflow-hidden rounded-3xl border border-purple-200 bg-gradient-to-br from-purple-50 via-white to-pink-50 p-8 shadow-lg transition-all duration-300 hover:border-purple-300 hover:shadow-2xl"
+                className="group relative overflow-hidden rounded-3xl border border-mkt-steel1 bg-mkt-canvas p-8 shadow-lg transition-all duration-300 hover:border-mkt-steel1 hover:shadow-2xl"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-600/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="absolute inset-0 bg-mkt-canvas opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                 <div className="relative">
-                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-pink-600 shadow-lg">
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-lg">
                     <Smartphone className="h-8 w-8 text-white" />
                   </div>
                   <h4 className="mb-6 text-2xl font-bold text-gray-900">Technical Requirements</h4>
                   <ul className="space-y-4 text-gray-700">
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Stable internet connection
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Computer or tablet with camera/microphone
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Zoom or Teams capability (we'll send the link)
                       </span>
                     </li>
                     <li className="group/item flex items-start">
-                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-purple-600 transition-all duration-300 group-hover/item:scale-150"></span>
-                      <span className="transition-colors duration-300 group-hover/item:text-purple-700">
+                      <span className="mr-3 mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-mkt-ink transition-all duration-300 group-hover/item:scale-150"></span>
+                      <span className="transition-colors duration-300 group-hover/item:text-mkt-ink">
                         Optional: Have your current printer model handy for compatibility check
                       </span>
                     </li>
@@ -933,7 +933,7 @@ export const BookDemo = () => {
               <p className="text-xl text-gray-600">Real results from real kitchens across the UK</p>
             </div>
 
-            <div className="rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 to-pink-50 p-8">
+            <div className="rounded-2xl border border-mkt-steel1 bg-mkt-canvas p-8">
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
                 <div>
                   <h3 className="mb-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
@@ -967,12 +967,12 @@ export const BookDemo = () => {
                   </ul>
                 </div>
               </div>
-              <div className="mt-6 rounded-lg border border-purple-200 bg-white p-4">
+              <div className="mt-6 rounded-lg border border-mkt-steel1 bg-white p-4">
                 <p className="text-center italic text-gray-700">
                   "The demo showed us exactly how InstaLabel would fit our workflow. Implementation
                   was seamless, and the time savings were immediate."
                 </p>
-                <p className="mt-2 text-center font-semibold text-purple-600">
+                <p className="mt-2 text-center font-semibold text-mkt-teal">
                   — Operations Manager, Manchester Restaurant Group
                 </p>
               </div>
@@ -1013,9 +1013,9 @@ export const BookDemo = () => {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -1036,7 +1036,7 @@ export const BookDemo = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                        className="border-mkt-steel1 text-mkt-teal hover:bg-mkt-canvas"
                       >
                         Download Kit
                       </Button>
@@ -1053,9 +1053,9 @@ export const BookDemo = () => {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-purple-200 hover:shadow-md">
+              <div className="h-full rounded-lg border border-gray-200 bg-white p-6 transition-all duration-200 hover:border-mkt-steel1 hover:shadow-md">
                 <div className="flex items-start space-x-4">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-600 transition-colors duration-200 group-hover:bg-purple-100">
+                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-mkt-canvas text-mkt-teal transition-colors duration-200 group-hover:bg-mkt-canvas">
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path
                         strokeLinecap="round"
@@ -1074,7 +1074,7 @@ export const BookDemo = () => {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                        className="border-mkt-steel1 text-mkt-teal hover:bg-mkt-canvas"
                       >
                         Read Blog
                       </Button>
@@ -1102,25 +1102,25 @@ export const BookDemo = () => {
               <div className="flex flex-wrap justify-center gap-6">
                 <Link
                   href="/features"
-                  className="font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700"
+                  className="font-medium text-mkt-teal transition-colors duration-200 hover:text-mkt-ink"
                 >
                   System features
                 </Link>
                 <Link
                   href="/printbridge"
-                  className="font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700"
+                  className="font-medium text-mkt-teal transition-colors duration-200 hover:text-mkt-ink"
                 >
                   PrintBridge technology
                 </Link>
                 <Link
                   href="/allergen-guide"
-                  className="font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700"
+                  className="font-medium text-mkt-teal transition-colors duration-200 hover:text-mkt-ink"
                 >
                   Allergen guide
                 </Link>
                 <Link
                   href="/allergen-compliance"
-                  className="font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700"
+                  className="font-medium text-mkt-teal transition-colors duration-200 hover:text-mkt-ink"
                 >
                   Compliance info
                 </Link>
@@ -1157,7 +1157,7 @@ export const BookDemo = () => {
                     id="firstName"
                     name="firstName"
                     required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                   />
                 </div>
                 <div>
@@ -1172,7 +1172,7 @@ export const BookDemo = () => {
                     id="lastName"
                     name="lastName"
                     required
-                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                    className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                   />
                 </div>
               </div>
@@ -1186,7 +1186,7 @@ export const BookDemo = () => {
                   id="email"
                   name="email"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                 />
               </div>
 
@@ -1198,7 +1198,7 @@ export const BookDemo = () => {
                   type="tel"
                   id="phone"
                   name="phone"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                 />
               </div>
 
@@ -1211,7 +1211,7 @@ export const BookDemo = () => {
                   id="business"
                   name="business"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                 />
               </div>
 
@@ -1226,7 +1226,7 @@ export const BookDemo = () => {
                   id="kitchenSize"
                   name="kitchenSize"
                   required
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                 >
                   <option value="">Select kitchen size</option>
                   <option value="small">Small (1-10 staff)</option>
@@ -1244,7 +1244,7 @@ export const BookDemo = () => {
                   name="message"
                   rows={4}
                   placeholder="Tell us about your current labeling setup and any specific needs..."
-                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-purple-500"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-mkt-ink"
                 ></textarea>
               </div>
 
@@ -1252,7 +1252,7 @@ export const BookDemo = () => {
                 <Button
                   type="submit"
                   size="lg"
-                  className="bg-purple-600 px-8 py-3 text-white hover:bg-purple-700"
+                  className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink"
                   disabled={loading}
                 >
                   {loading ? (

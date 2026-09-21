@@ -165,7 +165,7 @@ export const AllergenComplianceCTA = () => {
               </div>
               <Button
                 type="submit"
-                className="w-full bg-purple-600 py-3 text-lg text-white hover:bg-purple-700"
+                className="w-full bg-mkt-ink py-3 text-lg text-white hover:bg-mkt-ink"
                 disabled={isSubmitting}
               >
                 {isSubmitting ? (

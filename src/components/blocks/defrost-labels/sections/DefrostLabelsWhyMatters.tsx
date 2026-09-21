@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 
 export const DefrostLabelsWhyMatters = () => {
   return (
-    <section className="relative w-full bg-gradient-to-br from-white via-blue-50 to-cyan-50 px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative w-full bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-12 md:flex-row">
         {/* Left Side - Problem Visual */}
         <div className="mx-auto w-full max-w-md flex-1">
@@ -128,7 +128,7 @@ export const DefrostLabelsWhyMatters = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-mkt-teal"
                   >
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
@@ -146,7 +146,7 @@ export const DefrostLabelsWhyMatters = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-mkt-teal"
                   >
                     <path d="M8 2v4"></path>
                     <path d="M16 2v4"></path>
@@ -166,7 +166,7 @@ export const DefrostLabelsWhyMatters = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-mkt-teal"
                   >
                     <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path>
                     <path d="M14 2v4a2 2 0 0 0 2 2h4"></path>
@@ -187,7 +187,7 @@ export const DefrostLabelsWhyMatters = () => {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="h-4 w-4 text-purple-600"
+                    className="h-4 w-4 text-mkt-teal"
                   >
                     <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path>
                     <path d="M12 9v4"></path>
@@ -197,9 +197,9 @@ export const DefrostLabelsWhyMatters = () => {
                 </div>
               </div>
             </div>
-            <div className="mt-6 rounded-lg border border-purple-200 bg-purple-50 p-4">
-              <div className="text-sm font-semibold text-purple-800">
-                <span className="font-bold text-purple-700">The Solution:</span> Automated defrost
+            <div className="mt-6 rounded-lg border border-mkt-steel1 bg-mkt-canvas p-4">
+              <div className="text-sm font-semibold text-mkt-ink">
+                <span className="font-bold text-mkt-ink">The Solution:</span> Automated defrost
                 labels with date tracking, expiry dates, and allergen information ensure HACCP
                 compliance and food safety.
               </div>
