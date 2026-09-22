@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
-import { Download, Printer } from "lucide-react"
+import { ChevronDown, Download, Printer } from "lucide-react"
 import { toast } from "sonner"
 import { Button, Input } from "@/components/ui"
+import { Checkbox } from "@/components/ui/checkbox"
 import AppLoader from "@/components/AppLoader"
 import { AllergenMatrixSheet } from "@/components/dashboard/AllergenMatrixSheet"
 import { useAuth } from "@/context/AuthContext"
@@ -61,16 +62,53 @@ function ScaledSheet({ children }: { children: React.ReactNode }) {
   )
 }
 
+function chunkRows<T>(items: T[], size: number) {
+  const pages: T[][] = []
+  for (let i = 0; i < items.length; i += size) {
+    pages.push(items.slice(i, i + size))
+  }
+  return pages
+}
+
 export default function AllergenMatrixPage() {
   const [query, setQuery] = useState("")
+  const [pickerQuery, setPickerQuery] = useState("")
+  const [showPicker, setShowPicker] = useState(false)
+  const [hiddenIds, setHiddenIds] = useState<string[]>([])
+  const [hiddenReady, setHiddenReady] = useState(false)
   const [downloading, setDownloading] = useState(false)
   const captureRef = useRef<HTMLDivElement>(null)
-  const { profile, name } = useAuth()
+  const { profile, name, userId } = useAuth()
   const { menuItems, loading: menuLoading, error: menuError } = useMenuItems()
   const { customAllergens, isLoading: allergensLoading, error: allergensError } = useAllergens()
 
   const businessName = profile?.company_name?.trim() || name?.trim() || "Kitchen"
   const updatedAt = useMemo(() => formatUpdatedAt(new Date()), [])
+  const storageKey = userId ? `allergen-matrix-hidden:${userId}` : null
+
+  useEffect(() => {
+    if (!storageKey) {
+      setHiddenReady(true)
+      return
+    }
+    try {
+      const raw = localStorage.getItem(storageKey)
+      if (raw) {
+        const parsed = JSON.parse(raw)
+        if (Array.isArray(parsed)) {
+          setHiddenIds(parsed.filter((id) => typeof id === "string"))
+        }
+      }
+    } catch {
+      // Keep the default empty list if stored data is unreadable.
+    }
+    setHiddenReady(true)
+  }, [storageKey])
+
+  useEffect(() => {
+    if (!hiddenReady || !storageKey) return
+    localStorage.setItem(storageKey, JSON.stringify(hiddenIds))
+  }, [hiddenIds, hiddenReady, storageKey])
 
   const { columns, rows } = useMemo(
     () =>
@@ -81,41 +119,58 @@ export default function AllergenMatrixPage() {
     [menuItems, customAllergens]
   )
 
+  const includedRows = useMemo(
+    () => rows.filter((row) => !hiddenIds.includes(row.id)),
+    [rows, hiddenIds]
+  )
+
   const visibleRows = useMemo(() => {
     const q = query.trim().toLowerCase()
+    if (!q) return includedRows
+    return includedRows.filter((row) => row.name.toLowerCase().includes(q))
+  }, [query, includedRows])
+
+  const pickerRows = useMemo(() => {
+    const q = pickerQuery.trim().toLowerCase()
     if (!q) return rows
     return rows.filter((row) => row.name.toLowerCase().includes(q))
-  }, [query, rows])
+  }, [pickerQuery, rows])
 
-  const previewPages = useMemo(() => {
-    if (visibleRows.length === 0) return []
-    const pages = []
-    for (let i = 0; i < visibleRows.length; i += MATRIX_ROWS_PER_PAGE) {
-      pages.push(visibleRows.slice(i, i + MATRIX_ROWS_PER_PAGE))
-    }
-    return pages
-  }, [visibleRows])
+  const previewPages = useMemo(
+    () => chunkRows(visibleRows, MATRIX_ROWS_PER_PAGE),
+    [visibleRows]
+  )
+  const printPages = useMemo(
+    () => chunkRows(includedRows, MATRIX_ROWS_PER_PAGE),
+    [includedRows]
+  )
 
-  const printPages = useMemo(() => {
-    if (rows.length === 0) return []
-    const pages = []
-    for (let i = 0; i < rows.length; i += MATRIX_ROWS_PER_PAGE) {
-      pages.push(rows.slice(i, i + MATRIX_ROWS_PER_PAGE))
-    }
-    return pages
-  }, [rows])
+  const hiddenCount = rows.length - includedRows.length
+
+  const setOnChart = (id: string, onChart: boolean) => {
+    setHiddenIds((current) => {
+      if (onChart) return current.filter((itemId) => itemId !== id)
+      if (current.includes(id)) return current
+      return [...current, id]
+    })
+  }
+
+  const hidePickerResults = () => {
+    const ids = pickerRows.map((row) => row.id)
+    setHiddenIds((current) => Array.from(new Set([...current, ...ids])))
+  }
 
   const handlePrint = () => {
-    if (rows.length === 0) {
-      toast.error("Add menu items before printing the allergen chart.")
+    if (includedRows.length === 0) {
+      toast.error("Choose at least one dish before printing the allergen chart.")
       return
     }
     window.print()
   }
 
   const handleDownloadPdf = async () => {
-    if (rows.length === 0) {
-      toast.error("Add menu items before downloading the allergen chart.")
+    if (includedRows.length === 0) {
+      toast.error("Choose at least one dish before downloading the allergen chart.")
       return
     }
 
@@ -205,11 +260,11 @@ export default function AllergenMatrixPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={handlePrint} disabled={rows.length === 0}>
+          <Button variant="outline" onClick={handlePrint} disabled={includedRows.length === 0}>
             <Printer className="mr-2 h-4 w-4" />
             Print
           </Button>
-          <Button onClick={handleDownloadPdf} disabled={downloading || rows.length === 0}>
+          <Button onClick={handleDownloadPdf} disabled={downloading || includedRows.length === 0}>
             <Download className="mr-2 h-4 w-4" />
             {downloading ? "Preparing PDF..." : "Download PDF"}
           </Button>
@@ -218,30 +273,96 @@ export default function AllergenMatrixPage() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="rounded-xl border bg-card p-5 shadow">
-          <p className="text-muted-foreground">Dishes</p>
-          <h3 className="text-2xl font-bold">{rows.length}</h3>
+          <p className="text-muted-foreground">Dishes on chart</p>
+          <h3 className="text-2xl font-bold">{includedRows.length}</h3>
         </div>
         <div className="rounded-xl border bg-card p-5 shadow">
           <p className="text-muted-foreground">Allergen columns</p>
           <h3 className="text-2xl font-bold">{columns.length}</h3>
         </div>
         <div className="rounded-xl border bg-card p-5 shadow">
-          <p className="text-muted-foreground">With recorded allergens</p>
-          <h3 className="text-2xl font-bold">{rows.filter((row) => row.contains.length > 0).length}</h3>
+          <p className="text-muted-foreground">Hidden from chart</p>
+          <h3 className="text-2xl font-bold">{hiddenCount}</h3>
         </div>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Input
-          placeholder="Search dishes..."
+          placeholder="Search dishes on the chart..."
           className="w-full max-w-sm"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
-        <p className="text-sm text-muted-foreground">
-          PDF and print always include the full menu, not the search filter.
-        </p>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setShowPicker((open) => !open)}
+          disabled={rows.length === 0}
+        >
+          Choose dishes
+          <ChevronDown className={`h-4 w-4 transition ${showPicker ? "rotate-180" : ""}`} />
+        </Button>
       </div>
+
+      {showPicker && rows.length > 0 && (
+        <div className="rounded-2xl border bg-card p-5 shadow-sm">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-semibold">Dishes on this chart</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Uncheck a dish to leave it off the chart, print and PDF.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={() => setHiddenIds([])} disabled={hiddenCount === 0}>
+                Show all
+              </Button>
+              <Button
+                variant="outline"
+                onClick={hidePickerResults}
+                disabled={pickerRows.length === 0}
+              >
+                Hide these
+              </Button>
+            </div>
+          </div>
+          <Input
+            placeholder="Find a dish to hide..."
+            className="mt-4 w-full max-w-sm"
+            value={pickerQuery}
+            onChange={(e) => setPickerQuery(e.target.value)}
+          />
+          <div className="mt-4 max-h-72 overflow-y-auto rounded-xl border">
+            {pickerRows.length === 0 ? (
+              <p className="p-4 text-sm text-muted-foreground">No dishes match that search.</p>
+            ) : (
+              <ul>
+                {pickerRows.map((row) => {
+                  const onChart = !hiddenIds.includes(row.id)
+                  return (
+                    <li key={row.id} className="border-b last:border-b-0">
+                      <label className="flex cursor-pointer items-center gap-3 px-4 py-2.5 hover:bg-muted/50">
+                        <Checkbox
+                          checked={onChart}
+                          onCheckedChange={(checked) => setOnChart(row.id, checked === true)}
+                        />
+                        <span className={onChart ? "text-sm font-medium" : "text-sm text-muted-foreground"}>
+                          {row.name}
+                        </span>
+                        {!onChart && (
+                          <span className="ml-auto text-xs uppercase tracking-wide text-muted-foreground">
+                            Hidden
+                          </span>
+                        )}
+                      </label>
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
 
       {rows.length === 0 ? (
         <div className="rounded-2xl border bg-card p-10 text-center shadow-sm">
@@ -254,10 +375,27 @@ export default function AllergenMatrixPage() {
             <Link href="/dashboard/menuitem">Go to menu items</Link>
           </Button>
         </div>
+      ) : includedRows.length === 0 ? (
+        <div className="rounded-2xl border bg-card p-10 text-center shadow-sm">
+          <p className="text-lg font-semibold">No dishes on this chart</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Every menu item is currently hidden. Show dishes again to print or download the chart.
+          </p>
+          <Button className="mt-5" onClick={() => setHiddenIds([])}>
+            Show all dishes
+          </Button>
+        </div>
+      ) : visibleRows.length === 0 ? (
+        <div className="rounded-2xl border bg-card p-10 text-center shadow-sm">
+          <p className="text-lg font-semibold">No matching dishes</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Nothing on the chart matches that search. Hidden dishes stay off print and PDF.
+          </p>
+        </div>
       ) : (
         <div className="rounded-2xl border bg-[#ebe6db] p-4 shadow-sm">
           {previewPages.map((pageRows, index) => (
-            <ScaledSheet key={index}>
+            <ScaledSheet key={pageRows.map((row) => row.id).join("-")}>
               <AllergenMatrixSheet
                 businessName={businessName}
                 updatedAt={updatedAt}
