@@ -1,26 +1,15 @@
-import React from "react"
 import { Metadata } from "next"
 
+const title = "Privacy policy | InstaLabel"
+const description =
+  "Learn how InstaLabel describes the personal information used for accounts, support, printing activity and website services."
+
 export const metadata: Metadata = {
-  title: "Privacy Policy | InstaLabel",
-  description:
-    "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data when using our kitchen labeling software and services.",
-  keywords: [
-    "InstaLabel privacy policy",
-    "kitchen labeling privacy",
-    "data protection",
-    "restaurant software privacy",
-    "food safety software privacy",
-    "kitchen management privacy",
-    "data collection policy",
-    "user data protection",
-    "restaurant technology privacy",
-    "kitchen automation privacy",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Privacy Policy | InstaLabel",
-    description:
-      "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data when using our kitchen labeling software.",
+    title,
+    description,
     url: "https://www.instalabel.co/privacy-policy",
     type: "website",
     images: [
@@ -28,15 +17,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "InstaLabel Privacy Policy",
+        alt: "InstaLabel privacy policy",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Privacy Policy | InstaLabel",
-    description:
-      "Read InstaLabel's privacy policy to understand how we collect, use, and protect your data.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -44,125 +32,204 @@ export const metadata: Metadata = {
   },
 }
 
+const contents = [
+  { href: "#who-we-are", label: "Who we are and how to contact us" },
+  { href: "#information", label: "Information we collect" },
+  { href: "#use", label: "Why we use information" },
+  { href: "#permissions", label: "Device permissions" },
+  { href: "#sharing", label: "Service providers and sharing" },
+  { href: "#retention", label: "Retention" },
+  { href: "#security", label: "Protecting information" },
+  { href: "#rights", label: "Your rights and complaints" },
+  { href: "#cookies", label: "Cookies and similar technologies" },
+  { href: "#children", label: "Children" },
+  { href: "#changes", label: "Policy changes" },
+]
+
 const Page = () => {
   return (
-    <section className="bg-white">
-      <div className="prose max-w-none break-words text-base prose-h2:my-6 prose-p:my-2 prose-a:text-mkt-ink prose-a:no-underline hover:prose-a:text-mkt-teal">
-        <div className="flex w-full">
-          <div className="w-full">
-            <h1 className="mb-3 text-5xl font-bold">Privacy Policy</h1>
-            <p className="mb-8 text-lg leading-relaxed text-gray-600">
-              Your privacy is important to us. This Privacy Policy explains how INSTALABEL LIMITED
-              ("InstaLabel", "we", "us", or "our") collects, uses, and protects your information
-              when you use our kitchen labeling software and related services. If you have any
-              questions, <a href="mailto:support@instalabel.co">please get in touch.</a>
-            </p>
-          </div>
-        </div>
-        <article>
-          <h2>Information We Collect</h2>
-          <ul>
+    <article className="max-w-3xl text-mkt-ink">
+      <h1 className="mb-4 text-4xl font-black tracking-tight sm:text-5xl">Privacy policy</h1>
+      <p className="text-base leading-relaxed text-mkt-ink8">
+        This policy explains how INSTALABEL LIMITED uses personal information in connection with
+        InstaLabel, including account information, support enquiries and service activity.
+      </p>
+      <p className="mt-3 text-base leading-relaxed text-mkt-ink8">
+        For privacy questions or requests, email{" "}
+        <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
+          support@instalabel.co
+        </a>
+        .
+      </p>
+      <p className="mt-3 text-sm text-mkt-steel">Effective date: 15 September 2025</p>
+
+      <nav aria-label="On this page" className="mt-10 rounded-xl border border-mkt-steel1 bg-white p-6">
+        <h2 className="mb-4 text-base font-semibold">On this page</h2>
+        <ol className="space-y-2 text-sm">
+          {contents.map((item, index) => (
+            <li key={item.href}>
+              <a href={item.href} className="text-mkt-teal hover:underline">
+                {index + 1}. {item.label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div className="mt-12 space-y-10 text-base leading-relaxed text-mkt-ink8">
+        <section id="who-we-are" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            1. Who we are and how to contact us
+          </h2>
+          <p>
+            INSTALABEL LIMITED (&quot;InstaLabel&quot;, &quot;we&quot;, &quot;us&quot;, or
+            &quot;our&quot;) provides the InstaLabel website, software and related services.
+          </p>
+          <p className="mt-3">
+            For privacy questions or requests, email{" "}
+            <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
+              support@instalabel.co
+            </a>
+            .
+          </p>
+        </section>
+
+        <section id="information" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            2. Information we collect
+          </h2>
+          <ul className="list-disc space-y-2 pl-5">
             <li>
-              <strong>Account Information:</strong> Name, email address, business name, and contact
-              details you provide when registering.
+              <strong>Account and contact information:</strong> name, email address, business name
+              and contact details you provide when registering or contacting us.
             </li>
             <li>
-              <strong>Usage Data:</strong> Information about how you use InstaLabel, including label
-              print history, device/browser type, and IP address.
+              <strong>Usage and device information:</strong> how you use InstaLabel, including
+              device or browser type and IP address.
             </li>
             <li>
-              <strong>Print Logs:</strong> We retain print logs (label content, print time, printer
-              used) for compliance and audit purposes. These are kept for as long as your account is
-              active or as required by law.
+              <strong>Print records:</strong> label content, print time and printer used. Label
+              content may include staff identifiers recorded in the labelling workflow.
             </li>
             <li>
-              <strong>Cookies & Analytics:</strong> We use cookies and analytics tools (such as
-              Google Analytics) to understand usage and improve our service. See our Cookie Policy
-              for details.
+              <strong>Cookies and similar technologies:</strong> as described in our Cookie Policy.
             </li>
           </ul>
-          <h3>Bluetooth & Nearby Devices</h3>
-          <p>
-            Our mobile application uses Bluetooth permissions to enable communication with nearby
-            label-printing devices. On some older Android versions, the operating system may prompt
-            for Location permission to enable Bluetooth scanning, but we do not collect, store, or
-            track your physical location data. The location permission (if prompted) is used solely
-            for Bluetooth device discovery and does not involve any location tracking or data
-            collection.
-          </p>
-          <p>
-            You may disable Bluetooth or location permissions in your device settings; however,
-            doing so may prevent the app from connecting via Bluetooth and printing.
-          </p>
-          <p>
-            If you have questions about how Bluetooth connectivity works in the app, please contact
-            us at <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
-          </p>
-          <h3>How We Use Your Information</h3>
-          <ul>
+        </section>
+
+        <section id="use" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            3. Why we use information
+          </h2>
+          <ul className="list-disc space-y-2 pl-5">
             <li>To provide and maintain the InstaLabel service</li>
-            <li>To support food safety compliance and generate audit-ready print logs</li>
-            <li>To communicate with you about your account, updates, or support requests</li>
+            <li>To keep print records available in the service</li>
+            <li>To communicate with you about your account, updates or support requests</li>
             <li>To improve our product and user experience</li>
             <li>To comply with legal obligations</li>
           </ul>
-          <h3>How We Share Your Information</h3>
-          <ul>
+        </section>
+
+        <section id="permissions" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            4. Device permissions
+          </h2>
+          <p>
+            The InstaLabel Android app uses Bluetooth permissions to communicate with compatible
+            label printers. On some older Android versions, the operating system may prompt for
+            Location permission to enable Bluetooth scanning. InstaLabel does not use that
+            permission to track or collect your location. If you decline or disable these
+            permissions, some printing features may not work.
+          </p>
+        </section>
+
+        <section id="sharing" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            5. Service providers and sharing
+          </h2>
+          <p>We may share information:</p>
+          <ul className="mt-3 list-disc space-y-2 pl-5">
+            <li>With service providers who help us operate InstaLabel</li>
+            <li>With authorities if required by law</li>
             <li>
-              With service providers who help us operate InstaLabel (e.g., cloud hosting, analytics)
-            </li>
-            <li>With authorities if required by law or for compliance investigations</li>
-            <li>
-              With your consent, or as part of a business transfer (e.g., merger or acquisition)
+              With your consent, or as part of a business transfer such as a merger or acquisition
             </li>
           </ul>
-          <h3>Data Retention</h3>
+        </section>
+
+        <section id="retention" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">6. Retention</h2>
           <p>
             We retain your account data and print logs for as long as your account is active or as
             needed to comply with legal and regulatory requirements. You may request deletion of
-            your data by contacting us, but some records may be retained for compliance purposes.
+            your data by contacting us, but some records may be retained where we are required to
+            keep them.
           </p>
-          <h3>Security</h3>
+        </section>
+
+        <section id="security" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            7. Protecting information
+          </h2>
           <p>
-            We use industry-standard security measures to protect your data. However, no method of
-            transmission or storage is 100% secure. We encourage you to use strong passwords and
-            keep your login credentials confidential.
+            We use industry-standard security measures to protect your data. No method of
+            transmission or storage is completely secure. Use a strong password and keep your login
+            credentials confidential.
           </p>
-          <h3>Your Rights</h3>
-          <ul>
-            <li>You can access, update, or delete your account information at any time.</li>
+        </section>
+
+        <section id="rights" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            8. Your rights and complaints
+          </h2>
+          <ul className="list-disc space-y-2 pl-5">
+            <li>You can access, update or delete your account information in the service.</li>
             <li>
-              You can request a copy of your data or ask us to delete your account by contacting
-              support.
+              You can request a copy of your data or ask us to delete your account by emailing{" "}
+              <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
+                support@instalabel.co
+              </a>
+              . Some records may be retained where we are required to keep them.
             </li>
-            <li>You can manage cookie preferences in your browser settings.</li>
+            <li>
+              You can complain to the Information Commissioner&apos;s Office if you are unhappy with
+              how we handle your personal information.
+            </li>
           </ul>
-          <h3>Children's Privacy</h3>
+        </section>
+
+        <section id="cookies" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            9. Cookies and similar technologies
+          </h2>
+          <p>
+            For information about cookies and your choices, read our{" "}
+            <a href="/cookie-policy" className="text-mkt-teal hover:underline">
+              Cookie Policy
+            </a>
+            .
+          </p>
+        </section>
+
+        <section id="children" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">10. Children</h2>
           <p>
             InstaLabel is not intended for use by children under 16. We do not knowingly collect
             personal information from children.
           </p>
-          <h3>Changes to This Policy</h3>
+        </section>
+
+        <section id="changes" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            11. Policy changes
+          </h2>
           <p>
             We may update this Privacy Policy from time to time. We will notify you of significant
-            changes by posting the new policy on our website and updating the date below.
+            changes by posting the new policy on our website and updating the date above.
           </p>
-          <h3>Contact Us</h3>
-          <ul>
-            <li>
-              Email: <a href="mailto:support@instalabel.co">support@instalabel.co</a>
-            </li>
-            <li>
-              Website:{" "}
-              <a href="https://www.instalabel.co/about#contact" target="_blank" rel="noopener">
-                https://www.instalabel.co/about#contact
-              </a>
-            </li>
-          </ul>
-        </article>
-        <div className="py-8 text-sm text-muted-foreground">As of 15 Sep 2025</div>
+        </section>
       </div>
-    </section>
+    </article>
   )
 }
 

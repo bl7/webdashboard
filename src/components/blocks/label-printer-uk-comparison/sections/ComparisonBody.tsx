@@ -4,6 +4,7 @@ import React from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
+import { BeforeAfterSection } from "@/components/blocks/homepage/sections/beforeAfterSection"
 
 const rows = [
   {
@@ -105,7 +106,9 @@ export const ComparisonBody = () => (
       </div>
     </section>
 
-    <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <BeforeAfterSection />
+
+    <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
           Run a small, realistic trial.
@@ -126,7 +129,7 @@ export const ComparisonBody = () => (
       </div>
     </section>
 
-    <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
           Compare the whole setup.

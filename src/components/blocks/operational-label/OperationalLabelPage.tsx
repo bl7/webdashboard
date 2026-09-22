@@ -54,7 +54,7 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
       uuid: i,
       allergenName: name,
       category: "",
-      status: "Active",
+      status: "Active" as const,
       addedAt: "",
       isCustom: false,
     })),
