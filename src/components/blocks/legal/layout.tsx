@@ -1,6 +1,5 @@
 "use client"
 
-import { NavLink } from "@/components/ui"
 import { usePathname } from "next/navigation"
 
 const legalItems = [
@@ -25,16 +24,15 @@ export function SupportLayout({
           style={{ gap: "1.75rem" }}
         >
           {legalItems.map((item) => (
-            <NavLink
+            <a
               key={item.path}
               href={item.path}
-              exact
               className={`text-sm font-medium ${
                 pathname === item.path ? "text-mkt-ink" : "text-mkt-steel hover:text-mkt-ink"
               }`}
             >
               {item.name}
-            </NavLink>
+            </a>
           ))}
         </nav>
         {children}

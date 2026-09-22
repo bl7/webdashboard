@@ -1,25 +1,15 @@
 import { Metadata } from "next"
 
+const title = "Cookie policy | InstaLabel"
+const description =
+  "Read about cookies and similar technologies used by InstaLabel and how to manage the available choices."
+
 export const metadata: Metadata = {
-  title: "Cookie Policy | InstaLabel Kitchen Labeling",
-  description:
-    "Learn about how InstaLabel uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website.",
-  keywords: [
-    "InstaLabel cookie policy",
-    "kitchen labeling cookies",
-    "website cookies",
-    "restaurant software cookies",
-    "food safety software cookies",
-    "kitchen management cookies",
-    "cookie consent",
-    "website analytics cookies",
-    "restaurant technology cookies",
-    "kitchen automation cookies",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Cookie Policy | InstaLabel Kitchen Labeling",
-    description:
-      "Learn about how InstaLabel uses cookies and similar technologies to provide, improve, and secure our kitchen labeling software and website.",
+    title,
+    description,
     url: "https://www.instalabel.co/cookie-policy",
     type: "website",
     images: [
@@ -27,14 +17,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "InstaLabel Cookie Policy",
+        alt: "InstaLabel cookie policy",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cookie Policy | InstaLabel Kitchen Labeling",
-    description: "Learn about how InstaLabel uses cookies and similar technologies.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -42,77 +32,121 @@ export const metadata: Metadata = {
   },
 }
 
+const cookies = [
+  {
+    name: "token",
+    provider: "InstaLabel",
+    purpose: "Keeps a signed-in session so the service can recognise your account",
+    category: "Essential",
+    duration: "7 days",
+    when: "When you sign in",
+    control: "Sign out, or delete the cookie in your browser",
+  },
+]
+
 const Page = () => {
   return (
-    <section className="bg-white">
-      <div className="prose max-w-none break-words text-base prose-h2:my-6 prose-p:my-2 prose-a:text-mkt-ink prose-a:no-underline hover:prose-a:text-mkt-teal">
-        <div className="flex w-full">
-          <div className="w-full">
-            <h1 className="mb-3 text-5xl font-bold">Cookie Policy</h1>
+    <article className="max-w-3xl text-mkt-ink">
+      <h1 className="mb-4 text-4xl font-black tracking-tight sm:text-5xl">Cookie policy</h1>
+      <p className="text-base leading-relaxed text-mkt-ink8">
+        This page explains the cookies and similar technologies used by InstaLabel, what they do and
+        the choices available to you.
+      </p>
+      <p className="mt-3 text-sm text-mkt-steel">Effective date: 15 September 2025</p>
+
+      <div className="mt-12 space-y-10 text-base leading-relaxed text-mkt-ink8">
+        <section id="technologies" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            Cookies and similar technologies
+          </h2>
+          <p>
+            Cookies and related technologies can store or access information on your device.
+            Different technologies support different purposes, such as keeping an account session
+            working or measuring website use.
+          </p>
+        </section>
+
+        <section id="inventory" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">What we use</h2>
+          <p className="mb-6">
+            Public pages do not require cookies. After you sign in, InstaLabel sets the essential
+            cookie below so the application can keep your session.
+          </p>
+          <div className="overflow-x-auto rounded-xl border border-mkt-steel1 bg-white">
+            <table className="w-full min-w-[40rem] text-left text-sm">
+              <caption className="sr-only">Cookies used by InstaLabel</caption>
+              <thead className="bg-mkt-canvas">
+                <tr>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Name</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Provider</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Purpose</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Category</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Duration</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">When it runs</th>
+                  <th className="px-4 py-3 font-semibold text-mkt-ink">Your control</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cookies.map((row) => (
+                  <tr key={row.name} className="border-t border-mkt-steel1 align-top">
+                    <th className="px-4 py-3 font-medium text-mkt-ink">{row.name}</th>
+                    <td className="px-4 py-3">{row.provider}</td>
+                    <td className="px-4 py-3">{row.purpose}</td>
+                    <td className="px-4 py-3">{row.category}</td>
+                    <td className="px-4 py-3">{row.duration}</td>
+                    <td className="px-4 py-3">{row.when}</td>
+                    <td className="px-4 py-3">{row.control}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-        <article>
-          <p>
-            INSTALABEL LIMITED ("InstaLabel", "we", "us", or "our") uses cookies and similar
-            technologies to provide, improve, and secure our kitchen labeling software and website (
-            <a href="https://www.instalabel.co">https://www.instalabel.co</a>).
+          <p className="mt-4">
+            After you sign in, the browser may also store account details such as your name and
+            email in local storage so the signed-in application can load. The signed-in application
+            may also keep a browser identifier in local storage so this device can be recognised
+            while you are signed in. That storage is not a cookie. Account details are removed when
+            you sign out. The browser identifier can remain until you clear site data in your
+            browser.
           </p>
-          <h3>1. What are Cookies?</h3>
+        </section>
+
+        <section id="choices" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            Manage your choices
+          </h2>
           <p>
-            Cookies are small data files stored on your device when you visit a website. They help
-            us remember your preferences, keep you logged in, and analyze how you use our service.
+            We use essential technologies to operate the signed-in service. This page does not list
+            optional analytics or marketing cookies because none are currently active on the public
+            site.
           </p>
-          <h3>2. What Cookies Do We Use?</h3>
-          <ul>
-            <li>
-              <strong>Essential Cookies:</strong> Required for core site functionality, such as
-              authentication and security.
-            </li>
-            <li>
-              <strong>Analytics Cookies:</strong> We use Google Analytics to understand how users
-              interact with our site and improve our product. Google Analytics may set its own
-              cookies.{" "}
-              <a
-                href="https://policies.google.com/technologies/cookies"
-                target="_blank"
-                rel="noopener"
-              >
-                Learn more
-              </a>
-              .
-            </li>
-            <li>
-              <strong>Preference Cookies:</strong> Remember your settings and preferences (e.g.,
-              language, login state).
-            </li>
-          </ul>
-          <h3>3. Third-Party Cookies</h3>
+          <p className="mt-3">
+            You can delete or block cookies in your browser settings. Blocking the <code>token</code>{" "}
+            cookie will sign you out of the application. It will not stop you reading public pages.
+          </p>
+        </section>
+
+        <section id="changes" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">
+            Changes to this policy
+          </h2>
           <p>
-            Some third-party services (such as embedded videos or analytics) may set their own
-            cookies. We do not control these cookies. Please refer to the privacy policies of those
-            providers for more information.
+            We update this page when the technologies we use or the choices available to you change.
           </p>
-          <h3>4. Cookie Consent and Management</h3>
+        </section>
+
+        <section id="contact" style={{ scrollMarginTop: "7rem" }}>
+          <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">Contact us</h2>
           <p>
-            By using our website, you consent to our use of cookies as described in this policy. You
-            can manage or delete cookies in your browser settings. Most browsers allow you to block
-            cookies, delete existing cookies, or be notified before a cookie is set. Blocking some
-            cookies may affect your experience.
+            Questions about cookies on InstaLabel? Email{" "}
+            <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
+              support@instalabel.co
+            </a>
+            .
           </p>
-          <h3>5. Changes to This Policy</h3>
-          <p>
-            We may update this Cookie Policy from time to time. We will post any changes on this
-            page and update the date below.
-          </p>
-          <h3>6. Contact Us</h3>
-          <p>
-            If you have questions about our Cookie Policy, contact us at{" "}
-            <a href="mailto:support@instalabel.co">support@instalabel.co</a>.
-          </p>
-        </article>
-        <div className="py-8 text-sm text-muted-foreground">As of 15 Sep 2025</div>
+        </section>
       </div>
-    </section>
+    </article>
   )
 }
 
