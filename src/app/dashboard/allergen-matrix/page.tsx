@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { Download, Printer } from "lucide-react"
 import { toast } from "sonner"
@@ -23,15 +23,53 @@ function formatUpdatedAt(date: Date) {
   })
 }
 
+function ScaledSheet({ children }: { children: React.ReactNode }) {
+  const outerRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
+  const [scale, setScale] = useState(1)
+  const [height, setHeight] = useState<number>()
+
+  useEffect(() => {
+    const outer = outerRef.current
+    const inner = innerRef.current
+    if (!outer || !inner) return
+
+    const update = () => {
+      const next = Math.min(1, outer.clientWidth / 1512)
+      setScale(next)
+      setHeight(inner.offsetHeight * next)
+    }
+
+    update()
+    const ro = new ResizeObserver(update)
+    ro.observe(outer)
+    return () => ro.disconnect()
+  }, [])
+
+  return (
+    <div ref={outerRef} className="mb-6 overflow-hidden last:mb-0">
+      <div style={{ height }}>
+        <div
+          ref={innerRef}
+          className="shadow-lg"
+          style={{ width: 1512, transform: `scale(${scale})`, transformOrigin: "top left" }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function AllergenMatrixPage() {
   const [query, setQuery] = useState("")
   const [downloading, setDownloading] = useState(false)
   const captureRef = useRef<HTMLDivElement>(null)
-  const { profile } = useAuth()
+  const { profile, name } = useAuth()
   const { menuItems, loading: menuLoading, error: menuError } = useMenuItems()
   const { customAllergens, isLoading: allergensLoading, error: allergensError } = useAllergens()
 
-  const businessName = profile?.company_name?.trim() || "InstaLabel"
+  const businessName = profile?.company_name?.trim() || name?.trim() || "Kitchen"
   const updatedAt = useMemo(() => formatUpdatedAt(new Date()), [])
 
   const { columns, rows } = useMemo(
@@ -217,24 +255,18 @@ export default function AllergenMatrixPage() {
           </Button>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border bg-[#ebe6db] p-4 shadow-sm">
+        <div className="rounded-2xl border bg-[#ebe6db] p-4 shadow-sm">
           {previewPages.map((pageRows, index) => (
-            <div
-              key={index}
-              className="mb-6 overflow-hidden last:mb-0"
-              style={{ width: "100%", maxWidth: 1512 }}
-            >
-              <div className="origin-top-left shadow-lg max-[1512px]:origin-top-left sm:scale-100" style={{ width: 1512 }}>
-                <AllergenMatrixSheet
-                  businessName={businessName}
-                  updatedAt={updatedAt}
-                  columns={columns}
-                  rows={pageRows}
-                  page={index + 1}
-                  pageCount={previewPages.length}
-                />
-              </div>
-            </div>
+            <ScaledSheet key={index}>
+              <AllergenMatrixSheet
+                businessName={businessName}
+                updatedAt={updatedAt}
+                columns={columns}
+                rows={pageRows}
+                page={index + 1}
+                pageCount={previewPages.length}
+              />
+            </ScaledSheet>
           ))}
         </div>
       )}

@@ -33,7 +33,7 @@ export function AllergenMatrixSheet({
       data-matrix-page={captureId}
       style={{
         width: 1512,
-        minHeight: 1068,
+        minHeight: captureId ? 1068 : undefined,
         background: paper,
         color: ink,
         fontFamily: "Georgia, 'Times New Roman', serif",

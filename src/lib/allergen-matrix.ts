@@ -67,6 +67,7 @@ const UK_14: MatrixColumn[] = [
       "nut",
       "tree nuts",
       "tree nut",
+      "nuts tree nuts",
       "almond",
       "almonds",
       "hazelnut",
@@ -117,6 +118,9 @@ function matchesColumn(allergenName: string, column: MatrixColumn) {
 
   if (column.aliases.includes(n)) return true
 
+  if (column.id === "nuts") {
+    if (n.includes("tree nut") || /(^| )nuts?( |$)/.test(n)) return true
+  }
   if (column.id === "gluten" && n.includes("gluten")) return true
   if (column.id === "sulphites" && (n.includes("sulphit") || n.includes("sulfit") || n.includes("sulphur") || n.includes("sulfur"))) {
     return true
