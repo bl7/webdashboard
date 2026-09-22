@@ -1,4 +1,5 @@
 export * from "./hero"
+export * from "./UsesBody"
 export * from "./featureintro"
 export * from "./featuresgriduses"
 export * from "./galleryfeature"

@@ -1,5 +1,6 @@
 import { Footer, Header } from "@/components/navigation"
 import "./marketing.css"
+import "./marketing-dark.css"
 
 export default function WebLayout({
   children,

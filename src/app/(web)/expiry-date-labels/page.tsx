@@ -2,34 +2,34 @@ import { ExpiryDateLabelsPage } from "@/components/blocks/expiry-date-labels"
 import { Metadata } from "next"
 import React from "react"
 
+const title = "Expiry date labels for kitchens | InstaLabel"
+const description =
+  "Print readable date labels using your kitchen's configured rules. Review item details and support everyday stock-rotation checks with InstaLabel."
+
+const faqs = [
+  {
+    question: "Does InstaLabel choose a safe shelf life for me?",
+    answer:
+      "No. Your business decides its date rules from the appropriate product information and food-safety procedures.",
+  },
+  {
+    question: "Does reprinting a label restart the item's shelf life?",
+    answer:
+      "No. A replacement label must reflect the correct original information and applicable dates.",
+  },
+  {
+    question: "Is printing time always preparation time?",
+    answer:
+      "No. Those are different events. Check which event the selected workflow actually records.",
+  },
+]
+
 export const metadata: Metadata = {
-  title: "Expiry Date Labels | Food Expiry Labeling Software & Compliance",
-  description:
-    "Automate expiry date labeling for food safety compliance. Print expiry date labels, track food freshness, and ensure Natasha's Law compliance with InstaLabel software.",
-  keywords: [
-    "expiry date printer",
-    "food expiry labels",
-    "expiry date labels",
-    "food expiry labeling software",
-    "kitchen expiry date labels",
-    "restaurant expiry labeling",
-    "food safety expiry dates",
-    "expiry date compliance",
-    "kitchen label expiry software",
-    "food prep expiry labels",
-    "restaurant food expiry system",
-    "expiry date tracking software",
-    "kitchen management expiry labels",
-    "food business expiry compliance",
-    "expiry date automation",
-    "kitchen labeling expiry dates",
-    "food safety labeling software",
-    "expiry date printer software",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Expiry Date Labels | Food Expiry Labeling Software & Compliance",
-    description:
-      "Automate expiry date labeling for food safety compliance. Print expiry date labels, track food freshness, and ensure Natasha's Law compliance with InstaLabel software.",
+    title,
+    description,
     url: "https://www.instalabel.co/expiry-date-labels",
     type: "website",
     images: [
@@ -37,15 +37,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Expiry Date Labels - Food Expiry Labeling Software & Compliance",
+        alt: "Expiry date labels for kitchens",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Expiry Date Labels | Food Expiry Labeling Software & Compliance",
-    description:
-      "Automate expiry date labeling for food safety compliance. Print expiry date labels, track food freshness, and ensure Natasha's Law compliance with InstaLabel software.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -65,46 +64,24 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Expiry Date Labels",
-    description:
-      "Automate expiry date labeling for food safety compliance. Print expiry date labels, track food freshness, and ensure Natasha's Law compliance with InstaLabel software.",
-    url: "https://www.instalabel.co/expiry-date-labels",
-    mainEntity: {
-      "@type": "Article",
-      name: "Expiry Date Labeling Guide",
-      description: "Complete guide to expiry date labeling for food safety compliance",
-      author: {
-        "@type": "Organization",
-        name: "InstaLabel",
-      },
-      publisher: {
-        "@type": "Organization",
-        name: "InstaLabel",
-      },
-      datePublished: "2025-01-01",
-      dateModified: "2025-01-01",
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/expiry-date-labels",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Expiry Date Labels",
-          item: "https://www.instalabel.co/expiry-date-labels",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

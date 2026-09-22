@@ -1,0 +1,181 @@
+/* Dark marketing surfaces. Scoped to .marketing — does not change the dashboard. */
+
+@media (prefers-color-scheme: dark) {
+  .marketing {
+    background-color: #142124;
+    color: #d5dddb;
+  }
+
+  .marketing .bg-mkt-canvas {
+    background-color: #142124 !important;
+  }
+
+  .marketing .bg-white {
+    background-color: #1c282a !important;
+  }
+
+  .marketing .bg-mkt-ink {
+    background-color: #f6f5f1 !important;
+    color: #142124 !important;
+  }
+
+  .marketing .text-mkt-ink {
+    color: #f6f5f1 !important;
+  }
+
+  .marketing .text-mkt-ink8 {
+    color: #d5dddb !important;
+  }
+
+  .marketing .text-mkt-steel {
+    color: #9aa6a4 !important;
+  }
+
+  .marketing .text-mkt-teal,
+  .marketing .text-primary {
+    color: #8ecfc6 !important;
+  }
+
+  .marketing .text-mkt-allergen {
+    color: #c4a4e0 !important;
+  }
+
+  .marketing .bg-mkt-allergen1 {
+    background-color: #2a1f38 !important;
+  }
+
+  .marketing .border-mkt-steel1 {
+    border-color: #3a4a4c !important;
+  }
+
+  .marketing .border-mkt-ink {
+    border-color: #f6f5f1 !important;
+  }
+
+  .marketing header {
+    background-color: rgba(20, 33, 36, 0.94) !important;
+    border-color: #3a4a4c !important;
+  }
+
+  .marketing header a[href="/register"] {
+    background-color: #f6f5f1 !important;
+    color: #142124 !important;
+  }
+
+  .marketing header img[alt="InstaLabel"] {
+    filter: brightness(0) invert(1);
+  }
+
+  .marketing .mkt-hero-fade {
+    background: linear-gradient(to bottom, rgba(20, 33, 36, 0) 0%, #142124 100%) !important;
+  }
+
+  body:has(.marketing) :is(a, button)[class*="from-purple-"]:not([class*="bg-white"]),
+  body:has(.marketing) :is(a, button)[class*="to-pink-"]:not([class*="bg-white"]),
+  body:has(.marketing) :is(a, button)[class*="bg-purple-"]:not([class*="bg-white"]) {
+    background-color: #f6f5f1 !important;
+    color: #142124 !important;
+  }
+
+  body:has(.marketing) :is(a, button)[class*="border-purple-"]:not([class*="border-white"]),
+  body:has(.marketing) :is(a, button)[class*="border-blue-600"] {
+    border-color: #f6f5f1 !important;
+    color: #f6f5f1 !important;
+    background-color: transparent !important;
+  }
+
+  body:has(.marketing) :is(a, button)[class*="border-purple-"]:not([class*="border-white"]):hover,
+  body:has(.marketing) :is(a, button)[class*="border-blue-600"]:hover {
+    background-color: #f6f5f1 !important;
+    color: #142124 !important;
+  }
+
+  body:has(.marketing) :is(a, button)[class*="text-purple-"]:not([class*="from-purple"]):not([class*="text-white"]) {
+    color: #f6f5f1 !important;
+  }
+
+  body:has(.marketing) [data-radix-dropdown-menu-content],
+  body:has(.marketing) [data-vaul-drawer] {
+    background-color: #1c282a !important;
+    color: #f6f5f1 !important;
+    border-color: #3a4a4c !important;
+  }
+
+  body:has(.marketing) [data-radix-dropdown-menu-item] {
+    color: #f6f5f1 !important;
+  }
+}
+
+.dark .marketing {
+  background-color: #142124;
+  color: #d5dddb;
+}
+
+.dark .marketing .bg-mkt-canvas {
+  background-color: #142124 !important;
+}
+
+.dark .marketing .bg-white {
+  background-color: #1c282a !important;
+}
+
+.dark .marketing .bg-mkt-ink {
+  background-color: #f6f5f1 !important;
+  color: #142124 !important;
+}
+
+.dark .marketing .text-mkt-ink {
+  color: #f6f5f1 !important;
+}
+
+.dark .marketing .text-mkt-ink8 {
+  color: #d5dddb !important;
+}
+
+.dark .marketing .text-mkt-steel {
+  color: #9aa6a4 !important;
+}
+
+.dark .marketing .text-mkt-teal,
+.dark .marketing .text-primary {
+  color: #8ecfc6 !important;
+}
+
+.dark .marketing .border-mkt-steel1 {
+  border-color: #3a4a4c !important;
+}
+
+.dark .marketing header {
+  background-color: rgba(20, 33, 36, 0.94) !important;
+  border-color: #3a4a4c !important;
+}
+
+.dark .marketing header a[href="/register"] {
+  background-color: #f6f5f1 !important;
+  color: #142124 !important;
+}
+
+.dark .marketing header img[alt="InstaLabel"] {
+  filter: brightness(0) invert(1);
+}
+
+.dark .marketing .mkt-hero-fade {
+  background: linear-gradient(to bottom, rgba(20, 33, 36, 0) 0%, #142124 100%) !important;
+}
+
+.dark body:has(.marketing) [data-radix-dropdown-menu-content],
+.dark body:has(.marketing) [data-vaul-drawer] {
+  background-color: #1c282a !important;
+  color: #f6f5f1 !important;
+  border-color: #3a4a4c !important;
+}
+
+.dark body:has(.marketing) [data-radix-dropdown-menu-item] {
+  color: #f6f5f1 !important;
+}
+
+.dark body:has(.marketing) :is(a, button)[class*="border-purple-"]:not([class*="border-white"]) {
+  border-color: #f6f5f1 !important;
+  color: #f6f5f1 !important;
+  background-color: transparent !important;
+}

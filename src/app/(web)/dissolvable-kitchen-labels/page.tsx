@@ -1,29 +1,33 @@
 import type { Metadata } from "next"
 import { DissolvableKitchenLabelsPage } from "@/components/blocks/dissolvable-kitchen-labels/dissolvable-kitchen-labels"
 
+const title = "Dissolvable kitchen labels and printer compatibility | InstaLabel"
+const description =
+  "Learn what to check before using dissolvable label stock with kitchen labelling software, including printer fit, application conditions and removal."
+
+const faqs = [
+  {
+    question: "Will any dissolvable label work in a thermal printer?",
+    answer:
+      "Do not assume so. Confirm that the specific stock supports your printing method and printer requirements.",
+  },
+  {
+    question: "Does dissolvable stock make a label PPDS compliant?",
+    answer: "No. The material and the food-information requirements are separate questions.",
+  },
+  {
+    question: "Does InstaLabel guarantee washing performance?",
+    answer:
+      "No material-performance promise is made on this page. Use the stock supplier's specifications and your own application test.",
+  },
+]
+
 export const metadata: Metadata = {
-  title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
-  description:
-    "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
-  keywords: [
-    "dissolvable kitchen labels",
-    "dissolvable food labels",
-    "water soluble kitchen labels",
-    "dissolvable label printer software",
-    "kitchen label software",
-    "best kitchen label software",
-    "natasha's law software",
-    "expiry date printer software",
-    "allergen label software",
-    "food safety labeling software",
-    "kitchen automation software",
-    "label printer software UK",
-    "instalabel software",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
-    description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
+    title,
+    description,
     url: "https://www.instalabel.co/dissolvable-kitchen-labels",
     type: "website",
     images: [
@@ -31,15 +35,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "InstaLabel - Best Software for Dissolvable Kitchen Labels",
+        alt: "Dissolvable kitchen labels and printer compatibility",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "InstaLabel: Best Software for Dissolvable Kitchen Labels | UK",
-    description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -59,43 +62,24 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "InstaLabel Dissolvable Kitchen Label Software",
-    description:
-      "InstaLabel is the #1 software for printing dissolvable kitchen labels. Automate Natasha's Law compliance, expiry dates, and allergen labeling on USB and Bluetooth thermal printers. Start your free trial.",
-    url: "https://www.instalabel.co/dissolvable-kitchen-labels",
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: "InstaLabel",
-      description: "AI-powered kitchen label software for food safety and compliance",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web, Android",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: "500",
-      },
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/dissolvable-kitchen-labels",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Dissolvable Kitchen Labels",
-          item: "https://www.instalabel.co/dissolvable-kitchen-labels",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

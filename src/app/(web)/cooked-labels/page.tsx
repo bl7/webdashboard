@@ -1,106 +1,94 @@
 import { Metadata } from "next"
 import { CookedLabelsPage } from "@/components/blocks/cooked-labels"
 
-export const metadata: Metadata = {
-  title: "Cooked Labels | Hot Food HACCP Labels | InstaLabel",
-  description:
-    "Log cooking times, temperatures, and allergens for every batch automatically. Track food safety with hot food HACCP labels.",
-  keywords: [
-    "cooked food labels",
-    "hot food HACCP labels",
-    "cook temperature labels",
-    "cooked labels",
-    "hot food labels",
-    "cooking temperature tracking",
-    "HACCP compliance labels",
-    "food safety labels",
-    "cook time tracking",
-    "kitchen temperature logs",
-    "hot food safety",
-    "cooking batch tracking",
-    "food service labels",
-    "restaurant safety labels",
-    "cook temperature monitoring",
-    "hot food management",
-    "kitchen safety compliance",
-    "cooking process labels",
-    "food temperature tracking",
-    "cook batch labels",
-    "kitchen labeling software",
-    "best cook label software",
-    "instalabel software",
-  ],
-  authors: [{ name: "InstaLabel Team" }],
-  creator: "InstaLabel",
-  publisher: "InstaLabel",
-  robots: "index, follow",
-  alternates: {
-    canonical: "https://www.instalabel.co/cooked-labels",
+const title = "Cooked food labels for kitchens | InstaLabel"
+const description =
+  "Keep cooked batches identifiable with consistent labels, recorded allergen information and clear dates, alongside your kitchen's cooking records."
+
+const faqs = [
+  {
+    question: "Does this label measure cooking temperature?",
+    answer:
+      "No. Printing a label does not measure temperature. Use the monitoring process required by your kitchen.",
   },
+  {
+    question: "Is the printed date the cooked date?",
+    answer:
+      "Not automatically. Describe the actual event a field records; do not infer one from the other.",
+  },
+  {
+    question: "Does it replace a HACCP record?",
+    answer:
+      "It may form part of your records, but does not replace the wider checks and evidence your procedure requires.",
+  },
+]
+
+export const metadata: Metadata = {
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Cooked Labels | Hot Food HACCP Labels",
-    description:
-      "Log cooking times, temperatures, and allergens for every batch automatically. Track food safety with hot food HACCP labels.",
+    title,
+    description,
+    url: "https://www.instalabel.co/cooked-labels",
+    type: "website",
     images: [
       {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Cooked Labels - Hot Food HACCP Labels",
+        alt: "Cooked food labels for kitchens",
       },
     ],
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cooked Labels | Hot Food HACCP Labels",
-    description:
-      "Log cooking times, temperatures, and allergens for every batch automatically. Track food safety with hot food HACCP labels.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
-  category: "Food Service Technology",
-  metadataBase: new URL("https://www.instalabel.co"),
+  alternates: {
+    canonical: "https://www.instalabel.co/cooked-labels",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 }
 
 export default function Page() {
-  return <CookedLabelsPage />
-}
-
-const schemaData = {
-  "@context": "https://schema.org",
-  "@type": "WebPage",
-  name: "Cooked Labels",
-  description:
-    "Log cooking times, temperatures, and allergens for every batch automatically. Track food safety with hot food HACCP labels.",
-  url: "https://www.instalabel.co/cooked-labels",
-  mainEntity: {
-    "@type": "SoftwareApplication",
-    name: "InstaLabel Cooked Labels",
-    description:
-      "Software for creating hot food HACCP labels with cooking times, temperatures, and allergen tracking",
-    applicationCategory: "BusinessApplication",
-    operatingSystem: "Web-based",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.9",
-      reviewCount: "200",
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/cooked-labels",
     },
-  },
-  breadcrumb: {
-    "@type": "BreadcrumbList",
-    itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: "https://www.instalabel.co",
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Cooked Labels",
-        item: "https://www.instalabel.co/cooked-labels",
-      },
-    ],
-  },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
+    },
+  ]
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <CookedLabelsPage />
+    </>
+  )
 }

@@ -2,38 +2,33 @@ import { IngredientLabelsPage } from "@/components/blocks/ingredient-labels"
 import { Metadata } from "next"
 import React from "react"
 
+const title = "Ingredient labels for kitchen containers | InstaLabel"
+const description =
+  "Create clear ingredient labels with the supported item, date and staff details. Keep stored ingredients identifiable between shifts."
+
+const faqs = [
+  {
+    question: "Does an ingredient label replace the supplier label?",
+    answer:
+      "Keep the source information your kitchen needs. A container label supports day-to-day identification.",
+  },
+  {
+    question: "Is 40mm always the correct size?",
+    answer:
+      "Choose a supported label size that fits the information and remains readable on the container. Check your printer and stock dimensions.",
+  },
+  {
+    question: "Does a printed date prove when the ingredient was opened?",
+    answer: "No. Only describe an opening date where the actual workflow records it.",
+  },
+]
+
 export const metadata: Metadata = {
-  title: "Ingredient Labels | Kitchen Organization Software | InstaLabel",
-  description:
-    "Label storage containers and prep stations with clear expiry dates and staff initials. Keep your kitchen organized with ingredient expiry labels.",
-  keywords: [
-    "ingredient expiry labels",
-    "ingredient storage labels",
-    "kitchen ingredient labelling software",
-    "ingredient labels",
-    "expiry date labels",
-    "storage container labels",
-    "kitchen organization",
-    "food safety labels",
-    "ingredient tracking",
-    "kitchen management software",
-    "prep station labels",
-    "container labels",
-    "kitchen efficiency",
-    "food waste reduction",
-    "kitchen labeling system",
-    "ingredient management",
-    "kitchen automation",
-    "restaurant technology",
-    "food prep workflow",
-    "kitchen labeling software",
-    "best kitchen label software",
-    "instalabel software",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Ingredient Labels | Kitchen Organization Software",
-    description:
-      "Label storage containers and prep stations with clear expiry dates and staff initials. Keep your kitchen organized with ingredient expiry labels.",
+    title,
+    description,
     url: "https://www.instalabel.co/ingredient-labels",
     type: "website",
     images: [
@@ -41,15 +36,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Ingredient Labels - Kitchen Organization Software",
+        alt: "Ingredient labels for kitchen containers",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ingredient Labels | Kitchen Organization Software",
-    description:
-      "Label storage containers and prep stations with clear expiry dates and staff initials. Keep your kitchen organized with ingredient expiry labels.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -69,44 +63,24 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Ingredient Labels",
-    description:
-      "Label storage containers and prep stations with clear expiry dates and staff initials. Keep your kitchen organized with ingredient expiry labels.",
-    url: "https://www.instalabel.co/ingredient-labels",
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: "InstaLabel Ingredient Labels",
-      description:
-        "Software for creating organized ingredient labels with expiry dates and staff initials",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web-based",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: "200",
-      },
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/ingredient-labels",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Ingredient Labels",
-          item: "https://www.instalabel.co/ingredient-labels",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

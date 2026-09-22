@@ -4,7 +4,7 @@ import React, { useState, useRef, useCallback, useEffect } from "react"
 import beforeImage from "@/assets/images/after.png"
 import afterImage from "@/assets/images/before.png"
 import Image, { StaticImageData } from "next/image"
-import { ArrowRight, Zap, CheckCircle2, Clock, Shield } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui"
 import Link from "next/link"
@@ -219,139 +219,37 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({ beforeImage, afte
   )
 }
 
-const buttonVariant = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { delay: 0.6, duration: 0.4 } },
-}
-
-const featureVariant = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-}
-
 export const BeforeAfterSection = () => {
-  const features = [
-    {
-      icon: CheckCircle2,
-      title: "Reduce Manual Errors",
-      description: "Reduce manual labeling errors with structured templates and smart ingredient/allergen data",
-    },
-
-    {
-      icon: Shield,
-      title: "Built for Compliance",
-      description: "Built for UK kitchen compliance workflows, including PPDS and allergen labeling",
-    },
-  ]
-
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-white via-white/40 to-white px-4 py-16 text-foreground">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0">
-        <div className="absolute left-1/4 top-1/4 h-64 w-64 rounded-full bg-mkt-steel1/20 blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 h-48 w-48 rounded-full bg-mkt-steel1/30 blur-3xl"></div>
-      </div>
-
+    <section className="relative overflow-hidden bg-mkt-canvas px-4 py-16 text-foreground sm:px-6 md:px-12 lg:px-16">
       <div className="relative mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 items-center gap-20 lg:grid-cols-2">
-          {/* Left: Text Content */}
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-20">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="space-y-10"
+            className="space-y-6"
           >
-            {/* Enhanced Text Content */}
-            <div className="space-y-6">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                viewport={{ once: true }}
-                className="mx-auto inline-flex items-center rounded-full bg-mkt-canvas px-6 py-3 text-sm font-bold text-mkt-ink shadow-sm ring-1 ring-mkt-steel1 lg:mx-0"
-              >
-                <Zap className="mr-2 h-4 w-4" />
-                The Kitchen Transformation
-              </motion.div>
-
-              <motion.h3
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                viewport={{ once: true }}
-                className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-left lg:text-5xl"
-              >
-                <span className="text-mkt-ink">
-                  From Chaos to
-                </span>
-                <br />
-                <span className="text-gray-900">Kitchen Control</span>
-              </motion.h3>
-            </div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              viewport={{ once: true }}
-              className="space-y-6"
-            >
-              <p className="text-center text-xl leading-relaxed text-gray-600 lg:text-left">
-                Say goodbye to crossed-out dates, illegible handwriting, and forgotten allergens.
-                With InstaLabel, every label is professional, compliant, and printed in seconds.
-              </p>
-              <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
-                Transform your kitchen into a streamlined, efficient operation where mistakes are
-                eliminated and compliance is automatic. Faster prep. Safer food. Smarter kitchen.
-              </p>
-            </motion.div>
-
-            {/* Feature highlights */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true }}
-              className="grid grid-cols-1 gap-4 sm:grid-cols-2"
-            >
-              {features.map((feature, index) => (
-                <motion.div
-                  key={feature.title}
-                  variants={featureVariant}
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  className="flex items-start gap-3 rounded-xl bg-white/60 p-4 shadow-sm ring-1 ring-mkt-steel1 backdrop-blur-sm"
-                >
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full text-white text-white shadow-sm">
-                    <feature.icon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{feature.title}</h3>
-                    <p className="text-sm text-gray-600">{feature.description}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.6 }}
-              variants={buttonVariant}
-            >
+            <h2 className="text-center text-3xl font-black leading-tight tracking-tight text-mkt-ink sm:text-4xl lg:text-left">
+              Handwritten labels compared with printed labels.
+            </h2>
+            <p className="text-center text-base leading-relaxed text-mkt-ink8 lg:text-left">
+              Drag to compare a handwritten example with a printed InstaLabel label. Check that
+              names, dates and allergen information are readable before you apply a label.
+            </p>
+            <div className="flex justify-center lg:justify-start">
               <Button
-                className="w-full text-white px-10 py-5 text-lg font-bold text-white shadow-xl transition-all duration-300 hover:opacity-90 hover:shadow-2xl sm:w-auto"
+                className="border-0 font-semibold text-white"
+                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
                 asChild
               >
                 <Link href="/bookdemo">
-                  Book Demo
+                  Book a demo
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </motion.div>
           {/* Right: Before/After Slider */}
           <motion.div

@@ -1,178 +1,100 @@
 "use client"
 
-import { Button } from "@/components/ui"
-import { ArrowRight, Download, Wifi, Shield } from "lucide-react"
 import React from "react"
-import { motion } from "framer-motion"
+import { ArrowRight } from "lucide-react"
+import { Button } from "@/components/ui"
 import Link from "next/link"
+import { motion } from "framer-motion"
+import LabelRender from "@/app/dashboard/print/LabelRender"
 
 export const PrintBridgeHero = () => {
   return (
     <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-      {/* Background elements */}
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
       <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
       <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
-        {/* Hero Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="w-full max-w-2xl space-y-6 text-center md:text-left"
         >
-          {/* 1. Tagline pill at the top (with Wifi icon, matching Uses hero pill style) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
-              <Wifi className="mr-2 h-4 w-4" />
-              PrintBridge Technology
-            </div>
-          </motion.div>
+          <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
+            Desktop printing
+          </div>
 
-          {/* 2. Headline: two lines only, first line purple, second line black, both short. Font and spacing match Uses hero. Subheadline/explanation in paragraph below. Adjust vertical spacing to match other heroes. */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl">
-              <span className="text-mkt-teal">One-click printing that stays reliable</span>
-              <br className="hidden md:block" />
-              <span>in busy kitchens</span>
-            </h1>
-          </motion.div>
+          <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
+            Print kitchen labels from your computer.
+          </h1>
 
-          {/* 3. Subheadline: PrintBridge description as a <p> below the headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <p className="max-w-xl text-base text-gray-600 sm:text-lg md:text-xl">
-              PrintBridge sends label jobs directly to your thermal printer, reducing print popups and keeping printing consistent across devices.
-            </p>
-          </motion.div>
+          <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
+            PrintBridge connects the InstaLabel web app to a label printer installed on your Windows
+            or macOS computer. Set up the printer once, then use the same printing workflow for your
+            kitchen labels.
+          </p>
 
-          {/* 4. Key benefits grid (same as before) */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Shield className="h-4 w-4 text-mkt-teal" />
-                <span>Local & Secure</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Download className="h-4 w-4 text-mkt-teal" />
-                <span>One-Click Setup</span>
-              </div>
-              <div className="flex items-center justify-center gap-2 text-sm text-gray-600 md:justify-start">
-                <Wifi className="h-4 w-4 text-mkt-teal" />
-                <span>Always Connected</span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* 5. CTAs (primary: 'Start Free Trial', secondary: 'Learn More About PrintBridge') */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink">
-                <Link href="/register">Start Free Trial</Link>
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
+            <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
+              <Link href="/login">
+                Log in to set up PrintBridge
                 <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/bookdemo">Book Demo</Link>
-              </Button>
-            </div>
-          </motion.div>
-
-          {/* Trust indicators */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            viewport={{ once: true }}
-          >
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
-              <span>✓ Works with any USB label printer</span>
-              <span>✓ No internet required for printing</span>
-              <span>✓ Automatic reconnection</span>
-            </div>
-          </motion.div>
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link href="/bookdemo">Book a demo</Link>
+            </Button>
+          </div>
         </motion.div>
 
-        {/* 6. Right visual: single stylized card, matching Uses hero's card style */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
-          className="w-full max-w-[500px]"
+          className="flex w-full max-w-[500px] flex-col items-center md:items-end"
         >
-          <div className="relative">
-            {/* Split-screen card */}
-            <div className="flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg md:flex-row">
-              {/* Left: Browser Print Dialog */}
-              <div className="flex flex-1 flex-col justify-between border-b border-gray-100 bg-gray-50 p-4 md:border-b-0 md:border-r">
-                <div>
-                  <div className="mb-2 flex items-center gap-2">
-                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                    <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
-                    <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                    <span className="ml-2 text-xs text-gray-500">Print</span>
-                  </div>
-                  <div className="mb-2 space-y-1">
-                    <div className="h-3 w-3/4 rounded bg-gray-200"></div>
-                    <div className="h-3 w-1/2 rounded bg-gray-100"></div>
-                    <div className="h-3 w-2/3 rounded bg-gray-100"></div>
-                  </div>
-                  <div className="mb-2 text-xs text-gray-400">
-                    Select Printer: <span className="text-gray-600">HP LaserJet (Offline)</span>
-                  </div>
-                </div>
-                <button className="mt-2 w-full rounded bg-mkt-steel1 py-1 text-xs font-semibold text-mkt-ink shadow">
-                  Print
-                </button>
-                <div className="mt-2 text-[10px] text-red-400">
-                  Wrong printer? Confused? Popup blocked?
-                </div>
-              </div>
-              {/* Right: Success Message */}
-              <div className="flex flex-1 flex-col items-center justify-center bg-mkt-canvas p-4">
-                <div className="mb-2 flex items-center justify-center">
-                  <svg
-                    className="h-8 w-8 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                  </svg>
-                </div>
-                <div className="mb-1 text-lg font-bold text-gray-800">Label Printed!</div>
-                <div className="text-xs text-gray-500">No popups. No confusion. Just done.</div>
-              </div>
-            </div>
+          <div>
+            <LabelRender
+              item={{
+                uid: "printbridge-hero",
+                id: "printbridge-hero",
+                type: "menu",
+                name: "Mixed Vegetables",
+                quantity: 1,
+                ingredients: ["Carrots", "Broccoli", "Celery", "Peppers"],
+                allergens: [
+                  {
+                    uuid: 3,
+                    allergenName: "Celery",
+                    category: "Vegetable",
+                    status: "Active",
+                    addedAt: "",
+                    isCustom: false,
+                  },
+                ],
+                printedOn: "2024-07-01T09:00:00Z",
+                expiryDate: "2024-07-01T18:00:00Z",
+                labelType: "prep",
+              }}
+              expiry="2024-07-01T18:00:00Z"
+              useInitials={true}
+              selectedInitial="BL"
+              allergens={["Celery"]}
+              labelHeight="40mm"
+              allIngredients={[
+                { uuid: "6", ingredientName: "Carrots", allergens: [] },
+                { uuid: "7", ingredientName: "Broccoli", allergens: [] },
+                { uuid: "8", ingredientName: "Celery", allergens: [{ allergenName: "Celery" }] },
+                { uuid: "9", ingredientName: "Peppers", allergens: [] },
+              ]}
+            />
           </div>
+          <p className="mt-3 text-center text-xs text-mkt-steel md:text-right">
+            Example kitchen label from the InstaLabel renderer.
+          </p>
         </motion.div>
       </div>
-      {/* Bottom fade overlay */}
       <div
         className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
         style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}

@@ -1,84 +1,43 @@
 "use client"
 
 import React from "react"
-import { Upload, Printer, Smartphone, BadgeCheck, Layers, ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
+
+const steps = [
+  {
+    title: "Add your items.",
+    body: "Enter ingredients and products, or bring existing information in with CSV import.",
+  },
+  {
+    title: "Choose the label.",
+    body: "Select the item and the label type for the task.",
+  },
+  {
+    title: "Check the details.",
+    body: "Review allergens, dates and the label preview before printing.",
+  },
+  {
+    title: "Print and apply.",
+    body: "Send the label to your configured printer and apply it to the correct item.",
+  },
+]
 
 export const HowItWorks = () => (
-  <section className="relative bg-gradient-to-br from-white via-blue-50/30 to-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+  <section className="relative bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
     <div className="container mx-auto max-w-6xl">
-      {/* Section Header with Compliance Badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="mb-12 flex flex-col items-center justify-center text-center"
-      >
-        <span className="mb-3 inline-flex items-center rounded-full bg-mkt-canvas px-3 py-1 text-xs font-semibold text-mkt-ink ring-1 ring-mkt-steel1">
-          <BadgeCheck className="mr-1 h-4 w-4 text-mkt-teal" />
-          100% Natasha’s Law & EHO Compliant
-        </span>
-        <h3 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          <span className="text-mkt-ink">
-            How InstaLabel Works
-          </span>
-          <br />
-          <span className="text-gray-900">From Setup to Printing in Minutes</span>
-        </h3>
-      </motion.div>
-      {/* Steps */}
-      <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-4">
-        {[
-          {
-            icon: <Upload className="h-8 w-8 text-mkt-teal" />,
-            bg: "bg-mkt-canvas",
-            title: "Upload or Enter Menu",
-            desc: "Import your menu and ingredients, or enter them manually in minutes.",
-          },
-          {
-            icon: <Printer className="h-8 w-8 text-mkt-teal" />,
-            bg: "bg-mkt-canvas",
-            title: "Print Labels",
-            desc: "Print from the dashboard or directly on mobile devices with our app.",
-          },
-          {
-            icon: <Layers className="h-8 w-8 text-blue-600" />,
-            bg: "bg-blue-100",
-            title: "Select Label Type",
-            desc: "Choose Prep, Cook, Use-First, PPDS, or custom labels — all ready to go.",
-          },
-          {
-            icon: <Smartphone className="h-8 w-8 text-green-600" />,
-            bg: "bg-green-100",
-            title: "Print Instantly",
-            desc: "Print from the dashboard or directly on mobile devices with our app.",
-          },
-        ].map((step, i) => (
-          <motion.div
-            key={step.title}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 * (i + 1) }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center"
-          >
-            <div
-              className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full ${step.bg}`}
-            >
-              {step.icon}
+      <h2 className="mb-10 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+        From item information to a printed label.
+      </h2>
+      <ol className="grid gap-8 md:grid-cols-4">
+        {steps.map((step, index) => (
+          <li key={step.title}>
+            <div className="mb-3 text-sm font-semibold text-mkt-teal">
+              {String(index + 1).padStart(2, "0")}
             </div>
-            <div className="mb-1 text-lg font-bold text-gray-900">{step.title}</div>
-            <div className="text-sm text-gray-600">{step.desc}</div>
-          </motion.div>
+            <h3 className="mb-2 text-lg font-bold text-mkt-ink">{step.title}</h3>
+            <p className="text-sm leading-relaxed text-mkt-ink8">{step.body}</p>
+          </li>
         ))}
-      </div>
-      {/* Mobile Device Note */}
-      <div className="mt-4 rounded-lg bg-mkt-canvas p-4 text-center">
-        <p className="text-sm text-mkt-ink">
-          Print directly from mobile devices — InstaLabel app runs on Android.
-        </p>
-      </div>
+      </ol>
     </div>
   </section>
 )

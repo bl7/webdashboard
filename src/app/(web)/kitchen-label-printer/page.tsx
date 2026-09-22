@@ -2,34 +2,38 @@ import { KitchenLabelPrinterPage } from "@/components/blocks/kitchen-label-print
 import { Metadata } from "next"
 import React from "react"
 
+const title = "Kitchen label printer compatibility | InstaLabel"
+const description =
+  "Check desktop and Android printer requirements for InstaLabel, including PrintBridge and the supported MUNBYN RW411B and Born4Ship DB403 models."
+
+const faqs = [
+  {
+    question: "Will every Android Bluetooth printer work?",
+    answer: "No. Use the supported list above or ask about the exact model.",
+  },
+  {
+    question: "Is RW114B the recommended MUNBYN model?",
+    answer:
+      "The model confirmed for this release is RW411B. Check the model identifier carefully before purchase.",
+  },
+  {
+    question: "Do I need a specific printer width for Natasha's Law?",
+    answer:
+      "There is no blanket requirement to use the site's previously advertised 80mm format. Choose a supported layout that presents the applicable information clearly.",
+  },
+  {
+    question: "Can I use a receipt printer?",
+    answer:
+      "Do not assume receipt-paper capability makes a device suitable for your adhesive label stock. Check the printer's media support, sensing and intended workflow.",
+  },
+]
+
 export const metadata: Metadata = {
-  title: "Kitchen Label Printer UK | Commercial Food Labeling Solutions",
-  description:
-    "Find the best kitchen label printer for your restaurant. Compare thermal vs inkjet, get expert advice on commercial food labeling, and discover InstaLabel's software solutions for UK food businesses.",
-  keywords: [
-    "kitchen label printer",
-    "commercial kitchen label printer",
-    "restaurant label printer UK",
-    "thermal label printer for kitchens",
-    "food label printer UK",
-    "kitchen label printer comparison",
-    "best kitchen label printer",
-    "commercial food labeling",
-    "restaurant labeling system",
-    "kitchen printer setup",
-    "thermal printer kitchen",
-    "food safety labeling",
-    "kitchen label software",
-    "restaurant technology",
-    "kitchen automation",
-    "food prep labeling",
-    "commercial kitchen equipment",
-    "kitchen labeling solutions",
-  ],
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Kitchen Label Printer UK | Commercial Food Labeling Solutions",
-    description:
-      "Find the best kitchen label printer for your restaurant. Compare thermal vs inkjet, get expert advice on commercial food labeling, and discover InstaLabel's software solutions.",
+    title,
+    description,
     url: "https://www.instalabel.co/kitchen-label-printer",
     type: "website",
     images: [
@@ -37,15 +41,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Kitchen Label Printer UK - Commercial Food Labeling Solutions",
+        alt: "Kitchen label printer compatibility",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen Label Printer UK | Commercial Food Labeling Solutions",
-    description:
-      "Find the best kitchen label printer for your restaurant. Compare thermal vs inkjet, get expert advice on commercial food labeling, and discover InstaLabel's software solutions.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -65,47 +68,24 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Kitchen Label Printer UK",
-    description:
-      "Find the best kitchen label printer for your restaurant. Compare thermal vs inkjet, get expert advice on commercial food labeling, and discover InstaLabel's software solutions.",
-    url: "https://www.instalabel.co/kitchen-label-printer",
-    mainEntity: {
-      "@type": "Article",
-      name: "Kitchen Label Printer Guide",
-      description:
-        "Complete guide to choosing the right kitchen label printer for UK food businesses",
-      author: {
-        "@type": "Organization",
-        name: "InstaLabel",
-      },
-      publisher: {
-        "@type": "Organization",
-        name: "InstaLabel",
-      },
-      datePublished: "2025-01-01",
-      dateModified: "2025-01-01",
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/kitchen-label-printer",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Kitchen Label Printer",
-          item: "https://www.instalabel.co/kitchen-label-printer",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

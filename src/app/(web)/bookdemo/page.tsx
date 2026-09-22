@@ -2,30 +2,15 @@ import { BookDemo } from "@/components/blocks"
 import { Metadata } from "next"
 import React from "react"
 
+const description =
+  "See item setup, label previews and desktop or Android printing in an InstaLabel demo. Tell us about your kitchen and printer setup."
+
 export const metadata: Metadata = {
-  title: "Book Demo | Kitchen Labeling System",
-  description:
-    "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant. No obligation.",
-  keywords: [
-    "book demo",
-    "kitchen labeling demo",
-    "restaurant labeling consultation",
-    "food safety labels demo",
-    "allergen labeling demo",
-    "thermal printer demo",
-    "kitchen management demo",
-    "restaurant technology demo",
-    "HACCP compliance demo",
-    "kitchen automation demo",
-    "free consultation",
-    "restaurant software demo",
-    "kitchen labeling consultation",
-    "food service technology demo",
-  ],
+  title: { absolute: "Book an InstaLabel demo" },
+  description,
   openGraph: {
-    title: "Book Demo | Kitchen Labeling System",
-    description:
-      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
+    title: "Book an InstaLabel demo",
+    description,
     url: "https://www.instalabel.co/bookdemo",
     type: "website",
     images: [
@@ -33,15 +18,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Book Demo - InstaLabel Kitchen Labeling System",
+        alt: "Book an InstaLabel demo",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Book Demo | Kitchen Labeling System",
-    description:
-      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
+    title: "Book an InstaLabel demo",
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -60,46 +44,40 @@ export const metadata: Metadata = {
   },
 }
 
+const faqs = [
+  {
+    question: "Do I need to create an account first?",
+    answer: "You can request a demo using the form on this page.",
+  },
+  {
+    question: "Can you discuss our existing printer?",
+    answer: "Yes. Include the exact model and whether you use Windows, macOS or Android.",
+  },
+  {
+    question: "Is submitting the form a confirmed appointment?",
+    answer: "No. We will contact you to arrange a suitable time.",
+  },
+]
+
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Book Demo",
-    description:
-      "Book a free demo of InstaLabel's kitchen labeling system. See how our food safety labels, allergen warnings, and thermal printer integration work for your restaurant.",
-    url: "https://www.instalabel.co/bookdemo",
-    mainEntity: {
-      "@type": "Event",
-      name: "InstaLabel Kitchen Labeling Demo",
-      description: "Free consultation and demo of InstaLabel's kitchen labeling system",
-      startDate: "2024-01-01T00:00:00Z",
-      endDate: "2024-12-31T23:59:59Z",
-      eventStatus: "https://schema.org/EventScheduled",
-      eventAttendanceMode: "https://schema.org/OnlineEventAttendanceMode",
-      organizer: {
-        "@type": "Organization",
-        name: "InstaLabel",
-        url: "https://www.instalabel.co",
-      },
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Book an InstaLabel demo",
+      description,
+      url: "https://www.instalabel.co/bookdemo",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Book Demo",
-          item: "https://www.instalabel.co/bookdemo",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

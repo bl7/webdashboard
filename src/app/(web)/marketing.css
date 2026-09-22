@@ -16,8 +16,8 @@
   --mkt-info: #2c5f87;
   --primary: 189 29% 11%;
   --ring: 189 29% 11%;
-  background-color: var(--mkt-canvas);
-  color: var(--mkt-ink8);
+  background-color: #f6f5f1;
+  color: #243438;
 }
 
 /* Flatten leftover shared Button gradients inside marketing only */
@@ -31,20 +31,20 @@
 .marketing button[class*="from-purple-"]:not([class*="bg-white"]),
 .marketing a[class*="to-pink-"]:not([class*="bg-white"]),
 .marketing button[class*="to-pink-"]:not([class*="bg-white"]) {
-  background-color: var(--mkt-ink) !important;
+  background-color: #142124 !important;
   color: #ffffff !important;
 }
 
 .marketing [class*="border-purple-"]:not([class*="border-white"]) {
-  border-color: var(--mkt-ink) !important;
+  border-color: #142124 !important;
 }
 
 .marketing [class*="text-purple-"]:not([class*="text-white"]) {
-  color: var(--mkt-ink) !important;
+  color: #142124 !important;
 }
 
 .marketing [class*="hover:bg-purple-"]:not([class*="hover:bg-white"]):hover {
-  background-color: var(--mkt-canvas) !important;
+  background-color: #f6f5f1 !important;
 }
 
 .marketing .bg-mkt-ink {
@@ -89,6 +89,10 @@
 }
 .marketing .hover\:text-mkt-teal:hover {
   color: #17675f !important;
+}
+
+.marketing .mkt-hero-fade {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, #ffffff 100%);
 }
 
 /* Portaled dialogs/drawers render outside .marketing. Scope by page, not dashboard. */
@@ -152,4 +156,15 @@ body:has(.marketing) .bg-accent {
   -webkit-text-fill-color: #142124;
   color: #142124 !important;
   background-image: none !important;
+}
+
+body:has(.marketing) [data-radix-dropdown-menu-content] {
+  background-color: #ffffff !important;
+  color: #142124 !important;
+  border-color: #e3e7e4 !important;
+}
+
+body:has(.marketing) [data-radix-dropdown-menu-content] a,
+body:has(.marketing) [data-radix-dropdown-menu-item] {
+  color: #142124 !important;
 }

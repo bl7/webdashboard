@@ -2,106 +2,86 @@ import { Metadata } from "next"
 import React from "react"
 import { PrepLabelsPage } from "@/components/blocks/prep-labels"
 
-export const metadata: Metadata = {
-  title: "Prep Labels | Kitchen Prep Labelling Software | InstaLabel",
-  description:
-    "Automated prep labels with expiry, allergens, and batch details. Keep kitchens running smooth with HACCP prep labels.",
-  keywords: [
-    "food prep labels",
-    "kitchen prep labelling",
-    "HACCP prep labels",
-    "prep labels",
-    "food preparation labels",
-    "kitchen prep software",
-    "batch tracking labels",
-    "prep station labels",
-    "kitchen organization",
-    "food safety labels",
-    "prep workflow",
-    "kitchen management software",
-    "prep station management",
-    "batch codes",
-    "kitchen efficiency",
-    "food prep workflow",
-    "prep labeling system",
-    "kitchen automation",
-    "restaurant technology",
-    "prep tracking",
-    "kitchen labeling software",
-    "best prep label software",
-    "instalabel software",
-  ],
-  authors: [{ name: "InstaLabel Team" }],
-  creator: "InstaLabel",
-  publisher: "InstaLabel",
-  robots: "index, follow",
-  alternates: {
-    canonical: "https://www.instalabel.co/prep-labels",
+const title = "Prep labels for kitchen teams | InstaLabel"
+const description =
+  "Prepare consistent labels for items made ahead of service, with recorded allergen information and dates from your kitchen's settings."
+
+const faqs = [
+  {
+    question: "Is this the same as a PPDS label?",
+    answer:
+      "No. A prep label supports internal kitchen work. PPDS food needs the appropriate customer-facing ingredient information.",
   },
+  {
+    question: "Does the print timestamp show when preparation happened?",
+    answer:
+      "Only if those events genuinely coincide and the workflow records it that way. Do not substitute printing time for a required preparation record.",
+  },
+  {
+    question: "Will the label show a batch code?",
+    answer:
+      "Use the fields supported by your current template. Check the actual output before relying on a batch identifier.",
+  },
+]
+
+export const metadata: Metadata = {
+  title: { absolute: title },
+  description,
   openGraph: {
-    title: "Prep Labels | Kitchen Prep Labelling Software",
-    description:
-      "Automated prep labels with expiry, allergens, and batch details. Keep kitchens running smooth with HACCP prep labels.",
+    title,
+    description,
+    url: "https://www.instalabel.co/prep-labels",
+    type: "website",
     images: [
       {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Prep Labels - Kitchen Prep Labelling Software",
+        alt: "Prep labels for kitchen teams",
       },
     ],
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Prep Labels | Kitchen Prep Labelling Software",
-    description:
-      "Automated prep labels with expiry, allergens, and batch details. Keep kitchens running smooth with HACCP prep labels.",
+    title,
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
-  category: "Food Service Technology",
-  metadataBase: new URL("https://www.instalabel.co"),
+  alternates: {
+    canonical: "https://www.instalabel.co/prep-labels",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "Prep Labels",
-    description:
-      "Automated prep labels with expiry, allergens, and batch details. Keep kitchens running smooth with HACCP prep labels.",
-    url: "https://www.instalabel.co/prep-labels",
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: "InstaLabel Prep Labels",
-      description:
-        "Software for creating automated prep labels with expiry, allergens, and batch details",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web-based",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: "200",
-      },
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: title,
+      description,
+      url: "https://www.instalabel.co/prep-labels",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Prep Labels",
-          item: "https://www.instalabel.co/prep-labels",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

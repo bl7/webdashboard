@@ -1,27 +1,33 @@
-import type { Metadata } from "next"
-import { HaccpLabelsPage } from "@/components/blocks/haccp-labels/haccp-labels"
+import { HaccpLabelsPage } from "@/components/blocks/haccp-labels"
+import { Metadata } from "next"
+import React from "react"
+
+const description =
+  "See how clear item labels and print records can support your kitchen procedures, alongside temperature checks, training and other food-safety records."
+
+const faqs = [
+  {
+    question: "Does InstaLabel certify my HACCP system?",
+    answer: "No. It is a labelling tool, not a certification or inspection service.",
+  },
+  {
+    question: "Does print history prove a food-safety check happened?",
+    answer:
+      "It records label activity. Use the relevant operational record to demonstrate a temperature check, cleaning task or other control.",
+  },
+  {
+    question: "Can I use handwritten records as well?",
+    answer:
+      "Your procedures may use different record formats. What matters is that the information and checks meet the requirements of your system.",
+  },
+]
 
 export const metadata: Metadata = {
-  title: "InstaLabel: HACCP Labeling Software | UK Food Safety Compliance",
-  description:
-    "InstaLabel ensures 100% HACCP compliance for UK food businesses. AI-powered software automatically generates compliant labels with full traceability for food safety audits. Start your free trial.",
-  keywords: [
-    "haccp labels",
-    "haccp compliance",
-    "food safety labeling",
-    "kitchen label software",
-    "best kitchen label software",
-    "natasha's law software",
-    "allergen label software",
-    "food safety labeling software",
-    "kitchen automation software",
-    "label printer software UK",
-    "instalabel software",
-  ],
+  title: { absolute: "Kitchen labels and HACCP procedures | InstaLabel" },
+  description,
   openGraph: {
-    title: "InstaLabel: HACCP Labeling Software | UK Food Safety Compliance",
-    description:
-      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
+    title: "Kitchen labels and HACCP procedures | InstaLabel",
+    description,
     url: "https://www.instalabel.co/haccp-labels",
     type: "website",
     images: [
@@ -29,15 +35,14 @@ export const metadata: Metadata = {
         url: "https://www.instalabel.co/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "InstaLabel - HACCP Labeling Software",
+        alt: "Kitchen labels and HACCP procedures",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "InstaLabel: HACCP Labeling Software | UK Food Safety Compliance",
-    description:
-      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
+    title: "Kitchen labels and HACCP procedures | InstaLabel",
+    description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -57,43 +62,24 @@ export const metadata: Metadata = {
 }
 
 const Page = () => {
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: "InstaLabel HACCP Labeling Software",
-    description:
-      "InstaLabel supports HACCP compliance workflows for UK food businesses. AI-powered software helps generate compliant labels with full traceability for food safety audits. Start your free trial.",
-    url: "https://www.instalabel.co/haccp-labels",
-    mainEntity: {
-      "@type": "SoftwareApplication",
-      name: "InstaLabel",
-      description: "AI-powered kitchen label software for HACCP compliance",
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Web, Android",
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: "500",
-      },
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: "Kitchen labels and HACCP procedures | InstaLabel",
+      description,
+      url: "https://www.instalabel.co/haccp-labels",
     },
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://www.instalabel.co",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "HACCP Labels",
-          item: "https://www.instalabel.co/haccp-labels",
-        },
-      ],
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: faqs.map((faq) => ({
+        "@type": "Question",
+        name: faq.question,
+        acceptedAnswer: { "@type": "Answer", text: faq.answer },
+      })),
     },
-  }
+  ]
 
   return (
     <>

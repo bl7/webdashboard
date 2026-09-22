@@ -15,7 +15,7 @@ import { usePathname } from "next/navigation"
 import { Menu } from "lucide-react"
 
 const footerItems = [
-  { path: "#", name: "Blog", internal: true, new: false },
+  { path: "/blog", name: "Blog", internal: true, new: false },
   { path: "/privacy-policy", name: "Privacy Policy", internal: true, new: false },
   { path: "/terms", name: "Terms and Conditions", internal: true, new: false },
   { path: "/cookie-policy", name: "Cookies Policy", internal: true, new: false },

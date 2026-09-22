@@ -1,29 +1,28 @@
 import React from "react"
-import { Hero, TrustedBySection, Services, Pricing, BeforeAfterSection } from "."
-import { PPDSLabelHomepageSection } from "./sections/PPDSLabelHomepageSection"
-import { HowItWorks } from "./sections/HowItWorks"
-import WhatWeDoShowcase from "@/components/blocks/about/sections/WhatWeDoShowcase"
-import { FAQ } from "./sections/FAQ"
-import { AppDownload } from "./sections/AppDownload"
-import {
-  SimplePricing,
-  AllergenQuizSection,
-} from "./sections/SquareIntegrationHomepage"
+import { Hero } from "./sections/hero"
+import { TrustedBySection } from "./sections/features-scroll"
+import { LabelTypeStrip } from "./sections/LabelTypeStrip"
+import { ProductCapabilities } from "./sections/ProductCapabilities"
+import { KitchenWorkflowExplorer } from "./sections/KitchenWorkflowExplorer"
+import { EverydaySteps } from "./sections/EverydaySteps"
+import { PrintingSetupSelector } from "./sections/PrintingSetupSelector"
+import { HomepageFAQ } from "./sections/HomepageFAQ"
+import { HomepageClosingCTA } from "./sections/HomepageClosingCTA"
 
 export const Homepage = () => {
   return (
     <>
       <Hero />
-      <WhatWeDoShowcase />
       <TrustedBySection />
-      <Services />
-      <BeforeAfterSection />
-      <FAQ />
-      <SimplePricing />
-      <HowItWorks />
-      {/* <PPDSLabelHomepageSection /> */}
-      <AllergenQuizSection />
-      <AppDownload />
+      <div className="home-life">
+        <LabelTypeStrip />
+        <ProductCapabilities />
+        <KitchenWorkflowExplorer />
+        <EverydaySteps />
+        <PrintingSetupSelector />
+        <HomepageFAQ />
+        <HomepageClosingCTA />
+      </div>
     </>
   )
 }

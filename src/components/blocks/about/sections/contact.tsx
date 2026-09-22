@@ -1,138 +1,46 @@
 "use client"
+
 import React from "react"
+import Link from "next/link"
 import { ContactForm } from "./form"
-import { MapPin, Phone, Mail, Clock, Users, CheckCircle } from "lucide-react"
-import { motion } from "framer-motion"
+import { CONTACT } from "@/lib/marketing/site"
 
 export const Contact = () => {
   return (
-    <section
-      id="contact"
-      className="relative overflow-hidden bg-mkt-canvas/30 py-12 sm:py-16"
-    >
-      {/* Enhanced background decoration */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/4 top-1/4 h-72 w-72 animate-pulse rounded-full bg-mkt-steel1/20 blur-3xl" />
-        <div
-          className="absolute bottom-1/4 right-1/4 h-96 w-96 animate-pulse rounded-full bg-mkt-steel1/30 blur-3xl"
-          style={{ animationDelay: "1s" }}
-        />
-        <div
-          className="absolute left-3/4 top-1/2 h-64 w-64 animate-pulse rounded-full bg-mkt-steel1/20 blur-3xl"
-          style={{ animationDelay: "2s" }}
-        />
-        <div className="absolute left-1/2 top-10 h-32 w-32 rounded-full bg-green-200/30 blur-2xl" />
-        <div className="absolute right-10 top-3/4 h-48 w-48 rounded-full bg-yellow-200/20 blur-3xl" />
-      </div>
-
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="mb-12 text-center sm:mb-16"
-        >
-          <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-            Get in Touch
-          </h2>
-          <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
-            Tell us a little bit about who you are, and we'll tell you a whole lot more about who we
-            are.
-          </p>
-        </motion.div>
-
-        <div className="flex flex-col gap-16 lg:flex-row lg:gap-20">
-          {/* Left Side: Info - Floating elements */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            viewport={{ once: true }}
-            className="space-y-12 lg:w-1/2"
-          >
-            <div className="relative">
-              <div className="ml-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#142124" }}>
-                    <MapPin className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <dt className="mb-1 text-base font-semibold text-gray-900">Address</dt>
-                    <dd className="text-base text-gray-600">Bournemouth, UK</dd>
-                  </div>
-                </div>
-
-                <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#17675F" }}>
-                    <Phone className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <dt className="mb-1 text-lg font-bold text-gray-900">Phone</dt>
-                    <dd className="text-gray-600">+44 7845 447586</dd>
-                  </div>
-                </div>
-
-                <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#142124" }}>
-                    <Mail className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <dt className="mb-1 text-lg font-bold text-gray-900">Email</dt>
-                    <dd className="text-gray-600">contact@instalabel.co</dd>
-                  </div>
-                </div>
-
-                <div className="group flex transform items-start gap-4 rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:bg-white/60 hover:shadow-xl hover:backdrop-blur-sm">
-                  <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full text-white shadow-lg transition-all duration-300 group-hover:scale-110" style={{ backgroundColor: "#17675F" }}>
-                    <Clock className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <dt className="mb-1 text-lg font-bold text-gray-900">Response Time</dt>
-                    <dd className="text-gray-600">Within 24 hours</dd>
-                  </div>
-                </div>
+    <section id="contact" className="scroll-mt-24 bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+      <div className="container mx-auto max-w-6xl">
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div>
+            <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+              Talk to the InstaLabel team.
+            </h2>
+            <p className="mb-8 text-base leading-relaxed text-mkt-ink8">
+              Tell us about your kitchen, your printer setup or the question you need help with.
+            </p>
+            <dl className="space-y-4 text-sm text-mkt-ink8">
+              <div>
+                <dt className="font-semibold text-mkt-ink">Location</dt>
+                <dd>{CONTACT.location}</dd>
               </div>
-            </div>
-
-            {/* Trust Indicators - Floating badges */}
-            <div className="flex flex-wrap justify-center gap-6 lg:justify-start">
-              {/* <div className="group flex transform items-center gap-4 rounded-2xl bg-gradient-to-r from-green-50 to-green-100 p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                <CheckCircle className="h-8 w-8 text-green-500 transition-transform duration-300 group-hover:scale-110" />
-                <div>
-                  <div className="text-lg font-semibold text-gray-900">500+ Kitchens</div>
-                  <div className="text-sm text-gray-600">Trust InstaLabel</div>
-                </div>
-              </div> */}
-              {/* <div className="group flex transform items-center gap-4 rounded-2xl bg-mkt-canvas p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                <CheckCircle className="h-8 w-8 text-mkt-teal transition-transform duration-300 group-hover:scale-110" />
-                <div>
-                  <div className="text-lg font-semibold text-gray-900">EHO Compliant</div>
-                  <div className="text-sm text-gray-600">Certified Solution</div>
-                </div>
-              </div> */}
-            </div>
-          </motion.div>
-
-          {/* Right Side: Form - Floating design */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            viewport={{ once: true }}
-            className="lg:w-1/2"
-          >
-            <div className="relative">
-              {/* Floating form header */}
-              <div className="group mb-8 flex items-center"></div>
-
-              {/* Form with minimal styling */}
-              <div className="transform pl-4 transition-all duration-500 hover:scale-[1.02]">
-                <ContactForm />
+              <div>
+                <dt className="font-semibold text-mkt-ink">Email</dt>
+                <dd>
+                  <Link href={`mailto:${CONTACT.email}`} className="text-mkt-teal hover:underline">
+                    {CONTACT.email}
+                  </Link>
+                </dd>
               </div>
-            </div>
-          </motion.div>
+              <div>
+                <dt className="font-semibold text-mkt-ink">Phone</dt>
+                <dd>
+                  <Link href={CONTACT.phoneHref} className="text-mkt-teal hover:underline">
+                    {CONTACT.phoneDisplay}
+                  </Link>
+                </dd>
+              </div>
+            </dl>
+          </div>
+          <ContactForm />
         </div>
       </div>
     </section>

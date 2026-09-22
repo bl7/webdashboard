@@ -1,13 +1,12 @@
 import React from "react"
-import { PricingHero, PricingGrid, TestedInKitchens, LabelOrdering } from "."
+import { PlanHero } from "./sections/PlanHero"
+import { PlanBody } from "./sections/PlanBody"
 
 export const Plan = () => {
   return (
     <>
-      <PricingHero />
-      <PricingGrid />
-      <LabelOrdering />
-      <TestedInKitchens />
+      <PlanHero />
+      <PlanBody />
     </>
   )
 }

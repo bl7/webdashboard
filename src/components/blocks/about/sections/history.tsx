@@ -1,163 +1,54 @@
 "use client"
 
 import React from "react"
-import care from "@/assets/images/kitchen.jpg"
-import Image from "next/image"
-import Link from "next/link"
-import { motion } from "framer-motion"
+
+const priorities = [
+  {
+    title: "Clarity",
+    body: "Product names, dates and allergen information should be easy to find and read.",
+  },
+  {
+    title: "Consistency",
+    body: "Reusable item information should support the same labelling process across shifts.",
+  },
+  {
+    title: "Practical printing",
+    body: "Kitchens should be able to choose an appropriate desktop or Android setup without proprietary InstaLabel hardware.",
+  },
+]
 
 export const History = () => {
   return (
-    <section className="relative overflow-hidden bg-mkt-canvas/30 py-12 sm:py-16">
-      {/* Background decoration */}
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute left-1/3 top-1/4 h-64 w-64 rounded-full bg-mkt-steel1/20 blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 h-80 w-80 rounded-full bg-mkt-steel1/20 blur-3xl" />
-      </div>
+    <>
+      <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+            Good information should be easy to use.
+          </h2>
+          <p className="text-base leading-relaxed text-mkt-ink8">
+            A kitchen label needs to answer simple questions quickly: what is this, which date
+            applies and what information does the next person need? InstaLabel brings saved item
+            details and printing into one workflow so teams can spend less effort recreating the
+            same label.
+          </p>
+        </div>
+      </section>
 
-      <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Hero Image Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="relative mb-12 sm:mb-16"
-        >
-          <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-            <div className="h-64 w-full sm:h-[32rem]">
-              <Image
-                src={care}
-                alt="Chef in busy kitchen"
-                className="h-full w-full object-cover"
-                priority
-              />
-            </div>
-            {/* Overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-            {/* Floating badge */}
-            <div className="absolute bottom-6 left-6 inline-flex items-center rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-gray-800 shadow-lg backdrop-blur-sm">
-              <span className="mr-2">🏆</span>
-              Born in Real Kitchens
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Content Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-          className="mx-auto max-w-4xl"
-        >
-          {/* Header */}
-          <div className="mb-12 text-center sm:mb-16">
-            <h2 className="mb-6 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-              From Kitchen Chaos to Labeling Clarity
-            </h2>
-            <div className="mx-auto h-1 w-24 rounded-full bg-gradient-to-r from-mkt-ink to-mkt-teal" />
-          </div>
-
-          {/* Story Content */}
-          <div className="space-y-8">
-            {/* Opening paragraph - highlighted */}
-            <div className="relative rounded-2xl bg-white/80 p-8 shadow-lg ring-1 ring-gray-200/50 backdrop-blur-sm">
-              <div className="absolute left-6 top-6 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-mkt-ink to-mkt-ink8 text-xl text-white shadow-lg">
-                🚀
+      <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="mb-10 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+            What guides the product.
+          </h2>
+          <div className="grid gap-8 md:grid-cols-3">
+            {priorities.map((item) => (
+              <div key={item.title}>
+                <h3 className="mb-2 text-lg font-bold text-mkt-ink">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-mkt-ink8">{item.body}</p>
               </div>
-              <div className="ml-20">
-                <p className="text-base leading-relaxed text-gray-700 sm:text-lg">
-                  InstaLabel wasn't born out of a startup incubator or a pitch deck — it started
-                  behind a prep counter, during a lunch rush. We were there when the labels smudged,
-                  the expiry dates faded, and nobody could remember if the sauce tub was opened
-                  today or yesterday. These weren't just annoyances — they were risks. For safety.
-                  For compliance. For trust.
-                </p>
-              </div>
-            </div>
-
-            {/* Evolution story */}
-            <div className="grid gap-6 sm:gap-8 md:grid-cols-2">
-              <div className="space-y-6">
-                <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-teal/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-mkt-teal to-mkt-ink8 text-lg text-white">
-                      🎯
-                    </div>
-                    <p className="text-base leading-relaxed text-gray-600">
-                      We knew kitchens needed a better way to track what's fresh, what's safe, and
-                      what's compliant. So we built it — not with flashy tech jargon, but with real
-                      kitchen problems in mind. InstaLabel began as a tool for auto-calculating
-                      expiry dates and printing clear, wipe-safe labels.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-ink/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-lg text-white" style={{ backgroundColor: "#142124" }}>
-                      ⚙️
-                    </div>
-                    <p className="text-sm leading-relaxed text-gray-600">
-                      We added allergen tracking. Prep times. Use-by info. A manager dashboard. All
-                      the things that turn chaos into calm — without adding extra steps. No steep
-                      learning curves. No long onboarding. Just a tool that helps food teams get it
-                      right the first time.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-teal/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg text-lg text-white" style={{ backgroundColor: "#17675F" }}>
-                      🏪
-                    </div>
-                    <p className="text-sm leading-relaxed text-gray-600">
-                      Today, InstaLabel is trusted in hundreds of commercial kitchens across the UK
-                      — from independent cafés to growing chains — helping them reduce food waste,
-                      pass EHO inspections, and protect customers with confidence. It's simple,
-                      fast, and made to blend into the rhythm of your kitchen — not disrupt it.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="group relative overflow-hidden rounded-xl bg-white/60 p-6 shadow-md ring-1 ring-gray-200/50 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-mkt-ink/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="relative z-10">
-                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-mkt-ink to-mkt-ink8 text-lg text-white">
-                      🚀
-                    </div>
-                    <p className="text-sm leading-relaxed text-gray-600">
-                      And this is just the beginning. We're building the future of kitchen labeling
-                      — one clean, clear label at a time.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
-
-          {/* Call to Action */}
-          <div className="mt-16 text-center">
-            <Link href="/register">
-              <button
-                className="rounded-xl px-8 py-4 text-lg font-semibold text-white shadow-lg"
-                style={{ backgroundColor: "#142124", backgroundImage: "none" }}
-              >
-                <span className="mr-2">✨</span>
-                Ready to Transform Your Kitchen?
-              </button>
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   )
 }

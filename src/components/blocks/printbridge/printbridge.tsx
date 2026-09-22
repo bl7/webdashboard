@@ -1,22 +1,12 @@
 import React from "react"
-import { PrintBridgeHero } from "."
-import { PrintBridgeProblem } from "./sections/PrintBridgeProblem"
-import { PrintBridgeAdvantages } from "./sections/PrintBridgeAdvantages"
-import { PrintBridgeTechSpecs } from "./sections/PrintBridgeTechSpecs"
-import { PrintBridgeUseCases } from "./sections/PrintBridgeUseCases"
-import { PrintBridgeCTAs } from "./sections/PrintBridgeCTAs"
-import { PrintBridgeHowItWorks } from "."
+import { PrintBridgeHero } from "./sections/PrintBridgeHero"
+import { PrintBridgeBody } from "./sections/PrintBridgeBody"
 
 export const PrintBridgePage = () => {
   return (
     <>
       <PrintBridgeHero />
-      <PrintBridgeProblem />
-      <PrintBridgeHowItWorks />
-      <PrintBridgeAdvantages />
-      <PrintBridgeTechSpecs />
-      <PrintBridgeUseCases />
-      <PrintBridgeCTAs />
+      <PrintBridgeBody />
     </>
   )
-} 
+}

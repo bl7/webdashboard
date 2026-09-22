@@ -160,40 +160,31 @@ export const SquareIntegrationHomepage = () => {
 // Simple Pricing Section Component
 export const SimplePricing = () => {
   return (
-    <section className="relative bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+    <section className="relative bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-          {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <h3 className="text-center text-3xl font-black leading-tight tracking-tight sm:text-4xl lg:text-left lg:text-5xl">
-              <span className="text-mkt-ink">
-                Simple pricing, built
-              </span>
-              <br />
-              <span className="text-gray-900">for kitchens.</span>
-            </h3>
+            <h2 className="text-center text-3xl font-black leading-tight tracking-tight text-mkt-ink sm:text-4xl lg:text-left">
+              See what your subscription includes.
+            </h2>
 
-            <div className="space-y-4 text-sm leading-relaxed text-gray-600">
-              <p>No contracts, no hidden extras — just clear plans.</p>
-              <p>Choose monthly or annual billing.</p>
-              <p>One account works on web or mobile — print from anywhere.</p>
-              <p>Labels and subscription all managed in one place.</p>
-            </div>
+            <p className="text-base leading-relaxed text-mkt-ink8">
+              Compare billing options, review the trial terms and check the equipment you need
+              before you start.
+            </p>
 
-            <div className="pt-4">
-              <Link href="/plan">
-                <Button
-                  size="lg"
-                  className="border-0 font-semibold text-white shadow-lg"
-                  style={{ backgroundColor: "#142124", backgroundImage: "none" }}
-                >
-                  FIND A PLAN THAT SUITS YOU
-                </Button>
+            <div className="pt-2">
+              <Link
+                href="/plan"
+                className="inline-flex items-center text-sm font-semibold text-mkt-teal hover:underline"
+              >
+                View pricing
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </div>
           </motion.div>
