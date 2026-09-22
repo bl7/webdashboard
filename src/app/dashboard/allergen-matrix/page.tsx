@@ -44,15 +44,16 @@ function ScaledSheet({ children }: { children: React.ReactNode }) {
     update()
     const ro = new ResizeObserver(update)
     ro.observe(outer)
+    ro.observe(inner)
     return () => ro.disconnect()
   }, [])
 
   return (
-    <div ref={outerRef} className="mb-6 overflow-hidden last:mb-0">
-      <div style={{ height }}>
+    <div ref={outerRef} className="mb-6 w-full min-w-0 max-w-full last:mb-0">
+      <div className="relative w-full overflow-hidden" style={{ height: height || undefined }}>
         <div
           ref={innerRef}
-          className="shadow-lg"
+          className="absolute left-0 top-0 shadow-lg"
           style={{ width: 1512, transform: `scale(${scale})`, transformOrigin: "top left" }}
         >
           {children}
@@ -221,7 +222,7 @@ export default function AllergenMatrixPage() {
   }
 
   return (
-    <div className="allergen-matrix-page space-y-6">
+    <div className="allergen-matrix-page min-w-0 max-w-full space-y-6 overflow-x-hidden">
       <style>{`
         @media print {
           @page { size: A3 landscape; margin: 8mm; }
@@ -393,7 +394,7 @@ export default function AllergenMatrixPage() {
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl border bg-[#ebe6db] p-4 shadow-sm">
+        <div className="min-w-0 max-w-full overflow-hidden rounded-2xl border bg-[#ebe6db] p-4 shadow-sm">
           {previewPages.map((pageRows, index) => (
             <ScaledSheet key={pageRows.map((row) => row.id).join("-")}>
               <AllergenMatrixSheet
@@ -412,7 +413,16 @@ export default function AllergenMatrixPage() {
       <div
         ref={captureRef}
         className="allergen-matrix-print"
-        style={{ position: "absolute", left: -20000, top: 0, width: 1512 }}
+        style={{
+          position: "fixed",
+          left: 0,
+          top: 0,
+          zIndex: -1,
+          width: 0,
+          height: 0,
+          overflow: "hidden",
+          pointerEvents: "none",
+        }}
         aria-hidden="true"
       >
         {printPages.map((pageRows, index) => (

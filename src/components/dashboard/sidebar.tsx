@@ -230,7 +230,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   return (
     <Tooltip.Provider>
-      <div className="sticky top-0 z-20 h-screen shrink-0 overflow-y-auto">
+      <div className="sticky top-0 z-20 h-screen shrink-0">
         {/* Mobile Toggle Button */}
         <div className="fixed left-0 top-0 z-50 flex h-16 w-full items-center bg-transparent lg:hidden">
           <button
@@ -241,22 +241,6 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
             {sidebarMobile ? <FaChevronLeft size={22} /> : <FaBars size={22} />}
           </button>
         </div>
-
-        {/* Desktop Toggle Button - positioned at sidebar edge */}
-        <button
-          onClick={toggleSidebar}
-          className={cn(
-            "z-1 fixed top-1/2 hidden h-16 w-4 -translate-y-1/2 bg-[hsl(var(--primary))] text-white shadow-lg transition-all duration-300 ease-in-out hover:w-6 lg:flex lg:items-center lg:justify-center",
-            sidebarOpen ? "left-64 rounded-r-lg" : "left-20 rounded-r-lg"
-          )}
-          aria-label="Toggle Sidebar"
-        >
-          <div className="flex flex-col space-y-1">
-            <div className="h-1 w-2 rounded-full bg-white"></div>
-            <div className="h-1 w-2 rounded-full bg-white"></div>
-            <div className="h-1 w-2 rounded-full bg-white"></div>
-          </div>
-        </button>
 
         {/* Mobile Overlay */}
         <div
@@ -270,13 +254,24 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed left-0 top-0 z-50 flex h-full flex-col border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
-            // removed overflow-y-auto here!
+            "fixed left-0 top-0 z-50 flex h-full flex-col overflow-visible border-r bg-[hsl(var(--primary))] p-4 text-[hsl(var(--primary-foreground))] shadow-xl transition-all duration-300 ease-in-out",
             "lg:relative lg:z-auto lg:shadow-none",
             sidebarMobile ? "w-64 translate-x-0" : "w-64 -translate-x-full",
             sidebarOpen ? "lg:w-64 lg:translate-x-0" : "lg:w-20 lg:translate-x-0"
           )}
         >
+          {/* Desktop handle stays on the sidebar edge so it cannot drift when the page is narrow */}
+          <button
+            onClick={toggleSidebar}
+            className="absolute -right-4 top-1/2 z-50 hidden h-16 w-4 -translate-y-1/2 rounded-r-lg bg-[hsl(var(--primary))] text-white shadow-lg transition-all duration-300 ease-in-out hover:w-6 lg:flex lg:items-center lg:justify-center"
+            aria-label="Toggle Sidebar"
+          >
+            <div className="flex flex-col space-y-1">
+              <div className="h-1 w-2 rounded-full bg-white"></div>
+              <div className="h-1 w-2 rounded-full bg-white"></div>
+              <div className="h-1 w-2 rounded-full bg-white"></div>
+            </div>
+          </button>
           {/* Logo Section */}
           <div className="mb-6 flex">
             {isExpanded ? (

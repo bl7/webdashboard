@@ -11,13 +11,13 @@ export const metadata = {
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex bg-gradient-to-br from-slate-50 to-blue-50">
+    <main className="flex min-h-screen min-w-0 overflow-x-hidden bg-gradient-to-br from-slate-50 to-blue-50">
       <PrintBridgeProvider>
         <PrinterProvider>
           <Sidebar />
           <PrinterStatusBar />
-          <div className="container flex-1 pt-12">
-            <div className="space-y-6 p-6">{children}</div>
+          <div className="container min-w-0 flex-1 overflow-x-hidden pt-12">
+            <div className="space-y-6 p-4 sm:p-6">{children}</div>
           </div>
         </PrinterProvider>
       </PrintBridgeProvider>
