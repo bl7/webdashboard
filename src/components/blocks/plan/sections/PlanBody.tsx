@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
@@ -65,11 +65,21 @@ export const PlanBody = () => {
   const [billing, setBilling] = useState<"monthly" | "annually">("monthly")
   const [plan, setPlan] = useState<PublicPlan | null>(null)
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
+  const abortRef = useRef<AbortController | null>(null)
 
   const loadPlans = useCallback(() => {
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+    let timedOut = false
+    const timer = window.setTimeout(() => {
+      timedOut = true
+      controller.abort()
+    }, 8000)
+
     setStatus("loading")
     setPlan(null)
-    fetch("/api/plans/public")
+    fetch("/api/plans/public", { signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch plans")
         const data = await res.json()
@@ -80,13 +90,19 @@ export const PlanBody = () => {
         setStatus("ready")
       })
       .catch(() => {
+        if (abortRef.current !== controller) return
+        if (controller.signal.aborted && !timedOut) return
         setPlan(null)
         setStatus("error")
+      })
+      .finally(() => {
+        window.clearTimeout(timer)
       })
   }, [])
 
   useEffect(() => {
     loadPlans()
+    return () => abortRef.current?.abort()
   }, [loadPlans])
 
   const monthly = plan ? toPence(plan.price_monthly) : 0
@@ -109,7 +125,7 @@ export const PlanBody = () => {
           {status === "error" ? (
             <div className="text-center">
               <p className="mb-6 text-base leading-relaxed text-mkt-ink8">
-                We couldn&apos;t load the current plans. Please try again or contact us for pricing.
+                We couldn&apos;t load pricing. Try again.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3">
                 <Button

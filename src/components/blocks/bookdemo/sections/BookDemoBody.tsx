@@ -20,6 +20,10 @@ const topics = [
     body: "Select an item, review the preview and prepare a print.",
   },
   {
+    title: "Your allergen matrix",
+    body: "See how selected item records become a printable menu-wide matrix and what should be reviewed before export.",
+  },
+  {
     title: "Your equipment",
     body: "Compare desktop PrintBridge and Android printing for your setup.",
   },
@@ -47,7 +51,7 @@ export const BookDemoBody = () => (
         <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
           What we can walk through.
         </h2>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {topics.map((item) => (
             <div key={item.title}>
               <h3 className="mb-2 text-lg font-bold text-mkt-ink">{item.title}</h3>
@@ -64,8 +68,9 @@ export const BookDemoBody = () => (
           Bring a printer model or an example item, if you have one.
         </h2>
         <p className="text-base leading-relaxed text-mkt-ink8">
-          A printer model helps us discuss compatibility. A representative item or recipe helps us
-          show the relevant label workflow. You can also join with questions alone.
+          A printer model helps us discuss compatibility. Bring a representative menu item, recipe
+          or supplier specification if you want to see the allergen workflow. You can also join with
+          questions alone.
         </p>
       </div>
     </section>

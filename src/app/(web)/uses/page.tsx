@@ -5,11 +5,11 @@ import React from "react"
 export const metadata: Metadata = {
   title: { absolute: "Kitchen labelling workflows | InstaLabel" },
   description:
-    "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation and PPDS labels with InstaLabel.",
+    "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
   openGraph: {
     title: "Kitchen labelling workflows | InstaLabel",
     description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation and PPDS labels with InstaLabel.",
+      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
     url: "https://www.instalabel.co/uses",
     type: "website",
     images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kitchen labelling workflows | InstaLabel",
     description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation and PPDS labels with InstaLabel.",
+      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -50,7 +50,7 @@ const Page = () => {
     "@type": "WebPage",
     name: "Kitchen labelling workflows | InstaLabel",
     description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation and PPDS labels with InstaLabel.",
+      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
     url: "https://www.instalabel.co/uses",
   }
 

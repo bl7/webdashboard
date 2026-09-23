@@ -90,6 +90,16 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
         answer:
           "No. It shows recorded label activity. Keep the cooking, storage, supplier and other records your procedures require.",
       },
+      {
+        question: "What is the allergen matrix?",
+        answer:
+          "It is a printable view of the 14 regulated allergen categories recorded across the menu items you select. Review the included items and current source information before exporting it.",
+      },
+      {
+        question: "Does the matrix replace a PPDS ingredient label?",
+        answer:
+          "No. A matrix and a PPDS label serve different contexts. PPDS food needs the applicable food name, full ingredient list and allergen emphasis. Check how the food is packed and sold before choosing the output.",
+      },
     ],
   },
   {

@@ -105,6 +105,10 @@ const sources = [
     href: "https://www.gov.uk/government/publications/allergen-checklist-for-food-businesses",
   },
   {
+    label: "FSA allergen-matrix guidance",
+    href: "https://www.gov.uk/government/publications/download-your-allergen-icons-and-posters/download-your-allergen-icons-and-posters",
+  },
+  {
     label: "Food Standards Scotland PPDS guidance",
     href: "https://www.foodstandards.gov.scot/business-guidance/running-a-food-business/publications/guidance-on-labelling-of-food-sold-prepacked-for-direct-sale",
   },
@@ -238,6 +242,39 @@ export const AllergenGuideBody = () => (
         </External>
       </div>
     </section>
+
+    <section
+      id="matrix"
+      className="scroll-mt-24 bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16"
+      style={sectionStyle}
+    >
+      <div className="container mx-auto max-w-3xl">
+        <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+          When an allergen matrix can help.
+        </h2>
+        <p className="mb-6 text-base leading-relaxed text-mkt-ink8">
+          For non-prepacked food, businesses can provide written allergen information in several
+          ways, including a separate matrix. The format should cover all 14 regulated allergen
+          categories, remain accurate and up to date, and be easy for customers and staff to
+          understand. Written information works best when staff can support it with a conversation.
+        </p>
+        <p className="mb-8">
+          <External href="https://www.gov.uk/government/publications/download-your-allergen-icons-and-posters/download-your-allergen-icons-and-posters">
+            FSA allergen-matrix guidance
+          </External>
+        </p>
+        <p className="text-base leading-relaxed text-mkt-ink8">
+          Want to build a matrix from the records you use for labels?{" "}
+          <a
+            href="/allergen-compliance#matrix"
+            className="font-semibold text-mkt-teal hover:underline"
+          >
+            See the InstaLabel workflow
+          </a>
+          .
+        </p>
+      </div>
+    </section>
   </>
 )
 
@@ -277,8 +314,7 @@ export const AllergenGuideClosing = () => (
           Keep the official guidance close to hand.
         </h2>
         <p className="mb-8 text-sm text-mkt-steel">
-          These links are available without registration. A named reviewer and review date will be
-          added after a real review of this page.
+          These links are available without registration.
         </p>
         <ul className="mb-10 space-y-3">
           {sources.map((item) => (

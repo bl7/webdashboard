@@ -166,7 +166,7 @@ export const PrintBridgeBody = () => (
         </div>
         <p className="text-sm leading-relaxed text-mkt-ink8">
           Still need help? Send us your operating system, printer model and a description of the
-          problem.           Do not send passwords.{" "}
+          problem. Do not send passwords.{" "}
           <a href="/about#contact" className="font-semibold text-mkt-teal hover:underline">
             Contact.
           </a>

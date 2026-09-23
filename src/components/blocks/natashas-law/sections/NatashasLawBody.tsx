@@ -104,6 +104,16 @@ export const NatashasLawBody = () => (
           Check the official PPDS guidance
           <ArrowRight className="ml-2 h-4 w-4" />
         </a>
+        <p className="mt-8 max-w-3xl text-base leading-relaxed text-mkt-ink8">
+          Need a menu-wide view for non-prepacked dishes?{" "}
+          <a
+            href="/allergen-compliance#matrix"
+            className="font-semibold text-mkt-teal hover:underline"
+          >
+            Explore the allergen matrix workflow
+          </a>
+          . A matrix does not replace the full ingredient list required for applicable PPDS food.
+        </p>
       </div>
     </section>
 

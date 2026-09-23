@@ -29,7 +29,8 @@ export const History = () => {
             A kitchen label needs to answer simple questions quickly: what is this, which date
             applies and what information does the next person need? InstaLabel brings saved item
             details and printing into one workflow so teams can spend less effort recreating the
-            same label.
+            same label. The same item records can also be reviewed and exported as a printable
+            allergen matrix.
           </p>
         </div>
       </section>

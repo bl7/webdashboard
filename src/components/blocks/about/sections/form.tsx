@@ -74,8 +74,13 @@ export const ContactForm = () => {
       })
 
       if (response.ok) {
-        setStatus("success")
-        form.reset()
+        const result = await response.json().catch(() => null)
+        if (result?.ok === true) {
+          setStatus("success")
+          form.reset()
+        } else {
+          setStatus("error")
+        }
       } else {
         setStatus("error")
       }

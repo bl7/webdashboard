@@ -234,7 +234,7 @@ export const BookDemoHero = () => {
                         <FormControl>
                           <Textarea
                             id="message"
-                            placeholder="For example: prep labels, PPDS labels, importing our items or using our existing printer."
+                            placeholder="For example: prep labels, PPDS labels, the allergen matrix, importing our items or using our existing printer."
                             className="min-h-28 resize-none rounded-lg border border-mkt-steel1 bg-white text-base shadow-none focus-visible:ring-2 focus-visible:ring-[#142124]/50"
                             {...field}
                           />

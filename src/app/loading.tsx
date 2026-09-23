@@ -12,7 +12,7 @@ const accent_font = Oxygen({
 export const metadata: Metadata = {
   title: { default: "Loading... | InstaLabel", template: "%s | InstaLabel" },
   metadataBase: new URL("https://www.instalabel.co"),
-  description: "Loading InstaLabel - Kitchen Labeling System",
+  description: "Loading InstaLabel — kitchen labelling software",
   robots: {
     index: false,
     follow: false,
@@ -26,7 +26,9 @@ export default function Loading() {
     >
       <div className="text-center">
         <div className="mx-auto mb-4 h-32 w-32 animate-spin rounded-full border-b-2 border-primary"></div>
-        <h2 className="text-xl font-semibold">Loading InstaLabel...</h2>
+        <p className="text-xl font-semibold" role="status">
+          Loading InstaLabel…
+        </p>
         <p className="text-muted-foreground">Please wait while we prepare your experience</p>
       </div>
     </div>

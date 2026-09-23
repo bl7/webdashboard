@@ -2,6 +2,7 @@ import React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { HomeSpecimen } from "../home-labels"
 
 export const ProductCapabilities = () => (
   <section id="features" className="home-section" style={{ scrollMarginTop: "7rem" }}>
@@ -47,16 +48,13 @@ export const ProductCapabilities = () => (
           <p className="mt-3 text-sm font-semibold">
             Always check the current recipe and supplier information.
           </p>
-          <div className="mt-5 rounded-xl bg-[var(--home-sage)] p-4 font-mono text-sm leading-relaxed">
-            <p className="font-bold">Cheddar sandwich</p>
-            <p>
-              Ingredients: <strong>WHEAT</strong> bread, cheddar (<strong>MILK</strong>), butter (
-              <strong>MILK</strong>)
-            </p>
-            <p className="mt-2 text-xs text-[var(--home-muted)]">
-              Illustrative ingredient extract, not a production-ready label.
-            </p>
+          <div className="mt-5 flex justify-center rounded-xl bg-[var(--home-sage)] p-4">
+            <HomeSpecimen kind="ppds" />
           </div>
+          <p className="mt-2 text-xs text-[var(--home-muted)]">
+            Illustrative PPDS layout from the InstaLabel label renderer, using bread, cheddar and
+            butter with allergen emphasis. Not a production-ready label.
+          </p>
           <Link
             href="/allergen-compliance"
             className="home-link mt-4 inline-flex items-center gap-2"

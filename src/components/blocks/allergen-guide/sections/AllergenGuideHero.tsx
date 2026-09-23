@@ -26,6 +26,7 @@ const jumps = [
   { href: "#allergens", label: "14 allergen categories" },
   { href: "#contexts", label: "Labelling contexts" },
   { href: "#checks", label: "Checking routine" },
+  { href: "#matrix", label: "Allergen matrix" },
   { href: "#quiz", label: "Practice quiz" },
   { href: "#sources", label: "Official resources" },
 ]

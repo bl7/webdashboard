@@ -3,6 +3,7 @@ import { Hero } from "./sections/hero"
 import { TrustedBySection } from "./sections/features-scroll"
 import { LabelTypeStrip } from "./sections/LabelTypeStrip"
 import { ProductCapabilities } from "./sections/ProductCapabilities"
+import { AllergenMatrixModule } from "./sections/AllergenMatrixModule"
 import { KitchenWorkflowExplorer } from "./sections/KitchenWorkflowExplorer"
 import { EverydaySteps } from "./sections/EverydaySteps"
 import { PrintingSetupSelector } from "./sections/PrintingSetupSelector"
@@ -17,6 +18,7 @@ export const Homepage = () => {
       <div className="home-life">
         <LabelTypeStrip />
         <ProductCapabilities />
+        <AllergenMatrixModule />
         <KitchenWorkflowExplorer />
         <EverydaySteps />
         <PrintingSetupSelector />

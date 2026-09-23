@@ -18,6 +18,11 @@ const tasks = [
   { href: "#defrost", title: "Manage defrosting", copy: "Identify food moving out of frozen storage." },
   { href: "#rotation", title: "Organise stock rotation", copy: "Make the applicable date easy to see." },
   { href: "#ppds", title: "Pack food for direct sale", copy: "Prepare a PPDS ingredient label." },
+  {
+    href: "#matrix",
+    title: "Share menu allergen information",
+    copy: "Review the recorded allergens across selected dishes and export a printable matrix.",
+  },
 ]
 
 const businesses = [
@@ -79,6 +84,7 @@ export const UsesBody = () => (
       href="/ingredient-labels"
       link="Ingredient labels"
       canvas={false}
+      note="No allergen is currently recorded on this item. That is not an allergen-free claim."
     >
       <LabelRender
         item={{
@@ -207,6 +213,7 @@ export const UsesBody = () => (
       href="/defrost-labels"
       link="Defrost labels"
       canvas
+      note="Recorded allergen: Fish. The label uses the same CONTAINS ALLERGENS layout as other ingredient labels."
     >
       <LabelRender
         item={{
@@ -233,7 +240,9 @@ export const UsesBody = () => (
         selectedInitial="BL"
         allergens={["Fish"]}
         labelHeight="40mm"
-        allIngredients={[]}
+        allIngredients={[
+          { uuid: "d1", ingredientName: "Frozen Cod Fillet (defrosted)", allergens: [{ allergenName: "Fish" }] },
+        ]}
       />
     </WorkflowRow>
 
@@ -304,30 +313,60 @@ export const UsesBody = () => (
           <div>
             <PPDSLabelRenderer
               item={{
-                uid: "demo-ppds-1",
-                id: "1",
+                uid: "ppds-shortbread-uses",
+                id: "ppds-shortbread-uses",
                 type: "menu",
-                name: "Chicken Caesar Salad",
+                name: "Butter shortbread",
                 quantity: 1,
                 labelType: "ppds",
-                ingredients: ["Chicken Breast", "Caesar Dressing", "Croutons"],
-                printedOn: "2024-06-01",
-                expiryDate: "2024-06-03",
+                ingredients: ["flour", "butter", "sugar"],
               }}
-              storageInfo="Keep refrigerated below 5°C. Consume within 2 days of opening."
-              businessName="InstaLabel Ltd"
+              storageInfo=""
+              businessName=""
               allIngredients={[
-                { uuid: "a1", ingredientName: "Chicken Breast", allergens: [] },
-                {
-                  uuid: "a2",
-                  ingredientName: "Caesar Dressing",
-                  allergens: [{ allergenName: "Egg" }, { allergenName: "Fish" }],
-                },
-                { uuid: "a3", ingredientName: "Croutons", allergens: [{ allergenName: "Wheat" }] },
+                { uuid: "s1", ingredientName: "flour", allergens: [{ allergenName: "Wheat" }] },
+                { uuid: "s2", ingredientName: "butter", allergens: [{ allergenName: "Milk" }] },
+                { uuid: "s3", ingredientName: "sugar", allergens: [] },
               ]}
             />
+            <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">
+              Illustrative ingredient layout, using the same Butter shortbread example as the
+              Natasha&apos;s Law page. Not a production-ready label.
+            </p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section
+      id="matrix"
+      className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16"
+      style={{ scrollMarginTop: "7rem" }}
+    >
+      <div className="container mx-auto max-w-3xl">
+        <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+          Keep menu allergen information available in writing.
+        </h2>
+        <p className="mb-4 text-base leading-relaxed text-mkt-ink8">
+          For non-prepacked dishes, choose the active menu items, check their current allergen
+          records and generate a matrix showing the 14 regulated categories. Keep the document
+          current and support written information with a conversation where appropriate.
+        </p>
+        <p className="mb-4 text-sm italic leading-relaxed text-mkt-steel">
+          Example: A restaurant updates two sauces, reviews the affected dish records and generates
+          a fresh front-of-house matrix for the current menu.
+        </p>
+        <p className="mb-6 text-sm leading-relaxed text-mkt-steel">
+          This workflow does not replace a PPDS ingredient label and does not create allergen
+          information from a dish name.
+        </p>
+        <a
+          href="/allergen-compliance#matrix"
+          className="inline-flex items-center text-sm font-semibold text-mkt-teal hover:underline"
+        >
+          See the allergen matrix
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </a>
       </div>
     </section>
 
@@ -408,6 +447,7 @@ function WorkflowRow({
   href,
   link,
   canvas,
+  note,
   children,
 }: {
   id: string
@@ -417,6 +457,7 @@ function WorkflowRow({
   href: string
   link: string
   canvas: boolean
+  note?: string
   children: React.ReactNode
 }) {
   return (
@@ -434,7 +475,12 @@ function WorkflowRow({
           <p className="mb-6 text-sm italic leading-relaxed text-mkt-steel">Example: {example}</p>
           <TextLink href={href}>{link}</TextLink>
         </div>
-        <div className="flex justify-center overflow-x-auto lg:justify-end">{children}</div>
+        <div className="flex flex-col items-center lg:items-end">
+          <div className="overflow-x-auto">{children}</div>
+          {note ? (
+            <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">{note}</p>
+          ) : null}
+        </div>
       </div>
     </section>
   )

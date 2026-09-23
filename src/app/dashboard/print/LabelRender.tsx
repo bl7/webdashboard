@@ -529,22 +529,7 @@ export default function LabelRender({
               {itemAllergenNames.join(", ")}
             </div>
           </>
-        ) : (
-          <div
-            style={{
-              fontWeight: 900,
-              color: "black",
-              fontSize: fontSize,
-              textAlign: "center",
-              marginTop: 2,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              fontFamily: "inherit",
-            }}
-          >
-            DOES NOT CONTAIN ANY ALLERGEN
-          </div>
-        )}
+        ) : null}
       </div>
     )
   }
@@ -701,22 +686,7 @@ export default function LabelRender({
               {itemAllergenNames.join(", ")}
             </div>
           </>
-        ) : (
-          <div
-            style={{
-              fontWeight: 900,
-              color: "black",
-              fontSize: fontSize,
-              textAlign: "center",
-              marginTop: 2,
-              letterSpacing: 1,
-              textTransform: "uppercase",
-              fontFamily: "monospace",
-            }}
-          >
-            DOES NOT CONTAIN ANY ALLERGEN
-          </div>
-        ))}
+        ) : null)}
     </div>
   )
 }

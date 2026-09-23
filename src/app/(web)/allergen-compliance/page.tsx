@@ -3,7 +3,7 @@ import { Metadata } from "next"
 import React from "react"
 
 const description =
-  "Keep recorded ingredient and allergen information together, review recipe changes and prepare clear labels with InstaLabel."
+  "Keep recorded ingredient and allergen information together, prepare labels and generate a printable 14-allergen matrix with InstaLabel."
 
 export const metadata: Metadata = {
   title: { absolute: "Allergen labelling software | InstaLabel" },

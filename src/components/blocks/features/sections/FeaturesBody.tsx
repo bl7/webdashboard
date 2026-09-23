@@ -84,6 +84,47 @@ export const FeaturesBody = () => (
       </div>
     </section>
 
+    <section id="matrix" className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16" style={{ scrollMarginTop: "7rem" }}>
+      <div className="container mx-auto max-w-3xl">
+        <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+          Generate an allergen matrix from the same item records.
+        </h2>
+        <p className="mb-8 text-base leading-relaxed text-mkt-ink8">
+          Select the active dishes you want to include, review their recorded allergens and export a
+          clear 14-allergen matrix. When a recipe or supplier changes, update the item record and
+          generate a fresh version after review.
+        </p>
+        <ol className="mb-8 grid gap-4 sm:grid-cols-3">
+          <li className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-5">
+            <div className="mb-2 text-xs font-semibold text-mkt-teal">01</div>
+            <h3 className="mb-2 text-base font-bold text-mkt-ink">Choose the menu.</h3>
+            <p className="text-sm leading-relaxed text-mkt-ink8">
+              Include the active items that belong on this chart.
+            </p>
+          </li>
+          <li className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-5">
+            <div className="mb-2 text-xs font-semibold text-mkt-teal">02</div>
+            <h3 className="mb-2 text-base font-bold text-mkt-ink">Review the records.</h3>
+            <p className="text-sm leading-relaxed text-mkt-ink8">
+              Resolve duplicate names, blank records and changes before export.
+            </p>
+          </li>
+          <li className="rounded-xl border border-mkt-steel1 bg-mkt-canvas p-5">
+            <div className="mb-2 text-xs font-semibold text-mkt-teal">03</div>
+            <h3 className="mb-2 text-base font-bold text-mkt-ink">Export the matrix.</h3>
+            <p className="text-sm leading-relaxed text-mkt-ink8">
+              Generate a dated PDF for the intended kitchen or customer-information use.
+            </p>
+          </li>
+        </ol>
+        <p className="mb-6 text-sm leading-relaxed text-mkt-steel">
+          InstaLabel organises the information you record. Your team remains responsible for checking
+          current ingredients, suppliers and the finished matrix.
+        </p>
+        <TextLink href="/allergen-compliance#matrix">See the allergen matrix</TextLink>
+      </div>
+    </section>
+
     <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-3xl">
         <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">

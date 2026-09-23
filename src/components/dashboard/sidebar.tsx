@@ -230,7 +230,7 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
   return (
     <Tooltip.Provider>
-      <div className="sticky top-0 z-20 h-screen shrink-0">
+      <div className="z-20 h-full shrink-0">
         {/* Mobile Toggle Button */}
         <div className="fixed left-0 top-0 z-50 flex h-16 w-full items-center bg-transparent lg:hidden">
           <button
