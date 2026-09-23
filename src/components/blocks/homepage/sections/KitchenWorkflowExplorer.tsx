@@ -106,10 +106,14 @@ export const KitchenWorkflowExplorer = () => {
             ))}
           </div>
 
-          <div className="grid items-start gap-8 md:grid-cols-[auto_1fr]">
-            <div>
-              <HomeSpecimen key={current.key} kind={current.key} />
-              <p className="mt-3 max-w-xs text-xs text-white/70">
+          <div className="grid items-center gap-10 lg:grid-cols-2">
+            <div className="flex flex-col items-center">
+              <div className="flex w-full justify-center overflow-visible rounded-2xl bg-white px-8 py-16 md:px-12 md:py-20">
+                <div className="home-workflow-specimen">
+                  <HomeSpecimen key={current.key} kind={current.key} />
+                </div>
+              </div>
+              <p className="mt-3 max-w-md text-center text-xs text-white/70">
                 Illustrative layout. Dates must follow your kitchen’s procedures.
               </p>
             </div>

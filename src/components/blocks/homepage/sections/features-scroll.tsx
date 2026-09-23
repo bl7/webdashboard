@@ -19,9 +19,12 @@ export const TrustedBySection = () => {
   return (
     <section className="relative overflow-hidden bg-white px-4 py-12 sm:px-6 md:px-12 lg:px-16">
       <div className="container relative mx-auto max-w-6xl">
-        <h2 className="mb-8 text-center text-2xl font-black tracking-tight text-mkt-ink sm:text-3xl">
-          Kitchens using InstaLabel.
+        <h2 className="mb-3 text-center text-2xl font-black tracking-tight text-mkt-ink sm:text-3xl">
+          Businesses labelling with InstaLabel.
         </h2>
+        <p className="mx-auto mb-8 max-w-2xl text-center text-sm text-mkt-ink8 sm:text-base">
+          Used in real Bournemouth kitchens, including Noodle Bar and Loco Lime.
+        </p>
 
         <div className="hidden lg:block">
           <Marquee speed={25} pauseOnHover>
@@ -50,7 +53,7 @@ export const TrustedBySection = () => {
                 }
                 className="absolute left-2 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-mkt-steel1 bg-white"
                 type="button"
-                aria-label="Previous kitchen"
+                aria-label="Previous business"
               >
                 <ChevronLeft className="h-5 w-5 text-mkt-ink" />
               </button>
@@ -67,7 +70,7 @@ export const TrustedBySection = () => {
                 onClick={() => setCurrentIndex((prev) => (prev + 1) % foodBusinesses.length)}
                 className="absolute right-2 z-20 flex h-10 w-10 items-center justify-center rounded-full border border-mkt-steel1 bg-white"
                 type="button"
-                aria-label="Next kitchen"
+                aria-label="Next business"
               >
                 <ChevronRight className="h-5 w-5 text-mkt-ink" />
               </button>

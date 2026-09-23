@@ -162,6 +162,17 @@
   color: #000 !important;
 }
 
+.home-life .home-workflow-specimen {
+  transform: scale(1.45);
+  transform-origin: center center;
+}
+
+@media (max-width: 768px) {
+  .home-life .home-workflow-specimen {
+    transform: scale(1.15);
+  }
+}
+
 .home-life .home-print-label.is-printing {
   animation: home-print 0.9s ease;
 }

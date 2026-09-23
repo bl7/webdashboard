@@ -7,6 +7,8 @@ import React from "react"
 import instaLabel3 from "@/assets/images/instalabel3.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
+import { TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { emitHomeEvent } from "../home-labels"
 
 export const Hero = () => {
   return (
@@ -71,9 +73,17 @@ export const Hero = () => {
               className="border-2 border-mkt-steel1 font-semibold text-mkt-ink transition-all duration-300 hover:border-mkt-ink hover:bg-mkt-ink hover:text-white"
               asChild
             >
-              <a href="#workflows">See the labels in action</a>
+              <a
+                href="/bookdemo"
+                onClick={() => emitHomeEvent("demo_click", { location: "hero" })}
+              >
+                Book a demo
+              </a>
             </Button>
           </div>
+          <p className="text-xs text-mkt-steel sm:text-sm">
+            {TRIAL_PERIOD_DAYS}-day trial. Payment details at checkout. No charge during the trial.
+          </p>
           <p className="text-xs text-mkt-steel sm:text-sm">
             Print from a computer or the Android app.
           </p>

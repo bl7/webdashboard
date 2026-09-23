@@ -5,7 +5,6 @@ import { LabelTypeStrip } from "./sections/LabelTypeStrip"
 import { ProductCapabilities } from "./sections/ProductCapabilities"
 import { AllergenMatrixModule } from "./sections/AllergenMatrixModule"
 import { KitchenWorkflowExplorer } from "./sections/KitchenWorkflowExplorer"
-import { EverydaySteps } from "./sections/EverydaySteps"
 import { PrintingSetupSelector } from "./sections/PrintingSetupSelector"
 import { HomepageFAQ } from "./sections/HomepageFAQ"
 import { HomepageClosingCTA } from "./sections/HomepageClosingCTA"
@@ -14,13 +13,12 @@ export const Homepage = () => {
   return (
     <>
       <Hero />
-      <TrustedBySection />
       <div className="home-life">
         <LabelTypeStrip />
         <ProductCapabilities />
+        <TrustedBySection />
         <AllergenMatrixModule />
         <KitchenWorkflowExplorer />
-        <EverydaySteps />
         <PrintingSetupSelector />
         <HomepageFAQ />
         <HomepageClosingCTA />
