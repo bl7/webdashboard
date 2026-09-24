@@ -14,11 +14,6 @@
     background-color: #1c282a !important;
   }
 
-  .marketing .bg-mkt-ink {
-    background-color: #f6f5f1 !important;
-    color: #142124 !important;
-  }
-
   .marketing .text-mkt-ink {
     color: #f6f5f1 !important;
   }
@@ -62,8 +57,12 @@
     color: #142124 !important;
   }
 
-  .marketing header img[alt="InstaLabel"] {
-    filter: brightness(0) invert(1);
+  .marketing header .mkt-logo-on-light {
+    display: none !important;
+  }
+
+  .marketing header .mkt-logo-on-dark {
+    display: block !important;
   }
 
   .marketing .mkt-hero-fade {
@@ -119,11 +118,6 @@
   background-color: #1c282a !important;
 }
 
-.dark .marketing .bg-mkt-ink {
-  background-color: #f6f5f1 !important;
-  color: #142124 !important;
-}
-
 .dark .marketing .text-mkt-ink {
   color: #f6f5f1 !important;
 }
@@ -155,8 +149,12 @@
   color: #142124 !important;
 }
 
-.dark .marketing header img[alt="InstaLabel"] {
-  filter: brightness(0) invert(1);
+.dark .marketing header .mkt-logo-on-light {
+  display: none !important;
+}
+
+.dark .marketing header .mkt-logo-on-dark {
+  display: block !important;
 }
 
 .dark .marketing .mkt-hero-fade {
@@ -178,4 +176,113 @@
   border-color: #f6f5f1 !important;
   color: #f6f5f1 !important;
   background-color: transparent !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  body:has(.marketing) {
+    background-color: #142124;
+  }
+
+  .marketing .text-gray-900,
+  .marketing .text-gray-800,
+  .marketing .text-gray-700,
+  .marketing .text-black {
+    color: #f6f5f1 !important;
+  }
+
+  .marketing .text-gray-600,
+  .marketing .text-gray-500,
+  .marketing .text-gray-400 {
+    color: #b7c4c1 !important;
+  }
+
+  .marketing .bg-gray-50,
+  .marketing .bg-gray-100 {
+    background-color: #1c282a !important;
+  }
+
+  .marketing .border-gray-200,
+  .marketing .border-gray-100,
+  .marketing .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+    border-color: #3a4a4c !important;
+  }
+
+  .marketing [style*="#fff 100%"],
+  .marketing [style*="#ffffff 100%"],
+  .marketing [style*="rgb(255, 255, 255) 100%"],
+  .marketing [style*="255, 255, 255) 100%"] {
+    background: linear-gradient(to bottom, rgba(20, 33, 36, 0) 0%, #142124 100%) !important;
+  }
+
+  .marketing [style*="#fff 0%, #fff 50%"],
+  .marketing [style*="rgb(255, 255, 255) 0%"] {
+    background: linear-gradient(to bottom, #142124 0%, rgba(20, 33, 36, 0) 100%) !important;
+  }
+
+  .marketing [class*="154F3B"] {
+    color: #b7e7c8 !important;
+  }
+
+  .marketing .bg-mkt-steel1 {
+    background-color: #243438 !important;
+  }
+
+  .marketing :is(a, button).bg-mkt-ink,
+  .marketing :is(a, button)[class*="bg-mkt-ink"] {
+    background-color: #f6f5f1 !important;
+    color: #142124 !important;
+  }
+}
+
+.dark body:has(.marketing) {
+  background-color: #142124;
+}
+
+.dark .marketing .text-gray-900,
+.dark .marketing .text-gray-800,
+.dark .marketing .text-gray-700,
+.dark .marketing .text-black {
+  color: #f6f5f1 !important;
+}
+
+.dark .marketing .text-gray-600,
+.dark .marketing .text-gray-500,
+.dark .marketing .text-gray-400 {
+  color: #b7c4c1 !important;
+}
+
+.dark .marketing .bg-gray-50,
+.dark .marketing .bg-gray-100 {
+  background-color: #1c282a !important;
+}
+
+.dark .marketing .border-gray-200,
+.dark .marketing .border-gray-100 {
+  border-color: #3a4a4c !important;
+}
+
+.dark .marketing [style*="#fff 100%"],
+.dark .marketing [style*="#ffffff 100%"],
+.dark .marketing [style*="rgb(255, 255, 255) 100%"],
+.dark .marketing [style*="255, 255, 255) 100%"] {
+  background: linear-gradient(to bottom, rgba(20, 33, 36, 0) 0%, #142124 100%) !important;
+}
+
+.dark .marketing [style*="#fff 0%, #fff 50%"],
+.dark .marketing [style*="rgb(255, 255, 255) 0%"] {
+  background: linear-gradient(to bottom, #142124 0%, rgba(20, 33, 36, 0) 100%) !important;
+}
+
+.dark .marketing [class*="154F3B"] {
+  color: #b7e7c8 !important;
+}
+
+.dark .marketing .bg-mkt-steel1 {
+  background-color: #243438 !important;
+}
+
+.dark .marketing :is(a, button).bg-mkt-ink,
+.dark .marketing :is(a, button)[class*="bg-mkt-ink"] {
+  background-color: #f6f5f1 !important;
+  color: #142124 !important;
 }

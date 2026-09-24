@@ -67,8 +67,18 @@ export const Header = () => {
               width={140}
               height={38}
               priority
-              className="drop-shadow-sm transition-all duration-300 hover:brightness-110"
+              className="mkt-logo-on-light drop-shadow-sm"
               style={{ display: "block", margin: "0 auto" }}
+            />
+            <Image
+              src="/long_longwhite.png"
+              alt=""
+              width={140}
+              height={38}
+              priority
+              aria-hidden
+              className="mkt-logo-on-dark drop-shadow-sm"
+              style={{ display: "none", margin: "0 auto" }}
             />
           </div>
         </Link>

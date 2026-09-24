@@ -8,7 +8,7 @@ import { emitHomeEvent } from "../home-labels"
 export const HomepageClosingCTA = () => (
   <section className="home-close home-section">
     <div className="home-wrap text-center">
-      <div className="home-eyebrow" style={{ background: "#fff", color: "var(--home-ink)" }}>
+      <div className="home-eyebrow">
         The kitchen, labelled
       </div>
       <h2 className="home-h2 mx-auto mt-4 max-w-3xl">Less label fuss. More good food.</h2>

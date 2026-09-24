@@ -297,17 +297,16 @@
   }
 }
 
-.marketing .home-life,
-.dark .marketing .home-life,
-.marketing .home-life .home-card,
-.dark .marketing .home-life .home-card {
-  background-color: var(--home-paper);
-  color: var(--home-ink);
-}
+@media (prefers-color-scheme: light) {
+  .marketing .home-life,
+  .marketing .home-life .home-card {
+    background-color: var(--home-paper);
+    color: var(--home-ink);
+  }
 
-.marketing .home-life .home-card,
-.dark .marketing .home-life .home-card {
-  background-color: #fff;
+  .marketing .home-life .home-card {
+    background-color: #fff;
+  }
 }
 
 .marketing .home-life .home-strip,
@@ -334,4 +333,102 @@
 .dark .marketing .home-life .home-print-stage {
   background-color: var(--home-deep);
   color: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .marketing .home-life {
+    --home-ink: #f3f6f4;
+    --home-forest: #9ddec2;
+    --home-paper: #142124;
+    --home-sage: #1c2c28;
+    --home-muted: #b7c4be;
+    --home-border: #314640;
+    background-color: #142124;
+    color: #f3f6f4;
+  }
+
+  .marketing .home-life .home-card {
+    background-color: #1c2c28;
+    color: #f3f6f4;
+    border-color: #314640;
+  }
+
+  .marketing .home-life .home-dark {
+    background-color: #0e241c !important;
+    color: #fff;
+  }
+
+  .marketing .home-life .home-sage {
+    background-color: #1c2c28 !important;
+    color: #f3f6f4 !important;
+  }
+
+  .marketing .home-life .home-btn-primary {
+    background: #f6f5f1;
+    color: #142124;
+  }
+
+  .marketing .home-life .home-btn-ghost {
+    color: #f3f6f4;
+    border-color: #314640;
+  }
+
+  .marketing .home-life .home-chip {
+    background: transparent;
+    color: #f3f6f4;
+    border-color: #314640;
+  }
+
+  .marketing .home-life .home-eyebrow {
+    background: #243832;
+    color: #dfff83;
+  }
+}
+
+.dark .marketing .home-life {
+  --home-ink: #f3f6f4;
+  --home-forest: #9ddec2;
+  --home-paper: #142124;
+  --home-sage: #1c2c28;
+  --home-muted: #b7c4be;
+  --home-border: #314640;
+  background-color: #142124;
+  color: #f3f6f4;
+}
+
+.dark .marketing .home-life .home-card {
+  background-color: #1c2c28;
+  color: #f3f6f4;
+  border-color: #314640;
+}
+
+.dark .marketing .home-life .home-dark {
+  background-color: #0e241c !important;
+  color: #fff;
+}
+
+.dark .marketing .home-life .home-sage {
+  background-color: #1c2c28 !important;
+  color: #f3f6f4 !important;
+}
+
+.dark .marketing .home-life .home-btn-primary {
+  background: #f6f5f1;
+  color: #142124;
+}
+
+.dark .marketing .home-life .home-btn-ghost {
+  color: #f3f6f4;
+  border-color: #314640;
+}
+
+.dark .marketing .home-life .home-chip {
+  background: transparent;
+  color: #f3f6f4;
+  border-color: #314640;
+}
+
+.dark .marketing .home-life .home-eyebrow {
+  background: #243832;
+  color: #dfff83;
 }
