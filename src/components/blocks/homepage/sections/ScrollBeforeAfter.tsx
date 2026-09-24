@@ -2,8 +2,15 @@
 
 import React, { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { Eye, Tag, Users } from "lucide-react"
 import handwritten from "@/assets/images/before.png"
 import printed from "@/assets/images/after.png"
+
+const points = [
+  { icon: Tag, label: "Standardised labels for every prep" },
+  { icon: Eye, label: "Allergen information clearly displayed" },
+  { icon: Users, label: "Easy for every shift to follow" },
+]
 
 export const ScrollBeforeAfter = () => {
   const sectionRef = useRef<HTMLElement>(null)
@@ -47,18 +54,20 @@ export const ScrollBeforeAfter = () => {
       >
         <div className="home-wrap grid w-full items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           <div>
-            <div className="home-eyebrow">Why not handwriting</div>
-            <h2 className="home-h2 mt-4 max-w-xl">
-              A pen can cross a date out. The next shift still has to read it.
-            </h2>
+            <div className="home-eyebrow">Why not handwritten labels</div>
+            <h2 className="home-h2 mt-4 max-w-xl">Make every label clear and consistent.</h2>
             <p className="home-lead mt-4 max-w-xl">
-              Scroll. The handwritten tape gives way to a printed label on the same tub. Celery is
-              in the vegetables either way. Only the printed label says so.
+              Give your team the information they need at a glance. From prep dates and use-by
+              times to allergen information.
             </p>
-            <p className="mt-4 text-sm" style={{ color: "var(--home-muted)" }}>
-              The dates on these photos are examples. Your kitchen still sets the date, and someone
-              still checks the label before it goes on.
-            </p>
+            <div className="mt-6 flex flex-col gap-3">
+              {points.map(({ icon: Icon, label }) => (
+                <div key={label} className="flex items-center gap-3 text-sm">
+                  <Icon className="h-4 w-4 shrink-0" strokeWidth={1.5} aria-hidden />
+                  {label}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl border border-[var(--home-border)]">
             <Image
