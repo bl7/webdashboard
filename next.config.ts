@@ -104,6 +104,41 @@ const nextConfig = {
         destination: "/",
         permanent: true,
       },
+      { source: "/blog/roi-kitchen-automation-case-studies", destination: "/", permanent: true },
+      { source: "/blog/transform-your-kitchen-instalabel-labels", destination: "/", permanent: true },
+      {
+        source: "/blog/instalabel-vs-competitors-comparison",
+        destination: "/label-printer-uk-comparison",
+        permanent: true,
+      },
+      {
+        source: "/blog/restaurant-allergen-label-software-comparison",
+        destination: "/allergen-guide",
+        permanent: true,
+      },
+      { source: "/blog/top-5-labeling-mistakes-kitchens-avoid", destination: "/faqs", permanent: true },
+      { source: "/blog/essential-food-safety-labels-restaurants", destination: "/uses", permanent: true },
+      {
+        source: "/blog/natashas-law-guide-food-business-compliance",
+        destination: "/natashas-law",
+        permanent: true,
+      },
+      {
+        source: "/blog/natashas-law-compliance-guide-uk-food-businesses",
+        destination: "/natashas-law",
+        permanent: true,
+      },
+      { source: "/blog/haccp-label-app-complete-guide", destination: "/haccp-labels", permanent: true },
+      {
+        source: "/blog/commercial-kitchen-label-printer-guide",
+        destination: "/kitchen-label-printer",
+        permanent: true,
+      },
+      {
+        source: "/blog/kitchen-prep-label-printer-uk-guide",
+        destination: "/kitchen-label-printer",
+        permanent: true,
+      },
     ]
   },
 
@@ -117,10 +152,6 @@ const nextConfig = {
           {
             key: "Content-Type",
             value: "text/css; charset=utf-8",
-          },
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
           },
         ],
       },

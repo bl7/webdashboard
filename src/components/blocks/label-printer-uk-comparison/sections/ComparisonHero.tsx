@@ -9,15 +9,15 @@ import { motion } from "framer-motion"
 const methods = [
   {
     name: "Handwritten labels",
-    summary: "Written from the kitchen's records.",
+    summary: "Pen and tape, written from the kitchen's own records.",
   },
   {
-    name: "Printer templates",
-    summary: "Entered or stored according to the printer or software.",
+    name: "A dedicated labelling machine",
+    summary: "The supplier's device and the supplier's label rolls.",
   },
   {
     name: "InstaLabel",
-    summary: "Reused from saved item information.",
+    summary: "Software on the printer already installed, or a supported Android printer.",
   },
 ]
 

@@ -90,7 +90,7 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
                 <Link href="/register">
-                  Try InstaLabel
+                  Start free trial
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>

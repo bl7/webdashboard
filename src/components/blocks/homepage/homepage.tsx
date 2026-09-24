@@ -2,6 +2,7 @@ import React from "react"
 import { Hero } from "./sections/hero"
 import { TrustedBySection } from "./sections/features-scroll"
 import { WhyLabelling } from "./sections/WhyLabelling"
+import { ScrollBeforeAfter } from "./sections/ScrollBeforeAfter"
 import { LabelTypeStrip } from "./sections/LabelTypeStrip"
 import { ProductCapabilities } from "./sections/ProductCapabilities"
 import { AllergenMatrixModule } from "./sections/AllergenMatrixModule"
@@ -18,6 +19,9 @@ export const Homepage = () => {
       <Hero />
       <div className="home-life">
         <WhyLabelling />
+      </div>
+      <ScrollBeforeAfter />
+      <div className="home-life">
         <LabelTypeStrip />
         <KitchenWorkflowExplorer />
         <ProductCapabilities />

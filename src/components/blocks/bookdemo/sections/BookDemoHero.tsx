@@ -99,8 +99,8 @@ export const BookDemoHero = () => {
             See InstaLabel with your kitchen in mind.
           </h1>
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg">
-            Walk through item setup, label previews and the printing option that suits your team.
-            Tell us what you want to see and we&apos;ll arrange a demo.
+            A short walkthrough of item setup, a label preview and the printer you already use.
+            Have a menu or a CSV ready if you want to talk through your own items.
           </p>
         </motion.div>
 

@@ -30,9 +30,9 @@ export const HaccpHero = () => {
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            Use InstaLabel to identify kitchen items, communicate recorded information and make the
-            applicable dates easy to read. Keep labels alongside the checks and records in your
-            food-safety management system.
+            InstaLabel prints the date and content labels a kitchen uses while it runs its own
+            process. It does not log temperatures, and it is not a HACCP platform. Keep your own
+            checks and records alongside the labels.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

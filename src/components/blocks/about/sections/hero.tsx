@@ -24,9 +24,9 @@ export const AboutHero = () => {
           </h1>
 
           <p className="mx-auto max-w-2xl text-base text-mkt-ink8 sm:text-lg">
-            InstaLabel helps food businesses turn ingredient information and date settings into
-            clear, consistent labels. We focus on the practical work between preparing an item and
-            knowing what is in the container.
+            InstaLabel is kitchen labelling software from Bournemouth. It prints through a label
+            printer the kitchen already has on Windows or macOS, or through a supported Android
+            printer. The business still sets the recipes, allergens and dates.
           </p>
 
           <p className="text-sm text-mkt-steel">Based in Bournemouth, England.</p>

@@ -31,8 +31,10 @@ export const PlanHero = () => {
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            Review the subscription, choose your billing interval and check the equipment you need
-            for your kitchen.
+            There is no printer in the box. Use a label printer already installed on Windows or
+            macOS, or the Android app with a MUNBYN RW411B or Born4Ship DB403. New subscriptions
+            start with a 14-day trial. Payment details are collected at checkout, there is no charge
+            during the trial, and billing continues after it until you cancel.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

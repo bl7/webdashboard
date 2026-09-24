@@ -1,6 +1,7 @@
 import { Homepage } from "@/components/blocks"
 import { Metadata } from "next"
 import "./home-life.css"
+import "./home-bands.css"
 
 export const metadata: Metadata = {
   title: "Kitchen labelling software",

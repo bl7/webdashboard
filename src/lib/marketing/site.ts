@@ -24,9 +24,8 @@ export const PRODUCT_NAV = [
 export const RESOURCES_NAV = [
   { label: "Allergen guide", href: "/allergen-guide" },
   { label: "PPDS labels", href: "/natashas-law" },
-  { label: "HACCP and labelling", href: "/haccp-labels" },
-  { label: "Guides", href: "/blog" },
   { label: "FAQs", href: "/faqs" },
+  { label: "Guides", href: "/blog" },
 ] as const
 
 export const WORKFLOW_NAV = [

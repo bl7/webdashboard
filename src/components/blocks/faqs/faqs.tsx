@@ -21,7 +21,7 @@ type FaqItem = {
 const groups: { id: string; title: string; items: FaqItem[] }[] = [
   {
     id: "product",
-    title: "Product",
+    title: "Getting started",
     items: [
       {
         question: "What is InstaLabel?",
@@ -63,7 +63,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
   },
   {
     id: "information",
-    title: "Labels and information",
+    title: "Allergens and PPDS",
     items: [
       {
         question: "Does InstaLabel guarantee compliance?",
@@ -104,7 +104,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
   },
   {
     id: "printing",
-    title: "Printing",
+    title: "Printers",
     items: [
       {
         question: "What do I need for computer printing?",
@@ -145,11 +145,21 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
         answer:
           "Do not assume the complete workflow works offline because the printer connection is local. Check the connectivity requirements for the current web or Android workflow before relying on it during an outage.",
       },
+      {
+        question: "Which label sizes does InstaLabel print?",
+        answer:
+          "60×40 mm and 56×80 mm. Both sizes can carry prep, opened, cooked, defrost, use-first and PPDS layouts. Choose the size that fits the printer and the amount of information on the label.",
+      },
+      {
+        question: "Is a printer included?",
+        answer:
+          "No. Desktop printing uses a label printer already installed on Windows or macOS. Android printing uses a MUNBYN RW411B or Born4Ship DB403.",
+      },
     ],
   },
   {
     id: "getting-started",
-    title: "Getting started",
+    title: "Trial and price",
     items: [
       {
         question: "How long does setup take?",
@@ -188,13 +198,35 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
       },
     ],
   },
+  {
+    id: "limits",
+    title: "What it does not do",
+    items: [
+      {
+        question: "Does InstaLabel make my kitchen legally compliant?",
+        answer:
+          "No. It prints labels from the information you save. Your business checks recipes, supplier information and dates, and remains responsible for the labelling that applies to the food.",
+      },
+      {
+        question: "Does InstaLabel log temperatures or run a HACCP system?",
+        answer:
+          "No. It prints the labels a kitchen uses while it runs its own process. Temperature checks and HACCP records stay in that process.",
+      },
+      {
+        question: "Does InstaLabel decide shelf life?",
+        answer:
+          "No. Your kitchen sets the date rules. InstaLabel applies those settings when it prepares the label.",
+      },
+    ],
+  },
 ]
 
 const jumps = [
-  { href: "#product", label: "Product" },
-  { href: "#information", label: "Labels and information" },
-  { href: "#printing", label: "Printing" },
-  { href: "#getting-started", label: "Getting started" },
+  { href: "#product", label: "Getting started" },
+  { href: "#printing", label: "Printers" },
+  { href: "#information", label: "Allergens and PPDS" },
+  { href: "#limits", label: "What it does not do" },
+  { href: "#getting-started", label: "Trial and price" },
 ]
 
 export const FaqsPage = () => (
@@ -237,15 +269,11 @@ export const FaqsPage = () => (
           className="w-full max-w-[500px] space-y-4 text-left"
         >
           <p className="text-xs font-semibold uppercase tracking-wide text-mkt-steel">
-            Four groups
+            Where to start
           </p>
-          <p className="text-lg font-bold text-mkt-ink">Product</p>
+          <p className="text-lg font-bold text-mkt-ink">Printers, labels, trial</p>
           <p className="text-sm leading-relaxed text-mkt-ink8">
-            What InstaLabel is, who it is for, and how item information is recorded.
-          </p>
-          <p className="text-lg font-bold text-mkt-ink">Labels, printing and setup</p>
-          <p className="text-sm leading-relaxed text-mkt-ink8">
-            Allergen checks, date settings, desktop and Android printing, trial and demo.
+            The printer you already have, what a label can show, and what InstaLabel does not decide.
           </p>
         </motion.div>
       </div>

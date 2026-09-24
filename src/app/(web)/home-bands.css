@@ -1,0 +1,27 @@
+.home-life .home-band,
+.home-life .home-end {
+  background: #1c2c28;
+  color: #f3f6f4;
+}
+
+@media (prefers-color-scheme: light) {
+  .home-life .home-band,
+  .home-life .home-end {
+    background: #dfff83;
+    color: #152a23;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .home-life .home-band,
+  .home-life .home-end {
+    background: #1c2c28 !important;
+    color: #f3f6f4 !important;
+  }
+}
+
+.dark .home-life .home-band,
+.dark .home-life .home-end {
+  background: #1c2c28 !important;
+  color: #f3f6f4 !important;
+}

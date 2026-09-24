@@ -36,8 +36,8 @@ export const AllergenComplianceHero = () => {
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
             <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
-              <Link href="/bookdemo">
-                Book a demo
+              <Link href="/register">
+                Start free trial
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>

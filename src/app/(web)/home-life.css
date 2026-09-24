@@ -211,10 +211,10 @@
   transform: rotate(-8deg);
 }
 
-.home-life .home-strip,
-.home-life .home-close {
-  background: var(--home-lime);
-  color: var(--home-ink);
+.home-life .home-band,
+.home-life .home-end {
+  background: #1c2c28;
+  color: #f3f6f4;
 }
 
 .home-life .home-dark {
@@ -310,8 +310,10 @@
     background-color: #fff;
   }
 
-  .marketing .home-life .home-strip,
-  .marketing .home-life .home-close {
+  .home-life .home-band,
+  .home-life .home-end,
+  .marketing .home-life .home-band,
+  .marketing .home-life .home-end {
     background-color: var(--home-lime);
     color: var(--home-ink);
   }
@@ -389,18 +391,13 @@
     --home-chip-on-text: #dfff83;
   }
 
-  .marketing .home-life .home-strip,
-  .marketing .home-life .home-close {
+  .marketing .home-life .home-band,
+  .marketing .home-life .home-end {
     background-color: #1c2c28 !important;
     color: #f3f6f4 !important;
   }
 
-  .marketing .home-life .home-close .home-eyebrow {
-    background: #dfff83;
-    color: #142124;
-  }
-
-  .marketing .home-life .home-close .home-btn-ghost {
+  .marketing .home-life .home-end .home-btn-ghost {
     color: #f3f6f4;
     border-color: rgba(243, 246, 244, 0.45) !important;
   }
@@ -459,18 +456,13 @@
   --home-chip-on-text: #dfff83;
 }
 
-.dark .marketing .home-life .home-strip,
-.dark .marketing .home-life .home-close {
+.dark .marketing .home-life .home-band,
+.dark .marketing .home-life .home-end {
   background-color: #1c2c28 !important;
   color: #f3f6f4 !important;
 }
 
-.dark .marketing .home-life .home-close .home-eyebrow {
-  background: #dfff83;
-  color: #142124;
-}
-
-.dark .marketing .home-life .home-close .home-btn-ghost {
+.dark .marketing .home-life .home-end .home-btn-ghost {
   color: #f3f6f4;
   border-color: rgba(243, 246, 244, 0.45) !important;
 }

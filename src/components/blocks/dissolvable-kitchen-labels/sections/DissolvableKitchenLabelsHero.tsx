@@ -24,9 +24,9 @@ export const DissolvableKitchenLabelsHero = () => (
           Choose label stock for the job it needs to do.
         </h1>
         <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-          Dissolvable stock is designed for removal under specified conditions. Before using it in
-          your kitchen, check the manufacturer&apos;s instructions, printer compatibility and the
-          surface where the label will be applied.
+          The roll is the material. InstaLabel prints the label onto the stock your printer takes.
+          Check the manufacturer&apos;s instructions, the printer, and the surface before you rely
+          on a dissolvable label.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
           <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>

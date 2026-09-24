@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react"
 import { emitHomeEvent } from "../home-labels"
 
 export const HomepageClosingCTA = () => (
-  <section className="home-close home-section">
+  <section className="home-end home-section">
     <div className="home-wrap text-center">
       <div className="home-eyebrow">
         The kitchen, labelled
