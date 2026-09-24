@@ -192,16 +192,16 @@ export const CookedLabelsBenefits = () => {
             <h4 className="mb-6 text-center text-xl font-bold text-gray-900">Cook Label Impact</h4>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-600">95%</div>
-                <div className="text-sm text-gray-600">HACCP Compliance Rate</div>
+                <div className="mb-2 text-3xl font-bold text-orange-600">Named</div>
+                <div className="text-sm text-gray-600">Cooked food stays identified</div>
               </div>
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-600">60%</div>
-                <div className="text-sm text-gray-600">Faster Service Time</div>
+                <div className="mb-2 text-3xl font-bold text-orange-600">Dated</div>
+                <div className="text-sm text-gray-600">Using your date rules</div>
               </div>
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-600">80%</div>
-                <div className="text-sm text-gray-600">Reduced Food Safety Issues</div>
+                <div className="mb-2 text-3xl font-bold text-orange-600">Checked</div>
+                <div className="text-sm text-gray-600">Your team reviews the label</div>
               </div>
             </div>
           </div>

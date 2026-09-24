@@ -53,8 +53,8 @@ export const Hero = () => {
             </h1>
           </div>
           <p className="mb-1 mt-2 text-sm text-mkt-ink8 sm:text-base">
-            Less writing. More cooking. Turn your saved ingredients, allergen information and date
-            rules into clear, consistent labels for every stage of kitchen prep.
+            Create clear, consistent kitchen labels from the ingredient, allergen and date
+            information you already manage.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
             <Link href="/register">

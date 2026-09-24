@@ -16,48 +16,48 @@ const workflows: {
   {
     key: "prep",
     choice: "Prep",
-    heading: "Prep done. Details sorted.",
-    body: "Give food prepared ahead of service a clear identity, with the item name, recorded allergens and dates from your kitchen’s settings.",
+    heading: "Prep",
+    body: "Food prepared ahead of service gets a clear label with the information your team needs.",
     href: "/prep-labels",
     link: "Explore prep labels",
   },
   {
+    key: "ingredients",
+    choice: "Opened",
+    heading: "Opened",
+    body: "Know when an opened product needs to be used.",
+    href: "/ingredient-labels",
+    link: "Explore opened-product labels",
+  },
+  {
     key: "cooked",
     choice: "Cooked",
-    heading: "A new batch. A clear label.",
-    body: "Help the next shift identify cooked food and read its recorded details. Keep cooking and cooling records in your kitchen’s food-safety process.",
+    heading: "Cooked",
+    body: "Keep cooked food clearly identified and dated.",
     href: "/cooked-labels",
     link: "Explore cooked labels",
   },
   {
     key: "defrost",
     choice: "Defrost",
-    heading: "Keep the next step clear.",
-    body: "Identify food moving through your defrosting workflow, with its recorded allergens and relevant date information. Follow your kitchen’s defrosting procedure.",
+    heading: "Defrost",
+    body: "Keep track of when food was defrosted and when it needs to be used.",
     href: "/defrost-labels",
     link: "Explore defrost labels",
   },
   {
-    key: "ingredients",
-    choice: "Ingredients",
-    heading: "Know what’s in the container.",
-    body: "Keep ingredient names, recorded allergens and date information readable after items move from their original packaging into kitchen storage.",
-    href: "/ingredient-labels",
-    link: "Explore ingredient labels",
-  },
-  {
     key: "usefirst",
     choice: "Use first",
-    heading: "Make the next pick easier.",
-    body: "Add a clear use-first prompt to support your stock rotation routine. Keep the original product information and expiry date visible.",
+    heading: "Use first",
+    body: "Make food that needs attention easy for the team to identify.",
     href: "/uses",
     link: "Explore kitchen workflows",
   },
   {
     key: "ppds",
     choice: "PPDS",
-    heading: "Ready for the counter. Clear on the pack.",
-    body: "Prepare PPDS labels with the food name, full ingredient information and clear allergen emphasis. Check the recipe and the finished label before sale.",
+    heading: "PPDS",
+    body: "Create customer-facing labels with ingredient and allergen information.",
     href: "/natashas-law",
     link: "Explore PPDS labels",
   },
@@ -74,13 +74,13 @@ export const KitchenWorkflowExplorer = () => {
           From first prep to final pack
         </div>
         <h2 className="home-h2 mt-4">
-          One kitchen.
+          From first prep
           <br />
-          A whole lot of labels.
+          to final pack.
         </h2>
         <p className="home-lead mt-4">
-          Different jobs need different information. Explore the labels that keep your kitchen’s day
-          moving.
+          These are moments in a kitchen day, not a list of software features. The same saved
+          information can be printed for each job.
         </p>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-[16rem_1fr]">

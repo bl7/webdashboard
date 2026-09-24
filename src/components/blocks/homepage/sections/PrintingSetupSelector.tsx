@@ -15,10 +15,10 @@ export const PrintingSetupSelector = () => {
     <section className="home-sage home-section">
       <div className="home-wrap grid items-start gap-10 lg:grid-cols-2">
         <div>
-          <div className="home-eyebrow">Two ways to get it on a label</div>
-          <h2 className="home-h2 mt-4">Your setup. Your way.</h2>
+          <div className="home-eyebrow">Printing</div>
+          <h2 className="home-h2 mt-4">Print from the setup you already use.</h2>
           <p className="home-lead mt-4">
-            Print at a computer station or use the Android app with a supported Bluetooth printer.
+            Use a computer with PrintBridge, or the Android app with a supported Bluetooth printer.
           </p>
 
           <div className="mt-6 flex flex-wrap gap-2">

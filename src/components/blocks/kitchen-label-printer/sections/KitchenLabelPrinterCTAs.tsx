@@ -20,8 +20,8 @@ export const KitchenLabelPrinterCTAs = () => (
           Ready to Transform Your Kitchen Labeling?
         </h2>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
-          Join 500+ UK restaurants that trust InstaLabel for intelligent, compliant kitchen
-          labeling. Our AI-powered software works with USB and Bluetooth label printers (PC: any USB; mobile: Munbyn RW114B recommended) and eliminates manual errors.
+          Print from a computer with PrintBridge, or from the Android app with a supported
+          Bluetooth printer (MUNBYN RW411B or Born4Ship DB403).
         </p>
 
         {/* Primary CTAs */}
@@ -87,8 +87,8 @@ export const KitchenLabelPrinterCTAs = () => (
         viewport={{ once: true }}
       >
         <p className="text-sm text-gray-500">
-          <strong>Trusted by 500+ UK restaurants.</strong> InstaLabel reduces labeling time by 95%
-          while ensuring 100% Natasha's Law compliance. Start your 14-day free trial today.
+          <strong>Used in real kitchens.</strong> Check printer compatibility before you buy
+          equipment. Start your 14-day free trial today.
         </p>
       </motion.div>
     </div>

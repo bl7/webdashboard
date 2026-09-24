@@ -28,11 +28,11 @@ export const ExpiryDateLabelsSolution = () => (
           InstaLabel Solution
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          AI-Powered Expiry Date Labeling That Works with USB & Bluetooth Printers
+          Date labels from the rules you set
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-          InstaLabel's intelligent software automatically calculates expiry dates, generates
-          compliant labels, and ensures Natasha's Law compliance - reducing labeling time by 95%.
+          Your business sets the date rules. InstaLabel applies those settings when it prints a
+          label. Your team still checks the date against your food-safety procedure.
         </p>
       </motion.div>
 
@@ -49,10 +49,10 @@ export const ExpiryDateLabelsSolution = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Target className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered Expiry Calculation</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Your date rules</h3>
           <p className="text-gray-600">
-            InstaLabel's AI automatically calculates use-by dates based on food type, preparation
-            method, and current food safety guidelines. No more manual calculations or guesswork.
+            InstaLabel does not decide a use-by date from the type of food. It applies the date
+            settings your business has chosen.
           </p>
         </motion.div>
 
@@ -67,7 +67,7 @@ export const ExpiryDateLabelsSolution = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">100% Natasha's Law Compliance</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">PPDS labelling support</h3>
           <p className="text-gray-600">
             Every label automatically includes required allergen information, ingredients, and
             expiry dates. PPDS label formatting meets FSA requirements without manual work.
@@ -87,7 +87,7 @@ export const ExpiryDateLabelsSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">30-Second Label Generation</h3>
           <p className="text-gray-600">
-            Generate professional expiry date labels in under 30 seconds. Clear, legible text that
+            Generate professional expiry date labels from your saved information. Clear, legible text that
             never smudges or fades, even in kitchen environments.
           </p>
         </motion.div>
@@ -141,7 +141,7 @@ export const ExpiryDateLabelsSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Compatibility</h3>
           <p className="text-gray-600">
-            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge
+            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge
             technology ensures seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

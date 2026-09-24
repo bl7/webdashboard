@@ -162,6 +162,14 @@
   color: #000 !important;
 }
 
+.home-life .home-size-stage {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 11rem;
+  overflow: hidden;
+}
+
 .home-life .home-workflow-specimen {
   transform: scale(1.45);
   transform-origin: center center;

@@ -20,9 +20,8 @@ export const ExpiryDateLabelsCTAs = () => (
           Ready to Automate Your Expiry Date Labeling?
         </h2>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
-          Join 500+ UK restaurants that trust InstaLabel for intelligent, compliant expiry date
-          labeling. Our AI-powered software reduces labeling time by 95% while ensuring 100%
-          Natasha's Law compliance.
+          Used in real kitchens. Set your date rules, review the item and print a clear expiry
+          label. Your team still checks that the date matches your food-safety procedure.
         </p>
 
         {/* Primary CTAs */}
@@ -88,9 +87,8 @@ export const ExpiryDateLabelsCTAs = () => (
         viewport={{ once: true }}
       >
         <p className="text-sm text-gray-500">
-          <strong>Trusted by 500+ UK restaurants for expiry date compliance.</strong> InstaLabel
-          ensures your labels meet all Natasha's Law and food safety requirements. Start your 14-day
-          free trial today.
+          <strong>Used in real kitchens.</strong> InstaLabel applies the date rules your business
+          sets. Start your 14-day free trial today.
         </p>
       </motion.div>
     </div>

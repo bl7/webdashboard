@@ -293,7 +293,7 @@ At InstaLabel, we make **Natasha's Law compliance** simple and stress-free:
 
 - **Look for Natasha's Law compliance** features
 - **Ensure durable label materials**
-- **Check for automatic allergen detection**
+- **Check for recorded allergen information**
 - **Verify ease of use** for your staff
 
 ### **Step 3: Implement and Train**
@@ -317,7 +317,7 @@ At InstaLabel, we make **Natasha's Law compliance** simple and stress-free:
 ### **Emerging Trends:**
 
 1. **Digital allergen information** (QR codes linking to detailed info)
-2. **AI-powered allergen detection** from ingredient lists
+2. **saved allergen information** from ingredient lists
 3. **Real-time allergen alerts** for customers
 4. **Integration with ordering systems** for automatic allergen checking
 

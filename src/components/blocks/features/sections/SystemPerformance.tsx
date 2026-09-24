@@ -21,50 +21,50 @@ export const SystemPerformance = () => {
       icon: <Zap className="h-8 w-8 text-yellow-500" />,
       metrics: [
         {
-          title: "Page load time",
-          value: "Under 2 seconds",
-          description: "Globally optimized performance",
+          title: "Labels",
+          value: "Saved items",
+          description: "Ingredients, allergens and your date rules",
         },
         {
-          title: "Label generation",
-          value: "Under 500ms",
-          description: "Per label processing speed",
+          title: "Sizes",
+          value: "Two formats",
+          description: "60 × 40 mm and 56 × 80 mm",
         },
         {
-          title: "Bulk operations",
-          value: "100+ labels",
-          description: "Processed in under 30 seconds",
+          title: "Computer",
+          value: "PrintBridge",
+          description: "A printer installed on Windows or macOS",
         },
         {
-          title: "Printer communication",
-          value: "Real-time",
-          description: "Via WebSocket connection",
+          title: "Android",
+          value: "Two models",
+          description: "MUNBYN RW411B and Born4Ship DB403",
         },
       ],
     },
     {
-      category: "Data Management Capabilities",
+      category: "What you manage",
       icon: <Database className="h-8 w-8 text-blue-600" />,
       metrics: [
         {
-          title: "Cloud storage",
-          value: "Unlimited",
-          description: "Menu items and ingredients",
+          title: "Menu data",
+          value: "Your account",
+          description: "Items stay in InstaLabel",
         },
         {
-          title: "Data retention",
-          value: "5 years",
-          description: "For compliance purposes",
-        },
-        {
-          title: "Export formats",
+          title: "Import",
           value: "CSV",
-          description: "Data export and reporting",
+          description: "Review ingredients and allergens after import",
         },
         {
-          title: "Offline storage",
-          value: "Cached every other day",
-          description: "Local PrintBridge storage",
+          title: "Dates",
+          value: "Your rules",
+          description: "InstaLabel applies the settings you choose",
+        },
+        {
+          title: "Checks",
+          value: "Your team",
+          description: "Recipes and finished labels still need a check",
         },
       ],
     },
@@ -86,11 +86,11 @@ export const SystemPerformance = () => {
             Performance & Reliability
           </div>
           <h3 className="text-2xl font-bold text-gray-900 md:text-3xl">
-            Built for Speed & Reliability
+            What the software actually does
           </h3>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
-            InstaLabel delivers high-performance label generation
-            and reliable service for busy kitchens.
+            A kitchen labelling system: saved items, two label sizes, and printing from a computer
+            or a supported Android printer.
           </p>
         </motion.div>
 
@@ -105,7 +105,7 @@ export const SystemPerformance = () => {
             className="space-y-8"
           >
             <div>
-              <h4 className="mb-6 text-xl font-semibold text-gray-900">Performance Metrics</h4>
+              <h4 className="mb-6 text-xl font-semibold text-gray-900">How you print</h4>
               <div className="space-y-6">
                 {performanceMetrics[0].metrics.map((metric, index) => (
                   <motion.div

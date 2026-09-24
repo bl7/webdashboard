@@ -59,7 +59,7 @@ export const FeaturesGridUses = () => {
                 icon: <span className="text-2xl">🖨️</span>,
                 title: "Universal Printer Support",
                 description:
-                  "Works with USB and Bluetooth label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended — no locked-in hardware or special drivers required.",
+                  "Works with USB and Bluetooth label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403 — no locked-in hardware or special drivers required.",
               },
               {
                 icon: <span className="text-2xl">🧾</span>,
@@ -117,7 +117,7 @@ export const FeaturesGridUses = () => {
                   step: "01",
                   title: "Local Print Bridge for USB Printers",
                   description:
-                    "Our lightweight server connects your browser directly to any USB label printer. No drivers, no dialogs — just fast, reliable printing.",
+                    "PrintBridge connects the dashboard to a label printer installed on the computer.",
                   icon: <span className="text-3xl">🔗</span>,
                 },
                 {
@@ -131,7 +131,7 @@ export const FeaturesGridUses = () => {
                   step: "03",
                   title: "Cross-Platform Simplicity",
                   description:
-                    "Whether you're using Windows or Mac, InstaLabel works with USB label printers (PC: any USB). Mobile: Munbyn RW114B recommended. Set it up once and print from any modern browser or Android device.",
+                    "Whether you're using Windows or Mac, InstaLabel works with USB label printers (computer: PrintBridge with an installed printer). Mobile: MUNBYN RW411B or Born4Ship DB403. Set it up once and print from any modern browser or Android device.",
                   icon: <span className="text-3xl">💻</span>,
                 },
               ].map((step, index) => (

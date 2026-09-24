@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "Do I need a specific printer width for Natasha's Law?",
     answer:
-      "There is no blanket requirement to use the site's previously advertised 80mm format. Choose a supported layout that presents the applicable information clearly.",
+      "Natasha's Law does not set these sizes. InstaLabel prints 60 × 40 mm and 56 × 80 mm. Both support the same workflows, with a different layout for each size.",
   },
   {
     question: "Can I use a receipt printer?",

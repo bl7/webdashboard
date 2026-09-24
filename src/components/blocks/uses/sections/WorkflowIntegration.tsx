@@ -31,17 +31,16 @@ export const WorkflowIntegration = () => {
       color: "blue",
     },
     {
-      title: "Inventory Management",
+      title: "Date labelling",
       icon: <Database className="h-8 w-8 text-green-600" />,
       challenge: "Tracking ingredient usage and expiry dates manually",
       solution: "InstaLabel Solution",
       features: [
-        "Automatic expiry date calculations based on food type and storage",
+        "Date rules set by your business, then applied when a label is printed",
         "Use-first labeling for items approaching expiry dates",
-        "Barcode scanning for quick label reprints and inventory tracking",
-        "Usage analytics to identify waste patterns and improvement opportunities",
+        "Print again from a saved item",
       ],
-      result: "Average 25-30% reduction in food waste",
+      result: "Clearer dates on the items you label",
       color: "green",
     },
     {
@@ -55,7 +54,7 @@ export const WorkflowIntegration = () => {
         "Complete ingredient and allergen documentation",
         "Exportable reports for inspection preparation",
       ],
-      result: "98% first-time pass rate for EHO inspections",
+      result: "Print records can support your own inspection preparation",
       color: "teal",
     },
   ]
@@ -222,7 +221,7 @@ export const WorkflowIntegration = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900">Risk Reduction</h4>
                 <p className="text-sm text-gray-600">
-                  98% inspection success rate vs. industry average of 85%
+                  Keep your own inspection records alongside printed labels
                 </p>
               </motion.div>
               <motion.div
@@ -237,7 +236,7 @@ export const WorkflowIntegration = () => {
                 </div>
                 <h4 className="font-semibold text-gray-900">Efficiency Gains</h4>
                 <p className="text-sm text-gray-600">
-                  25-30% reduction in food waste through better tracking
+                  Clearer dates on the items you label
                 </p>
               </motion.div>
             </div>

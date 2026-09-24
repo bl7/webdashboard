@@ -59,7 +59,7 @@ export const PrintBridgeProblem = () => (
         </ul>
         <div className="mt-4 text-lg font-semibold text-gray-700">
           <span className="font-bold text-mkt-ink">Average print job:</span> 6 clicks, 15
-          seconds, 23% error rate
+          seconds, with details that are easy to misread
         </div>
         <div className="mt-2 text-base text-gray-500">
           Web browsers can't talk to USB printers.{" "}

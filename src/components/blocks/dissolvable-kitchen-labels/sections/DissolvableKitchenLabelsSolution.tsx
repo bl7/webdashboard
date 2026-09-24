@@ -19,11 +19,11 @@ export const DissolvableKitchenLabelsSolution = () => (
           InstaLabel Solution
         </div>
         <h2 className="text-3xl font-black leading-tight tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
-          AI-Powered Dissolvable Label Generation That Works with USB & Bluetooth Printers
+          Dissolvable Label Generation That Works with USB & Bluetooth Printers
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
           InstaLabel's intelligent software automatically generates compliant dissolvable labels, 
-          calculates expiry dates, and ensures Natasha's Law compliance - reducing labeling time by 95%.
+          calculates expiry dates, and ensures Natasha's Law compliance - so you spend less time writing labels.
         </p>
       </motion.div>
 
@@ -40,10 +40,10 @@ export const DissolvableKitchenLabelsSolution = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Target className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered Dissolvable Label Generation</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Dissolvable Label Generation</h3>
           <p className="text-gray-600">
-            InstaLabel's AI automatically analyzes menu descriptions to identify ingredients, 
-            allergens, and create perfect dissolvable labels. Generate compliant labels in seconds, not minutes.
+            Use the ingredients and allergens you have already saved. InstaLabel prints that
+            information. It does not detect allergens from a menu description.
           </p>
         </motion.div>
 
@@ -58,7 +58,7 @@ export const DissolvableKitchenLabelsSolution = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Shield className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">100% Natasha's Law Compliance</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">PPDS labelling support</h3>
           <p className="text-gray-600">
             Every dissolvable label automatically includes required allergen information, ingredients, 
             and expiry dates. PPDS label formatting meets FSA requirements without manual work.
@@ -78,7 +78,7 @@ export const DissolvableKitchenLabelsSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">30-Second Label Generation</h3>
           <p className="text-gray-600">
-            Generate professional dissolvable labels in under 30 seconds. Clear, legible text 
+            Generate professional dissolvable labels from your saved information. Clear, legible text 
             that's perfectly formatted for water-soluble printing on any thermal printer.
           </p>
         </motion.div>
@@ -132,7 +132,7 @@ export const DissolvableKitchenLabelsSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Compatibility</h3>
           <p className="text-gray-600">
-            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge 
+            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge 
             technology ensures seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

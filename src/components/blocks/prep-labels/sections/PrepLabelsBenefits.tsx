@@ -34,24 +34,24 @@ const benefits = [
 
 const stats = [
   {
-    number: "60%",
-    label: "Faster Prep",
-    description: "Automated labels speed up prep work",
+    number: "Prep",
+    label: "Ahead of service",
+    description: "Food prepared early gets a clear label",
   },
   {
-    number: "40%",
-    label: "Less Waste",
-    description: "Clear labels reduce food waste",
+    number: "Dates",
+    label: "Your rules",
+    description: "InstaLabel applies the dates you set",
   },
   {
-    number: "100%",
-    label: "Traceability",
-    description: "Complete batch tracking",
+    number: "Named",
+    label: "On the container",
+    description: "Staff can see what the item is",
   },
   {
-    number: "24/7",
-    label: "Printing",
-    description: "Print labels anytime, anywhere",
+    number: "2 sizes",
+    label: "60 × 40 and 56 × 80",
+    description: "Both formats support prep labels",
   },
 ]
 
@@ -115,7 +115,7 @@ export const PrepLabelsBenefits = () => (
         <div className="mb-6 text-center">
           <h4 className="text-2xl font-bold">The Numbers Don't Lie</h4>
           <p className="text-white/80">
-            See why 500+ UK kitchens trust InstaLabel for prep organization
+            See how real kitchens use InstaLabel for prep organization
           </p>
         </div>
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">

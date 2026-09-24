@@ -27,7 +27,7 @@ export const AllergenComplianceSocialProof = () => {
 
   const stats = [
     { number: "1,200+", label: "Downloads", icon: Download },
-    { number: "500+", label: "Kitchens using daily", icon: Users },
+    { number: "Real", label: "Kitchens", icon: Users },
     { number: "Zero", label: "Compliance issues reported", icon: Shield },
   ]
 

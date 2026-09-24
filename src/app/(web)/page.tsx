@@ -5,11 +5,11 @@ import "./home-life.css"
 export const metadata: Metadata = {
   title: "Kitchen labelling software",
   description:
-    "Less writing. More cooking. Turn your saved ingredients, allergen information and date rules into clear, consistent labels for every stage of kitchen prep.",
+    "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
   openGraph: {
     title: "Kitchen labelling software | InstaLabel",
     description:
-      "Less writing. More cooking. Turn your saved ingredients, allergen information and date rules into clear, consistent labels for every stage of kitchen prep.",
+      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
     url: "https://www.instalabel.co",
     type: "website",
     images: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kitchen labelling software | InstaLabel",
     description:
-      "Less writing. More cooking. Turn your saved ingredients, allergen information and date rules into clear, consistent labels for every stage of kitchen prep.",
+      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -50,7 +50,7 @@ export default function Home() {
     "@type": "WebPage",
     name: "Kitchen labelling software | InstaLabel",
     description:
-      "Less writing. More cooking. Turn your saved ingredients, allergen information and date rules into clear, consistent labels for every stage of kitchen prep.",
+      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
     url: "https://www.instalabel.co",
   }
 

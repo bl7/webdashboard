@@ -88,11 +88,11 @@ export const TestedInKitchens = () => {
                 </div>
                 <div className="min-w-0 flex-1">
                   <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                    Compliant Out of the Box
+                    Built around kitchen labelling
                   </h3>
                   <p className="text-sm leading-relaxed text-gray-600">
-                    Labels meet Natasha's Law and EHO expectations — our testers even passed
-                    surprise inspections using InstaLabel.
+                    Designed to support consistent prep, cook, defrost and PPDS labelling. Your
+                    team still checks recipes, supplier information and finished labels.
                   </p>
                 </div>
               </div>
@@ -109,27 +109,27 @@ export const TestedInKitchens = () => {
           className="mx-auto grid max-w-4xl grid-cols-2 gap-8 text-center sm:grid-cols-4"
         >
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">500+</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">Real</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
-              UK Kitchens
+              Kitchens
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">10min</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">2</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
-              Setup Time
+              Label sizes
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">100%</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">PPDS</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
-              EHO Compliant
+              Label support
             </div>
           </div>
           <div className="space-y-2">
-            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">24/7</div>
+            <div className="text-3xl font-bold text-mkt-teal sm:text-4xl">14</div>
             <div className="text-sm font-medium uppercase tracking-wider text-gray-600">
-              Always Ready
+              Day trial
             </div>
           </div>
         </motion.div>

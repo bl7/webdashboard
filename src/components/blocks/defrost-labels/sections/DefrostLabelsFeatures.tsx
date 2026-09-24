@@ -173,7 +173,7 @@ export const DefrostLabelsFeatures = () => {
               <h4 className="text-lg font-bold text-gray-900">Expiry Date Auto-Calculated</h4>
             </div>
             <p className="mb-4 text-sm leading-relaxed text-gray-600">
-              Every defrost label automatically calculates the correct expiry date based on defrost
+              Defrost labels use the date rules your business sets. They do not decide the correct expiry from the defrost
               time and food safety rules.
             </p>
             <ul className="space-y-2">

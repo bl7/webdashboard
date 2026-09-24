@@ -57,15 +57,21 @@ function menuItem(
   }
 }
 
-export function HomeSpecimen({ kind }: { kind: HomeLabelKind }) {
+export function HomeSpecimen({
+  kind,
+  labelHeight = "40mm",
+}: {
+  kind: HomeLabelKind
+  labelHeight?: "40mm" | "80mm"
+}) {
   return (
     <div className="home-specimen" style={{ color: "#000" }}>
-      {renderSpecimen(kind)}
+      {renderSpecimen(kind, labelHeight)}
     </div>
   )
 }
 
-function renderSpecimen(kind: HomeLabelKind) {
+function renderSpecimen(kind: HomeLabelKind, labelHeight: "40mm" | "80mm") {
   if (kind === "ppds") {
     return (
       <PPDSLabelRenderer
@@ -93,7 +99,7 @@ function renderSpecimen(kind: HomeLabelKind) {
         useInitials={false}
         selectedInitial=""
         allergens={[]}
-        labelHeight="40mm"
+        labelHeight={labelHeight}
         allIngredients={[]}
       />
     )
@@ -109,7 +115,7 @@ function renderSpecimen(kind: HomeLabelKind) {
         useInitials={true}
         selectedInitial="BL"
         allergens={["Celery"]}
-        labelHeight="40mm"
+        labelHeight={labelHeight}
         allIngredients={vegIngredients}
       />
     )
@@ -126,7 +132,7 @@ function renderSpecimen(kind: HomeLabelKind) {
         useInitials={true}
         selectedInitial="BL"
         allergens={["Milk", "Mustard"]}
-        labelHeight="40mm"
+        labelHeight={labelHeight}
         allIngredients={curryIngredients}
       />
     )
@@ -140,7 +146,7 @@ function renderSpecimen(kind: HomeLabelKind) {
         useInitials={true}
         selectedInitial="BL"
         allergens={["Fish"]}
-        labelHeight="40mm"
+        labelHeight={labelHeight}
         allIngredients={[
           { uuid: "d1", ingredientName: "Cod fillets", allergens: [{ allergenName: "Fish" }] },
         ]}
@@ -155,7 +161,7 @@ function renderSpecimen(kind: HomeLabelKind) {
       useInitials={true}
       selectedInitial="BL"
       allergens={["Milk"]}
-      labelHeight="40mm"
+      labelHeight={labelHeight}
       allIngredients={[
         { uuid: "y1", ingredientName: "Greek yoghurt", allergens: [{ allergenName: "Milk" }] },
       ]}

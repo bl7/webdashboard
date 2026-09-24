@@ -10,7 +10,7 @@ export const PrintingSetup = () => {
       subtitle: "For kitchens with existing thermal printers",
       icon: <Monitor className="h-8 w-8 text-blue-600" />,
       features: [
-        "Works with any USB thermal printer (Epson TM series, Brother QL series, etc.)",
+        "On a computer, use PrintBridge with a label printer installed on Windows or macOS",
         "PrintBridge software creates direct connection from browser to printer",
         "Print from Windows or Mac computers",
         "No special drivers or complicated setup required",
@@ -25,7 +25,7 @@ export const PrintingSetup = () => {
       icon: <Smartphone className="h-8 w-8 text-green-600" />,
       features: [
         "Download InstaLabel app from Google Play Store",
-        "Munbyn RW114B recommended for best results; connect via Bluetooth to your Android tablet",
+        "MUNBYN RW411B or Born4Ship DB403 for best results; connect via Bluetooth to your Android tablet",
         "Print directly from the app without additional software",
         "Perfect for food trucks, catering, or space-limited kitchens",
         "Works offline once labels are created",
@@ -52,7 +52,7 @@ export const PrintingSetup = () => {
         "USB thermal printers for desktop/laptop use",
         "Bluetooth thermal printers for Android devices",
         "No network or WiFi printing required",
-        "PC: any USB thermal printer. Mobile: Munbyn RW114B recommended (TSPL compliant)",
+        "Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403 (TSPL compliant)",
         "Automatic printer detection and configuration",
       ],
     },

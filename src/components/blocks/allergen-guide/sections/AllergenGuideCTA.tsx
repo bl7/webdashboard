@@ -89,8 +89,8 @@ export const AllergenGuideCTA = () => {
             viewport={{ once: true }}
             className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-600"
           >
-            <span>✓ Used by 500+ UK kitchens</span>
-            <span>✓ EHO approved information</span>
+            <span>✓ Used in real kitchens</span>
+            <span>✓ Check recipes and supplier information</span>
             <span>✓ 100% free download</span>
           </motion.div>
         </div>

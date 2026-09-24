@@ -87,7 +87,7 @@ const knowledgeBase = [
   {
     keywords: ["what is instalabel", "what does instalabel do", "how does instalabel work"],
     answer:
-      "InstaLabel is a professional kitchen labeling system designed for restaurants, cafés, food trucks, and catering businesses. It lets you print food safety labels—prep, cook, use‑first, PPDS—instantly from any device without handwriting, fully compliant with regulations like Natasha's Law. Our system includes a web-based dashboard for managing ingredients, menu items, and labels, with built-in expiry date logic and allergen tracking.",
+      "InstaLabel is a kitchen labelling system for restaurants, cafés, takeaways, catering and other food businesses. It turns the ingredient, allergen and date information you save into clear labels for prep, opened products, cooked food, defrost, use-first and PPDS. Your business remains responsible for checking that information and the finished labels.",
   },
   {
     keywords: [
@@ -103,7 +103,7 @@ const knowledgeBase = [
       "labels",
     ],
     answer:
-      "InstaLabel supports 5 main label types with specific sizes: **Prep Labels** (60mm x 40mm for ingredients, allergens, prep times, expiry dates), **Cook Labels** (60mm x 40mm for cook times, temperatures, allergen info for service), **Defrost Labels** (60mm x 40mm for defrost dates and instructions), **PPDS Labels** (56mm x 80mm for full ingredient lists with allergen warnings for pre-packaged food), and **Use-First Labels** (60mm x 40mm for priority consumption order). Each label automatically includes allergen alerts, expiry dates, and storage instructions. You can order labels directly from the dashboard and we'll ship them to you!",
+      "InstaLabel supports prep, opened-product, cooked, defrost, use-first and PPDS labels. There are two physical formats, 60 × 40 mm and 56 × 80 mm. Both formats support those workflows. InstaLabel changes the layout to fit the size. Dates follow the rules your business sets. Your team still checks the finished label.",
   },
   {
     keywords: [
@@ -113,7 +113,7 @@ const knowledgeBase = [
       "allergen tracking",
     ],
     answer:
-      "InstaLabel has comprehensive allergen management at the ingredient level. All labels automatically highlight allergens with clear warnings, use FDA/EHO-approved templates, and include allergen icons and color coding. The system tracks allergens per ingredient and automatically shows them on relevant labels. For PPDS labels, allergens are prominently displayed with asterisks (*) next to ingredients containing them, ensuring full Natasha's Law compliance.",
+      "InstaLabel has comprehensive allergen management at the ingredient level. All labels automatically highlight allergens with clear warnings, use consistent label layouts, and include allergen icons and color coding. The system tracks allergens per ingredient and automatically shows them on relevant labels. For PPDS labels, allergens are prominently displayed with asterisks (*) next to ingredients containing them, for PPDS labelling workflows. Your team still checks the finished label.",
   },
   {
     keywords: [
@@ -175,7 +175,7 @@ const knowledgeBase = [
   {
     keywords: ["customizable", "templates", "branding", "business name", "label customization"],
     answer:
-      "Yes, InstaLabel labels are highly customizable! You can set your business name, customize storage information, and adjust label heights (40mm or 80mm). The system supports different font sizes and layouts for different label types. While the core templates are FDA/EHO-approved for compliance, you can personalize business information, storage instructions, and other details. The system also supports custom initials for staff identification and flexible expiry date configurations.",
+      "Yes, InstaLabel labels are highly customizable! You can set your business name, customize storage information, and adjust label heights (40mm or 80mm). The system supports different font sizes and layouts for different label types. While the core templates are consistent for compliance, you can personalize business information, storage instructions, and other details. The system also supports custom initials for staff identification and flexible expiry date configurations.",
   },
 
   // 2. Printers & Hardware
@@ -189,17 +189,17 @@ const knowledgeBase = [
       "hardware compatibility",
     ],
     answer:
-      "InstaLabel supports **USB thermal printers** for desktop (any USB label printer) and **Bluetooth thermal printers** for mobile (Munbyn RW114B recommended for best results). We use PrintBridge technology for USB on Windows (.NET) and macOS (Node.js). No network printing.",
+      "On a computer, InstaLabel uses PrintBridge with a label printer installed on Windows or macOS. On Android, printing is limited to supported Bluetooth models: MUNBYN RW411B and Born4Ship DB403.",
   },
   {
     keywords: ["special hardware", "equipment needed", "what equipment", "hardware requirements"],
     answer:
-      "You don't need any special hardware! InstaLabel works with standard thermal label printers. For web printing, plug in any USB thermal printer. For mobile printing, use our Android app with Munbyn RW114B recommended for best results. Bluetooth (TSPL) also supported. The system automatically detects and connects to available printers. No expensive proprietary hardware required.",
+      "You do not need a proprietary InstaLabel printer. On a computer, use PrintBridge with a label printer already installed on Windows or macOS. On Android, use the InstaLabel app with a MUNBYN RW411B or Born4Ship DB403.",
   },
   {
     keywords: ["existing printer", "current printer", "use my printer", "printer compatibility"],
     answer:
-      "Yes, you can absolutely use your existing printer! InstaLabel works with USB and Bluetooth thermal printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended for best results. The system automatically detects USB and Bluetooth printers. If you're upgrading from handwritten labels or a basic labeling system, you can continue using your current printer while getting all the benefits of InstaLabel's smart labeling features.",
+      "On a computer, you can use a label printer that is already installed on Windows or macOS, through PrintBridge. Android printing works with the MUNBYN RW411B and Born4Ship DB403. Check the printer compatibility page before you buy equipment.",
   },
 
   {
@@ -231,7 +231,7 @@ const knowledgeBase = [
       "how does instalabel help with natasha's law",
     ],
     answer:
-      "InstaLabel is specifically designed for Natasha's Law compliance workflows. Our PPDS (Prepacked for Direct Sale) labels automatically include full ingredient lists with allergen warnings. Each ingredient is checked against your allergen database, and allergens are prominently highlighted with asterisks (*) and clear warnings. The system uses FDA/EHO-approved templates and generates complete print logs for easy audits. All labels include auto-calculated prep dates and expiry, supporting compliance with food safety regulations.",
+      "InstaLabel can print PPDS labels with the ingredient list and allergen emphasis from the records you save. Dates follow the rules your business sets. Print logs show what was printed. Your team still checks recipes, supplier information and the finished label. InstaLabel does not decide whether a label is legally compliant.",
   },
   {
     keywords: ["allergen accuracy", "how does it ensure allergen accuracy", "allergen compliance"],
@@ -276,7 +276,7 @@ const knowledgeBase = [
   {
     keywords: ["save time", "kitchen staff", "efficiency", "time savings", "workflow"],
     answer:
-      "InstaLabel significantly saves time for your kitchen staff! Restaurants typically save 15+ hours per week on labeling tasks. The system eliminates handwriting, automatically calculates expiry dates, and provides bulk printing capabilities. Staff can print multiple labels in seconds instead of manually writing each one. The intuitive interface reduces training time, and the automated allergen tracking prevents time-consuming errors. This efficiency improvement typically pays for itself within the first month of use.",
+      "InstaLabel significantly saves time for your kitchen staff! Staff can print from saved items instead of handwriting each label. Dates follow the rules your business sets. There is no published figure for hours saved.",
   },
 
   {

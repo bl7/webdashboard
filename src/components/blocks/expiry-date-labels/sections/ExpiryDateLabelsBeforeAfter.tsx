@@ -152,7 +152,7 @@ export const ExpiryDateLabelsBeforeAfter = () => (
                   <div className="text-green-600">Prepared: 15 Jan 2025</div>
                   <div className="text-green-600">Use By: 18 Jan 2025</div>
                   <div className="text-green-600">Allergens: None</div>
-                  <div className="text-green-600">Natasha's Law ✓</div>
+                  <div className="text-green-600">PPDS details</div>
                 </div>
               </div>
             </div>
@@ -161,7 +161,7 @@ export const ExpiryDateLabelsBeforeAfter = () => (
               <br />
               Complete expiry information
               <br />
-              100% food safety compliant
+              Your team still checks the date
             </div>
           </div>
 

@@ -352,7 +352,7 @@ Printer: Kitchen-01 | Label Type: Prep | Quantity: 5
 
 ### Emerging HACCP Technologies:
 
-1. **AI-Powered Risk Assessment**
+1. **Risk Assessment**
    - Automatic hazard identification
    - Predictive compliance monitoring
    - Intelligent alert systems

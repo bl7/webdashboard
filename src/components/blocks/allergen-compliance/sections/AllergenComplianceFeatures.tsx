@@ -28,7 +28,7 @@ export const AllergenComplianceFeatures = () => (
           Powerful Allergen Compliance Features
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-          InstaLabel combines AI intelligence, automatic compliance, and thermal printer support to
+          InstaLabel stores kitchen label information and prints it on a compatible thermal printer to
           make allergen labeling effortless with structured templates.
         </p>
       </motion.div>
@@ -47,7 +47,7 @@ export const AllergenComplianceFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">14 Allergens Auto-Detection</h3>
           <p className="text-gray-600">
-            AI automatically identifies all 14 UK required allergens from your menu descriptions. No
+            Record allergen information against your ingredients and menu items. No
             more manual checking or missing allergens.
           </p>
         </motion.div>
@@ -64,8 +64,8 @@ export const AllergenComplianceFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">30-Second Allergen Labels</h3>
           <p className="text-gray-600">
-            Generate fully compliant allergen labels in just a couple of clicks. From 2-3 minutes to
-            instant printing - that's significant time savings.
+            Print allergen information from the records you have saved. Your team still checks the
+            recipe and the finished label.
           </p>
         </motion.div>
 
@@ -79,10 +79,10 @@ export const AllergenComplianceFeatures = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <CheckCircle className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">100% Natasha's Law Compliance</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">PPDS labelling support</h3>
           <p className="text-gray-600">
             Every label automatically meets Natasha's Law requirements with full ingredient lists
-            and allergen declarations. Zero compliance errors.
+            and allergen declarations. Your team still checks the label.
           </p>
         </motion.div>
 

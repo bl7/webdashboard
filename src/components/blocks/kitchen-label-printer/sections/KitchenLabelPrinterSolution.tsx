@@ -22,8 +22,8 @@ export const KitchenLabelPrinterSolution = () => (
           Intelligent Software That Works with USB & Bluetooth Printers
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-          InstaLabel's AI-powered software automatically generates compliant labels, calculates
-          expiry dates, and ensures Natasha's Law compliance - regardless of your printer.
+          Print from a computer with PrintBridge, or from Android with a supported Bluetooth
+          printer. Dates follow the rules your business sets.
         </p>
       </motion.div>
 
@@ -40,9 +40,9 @@ export const KitchenLabelPrinterSolution = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Target className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered Label Generation</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Label Generation</h3>
           <p className="text-gray-600">
-            InstaLabel's AI automatically analyzes menu descriptions to identify ingredients and
+            Use the ingredients and allergens you have already saved. InstaLabel does not detect them from a menu description. It can
             allergens. Generate compliant labels in seconds, not minutes.
           </p>
         </motion.div>
@@ -78,7 +78,7 @@ export const KitchenLabelPrinterSolution = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
-            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge technology ensures
+            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge technology ensures
             seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

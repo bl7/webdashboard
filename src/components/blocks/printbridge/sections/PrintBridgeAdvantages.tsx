@@ -20,7 +20,7 @@ const advantages = [
       "Popups, confusion, wrong settings",
       "Users select the wrong printer",
       "Blocked by browser security",
-      "23% error rate, 6+ clicks",
+      "Handwritten details, several steps",
     ],
     outcome: "Frustration, wasted time, support tickets",
   },

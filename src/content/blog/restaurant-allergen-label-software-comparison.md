@@ -310,7 +310,7 @@ This comprehensive guide covers everything you need to know about restaurant all
 
 ### Emerging Technologies:
 
-1. **AI-Powered Allergen Detection**
+1. **Allergen Detection**
    - Automatic ingredient analysis
    - Hidden allergen identification
    - Cross-contamination prediction

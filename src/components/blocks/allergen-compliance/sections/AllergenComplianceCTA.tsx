@@ -192,7 +192,7 @@ export const AllergenComplianceCTA = () => {
               </Button>
               <div className="space-y-1 text-center text-xs text-gray-500">
                 <p>No spam, unsubscribe anytime</p>
-                <p>We respect your privacy - GDPR compliant</p>
+                <p>We use this address only to reply about the toolkit.</p>
                 <p>Instant download + bonus email tips</p>
               </div>
             </form>

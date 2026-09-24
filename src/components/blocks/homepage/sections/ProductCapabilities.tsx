@@ -7,24 +7,35 @@ import { HomeSpecimen } from "../home-labels"
 export const ProductCapabilities = () => (
   <section id="features" className="home-section" style={{ scrollMarginTop: "7rem" }}>
     <div className="home-wrap">
-      <div className="home-eyebrow">Small labels. Big difference.</div>
-      <h2 className="home-h2 mt-4">
-        Less label admin.
-        <br />
-        More kitchen momentum.
-      </h2>
-      <p className="home-lead mt-4">
-        Keep the information behind your labels together, so every shift has a clearer starting
-        point.
+      <div className="home-eyebrow">Behind every label</div>
+      <h2 className="home-h2 mt-4">The label is only the final step.</h2>
+      <p className="home-lead mt-4 max-w-2xl">
+        InstaLabel stores the information your kitchen already works from, then uses it to generate
+        the finished label.
+      </p>
+
+      <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {["Ingredients", "Menu item", "Allergen information", "Date rules", "Finished label"].map(
+          (step, index) => (
+            <li key={step} className="home-card px-4 py-3 text-sm font-semibold">
+              <span className="mr-2 text-[var(--home-forest)]">{index + 1}</span>
+              {step}
+            </li>
+          )
+        )}
+      </ol>
+      <p className="mt-4 max-w-2xl text-sm leading-relaxed text-[var(--home-muted)]">
+        Your business sets the ingredients, allergens and date rules. InstaLabel applies those
+        settings when it prints. It does not decide whether a label is legally compliant.
       </p>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         <article className="home-card p-6 shadow-sm lg:col-span-2 lg:grid lg:grid-cols-2 lg:items-center lg:gap-8">
           <div>
-            <h3 className="text-2xl font-extrabold">Your menu. Ready to label.</h3>
+            <h3 className="text-2xl font-extrabold">Choose the item. Check the details.</h3>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
-              Keep your products and ingredients in one place. Choose an item, review its details
-              and prepare the right label for the job.
+              Menu items and ingredients stay in one place. Staff pick the job, review what is
+              already saved, and print.
             </p>
             <Link href="/features" className="home-link mt-4 inline-flex items-center gap-2">
               Explore the software
@@ -41,9 +52,10 @@ export const ProductCapabilities = () => (
         </article>
 
         <article className="home-card p-6">
-          <h3 className="text-2xl font-extrabold">Make the important details stand out.</h3>
+          <h3 className="text-2xl font-extrabold">Allergens travel with the item.</h3>
           <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
-            Carry checked ingredient information into your labels, with clear allergen emphasis.
+            Saved allergen information can be carried onto the label, with the ingredients that
+            contain them emphasised.
           </p>
           <p className="mt-3 text-sm font-semibold">
             Always check the current recipe and supplier information.
@@ -66,24 +78,10 @@ export const ProductCapabilities = () => (
 
         <div className="grid gap-6">
           <article className="home-card p-6">
-            <h3 className="text-xl font-extrabold">Your items deserve a head start.</h3>
+            <h3 className="text-xl font-extrabold">Your kitchen’s date rules.</h3>
             <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
-              Bring existing item information in with CSV import. Review the ingredients, allergens
-              and settings, then put those details to work.
-            </p>
-            <Link
-              href="/features#csv-import"
-              className="home-link mt-4 inline-flex items-center gap-2"
-            >
-              See how importing works
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </article>
-          <article className="home-card p-6">
-            <h3 className="text-xl font-extrabold">Your kitchen’s rules. Clearly on the label.</h3>
-            <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
-              Apply the date settings your business has chosen. Give the team a consistent format to
-              check before each label is printed.
+              Your business sets the date rules. InstaLabel applies those settings when generating
+              labels, so the team sees a consistent format to check before printing.
             </p>
             <Link
               href="/expiry-date-labels"

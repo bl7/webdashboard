@@ -55,6 +55,24 @@ const faqs = [
     ),
   },
   {
+    q: "Which label sizes does InstaLabel print?",
+    a: (
+      <>
+        Two formats: 60 × 40 mm and 56 × 80 mm. Both support prep, opened, cooked, defrost,
+        use-first and PPDS labels. InstaLabel changes the layout to fit the size you select.
+      </>
+    ),
+  },
+  {
+    q: "Does InstaLabel make my kitchen legally compliant?",
+    a: (
+      <>
+        No. InstaLabel is a labelling system. Your business configures ingredients, allergens and
+        date rules, and your team checks recipes, supplier information and the finished labels.
+      </>
+    ),
+  },
+  {
     q: "Can I see it working before I decide?",
     a: (
       <>

@@ -50,7 +50,7 @@ export const GalleryFeature = () => {
               </h3>
             </div>
             <p className="text-center text-lg leading-relaxed text-gray-600 lg:text-left">
-              Our intelligent system automatically detects and highlights all 14 required allergens,
+              Our intelligent system can show the allergen information you have recorded,
               while allowing complete customization for your unique menu items and dietary
               requirements.
             </p>
@@ -59,7 +59,7 @@ export const GalleryFeature = () => {
               <div className="flex items-center gap-3">
                 <div className="h-2 w-2 flex-shrink-0 rounded-full bg-mkt-canvas0" />
                 <span className="text-gray-700">
-                  AI-powered ingredient analysis and allergen detection
+                  saved ingredient and allergen information
                 </span>
               </div>
               <div className="flex items-center gap-3">

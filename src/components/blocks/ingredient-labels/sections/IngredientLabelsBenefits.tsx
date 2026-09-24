@@ -38,24 +38,24 @@ const benefits = [
 
 const stats = [
   {
-    number: "50%",
-    label: "Less Food Waste",
-    description: "Clear expiry dates reduce waste",
+    number: "Opened",
+    label: "Products",
+    description: "Show when an opened product should be used",
   },
   {
-    number: "100%",
-    label: "Traceability",
-    description: "Staff initials and printed dates",
+    number: "Dates",
+    label: "Your rules",
+    description: "Printed from the settings you choose",
   },
   {
-    number: "40mm",
-    label: "Small Containers",
-    description: "Perfect for spice jars and small containers",
+    number: "60 × 40",
+    label: "Compact format",
+    description: "Useful where a smaller label fits the container",
   },
   {
-    number: "24/7",
-    label: "Printing",
-    description: "Print labels anytime, anywhere",
+    number: "56 × 80",
+    label: "Extended format",
+    description: "More room when the label needs extra detail",
   },
 ]
 
@@ -129,7 +129,7 @@ export const IngredientLabelsBenefits = () => (
         <div className="mb-6 text-center">
           <h4 className="text-2xl font-bold">The Numbers Don't Lie</h4>
           <p className="text-white/80">
-            See why 500+ UK kitchens trust InstaLabel for ingredient organization
+            See how real kitchens use InstaLabel for ingredient organization
           </p>
         </div>
 

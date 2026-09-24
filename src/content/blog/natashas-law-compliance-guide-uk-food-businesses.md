@@ -86,18 +86,18 @@ PPDS foods are items that:
 
 ## How InstaLabel Software Solves Compliance
 
-InstaLabel's AI-powered software transforms Natasha's Law compliance from a time-consuming chore into an automated process with structured templates.
+InstaLabel's labelling software transforms Natasha's Law compliance from a time-consuming chore into an automated process with structured templates.
 
-### AI-Powered Allergen Detection
+### Allergen Detection
 
 - **Automatic Analysis**: Scans menu descriptions for allergens
-- **Comprehensive Detection**: Identifies all 14 major allergens
+- **Comprehensive Detection**: Carries the allergen information you have recorded
 - **Real-Time Updates**: Adapts to new ingredients
 - **Comprehensive Coverage**: No allergens missed
 
 ### PPDS Formatting Automation
 
-- **FSA Compliant**: Meets all regulatory requirements
+- **Your records**: Ingredient and allergen information comes from what you save
 - **Consistent Layout**: Professional appearance every time
 - **Clear Readability**: Optimized for customer understanding
 - **Professional Standards**: Restaurant-quality labeling
@@ -113,8 +113,8 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ### Time Savings
 
-- **From 20-30 minutes to 30 seconds** per label
-- **95% reduction** in labeling time
+- Less time writing each label by hand
+- Less time writing labels by hand
 - **Staff efficiency** dramatically improved
 - **Kitchen productivity** increased
 
@@ -122,7 +122,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 - **Lower labor costs** through automation
 - **Reduced training expenses** with simple interface
-- **Fewer compliance errors** eliminating fines
+- Your team still checks recipes, supplier information and finished labels
 - **Improved customer satisfaction** through clear labeling
 
 ### Risk Mitigation
@@ -136,7 +136,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ### Printer Compatibility
 
-- **Thermal Printers**: Works with USB and Bluetooth thermal label printers (PC: any USB; mobile: Munbyn RW114B recommended)
+- **Thermal Printers**: Works with USB and Bluetooth thermal label printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403)
 - **Connectivity**: USB and Bluetooth support
 - **No Special Drivers**: Plug-and-play operation
 - **PrintBridge Technology**: Seamless integration
@@ -191,7 +191,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ### Q: Does InstaLabel work with my existing printer?
 
-**A**: Yes! InstaLabel works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. No special drivers or hardware required.
+**A**: Yes! InstaLabel works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. No special drivers or hardware required.
 
 ### Q: How long does staff training take?
 
@@ -210,7 +210,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 ### Restaurant Chain Implementation
 
 - **50+ locations** across the UK
-- **95% time savings** in labeling
+- **less time writing labels** in labeling
 - **Consistent compliance workflows** maintained
 - **Staff satisfaction** significantly improved
 
@@ -223,7 +223,7 @@ InstaLabel's AI-powered software transforms Natasha's Law compliance from a time
 
 ## Conclusion
 
-Natasha's Law compliance doesn't have to be a burden. With InstaLabel's AI-powered software, UK food businesses can achieve:
+Natasha's Law compliance doesn't have to be a burden. With InstaLabel's labelling software, UK food businesses can achieve:
 
 - **Compliance-focused workflows** for all PPDS requirements
 - **Massive time savings** through automation

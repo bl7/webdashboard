@@ -9,15 +9,11 @@ export const HomepageClosingCTA = () => (
   <section className="home-close home-section">
     <div className="home-wrap text-center">
       <div className="home-eyebrow" style={{ background: "#fff", color: "var(--home-ink)" }}>
-        Less label fuss. More good food.
+        The kitchen, labelled
       </div>
-      <h2 className="home-h2 mx-auto mt-4 max-w-3xl">
-        Bring a little order
-        <br />
-        to the beautiful chaos.
-      </h2>
+      <h2 className="home-h2 mx-auto mt-4 max-w-3xl">Less label fuss. More good food.</h2>
       <p className="mx-auto mt-4 max-w-xl text-[1.05rem] leading-relaxed">
-        Start with your own items, or let us walk you through your first label.
+        Let InstaLabel handle the labels while your team gets on with running the kitchen.
       </p>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Link

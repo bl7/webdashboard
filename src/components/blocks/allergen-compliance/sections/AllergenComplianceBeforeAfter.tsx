@@ -153,7 +153,7 @@ export const AllergenComplianceBeforeAfter = () => (
                   <div className="font-bold">Chicken Curry</div>
                   <div className="text-green-600">Ingredients: Chicken, Rice, Curry</div>
                   <div className="text-green-600">Allergens: None</div>
-                  <div className="text-green-600">Natasha's Law ✓</div>
+                  <div className="text-green-600">PPDS details</div>
                   <div className="text-green-600">Professional Print</div>
                 </div>
               </div>
@@ -163,7 +163,7 @@ export const AllergenComplianceBeforeAfter = () => (
               <br />
               Complete allergen information
               <br />
-              100% Natasha's Law compliant
+              Built for PPDS labelling workflows
             </div>
           </div>
 
@@ -205,19 +205,19 @@ export const AllergenComplianceBeforeAfter = () => (
         viewport={{ once: true }}
       >
         <div className="rounded-lg bg-red-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-red-600">15-20 min</div>
-          <div className="text-sm font-medium text-red-800">Before: Manual Creation</div>
-          <div className="mt-1 text-xs text-red-600">Staff checking allergens manually</div>
+          <div className="mb-2 text-3xl font-bold text-red-600">Handwritten</div>
+          <div className="text-sm font-medium text-red-800">Before</div>
+          <div className="mt-1 text-xs text-red-600">Written out for each container</div>
         </div>
         <div className="rounded-lg bg-mkt-canvas p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-mkt-teal">30 sec</div>
-          <div className="text-sm font-medium text-mkt-ink">After: InstaLabel</div>
-          <div className="mt-1 text-xs text-mkt-teal">AI-powered automation</div>
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">Printed</div>
+          <div className="text-sm font-medium text-mkt-ink">With InstaLabel</div>
+          <div className="mt-1 text-xs text-mkt-teal">From the information you have saved</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-green-600">95%</div>
-          <div className="text-sm font-medium text-green-800">Time Saved</div>
-          <div className="mt-1 text-xs text-green-600">Massive efficiency improvement</div>
+          <div className="mb-2 text-3xl font-bold text-green-600">Your check</div>
+          <div className="text-sm font-medium text-green-800">Still required</div>
+          <div className="mt-1 text-xs text-green-600">Recipes and supplier information</div>
         </div>
       </motion.div>
     </div>

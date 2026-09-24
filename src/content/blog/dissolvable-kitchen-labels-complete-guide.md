@@ -42,18 +42,18 @@ Since October 2021, all UK food businesses must comply with Natasha's Law (PPDS 
 
 ## How InstaLabel Software Transforms Dissolvable Label Printing
 
-InstaLabel's AI-powered software makes dissolvable label printing effortless and compliant:
+InstaLabel's labelling software makes dissolvable label printing effortless and compliant:
 
-### AI-Powered Label Generation
+### Label Generation
 
 - Automatically analyzes menu descriptions
-- Identifies all 14 UK required allergens
-- Generates compliant labels in under 30 seconds
+- Carries the allergen information you have recorded
+- Generates compliant labels from your saved information
 - Ensures perfect formatting every time
 
 ### Thermal Printer Compatibility
 
-- Works with USB and Bluetooth thermal label printers (PC: any USB; mobile: Munbyn RW114B recommended)
+- Works with USB and Bluetooth thermal label printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403)
 - USB and Bluetooth connectivity
 - No special drivers or setup required
 - PrintBridge technology ensures seamless operation
@@ -121,7 +121,7 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 ### InstaLabel Software Benefits
 
-- **Automated Creation**: 30 seconds per label (95% time savings)
+- **Printed from saved items**: less time writing labels by hand
 - **Minimal Training**: 5-minute staff onboarding
 - **Compliance-Focused**: Structured templates reduce compliance errors
 - **No Cleanup**: Automatic dissolution
@@ -153,14 +153,14 @@ InstaLabel's AI-powered software makes dissolvable label printing effortless and
 
 ### Proven Results
 
-- **500+ UK restaurants** trust InstaLabel
-- **95% reduction** in labeling time
+- **Used in real kitchens**
+- Less time writing labels by hand
 - **Consistent compliance workflows** maintained
 - **14-day free trial** available
 
 ### Technical Excellence
 
-- **AI-powered** allergen detection
+- Allergen information saved against ingredients
 - **Cloud-based** architecture
 - **Mobile-first** design
 - **Real-time** analytics
@@ -183,7 +183,7 @@ Ready to transform your dissolvable label printing? InstaLabel makes it simple:
 
 ## Conclusion
 
-Dissolvable kitchen labels represent the future of food safety and compliance. With InstaLabel's AI-powered software, UK food businesses can achieve:
+Dissolvable kitchen labels represent the future of food safety and compliance. With InstaLabel's labelling software, UK food businesses can achieve:
 
 - **Compliance-focused workflows** for Natasha's Law
 - **Massive time savings** in label creation

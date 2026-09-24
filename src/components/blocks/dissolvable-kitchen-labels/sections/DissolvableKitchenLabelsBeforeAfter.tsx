@@ -157,7 +157,7 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
                   <div className="text-green-600">Professional Print</div>
                   <div className="text-green-600">Allergens: Eggs, Mustard</div>
                   <div className="text-green-600">Expiry: 18 Jan 2025</div>
-                  <div className="text-green-600">Natasha's Law ✓</div>
+                  <div className="text-green-600">PPDS details</div>
                 </div>
               </div>
             </div>
@@ -166,7 +166,7 @@ export const DissolvableKitchenLabelsBeforeAfter = () => (
               <br />
               Complete compliance information
               <br />
-              100% Natasha's Law compliant
+              Built for PPDS labelling workflows
             </div>
           </div>
 

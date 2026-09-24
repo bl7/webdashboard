@@ -37,7 +37,7 @@ export const SquareIntegration = () => {
           </h3>
           <p className="mx-auto max-w-3xl text-xl text-gray-600">
             The only food labeling solution with <strong>native Square POS integration</strong>.
-            Smart bidirectional sync with AI-powered allergen detection, safe create-only mode, and
+            Smart bidirectional sync with saved allergen information, safe create-only mode, and
             real-time menu updates — all automatically.
           </p>
         </motion.div>
@@ -192,7 +192,7 @@ export const SquareIntegration = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2 text-green-500">✓</span>
-                  <strong>AI-powered ingredient extraction</strong> from modifiers
+                  <strong>recorded ingredient details</strong> from modifiers
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2 text-green-500">✓</span>

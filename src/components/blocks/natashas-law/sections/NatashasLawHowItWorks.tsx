@@ -8,12 +8,12 @@ const solutions = [
     icon: <Search className="h-7 w-7 text-mkt-teal" />,
     title: "Automatic Allergen Detection & Highlighting",
     description:
-      "InstaLabel automatically identifies allergens in your ingredients and highlights them in red for maximum visibility and compliance.",
+      "Allergen emphasis uses the allergens you have saved against each ingredient. Your team still checks the recipe.",
     features: [
-      "Smart ingredient analysis",
-      "Red highlighting for allergens",
-      "FSA-compliant formatting",
-      "No manual allergen checking needed",
+      "Saved ingredient records",
+      "Allergen emphasis on the label",
+      "Layout for the size you select",
+      "A check before the label is used",
     ],
   },
   {

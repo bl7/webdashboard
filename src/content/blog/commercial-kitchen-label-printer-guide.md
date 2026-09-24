@@ -412,7 +412,7 @@ Commercial kitchen label printers are specifically designed to handle the unique
    - Predictive maintenance
    - Automated consumables ordering
 
-2. **AI-Powered Labeling**
+2. **Labeling**
    - Automatic content generation
    - Smart template selection
    - Predictive printing schedules

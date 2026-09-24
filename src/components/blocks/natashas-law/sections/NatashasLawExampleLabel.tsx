@@ -51,7 +51,7 @@ export const NatashasLawExampleLabel = () => (
           See InstaLabel PPDS Labels in Action
         </h3>
         <p className="mx-auto mt-2 max-w-2xl text-lg text-gray-600">
-          Here's a real example of a fully compliant PPDS label created with InstaLabel. Notice how
+          Here is an illustrative PPDS layout from the InstaLabel renderer. Notice how
           allergens are automatically highlighted and all required information is included.
         </p>
       </motion.div>

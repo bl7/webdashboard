@@ -50,10 +50,8 @@ export const PPDSLabelShowcaseSection = () => (
           Full-Compliance Food Labels, Instantly
         </h3>
         <p className="text-center text-lg leading-relaxed text-gray-700 lg:text-left">
-          InstaLabel makes it effortless to print fully compliant PPDS (Prepacked for Direct Sale)
-          labels. Our system automatically pulls ingredients and allergens, formats them to FSA
-          standards, and lets you add storage instructions and business info. No more manual editing
-          or compliance worries—just tap, print, and go.
+          Print PPDS labels from the ingredient and allergen information you have saved. Your team
+          still checks the recipe, supplier information and the finished label.
         </p>
         <ul className="mx-auto list-disc space-y-2 text-center text-base text-gray-700 lg:mx-0 lg:text-left">
           <li>Allergen summary and inline highlighting</li>

@@ -6,12 +6,12 @@ const softwareFeatures = [
   {
     icon: <CheckCircle className="h-7 w-7 text-green-600" />,
     title: "Label Printing Made Easy",
-    description: "Print EHO and Natasha’s Law compliant labels in seconds—no handwriting needed.",
+    description: "Print prep, cook, defrost and PPDS labels from the information you have saved.",
   },
   {
     icon: <ShieldCheck className="h-7 w-7 text-mkt-teal" />,
     title: "Compliance Built In",
-    description: "Stay inspection-ready with built-in compliance for food safety laws.",
+    description: "Keep ingredient, allergen and date information with the item. Your team still checks the label.",
   },
   {
     icon: <Zap className="h-7 w-7 text-yellow-500" />,
@@ -27,7 +27,7 @@ const softwareFeatures = [
   {
     icon: <Repeat className="h-7 w-7 text-mkt-teal" />,
     title: "Easy Label Re-Order",
-    description: "Re-order labels in-app with one click—free shipping, always.",
+    description: "Reorder label stock from the dashboard. The price is shown at checkout.",
   },
   {
     icon: <Settings className="h-7 w-7 text-gray-600" />,

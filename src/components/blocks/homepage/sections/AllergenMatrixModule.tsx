@@ -42,14 +42,14 @@ export const AllergenMatrixModule = () => (
     <div className="home-wrap min-w-0">
       <div className="home-eyebrow">Allergen matrix</div>
       <h2 className="home-h2 mt-4">
-        One menu. Fourteen allergens.
+        One set of ingredient information.
         <br />
-        One chart your team can actually use.
+        More than one use.
       </h2>
       <p className="home-lead mt-4">
-        Turn the allergen records already attached to your menu items into a clear, printable
-        matrix. Review what is included, export the PDF and keep the latest information ready for
-        your team.
+        The same saved ingredient and menu information can also produce an allergen matrix. Review
+        what is recorded, export the PDF and keep it with your team. Check it against current
+        recipes and supplier information.
       </p>
 
       <ul className="mt-8 grid gap-3 sm:grid-cols-3">

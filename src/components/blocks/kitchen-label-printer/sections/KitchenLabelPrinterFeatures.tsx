@@ -22,8 +22,8 @@ export const KitchenLabelPrinterFeatures = () => (
           Powerful Features That Transform Kitchen Labeling
         </h2>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-600">
-          InstaLabel combines AI intelligence, compliance automation, and universal printer support
-          to make kitchen labeling effortless with structured templates.
+          InstaLabel stores the information behind a kitchen label and prints it from a computer
+          with PrintBridge, or from the Android app with a supported Bluetooth printer.
         </p>
       </motion.div>
 
@@ -40,10 +40,10 @@ export const KitchenLabelPrinterFeatures = () => (
           <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-mkt-canvas">
             <Zap className="h-6 w-6 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">AI-Powered Ingredient Analysis</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Ingredient Analysis</h3>
           <p className="text-gray-600">
-            InstaLabel's AI automatically analyzes menu descriptions to identify ingredients and
-            detect all 14 UK required allergens. Generate compliant labels in seconds.
+            Use the ingredients and allergens you have already saved. InstaLabel can show that
+            information on the label. It does not detect allergens from a menu description.
           </p>
         </motion.div>
 
@@ -96,7 +96,7 @@ export const KitchenLabelPrinterFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
-            Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended.
+            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403.
             PrintBridge technology ensures seamless connectivity without special drivers.
           </p>
         </motion.div>
@@ -150,7 +150,7 @@ export const KitchenLabelPrinterFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Bulk Operations</h3>
           <p className="text-gray-600">
-            Process 100+ labels in under 30 seconds with batch operations. Excel/CSV import with
+            Print more than one label from a saved list. Excel/CSV import with
             duplicate detection and validation for high-volume kitchens.
           </p>
         </motion.div>
@@ -168,8 +168,7 @@ export const KitchenLabelPrinterFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Cloud-First Architecture</h3>
           <p className="text-gray-600">
-            Unlimited product storage with real-time sync across devices. AWS cloud infrastructure
-            provides automatic backups every 15 minutes with high availability.
+            Keep products in your InstaLabel account and print them from the dashboard or Android app.
           </p>
         </motion.div>
 
@@ -186,8 +185,8 @@ export const KitchenLabelPrinterFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Enterprise Security</h3>
           <p className="text-gray-600">
-            256-bit AES encryption for all data in transit and at rest. GDPR compliance with
-            automatic data retention policies and role-based access controls.
+            Access to the dashboard uses your account login. Ask us if you need specific security
+            documentation.
           </p>
         </motion.div>
       </div>
@@ -201,8 +200,8 @@ export const KitchenLabelPrinterFeatures = () => (
         viewport={{ once: true }}
       >
         <p className="text-lg font-semibold text-gray-700">
-          <span className="font-bold text-mkt-ink">Pro Tip:</span> InstaLabel's AI reduces
-          labeling time by 95% while supporting compliance workflows. Start your free trial today.
+          <span className="font-bold text-mkt-ink">Pro Tip:</span> Printing from saved items reduces
+          labelling without handwriting every label. Start your free trial today.
         </p>
       </motion.div>
     </div>

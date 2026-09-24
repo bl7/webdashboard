@@ -28,8 +28,8 @@ export const IntegrationEnhancement = () => {
               </div>
               <h4 className="mb-2 text-lg font-semibold text-gray-900">Enterprise Security</h4>
               <p className="text-sm text-gray-600">
-                End-to-end encryption, GDPR compliance, role-based access controls, and
-                comprehensive audit trails.
+                The dashboard uses your account login. Ask us if you need specific security
+                documentation.
               </p>
             </div>
           </div>

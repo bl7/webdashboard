@@ -25,11 +25,11 @@ const softwareFeatures = [
     icon: <CheckCircle className="h-7 w-7 text-green-600" />,
     title: "Smart Label Generation",
     description:
-      "AI-powered ingredient analysis, automatic allergen detection, and FDA/EHO compliant templates. Generate professional labels in seconds.",
+      "Manage ingredients and recorded allergens, then print a consistent label.",
     technicalDetails: [
-      "Text analysis processes menu descriptions to identify ingredients automatically",
-      "Pattern recognition scans for all 14 UK required allergens in ingredient lists",
-      "Pre-built templates ensure FSA compliance formatting",
+      "Ingredients come from the records you save or import",
+      "Allergen emphasis uses the allergens saved against each ingredient",
+      "Layouts follow the label type and size you select",
       "Label preview shows exact layout before printing",
       "Bulk label generation for multiple items simultaneously",
     ],
@@ -38,11 +38,11 @@ const softwareFeatures = [
     icon: <ShieldCheck className="h-7 w-7 text-mkt-teal" />,
     title: "Compliance & Safety",
     description:
-      "Built-in Natasha's Law compliance, automatic FSA updates, comprehensive audit trails, and food safety regulation adherence.",
+      "PPDS layouts, print records and the allergen information your business saves.",
     technicalDetails: [
-      "Templates automatically update when UK food safety regulations change",
+      "You update ingredient, allergen and date information when your recipes change",
       "Complete audit trail logs every label printed with timestamp and staff ID",
-      "PPDS label formatting meets FSA requirements without manual formatting",
+      "PPDS layouts include the ingredient list and allergen emphasis from your records",
       "Allergen highlighting uses color coding and bold text for visibility",
       "Inspection-ready reports export in PDF format for EHO visits",
     ],
@@ -54,7 +54,7 @@ const softwareFeatures = [
       "Get started in minutes with automatic printer detection and intuitive guided onboarding.",
     technicalDetails: [
       "PrintBridge software automatically detects USB thermal printers on Windows/Mac",
-      "Android app pairs with Bluetooth printers in under 30 seconds",
+      "The Android app pairs with a supported Bluetooth printer",
       "Menu import wizard guides you through ingredient and allergen mapping",
       "Test print feature verifies printer compatibility before going live",
     ],
@@ -63,13 +63,12 @@ const softwareFeatures = [
     icon: <Cloud className="h-7 w-7 text-blue-600" />,
     title: "Cloud-First Architecture",
     description:
-      "Unlimited product storage, real-time sync across devices, secure AWS backup with high availability, and instant access anywhere.",
+      "Products are stored in your InstaLabel account and can be printed from the dashboard or Android app.",
     technicalDetails: [
-      "Menu database stores unlimited items with ingredient and allergen information",
-      "Real-time synchronization across web dashboard and Android app",
-      "AWS cloud infrastructure provides automatic backups every 15 minutes",
-      "Access from multiple devices simultaneously without data conflicts",
-      "Offline mode allows label creation when internet is temporarily unavailable",
+      "Menu items and ingredients are stored with the allergen information you record",
+      "Use the web dashboard or the Android app",
+      "Items are stored in your InstaLabel account",
+      "Printing still depends on the computer or Android setup you are using",
     ],
   },
   {
@@ -78,7 +77,7 @@ const softwareFeatures = [
     description:
       "Mass label printing, batch ingredient updates, bulk allergen management, and automated workflow optimization for busy kitchens.",
     technicalDetails: [
-      "Process 100+ labels in under 30 seconds with batch operations",
+      "Print more than one label from a saved list",
       "Excel/CSV import with duplicate detection and validation",
       "Bulk allergen updates across multiple menu items simultaneously",
       "Automated workflow templates for common kitchen procedures",
@@ -92,7 +91,7 @@ const softwareFeatures = [
       "Responsive web app optimized for mobile devices, Android app for thermal printing, and seamless cross-device experience.",
     technicalDetails: [
       "Native Android app for mobile kitchen operations",
-      "Android app: Munbyn RW114B recommended; Bluetooth 4.0+ thermal printers supported",
+      "Android app: MUNBYN RW411B or Born4Ship DB403; Bluetooth 4.0+ thermal printers supported",
       "Touch-optimized interface for kitchen glove compatibility",
       "Offline printing queue stores up to 50 labels when disconnected",
       "Cross-device synchronization maintains consistent data across platforms",
@@ -116,13 +115,11 @@ const softwareFeatures = [
     icon: <Lock className="h-7 w-7 text-red-600" />,
     title: "Enterprise Security",
     description:
-      "End-to-end encryption, GDPR compliance, role-based access controls, and secure authentication for team management.",
+      "The dashboard is opened with your account login. Ask us if you need specific security documentation.",
     technicalDetails: [
-      "256-bit AES encryption for all data in transit and at rest",
-      "GDPR compliance with automatic data retention policies",
-      "Role-based access controls with granular permission management",
-      "Multi-factor authentication support for enhanced security",
-      "Regular security audits and penetration testing",
+      "Account access is required to open the dashboard",
+      "Staff can be given their own logins where your plan includes them",
+      "Ask us before relying on a specific encryption, backup or certification claim",
     ],
   },
 
@@ -130,11 +127,11 @@ const softwareFeatures = [
     icon: <Printer className="h-7 w-7 text-gray-600" />,
     title: "Universal Printer Support",
     description:
-      "Works with USB and Bluetooth thermal label printers. PC: any USB label printer. Mobile: Munbyn RW114B recommended. PrintBridge technology ensures seamless connectivity.",
+      "Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge technology ensures seamless connectivity.",
     technicalDetails: [
       "PrintBridge software creates direct connection from web browser to USB printers",
       "Supports ESC/POS thermal printer protocol (industry standard)",
-      "Android app: Munbyn RW114B recommended; Bluetooth 4.0+ thermal printers supported",
+      "Android app: MUNBYN RW411B or Born4Ship DB403; Bluetooth 4.0+ thermal printers supported",
       "No special drivers required - works with existing printer installations",
       "Print queue management handles multiple label requests efficiently",
     ],

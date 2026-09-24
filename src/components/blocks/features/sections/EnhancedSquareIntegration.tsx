@@ -69,10 +69,10 @@ export const EnhancedSquareIntegration = () => {
       icon: <Bluetooth className="h-6 w-6 text-green-600" />,
       requirement: "Android App",
       printers: [
-        "Munbyn RW114B recommended; Bluetooth 4.0+ thermal printers ✓",
+        "MUNBYN RW411B or Born4Ship DB403; Bluetooth 4.0+ thermal printers ✓",
         "Connection range: 10 meters typical",
         "Offline printing queue: Up to 50 labels",
-        "Pairing time: Under 30 seconds",
+        "Pair the supported Bluetooth printer in the Android app",
       ],
     },
   ]

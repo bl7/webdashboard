@@ -65,7 +65,7 @@ export const AllergenComplianceUrgency = () => {
             Get Your Free Allergen Compliance Toolkit
           </h3>
           <p className="mb-6 text-gray-600">
-            Join 500+ professional kitchens that are already compliant
+            Used in real kitchens. Your team still checks recipes and finished labels
           </p>
           <div className="flex items-center justify-center gap-4">
             <CheckCircle2 className="h-6 w-6 text-green-600" />

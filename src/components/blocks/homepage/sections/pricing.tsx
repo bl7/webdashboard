@@ -38,15 +38,14 @@ export const Pricing = () => {
 
           <h3 className="font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             <span className="text-mkt-ink">
-              Save £2,000+ Monthly
+              Plans for kitchen labelling
             </span>
             <br />
-            <span className="text-gray-900">On Kitchen Operations</span>
+            <span className="text-gray-900">Shown from the live billing source</span>
           </h3>
 
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-600 sm:text-2xl">
-            Most kitchens save 15+ hours weekly and reduce waste by 30%. Your InstaLabel investment
-            pays for itself in the first month.
+            See the current plans and trial terms. There is no published saving or waste figure.
           </p>
 
           {/* Value Proposition */}
@@ -60,22 +59,22 @@ export const Pricing = () => {
             <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
               <Clock className="h-8 w-8 text-mkt-teal" />
               <div className="text-left">
-                <div className="font-bold text-gray-900">15+ Hours Saved</div>
-                <div className="text-sm text-gray-600">Per week on labeling</div>
+                <div className="font-bold text-gray-900">Less writing</div>
+                <div className="text-sm text-gray-600">Than handwriting each label</div>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
               <Shield className="h-8 w-8 text-green-600" />
               <div className="text-left">
-                <div className="font-bold text-gray-900">Zero Fines</div>
-                <div className="text-sm text-gray-600">Built for compliance</div>
+                <div className="font-bold text-gray-900">Your check</div>
+                <div className="text-sm text-gray-600">Recipes and finished labels</div>
               </div>
             </div>
             <div className="flex items-center gap-3 rounded-xl border border-mkt-steel1 bg-white p-4 shadow-sm">
               <TrendingUp className="h-8 w-8 text-blue-600" />
               <div className="text-left">
-                <div className="font-bold text-gray-900">30% Less Waste</div>
-                <div className="text-sm text-gray-600">Better tracking</div>
+                <div className="font-bold text-gray-900">Two sizes</div>
+                <div className="text-sm text-gray-600">60 × 40 mm and 56 × 80 mm</div>
               </div>
             </div>
           </motion.div>

@@ -118,7 +118,7 @@ export const KitchenLabelPrinterBeforeAfter = () => (
                   <div className="text-green-600">Ingredients: Chicken, Rice, Curry</div>
                   <div className="text-green-600">Allergens: None</div>
                   <div className="text-green-600">Expiry: 18 Jan 2025</div>
-                  <div className="text-green-600">Natasha's Law ✓</div>
+                  <div className="text-green-600">PPDS details</div>
                 </div>
               </div>
             </div>
@@ -127,7 +127,7 @@ export const KitchenLabelPrinterBeforeAfter = () => (
               <br />
               Complete compliance information
               <br />
-              100% Natasha's Law compliant
+              Built for PPDS labelling workflows
             </div>
           </div>
 

@@ -61,9 +61,9 @@ export const KitchenLabelPrinterComparison = () => (
             <div className="p-4 text-center">
               <div className="flex items-center justify-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span className="font-medium">30 seconds</span>
+                <span className="font-medium">Saved item</span>
               </div>
-              <p className="mt-1 text-sm text-gray-600">AI-powered generation</p>
+              <p className="mt-1 text-sm text-gray-600">printed from saved items</p>
             </div>
             <div className="p-4 text-center">
               <div className="flex items-center justify-center gap-2">
@@ -80,9 +80,9 @@ export const KitchenLabelPrinterComparison = () => (
             <div className="p-4 text-center">
               <div className="flex items-center justify-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span className="font-medium">99.9%</span>
+                <span className="font-medium">Your records</span>
               </div>
-              <p className="mt-1 text-sm text-gray-600">Automatic compliance</p>
+              <p className="mt-1 text-sm text-gray-600">You check the finished label</p>
             </div>
             <div className="p-4 text-center">
               <div className="flex items-center justify-center gap-2">
@@ -99,7 +99,7 @@ export const KitchenLabelPrinterComparison = () => (
             <div className="p-4 text-center">
               <div className="flex items-center justify-center gap-2">
                 <Check className="h-5 w-5 text-green-500" />
-                <span className="font-medium">AI-Powered</span>
+                <span className="font-medium">Saved records</span>
               </div>
               <p className="mt-1 text-sm text-gray-600">Automatic identification</p>
             </div>
@@ -181,8 +181,8 @@ export const KitchenLabelPrinterComparison = () => (
       >
         <h3 className="mb-3 text-xl font-bold text-mkt-ink">Why Choose InstaLabel?</h3>
         <p className="text-mkt-ink">
-          <strong>InstaLabel saves 95% of labeling time</strong> while supporting compliance workflows. Our
-          AI-powered software works with USB and Bluetooth printers (PC: any USB; mobile: Munbyn RW114B recommended) and eliminates manual errors.
+          <strong>Spend less time writing labels</strong> while supporting compliance workflows. Our
+          labelling software works with USB and Bluetooth printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403) and eliminates manual errors.
           <strong>Start your free trial today and see the difference.</strong>
         </p>
       </motion.div>

@@ -42,11 +42,10 @@ export const DissolvableKitchenLabelsBenefits = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Massive Time Savings</h3>
           <p className="mb-4 text-gray-600">
-            Reduce dissolvable label creation time from 2-3 minutes to just a couple of clicks.
-            That's a 95% reduction in labeling time, allowing your kitchen staff to focus on food
-            preparation instead of manual labeling.
+            Spend less time writing labels by hand. Select a saved item and print, so the team can
+            get back to the food.
           </p>
-          <div className="text-sm font-semibold text-mkt-teal">✓ 95% faster label generation</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ less time writing labels</div>
         </motion.div>
 
         {/* Benefit 2 */}
@@ -62,11 +61,10 @@ export const DissolvableKitchenLabelsBenefits = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Built for Compliance</h3>
           <p className="mb-4 text-gray-600">
-            Every dissolvable label automatically meets Natasha's Law requirements. No more
-            compliance errors, food safety violations, or EHO inspection issues. InstaLabel ensures
-            perfect formatting every single time.
+            InstaLabel prints the information you have saved. It does not certify the label material
+            or decide whether the finished label meets the law. Your team still checks it.
           </p>
-          <div className="text-sm font-semibold text-mkt-teal">✓ Zero compliance errors</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ Your team still checks the label</div>
         </motion.div>
 
         {/* Benefit 3 */}
@@ -83,10 +81,10 @@ export const DissolvableKitchenLabelsBenefits = () => (
           <h3 className="mb-3 text-xl font-bold text-gray-900">Reduced Food Waste</h3>
           <p className="mb-4 text-gray-600">
             Accurate expiry dates and clear ingredient information reduce food waste caused by
-            incorrect labeling. InstaLabel's AI ensures every dissolvable label contains precise,
+            incorrect labeling. InstaLabel prints the information you have saved, so the label can stay
             legible information.
           </p>
-          <div className="text-sm font-semibold text-mkt-teal">✓ 20-30% less food waste</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ Clearer dates on the label</div>
         </motion.div>
 
         {/* Benefit 4 */}
@@ -106,7 +104,7 @@ export const DissolvableKitchenLabelsBenefits = () => (
             error prevention and guidance ensure consistent, high-quality dissolvable labels
             regardless of staff experience.
           </p>
-          <div className="text-sm font-semibold text-mkt-teal">✓ 5-minute staff training</div>
+          <div className="text-sm font-semibold text-mkt-teal">✓ Short to learn during a shift</div>
         </motion.div>
       </div>
 
@@ -119,19 +117,19 @@ export const DissolvableKitchenLabelsBenefits = () => (
         viewport={{ once: true }}
       >
         <div className="rounded-lg bg-mkt-canvas p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-mkt-teal">95%</div>
-          <div className="text-sm font-medium text-mkt-ink">Time Saved</div>
-          <div className="mt-1 text-xs text-mkt-teal">From 35 minutes to 30 seconds</div>
+          <div className="mb-2 text-3xl font-bold text-mkt-teal">Less writing</div>
+          <div className="text-sm font-medium text-mkt-ink">Than handwriting</div>
+          <div className="mt-1 text-xs text-mkt-teal">Select a saved item and print</div>
         </div>
         <div className="rounded-lg bg-green-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-green-600">100%</div>
-          <div className="text-sm font-medium text-green-800">Compliance Rate</div>
-          <div className="mt-1 text-xs text-green-600">Every label meets FSA standards</div>
+          <div className="mb-2 text-3xl font-bold text-green-600">Your check</div>
+          <div className="text-sm font-medium text-green-800">Still required</div>
+          <div className="mt-1 text-xs text-green-600">Your team checks the finished label</div>
         </div>
         <div className="rounded-lg bg-blue-50 p-6 text-center">
-          <div className="mb-2 text-3xl font-bold text-blue-600">500+</div>
-          <div className="text-sm font-medium text-blue-800">UK Restaurants</div>
-          <div className="mt-1 text-xs text-blue-600">Trust InstaLabel for dissolvable labels</div>
+          <div className="mb-2 text-3xl font-bold text-blue-600">Real</div>
+          <div className="text-sm font-medium text-blue-800">Kitchens</div>
+          <div className="mt-1 text-xs text-blue-600">Used for kitchen labelling</div>
         </div>
       </motion.div>
     </div>

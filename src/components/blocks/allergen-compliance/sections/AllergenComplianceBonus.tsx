@@ -13,7 +13,7 @@ export const AllergenComplianceBonus = () => {
     {
       icon: Users,
       title: "Industry insights",
-      description: "From 500+ professional kitchens",
+      description: "From kitchens using InstaLabel",
     },
     {
       icon: Clock,

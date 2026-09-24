@@ -34,7 +34,7 @@ const benefits = [
     description:
       "What used to take 10+ minutes per label now takes seconds. Focus on food preparation instead of label writing.",
     features: [
-      "10x faster than manual labels",
+      "Spend less time writing labels by hand",
       "Consistent formatting",
       "No handwriting errors",
       "More time for food prep",
@@ -44,24 +44,24 @@ const benefits = [
 
 const stats = [
   {
-    number: "10x",
-    label: "Faster than manual labels",
-    description: "Create compliant labels in seconds, not minutes",
+    number: "PPDS",
+    label: "Customer-facing labels",
+    description: "Ingredient list and allergen emphasis from your records",
   },
   {
-    number: "100%",
-    label: "FSA Compliant",
-    description: "Every label meets all legal requirements",
+    number: "Your check",
+    label: "Still required",
+    description: "Your team checks the recipe and the finished label",
   },
   {
-    number: "0",
-    label: "Training Required",
-    description: "Start printing compliant labels immediately",
+    number: "56 × 80",
+    label: "More room",
+    description: "Useful when a PPDS label needs a longer ingredient list",
   },
   {
-    number: "£0",
-    label: "Compliance Fines",
-    description: "Protect your business from costly violations",
+    number: "60 × 40",
+    label: "Also supported",
+    description: "PPDS is not limited to one label size",
   },
 ]
 
@@ -135,7 +135,7 @@ export const NatashasLawBenefits = () => (
         <div className="mb-6 text-center">
           <h4 className="text-2xl font-bold">The Numbers Don't Lie</h4>
           <p className="text-white/80">
-            See why 500+ UK kitchens trust InstaLabel for PPDS compliance
+            See how real kitchens use InstaLabel for PPDS compliance
           </p>
         </div>
 

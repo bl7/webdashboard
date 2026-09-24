@@ -150,7 +150,7 @@ The printer is only half the solution. UK restaurants need software that handles
 
 ### InstaLabel: Complete UK Kitchen Labeling Solution
 
-Our software works with USB and Bluetooth thermal label printers (PC: any USB; mobile: Munbyn RW114B recommended) and provides:
+Our software works with USB and Bluetooth thermal label printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403) and provides:
 
 **HACCP Compliance Features:**
 

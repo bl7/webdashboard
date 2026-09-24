@@ -110,7 +110,7 @@ export const CookedLabelsHero = () => {
             viewport={{ once: true }}
           >
             <div className="flex flex-wrap items-center justify-center gap-6 pt-4 text-xs text-gray-500 md:justify-start">
-              <span>✓ HACCP compliant</span>
+              <span>✓ Cooked food, named and dated</span>
               <span>✓ Temperature tracking</span>
               <span>✓ Allergen info</span>
             </div>

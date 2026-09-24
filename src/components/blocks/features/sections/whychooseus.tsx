@@ -16,7 +16,7 @@ const setupSupport = [
     icon: <Download className="h-5 w-5 text-green-600" />,
   },
   {
-    title: "15-minute staff training session",
+    title: "1Short to learn during a shift session",
     description: "Via video call",
     icon: <Zap className="h-5 w-5 text-mkt-teal" />,
   },

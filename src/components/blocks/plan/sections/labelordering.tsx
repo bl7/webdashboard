@@ -41,8 +41,8 @@ export const LabelOrdering = () => {
                       Bulk Ordering Savings
                     </h3>
                     <p className="text-sm leading-relaxed text-gray-600">
-                      Save up to 40% with bulk quantities. Order 500+ labels and get premium pricing
-                      with volume discounts.
+                      Order label stock from the dashboard. The price shown at checkout is the price you
+                      pay.
                     </p>
                   </div>
                 </div>
@@ -56,8 +56,7 @@ export const LabelOrdering = () => {
                   <div className="min-w-0 flex-1">
                     <h3 className="mb-1 text-lg font-semibold text-gray-900">Next-Day Delivery</h3>
                     <p className="text-sm leading-relaxed text-gray-600">
-                      Free next-day delivery to your kitchen. Track your order in real-time through
-                      your dashboard.
+                      Delivery depends on the order you place. Check the confirmation for timing.
                     </p>
                   </div>
                 </div>
@@ -128,7 +127,7 @@ export const LabelOrdering = () => {
                     3
                   </div>
                   <span className="text-gray-700">
-                    Confirm order - labels arrive next business day
+                    Confirm the order and check the confirmation for delivery timing
                   </span>
                 </div>
               </div>
@@ -140,32 +139,32 @@ export const LabelOrdering = () => {
                 <div className="mb-2 flex items-center justify-center">
                   <Zap className="h-6 w-6 text-mkt-teal" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900">24h</div>
-                <div className="text-sm text-gray-600">Delivery Time</div>
+                <div className="text-2xl font-bold text-gray-900">Stock</div>
+                <div className="text-sm text-gray-600">Order from the dashboard</div>
               </div>
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
                   <CheckCircle className="h-6 w-6 text-mkt-teal" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900">99.9%</div>
-                <div className="text-sm text-gray-600">On-Time Delivery</div>
+                <div className="text-2xl font-bold text-gray-900">Price</div>
+                <div className="text-sm text-gray-600">Shown at checkout</div>
               </div>
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
                   <Star className="h-6 w-6 text-mkt-teal" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900">4.9/5</div>
-                <div className="text-sm text-gray-600">Customer Rating</div>
+                <div className="text-2xl font-bold text-gray-900">60 × 40</div>
+                <div className="text-sm text-gray-600">Compact labels</div>
               </div>
 
               <div className="rounded-lg border border-gray-200 bg-white p-4 text-center">
                 <div className="mb-2 flex items-center justify-center">
                   <Clock className="h-6 w-6 text-mkt-teal" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900">2min</div>
-                <div className="text-sm text-gray-600">Order Time</div>
+                <div className="text-2xl font-bold text-gray-900">56 × 80</div>
+                <div className="text-sm text-gray-600">Extended labels</div>
               </div>
             </div>
 

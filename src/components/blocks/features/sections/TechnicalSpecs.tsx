@@ -10,12 +10,12 @@ export const TechnicalSpecs = () => (
         <div>
           <h3 className="mb-2 text-xl font-semibold text-gray-900">Software Specs</h3>
           <ul className="list-disc space-y-2 pl-5 text-gray-700">
-            <li>Cloud-based storage, unlimited products with AWS backup</li>
-            <li>Instant reprints from any device/location</li>
-            <li>Built-in compliance for Natasha's Law & EHO requirements</li>
-            <li>Easy label re-ordering in-app with free shipping</li>
-            <li>Secure end-to-end encryption and GDPR compliance</li>
-            <li>Simple, intuitive interface—no training needed</li>
+            <li>Products are stored in your InstaLabel account</li>
+            <li>Print again from the dashboard or Android app</li>
+            <li>PPDS layouts use the ingredient and allergen information you save</li>
+            <li>Label stock can be ordered from the dashboard. Check the price at checkout</li>
+            <li>Account login is required. Ask us for security documentation</li>
+            <li>Built for a kitchen shift, with a short setup</li>
           </ul>
         </div>
         <div>
@@ -25,7 +25,7 @@ export const TechnicalSpecs = () => (
             <li>203 DPI resolution for crisp, clear text and graphics</li>
             <li>Print speed up to 152mm per second</li>
             <li>Label width support: 60mm x 40mm (standard) and 56mm x 80mm (PPDS labels)</li>
-            <li>PC: any USB thermal printer. Mobile: Munbyn RW114B recommended</li>
+            <li>Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403</li>
             <li>
               PrintBridge technology for USB printing on Mac and Windows, Bluetooth for Android
               devices
