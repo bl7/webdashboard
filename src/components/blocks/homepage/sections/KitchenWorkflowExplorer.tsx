@@ -91,9 +91,9 @@ export const KitchenWorkflowExplorer = () => {
                 type="button"
                 className="home-chip"
                 style={{
-                  background: selected === item.key ? "var(--home-lime)" : "transparent",
-                  color: selected === item.key ? "var(--home-ink)" : "#fff",
-                  borderColor: selected === item.key ? "var(--home-lime)" : "rgba(255,255,255,0.25)",
+                  background: selected === item.key ? "var(--home-chip-on)" : "transparent",
+                  color: selected === item.key ? "var(--home-chip-on-text)" : "#fff",
+                  borderColor: selected === item.key ? "var(--home-chip-on-text)" : "rgba(255,255,255,0.25)",
                 }}
                 aria-pressed={selected === item.key}
                 onClick={() => {

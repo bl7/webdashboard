@@ -4,6 +4,8 @@
   --home-deep: #123c2f;
   --home-paper: #f7f8f2;
   --home-lime: #dfff83;
+  --home-chip-on: #dfff83;
+  --home-chip-on-text: #152a23;
   --home-sage: #e9eedd;
   --home-muted: #58655d;
   --home-border: #d8ded1;
@@ -307,14 +309,12 @@
   .marketing .home-life .home-card {
     background-color: #fff;
   }
-}
 
-.marketing .home-life .home-strip,
-.dark .marketing .home-life .home-strip,
-.marketing .home-life .home-close,
-.dark .marketing .home-life .home-close {
-  background-color: var(--home-lime);
-  color: var(--home-ink);
+  .marketing .home-life .home-strip,
+  .marketing .home-life .home-close {
+    background-color: var(--home-lime);
+    color: var(--home-ink);
+  }
 }
 
 .marketing .home-life .home-dark,
@@ -383,6 +383,27 @@
     background: #243832;
     color: #dfff83;
   }
+
+  .marketing .home-life {
+    --home-chip-on: #1a3d32;
+    --home-chip-on-text: #dfff83;
+  }
+
+  .marketing .home-life .home-strip,
+  .marketing .home-life .home-close {
+    background-color: #1c2c28 !important;
+    color: #f3f6f4 !important;
+  }
+
+  .marketing .home-life .home-close .home-eyebrow {
+    background: #dfff83;
+    color: #142124;
+  }
+
+  .marketing .home-life .home-close .home-btn-ghost {
+    color: #f3f6f4;
+    border-color: rgba(243, 246, 244, 0.45) !important;
+  }
 }
 
 .dark .marketing .home-life {
@@ -431,4 +452,25 @@
 .dark .marketing .home-life .home-eyebrow {
   background: #243832;
   color: #dfff83;
+}
+
+.dark .marketing .home-life {
+  --home-chip-on: #1a3d32;
+  --home-chip-on-text: #dfff83;
+}
+
+.dark .marketing .home-life .home-strip,
+.dark .marketing .home-life .home-close {
+  background-color: #1c2c28 !important;
+  color: #f3f6f4 !important;
+}
+
+.dark .marketing .home-life .home-close .home-eyebrow {
+  background: #dfff83;
+  color: #142124;
+}
+
+.dark .marketing .home-life .home-close .home-btn-ghost {
+  color: #f3f6f4;
+  border-color: rgba(243, 246, 244, 0.45) !important;
 }
