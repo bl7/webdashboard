@@ -185,6 +185,7 @@ async function renderNotesToPng(config: NotesConfig, labelHeight: LabelHeight): 
 
   const imageData = await toPng(container, {
     cacheBust: true,
+    pixelRatio: 3,
     width: container.offsetWidth,
     height: container.offsetHeight,
   })

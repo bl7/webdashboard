@@ -99,6 +99,7 @@ export async function formatLabelForPrintImage(
 
   const imageData = await toPng(container, {
     cacheBust: true,
+    pixelRatio: 3,
     width: container.offsetWidth,
     height: container.offsetHeight,
     style: {

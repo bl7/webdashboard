@@ -473,6 +473,7 @@ export default function PrintSessionsPage() {
 
             imageDataUrl = await toPng(container, {
               cacheBust: true,
+              pixelRatio: 3,
               width: container.offsetWidth,
               height: container.offsetHeight,
               style: {
@@ -737,6 +738,7 @@ export default function PrintSessionsPage() {
 
             imageDataUrl = await toPng(container, {
               cacheBust: true,
+              pixelRatio: 3,
               width: container.offsetWidth,
               height: container.offsetHeight,
               style: {

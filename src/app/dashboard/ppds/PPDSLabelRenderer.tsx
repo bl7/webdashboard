@@ -49,6 +49,8 @@ export function PPDSLabelRenderer({
         display: "flex",
         flexDirection: "column",
         fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
         color: "#000",
         border: "2px solid #000", // Thicker border to match LabelRender
         borderRadius: 6, // Rounded corners to match LabelRender
@@ -72,7 +74,7 @@ export function PPDSLabelRenderer({
         {item.name}
       </div>
       {/* Ingredients List with allergens inline */}
-      <div style={{ fontSize: "10pt", marginBottom: "1.5mm", lineHeight: 1.3, fontWeight: 400 }}>
+      <div style={{ fontSize: "10pt", marginBottom: "1.5mm", lineHeight: 1.3, fontWeight: 700 }}>
         <span style={{ fontWeight: 700 }}>Ingredients: </span>
         {ingredientObjs.map((ing: any, idx: number) => {
           const allergenList = (ing?.allergens || [])
@@ -99,7 +101,7 @@ export function PPDSLabelRenderer({
             borderRadius: "6px",
             padding: "1mm 2mm",
             fontSize: "8pt",
-            fontWeight: 500,
+            fontWeight: 700,
             marginBottom: "2.5mm",
             width: "100%",
             boxSizing: "border-box",
@@ -120,7 +122,7 @@ export function PPDSLabelRenderer({
             </svg>
           </span>
           <span>
-            Contains: <span style={{ fontWeight: 600 }}>{uniqueAllergens.join(", ")}</span>
+            Contains: <span style={{ fontWeight: 700 }}>{uniqueAllergens.join(", ")}</span>
           </span>
         </div>
       )}
@@ -137,7 +139,7 @@ export function PPDSLabelRenderer({
           style={{
             fontSize: "8pt",
             marginBottom: "1mm",
-            fontWeight: 600,
+            fontWeight: 700,
             borderTop: "1px solid #000",
             paddingTop: "1mm",
             display: "flex",
@@ -171,14 +173,14 @@ export function PPDSLabelRenderer({
         </div>
       )}
       {/* Storage Instruction always just above company name */}
-      <div style={{ fontSize: "8pt", marginBottom: "1mm", fontWeight: 400, minHeight: "10px" }}>
+      <div style={{ fontSize: "8pt", marginBottom: "1mm", fontWeight: 700, minHeight: "10px" }}>
         {storageInfo}
       </div>
       {/* Preparation Info */}
-      <div style={{ fontSize: "7pt", fontWeight: 400 }}>
+      <div style={{ fontSize: "7pt", fontWeight: 700 }}>
         Prepared by: <span style={{ fontWeight: 700 }}>{businessName}</span>
         <br />
-        <span style={{ fontWeight: 400 }}>www.instalabel.co</span>
+        <span style={{ fontWeight: 700 }}>www.instalabel.co</span>
       </div>
     </div>
   )

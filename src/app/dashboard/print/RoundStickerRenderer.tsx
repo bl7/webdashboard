@@ -96,7 +96,9 @@ export function RoundStickerRenderer({
         justifyContent: "center",
         padding: "1mm 3mm", // Reduced padding further to fit the safely readable font sizes
         boxSizing: "border-box",
-        fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
+        fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
         position: "relative",
         overflow: "hidden",
       }}
@@ -150,7 +152,7 @@ export function RoundStickerRenderer({
                     <span style={{ fontWeight: 800 }}>{uniqueAllergens.join(", ")}</span>
                   </>
                 ) : (
-                  <span style={{ fontWeight: 500, fontStyle: "italic", color: "#666" }}>
+                  <span style={{ fontWeight: 700, color: "#000" }}>
                     No allergens
                   </span>
                 )}
@@ -185,10 +187,9 @@ export function RoundStickerRenderer({
           <div
             style={{
               fontSize: "6pt",
-              fontWeight: 500,
+              fontWeight: 700,
               textAlign: "center",
-              color: "#666",
-              fontStyle: "italic",
+              color: "#000",
               marginBottom: "3mm",
             }}
           >

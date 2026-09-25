@@ -87,8 +87,10 @@ export default function LabelRender({
     height: `${labelHeightCm}cm`,
     padding: 0, // Remove all padding
     backgroundColor: "white",
-    fontFamily: "Menlo, Consolas, 'Liberation Mono', monospace",
-    fontWeight: 500,
+    fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
+    fontWeight: 700,
+    WebkitFontSmoothing: "antialiased" as const,
+    MozOsxFontSmoothing: "grayscale" as const,
     fontSize,
     display: "flex",
     flexDirection: "column" as const,
@@ -291,7 +293,7 @@ export default function LabelRender({
             justifyContent: "space-between",
             alignItems: "center",
             fontSize: config.metaFontSize,
-            fontWeight: 600,
+            fontWeight: 700,
             marginBottom: 2,
             fontFamily: "inherit",
             letterSpacing: 0,
@@ -320,11 +322,11 @@ export default function LabelRender({
         >
           <span style={{ fontWeight: 700, fontFamily: "inherit" }}>Contains: </span>
           {uniqueAllergens.length === 0 ? (
-            <span style={{ fontWeight: 500, fontFamily: "inherit" }}>
+            <span style={{ fontWeight: 700, fontFamily: "inherit" }}>
               Does not contain any allergens
             </span>
           ) : (
-            <span style={{ fontWeight: 600, fontFamily: "inherit" }}>
+            <span style={{ fontWeight: 700, fontFamily: "inherit" }}>
               {uniqueAllergens.join(", ")}
             </span>
           )}
@@ -341,7 +343,7 @@ export default function LabelRender({
       <span
         key={ing + idx}
         style={{
-          fontWeight: allergenMap[ing] && allergenMap[ing].length > 0 ? 600 : 500,
+          fontWeight: 700,
           fontFamily: "inherit",
         }}
       >
@@ -406,7 +408,7 @@ export default function LabelRender({
               marginTop: "auto",
               marginBottom: 2,
               fontSize: Math.max(7.5, config.metaFontSize - 1),
-              fontWeight: 500,
+              fontWeight: 700,
               lineHeight: 1.15,
               overflow: "hidden",
               textOverflow: "ellipsis",
@@ -485,7 +487,7 @@ export default function LabelRender({
             justifyContent: "space-between",
             alignItems: "center",
             fontSize: config.metaFontSize,
-            fontWeight: 600,
+            fontWeight: 700,
             marginBottom: 2,
             fontFamily: "inherit",
             letterSpacing: 0,
@@ -555,7 +557,7 @@ export default function LabelRender({
           fontWeight: 900,
           letterSpacing: 1,
           textTransform: "uppercase",
-          fontFamily: "monospace",
+          fontFamily: "inherit",
         }}
       >
         {item.name}
@@ -571,7 +573,7 @@ export default function LabelRender({
             display: "flex",
             flexDirection: "column",
             gap: 1,
-            fontFamily: "monospace",
+            fontFamily: "inherit",
           }}
         >
           <span>
@@ -591,7 +593,7 @@ export default function LabelRender({
             marginBottom: sectionSpacing,
             fontWeight: 700,
             textAlign: "center",
-            fontFamily: "monospace",
+            fontFamily: "inherit",
           }}
         >
           Best Before: {shortExpiry}
@@ -608,7 +610,7 @@ export default function LabelRender({
             flexWrap: "wrap",
             alignItems: "center",
             gap: 2,
-            fontFamily: "monospace",
+            fontFamily: "inherit",
           }}
         >
           <span style={{ fontWeight: 700 }}>Ingredients:</span>
@@ -617,7 +619,7 @@ export default function LabelRender({
               key={ing + idx}
               style={{
                 marginLeft: 2,
-                fontWeight: isAllergen(ing) ? 900 : 500,
+                fontWeight: isAllergen(ing) ? 900 : 700,
               }}
             >
               {isAllergen(ing) ? `*${ing}*` : ing}
@@ -638,7 +640,7 @@ export default function LabelRender({
             marginBottom: sectionSpacing,
             fontWeight: 700,
             textTransform: "uppercase",
-            fontFamily: "monospace",
+            fontFamily: "inherit",
           }}
         >
           Contains:
@@ -666,7 +668,7 @@ export default function LabelRender({
                 marginTop: 2,
                 letterSpacing: 1,
                 textTransform: "uppercase",
-                fontFamily: "monospace",
+                fontFamily: "inherit",
               }}
             >
               CONTAINS ALLERGENS
@@ -680,7 +682,7 @@ export default function LabelRender({
                 marginTop: 1,
                 letterSpacing: 0.5,
                 textTransform: "uppercase",
-                fontFamily: "monospace",
+                fontFamily: "inherit",
               }}
             >
               {itemAllergenNames.join(", ")}

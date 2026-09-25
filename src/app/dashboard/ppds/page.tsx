@@ -147,6 +147,7 @@ export default function PPDSPage() {
 
             const imageDataUrl = await toPng(container, {
               cacheBust: true,
+              pixelRatio: 3,
               width: container.offsetWidth,
               height: container.offsetHeight,
               style: {

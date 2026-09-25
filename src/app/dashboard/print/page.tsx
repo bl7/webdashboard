@@ -1342,7 +1342,7 @@ async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm")
   container.style.flexDirection = "column"
   container.style.justifyContent = "center"
   container.style.alignItems = "center"
-  container.style.fontFamily = "monospace"
+  container.style.fontFamily = 'Arial, Helvetica, "Liberation Sans", sans-serif'
   container.style.border = "2px solid black"
   container.style.borderRadius = "6px"
   container.style.padding = "6px" // Reduced padding to remove top gap
@@ -1366,6 +1366,7 @@ async function printSimpleLabel(html: string, labelHeight: LabelHeight = "40mm")
     await import("html-to-image")
   ).toPng(container, {
     cacheBust: true,
+    pixelRatio: 3,
     width: container.offsetWidth,
     height: container.offsetHeight,
     style: {
