@@ -506,6 +506,17 @@ export default function AdHocLabelsPage() {
                 <div className="mt-6 rounded-xl border bg-white p-4 shadow-sm">
                   <h3 className="mb-3 text-sm font-semibold text-gray-700">Live Preview</h3>
                   <div className="flex justify-center">
+                    <div
+                      style={{
+                        width: "60mm",
+                        height: labelHeight === "80mm" ? "80mm" : "40mm",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                      }}
+                    >
                     <LabelRender
                       item={livePrepDerived.printItem}
                       expiry={prepForm.expiryDate || ""}
@@ -513,8 +524,10 @@ export default function AdHocLabelsPage() {
                       selectedInitial=""
                       allergens={[]}
                       labelHeight={labelHeight}
+                      insetMm={2}
                       allIngredients={livePrepDerived.allIngredients}
                     />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -777,16 +790,30 @@ export default function AdHocLabelsPage() {
                 {previewPrepItems.map((entry) => {
                   const derived = buildPrepData(entry)
                   return (
-                    <LabelRender
+                    <div
                       key={entry.uid}
+                      data-print-label={entry.uid}
+                      style={{
+                        width: "60mm",
+                        height: labelHeight === "80mm" ? "80mm" : "40mm",
+                        background: "white",
+                        display: "flex",
+                        alignItems: "flex-start",
+                        justifyContent: "center",
+                        overflow: "hidden",
+                      }}
+                    >
+                    <LabelRender
                       item={derived.printItem}
                       expiry={entry.expiryDate || ""}
                       useInitials={false}
                       selectedInitial=""
                       allergens={[]}
                       labelHeight={labelHeight}
+                      insetMm={2}
                       allIngredients={derived.allIngredients}
                     />
+                    </div>
                   )
                 })}
                 {previewNotesItems.map((entry) => (

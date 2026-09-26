@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { PrintQueueItem } from "@/types/print"
 import LabelRender from "./LabelRender"
 import { LabelHeight } from "./LabelHeightChooser"
@@ -41,6 +41,9 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
   ppdsOptions,
   ppdsBusinessName = "InstaLabel",
 }) => {
+  const [cutOffIds, setCutOffIds] = useState<string[]>([])
+  const anyCutOff = printQueue.some((item) => cutOffIds.includes(item.uid))
+
   return (
     <div className="mt-8">
       <h2 className="mb-4 text-xl font-semibold">Label Preview</h2>
@@ -48,6 +51,13 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
         <p className="text-gray-500">Select items to preview labels.</p>
       ) : (
         <div className="flex flex-wrap gap-3 bg-gray-100 p-4">
+          {anyCutOff && (
+            <p className="w-full rounded border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-950">
+              {labelHeight === "40mm"
+                ? "This does not fit on a small 60×40mm label. The print will be cut off the same way you see here. Switch the label size to large (56×80mm)."
+                : "This does not fit on the label. The print will be cut off the same way you see here."}
+            </p>
+          )}
           {printQueue.map((item) => (
             <div key={item.uid} className="space-y-2">
               <label className="text-xs font-medium">Expiry Date:</label>
@@ -72,6 +82,18 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                   price={ppdsOptions?.price || ""}
                 />
               ) : (
+                <div
+                  data-print-label={item.uid}
+                  style={{
+                    width: "60mm",
+                    height: labelHeight === "80mm" ? "80mm" : "40mm",
+                    background: "white",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    justifyContent: "center",
+                    overflow: "hidden",
+                  }}
+                >
                 <LabelRender
                   item={item}
                   expiry={customExpiry[item.uid] || item.expiryDate || ""}
@@ -80,6 +102,15 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                   allergens={ALLERGENS}
                   maxIngredients={maxIngredientsToFit}
                   labelHeight={labelHeight}
+                  insetMm={2}
+                  onOverflow={(overflows) => {
+                    setCutOffIds((prev) => {
+                      const has = prev.includes(item.uid)
+                      if (overflows && !has) return [...prev, item.uid]
+                      if (!overflows && has) return prev.filter((id) => id !== item.uid)
+                      return prev
+                    })
+                  }}
                   allIngredients={allIngredients}
                   ppdsMeta={{
                     storageInfo: ppdsOptions?.storageInfo || "",
@@ -89,6 +120,7 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                     price: ppdsOptions?.price || "",
                   }}
                 />
+                </div>
               )}
             </div>
           ))}

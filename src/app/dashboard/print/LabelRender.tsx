@@ -24,6 +24,7 @@ interface LabelRenderProps {
   }
   /** White margin inside the print image, in mm, so the border is not on the cut edge. */
   insetMm?: number
+  onOverflow?: (overflows: boolean) => void
 }
 
 function fitText(text: string, maxLen: number) {
@@ -41,6 +42,7 @@ export default function LabelRender({
   allIngredients = [],
   ppdsMeta,
   insetMm = 0,
+  onOverflow,
 }: LabelRenderProps) {
   // --- Sizing and layout configuration ---
   const labelConfig = {
@@ -80,17 +82,18 @@ export default function LabelRender({
   const { heightCm, fontSize, nameFontSize, sectionSpacing, padding } = config
 
   // --- No padding for edge-to-edge ---
-  const LABEL_WIDTH_CM = 6.0 // Updated to 60mm
-  const insetCm = insetMm / 10
+  const LABEL_WIDTH_CM = 6.0
+  const printBox = insetMm > 0
+  const insetCm = printBox ? insetMm / 10 : 0
   const labelWidthCm = LABEL_WIDTH_CM - insetCm * 2
   const labelHeightCm = heightCm - insetCm * 2
-  const printBox = insetMm > 0
+  const fullWidthPx = Math.round((labelWidthCm / 2.54) * 96) - (printBox ? 4 : 0)
 
   // --- Common styling ---
   const baseStyle = {
     width: printBox ? `${Math.round((labelWidthCm / 2.54) * 96)}px` : `${labelWidthCm}cm`,
     height: printBox ? `${Math.round((labelHeightCm / 2.54) * 96)}px` : `${labelHeightCm}cm`,
-    padding: printBox ? "4px 8px 4px 10px" : 0,
+    padding: printBox ? "0 8px 4px 10px" : 0,
     backgroundColor: "white",
     fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
     fontWeight: 700,
@@ -100,13 +103,18 @@ export default function LabelRender({
     display: "flex",
     flexDirection: "column" as const,
     boxSizing: "border-box" as const,
-    border: printBox ? "none" : "2px solid black",
-    boxShadow: printBox
-      ? "inset 2px 0 0 #000, inset -4px 0 0 #000, inset 0 2px 0 #000, inset 0 -2px 0 #000"
-      : undefined,
+    borderStyle: "solid",
+    borderColor: "black",
+    borderWidth: printBox ? 0 : "2px",
+    boxShadow: undefined,
+    minWidth: printBox ? 0 : undefined,
+    maxWidth: printBox ? `${fullWidthPx}px` : undefined,
     borderRadius: printBox ? 0 : 6,
     position: "relative" as const,
-    overflow: "visible" as const,
+    overflow: printBox ? ("hidden" as const) : ("visible" as const),
+    minHeight: printBox ? 0 : undefined,
+    flexShrink: printBox ? 0 : undefined,
+    alignSelf: printBox ? ("flex-start" as const) : undefined,
     margin: 0, // Remove all margin
     letterSpacing: 0,
   }
@@ -152,6 +160,34 @@ export default function LabelRender({
 
     return baseFontSize
   }
+
+  const measureName = (text: string, fontSize: number) => {
+    if (typeof document === "undefined") return text.length * fontSize * 0.62
+    const canvas = document.createElement("canvas")
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return text.length * fontSize * 0.62
+    ctx.font = `900 ${fontSize}px Arial, Helvetica, sans-serif`
+    return ctx.measureText(text).width
+  }
+
+  const fitName = (name: string, baseFontSize: number) => {
+    const text = name?.trim() ?? ""
+    const start = getNameFontSize(text, baseFontSize, labelHeight)
+    const maxWidth = (printBox ? fullWidthPx - 20 : fullWidthPx - 8) - 1
+    const minPx = 12
+    if (!text) return { fontSize: start, lines: 1 as const, visible: false }
+    let fontSize = start
+    while (fontSize > minPx && measureName(text, fontSize) > maxWidth) fontSize -= 1
+    if (measureName(text, fontSize) <= maxWidth) return { fontSize, lines: 1 as const, visible: true }
+    let twoLineSize = start
+    while (twoLineSize > minPx && measureName(text, twoLineSize) > maxWidth * 2) twoLineSize -= 1
+    if (measureName(text, twoLineSize) <= maxWidth * 2) {
+      return { fontSize: twoLineSize, lines: 2 as const, visible: true }
+    }
+    return { fontSize: minPx, lines: 1 as const, visible: false }
+  }
+
+  const fittedName = fitName(item.name, nameFontSize)
 
   // --- Data preparation ---
   const shortPrinted = shortDate(item.printedOn || "")
@@ -203,20 +239,64 @@ export default function LabelRender({
     textAlign: "center" as const,
     backgroundColor: "black",
     color: "white",
-    padding: printBox ? "2px 8px" : "2px 0",
-    marginTop: printBox ? -4 : 0,
-    marginLeft: printBox ? -10 : 0,
-    marginRight: printBox ? -8 : 0,
+    padding: printBox ? "4px 8px" : "2px 0",
+    marginTop: 1,
+    marginLeft: printBox ? -9 : 0,
+    marginRight: printBox ? -6 : 0,
     marginBottom: sectionSpacing - 1,
-    width: printBox ? "calc(100% + 18px)" : undefined,
+    width: printBox ? "calc(100% + 15px)" : undefined,
+    flexShrink: 0,
     position: "relative" as const,
-    fontSize: getNameFontSize(item.name, nameFontSize, labelHeight),
+    fontSize: fittedName.fontSize,
     fontWeight: 900,
     borderRadius: printBox ? 0 : 2,
     fontFamily: "inherit",
     letterSpacing: 0,
     boxSizing: "border-box" as const,
+    whiteSpace: fittedName.lines === 1 ? ("nowrap" as const) : ("normal" as const),
+    overflow: "hidden",
+    textOverflow: "clip" as const,
+    lineHeight: 1.15,
+    ...(fittedName.lines === 2
+      ? {
+          display: "-webkit-box",
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: "vertical" as const,
+        }
+      : {}),
   }
+
+  const labelRef = React.useRef<HTMLDivElement>(null)
+  const headerRef = React.useRef<HTMLDivElement>(null)
+  const [omitName, setOmitName] = React.useState(false)
+  const showName = fittedName.visible && !omitName
+  const borderFrame = printBox ? (
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 1,
+        bottom: 0,
+        left: 0,
+        borderTop: "1px solid #000",
+        borderRight: "1px solid #000",
+        borderBottom: "1px solid #000",
+        borderLeft: "1px solid #000",
+        pointerEvents: "none",
+        zIndex: 5,
+        boxSizing: "border-box",
+      }}
+    />
+  ) : null
+  React.useLayoutEffect(() => {
+    const label = labelRef.current
+    if (!label) return
+    const overflows = label.scrollHeight > label.clientHeight + 2
+    onOverflow?.(overflows)
+    if (headerRef.current && (overflows || headerRef.current.scrollHeight > headerRef.current.clientHeight + 1)) {
+      setOmitName(true)
+    }
+  })
 
   // --- Special USE FIRST label ---
   const isUseFirst = item.name === "USE FIRST"
@@ -281,8 +361,12 @@ export default function LabelRender({
     )
 
     return (
-      <div style={baseStyle}>
-        <div style={headerStyle}>{item.name}</div>
+      <div ref={labelRef} data-label-root="" style={baseStyle}>
+        {showName && (
+          <div ref={headerRef} data-label-name="" style={headerStyle}>
+            {item.name}
+          </div>
+        )}
 
         <div
           style={{
@@ -344,6 +428,7 @@ export default function LabelRender({
             </span>
           )}
         </div>
+        {borderFrame}
       </div>
     )
   }
@@ -380,8 +465,12 @@ export default function LabelRender({
     ))
 
     return (
-      <div style={baseStyle}>
-        <div style={headerStyle}>{item.name}</div>
+      <div ref={labelRef} data-label-root="" style={baseStyle}>
+        {showName && (
+          <div ref={headerRef} data-label-name="" style={headerStyle}>
+            {item.name}
+          </div>
+        )}
 
         <div
           style={{
@@ -414,12 +503,15 @@ export default function LabelRender({
           </span>
           {ingredientsLine}
         </div>
-        {(ppdsMeta?.storageInfo || ppdsMeta?.showNetWt || ppdsMeta?.showPrice) && <div style={{ flex: 1 }} />}
+        {(ppdsMeta?.storageInfo || ppdsMeta?.showNetWt || ppdsMeta?.showPrice) && (
+          <div style={{ flex: "1 1 0", minHeight: 0 }} />
+        )}
         {ppdsMeta?.storageInfo && (
           <div
             style={{
               marginTop: "auto",
               marginBottom: 2,
+              flexShrink: 0,
               fontSize: Math.max(7.5, config.metaFontSize - 1),
               fontWeight: 700,
               lineHeight: 1.15,
@@ -438,6 +530,7 @@ export default function LabelRender({
             style={{
               borderTop: "1px solid #000",
               paddingTop: 2,
+              flexShrink: 0,
               fontSize: Math.max(8, config.metaFontSize - 0.5),
               fontWeight: 700,
               display: "flex",
@@ -462,6 +555,7 @@ export default function LabelRender({
             </span>
           </div>
         )}
+        {borderFrame}
       </div>
     )
   }
@@ -475,8 +569,12 @@ export default function LabelRender({
       item.labelType === "default")
   ) {
     return (
-      <div style={baseStyle}>
-        <div style={headerStyle}>{item.name}</div>
+      <div ref={labelRef} data-label-root="" style={baseStyle}>
+        {showName && (
+          <div ref={headerRef} data-label-name="" style={headerStyle}>
+            {item.name}
+          </div>
+        )}
 
         <div
           style={{
@@ -545,6 +643,7 @@ export default function LabelRender({
             </div>
           </>
         ) : null}
+        {borderFrame}
       </div>
     )
   }
@@ -562,11 +661,13 @@ export default function LabelRender({
   const isPPDS = item.labelType === "ppds"
 
   return (
-    <div style={baseStyle}>
+    <div ref={labelRef} data-label-root="" style={baseStyle}>
+      {showName && (
       <div
+        ref={headerRef}
+        data-label-name=""
         style={{
           ...headerStyle,
-          fontSize: nameFontSize,
           fontWeight: 900,
           letterSpacing: 1,
           textTransform: "uppercase",
@@ -575,6 +676,7 @@ export default function LabelRender({
       >
         {item.name}
       </div>
+      )}
 
       {/* Dates */}
       {!isPPDS && (
@@ -702,6 +804,7 @@ export default function LabelRender({
             </div>
           </>
         ) : null)}
+      {borderFrame}
     </div>
   )
 }
