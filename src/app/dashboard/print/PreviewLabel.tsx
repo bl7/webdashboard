@@ -68,6 +68,7 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                 className="w-full rounded border px-2 py-1 text-xs"
               />
               {item.labelType === "ppds" && item.type === "menu" && labelHeight === "80mm" ? (
+                <div data-print-label={item.uid} data-label-kind="ppds80" style={{ width: "56mm", height: "80mm" }}>
                 <PPDSLabelRenderer
                   item={{
                     ...item,
@@ -81,6 +82,7 @@ const LabelPreview: React.FC<LabelPreviewProps> = ({
                   netWt={ppdsOptions?.netWt || ""}
                   price={ppdsOptions?.price || ""}
                 />
+                </div>
               ) : (
                 <div
                   data-print-label={item.uid}

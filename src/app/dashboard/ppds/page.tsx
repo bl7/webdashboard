@@ -6,10 +6,9 @@ import { usePrinter } from "@/context/PrinterContext"
 import { Button } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { useAuth } from "@/context/AuthContext"
-import { toPng } from "html-to-image"
+import { formatLabelForPrintImage } from "../print/labelFormatter"
 import { PPDSLabelRenderer } from "./PPDSLabelRenderer"
 import { logAction } from "@/lib/logAction"
-import ReactDOM from "react-dom/client"
 
 function getPrinterName(printer: any): string {
   if (!printer) return ""
@@ -114,50 +113,24 @@ export default function PPDSPage() {
 
           // Print multiple copies of the same label
           for (let i = 0; i < item.quantity; i++) {
-            // Render label to PNG using html-to-image
-            const container = document.createElement("div")
-            container.style.position = "absolute"
-            container.style.top = "0"
-            container.style.left = "0"
-            container.style.width = "56mm"
-            container.style.height = "80mm"
-            container.style.backgroundColor = "white"
-            container.style.zIndex = "-1"
-            container.style.visibility = "hidden"
-            document.body.appendChild(container)
-
-            // Render PPDSLabelRenderer into container
-            const root = ReactDOM.createRoot(container)
-            root.render(
-              <PPDSLabelRenderer
-                item={{ ...item }}
-                storageInfo={storageInfo}
-                businessName={businessName}
-                allIngredients={allIngredients}
-                showNetWt={showNetWt}
-                showPrice={showPrice}
-                netWt={netWt}
-                price={getDisplayPrice(price)}
-              />
+            const imageDataUrl = await formatLabelForPrintImage(
+              item,
+              [],
+              {},
+              5,
+              false,
+              "",
+              "80mm",
+              allIngredients,
+              {
+                storageInfo,
+                businessName,
+                showNetWt,
+                showPrice,
+                netWt,
+                price: getDisplayPrice(price),
+              }
             )
-
-            // Wait for React to render
-            await new Promise((resolve) => setTimeout(resolve, 300))
-            container.style.visibility = "visible"
-
-            const imageDataUrl = await toPng(container, {
-              cacheBust: true,
-              pixelRatio: 3,
-              width: container.offsetWidth,
-              height: container.offsetHeight,
-              style: {
-                transform: "scale(1)",
-                transformOrigin: "top left",
-              },
-            })
-
-            root.unmount()
-            document.body.removeChild(container)
 
             console.log(
               `🖨️ PPDS image generated for ${item.name} copy ${i + 1}/${item.quantity}, length: ${imageDataUrl.length}`
@@ -607,8 +580,8 @@ export default function PPDSPage() {
         ) : (
           <div className="flex flex-wrap justify-center gap-4">
             {printQueue.map((item) => (
+              <div key={item.uid} data-print-label={item.uid} data-label-kind="ppds80" style={{ width: "56mm", height: "80mm" }}>
               <PPDSLabelRenderer
-                key={item.uid}
                 item={item}
                 storageInfo={storageInfo}
                 businessName={businessName}
@@ -618,6 +591,7 @@ export default function PPDSPage() {
                 netWt={netWt}
                 price={getDisplayPrice(price)}
               />
+              </div>
             ))}
           </div>
         )}

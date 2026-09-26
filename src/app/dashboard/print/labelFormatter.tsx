@@ -6,9 +6,13 @@ import LabelRender from "./LabelRender"
 import { LabelHeight } from "./LabelHeightChooser"
 import { PPDSLabelRenderer } from "../ppds/PPDSLabelRenderer"
 
-function findPreview(uid: string): HTMLElement | null {
+function findPreview(uid: string, kind?: string): HTMLElement | null {
   for (const node of document.querySelectorAll("[data-print-label]")) {
-    if (node instanceof HTMLElement && node.getAttribute("data-print-label") === uid) return node
+    if (!(node instanceof HTMLElement)) continue
+    if (node.getAttribute("data-print-label") !== uid) continue
+    if (kind && node.getAttribute("data-label-kind") !== kind) continue
+    if (!kind && node.getAttribute("data-label-kind") === "ppds80") continue
+    return node
   }
   return null
 }
@@ -62,7 +66,8 @@ export async function formatLabelForPrintImage(
 ): Promise<string> {
   console.log("🖼️ Starting image generation for:", item.name, "at", labelHeight)
 
-  const live = findPreview(item.uid)
+  const isPpds80 = item.labelType === "ppds" && item.type === "menu" && labelHeight === "80mm"
+  const live = findPreview(item.uid, isPpds80 ? "ppds80" : undefined)
   if (live) {
     const clone = live.cloneNode(true) as HTMLElement
     clone.style.position = "absolute"
@@ -87,14 +92,11 @@ export async function formatLabelForPrintImage(
     }
   }
 
-  const isPpds80 = item.labelType === "ppds" && item.type === "menu" && labelHeight === "80mm"
-
   const container = document.createElement("div")
   container.style.position = "absolute"
   container.style.top = "0"
   container.style.left = "0"
   if (isPpds80) {
-    // Match hidden PPDS tab render engine dimensions.
     container.style.width = "56mm"
     container.style.height = "80mm"
   } else {
@@ -102,6 +104,8 @@ export async function formatLabelForPrintImage(
     const widthCm = 6.0 // 60mm for standard labels
     container.style.width = `${widthCm}cm`
     container.style.height = `${heightCm}cm`
+    container.style.position = "fixed"
+    container.style.left = "-10000px"
   }
   container.style.backgroundColor = "white"
   container.style.display = "flex"
@@ -109,15 +113,17 @@ export async function formatLabelForPrintImage(
   container.style.justifyContent = "center"
   container.style.overflow = "hidden"
   container.style.zIndex = "-1"
-  container.style.position = "fixed"
-  container.style.left = "-10000px"
   document.body.appendChild(container)
 
   const root = ReactDOM.createRoot(container)
   if (isPpds80) {
     root.render(
       <PPDSLabelRenderer
-        item={{ ...item }}
+        item={{
+          ...item,
+          expiryDate: customExpiry[item.uid] || item.expiryDate || "",
+          printedOn: item.printedOn || "",
+        }}
         storageInfo={ppdsOptions?.storageInfo || ""}
         businessName={ppdsOptions?.businessName || "InstaLabel"}
         allIngredients={allIngredients}
