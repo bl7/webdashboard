@@ -47,6 +47,10 @@ export async function formatLabelForPrintImage(
     container.style.height = `${heightCm}cm`
   }
   container.style.backgroundColor = "white"
+  container.style.display = "flex"
+  container.style.alignItems = "center"
+  container.style.justifyContent = "center"
+  container.style.overflow = "hidden"
   container.style.zIndex = "-1"
   container.style.visibility = "hidden"
   document.body.appendChild(container)
@@ -75,6 +79,7 @@ export async function formatLabelForPrintImage(
         allergens={ALLERGENS}
         maxIngredients={MAX_INGREDIENTS_TO_FIT}
         labelHeight={labelHeight}
+        insetMm={2}
         allIngredients={allIngredients}
         ppdsMeta={{
           storageInfo: ppdsOptions?.storageInfo || "",

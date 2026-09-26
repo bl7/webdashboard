@@ -22,6 +22,8 @@ interface LabelRenderProps {
     netWt?: string
     price?: string
   }
+  /** White margin inside the print image, in mm, so the border is not on the cut edge. */
+  insetMm?: number
 }
 
 function fitText(text: string, maxLen: number) {
@@ -38,6 +40,7 @@ export default function LabelRender({
   labelHeight = "40mm",
   allIngredients = [],
   ppdsMeta,
+  insetMm = 0,
 }: LabelRenderProps) {
   // --- Sizing and layout configuration ---
   const labelConfig = {
@@ -78,14 +81,16 @@ export default function LabelRender({
 
   // --- No padding for edge-to-edge ---
   const LABEL_WIDTH_CM = 6.0 // Updated to 60mm
-  const labelWidthCm = LABEL_WIDTH_CM
-  const labelHeightCm = heightCm
+  const insetCm = insetMm / 10
+  const labelWidthCm = LABEL_WIDTH_CM - insetCm * 2
+  const labelHeightCm = heightCm - insetCm * 2
+  const printBox = insetMm > 0
 
   // --- Common styling ---
   const baseStyle = {
-    width: `${labelWidthCm}cm`,
-    height: `${labelHeightCm}cm`,
-    padding: 0, // Remove all padding
+    width: printBox ? `${Math.round((labelWidthCm / 2.54) * 96)}px` : `${labelWidthCm}cm`,
+    height: printBox ? `${Math.round((labelHeightCm / 2.54) * 96)}px` : `${labelHeightCm}cm`,
+    padding: printBox ? "4px 8px 4px 10px" : 0,
     backgroundColor: "white",
     fontFamily: 'Arial, Helvetica, "Liberation Sans", sans-serif',
     fontWeight: 700,
@@ -95,8 +100,11 @@ export default function LabelRender({
     display: "flex",
     flexDirection: "column" as const,
     boxSizing: "border-box" as const,
-    border: "2px solid black",
-    borderRadius: 6,
+    border: printBox ? "none" : "2px solid black",
+    boxShadow: printBox
+      ? "inset 2px 0 0 #000, inset -4px 0 0 #000, inset 0 2px 0 #000, inset 0 -2px 0 #000"
+      : undefined,
+    borderRadius: printBox ? 0 : 6,
     position: "relative" as const,
     overflow: "visible" as const,
     margin: 0, // Remove all margin
@@ -195,14 +203,19 @@ export default function LabelRender({
     textAlign: "center" as const,
     backgroundColor: "black",
     color: "white",
-    padding: "2px 0",
+    padding: printBox ? "2px 8px" : "2px 0",
+    marginTop: printBox ? -4 : 0,
+    marginLeft: printBox ? -10 : 0,
+    marginRight: printBox ? -8 : 0,
     marginBottom: sectionSpacing - 1,
+    width: printBox ? "calc(100% + 18px)" : undefined,
     position: "relative" as const,
     fontSize: getNameFontSize(item.name, nameFontSize, labelHeight),
     fontWeight: 900,
-    borderRadius: 2,
+    borderRadius: printBox ? 0 : 2,
     fontFamily: "inherit",
     letterSpacing: 0,
+    boxSizing: "border-box" as const,
   }
 
   // --- Special USE FIRST label ---

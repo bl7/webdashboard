@@ -521,7 +521,13 @@ export default function LabelDemo() {
 
             // Revert to sending the same print request for all OSes
             if (isConnected) {
-              await print(imageDataUrl, undefined, { labelHeight })
+              await print(imageDataUrl, undefined, {
+                labelWidthMm:
+                  item.labelType === "ppds" && item.type === "menu" && labelHeight === "80mm"
+                    ? 56
+                    : 60,
+                labelHeightMm: labelHeight === "80mm" ? 80 : 40,
+              })
             } else {
               console.log(
                 "🖨️ DEBUG: Would print image data:",

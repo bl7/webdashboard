@@ -521,7 +521,10 @@ export default function PrintSessionsPage() {
           if (isConnected) {
             // Use correct label height for PPDS labels
             const printLabelHeight = log.details.labelType === "ppds" ? "80mm" : labelHeight
-            await print(imageDataUrl, undefined, { labelHeight: printLabelHeight })
+            await print(imageDataUrl, undefined, {
+              labelWidthMm: log.details.labelType === "ppds" ? 56 : 60,
+              labelHeightMm: printLabelHeight === "80mm" ? 80 : 40,
+            })
             console.log(
               `✅ Printed ${log.details.itemName} copy ${i + 1}/${log.details.quantity} successfully`
             )
@@ -785,7 +788,10 @@ export default function PrintSessionsPage() {
           if (isConnected) {
             // Use correct label height for PPDS labels
             const printLabelHeight = log.details.labelType === "ppds" ? "80mm" : labelHeight
-            await print(imageDataUrl, undefined, { labelHeight: printLabelHeight })
+            await print(imageDataUrl, undefined, {
+              labelWidthMm: log.details.labelType === "ppds" ? 56 : 60,
+              labelHeightMm: printLabelHeight === "80mm" ? 80 : 40,
+            })
             console.log(`✅ Printed ${log.details.itemName} successfully`)
           } else {
             console.log("🖨️ DEBUG: Would print image data:", imageDataUrl.substring(0, 100) + "...")

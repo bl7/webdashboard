@@ -191,6 +191,8 @@ export const usePrintBridge = () => {
         const printJob = {
           type: 'print',
           images: [cleanImageData],
+          labelWidth: labelWidthMm,
+          labelHeight: labelHeightMm,
           selectedPrinter: printerName
         };
         wsRef.current.send(JSON.stringify(printJob));

@@ -99,7 +99,7 @@ export function PrinterProvider({ children }: { children: React.ReactNode }) {
     if (options?.labelHeight) {
       labelHeightMm = options.labelHeight === "80mm" ? 80 : 40
     }
-    const labelWidthMm = options?.labelWidthMm ?? 56
+    const labelWidthMm = options?.labelWidthMm ?? 60
 
     try {
       // Remove data URL prefix if present

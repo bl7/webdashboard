@@ -165,7 +165,7 @@ export default function PPDSPage() {
 
             // Print using WebSocket (if connected) or just log for debug
             if (isConnected) {
-              await print(imageDataUrl, undefined, { labelHeight: "80mm" })
+              await print(imageDataUrl, undefined, { labelWidthMm: 56, labelHeightMm: 80 })
               console.log(
                 `✅ Printed PPDS ${item.name} copy ${i + 1}/${item.quantity} successfully`
               )
