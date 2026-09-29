@@ -3,20 +3,14 @@
 import { Suspense, useEffect, useMemo, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 import { CleaningMessage, StatusPill } from "@/components/dashboard/cleaning/CleaningNav"
 import { cleaningGet, cleaningToken, downloadCleaningPdf } from "@/lib/cleaningApi"
 
 type RecordRow = {
   uuid: string
+  scheduledDate: string
   scheduledDateLabel: string
+  scheduledDateLong?: string
   taskName: string
   taskId: string
   areaName: string
@@ -26,6 +20,31 @@ type RecordRow = {
   completedByName?: string | null
   completedByUserId?: string | null
   completedAtLabel?: string | null
+}
+
+function businessToday(timeZone: string) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: timeZone || "Europe/London",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date())
+}
+
+function recordsSoFar(rows: RecordRow[], today: string) {
+  return rows.filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.scheduledDate || "") && row.scheduledDate <= today)
+}
+
+function longDate(dateStr: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return ""
+  const [year, month, day] = dateStr.split("-").map(Number)
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, day)))
 }
 
 export default function CleaningHistoryPage() {
@@ -41,13 +60,13 @@ function CleaningHistory() {
   const [records, setRecords] = useState<RecordRow[]>([])
   const [areas, setAreas] = useState<Array<{ uuid: string; name: string }>>([])
   const [tasks, setTasks] = useState<Array<{ uuid: string; name: string }>>([])
-  const [summary, setSummary] = useState({ total: 0, completed: 0, overdue: 0, pending: 0 })
   const [from, setFrom] = useState("")
   const [to, setTo] = useState("")
   const [areaId, setAreaId] = useState("")
   const [taskId, setTaskId] = useState("")
   const [status, setStatus] = useState(searchParams.get("status") || "")
   const [staff, setStaff] = useState("")
+  const [day, setDay] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
@@ -63,6 +82,16 @@ function CleaningHistory() {
     return params.toString()
   }, [from, to, areaId, taskId, status, staff])
 
+  const days = useMemo(() => [...new Set(records.map((row) => row.scheduledDate))].sort(), [records])
+
+  useEffect(() => {
+    if (days.length === 0) {
+      setDay("")
+      return
+    }
+    setDay((current) => (current && days.includes(current) ? current : days[days.length - 1]))
+  }, [days])
+
   const load = () => {
     const token = cleaningToken()
     if (!token) return
@@ -70,8 +99,7 @@ function CleaningHistory() {
     setError("")
     cleaningGet(`/cleaning/history?${query}`, token)
       .then((response) => {
-        setRecords(response.data.records || [])
-        setSummary(response.data.summary)
+        setRecords(recordsSoFar(response.data.records || [], businessToday(response.data.timezone)))
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
@@ -105,6 +133,13 @@ function CleaningHistory() {
       setExporting(false)
     }
   }
+
+  const dayRows = records.filter((row) => row.scheduledDate === day)
+  const areaNames = [...new Set(dayRows.map((row) => row.areaName || "Other"))]
+  const dayIndex = days.indexOf(day)
+  const done = dayRows.filter((row) => row.status === "completed").length
+  const missed = dayRows.filter((row) => row.status === "overdue").length
+  const open = dayRows.filter((row) => row.status === "pending").length
 
   return (
     <div className="space-y-4">
@@ -140,10 +175,8 @@ function CleaningHistory() {
           onChange={(e) => setStaff(e.target.value)}
         />
       </div>
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-600">
-          {summary.total} records · {summary.completed} completed · {summary.overdue} overdue
-        </p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-slate-600">One day at a time, up to today. The PDF prints one page per day.</p>
         <Button onClick={exportPdf} disabled={exporting}>
           {exporting ? "Exporting…" : "Export PDF"}
         </Button>
@@ -151,38 +184,65 @@ function CleaningHistory() {
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
       {loading ? (
         <div className="h-64 animate-pulse rounded-2xl bg-white/70" />
-      ) : records.length === 0 ? (
-        <CleaningMessage title="No cleaning records yet." />
+      ) : days.length === 0 || !day ? (
+        <CleaningMessage title={days.length === 0 ? "No cleaning records yet." : "Loading this day."} />
       ) : (
-        <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Task</TableHead>
-                <TableHead>Area</TableHead>
-                <TableHead>Due</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Completed by</TableHead>
-                <TableHead>Completed at</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {records.map((row) => (
-                <TableRow key={row.uuid}>
-                  <TableCell>{row.scheduledDateLabel}</TableCell>
-                  <TableCell>{row.taskName}</TableCell>
-                  <TableCell>{row.areaName}</TableCell>
-                  <TableCell>{row.dueLabel}</TableCell>
-                  <TableCell>
-                    <StatusPill status={row.status} />
-                  </TableCell>
-                  <TableCell>{row.completedByName || "—"}</TableCell>
-                  <TableCell>{row.completedAtLabel || "—"}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="space-y-4 rounded-2xl bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <Button type="button" variant="outline" disabled={dayIndex <= 0} onClick={() => setDay(days[dayIndex - 1])}>
+              Previous day
+            </Button>
+            <div className="text-center">
+              <p className="text-lg font-semibold text-slate-900">{longDate(day)}</p>
+              <p className="text-sm text-slate-500">
+                {dayRows.length} tasks · {done} done · {missed} missed · {open} not done
+              </p>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              disabled={dayIndex < 0 || dayIndex >= days.length - 1}
+              onClick={() => setDay(days[dayIndex + 1])}
+            >
+              Next day
+            </Button>
+          </div>
+          {areaNames.map((area) => (
+            <section key={area}>
+              <h3 className="mb-2 text-sm font-semibold text-slate-500">{area}</h3>
+              <ul className="divide-y rounded-xl border">
+                {dayRows
+                  .filter((row) => (row.areaName || "Other") === area)
+                  .map((row) => (
+                    <li key={row.uuid} className="flex items-start gap-3 px-3 py-3">
+                      <span
+                        className={
+                          row.status === "completed"
+                            ? "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border border-emerald-700 bg-emerald-700 text-xs text-white"
+                            : row.status === "overdue"
+                              ? "mt-0.5 h-5 w-5 shrink-0 rounded border border-red-600"
+                              : "mt-0.5 h-5 w-5 shrink-0 rounded border border-slate-300"
+                        }
+                      >
+                        {row.status === "completed" ? "✓" : ""}
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <p className="font-medium text-slate-900">{row.taskName}</p>
+                          <StatusPill status={row.status} />
+                        </div>
+                        <p className="text-sm text-slate-500">
+                          Due {row.dueLabel}
+                          {row.status === "completed" && row.completedByName
+                            ? ` · ${row.completedByName}${row.completedAtLabel ? `, ${row.completedAtLabel}` : ""}`
+                            : ""}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </section>
+          ))}
         </div>
       )}
     </div>
