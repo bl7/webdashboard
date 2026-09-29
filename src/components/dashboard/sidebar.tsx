@@ -18,7 +18,7 @@ import {
   FaRegDotCircle,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
-import { MdRestaurantMenu, MdGridOn } from "react-icons/md"
+import { MdRestaurantMenu, MdGridOn, MdCleaningServices } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
 import { IoLogOutOutline } from "react-icons/io5"
 import { RiAdminLine } from "react-icons/ri"
@@ -37,6 +37,7 @@ const NAV_ITEMS = [
   // { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
   // { label: "Bulk Print", icon: <FaList />, href: "/dashboard/bulk-print" },
   { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
+  { label: "Cleaning", icon: <MdCleaningServices />, href: "/dashboard/cleaning" },
   { label: "PrintBridge Test", icon: <FaPrint />, href: "/dashboard/printbridge-test" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
