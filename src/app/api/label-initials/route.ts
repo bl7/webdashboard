@@ -21,12 +21,14 @@ export async function GET(req: NextRequest) {
     
     const [settingsResult, initialsResult] = await Promise.all([
       pool.query("SELECT use_initials FROM label_initials WHERE user_id = $1", [userUuid]),
-      pool.query("SELECT initial FROM label_initial_items WHERE user_id = $1", [userUuid]),
+      pool.query("SELECT initial, full_name FROM label_initial_items WHERE user_id = $1", [userUuid]),
     ])
 
+    const rows = initialsResult.rows as { initial: string; full_name: string | null }[]
     return withCORS(NextResponse.json({
       use_initials: settingsResult.rows[0]?.use_initials ?? true,
-      initials: initialsResult.rows.map((r: { initial: string }) => r.initial),
+      initials: rows.map((row) => row.initial),
+      staff: rows.map((row) => ({ initial: row.initial, name: row.full_name || "" })),
     }))
   } catch (error: any) {
     if (error.message.includes("Unauthorized")) {
@@ -38,10 +40,24 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { user_id, use_initials, initials } = await req.json()
+    const { user_id, use_initials, initials, staff } = await req.json()
 
-    if (!user_id || typeof use_initials !== "boolean" || !Array.isArray(initials)) {
+    if (!user_id || typeof use_initials !== "boolean" || (!Array.isArray(initials) && !Array.isArray(staff))) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
+    }
+
+    const people = Array.isArray(staff)
+      ? staff.map((person: { initial?: unknown; name?: unknown }) => ({
+          initial: String(person?.initial ?? "").trim().toUpperCase(),
+          name: String(person?.name ?? "").trim(),
+        }))
+      : (initials as unknown[]).map((initial) => ({
+          initial: String(initial ?? "").trim().toUpperCase(),
+          name: "",
+        }))
+    const entries = people.filter((person: { initial: string }) => person.initial)
+    if (entries.some((person: { initial: string; name: string }) => person.initial.length > 10 || person.name.length > 80)) {
+      return NextResponse.json({ error: "Initials must be 10 characters or fewer, and names 80 or fewer." }, { status: 400 })
     }
 
     const client = await pool.connect()
@@ -62,15 +78,13 @@ export async function PUT(req: NextRequest) {
       // Delete all previous initials for user
       await client.query("DELETE FROM label_initial_items WHERE user_id = $1", [user_id])
 
-      // Insert new initials, if any
-      for (const initial of initials) {
-        // Optional: you could validate 'initial' format here if desired
+      for (const person of entries) {
         await client.query(
           `
-          INSERT INTO label_initial_items (user_id, initial)
-          VALUES ($1, $2)
+          INSERT INTO label_initial_items (user_id, initial, full_name)
+          VALUES ($1, $2, $3)
           `,
-          [user_id, initial]
+          [user_id, person.initial, person.name || null]
         )
       }
 

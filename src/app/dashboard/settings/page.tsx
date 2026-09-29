@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import { Plus, X, CheckCircle2, AlertTriangle } from "lucide-react"
+import { Plus, X, Pencil, CheckCircle2, AlertTriangle } from "lucide-react"
 import BridgeDownload from "@/components/BridgeDownload"
 
 const labelTypes = [
@@ -16,9 +16,11 @@ const labelTypes = [
 
 export default function Settings() {
   const [expiryDays, setExpiryDays] = useState<Record<string, string>>({})
-  const [customInitials, setCustomInitials] = useState<string[]>([])
+  const [staff, setStaff] = useState<Array<{ initial: string; name: string }>>([])
   const [useInitials, setUseInitials] = useState<boolean>(true)
   const [newInitial, setNewInitial] = useState<string>("")
+  const [newName, setNewName] = useState<string>("")
+  const [editingInitial, setEditingInitial] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
 
   const [feedbackMsg, setFeedbackMsg] = useState<string>("")
@@ -73,7 +75,11 @@ export default function Settings() {
         )
         setExpiryDays(expiryMap)
         setUseInitials(initialsData.use_initials)
-        setCustomInitials(initialsData.initials || [])
+        setStaff(
+          initialsData.staff?.length
+            ? initialsData.staff
+            : (initialsData.initials || []).map((initial: string) => ({ initial, name: "" }))
+        )
       } catch (err) {
         console.error("Failed to load settings:", err)
         showFeedback("Failed to load settings", "error")
@@ -88,7 +94,10 @@ export default function Settings() {
   }
 
   // Helper to sync initials with backend immediately
-  const saveInitials = async (initials: string[], useInitialsVal: boolean) => {
+  const saveInitials = async (
+    people: Array<{ initial: string; name: string }>,
+    useInitialsVal: boolean
+  ) => {
     try {
       const token = localStorage.getItem("token")
       if (!token) {
@@ -105,11 +114,12 @@ export default function Settings() {
         body: JSON.stringify({
           user_id: userId,
           use_initials: useInitialsVal,
-          initials,
+          initials: people.map((person) => person.initial),
+          staff: people,
         }),
       })
       if (res.ok) {
-        showFeedback("Initials updated", "success")
+        showFeedback("Staff updated", "success")
       } else {
         showFeedback("Failed to update initials", "error")
       }
@@ -120,31 +130,54 @@ export default function Settings() {
   }
 
   const handleAddInitial = () => {
-    const trimmed = newInitial.trim().toUpperCase()
-    if (!trimmed) {
-      showFeedback("Initial cannot be empty", "error")
+    const initial = newInitial.trim().toUpperCase()
+    const name = newName.trim()
+    if (!initial) {
+      showFeedback("Initials cannot be empty", "error")
       return
     }
-    if (customInitials.includes(trimmed)) {
-      showFeedback(`Initial "${trimmed}" already added`, "error")
+    if (initial.length > 10) {
+      showFeedback("Initials must be 10 characters or fewer", "error")
       return
     }
-    const updatedInitials = [...customInitials, trimmed]
-    setCustomInitials(updatedInitials)
+    if (!name) {
+      showFeedback("Full name cannot be empty", "error")
+      return
+    }
+    if (name.length > 80) {
+      showFeedback("Name must be 80 characters or fewer", "error")
+      return
+    }
+    if (staff.some((person) => person.initial === initial && person.initial !== editingInitial)) {
+      showFeedback(`"${initial}" is already added`, "error")
+      return
+    }
+    const updated = editingInitial
+      ? staff.map((person) => (person.initial === editingInitial ? { initial, name } : person))
+      : [...staff, { initial, name }]
+    setStaff(updated)
     setNewInitial("")
-    saveInitials(updatedInitials, useInitials)
+    setNewName("")
+    setEditingInitial(null)
+    saveInitials(updated, useInitials)
+  }
+
+  const handleEditInitial = (person: { initial: string; name: string }) => {
+    setEditingInitial(person.initial)
+    setNewInitial(person.initial)
+    setNewName(person.name)
   }
 
   const handleRemoveInitial = (initial: string) => {
-    const updatedInitials = customInitials.filter((i) => i !== initial)
-    setCustomInitials(updatedInitials)
-    saveInitials(updatedInitials, useInitials)
+    const updated = staff.filter((person) => person.initial !== initial)
+    setStaff(updated)
+    saveInitials(updated, useInitials)
   }
 
   // When toggling useInitials switch, update backend immediately too
   const handleToggleUseInitials = (checked: boolean) => {
     setUseInitials(checked)
-    saveInitials(customInitials, checked)
+    saveInitials(staff, checked)
   }
 
   const handleSave = async () => {
@@ -257,9 +290,9 @@ export default function Settings() {
         {/* Label Initials Section */}
         <div className="bg-white rounded-xl shadow-lg border p-6">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-900">Label Initials</h2>
+            <h2 className="text-xl font-semibold text-gray-900">Staff</h2>
             <div className="flex items-center gap-3">
-              <Label className="text-gray-700 font-medium">Use Initials</Label>
+              <Label className="text-gray-700 font-medium">Use initials</Label>
               <Switch 
                 checked={useInitials} 
                 onCheckedChange={handleToggleUseInitials}
@@ -269,36 +302,65 @@ export default function Settings() {
           </div>
           {useInitials && (
             <>
-              <div className="mb-6 flex items-center gap-4">
+              <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Input
                   value={newInitial}
                   onChange={(e) => setNewInitial(e.target.value)}
-                  placeholder="Enter Initial (e.g., CH)"
-                  className="flex-1 border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+                  placeholder="Initials (e.g. MC)"
+                  className="border-gray-300 focus:border-purple-500 focus:ring-purple-200 sm:w-36"
                   maxLength={10}
+                />
+                <Input
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Full name"
+                  className="flex-1 border-gray-300 focus:border-purple-500 focus:ring-purple-200"
+                  maxLength={80}
                 />
                 <Button 
                   variant="outline" 
                   onClick={handleAddInitial}
                   className="border-purple-300 text-purple-700 hover:bg-purple-50"
                 >
-                  <Plus className="mr-1 h-4 w-4" /> Add Initial
+                  {editingInitial ? (
+                    "Update"
+                  ) : (
+                    <>
+                      <Plus className="mr-1 h-4 w-4" /> Add
+                    </>
+                  )}
                 </Button>
+                {editingInitial ? (
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setEditingInitial(null)
+                      setNewInitial("")
+                      setNewName("")
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                ) : null}
               </div>
-              {/* Display current initials */}
               <div className="flex flex-wrap gap-2">
-                {customInitials.length === 0 && (
-                  <span className="text-sm text-gray-500">No initials added yet.</span>
+                {staff.length === 0 && (
+                  <span className="text-sm text-gray-500">No staff added yet.</span>
                 )}
-                {customInitials.map((initial) => (
+                {staff.map((person) => (
                   <span
-                    key={initial}
+                    key={person.initial}
                     className="inline-flex items-center rounded-full border border-purple-200 bg-purple-50 px-3 py-1 text-sm text-purple-800 shadow-sm transition hover:bg-red-50 hover:border-red-200"
                   >
-                    {initial}
+                    {person.initial}
+                    {person.name ? ` · ${person.name}` : ""}
+                    <Pencil
+                      className="ml-2 h-3.5 w-3.5 cursor-pointer text-purple-600"
+                      onClick={() => handleEditInitial(person)}
+                    />
                     <X
                       className="ml-2 h-4 w-4 cursor-pointer text-purple-600 transition hover:text-red-500"
-                      onClick={() => handleRemoveInitial(initial)}
+                      onClick={() => handleRemoveInitial(person.initial)}
                     />
                   </span>
                 ))}
