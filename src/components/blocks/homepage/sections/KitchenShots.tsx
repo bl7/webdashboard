@@ -16,7 +16,7 @@ export const KitchenShots = () => (
           file: "android-print.mp4",
           poster: "android-printer.png",
           alt: "Printing from the Android app to a supported Bluetooth printer",
-          label: "From Android, on a MUNBYN RW411B or Born4Ship DB403.",
+          label: "From Android, on a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425.",
         },
         {
           file: "label-on-tub.mp4",

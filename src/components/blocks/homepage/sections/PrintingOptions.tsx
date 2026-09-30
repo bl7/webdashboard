@@ -5,7 +5,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import instaLabel2 from "@/assets/images/instaLabel2.png"
-import { ANDROID_PRINTERS, PLAY_STORE_URL } from "@/lib/marketing/site"
+import { formatAndroidPrinters, PLAY_STORE_URL } from "@/lib/marketing/site"
 
 export const PrintingOptions = () => (
   <section className="relative bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
@@ -32,7 +32,7 @@ export const PrintingOptions = () => (
           <h3 className="mb-3 text-xl font-bold text-mkt-ink">From Android</h3>
           <p className="mb-4 text-sm leading-relaxed text-mkt-ink8">
             Use the InstaLabel app with a supported Bluetooth label printer. Confirmed models:{" "}
-            {`${ANDROID_PRINTERS.join(" and ")}.`}
+            {`${formatAndroidPrinters("and")}.`}
           </p>
           <div className="mb-4 flex flex-wrap items-center gap-4">
             <Image

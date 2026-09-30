@@ -189,17 +189,17 @@ const knowledgeBase = [
       "hardware compatibility",
     ],
     answer:
-      "On a computer, InstaLabel uses PrintBridge with a label printer installed on Windows or macOS. On Android, printing is limited to supported Bluetooth models: MUNBYN RW411B and Born4Ship DB403.",
+      "On a computer, InstaLabel uses PrintBridge with a label printer installed on Windows or macOS. On Android, printing is limited to supported Bluetooth models: MUNBYN RW411B, Born4Ship DB403 and Rongta RP425.",
   },
   {
     keywords: ["special hardware", "equipment needed", "what equipment", "hardware requirements"],
     answer:
-      "You do not need a proprietary InstaLabel printer. On a computer, use PrintBridge with a label printer already installed on Windows or macOS. On Android, use the InstaLabel app with a MUNBYN RW411B or Born4Ship DB403.",
+      "You do not need a proprietary InstaLabel printer. On a computer, use PrintBridge with a label printer already installed on Windows or macOS. On Android, use the InstaLabel app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425.",
   },
   {
     keywords: ["existing printer", "current printer", "use my printer", "printer compatibility"],
     answer:
-      "On a computer, you can use a label printer that is already installed on Windows or macOS, through PrintBridge. Android printing works with the MUNBYN RW411B and Born4Ship DB403. Check the printer compatibility page before you buy equipment.",
+      "On a computer, you can use a label printer that is already installed on Windows or macOS, through PrintBridge. Android printing works with the MUNBYN RW411B, Born4Ship DB403 and Rongta RP425. Check the printer compatibility page before you buy equipment.",
   },
 
   {

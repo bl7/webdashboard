@@ -21,7 +21,7 @@ export const KitchenLabelPrinterCTAs = () => (
         </h2>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
           Print from a computer with PrintBridge, or from the Android app with a supported
-          Bluetooth printer (MUNBYN RW411B or Born4Ship DB403).
+          Bluetooth printer (MUNBYN RW411B, Born4Ship DB403 or Rongta RP425).
         </p>
 
         {/* Primary CTAs */}

@@ -1,7 +1,13 @@
 export const PLAY_STORE_URL =
   "https://play.google.com/store/apps/details?id=com.instalabel.co.app"
 
-export const ANDROID_PRINTERS = ["MUNBYN RW411B", "Born4Ship DB403"] as const
+export const ANDROID_PRINTERS = ["MUNBYN RW411B", "Born4Ship DB403", "Rongta RP425"] as const
+
+export function formatAndroidPrinters(conjunction: "and" | "or" = "or") {
+  const names = [...ANDROID_PRINTERS]
+  if (names.length <= 1) return names[0] ?? ""
+  return `${names.slice(0, -1).join(", ")} ${conjunction} ${names[names.length - 1]}`
+}
 
 export const TRIAL_PERIOD_DAYS = 14
 

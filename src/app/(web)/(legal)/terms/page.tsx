@@ -1,5 +1,5 @@
 import { Metadata } from "next"
-import { ANDROID_PRINTERS, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
 
 const title = "Terms of service | InstaLabel"
 const description =
@@ -122,7 +122,7 @@ const Page = () => {
           <p>
             You are responsible for ensuring your printer and devices work with InstaLabel. Desktop
             printing uses PrintBridge with a label printer installed on Windows or macOS. Android
-            printing uses supported Bluetooth models ({ANDROID_PRINTERS.join(" and ")}). We cannot
+            printing uses supported Bluetooth models ({formatAndroidPrinters("and")}). We cannot
             guarantee compatibility with every printer or device. Check the printer compatibility
             page and test your setup before relying on it in service.
           </p>

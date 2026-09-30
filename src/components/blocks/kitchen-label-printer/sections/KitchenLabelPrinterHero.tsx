@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { ANDROID_PRINTERS } from "@/lib/marketing/site"
+import { formatAndroidPrinters } from "@/lib/marketing/site"
 
 export const KitchenLabelPrinterHero = () => (
   <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
@@ -55,7 +55,7 @@ export const KitchenLabelPrinterHero = () => (
         </p>
         <p className="text-lg font-bold text-mkt-ink">Android</p>
         <p className="text-sm leading-relaxed text-mkt-ink8">
-          InstaLabel app with {ANDROID_PRINTERS.join(" or ")}.
+          InstaLabel app with {formatAndroidPrinters("or")}.
         </p>
       </motion.div>
     </div>

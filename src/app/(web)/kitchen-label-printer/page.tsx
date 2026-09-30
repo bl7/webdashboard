@@ -4,7 +4,7 @@ import React from "react"
 
 const title = "Kitchen label printer compatibility | InstaLabel"
 const description =
-  "Check desktop and Android printer requirements for InstaLabel, including PrintBridge and the supported MUNBYN RW411B and Born4Ship DB403 models."
+  "Check desktop and Android printer requirements for InstaLabel, including PrintBridge and the supported MUNBYN RW411B, Born4Ship DB403 and Rongta RP425 models."
 
 const faqs = [
   {

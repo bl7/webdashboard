@@ -7,7 +7,7 @@ import React from "react"
 import instaLabel3 from "@/assets/images/instalabel3.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
 import { emitHomeEvent } from "../home-labels"
 
 export const Hero = () => {
@@ -86,8 +86,8 @@ export const Hero = () => {
             {TRIAL_PERIOD_DAYS}-day trial. Payment details at checkout. No charge during the trial.
           </p>
           <p className="text-xs text-mkt-steel sm:text-sm">
-            No printer in the box. Windows or macOS with PrintBridge, or Android with a MUNBYN
-            RW411B or Born4Ship DB403.
+            No printer in the box. Windows or macOS with PrintBridge, or Android with{" "}
+            {formatAndroidPrinters("or")}.
           </p>
         </div>
       </div>

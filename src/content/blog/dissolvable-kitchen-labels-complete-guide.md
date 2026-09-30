@@ -53,7 +53,7 @@ InstaLabel's labelling software makes dissolvable label printing effortless and 
 
 ### Thermal Printer Compatibility
 
-- Works with USB and Bluetooth thermal label printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403)
+- Works with USB and Bluetooth thermal label printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425)
 - USB and Bluetooth connectivity
 - No special drivers or setup required
 - PrintBridge technology ensures seamless operation

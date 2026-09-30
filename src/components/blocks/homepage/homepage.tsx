@@ -5,6 +5,7 @@ import { WhyLabelling } from "./sections/WhyLabelling"
 import { ScrollBeforeAfter } from "./sections/ScrollBeforeAfter"
 import { LabelTypeStrip } from "./sections/LabelTypeStrip"
 import { ProductCapabilities } from "./sections/ProductCapabilities"
+import { CleaningChecklist } from "./sections/CleaningChecklist"
 import { AllergenMatrixModule } from "./sections/AllergenMatrixModule"
 import { LabelFormats } from "./sections/LabelFormats"
 import { KitchenWorkflowExplorer } from "./sections/KitchenWorkflowExplorer"
@@ -25,6 +26,7 @@ export const Homepage = () => {
         <LabelTypeStrip />
         <KitchenWorkflowExplorer />
         <ProductCapabilities />
+        <CleaningChecklist />
         <AllergenMatrixModule />
         <LabelFormats />
         <PrintingSetupSelector />

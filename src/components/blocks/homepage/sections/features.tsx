@@ -101,7 +101,7 @@ export const Feature = () => {
                 <span className="text-xl">✅</span>Allergen highlighting built-in
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-xl">✅</span>Works with USB & TSPL Bluetooth label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403.
+                <span className="text-xl">✅</span>Works with USB & TSPL Bluetooth label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425.
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-xl">✅</span>Print logs for traceability & audits

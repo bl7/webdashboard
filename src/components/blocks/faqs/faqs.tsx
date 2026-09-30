@@ -11,7 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { ANDROID_PRINTERS, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
 
 type FaqItem = {
   question: string
@@ -123,7 +123,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
         question: "Which printers work with Android?",
         answer: (
           <>
-            The models confirmed for this release are {ANDROID_PRINTERS.join(" and ")}. Ask about
+            The models confirmed for this release are {formatAndroidPrinters("and")}. Ask about
             any other exact model before buying it.{" "}
             <Link
               href="/kitchen-label-printer"
@@ -153,7 +153,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
       {
         question: "Is a printer included?",
         answer:
-          "No. Desktop printing uses a label printer already installed on Windows or macOS. Android printing uses a MUNBYN RW411B or Born4Ship DB403.",
+          "No. Desktop printing uses a label printer already installed on Windows or macOS. Android printing uses a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425.",
       },
     ],
   },
@@ -210,7 +210,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
       {
         question: "Does InstaLabel log temperatures or run a HACCP system?",
         answer:
-          "No. It prints the labels a kitchen uses while it runs its own process. Temperature checks and HACCP records stay in that process.",
+          "No. It does not log temperatures or run a HACCP system. Cleaning checklists record the tasks you schedule. Temperature checks and the rest of your food-safety process stay with your business.",
       },
       {
         question: "Does InstaLabel decide shelf life?",

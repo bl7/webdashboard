@@ -18,7 +18,7 @@ InstaLabel does not arrive as a printer in a box. The first label needs a way to
 
 On a computer, that is Windows or macOS, a label printer installed with its own driver, label stock that fits that printer, and PrintBridge to connect the browser to it.
 
-On Android, that is the InstaLabel app and a MUNBYN RW411B or a Born4Ship DB403.
+On Android, that is the InstaLabel app and a MUNBYN RW411B, a Born4Ship DB403 or a Rongta RP425.
 
 You also need the items you actually label. A short list is enough for the first day. A CSV can bring a longer menu across. Importing does not check that the ingredients or allergens are right.
 

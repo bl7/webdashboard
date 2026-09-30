@@ -59,7 +59,7 @@ export const FeaturesGridUses = () => {
                 icon: <span className="text-2xl">🖨️</span>,
                 title: "Universal Printer Support",
                 description:
-                  "Works with USB and Bluetooth label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403 — no locked-in hardware or special drivers required.",
+                  "Works with USB and Bluetooth label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425 — no locked-in hardware or special drivers required.",
               },
               {
                 icon: <span className="text-2xl">🧾</span>,
@@ -131,7 +131,7 @@ export const FeaturesGridUses = () => {
                   step: "03",
                   title: "Cross-Platform Simplicity",
                   description:
-                    "Whether you're using Windows or Mac, InstaLabel works with USB label printers (computer: PrintBridge with an installed printer). Mobile: MUNBYN RW411B or Born4Ship DB403. Set it up once and print from any modern browser or Android device.",
+                    "Whether you're using Windows or Mac, InstaLabel works with USB label printers (computer: PrintBridge with an installed printer). Mobile: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. Set it up once and print from any modern browser or Android device.",
                   icon: <span className="text-3xl">💻</span>,
                 },
               ].map((step, index) => (

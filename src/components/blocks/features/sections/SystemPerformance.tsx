@@ -38,7 +38,7 @@ export const SystemPerformance = () => {
         {
           title: "Android",
           value: "Two models",
-          description: "MUNBYN RW411B and Born4Ship DB403",
+          description: "MUNBYN RW411B, Born4Ship DB403 and Rongta RP425",
         },
       ],
     },

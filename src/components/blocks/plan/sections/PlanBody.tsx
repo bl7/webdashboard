@@ -28,6 +28,7 @@ const included = [
   "Web access and PrintBridge",
   "Android app access",
   "Print history",
+  "Cleaning checklists",
 ]
 
 const faqs = [

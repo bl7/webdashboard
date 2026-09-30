@@ -114,6 +114,9 @@ export const MobileAppBody = () => (
             </li>
           ))}
         </ol>
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mkt-ink8">
+          Staff can also mark scheduled cleaning tasks as done in the app.
+        </p>
       </div>
     </section>
 

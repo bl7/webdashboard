@@ -91,7 +91,7 @@ const softwareFeatures = [
       "Responsive web app optimized for mobile devices, Android app for thermal printing, and seamless cross-device experience.",
     technicalDetails: [
       "Native Android app for mobile kitchen operations",
-      "Android app: MUNBYN RW411B or Born4Ship DB403; Bluetooth 4.0+ thermal printers supported",
+      "Android app: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425; Bluetooth 4.0+ thermal printers supported",
       "Touch-optimized interface for kitchen glove compatibility",
       "Offline printing queue stores up to 50 labels when disconnected",
       "Cross-device synchronization maintains consistent data across platforms",
@@ -127,11 +127,11 @@ const softwareFeatures = [
     icon: <Printer className="h-7 w-7 text-gray-600" />,
     title: "Universal Printer Support",
     description:
-      "Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge technology ensures seamless connectivity.",
+      "Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. PrintBridge technology ensures seamless connectivity.",
     technicalDetails: [
       "PrintBridge software creates direct connection from web browser to USB printers",
       "Supports ESC/POS thermal printer protocol (industry standard)",
-      "Android app: MUNBYN RW411B or Born4Ship DB403; Bluetooth 4.0+ thermal printers supported",
+      "Android app: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425; Bluetooth 4.0+ thermal printers supported",
       "No special drivers required - works with existing printer installations",
       "Print queue management handles multiple label requests efficiently",
     ],

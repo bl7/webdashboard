@@ -197,7 +197,7 @@ export const ExpiryDateLabelsFeatures = () => (
           </div>
           <h3 className="mb-3 text-xl font-bold text-gray-900">Thermal Printer Support</h3>
           <p className="text-gray-600">
-            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403. PrintBridge
+            Works with USB and Bluetooth thermal label printers. Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. PrintBridge
             technology ensures seamless connectivity without special drivers or setup.
           </p>
         </motion.div>

@@ -182,7 +182,7 @@ export const KitchenLabelPrinterComparison = () => (
         <h3 className="mb-3 text-xl font-bold text-mkt-ink">Why Choose InstaLabel?</h3>
         <p className="text-mkt-ink">
           <strong>Spend less time writing labels</strong> while supporting compliance workflows. Our
-          labelling software works with USB and Bluetooth printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B or Born4Ship DB403) and eliminates manual errors.
+          labelling software works with USB and Bluetooth printers (computer: PrintBridge with an installed printer; Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425) and eliminates manual errors.
           <strong>Start your free trial today and see the difference.</strong>
         </p>
       </motion.div>

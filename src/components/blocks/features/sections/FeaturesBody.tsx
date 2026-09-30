@@ -71,6 +71,45 @@ export const FeaturesBody = () => (
       </div>
     </section>
 
+    <section id="cleaning" className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16" style={{ scrollMarginTop: "7rem" }}>
+      <div className="container mx-auto max-w-6xl">
+        <h2 className="mb-4 max-w-2xl text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+          Cleaning checklists for the tasks you already run.
+        </h2>
+        <p className="mb-10 max-w-2xl text-base leading-relaxed text-mkt-ink8">
+          Labelling stays the main job. In the same dashboard you can keep the cleaning list: what needs doing, how often, and whether it was done.
+        </p>
+        <ul className="grid gap-4 sm:grid-cols-2">
+          {[
+            {
+              title: "Set the task",
+              body: "Choose an area, then daily, weekly or monthly. If a monthly date does not exist, the task runs on the last day of that month.",
+            },
+            {
+              title: "Staff complete it",
+              body: "On the Android app they open the tasks due, pick who did the check, and mark it done.",
+            },
+            {
+              title: "Look back by day",
+              body: "History is that day’s checklist, not a list of future dates. The PDF prints one page per day, using the business name on your profile.",
+            },
+            {
+              title: "One overdue email",
+              body: "If a task passes its due time and emails are on, the account receives one message. Opening the dashboard does not send another.",
+            },
+          ].map((item) => (
+            <li key={item.title} className="rounded-xl border border-mkt-steel1 bg-white p-6">
+              <h3 className="text-lg font-extrabold text-mkt-ink">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-mkt-ink8">{item.body}</p>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mkt-ink8">
+          This records the checks you schedule. It does not log temperatures, replace your HACCP records, or certify the kitchen.
+        </p>
+      </div>
+    </section>
+
     <section id="matrix" className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16" style={{ scrollMarginTop: "7rem" }}>
       <div className="container mx-auto grid max-w-6xl items-center gap-8 lg:grid-cols-2">
         <div>

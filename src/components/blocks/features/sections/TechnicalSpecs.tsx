@@ -25,7 +25,7 @@ export const TechnicalSpecs = () => (
             <li>203 DPI resolution for crisp, clear text and graphics</li>
             <li>Print speed up to 152mm per second</li>
             <li>Label width support: 60mm x 40mm (standard) and 56mm x 80mm (PPDS labels)</li>
-            <li>Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403</li>
+            <li>Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425</li>
             <li>
               PrintBridge technology for USB printing on Mac and Windows, Bluetooth for Android
               devices

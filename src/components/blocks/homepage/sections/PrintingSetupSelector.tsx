@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import labelPrinterInKitchen from "@/assets/images/labelPrunterInKitchen.png"
-import { ANDROID_PRINTERS } from "@/lib/marketing/site"
+import { formatAndroidPrinters } from "@/lib/marketing/site"
 import { emitHomeEvent } from "../home-labels"
 
 export const PrintingSetupSelector = () => {
@@ -75,7 +75,7 @@ export const PrintingSetupSelector = () => {
               </p>
               <ul className="mt-4 space-y-2 text-sm">
                 <li>InstaLabel Android app.</li>
-                <li>{ANDROID_PRINTERS.join(" or ")}.</li>
+                <li>{formatAndroidPrinters("or")}.</li>
                 <li>Suitable label stock and a checked first print.</li>
               </ul>
               <Link href="/mobile-app" className="home-link mt-4 inline-flex items-center gap-2">

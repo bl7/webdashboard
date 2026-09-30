@@ -25,7 +25,7 @@ export const PrintingSetup = () => {
       icon: <Smartphone className="h-8 w-8 text-green-600" />,
       features: [
         "Download InstaLabel app from Google Play Store",
-        "MUNBYN RW411B or Born4Ship DB403 for best results; connect via Bluetooth to your Android tablet",
+        "MUNBYN RW411B, Born4Ship DB403 or Rongta RP425 for best results; connect via Bluetooth to your Android tablet",
         "Print directly from the app without additional software",
         "Perfect for food trucks, catering, or space-limited kitchens",
         "Works offline once labels are created",
@@ -52,7 +52,7 @@ export const PrintingSetup = () => {
         "USB thermal printers for desktop/laptop use",
         "Bluetooth thermal printers for Android devices",
         "No network or WiFi printing required",
-        "Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B or Born4Ship DB403 (TSPL compliant)",
+        "Computer: a label printer installed on Windows or macOS, through PrintBridge. Android: MUNBYN RW411B, Born4Ship DB403 or Rongta RP425 (TSPL compliant)",
         "Automatic printer detection and configuration",
       ],
     },

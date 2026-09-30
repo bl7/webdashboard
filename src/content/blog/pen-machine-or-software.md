@@ -18,6 +18,6 @@ Handwriting uses a pen and a label or tape. It needs no subscription. It depends
 
 A dedicated labelling machine is a device and a roll from that supplier. The subscription often includes the hardware, the stock and a replacement if the device fails. You print their formats, on their labels.
 
-InstaLabel is the software. On a computer it prints through PrintBridge to a label printer already installed on Windows or macOS. On Android it prints to a MUNBYN RW411B or a Born4Ship DB403. There is no printer in the box. You still set the recipes, the allergens and the dates, and you still check the label before it goes on the food.
+InstaLabel is the software. On a computer it prints through PrintBridge to a label printer already installed on Windows or macOS. On Android it prints to a MUNBYN RW411B, a Born4Ship DB403 or a Rongta RP425. There is no printer in the box. You still set the recipes, the allergens and the dates, and you still check the label before it goes on the food.
 
 If the question is only "which box is cheaper", the pricing page has the subscription. It does not include a printer, label rolls, or a claim about how many hours a kitchen will save.
