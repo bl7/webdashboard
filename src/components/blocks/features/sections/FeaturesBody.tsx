@@ -22,14 +22,14 @@ const steps = [
   {
     title: "Allergens",
     body: "Allergen information saved on the ingredients can be carried onto the label. Staff still check the recipe and the supplier information.",
-    file: "dashboard-matrix.png",
-    alt: "Allergen information recorded for menu items",
+    file: "dashboard-allergens.png",
+    alt: "Allergen records in the InstaLabel dashboard",
   },
   {
     title: "Date rules you set",
     body: "Your business sets the date rules. InstaLabel applies those settings when it prepares the label. It does not decide shelf life.",
-    file: "dashboard-print.png",
-    alt: "A label preview with the date from kitchen settings",
+    file: "dashboard-settings.png",
+    alt: "Date settings in the InstaLabel dashboard",
   },
   {
     title: "Finished label",

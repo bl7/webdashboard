@@ -59,6 +59,7 @@ export const FeaturesHero = () => {
               alt="InstaLabel print screen with a label preview"
               width={1000}
               height={750}
+              quality={95}
               className="h-auto w-full object-cover"
               priority
             />

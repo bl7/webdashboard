@@ -10,17 +10,17 @@ type MediaSlotProps = {
 }
 
 export const MediaSlot = ({ file, alt, label, poster }: MediaSlotProps) => {
-  const src = `/marketing/${file}?v=20260930b`
+  const src = `/marketing/${file}?v=20260930e`
   const isVideo = file.endsWith(".mp4")
   const [showVideo, setShowVideo] = useState(isVideo)
-  const posterSrc = poster ? `/marketing/${poster}?v=20260930b` : undefined
+  const posterSrc = poster ? `/marketing/${poster}?v=20260930e` : undefined
   const imageSrc = isVideo && posterSrc ? posterSrc : src
 
   return (
     <figure className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white" title={`Replace public/marketing/${file}`}>
       {showVideo ? (
         <video
-          className="aspect-video w-full bg-[#142124] object-cover"
+          className="aspect-video w-full bg-[#142124] object-cover object-top"
           controls
           playsInline
           preload="metadata"
@@ -29,7 +29,7 @@ export const MediaSlot = ({ file, alt, label, poster }: MediaSlotProps) => {
           onError={() => setShowVideo(false)}
         />
       ) : (
-        <img src={imageSrc} alt={alt} className="aspect-video w-full object-cover" />
+        <img src={imageSrc} alt={alt} className="aspect-video w-full object-cover object-top" />
       )}
       <figcaption className="border-t border-mkt-steel1 px-3 py-2 text-xs leading-relaxed text-mkt-steel">
         {label}
