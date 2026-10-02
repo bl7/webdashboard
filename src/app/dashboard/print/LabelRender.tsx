@@ -615,12 +615,13 @@ export default function LabelRender({
           <>
             <div
               style={{
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "black",
-                fontSize: fontSize,
+                fontSize: config.containsFontSize,
                 textAlign: "center",
                 marginTop: 2,
-                letterSpacing: 1,
+                letterSpacing: 0,
+                lineHeight: 1.2,
                 textTransform: "uppercase",
                 fontFamily: "inherit",
               }}
@@ -631,10 +632,11 @@ export default function LabelRender({
               style={{
                 fontWeight: 700,
                 color: "black",
-                fontSize: fontSize - 2,
+                fontSize: config.containsFontSize,
                 textAlign: "center",
                 marginTop: 1,
-                letterSpacing: 0.5,
+                letterSpacing: 0,
+                lineHeight: 1.2,
                 textTransform: "uppercase",
                 fontFamily: "inherit",
               }}
@@ -776,12 +778,13 @@ export default function LabelRender({
           <>
             <div
               style={{
-                fontWeight: 900,
+                fontWeight: 700,
                 color: "black",
-                fontSize: fontSize,
+                fontSize: config.containsFontSize,
                 textAlign: "center",
                 marginTop: 2,
-                letterSpacing: 1,
+                letterSpacing: 0,
+                lineHeight: 1.2,
                 textTransform: "uppercase",
                 fontFamily: "inherit",
               }}
@@ -792,10 +795,11 @@ export default function LabelRender({
               style={{
                 fontWeight: 700,
                 color: "black",
-                fontSize: fontSize - 2,
+                fontSize: config.containsFontSize,
                 textAlign: "center",
                 marginTop: 1,
-                letterSpacing: 0.5,
+                letterSpacing: 0,
+                lineHeight: 1.2,
                 textTransform: "uppercase",
                 fontFamily: "inherit",
               }}

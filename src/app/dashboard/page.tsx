@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import SalesPrepSuggestions from "@/components/dashboard/SalesPrepSuggestions"
 import LowStockAlerts from "@/components/dashboard/LowStockAlerts"
 import CleaningOverdueAlert from "@/components/dashboard/cleaning/CleaningOverdueAlert"
+import ComplianceDueAlert from "@/components/dashboard/compliance/ComplianceDueAlert"
 
 const CARD_STYLES = {
   allergens: {
@@ -112,6 +113,7 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 px-4 py-12">
       <div className="mx-auto w-full max-w-7xl">
         <CleaningOverdueAlert />
+        <ComplianceDueAlert />
         {/* Expiration Metrics Cards */}
         <motion.section
           initial={{ opacity: 0, y: -20 }}
