@@ -13,13 +13,13 @@ export const MobileAppPage = () => {
             file: "android-print.mp4",
             poster: "rw411b.png",
             alt: "Android app printing to a MUNBYN RW411B",
-            label: "MUNBYN RW411B. Replace this clip with that printer.",
+            label: "MUNBYN RW411B.",
           },
           {
             file: "db403-print.mp4",
             poster: "db403.png",
             alt: "Android app printing to a Born4Ship DB403",
-            label: "Born4Ship DB403. Replace this clip with that printer.",
+            label: "Born4Ship DB403.",
           },
         ]}
       />

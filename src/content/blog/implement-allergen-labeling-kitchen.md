@@ -1,7 +1,7 @@
 ---
-title: "Staff Training for Allergen Labeling | InstaLabel"
-description: "Practical checklists and templates to help your team stay allergen-aware and keep your customers informed."
-date: "2024-12-17"
+title: "Staff training for allergen labelling"
+description: "A short checklist for kitchen teams covering the 14 UK regulated allergens, recorded information and what to say to a customer."
+date: "2026-10-02"
 category: "Allergen Management"
 readTime: "5 min read"
 author: "InstaLabel Team"
@@ -10,39 +10,33 @@ featured: false
 image: "/opengraph-image.png"
 ---
 
-# Staff Training and Customer Communication for Allergen Labeling
+# Staff training for allergen labelling
 
-Effective allergen labeling is a team effort. Here are practical tools to help your staff stay informed and your customers feel confident.
+Allergen information is only useful if the people on the shift know where it comes from and check it before a label is applied.
 
----
+## Staff checklist
 
-## Staff Training Checklist: Allergen Awareness and Labeling
+- [ ] Know the 14 regulated allergens in the UK, and any other allergens your kitchen records
+- [ ] Check ingredient and supplier information when a recipe or delivery changes
+- [ ] Follow the kitchen's hygiene and preparation steps to limit cross-contact
+- [ ] Use the saved InstaLabel record to review allergens before printing
+- [ ] Read the label for prep, cooked and PPDS items before it is used
+- [ ] Answer a customer from the recorded information, or fetch the person who can
+- [ ] Repeat the check when the menu or a supplier changes
 
-- [ ] Understand the 8 major allergens and any custom allergens in your kitchen
-- [ ] Identify allergenic ingredients and potential cross-contamination points
-- [ ] Follow proper hygiene and prep procedures to avoid allergen cross-contact
-- [ ] Use InstaLabel's system to check allergen data and print accurate labels
-- [ ] Verify labels for prep, cook, and PPDS items before use
-- [ ] Confidently respond to customer allergen questions
-- [ ] Attend regular refresher training sessions to stay updated
+The 14 regulated categories are celery, cereals containing gluten, crustaceans, eggs, fish, lupin, milk, molluscs, mustard, nuts, peanuts, sesame, soya, and sulphur dioxide and sulphites. The full notes are in the [allergen guide](/allergen-guide).
 
----
+## What a customer can be told
 
-### Customer-Facing Allergen Information Sheet (Sample)
+Use wording the business has agreed. A workable notice says:
 
-**Your Safety is Our Priority: Allergen Information**
+- Allergen information comes from the ingredients recorded for each item.
+- Ask a member of staff before ordering if you have an allergy.
+- The kitchen takes steps to limit cross-contact. It cannot promise an allergen-free environment.
+- For a specific dish, staff should read the saved record rather than guess.
 
-We take allergen management seriously to protect you and your loved ones. Please note:
+A blank on the allergen matrix means nothing is recorded there. It does not mean the dish is allergen-free.
 
-- We track and label common allergens including milk, eggs, fish, shellfish, tree nuts, peanuts, wheat (gluten), and soybeans.
-- Please inform our staff of any allergies or dietary restrictions before ordering.
-- We take precautions to minimize cross-contamination but cannot guarantee a completely allergen-free environment.
-- For detailed allergen information on menu items, please scan the QR code on your table or ask a team member.
+## What the software does not do
 
-Thank you for trusting us with your health and safety!
-
----
-
-## Conclusion
-
-Regular staff training combined with clear customer communication strengthens your allergen labeling program and builds trust. Use these tools alongside InstaLabel to protect your customers and keep your kitchen compliant.
+InstaLabel prints and displays the allergen information the business has saved. It does not decide that a food is safe, and it does not replace training, supplier checks or the kitchen's own procedure.

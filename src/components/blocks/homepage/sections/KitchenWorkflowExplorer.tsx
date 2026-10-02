@@ -23,11 +23,11 @@ const workflows: {
   },
   {
     key: "ingredients",
-    choice: "Opened",
-    heading: "Opened",
-    body: "Know when an opened product needs to be used.",
+    choice: "Default",
+    heading: "Default",
+    body: "Identify a stored ingredient with its name, recorded allergens and date.",
     href: "/ingredient-labels",
-    link: "Explore opened-product labels",
+    link: "Explore ingredient labels",
   },
   {
     key: "cooked",
@@ -50,8 +50,8 @@ const workflows: {
     choice: "Use first",
     heading: "Use first",
     body: "Make food that needs attention easy for the team to identify.",
-    href: "/uses",
-    link: "Explore kitchen workflows",
+    href: "/use-first-labels",
+    link: "Explore use-first labels",
   },
   {
     key: "ppds",

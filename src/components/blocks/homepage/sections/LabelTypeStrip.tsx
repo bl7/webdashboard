@@ -1,6 +1,6 @@
 import React from "react"
 
-const items = ["Prep", "Opened", "Cooked", "Defrost", "Use first", "PPDS"]
+const items = ["Default", "Prep", "Cooked", "Defrost", "Use first", "PPDS"]
 
 export const LabelTypeStrip = () => (
   <section className="home-band py-5">

@@ -126,7 +126,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
             The models confirmed for this release are {formatAndroidPrinters("and")}. Ask about
             any other exact model before buying it.{" "}
             <Link
-              href="/kitchen-label-printer"
+              href="/printer-compatibility"
               className="font-semibold text-mkt-teal hover:underline"
             >
               Printer compatibility
@@ -148,7 +148,7 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
       {
         question: "Which label sizes does InstaLabel print?",
         answer:
-          "60×40 mm and 56×80 mm. Both sizes can carry prep, opened, cooked, defrost, use-first and PPDS layouts. Choose the size that fits the printer and the amount of information on the label.",
+          "60×40 mm and 56×80 mm. Both sizes can carry default, prep, cooked, defrost, use-first and PPDS labels. Choose the size that fits the printer and the amount of information on the label.",
       },
       {
         question: "Is a printer included?",

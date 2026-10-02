@@ -87,7 +87,7 @@ const knowledgeBase = [
   {
     keywords: ["what is instalabel", "what does instalabel do", "how does instalabel work"],
     answer:
-      "InstaLabel is a kitchen labelling system for restaurants, cafés, takeaways, catering and other food businesses. It turns the ingredient, allergen and date information you save into clear labels for prep, opened products, cooked food, defrost, use-first and PPDS. Your business remains responsible for checking that information and the finished labels.",
+      "InstaLabel is a kitchen labelling system for restaurants, cafés, takeaways, catering and other food businesses. It turns the ingredient, allergen and date information you save into clear labels for default, prep, cooked, defrost, use-first and PPDS. Your business remains responsible for checking that information and the finished labels.",
   },
   {
     keywords: [
@@ -103,7 +103,7 @@ const knowledgeBase = [
       "labels",
     ],
     answer:
-      "InstaLabel supports prep, opened-product, cooked, defrost, use-first and PPDS labels. There are two physical formats, 60 × 40 mm and 56 × 80 mm. Both formats support those workflows. InstaLabel changes the layout to fit the size. Dates follow the rules your business sets. Your team still checks the finished label.",
+      "InstaLabel supports default, prep, cooked, defrost, use-first and PPDS labels. There are two physical formats, 60 × 40 mm and 56 × 80 mm. Both formats support those labels. InstaLabel changes the layout to fit the size. Dates follow the rules your business sets. Your team still checks the finished label.",
   },
   {
     keywords: [

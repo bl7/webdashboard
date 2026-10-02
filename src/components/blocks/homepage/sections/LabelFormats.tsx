@@ -40,8 +40,8 @@ export const LabelFormats = () => (
       </div>
 
       <p className="mt-8 max-w-3xl text-[1.02rem] leading-relaxed">
-        Two formats. The same InstaLabel workflows. Different layouts. Both sizes support prep,
-        opened, cooked, defrost, use-first and PPDS labels. InstaLabel formats the information to
+        Two formats. The same InstaLabel workflows. Different layouts. Both sizes support default,
+        prep, cooked, defrost, use-first and PPDS labels. InstaLabel formats the information to
         suit the selected size.
       </p>
       <p className="mt-3 text-xs text-[var(--home-muted)]">

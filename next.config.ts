@@ -139,6 +139,27 @@ const nextConfig = {
         destination: "/kitchen-label-printer",
         permanent: true,
       },
+      {
+        source: "/blog/dissolvable-kitchen-labels-complete-guide",
+        destination: "/dissolvable-kitchen-labels",
+        permanent: true,
+      },
+      {
+        source: "/blog/haccp-compliance-restaurant-kitchens",
+        destination: "/haccp-labels",
+        permanent: true,
+      },
+      {
+        source: "/blog/thermal-vs-inkjet-kitchen-labels",
+        destination: "/kitchen-label-printer",
+        permanent: true,
+      },
+      { source: "/opened-labels", destination: "/ingredient-labels", permanent: true },
+      {
+        source: "/blog/staff-training-for-allergen-labeling",
+        destination: "/blog/implement-allergen-labeling-kitchen",
+        permanent: true,
+      },
     ]
   },
 

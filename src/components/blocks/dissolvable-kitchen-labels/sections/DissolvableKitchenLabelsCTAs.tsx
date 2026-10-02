@@ -51,15 +51,13 @@ export const DissolvableKitchenLabelsCTAs = () => (
           <div className="mb-4 flex justify-center">
             <Download className="h-12 w-12 text-mkt-teal" />
           </div>
-          <h3 className="mb-3 text-xl font-bold text-gray-900">Download Dissolvable Label Guide</h3>
+          <h3 className="mb-3 text-xl font-bold text-gray-900">Check the label stock</h3>
           <p className="mb-4 text-gray-600">
-            Get our "Complete Guide to Dissolvable Kitchen Labels" with compliance requirements, 
-            best practices, and InstaLabel implementation strategies.
+            The software prints the layout. The stock decides whether a label dissolves, lifts cleanly
+            or stands up to moisture. Test it on the container before you buy in quantity.
           </p>
           <Button variant="outline" className="w-full" asChild>
-            <Link href="/blog/dissolvable-kitchen-labels-complete-guide">
-              Download Free Guide
-            </Link>
+            <Link href="/dissolvable-kitchen-labels">Label materials</Link>
           </Button>
         </div>
 

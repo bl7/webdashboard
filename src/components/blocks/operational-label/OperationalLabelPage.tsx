@@ -40,6 +40,7 @@ export type OperationalLabelConfig = {
   closingTitle: string
   closingBody: string
   hideEmptyContains?: boolean
+  heroNote?: string
 }
 
 export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfig }) => {
@@ -117,7 +118,8 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
               />
             </div>
             <p className="mt-3 text-center text-xs text-mkt-steel md:text-right">
-              Illustrative layout. Dates must follow your kitchen&apos;s procedures.
+              {config.heroNote ??
+                "Illustrative layout. Dates must follow your kitchen's procedures."}
             </p>
           </motion.div>
         </div>

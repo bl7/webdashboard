@@ -51,5 +51,4 @@ User-agent: YandexBot
 Allow: /
 
 # Sitemap location
-Sitemap: https://www.instalabel.co/sitemap-v1.xml 
-Sitemap: https://www.instalabel.co/sitemap-test.xml
+Sitemap: https://www.instalabel.co/sitemap-v1.xml

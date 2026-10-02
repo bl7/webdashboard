@@ -58,7 +58,7 @@ const faqs = [
     q: "Which label sizes does InstaLabel print?",
     a: (
       <>
-        Two formats: 60 × 40 mm and 56 × 80 mm. Both support prep, opened, cooked, defrost,
+        Two formats: 60 × 40 mm and 56 × 80 mm. Both support default, prep, cooked, defrost,
         use-first and PPDS labels. InstaLabel changes the layout to fit the size you select.
       </>
     ),

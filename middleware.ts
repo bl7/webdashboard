@@ -57,7 +57,10 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/ingredient-labels") ||
     pathname.startsWith("/expiry-date-labels") ||
     pathname.startsWith("/haccp-labels") ||
-    pathname.startsWith("/dissolvable-kitchen-labels")
+    pathname.startsWith("/dissolvable-kitchen-labels") ||
+    pathname.startsWith("/use-first-labels") ||
+    pathname.startsWith("/allergen-matrix") ||
+    pathname.startsWith("/printer-compatibility")
 
   // Allow public routes to pass through
   if (isPublicRoute) {

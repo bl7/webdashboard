@@ -24,11 +24,12 @@ export const PRODUCT_NAV = [
   { label: "Features", href: "/features" },
   { label: "Desktop printing", href: "/printbridge" },
   { label: "Android app", href: "/mobile-app" },
-  { label: "Printer compatibility", href: "/kitchen-label-printer" },
+  { label: "Printer compatibility", href: "/printer-compatibility" },
 ] as const
 
 export const RESOURCES_NAV = [
   { label: "Allergen guide", href: "/allergen-guide" },
+  { label: "Allergen matrix", href: "/allergen-matrix" },
   { label: "PPDS labels", href: "/natashas-law" },
   { label: "FAQs", href: "/faqs" },
   { label: "Guides", href: "/blog" },
@@ -38,6 +39,7 @@ export const WORKFLOW_NAV = [
   { label: "All workflows", href: "/uses" },
   { label: "Ingredient", href: "/ingredient-labels" },
   { label: "Prep", href: "/prep-labels" },
+  { label: "Use first", href: "/use-first-labels" },
   { label: "Cooked", href: "/cooked-labels" },
   { label: "Defrost", href: "/defrost-labels" },
   { label: "Expiry date", href: "/expiry-date-labels" },
@@ -49,11 +51,12 @@ export const FOOTER_PRODUCT = [
   { label: "Pricing", href: "/plan" },
   { label: "PrintBridge", href: "/printbridge" },
   { label: "Android app", href: "/mobile-app" },
-  { label: "Printer compatibility", href: "/kitchen-label-printer" },
+  { label: "Printer compatibility", href: "/printer-compatibility" },
 ] as const
 
 export const FOOTER_RESOURCES = [
   { label: "Allergen labelling", href: "/allergen-compliance" },
+  { label: "Allergen matrix", href: "/allergen-matrix" },
   { label: "Allergen guide", href: "/allergen-guide" },
   { label: "HACCP and labelling", href: "/haccp-labels" },
   { label: "Label materials", href: "/dissolvable-kitchen-labels" },

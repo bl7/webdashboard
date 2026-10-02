@@ -420,7 +420,7 @@ export default function LabelRender({
           <span style={{ fontWeight: 700, fontFamily: "inherit" }}>Contains: </span>
           {uniqueAllergens.length === 0 ? (
             <span style={{ fontWeight: 700, fontFamily: "inherit" }}>
-              Does not contain any allergens
+              No allergens recorded
             </span>
           ) : (
             <span style={{ fontWeight: 700, fontFamily: "inherit" }}>
