@@ -12,6 +12,7 @@ Allow: /allergen-compliance
 Allow: /allergen-guide
 Allow: /printbridge
 Allow: /plan
+Allow: /christmas
 Allow: /about
 Allow: /bookdemo
 Allow: /faqs
@@ -51,4 +52,8 @@ User-agent: YandexBot
 Allow: /
 
 # Sitemap location
+Sitemap: https://www.instalabel.co/sitemap.xml
 Sitemap: https://www.instalabel.co/sitemap-v1.xml
+
+# AI search and assistants use the same public pages. A short map is at:
+# https://www.instalabel.co/llms.txt

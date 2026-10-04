@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext"
 import { PerformanceOptimizer } from "@/components/PerformanceOptimizer"
 import { Analytics } from "@/components/Analytics"
 import { PerformanceMonitor } from "@/components/PerformanceMonitor"
+import { CampaignCodeCapture } from "@/components/CampaignCodeCapture"
 
 const base_font = Manrope({
   subsets: ["latin"],
@@ -197,6 +198,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessData) }}
         />
+        <CampaignCodeCapture />
         <PerformanceOptimizer />
         <Analytics />
         <PerformanceMonitor />

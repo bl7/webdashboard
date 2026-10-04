@@ -49,6 +49,7 @@ export const WORKFLOW_NAV = [
 export const FOOTER_PRODUCT = [
   { label: "Features", href: "/features" },
   { label: "Pricing", href: "/plan" },
+  { label: "Christmas offer", href: "/christmas" },
   { label: "PrintBridge", href: "/printbridge" },
   { label: "Android app", href: "/mobile-app" },
   { label: "Printer compatibility", href: "/printer-compatibility" },

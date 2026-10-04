@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
 import { cn } from "@/lib/utils"
+import ComplianceSections from "@/components/dashboard/compliance/ComplianceSections"
 
 const LINKS = [
   { href: "/dashboard/cleaning", label: "Overview", exact: true },
@@ -17,6 +18,7 @@ export default function CleaningNav() {
   const pathname = usePathname()
   return (
     <div className="space-y-4">
+      <ComplianceSections />
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Cleaning</h1>
         <p className="text-sm text-slate-500">Schedules, today’s tasks and cleaning records.</p>

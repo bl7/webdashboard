@@ -19,7 +19,7 @@ import {
   FaTemperatureHigh,
 } from "react-icons/fa"
 import { GiShrimp, GiChickenOven } from "react-icons/gi"
-import { MdRestaurantMenu, MdGridOn, MdCleaningServices } from "react-icons/md"
+import { MdRestaurantMenu, MdGridOn } from "react-icons/md"
 import { FaLayerGroup } from "react-icons/fa6"
 import { IoLogOutOutline } from "react-icons/io5"
 import { RiAdminLine } from "react-icons/ri"
@@ -38,8 +38,7 @@ const NAV_ITEMS = [
   // { label: "Print Label", icon: <FaPrint />, href: "/dashboard/print" },
   // { label: "Bulk Print", icon: <FaList />, href: "/dashboard/bulk-print" },
   { label: "Print Sessions", icon: <GoLog />, href: "/dashboard/logs" },
-  { label: "Cleaning", icon: <MdCleaningServices />, href: "/dashboard/cleaning" },
-  { label: "Temperature records", icon: <FaTemperatureHigh />, href: "/dashboard/compliance" },
+  { label: "Compliance", icon: <FaTemperatureHigh />, href: "/dashboard/compliance" },
   { label: "PrintBridge Test", icon: <FaPrint />, href: "/dashboard/printbridge-test" },
   { label: "Menu Items", icon: <MdRestaurantMenu />, href: "/dashboard/menuitem" },
   { label: "Ingredients", icon: <GiChickenOven />, href: "/dashboard/ingredients" },
@@ -52,9 +51,12 @@ const NAV_ITEMS = [
   { label: "Settings", icon: <FaCog />, href: "/dashboard/settings" },
 ]
 
-const ADMIN_ROUTES = NAV_ITEMS.filter(
-  (i) => !["Dashboard", "Labels", "Stickers", "PrintBridge Test"].includes(i.label)
-).map((i) => i.href)
+const ADMIN_ROUTES = [
+  ...NAV_ITEMS.filter(
+    (i) => !["Dashboard", "Labels", "Stickers", "PrintBridge Test"].includes(i.label)
+  ).map((i) => i.href),
+  "/dashboard/cleaning",
+]
 
 interface SidebarProps {
   isSetupPage?: boolean
@@ -307,7 +309,9 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
                     href={href}
                     className={cn(
                       "group relative flex items-center gap-3 rounded-lg px-3 py-2 text-base font-medium text-white transition-colors hover:bg-white/10",
-                      pathname === href && "bg-white/20"
+                      (href === "/dashboard/compliance"
+                        ? pathname.startsWith("/dashboard/compliance") || pathname.startsWith("/dashboard/cleaning")
+                        : pathname === href) && "bg-white/20"
                     )}
                     onClick={() => setSidebarMobile(false)}
                   >

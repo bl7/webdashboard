@@ -4,6 +4,7 @@ import { stripe } from "@/lib/stripe"
 import Stripe from "stripe"
 import { getPlanNameFromPriceId } from "@/lib/formatPlanName"
 import { sendMail } from "@/lib/mail"
+import { alignCampaignSubscription } from "@/lib/campaignOffer"
 import {
   newSubscriptionEmail,
   planChangeEmail,
@@ -35,7 +36,8 @@ export async function POST(req: NextRequest) {
     console.log("[WEBHOOK] Received event:", event.type, JSON.stringify(event.data, null, 2))
     switch (event.type) {
       case "customer.subscription.created": {
-        const sub = event.data.object as Stripe.Subscription
+        let sub = event.data.object as Stripe.Subscription
+        sub = await alignCampaignSubscription(sub)
         let user_id = sub.metadata?.user_id
         let userEmail = null
         if (!user_id && sub.customer) {
@@ -1071,7 +1073,8 @@ export async function POST(req: NextRequest) {
           break
         }
         // Fetch the subscription from Stripe
-        const sub = (await stripe.subscriptions.retrieve(subscriptionId)) as Stripe.Subscription
+        let sub = (await stripe.subscriptions.retrieve(subscriptionId)) as Stripe.Subscription
+        sub = await alignCampaignSubscription(sub)
         // Log the full Stripe subscription object for debugging
         console.log("[WEBHOOK] Stripe Subscription Object:", JSON.stringify(sub, null, 2))
         // Extract user_id from metadata or fallback

@@ -1,0 +1,379 @@
+.xmas {
+  --xmas-paper: #f6efe6;
+  --xmas-red: #9c1c2e;
+  --xmas-green: #0e6b45;
+  --xmas-ink: #2c241c;
+  --xmas-muted: #6d6256;
+  background:
+    radial-gradient(460px 280px at 0% 8%, rgba(156, 28, 46, 0.09), transparent 70%),
+    radial-gradient(420px 260px at 100% 92%, rgba(14, 107, 69, 0.1), transparent 72%),
+    var(--xmas-paper);
+  color: var(--xmas-ink);
+}
+
+.marketing .xmas,
+.dark .marketing .xmas {
+  background-color: var(--xmas-paper) !important;
+  color: var(--xmas-ink) !important;
+}
+
+.xmas-sheet {
+  max-width: 38rem;
+  margin: 0 auto;
+  padding: 7.75rem 1.25rem 4.75rem;
+  text-align: center;
+}
+
+.xmas-kicker {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--xmas-muted);
+}
+
+.xmas-title {
+  margin: 0.85rem 0 0;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  font-size: clamp(3.5rem, 9vw, 5.75rem);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  color: var(--xmas-red);
+}
+
+.xmas-lead {
+  margin: 1.15rem auto 0;
+  max-width: 26rem;
+  font-size: 1.15rem;
+  line-height: 1.45;
+  color: var(--xmas-ink);
+}
+
+.xmas-offers {
+  margin-top: 2rem;
+}
+
+.xmas-ticket {
+  position: relative;
+  border-radius: 16px;
+  padding: 1.55rem 1.75rem 1.4rem;
+  color: #fff;
+}
+
+.xmas-ticket::before,
+.xmas-ticket::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 50%;
+  background: var(--xmas-paper);
+}
+
+.xmas-ticket::before {
+  left: -11px;
+}
+
+.xmas-ticket::after {
+  right: -11px;
+}
+
+.xmas-ticket-red {
+  background: var(--xmas-red);
+}
+
+.xmas-ticket-green {
+  background: var(--xmas-green);
+}
+
+.xmas-ticket-kicker,
+.xmas-ticket-note {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.xmas-ticket-title {
+  margin: 0.2rem 0 0;
+  font-size: clamp(2rem, 5vw, 2.7rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.xmas-ticket-note {
+  margin-top: 0.55rem;
+  letter-spacing: 0.08em;
+  opacity: 0.88;
+}
+
+.xmas-plus {
+  margin: 0.7rem 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #b0893e;
+}
+
+.xmas-code {
+  margin-top: 1.35rem;
+}
+
+.xmas-code p {
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--xmas-muted);
+}
+
+.xmas-code strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1.65rem;
+  letter-spacing: 0.08em;
+  color: var(--xmas-ink);
+}
+
+.xmas-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.5rem;
+  border-radius: 999px;
+  background: var(--xmas-red);
+  color: #fff !important;
+  padding: 0.95rem 1.7rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+}
+
+.xmas-cta:hover {
+  background: #7e1424;
+  color: #fff !important;
+}
+
+.xmas-cta:focus-visible {
+  outline: 3px solid var(--xmas-ink);
+  outline-offset: 3px;
+}
+
+.xmas-fine {
+  margin: 1.15rem auto 0;
+  max-width: 32rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--xmas-muted);
+}
+
+.xmas-date {
+  white-space: nowrap;
+}
+
+.xmas-crumb {
+  margin: 0 0 1.25rem;
+  font-size: 0.85rem;
+  color: var(--xmas-muted);
+}
+
+.xmas-crumb a {
+  color: var(--xmas-red);
+  text-decoration: none;
+}
+
+.xmas-faq {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  text-align: left;
+}
+
+.xmas-fine a {
+  color: var(--xmas-red);
+}
+
+.xmas-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.xmas-decor {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+}
+
+.xmas-corner {
+  position: absolute;
+  width: min(280px, 34vw);
+  height: auto;
+}
+
+.xmas-corner-tl {
+  top: 4.5rem;
+  left: 0;
+}
+
+.xmas-corner-tr {
+  top: 4.5rem;
+  right: 0;
+}
+
+.xmas-corner-bl {
+  bottom: 0;
+  left: 0;
+  width: min(220px, 28vw);
+}
+
+.xmas-corner-br {
+  right: 0;
+  bottom: 0;
+  width: min(220px, 28vw);
+}
+
+.xmas-wide {
+  width: min(68rem, calc(100% - 2.5rem));
+  margin: 0 auto;
+}
+
+.xmas-band,
+.xmas-close {
+  padding: 4.5rem 0 5rem;
+}
+
+.xmas-band {
+  background: #fffaf4;
+  border-top: 1px solid rgba(44, 36, 28, 0.08);
+  border-bottom: 1px solid rgba(44, 36, 28, 0.08);
+}
+
+.xmas-band .xmas-lead {
+  margin-left: 0;
+  margin-right: 0;
+  max-width: 40rem;
+  text-align: left;
+}
+
+.xmas-h2 {
+  margin: 0;
+  font-family: Georgia, "Iowan Old Style", "Palatino Linotype", Palatino, serif;
+  font-size: clamp(2.1rem, 4vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--xmas-red);
+}
+
+.xmas-grid {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.75rem;
+}
+
+.xmas-card {
+  background: #fff;
+  border: 1px solid rgba(44, 36, 28, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem 1.3rem 1.35rem;
+  text-align: left;
+}
+
+.xmas-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.xmas-card p {
+  margin: 0.45rem 0 0;
+  color: var(--xmas-muted);
+  line-height: 1.45;
+}
+
+.xmas-shot {
+  margin-top: 1.5rem;
+  overflow: hidden;
+  border-radius: 1.15rem;
+  border: 1px solid rgba(44, 36, 28, 0.1);
+  background: #fff;
+}
+
+.xmas-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.xmas-steps {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.75rem;
+  text-align: left;
+}
+
+.xmas-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  align-items: start;
+}
+
+.xmas-step span {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--xmas-red);
+  color: #fff;
+  font-weight: 800;
+}
+
+.xmas-step h3 {
+  margin: 0.15rem 0 0;
+  font-size: 1.05rem;
+}
+
+.xmas-step p {
+  margin: 0.3rem 0 0;
+  color: var(--xmas-muted);
+  line-height: 1.45;
+}
+
+.xmas-wish {
+  margin: 0;
+  font-family: "Segoe Script", "Apple Chancery", "Snell Roundhand", cursive;
+  font-size: clamp(1.7rem, 3vw, 2.3rem);
+  line-height: 1.25;
+  color: #8a5a2b;
+}
+
+.xmas-close {
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .xmas-grid,
+  .xmas-steps {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 800px) {
+  .xmas-corner-tl,
+  .xmas-corner-tr {
+    width: 150px;
+    opacity: 0.85;
+  }
+
+  .xmas-corner-bl,
+  .xmas-corner-br {
+    display: none;
+  }
+}

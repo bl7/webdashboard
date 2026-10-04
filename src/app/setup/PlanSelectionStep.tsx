@@ -62,6 +62,16 @@ export default function PlanSelectionStep({
   const [processingPlanId, setProcessingPlanId] = useState<string | null>(null)
   const [checkoutConfirmOpen, setCheckoutConfirmOpen] = useState(false)
   const [planPendingCheckout, setPlanPendingCheckout] = useState<Plan | null>(null)
+  const [promoCode, setPromoCode] = useState("")
+
+  useEffect(() => {
+    const fromUrl = new URLSearchParams(window.location.search).get("code")
+    const stored = sessionStorage.getItem("campaign_promo_code")
+    const initial = (fromUrl || stored || "").trim()
+    if (!initial) return
+    setPromoCode(initial)
+    sessionStorage.setItem("campaign_promo_code", initial)
+  }, [])
 
   useEffect(() => {
     const fetchPlans = async () => {
@@ -188,6 +198,7 @@ export default function PlanSelectionStep({
           email: userEmail,
           billing_period: billingPeriod,
           plan_name: plan.name,
+          promo_code: promoCode.trim(),
         }),
       })
 
@@ -351,6 +362,11 @@ export default function PlanSelectionStep({
               </span>{" "}
               on <span className="font-semibold text-foreground">{pendingBillingLabel}</span>{" "}
               billing? You will be redirected to our secure payment page.
+              {promoCode.trim()
+                ? billingPeriod === "yearly"
+                  ? " This code gives 60 days free, then 30% off the first year."
+                  : " This code gives 60 days free. The 30% discount applies on yearly billing."
+                : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -375,9 +391,30 @@ export default function PlanSelectionStep({
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-4xl font-bold text-gray-900">Choose Your Plan</h1>
           <p className="mx-auto max-w-2xl text-xl text-gray-600">
-            Start with a 14-day free trial, with no charges during the trial period. Cancel
-            anytime.
+            {promoCode.trim()
+              ? billingPeriod === "yearly"
+                ? "With this code: 60 days free, then 30% off your first year. Cancel anytime."
+                : "With this code: 60 days free, then the monthly price. Cancel anytime."
+              : "Start with a 14-day free trial, with no charges during the trial period. Cancel anytime."}
           </p>
+        </div>
+
+        <div className="mb-8 flex justify-center">
+          <label className="w-full max-w-sm text-left text-sm text-gray-700">
+            Offer code
+            <input
+              value={promoCode}
+              onChange={(event) => {
+                const next = event.target.value
+                setPromoCode(next)
+                if (next.trim()) sessionStorage.setItem("campaign_promo_code", next.trim())
+                else sessionStorage.removeItem("campaign_promo_code")
+              }}
+              autoComplete="off"
+              spellCheck={false}
+              className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-base text-gray-900 shadow-sm"
+            />
+          </label>
         </div>
 
         {/* Billing Toggle */}

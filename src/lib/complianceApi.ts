@@ -39,19 +39,19 @@ export async function complianceSend(
   return parseJson(response)
 }
 
-export async function downloadCompliancePdf(token: string | null, query: string) {
+export async function downloadCompliancePdf(token: string | null, query: string, filename = "food-safety-diary.pdf") {
   const response = await fetch(`${apiBase()}/compliance/history/pdf?${query}`, {
     headers: authHeaders(token, false),
   })
   if (!response.ok) {
     const data = await response.json().catch(() => ({}))
-    throw new Error(data.message || "Could not export the temperature records")
+    throw new Error(data.message || "Could not export the diary")
   }
   const blob = await response.blob()
   const url = URL.createObjectURL(blob)
   const link = document.createElement("a")
   link.href = url
-  link.download = "temperature-records.pdf"
+  link.download = filename
   link.click()
   URL.revokeObjectURL(url)
 }

@@ -24,9 +24,15 @@ type Today = {
   overdue: number
   openFails: number
   equipment: Array<{ uuid: string; name: string; equipmentType: string; slots: Slot[]; items?: HeldItem[] }>
-  food: Array<{ uuid: string; dishName: string; process: string; result: string; resultLabel: string; valueC: number | null; finalValue: number | null }>
+  food: Array<{ uuid: string; dishName: string; process: string; result: string; resultLabel: string; valueC: number | null; startValue: number | null; finalValue: number | null; timeRange: string | null; startedAtLabel: string | null }>
   deliveries: Array<{ uuid: string; supplier: string; product: string; valueC: number; decision: string; result: string }>
   signoff: { signedBy: string; recordedBy: string; problems: string } | null
+  checks?: {
+    opening: Array<{ uuid: string; label: string; done: boolean | null; note: string; recordedBy: string }>
+    closing: Array<{ uuid: string; label: string; done: boolean | null; note: string; recordedBy: string }>
+    problems: string
+    problemsBy: string
+  }
 }
 
 const statusText: Record<string, string> = {
@@ -127,6 +133,7 @@ export default function ComplianceTodayPage() {
         {data.equipment.map((unit) => (
           <div key={unit.uuid} className="rounded-2xl bg-white p-4 shadow-sm">
             <p className="font-semibold text-slate-900">{unit.name}</p>
+            {unit.equipmentType === "display" ? <p className="mt-2 text-sm font-medium text-slate-800">Cabinet</p> : null}
             <div className="mt-3 grid gap-2 sm:grid-cols-2">
               {unit.slots.map((slot) => (
                 <div key={slot.slotIndex} className="rounded-xl bg-slate-50 px-3 py-2 text-sm">
@@ -171,8 +178,13 @@ export default function ComplianceTodayPage() {
           {data.food.map((row) => (
             <p key={row.uuid} className="mt-2 text-sm text-slate-700">
               {row.dishName} · {row.process.replace("_", " ")} · {row.resultLabel}
-              {row.valueC != null ? ` · ${row.valueC} °C` : ""}
-              {row.finalValue != null ? ` · final ${row.finalValue} °C` : ""}
+              {row.timeRange ? ` · ${row.timeRange}` : row.startedAtLabel ? ` · from ${row.startedAtLabel}` : ""}
+              {row.process === "hot_hold" && row.startValue != null && row.finalValue != null
+                ? ` · ${row.startValue} °C to ${row.finalValue} °C`
+                : row.valueC != null
+                ? ` · ${row.valueC} °C`
+                : ""}
+              {row.process === "cool" && row.finalValue != null ? ` · final ${row.finalValue} °C` : ""}
             </p>
           ))}
         </div>
@@ -185,6 +197,30 @@ export default function ComplianceTodayPage() {
               {row.supplier} · {row.product} · {row.valueC} °C · {row.decision} · {row.result}
             </p>
           ))}
+        </div>
+      ) : null}
+      {data.checks ? (
+        <div className="grid gap-3 md:grid-cols-2">
+          {(["opening", "closing"] as const).map((kind) => (
+            <div key={kind} className="rounded-2xl bg-white p-4 shadow-sm">
+              <p className="font-semibold text-slate-900">{kind === "opening" ? "Opening checks" : "Closing checks"}</p>
+              <ul className="mt-2 space-y-1 text-sm text-slate-700">
+                {data.checks?.[kind].map((row) => (
+                  <li key={row.uuid}>
+                    {row.done == null ? "Not ticked" : row.done ? "Done" : "Not done"}: {row.label}
+                    {row.note ? `. ${row.note}` : ""}
+                    {row.recordedBy ? ` · ${row.recordedBy}` : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      ) : null}
+      {data.checks?.problems ? (
+        <div className="rounded-2xl bg-white p-4 text-sm text-slate-700 shadow-sm">
+          <p className="font-semibold text-slate-900">Problems or changes</p>
+          <p className="mt-1">{data.checks.problems}{data.checks.problemsBy ? ` · ${data.checks.problemsBy}` : ""}</p>
         </div>
       ) : null}
       <div className="rounded-2xl bg-white p-4 text-sm text-slate-700 shadow-sm">

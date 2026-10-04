@@ -60,13 +60,13 @@ export default function CleaningSettingsPage() {
   return (
     <div className="max-w-xl space-y-5 rounded-2xl bg-white p-6 shadow-sm">
       <div>
-        <h2 className="text-lg font-semibold">Cleaning notifications</h2>
+        <h2 className="text-lg font-semibold">End of day email</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Emails are sent once for each overdue occurrence. Refreshing this page does not send another email.
+          One email at 11pm. It lists temperatures, checklist lines, and cleaning tasks still not done, and attaches that day’s full diary.
         </p>
       </div>
       <label className="flex items-center justify-between gap-4">
-        <span className="text-sm font-medium">Email me when cleaning tasks become overdue</span>
+        <span className="text-sm font-medium">Email the end-of-day diary</span>
         <Switch checked={enabled} onCheckedChange={setEnabled} />
       </label>
       <div className="space-y-2">

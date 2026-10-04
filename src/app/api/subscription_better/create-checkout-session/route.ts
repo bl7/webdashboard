@@ -1,6 +1,12 @@
 import { stripe } from "@/lib/stripe"
+import type Stripe from "stripe"
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import {
+  decideCampaignOffer,
+  loadAnnualCampaignPromotion,
+  trialDaysForCheckout,
+} from "@/lib/campaignOffer"
 
 export async function POST(req: NextRequest) {
   let body
@@ -9,7 +15,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 })
   }
-  const { user_id, email, plan_id, price_id } = body
+  const { user_id, email, plan_id, price_id, promo_code } = body
   // Debug log
   console.log("DEBUG: Received checkout payload", { user_id, email, plan_id, price_id })
   if (!user_id || !email || !plan_id || !price_id) {
@@ -27,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
     const plan = planRes.rows[0]
     let plan_name = plan.name
-    let plan_interval = null
+    let plan_interval: "monthly" | "yearly" | null = null
     if (price_id === plan.stripe_price_id_monthly) plan_interval = "monthly"
     else if (price_id === plan.stripe_price_id_yearly) plan_interval = "yearly"
     else {
@@ -54,28 +60,62 @@ export async function POST(req: NextRequest) {
       [user_id]
     )
     const trialEligible = subCheck.rows.length === 0
+    const campaign = await decideCampaignOffer({
+      enteredCode: typeof promo_code === "string" ? promo_code : "",
+      isNewCustomer: trialEligible,
+      interval: plan_interval,
+    })
+    if (campaign && !campaign.ok) {
+      return NextResponse.json({ error: campaign.error }, { status: 400 })
+    }
+
+    const trialDays = trialDaysForCheckout(campaign, trialEligible)
+    let annualPromotionCodeId: string | null = null
+    if (campaign?.ok && campaign.applyAnnualDiscount) {
+      const promo = await loadAnnualCampaignPromotion()
+      if (!promo.ok) {
+        return NextResponse.json({ error: promo.error }, { status: 400 })
+      }
+      annualPromotionCodeId = promo.promotionCodeId
+    }
+
+    const metadata: Record<string, string> = {
+      user_id,
+      plan_id,
+      price_id,
+      plan_name,
+      plan_interval,
+    }
+    if (campaign?.ok) metadata.campaign_offer = plan_interval
+
     // Billing address is collected on Stripe Checkout / Portal — not from local DB
-    const sessionData = {
+    const sessionData: Record<string, unknown> = {
       customer: customer.id,
       mode: "subscription" as const,
       payment_method_types: ["card" as const],
       line_items: [{ price: price_id, quantity: 1 }],
       subscription_data: {
-        metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
-        ...(trialEligible ? { trial_period_days: 14 } : {}),
+        metadata,
+        ...(trialDays ? { trial_period_days: trialDays } : {}),
       },
-      metadata: { user_id, plan_id, price_id, plan_name, plan_interval },
+      metadata,
       success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&success=true&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/profile?tab=billing&canceled=true&session_id={CHECKOUT_SESSION_ID}`,
-      allow_promotion_codes: true,
       billing_address_collection: "required" as const,
       customer_update: {
         address: "auto" as const,
         name: "auto" as const,
       },
     }
+    if (annualPromotionCodeId) {
+      sessionData.discounts = [{ promotion_code: annualPromotionCodeId }]
+    } else if (!campaign?.ok) {
+      sessionData.allow_promotion_codes = true
+    }
     console.log("[CHECKOUT] Creating session with data:", sessionData)
-    const session = await stripe.checkout.sessions.create(sessionData)
+    const session = await stripe.checkout.sessions.create(
+      sessionData as Stripe.Checkout.SessionCreateParams
+    )
     console.log("[CHECKOUT] Session created:", { session_id: session.id })
     return NextResponse.json({ url: session.url })
   } catch (error: any) {

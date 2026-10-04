@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { CleaningMessage, StatusPill } from "@/components/dashboard/cleaning/CleaningNav"
 import { cleaningGet, cleaningToken, downloadCleaningPdf } from "@/lib/cleaningApi"
+import CleaningPhoto from "@/components/dashboard/cleaning/CleaningPhoto"
 
 type RecordRow = {
   uuid: string
@@ -20,6 +21,7 @@ type RecordRow = {
   completedByName?: string | null
   completedByUserId?: string | null
   completedAtLabel?: string | null
+  hasPhoto?: boolean
 }
 
 function businessToday(timeZone: string) {
@@ -176,9 +178,9 @@ function CleaningHistory() {
         />
       </div>
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm text-slate-600">One day at a time, up to today. The PDF prints one page per day.</p>
+        <p className="text-sm text-slate-600">One day at a time, up to today. This diary is the cleaning record only.</p>
         <Button onClick={exportPdf} disabled={exporting}>
-          {exporting ? "Exporting…" : "Export PDF"}
+          {exporting ? "Exporting…" : "Download diary"}
         </Button>
       </div>
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
@@ -237,6 +239,7 @@ function CleaningHistory() {
                             ? ` · ${row.completedByName}${row.completedAtLabel ? `, ${row.completedAtLabel}` : ""}`
                             : ""}
                         </p>
+                        {row.hasPhoto ? <div className="mt-2"><CleaningPhoto occurrenceId={row.uuid} /></div> : null}
                       </div>
                     </li>
                   ))}

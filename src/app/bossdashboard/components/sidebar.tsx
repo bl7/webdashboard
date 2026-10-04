@@ -21,6 +21,7 @@ import {
   List,
   Quote,
   Smartphone,
+  Tag,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -46,6 +47,7 @@ export default function Sidebar({
     { name: "Orders", href: "/bossdashboard/orders", icon: FileText },
     { name: "Analytics", href: "/bossdashboard/analytics", icon: BarChart3 },
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
+    { name: "Offer code", href: "/bossdashboard/offer-code", icon: Tag },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
     { name: "App Version", href: "/bossdashboard/app-version", icon: Smartphone },

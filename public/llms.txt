@@ -1,0 +1,24 @@
+# InstaLabel
+
+> InstaLabel is kitchen labelling software for food businesses. Staff keep item, ingredient, allergen and date information in one place and print labels from the web app or the Android app.
+
+The current public promotion is the Christmas offer. It is for new customers only and ends on 10 January 2027.
+
+- New customers receive 60 days free.
+- An annual plan also receives 30% off the first annual payment. The following renewal is the full price.
+- A monthly plan receives the 60 days, then the normal monthly price. The 30% does not apply to monthly billing.
+- Payment details are collected at checkout. There is no charge during the free period. The subscription can be cancelled at any time.
+- The customer-facing code, when one is active, is shown on the Christmas offer page. Someone who has already had a subscription cannot use the offer.
+
+## Offer
+
+- [Christmas offer](https://www.instalabel.co/christmas): 60 days free for new customers, plus 30% off the first annual payment. Ends 10 January 2027.
+
+## Product
+
+- [Home](https://www.instalabel.co/): Kitchen labelling software.
+- [Features](https://www.instalabel.co/features): What the software includes.
+- [Pricing](https://www.instalabel.co/plan): Current plan prices, billing intervals and the standard 14-day trial.
+- [Printer compatibility](https://www.instalabel.co/printer-compatibility): Which printer setups are supported.
+- [FAQs](https://www.instalabel.co/faqs): Common questions.
+- [About](https://www.instalabel.co/about): The company, in Bournemouth, England.

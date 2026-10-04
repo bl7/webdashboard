@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table"
 import { CleaningMessage, StatusPill } from "@/components/dashboard/cleaning/CleaningNav"
 import { cleaningGet, cleaningToken } from "@/lib/cleaningApi"
+import CleaningPhoto from "@/components/dashboard/cleaning/CleaningPhoto"
 
 type Overview = {
   dateLabel: string
@@ -29,6 +30,7 @@ type Overview = {
     status: string
     completedByName?: string | null
     completedAtLabel?: string | null
+    hasPhoto?: boolean
   }>
 }
 
@@ -140,6 +142,7 @@ export default function CleaningOverviewPage() {
                   {task.status === "completed"
                     ? `${task.completedByName || "Staff"}${task.completedAtLabel ? ` · ${task.completedAtLabel}` : ""}`
                     : "—"}
+                  {task.hasPhoto ? <div className="mt-2"><CleaningPhoto occurrenceId={task.uuid} /></div> : null}
                 </TableCell>
               </TableRow>
             ))}
