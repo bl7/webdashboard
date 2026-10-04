@@ -1,3 +1,4 @@
+import { ChristmasOfferNotice } from "@/components/marketing/ChristmasOfferNotice"
 import { Footer, Header } from "@/components/navigation"
 import "./marketing.css"
 import "./marketing-dark.css"
@@ -10,6 +11,7 @@ export default function WebLayout({
   return (
     <main className="marketing min-h-screen overflow-x-clip scroll-smooth">
       <Header />
+      <ChristmasOfferNotice />
       {children}
       <Footer />
     </main>
