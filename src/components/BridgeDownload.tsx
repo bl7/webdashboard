@@ -29,20 +29,23 @@ export default function BridgeDownload({ platform, className = "" }: BridgeDownl
     setShowConfirmDialog(false)
 
     try {
-      // Platform-specific download URLs from Dropbox
+      // dl=1 forces a file download instead of the Dropbox preview page
       const downloadUrls = {
-        mac: "https://www.dropbox.com/scl/fi/qodk02n8oac3edpjiw2z6/PrintBridgeByZentraV1.0.1.dmg?rlkey=ukthk0tryg2dplnws606spg6o&st=foxgx1ej&dl=1",
+        mac: "https://www.dropbox.com/scl/fi/jw6zr8a00turdt0jqeg7y/PrintBridge-1.0.0.dmg?rlkey=woz60sbl74fuvpsipdfuhzf5a&st=gcermw54&dl=1",
         windows:
-          "https://www.dropbox.com/scl/fi/la0emsxn68t1wyjbi6lhn/PrintServer.Tray.exe?rlkey=t0tv6csz7lp7b2u5cnao42ybd&st=mqbhmdiq&dl=1",
+          "https://www.dropbox.com/scl/fi/u5ad8rn06ya7khp5dc1th/InstaLabel.PrintBridge.exe?rlkey=ovm2qbqg60godiho8xdcb688y&st=8q94rez8&dl=1",
+      }
+      const filenames = {
+        mac: "PrintBridge-1.0.0.dmg",
+        windows: "InstaLabel.PrintBridge.exe",
       }
 
       const downloadUrl = downloadUrls[platform]
-
-      // Create download link
       const link = document.createElement("a")
       link.href = downloadUrl
-      link.setAttribute("download", "")
-      link.target = "_blank" // Open in new tab for better UX
+      link.setAttribute("download", filenames[platform])
+      link.target = "_blank"
+      link.rel = "noopener"
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
