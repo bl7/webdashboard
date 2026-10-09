@@ -180,7 +180,7 @@ export const FOLDER_SEO = {
   },
   "/tools": {
     title: "Free Allergen Matrix & Restaurant Cleaning Templates | InstaLabel",
-    description: "Build a manual allergen matrix, adapt a restaurant cleaning checklist or explore example label layouts. Download or print your worksheet without signing up.",
+    description: "Build a manual allergen matrix or adapt a restaurant cleaning checklist. Download or print your worksheet without signing up.",
     keywords: ["free kitchen labelling tools", "allergen matrix template", "restaurant cleaning checklist template"],
   },
   "/plan": {

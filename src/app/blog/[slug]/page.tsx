@@ -266,9 +266,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               </div>
               <div className="text-xs text-gray-400">By {post.meta.author}</div>
             </div>
-            <h2 className="mb-4 text-2xl font-bold leading-snug text-gray-900">
+            <h1 className="mb-4 text-2xl font-bold leading-snug text-gray-900">
               {post.meta.title}
-            </h2>
+            </h1>
             {post.meta.image && (
               <Image
                 src={post.meta.image}

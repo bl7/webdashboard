@@ -48,6 +48,8 @@ export function middleware(req: NextRequest) {
     // Demo / contact entry points
     pathname.startsWith("/bookdemo") ||
     pathname.startsWith("/contact") ||
+    pathname === "/getting-started" ||
+    pathname === "/editorial-policy" ||
     pathname.startsWith("/testimonial") ||
     // Label-specific landing pages
     pathname.startsWith("/natashas-law") ||

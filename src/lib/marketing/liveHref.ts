@@ -7,7 +7,7 @@ const ALIAS: Record<string, string> = {
   "/guides/kitchen-labelling-haccp": "/haccp-labels",
   "/app": "/mobile-app",
   "/faq": "/faqs",
-  "/getting-started": "/bookdemo",
+  "/getting-started": "/faqs#getting-started",
   "/contact": "/about#contact",
   "/resources": "/guides",
   "/dissolvable-labels": "/dissolvable-kitchen-labels",

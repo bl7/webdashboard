@@ -87,6 +87,17 @@ export const Hero = () => {
             {TRIAL_PERIOD_DAYS}-day trial. Payment details at checkout. No charge during the trial.
           </p>
           <p className="text-xs text-mkt-steel sm:text-sm">
+            <Link href="/plan" className="underline underline-offset-2 hover:text-mkt-ink">
+              £15.99 a month
+            </Link>
+            .{" "}
+            <Link href="/christmas" className="underline underline-offset-2 hover:text-mkt-ink">
+              New customers get 60 days free, and an annual plan also gets 30% off the first
+              annual payment, until 10 January 2027
+            </Link>
+            .
+          </p>
+          <p className="text-xs text-mkt-steel sm:text-sm">
             No printer in the box. Windows or macOS with PrintBridge, or Android with{" "}
             {formatAndroidPrinters("or")}.
           </p>

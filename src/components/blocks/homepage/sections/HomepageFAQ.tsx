@@ -73,6 +73,22 @@ const faqs = [
     ),
   },
   {
+    q: "What does InstaLabel cost?",
+    a: (
+      <>
+        <Link href="/plan" className="home-link">
+          £15.99 a month
+        </Link>
+        .{" "}
+        <Link href="/christmas" className="home-link">
+          New customers get 60 days free, and an annual plan also gets 30% off the first annual
+          payment, until 10 January 2027
+        </Link>
+        .
+      </>
+    ),
+  },
+  {
     q: "Can I see it working before I decide?",
     a: (
       <>

@@ -18,6 +18,7 @@ export const Homepage = () => {
   return (
     <>
       <Hero />
+      <TrustedBySection />
       <div className="home-life">
         <WhyLabelling />
       </div>
@@ -31,7 +32,6 @@ export const Homepage = () => {
         <LabelFormats />
         <PrintingSetupSelector />
         <MenuImport />
-        <TrustedBySection />
         <HomepageFAQ />
         <HomepageClosingCTA />
       </div>
