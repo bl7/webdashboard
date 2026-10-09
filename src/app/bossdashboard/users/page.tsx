@@ -51,6 +51,7 @@ export default function UsersPage() {
   const [cancelMode, setCancelMode] = useState<"immediate" | "period_end">("period_end")
   const [cancelReason, setCancelReason] = useState<string>("")
   const [actionLoading, setActionLoading] = useState<boolean>(false)
+  const [actionNotice, setActionNotice] = useState<string | null>(null)
   const { isDarkMode } = useDarkMode()
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [printsOpen, setPrintsOpen] = useState(false)
@@ -133,7 +134,7 @@ export default function UsersPage() {
   }
 
   const reactivateUser = async (user: User) => {
-    if (!confirm(`Reactivate ${user.company_name || user.email}? Billing will continue.`)) return
+    setActionNotice(null)
     setActionLoading(true)
     try {
       const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
@@ -145,11 +146,14 @@ export default function UsersPage() {
         body: JSON.stringify({ user_id: user.user_id }),
       })
       const data = await res.json()
-      if (!res.ok || data.error) alert(data.error || "Failed to reactivate")
-      else {
-        alert(data.message || "Subscription reactivated")
+      if (!res.ok || data.error) {
+        setActionNotice(data.error || "Failed to reactivate")
+      } else {
+        setActionNotice(data.message || "Subscription reactivated")
         await reloadUsers()
       }
+    } catch (error) {
+      setActionNotice(error instanceof Error ? error.message : "Failed to reactivate")
     } finally {
       setActionLoading(false)
     }
@@ -415,6 +419,9 @@ export default function UsersPage() {
           <p className={`${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
             Manage your users and their subscriptions
           </p>
+          {actionNotice && (
+            <p className="mt-2 text-sm font-medium text-amber-700 dark:text-amber-300">{actionNotice}</p>
+          )}
         </div>
       </div>
 
@@ -615,7 +622,7 @@ export default function UsersPage() {
                           onClick={() => reactivateUser(user)}
                           disabled={actionLoading}
                         >
-                          Reactivate
+                          {actionLoading ? "Working..." : "Reactivate"}
                         </button>
                       )}
                     <button
@@ -1010,9 +1017,9 @@ export default function UsersPage() {
                       })
                       const data = await res.json()
                       if (!res.ok || data.error) {
-                        alert(data.error || "Failed to extend trial")
+                        setActionNotice(data.error || "Failed to extend trial")
                       } else {
-                        alert(data.message || "Trial extended")
+                        setActionNotice(data.message || "Trial extended")
                         setShowExtendTrialModal(false)
                         // refresh users
                         const refToken =
@@ -1094,12 +1101,7 @@ export default function UsersPage() {
                 <button
                   onClick={async () => {
                     if (!selectedUser) return
-                    if (
-                      !confirm(
-                        `Are you sure you want to ${cancelMode === "immediate" ? "cancel immediately" : "cancel at period end"}?`
-                      )
-                    )
-                      return
+                    setActionNotice(null)
                     setActionLoading(true)
                     try {
                       const bossToken =
@@ -1120,9 +1122,9 @@ export default function UsersPage() {
                       })
                       const data = await res.json()
                       if (!res.ok || data.error) {
-                        alert(data.error || "Failed to cancel subscription")
+                        setActionNotice(data.error || "Failed to cancel subscription")
                       } else {
-                        alert(data.message || "Cancellation saved")
+                        setActionNotice(data.message || "Cancellation saved")
                         setShowCancelModal(false)
                         // refresh users
                         const refToken =
