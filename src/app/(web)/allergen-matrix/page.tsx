@@ -107,7 +107,8 @@ export default function AllergenMatrixPage() {
             </h1>
             <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
               The matrix uses the same saved item records as your labels. It covers the 14 regulated
-              allergen categories. You can export a PDF after you have checked the records.
+              allergen categories. A restaurant allergen matrix can be downloaded as an allergen
+              matrix PDF after you have checked the records.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>

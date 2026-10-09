@@ -56,6 +56,7 @@ export const AllergenGuideHero = () => {
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
             Use this guide to identify the regulated allergen categories, understand why the sales
             context matters and practise the checks your team makes before sharing food information.
+            This 14 allergens list is the regulated set to check against a recipe.
           </p>
 
           <p className="text-sm text-mkt-steel">

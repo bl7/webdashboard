@@ -9,7 +9,7 @@ export const PrepLabelsPage = () => (
       badge: "Prep labels",
       h1: "Clear prep labels for food made ahead of service.",
       heroBody:
-        "Label prepared ingredients and dishes before they move into storage or the next stage of service. Reuse recorded item information and review the applicable date before printing.",
+        "Label prepared ingredients and dishes before they move into storage or the next stage of service. Restaurant prep labels reuse that recorded item information, and you still review the applicable date before printing.",
       whenTitle: "For items prepared ahead of service.",
       whenBody:
         "Use prep labels for tasks such as prepared vegetables or a mixture assembled in advance. Select the item and label type that match the work actually carried out.",

@@ -850,7 +850,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "A free restaurant cleaning checklist lets you edit daily, weekly and monthly tasks, then print or download the schedule.",
     h1: "Free restaurant cleaning checklist template.",
-    lead: "Edit daily, weekly and monthly tasks for your kitchen. Add the method your team uses, then print or download the checklist.",
+    lead: "Edit daily, weekly and monthly tasks for your kitchen. This kitchen cleaning schedule template is the list you edit, then print or download.",
     sections: [
       {
         heading: "The method still belongs to your kitchen",

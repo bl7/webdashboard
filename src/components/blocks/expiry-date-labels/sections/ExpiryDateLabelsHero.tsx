@@ -28,7 +28,8 @@ export const ExpiryDateLabelsHero = () => (
         </h1>
         <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
           Use InstaLabel to apply configured date settings and print a clear result on the item.
-          Keep the calculation connected to the procedures your kitchen follows.
+          Use-by labels and expiry date labels both follow the date rule your kitchen sets. Keep
+          the calculation connected to the procedures your kitchen follows.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
           <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>

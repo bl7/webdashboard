@@ -9,7 +9,7 @@ const foodBusinesses = [
   { name: "Crispy as duck", logo: "/donald.jpg" },
   { name: "Katsu curry bar", logo: "/katsu.png" },
   { name: "Korean fried chicken", logo: "/korean.png" },
-  { name: "bang fang rice bar", logo: "/dangfang.jpg" },
+  { name: "dang fang rice bar", logo: "/dangfang.jpg" },
   { name: "Loco lime", logo: "/loco.png" },
 ]
 

@@ -9,7 +9,7 @@ export const DefrostLabelsPage = () => (
       badge: "Defrost labels",
       h1: "Defrost labels for food moving out of the freezer.",
       heroBody:
-        "Identify food moving out of frozen storage and keep the relevant item information visible. Check the label against the actual stage of your kitchen's defrosting procedure.",
+        "Identify food moving out of frozen storage and keep the relevant item information visible. Thaw labels are this same defrost label, used while food is leaving the freezer. Check the label against the actual stage of your kitchen's defrosting procedure.",
       whenTitle: "Identify the item and its current stage.",
       whenBody:
         "Use the defrost workflow to distinguish items being handled under your kitchen's defrosting process. Record and check actual start or completion events in the system your procedure uses. A label does not establish that an item has finished defrosting.",
