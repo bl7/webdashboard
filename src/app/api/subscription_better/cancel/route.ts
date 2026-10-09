@@ -19,13 +19,13 @@ async function recordProcessedCancellation(
      SET status = 'processed',
          reason = COALESCE($3, reason)
      WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
-    [userId, subscriptionId, reason || null]
+    [userId, subscriptionId, reason?.trim() || ""]
   )
   if ((updated.rowCount ?? 0) === 0) {
     await client.query(
       `INSERT INTO subscription_cancellations (user_id, subscription_id, reason, status)
        VALUES ($1, $2, $3, 'processed')`,
-      [userId, subscriptionId, reason || null]
+      [userId, subscriptionId, reason?.trim() || ""]
     )
   }
 }

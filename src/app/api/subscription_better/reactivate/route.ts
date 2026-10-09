@@ -62,10 +62,12 @@ export async function POST(req: NextRequest) {
         )
       }
 
-      await stripe.subscriptions.update(sub.stripe_subscription_id, {
-        cancel_at: null,
-        cancel_at_period_end: false,
-      })
+      await stripe.subscriptions.update(
+        sub.stripe_subscription_id,
+        stripeSub.cancel_at_period_end
+          ? { cancel_at_period_end: false }
+          : { cancel_at: null }
+      )
 
       await client.query(
         `UPDATE subscription_better SET cancel_at_period_end = false, cancel_at = NULL, updated_at = NOW() WHERE user_id = $1`,
