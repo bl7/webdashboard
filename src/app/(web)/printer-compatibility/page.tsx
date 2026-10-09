@@ -92,12 +92,13 @@ export default function PrinterCompatibilityPage() {
               Printer compatibility
             </div>
             <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-              Check your InstaLabel printer compatibility.
+              Check the printer before you rely on it.
             </h1>
             <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-              InstaLabel does not include a printer. On Windows or macOS, PrintBridge uses a label
-              printer installed on the computer. On Android, the app prints to the models listed
-              below. Label sizes are 60 × 40 mm and 56 × 80 mm.
+              InstaLabel printer compatibility covers Windows and macOS through PrintBridge, plus
+              MUNBYN RW411B InstaLabel, Born4Ship DB403 InstaLabel and Rongta RP425 InstaLabel on
+              Android. InstaLabel does not include a printer. Label sizes are 60 × 40 mm and 56 ×
+              80 mm.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
               <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>

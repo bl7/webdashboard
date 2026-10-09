@@ -53,10 +53,11 @@ export const Hero = () => {
             </h1>
           </div>
           <p className="mb-1 mt-2 text-sm text-mkt-ink8 sm:text-base">
-            Create clear, consistent kitchen labels from the ingredient, allergen and date
-            information you already manage. Use the label printer already installed on your
-            computer, or the Android app with a supported Bluetooth printer. The same account
-            keeps temperature records, a cleaning checklist and the diary.
+            InstaLabel is kitchen labelling software, and food labelling software UK teams use
+            for restaurant kitchen labels from the ingredient, allergen and date information they
+            already manage. Use the label printer already installed on your computer, or the
+            Android app with a supported Bluetooth printer. The same account keeps temperature
+            records, a cleaning checklist and the diary.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
             <Link href="/register">

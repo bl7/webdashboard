@@ -39,7 +39,7 @@ export const FOLDER_SEO = {
     keywords: ["expiry date label software", "expiry date labels", "use by labels", "food date labelling software"],
   },
   "/ingredient-labels": {
-    title: "Ingredient Information for Food Labels & Allergens | InstaLabel",
+    title: "Ingredient management for kitchens | InstaLabel",
     description: "Organise ingredients and menu items once, then use the saved information when you print labels or create an allergen matrix.",
     keywords: ["ingredient management for kitchens", "ingredient labels", "ingredient information software", "food ingredient labelling"],
   },
@@ -164,7 +164,7 @@ export const FOLDER_SEO = {
     keywords: ["kitchen labelling software", "food labelling software UK", "restaurant kitchen labels"],
   },
   "/uses": {
-    title: "Prep, Cooked, Defrost, Date & PPDS Label Workflows | InstaLabel",
+    title: "Kitchen food label types | InstaLabel",
     description: "Choose the workflow for the food you are preparing, cooking, opening, defrosting or packing. Use saved item information and print the quantity you need.",
     keywords: ["kitchen food label types", "prep cooked defrost labels", "food label workflows"],
   },
@@ -179,7 +179,7 @@ export const FOLDER_SEO = {
     keywords: ["InstaLabel resources", "kitchen labelling guides", "food labelling templates"],
   },
   "/tools": {
-    title: "Free Allergen Matrix & Restaurant Cleaning Templates | InstaLabel",
+    title: "Free kitchen labelling tools | InstaLabel",
     description: "Build a manual allergen matrix or adapt a restaurant cleaning checklist. Download or print your worksheet without signing up.",
     keywords: ["free kitchen labelling tools", "allergen matrix template", "restaurant cleaning checklist template"],
   },

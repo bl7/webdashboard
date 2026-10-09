@@ -23,11 +23,12 @@ export const KitchenLabelPrinterHero = () => (
           Printer compatibility
         </div>
         <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-          Choose a kitchen label printer that works with your setup.
+          Choose a printer that works with your setup.
         </h1>
         <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-          Start with the device your team will print from. Desktop printing uses PrintBridge and the
-          operating system&apos;s printer setup. Android printing uses supported Bluetooth models.
+          Choose the kitchen label printer for the device your team will use: a food label printer UK kitchens already have, or a restaurant label printer at the pass. Desktop printing
+          uses PrintBridge and the operating system&apos;s printer setup. Android printing uses
+          supported Bluetooth models in the kitchen printer software.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
           <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>

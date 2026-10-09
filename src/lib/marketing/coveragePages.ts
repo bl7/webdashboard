@@ -72,9 +72,9 @@ export const coveragePages: CoveragePage[] = [
     badge: "Restaurants",
     title: "Kitchen labelling software for restaurants.",
     description:
-      "Kitchen labelling software for restaurants prints consistent prep and service labels from saved item information.",
+      "Print consistent prep and service labels from saved item information.",
     h1: "Consistent food labels for restaurant prep and service.",
-    lead: "Label sauces, fillings and prepared food so the next shift can identify the item, read its dates and find the ingredient information behind it.",
+    lead: "Kitchen labelling software for restaurants keeps restaurant food labelling consistent for sauces, fillings and prepared food. Pub kitchen labelling software on the same account prints restaurant prep labels so the next shift can identify the item, read its dates and find the ingredient information behind it.",
     sections: [
       {
         heading: "Give the next shift the same information",
@@ -121,7 +121,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Food labelling software for cafés covers kitchen prep and packed-food labels, including sandwiches and other food packed ahead.",
     h1: "Kitchen prep and packed-food labels for cafés.",
-    lead: "Keep ingredient information behind your fillings, sandwiches and salad pots, then print the kitchen or PPDS label the job needs.",
+    lead: "Food labelling software for cafes covers cafe PPDS labels and food to go labelling for fillings, sandwiches and salad pots. Sandwich label software prints the kitchen or PPDS label the job needs from the ingredient information you save.",
     sections: [
       {
         heading: "Label ingredients prepared before opening",
@@ -167,9 +167,9 @@ export const coveragePages: CoveragePage[] = [
     badge: "Takeaways",
     title: "Kitchen labelling software for takeaways.",
     description:
-      "Kitchen labelling software for takeaways prints prep, cooked, defrost and ingredient labels for the food behind each order.",
+      "Print prep, cooked, defrost and ingredient labels for the food behind each order.",
     h1: "Clear labels for the prep behind every takeaway order.",
-    lead: "Print prep, cooked, defrost and ingredient labels for the food behind each order, using the ingredient and allergen information you have saved.",
+    lead: "Kitchen labelling software for takeaways prints takeaway food labels and takeaway prep labels for the food behind each order. Takeaway allergen information comes from the ingredient and allergen records you have saved.",
     sections: [
       {
         heading: "Keep the preparation line easy to identify",
@@ -208,9 +208,9 @@ export const coveragePages: CoveragePage[] = [
     badge: "Caterers",
     title: "Kitchen label printing software for caterers.",
     description:
-      "Kitchen labelling software for caterers prints batch food labels from saved ingredients, with a matrix the event team can review.",
+      "Print batch food labels from saved ingredients, with a matrix the event team can review.",
     h1: "Batch food labels for catering preparation.",
-    lead: "Print the quantity of prep, cooked or packed-food labels your catering job needs, using the saved information for each ingredient and menu item.",
+    lead: "Kitchen labelling software for caterers prints catering food labels in the quantity a job needs, including bulk kitchen label printing from saved items. A catering allergen matrix can be reviewed from the same records before the event.",
     sections: [
       {
         heading: "Print for several containers in one job",
@@ -410,11 +410,11 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/label-sizes",
     badge: "Label sizes",
-    title: "InstaLabel label sizes are 60×40 mm and 56×80 mm.",
+    title: "Two sizes: 60×40 mm and 56×80 mm.",
     description:
-      "InstaLabel label sizes are 60 × 40 mm and 56 × 80 mm. Match the layout to your stock and the amount of information on the label.",
+      "Match the layout to your stock and the amount of information on the label.",
     h1: "Two label sizes for different amounts of information.",
-    lead: "Choose between 60 × 40 mm and 56 × 80 mm layouts, then match the printer settings and physical stock to the size you select.",
+    lead: "InstaLabel label sizes cover 60x40 kitchen labels and 56x80 food labels, including PPDS label sizes. Choose between 60 × 40 mm and 56 × 80 mm, then match the printer settings and physical stock to the size you select.",
     sections: [
       {
         heading: "60 × 40 mm: a compact format",
@@ -483,7 +483,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "PPDS labelling requirements explain which food may need a name and a full ingredient list before it is sold.",
     h1: "PPDS labelling requirements: what to check before selling.",
-    lead: "Understand which food may be prepacked for direct sale, what its ingredient label needs and how to review a finished pack.",
+    lead: "PPDS labelling applies to food packed before a customer selects it, where the official guidance says the pack needs a name and a full ingredient list. Natasha’s Law is the UK rule behind that list, with allergens emphasised, and the finished pack still has to be checked against the recipe.",
     sections: [
       {
         heading: "Start with the selling arrangement",
@@ -541,7 +541,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Use-by versus best-before dates: a use-by date relates to safety, and a best-before date relates to quality.",
     h1: "Use-by and best-before dates mean different things.",
-    lead: "Keep safety dates and quality dates distinct when reviewing supplier packs and setting your kitchen’s label information.",
+    lead: "A use-by date is a safety date: do not use the food after it, and follow the storage instructions that make that date applicable. A best-before date is a quality date, and it is not the same instruction as a use-by date.",
     sections: [
       {
         heading: "Use-by: a safety date",
@@ -582,7 +582,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "FIFO food storage means using older suitable stock before newer stock, with dates checked when shelf lives differ.",
     h1: "FIFO food storage: make the next item to use easy to find.",
-    lead: "Combine readable dates, sensible shelf organisation and visible use-first cues so staff can follow your stock-rotation routine.",
+    lead: "FIFO food storage means using the older suitable stock before newer stock, after the dates have been checked. Kitchen stock rotation still needs readable labels and a shelf the team can follow, because arrival order alone does not show which item should be used next.",
     sections: [
       {
         heading: "Identify stock when it arrives or changes stage",
@@ -623,7 +623,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "A kitchen food labelling checklist reviews the item, dates, stock and physical print before a batch goes out.",
     h1: "A kitchen food labelling checklist for the first print.",
-    lead: "Check the item information, date rule, label layout and physical output before you print a batch for the kitchen or a pack for sale.",
+    lead: "A kitchen food labelling checklist is the review before a batch goes out: the item, its date rule, the layout and a real print. It does not replace checking the recipe, the supplier information or the pack you are about to label.",
     sections: [
       {
         heading: "1. Check the food and its stage",
@@ -677,7 +677,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Allergen information for restaurants stays useful when recipes, the matrix and the person answering a customer all use the same records.",
     h1: "Keep restaurant allergen information current and easy to find.",
-    lead: "Connect recipe records, supplier information, a reviewed matrix and staff communication so customer questions reach the right information.",
+    lead: "Allergen information for restaurants stays useful when the recipe, the supplier packs and the person answering a customer all use the same records. A matrix is an overview of what is recorded, and a blank cell means nothing is recorded there, not that the dish is free of that allergen.",
     sections: [
       {
         heading: "Start with the actual recipes",
@@ -719,7 +719,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Handwritten versus printed food labels depends on how often you repeat the same details and how long the ingredient lists are.",
     h1: "Handwritten or printed food labels: which fits your kitchen?",
-    lead: "Compare readability, repeated information, equipment and the effort of keeping item details current before choosing a labelling method.",
+    lead: "Handwritten labels can suit a few simple jobs, while printed labels reuse saved details in a consistent format. Which fits depends on how often you repeat the same information, how long the lists are, and whether the records stay current.",
     sections: [
       {
         heading: "Start with the labels you actually produce",
@@ -763,7 +763,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Choose kitchen labelling software by testing the label jobs, printer route and complete cost with your own items.",
     h1: "Choose kitchen labelling software around the jobs you need.",
-    lead: "Compare label workflows, ingredient records, printer compatibility, setup and the complete ongoing cost using your own kitchen’s requirements.",
+    lead: "Choose kitchen labelling software by listing the label jobs you actually print, then testing the printer route and the full cost with your own items. A short typical label and your longest ingredient list show more than a feature list.",
     sections: [
       {
         heading: "Write down the required label jobs",

@@ -21,14 +21,16 @@ export const NatashasLawHero = () => {
           className="w-full max-w-2xl space-y-6 text-center md:text-left"
         >
           <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
-            PPDS labels
+            Packed food
           </div>
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            PPDS labels from your saved ingredient information.
+            Packed-food labels from your saved ingredient information.
           </h1>
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            Prepare labels with the food name, ingredient information and clear allergen emphasis.
-            Review the recipe and the printed result before offering the product for sale.
+            This PPDS labelling software prepares PPDS labels from the food name and ingredient
+            list you save. Natasha’s Law labels use the same Natasha’s Law label software preview,
+            and you still review the recipe and the printed result before offering the product for
+            sale.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
             <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
