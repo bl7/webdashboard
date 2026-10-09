@@ -246,7 +246,7 @@ export default async function ChristmasOfferPage() {
       {!ended ? (
         <section className="xmas-band">
           <div className="xmas-wide">
-            <h2 className="xmas-h2">The same kitchen tools. A longer start.</h2>
+            <h2 className="xmas-h2">The same labelling system. Sixty days free.</h2>
             <p className="xmas-lead" style={{ marginLeft: 0 }}>
               InstaLabel is the labelling system the kitchen already runs. This offer only changes
               the trial and, on an annual plan, the first payment.
