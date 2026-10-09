@@ -1,4 +1,3 @@
-import type { Metadata } from "next"
 import { Manrope, Oxygen } from "next/font/google"
 import "./globals.css"
 
@@ -8,16 +7,6 @@ const accent_font = Oxygen({
   weight: ["300", "400", "700"],
   variable: "--font-accent",
 })
-
-export const metadata: Metadata = {
-  title: { default: "Loading... | InstaLabel", template: "%s | InstaLabel" },
-  metadataBase: new URL("https://www.instalabel.co"),
-  description: "Loading InstaLabel — kitchen labelling software",
-  robots: {
-    index: false,
-    follow: false,
-  },
-}
 
 export default function Loading() {
   return (
