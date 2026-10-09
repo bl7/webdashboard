@@ -9,6 +9,8 @@ The current public promotion is the Christmas offer. It is for new customers onl
 - A monthly plan receives the 60 days, then the normal monthly price. The 30% does not apply to monthly billing.
 - Payment details are collected at checkout. There is no charge during the free period. The subscription can be cancelled at any time.
 - The customer-facing code, when one is active, is shown on the Christmas offer page. Someone who has already had a subscription cannot use the offer.
+- The standing price is £15.99 a month. Outside the promotion, new subscriptions start with a 14-day trial.
+- InstaLabel does not guarantee compliance. It does not include iOS printing, nutrition or a POS connection. Temperature checks for equipment, food and deliveries are recorded in the dashboard.
 
 ## Offer
 
@@ -18,7 +20,62 @@ The current public promotion is the Christmas offer. It is for new customers onl
 
 - [Home](https://www.instalabel.co/): Kitchen labelling software.
 - [Features](https://www.instalabel.co/features): What the software includes.
-- [Pricing](https://www.instalabel.co/plan): Current plan prices, billing intervals and the standard 14-day trial.
+- [Pricing](https://www.instalabel.co/plan): £15.99 a month, billing intervals and the standard 14-day trial.
 - [Printer compatibility](https://www.instalabel.co/printer-compatibility): Which printer setups are supported.
+- [PrintBridge](https://www.instalabel.co/printbridge): Windows and Mac printing.
+- [Android app](https://www.instalabel.co/mobile-app): Supported Bluetooth printing.
+- [Label sizes](https://www.instalabel.co/label-sizes): 60×40 mm and 56×80 mm layouts.
+- [Kitchen label printer](https://www.instalabel.co/kitchen-label-printer): How to choose a setup.
+- [CSV import](https://www.instalabel.co/csv-import): Bring in existing ingredient and menu information.
 - [FAQs](https://www.instalabel.co/faqs): Common questions.
 - [About](https://www.instalabel.co/about): The company, in Bournemouth, England.
+- [Book a demo](https://www.instalabel.co/bookdemo): See the workflow with your own labels in mind.
+
+## Labels
+
+- [Workflows](https://www.instalabel.co/uses): Prep, cooked, defrost, date and PPDS labels.
+- [Prep labels](https://www.instalabel.co/prep-labels): Food made ahead of service.
+- [Cooked labels](https://www.instalabel.co/cooked-labels): Cooked food date labels.
+- [Defrost labels](https://www.instalabel.co/defrost-labels): Food leaving the freezer.
+- [Opened food labels](https://www.instalabel.co/opened-food-labels): An ingredient label for a pack that has been opened. There is no separate opened label type.
+- [Use-first labels](https://www.instalabel.co/use-first-labels): Stock-rotation priority.
+- [Expiry date labels](https://www.instalabel.co/expiry-date-labels): Dates from the kitchen's rules.
+- [Ingredient labels](https://www.instalabel.co/ingredient-labels): Ingredient information for labels.
+- [PPDS labels](https://www.instalabel.co/natashas-law): PPDS labelling software.
+- [Dissolvable kitchen labels](https://www.instalabel.co/dissolvable-kitchen-labels): What to check on the stock.
+
+## Allergens, cleaning and procedures
+
+- [Allergen labelling](https://www.instalabel.co/allergen-compliance): Food allergen labelling software.
+- [The 14 allergens](https://www.instalabel.co/allergen-guide): UK regulated categories.
+- [Allergen matrix](https://www.instalabel.co/allergen-matrix): A matrix from saved item records.
+- [Free allergen matrix](https://www.instalabel.co/tools/allergen-matrix): A manual worksheet.
+- [Cleaning checklists](https://www.instalabel.co/cleaning-checklists): Recurring kitchen cleaning tasks.
+- [Free cleaning checklist](https://www.instalabel.co/tools/restaurant-cleaning-checklist): An editable template.
+- [Free tools](https://www.instalabel.co/tools): The allergen matrix and cleaning checklist templates.
+- [HACCP and labelling](https://www.instalabel.co/haccp-labels): How labels sit inside wider procedures.
+
+## Businesses
+
+- [Restaurants](https://www.instalabel.co/for/restaurants): Kitchen labelling software for restaurants.
+- [Cafés](https://www.instalabel.co/for/cafes): Food labelling software for cafés and food to go.
+- [Takeaways](https://www.instalabel.co/for/takeaways): Kitchen labelling software for takeaways.
+- [Caterers](https://www.instalabel.co/for/caterers): Batch labels for catering preparation.
+
+## Guides
+
+- [Practical guides](https://www.instalabel.co/guides): PPDS, dates, stock rotation and buying questions.
+- [PPDS requirements](https://www.instalabel.co/guides/ppds-labelling-requirements): What to check before selling.
+- [Use-by and best-before](https://www.instalabel.co/guides/use-by-vs-best-before): How the two dates differ.
+- [FIFO](https://www.instalabel.co/guides/fifo-food-storage): Stock rotation.
+- [Labelling checklist](https://www.instalabel.co/guides/food-labelling-checklist): Checks before the first print.
+- [Allergen information for restaurants](https://www.instalabel.co/guides/allergen-information-for-restaurants): How to keep menu allergen records current.
+- [Handwritten and printed labels](https://www.instalabel.co/guides/handwritten-vs-printed-food-labels): Which method fits the kitchen.
+- [Choosing software](https://www.instalabel.co/guides/choosing-kitchen-labelling-software): What to test before you buy.
+- [Labelling methods](https://www.instalabel.co/label-printer-uk-comparison): Handwritten labels, printers and software.
+- [Blog](https://www.instalabel.co/blog): Kitchen labelling guides.
+- [What you still decide](https://www.instalabel.co/blog/what-you-still-decide): The kitchen still sets recipes, allergens and dates.
+- [Pen, a dedicated machine, or software](https://www.instalabel.co/blog/pen-machine-or-software): Three ways to label food.
+- [The first day with InstaLabel](https://www.instalabel.co/blog/first-day-with-instalabel): What has to be ready before the first label.
+- [What to check on a PPDS label](https://www.instalabel.co/blog/what-to-check-on-a-ppds-label): Name, ingredients, allergens and the date.
+- [Staff training for allergen labelling](https://www.instalabel.co/blog/implement-allergen-labeling-kitchen): A short checklist for the 14 regulated allergens.

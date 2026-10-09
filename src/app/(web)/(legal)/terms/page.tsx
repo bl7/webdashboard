@@ -1,7 +1,7 @@
 import { Metadata } from "next"
 import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
 
-const title = "Terms of service | InstaLabel"
+const title = "Terms of service for the InstaLabel subscription. | InstaLabel"
 const description =
   "Read the terms governing the InstaLabel website, software, account use and subscriptions."
 
@@ -233,8 +233,8 @@ const Page = () => {
           <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">14. Contact</h2>
           <p>
             Questions about these terms? Email{" "}
-            <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
-              support@instalabel.co
+            <a href="mailto:contact@instalabel.co" className="text-mkt-teal hover:underline">
+              contact@instalabel.co
             </a>
             .
           </p>

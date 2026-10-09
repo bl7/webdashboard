@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 
-const title = "Cookie policy | InstaLabel"
+const title = "Cookie policy for the InstaLabel website. | InstaLabel"
 const description =
   "Read about cookies and similar technologies used by InstaLabel and how to manage the available choices."
 
@@ -139,8 +139,8 @@ const Page = () => {
           <h2 className="mb-3 text-2xl font-bold tracking-tight text-mkt-ink">Contact us</h2>
           <p>
             Questions about cookies on InstaLabel? Email{" "}
-            <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
-              support@instalabel.co
+            <a href="mailto:contact@instalabel.co" className="text-mkt-teal hover:underline">
+              contact@instalabel.co
             </a>
             .
           </p>

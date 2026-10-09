@@ -71,13 +71,9 @@ export const KitchenWorkflowExplorer = () => {
     <section id="workflows" className="home-dark home-section" style={{ scrollMarginTop: "7rem" }}>
       <div className="home-wrap">
         <div className="home-eyebrow" style={{ background: "var(--home-deep)", color: "var(--home-lime)" }}>
-          From first prep to final pack
+          Label types
         </div>
-        <h2 className="home-h2 mt-4">
-          From first prep
-          <br />
-          to final pack.
-        </h2>
+        <h2 className="home-h2 mt-4">A label for each stage of the kitchen day.</h2>
         <p className="home-lead mt-4">
           These are moments in a kitchen day, not a list of software features. The same saved
           information can be printed for each job.

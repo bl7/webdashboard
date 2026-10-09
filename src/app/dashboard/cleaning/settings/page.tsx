@@ -19,6 +19,7 @@ const TIMEZONES = [
 export default function CleaningSettingsPage() {
   const [enabled, setEnabled] = useState(true)
   const [timezone, setTimezone] = useState("Europe/London")
+  const [sendTime, setSendTime] = useState("23:00")
   const [note, setNote] = useState("")
   const [error, setError] = useState("")
   const [saved, setSaved] = useState("")
@@ -31,6 +32,7 @@ export default function CleaningSettingsPage() {
       .then((response) => {
         setEnabled(response.data.overdueEmailEnabled)
         setTimezone(response.data.timezone)
+        setSendTime(response.data.diaryEmailTime || "23:00")
         setNote(response.data.defaults?.note || "")
       })
       .catch((err) => setError(err.message))
@@ -46,6 +48,7 @@ export default function CleaningSettingsPage() {
       await cleaningSend("/cleaning/settings", token, "PATCH", {
         overdueEmailEnabled: enabled,
         timezone,
+        diaryEmailTime: sendTime,
       })
       setSaved("Cleaning settings saved.")
     } catch (err) {
@@ -62,12 +65,24 @@ export default function CleaningSettingsPage() {
       <div>
         <h2 className="text-lg font-semibold">End of day email</h2>
         <p className="mt-1 text-sm text-slate-500">
-          One email at 11pm. It lists temperatures, checklist lines, and cleaning tasks still not done, and attaches that day’s full diary.
+          One email at the time you choose, in the business timezone. It lists temperatures, checklist lines, and cleaning tasks still not done, and attaches that day’s full diary.
         </p>
       </div>
       <label className="flex items-center justify-between gap-4">
         <span className="text-sm font-medium">Email the end-of-day diary</span>
         <Switch checked={enabled} onCheckedChange={setEnabled} />
+      </label>
+      <label className="block space-y-2">
+        <span className="text-sm font-medium">Send time</span>
+        <input
+          type="time"
+          className="h-10 w-full rounded-md border px-3 text-sm"
+          value={sendTime}
+          onChange={(e) => setSendTime(e.target.value)}
+        />
+        <p className="text-xs text-slate-500">
+          Kitchens close at different times. The diary email goes out once, at this time.
+        </p>
       </label>
       <div className="space-y-2">
         <p className="text-sm font-medium">Business timezone</p>

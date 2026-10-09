@@ -13,10 +13,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { PRODUCT_NAV, RESOURCES_NAV } from "@/lib/marketing/site"
+import { BUSINESS_NAV, PRODUCT_NAV, RESOURCES_NAV } from "@/lib/marketing/site"
 
 const simpleNav = [
-  { label: "Kitchen workflows", href: "/uses" },
   { label: "Pricing", href: "/plan" },
   { label: "About", href: "/about" },
 ]
@@ -88,6 +87,12 @@ export const Header = () => {
               label="Product"
               items={PRODUCT_NAV}
               active={isGroupActive(PRODUCT_NAV)}
+              onNavigate={(href) => router.push(href)}
+            />
+            <NavDropdown
+              label="Food businesses"
+              items={BUSINESS_NAV}
+              active={isGroupActive(BUSINESS_NAV)}
               onNavigate={(href) => router.push(href)}
             />
             {simpleNav.map((item) => (

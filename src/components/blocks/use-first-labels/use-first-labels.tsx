@@ -7,7 +7,7 @@ export const UseFirstLabelsPage = () => (
   <OperationalLabelPage
     config={{
       badge: "Use first labels",
-      h1: "Mark the container to use first.",
+      h1: "Use-first labels that make stock priorities visible.",
       heroBody:
         "Print a Use First marker so the next person can see which container to take. It is a stock-rotation sign. It does not set a shelf life and it does not replace the item's own date label.",
       whenTitle: "Point staff at the container that should be used next.",

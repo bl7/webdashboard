@@ -20,6 +20,8 @@ interface User {
   billing_interval?: "month" | "year" | null
   current_period_end: string | null
   trial_end: string | null
+  cancel_at_period_end?: boolean | null
+  cancel_at?: string | null
   pending_plan_change: string | null
   pending_plan_change_effective: string | null
   created_at: string
@@ -120,6 +122,38 @@ export default function UsersPage() {
   })
 
   const usersPerPage = 10
+
+  const reloadUsers = async () => {
+    const refToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const r = await fetch("/api/subscription_better/users", {
+      headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
+    })
+    const d = await r.json()
+    setUsers(Array.isArray(d) ? d : [])
+  }
+
+  const reactivateUser = async (user: User) => {
+    if (!confirm(`Reactivate ${user.company_name || user.email}? Billing will continue.`)) return
+    setActionLoading(true)
+    try {
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const res = await fetch("/api/subscription_better/reactivate", {
+        method: "POST",
+        headers: bossToken
+          ? { "Content-Type": "application/json", Authorization: `Bearer ${bossToken}` }
+          : { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: user.user_id }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) alert(data.error || "Failed to reactivate")
+      else {
+        alert(data.message || "Subscription reactivated")
+        await reloadUsers()
+      }
+    } finally {
+      setActionLoading(false)
+    }
+  }
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -513,7 +547,14 @@ export default function UsersPage() {
                       ? "Annual"
                       : "-"}
                 </td>
-                <td className="px-6 py-4">{user.status}</td>
+                <td className="px-6 py-4">
+                  <div>{user.status || "-"}</div>
+                  {user.status &&
+                    user.status !== "canceled" &&
+                    (user.cancel_at_period_end || user.cancel_at) && (
+                      <div className="text-xs text-amber-600">Cancels at period end</div>
+                    )}
+                </td>
                 <td className="px-6 py-4">
                   {user.current_period_end
                     ? new Date(user.current_period_end).toLocaleDateString()
@@ -550,19 +591,33 @@ export default function UsersPage() {
                           Extend Trial
                         </button>
                       )}
-                    {user.status !== "canceled" && (
-                      <button
-                        className="rounded bg-red-600 px-3 py-1 text-white transition hover:bg-red-700"
-                        onClick={() => {
-                          setSelectedUser(user)
-                          setCancelMode("period_end")
-                          setCancelReason("")
-                          setShowCancelModal(true)
-                        }}
-                      >
-                        Cancel
-                      </button>
-                    )}
+                    {user.status &&
+                      user.status !== "canceled" &&
+                      !user.cancel_at_period_end &&
+                      !user.cancel_at && (
+                        <button
+                          className="rounded bg-red-600 px-3 py-1 text-white transition hover:bg-red-700"
+                          onClick={() => {
+                            setSelectedUser(user)
+                            setCancelMode("period_end")
+                            setCancelReason("")
+                            setShowCancelModal(true)
+                          }}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    {user.status &&
+                      user.status !== "canceled" &&
+                      (user.cancel_at_period_end || user.cancel_at) && (
+                        <button
+                          className="rounded bg-amber-600 px-3 py-1 text-white transition hover:bg-amber-700 disabled:opacity-70"
+                          onClick={() => reactivateUser(user)}
+                          disabled={actionLoading}
+                        >
+                          Reactivate
+                        </button>
+                      )}
                     <button
                       className="flex items-center gap-1 rounded bg-gray-200 px-3 py-1 text-gray-900 transition hover:bg-gray-300 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                       onClick={() => openAppDevicesDrawer(user)}
@@ -957,6 +1012,7 @@ export default function UsersPage() {
                       if (!res.ok || data.error) {
                         alert(data.error || "Failed to extend trial")
                       } else {
+                        alert(data.message || "Trial extended")
                         setShowExtendTrialModal(false)
                         // refresh users
                         const refToken =
@@ -1066,6 +1122,7 @@ export default function UsersPage() {
                       if (!res.ok || data.error) {
                         alert(data.error || "Failed to cancel subscription")
                       } else {
+                        alert(data.message || "Cancellation saved")
                         setShowCancelModal(false)
                         // refresh users
                         const refToken =

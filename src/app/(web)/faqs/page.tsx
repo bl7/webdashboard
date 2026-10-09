@@ -1,14 +1,15 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { FaqsPage } from "@/components/blocks/faqs/faqs"
 import { Metadata } from "next"
 import React from "react"
 
-const title = "Frequently asked questions | InstaLabel"
-const description =
-  "Find answers about InstaLabel's label workflows, CSV import, printers, Android app, date settings, pricing and setup."
+const title = FOLDER_SEO["/faqs"].title
+const description = FOLDER_SEO["/faqs"].description
 
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/faqs"].keywords],
   openGraph: {
     title,
     description,

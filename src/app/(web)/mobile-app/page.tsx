@@ -1,15 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { MobileAppPage } from "@/components/blocks/mobile-app"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "Print kitchen labels from Android with the InstaLabel app and a supported Bluetooth printer. Check models and see the workflow."
+const description = FOLDER_SEO["/mobile-app"].description
 
 export const metadata: Metadata = {
-  title: { absolute: "Android kitchen label app | InstaLabel" },
+  title: { absolute: FOLDER_SEO["/mobile-app"].title },
   description,
+  keywords: [...FOLDER_SEO["/mobile-app"].keywords],
   openGraph: {
-    title: "Android kitchen label app | InstaLabel",
+    title: FOLDER_SEO["/mobile-app"].title,
     description,
     url: "https://www.instalabel.co/mobile-app",
     type: "website",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Android kitchen label app | InstaLabel",
+    title: FOLDER_SEO["/mobile-app"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -70,7 +71,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "Android kitchen label app | InstaLabel",
+      name: FOLDER_SEO["/mobile-app"].title,
       description,
       url: "https://www.instalabel.co/mobile-app",
     },

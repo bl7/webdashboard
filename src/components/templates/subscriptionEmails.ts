@@ -321,7 +321,7 @@ export const newSubscriptionEmail = ({
                 <h3>Need Assistance?</h3>
                 <p>Our customer success team is here to help you get the most out of InstaLabel.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -332,7 +332,7 @@ export const newSubscriptionEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because you subscribed to InstaLabel.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -749,7 +749,7 @@ export const planChangeEmail = ({
                 <h3>Questions About Your Plan Change?</h3>
                 <p>Our customer success team is here to help you make the most of your updated subscription.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -760,7 +760,7 @@ export const planChangeEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because you modified your InstaLabel subscription.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -860,12 +860,12 @@ export const cancellationEmail = ({
             
             <h3>📞 Feedback</h3>
             <p>We'd love to hear why you're leaving and how we can improve. Your feedback helps us make InstaLabel better for everyone.</p>
-            <p>Contact us at: admin@instalabel.co</p>
+            <p>Contact us at: contact@instalabel.co</p>
             
             <h3>❓ Questions?</h3>
             <p>If you have any questions about your cancellation, please contact us:</p>
             <ul>
-                <li>📧 Email: support@instalabel.co</li>
+                <li>📧 Email: contact@instalabel.co</li>
                 <li>📱 Phone: +44 7845 447586</li>
             </ul>
         </div>
@@ -1094,7 +1094,7 @@ export const cancellationRequestReceivedEmail = ({
                 <h3>Need to speak with us sooner?</h3>
                 <p>If you have any questions in the meantime, our team is happy to help.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">Email Support</a>
                     <a href="tel:+447845447586" class="support-link">Phone Support</a>
                 </div>
             </div>
@@ -1104,7 +1104,7 @@ export const cancellationRequestReceivedEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because you submitted a cancellation request.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -1675,7 +1675,7 @@ export const expiringSoonEmail = ({
                 <h3>Need Help with Renewal?</h3>
                 <p>Our customer support team is here to assist you with any questions about renewing your subscription.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -1686,7 +1686,7 @@ export const expiringSoonEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because your InstaLabel subscription is expiring soon.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -2086,7 +2086,7 @@ export const renewalReminderEmail = ({
                 <h3>Questions About Your Renewal?</h3>
                 <p>Our customer support team is here to help with any questions about your subscription or renewal process.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -2097,7 +2097,7 @@ export const renewalReminderEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent as a courtesy reminder about your upcoming subscription renewal.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -2406,7 +2406,7 @@ export const renewalConfirmationEmail = ({
                 <h3>Need Assistance?</h3>
                 <p>Our customer success team is here to help you get the most out of InstaLabel.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -2417,7 +2417,7 @@ export const renewalConfirmationEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because your subscription was renewed.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -2746,7 +2746,7 @@ export const paymentFailedEmail = ({
                 <h3>Need Help?</h3>
                 <p>Our support team is ready to assist you with any payment or billing questions.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -2757,7 +2757,7 @@ export const paymentFailedEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because we couldn't process your payment.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -3105,7 +3105,7 @@ export const trialEndingSoonEmail = ({
                 <h3>Questions About Upgrading?</h3>
                 <p>Our team is here to help you choose the right plan and ensure a smooth transition.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -3116,7 +3116,7 @@ export const trialEndingSoonEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent because your trial is ending soon.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -3447,7 +3447,7 @@ export const labelOrderConfirmationEmail = ({
                 <h3>Need Help?</h3>
                 <p>Our support team is ready to assist you with any questions about your order or our products.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -3458,7 +3458,7 @@ export const labelOrderConfirmationEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent to confirm your label order.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>
@@ -3868,7 +3868,7 @@ export const labelOrderShippedEmail = ({
                 <h3>Questions About Your Shipment?</h3>
                 <p>Our support team can help with tracking, delivery questions, or any concerns about your order.</p>
                 <div class="support-links">
-                    <a href="mailto:support@instalabel.co" class="support-link">📧 Email Support</a>
+                    <a href="mailto:contact@instalabel.co" class="support-link">📧 Email Support</a>
                     <a href="tel:+447845447586" class="support-link">📞 Phone Support</a>
                     <a href="${process.env.NEXT_PUBLIC_APP_URL}/help" class="support-link">📚 Help Center</a>
                 </div>
@@ -3879,7 +3879,7 @@ export const labelOrderShippedEmail = ({
             <p><strong>InstaLabel</strong> - Professional Kitchen Labeling Solutions</p>
             <div class="divider"></div>
             <p>This email was sent to notify you that your order has shipped.</p>
-            <p>Questions? Contact us at <a href="mailto:support@instalabel.co">support@instalabel.co</a></p>
+            <p>Questions? Contact us at <a href="mailto:contact@instalabel.co">contact@instalabel.co</a></p>
             <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">
                 © ${new Date().getFullYear()} InstaLabel. All rights reserved.
             </p>

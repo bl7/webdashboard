@@ -1,9 +1,9 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Metadata } from "next"
 import { CookedLabelsPage } from "@/components/blocks/cooked-labels"
 
-const title = "Cooked food labels for kitchens | InstaLabel"
-const description =
-  "Keep cooked batches identifiable with consistent labels, recorded allergen information and clear dates, alongside your kitchen's cooking records."
+const title = FOLDER_SEO["/cooked-labels"].title
+const description = FOLDER_SEO["/cooked-labels"].description
 
 const faqs = [
   {
@@ -26,6 +26,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/cooked-labels"].keywords],
   openGraph: {
     title,
     description,

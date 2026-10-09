@@ -1,10 +1,10 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { IngredientLabelsPage } from "@/components/blocks/ingredient-labels"
 import { Metadata } from "next"
 import React from "react"
 
-const title = "Ingredient labels for kitchen containers | InstaLabel"
-const description =
-  "Create clear ingredient labels with the supported item, date and staff details. Keep stored ingredients identifiable between shifts."
+const title = FOLDER_SEO["/ingredient-labels"].title
+const description = FOLDER_SEO["/ingredient-labels"].description
 
 const faqs = [
   {
@@ -26,6 +26,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/ingredient-labels"].keywords],
   openGraph: {
     title,
     description,

@@ -31,14 +31,16 @@ export const Uses = () => {
             label: "Ingredient, including food that has been opened.",
           },
           {
-            file: "ppds-on-container.png",
-            alt: "PPDS label on packed food",
+            file: "ppds-tall-close.jpg",
+            alt: "Taller PPDS label on a packed California roll",
             label: "PPDS, 56×80 mm.",
+            fit: "contain",
           },
           {
-            file: "both-sizes.png",
-            alt: "60 by 40 and 56 by 80 labels side by side",
+            file: "both-sizes.jpg",
+            alt: "60 by 40 mm and 56 by 80 mm California roll labels side by side",
             label: "60×40 mm and 56×80 mm, from the same item.",
+            fit: "contain",
           },
         ]}
       />

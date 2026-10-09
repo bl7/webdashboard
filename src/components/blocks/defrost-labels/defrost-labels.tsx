@@ -7,7 +7,7 @@ export const DefrostLabelsPage = () => (
   <OperationalLabelPage
     config={{
       badge: "Defrost labels",
-      h1: "Keep the defrost workflow clear between shifts.",
+      h1: "Defrost labels for food moving out of the freezer.",
       heroBody:
         "Identify food moving out of frozen storage and keep the relevant item information visible. Check the label against the actual stage of your kitchen's defrosting procedure.",
       whenTitle: "Identify the item and its current stage.",

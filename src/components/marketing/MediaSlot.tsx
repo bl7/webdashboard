@@ -7,9 +7,10 @@ type MediaSlotProps = {
   alt: string
   label: string
   poster?: string
+  fit?: "cover" | "contain"
 }
 
-export const MediaSlot = ({ file, alt, label, poster }: MediaSlotProps) => {
+export const MediaSlot = ({ file, alt, label, poster, fit = "cover" }: MediaSlotProps) => {
   const src = `/marketing/${file}?v=20260930e`
   const isVideo = file.endsWith(".mp4")
   const [showVideo, setShowVideo] = useState(isVideo)
@@ -29,7 +30,15 @@ export const MediaSlot = ({ file, alt, label, poster }: MediaSlotProps) => {
           onError={() => setShowVideo(false)}
         />
       ) : (
-        <img src={imageSrc} alt={alt} className="aspect-video w-full object-cover object-top" />
+        <img
+          src={imageSrc}
+          alt={alt}
+          className={
+            fit === "contain"
+              ? "max-h-[32rem] w-full bg-mkt-canvas object-contain"
+              : "aspect-video w-full object-cover object-top"
+          }
+        />
       )}
       <figcaption className="border-t border-mkt-steel1 px-3 py-2 text-xs leading-relaxed text-mkt-steel">
         {label}

@@ -41,11 +41,7 @@ export const AllergenMatrixModule = () => (
   <section id="allergen-matrix" className="home-section min-w-0" style={{ scrollMarginTop: "7rem" }}>
     <div className="home-wrap min-w-0">
       <div className="home-eyebrow">Allergen matrix</div>
-      <h2 className="home-h2 mt-4">
-        One set of ingredient information.
-        <br />
-        More than one use.
-      </h2>
+      <h2 className="home-h2 mt-4">An allergen matrix from the same saved records.</h2>
       <p className="home-lead mt-4">
         The same saved ingredient and menu information can also produce an allergen matrix. Review
         what is recorded, export the PDF and keep it with your team. Check it against current

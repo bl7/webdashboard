@@ -41,7 +41,9 @@ export async function GET(req: NextRequest) {
         s.status, 
         s.billing_interval, 
         s.current_period_end, 
-        s.trial_end, 
+        s.trial_end,
+        s.cancel_at_period_end,
+        s.cancel_at,
         s.pending_plan_change, 
         s.pending_plan_change_effective, 
         s.created_at

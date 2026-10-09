@@ -5,7 +5,6 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 import LabelRender from "@/app/dashboard/print/LabelRender"
-import { PPDSLabelRenderer } from "@/app/dashboard/ppds/PPDSLabelRenderer"
 
 const tasks = [
   { href: "#store", title: "Store an ingredient", copy: "Identify a stored or decanted ingredient." },
@@ -311,27 +310,13 @@ export const UsesBody = () => (
         </div>
         <div className="flex justify-center lg:justify-end">
           <div>
-            <PPDSLabelRenderer
-              item={{
-                uid: "ppds-shortbread-uses",
-                id: "ppds-shortbread-uses",
-                type: "menu",
-                name: "Butter shortbread",
-                quantity: 1,
-                labelType: "ppds",
-                ingredients: ["flour", "butter", "sugar"],
-              }}
-              storageInfo=""
-              businessName=""
-              allIngredients={[
-                { uuid: "s1", ingredientName: "flour", allergens: [{ allergenName: "Wheat" }] },
-                { uuid: "s2", ingredientName: "butter", allergens: [{ allergenName: "Milk" }] },
-                { uuid: "s3", ingredientName: "sugar", allergens: [] },
-              ]}
+            <img
+              src="/marketing/ppds-wide.jpg"
+              alt="Wider PPDS label on a packed California roll"
+              className="w-full max-w-md rounded-lg border border-mkt-steel1"
             />
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">
-              Illustrative ingredient layout, using the same Butter shortbread example as the
-              Natasha&apos;s Law page. Not a production-ready label.
+              A 60×40 mm PPDS label. The 56×80 mm size is shown with the other label photos above.
             </p>
           </div>
         </div>

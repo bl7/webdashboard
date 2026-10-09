@@ -60,7 +60,16 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/dissolvable-kitchen-labels") ||
     pathname.startsWith("/use-first-labels") ||
     pathname.startsWith("/allergen-matrix") ||
-    pathname.startsWith("/printer-compatibility")
+    pathname.startsWith("/printer-compatibility") ||
+    pathname.startsWith("/christmas") ||
+    pathname === "/for" ||
+    pathname.startsWith("/for/") ||
+    pathname.startsWith("/guides") ||
+    pathname.startsWith("/tools") ||
+    pathname.startsWith("/opened-food-labels") ||
+    pathname.startsWith("/cleaning-checklists") ||
+    pathname.startsWith("/csv-import") ||
+    pathname.startsWith("/label-sizes")
 
   // Allow public routes to pass through
   if (isPublicRoute) {

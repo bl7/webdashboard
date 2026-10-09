@@ -5,7 +5,7 @@ import Image from "next/image"
 import featureHeroImg from "@/assets/images/featurehero.png"
 import { Metadata } from "next"
 
-const title = "Kitchen labelling guides | InstaLabel"
+const title = "Kitchen labelling guides from the InstaLabel blog. | InstaLabel"
 const description =
   "Find practical guides to kitchen workflows, allergens, PPDS labels, printer setup and label materials from InstaLabel."
 
@@ -122,10 +122,11 @@ export default function BlogPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
         <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-10 md:flex-row md:gap-16">
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
           <div className="w-full max-w-2xl space-y-6 text-center md:text-left">
             <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
               Guides
@@ -149,18 +150,20 @@ export default function BlogPage() {
               </Button>
             </div>
           </div>
-          <div className="mx-auto w-full max-w-xs sm:max-w-md md:max-w-lg">
-            <Image
-              src={featureHeroImg}
-              alt="InstaLabel kitchen labelling product screen"
-              width={1024}
-              height={1024}
-              className="w-full"
-              priority
-            />
+          <div className="w-full max-w-[500px]">
+            <div className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white shadow-lg">
+              <Image
+                src={featureHeroImg}
+                alt="InstaLabel kitchen labelling product screen"
+                width={1024}
+                height={1024}
+                className="h-auto w-full object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
-        <div className="mkt-hero-fade pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" />
+        <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
       </section>
 
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">

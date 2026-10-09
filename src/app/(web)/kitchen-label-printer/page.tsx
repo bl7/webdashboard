@@ -1,10 +1,10 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { KitchenLabelPrinterPage } from "@/components/blocks/kitchen-label-printer"
 import { Metadata } from "next"
 import React from "react"
 
-const title = "Kitchen label printer compatibility | InstaLabel"
-const description =
-  "Check desktop and Android printer requirements for InstaLabel, including PrintBridge and the supported MUNBYN RW411B, Born4Ship DB403 and Rongta RP425 models."
+const title = FOLDER_SEO["/kitchen-label-printer"].title
+const description = FOLDER_SEO["/kitchen-label-printer"].description
 
 const faqs = [
   {
@@ -31,6 +31,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/kitchen-label-printer"].keywords],
   openGraph: {
     title,
     description,

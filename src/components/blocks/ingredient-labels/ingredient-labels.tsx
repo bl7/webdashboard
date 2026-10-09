@@ -7,7 +7,7 @@ export const IngredientLabelsPage = () => (
   <OperationalLabelPage
     config={{
       badge: "Ingredient labels",
-      h1: "Know what is in the container.",
+      h1: "Keep ingredient information connected to your kitchen labels.",
       heroBody:
         "Print clear ingredient labels for stored or decanted items. Keep the item name and relevant date information easy to find during preparation and shift handovers.",
       whenTitle: "Give stored ingredients a consistent identity.",

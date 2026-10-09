@@ -1,9 +1,9 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import type { Metadata } from "next"
 import { DefrostLabelsPage } from "@/components/blocks/defrost-labels/defrost-labels"
 
-const title = "Defrost labels for kitchen workflows | InstaLabel"
-const description =
-  "Identify food moving through your defrosting procedure, review the applicable dates and print clear item information with InstaLabel."
+const title = FOLDER_SEO["/defrost-labels"].title
+const description = FOLDER_SEO["/defrost-labels"].description
 
 const faqs = [
   {
@@ -26,6 +26,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/defrost-labels"].keywords],
   openGraph: {
     title,
     description,

@@ -1,15 +1,20 @@
 import React from "react"
-import { HomeSpecimen } from "../home-labels"
 
 export const LabelFormats = () => (
   <section id="label-formats" className="home-section" style={{ scrollMarginTop: "7rem" }}>
     <div className="home-wrap">
       <div className="home-eyebrow">Two physical formats</div>
-      <h2 className="home-h2 mt-4">Labels that fit the job.</h2>
+      <h2 className="home-h2 mt-4">Two label sizes: 60 × 40 mm and 56 × 80 mm.</h2>
       <p className="home-lead mt-4 max-w-2xl">
         InstaLabel supports two label formats. Choose the size that fits your printer, workflow and
         the amount of information you need to display.
       </p>
+
+      <img
+        src="/marketing/both-sizes.jpg"
+        alt="60 by 40 mm and 56 by 80 mm California roll labels side by side"
+        className="mt-10 w-full rounded-lg border border-[var(--home-line)]"
+      />
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
         <article className="home-card p-6">
@@ -20,9 +25,6 @@ export const LabelFormats = () => (
           <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
             A smaller footprint for everyday kitchen labelling.
           </p>
-          <div className="home-size-stage mt-6">
-            <HomeSpecimen kind="prep" labelHeight="40mm" />
-          </div>
         </article>
 
         <article className="home-card p-6">
@@ -33,9 +35,6 @@ export const LabelFormats = () => (
           <p className="mt-3 text-[0.95rem] leading-relaxed text-[var(--home-muted)]">
             More room when a label needs a longer ingredient list or extra detail, including PPDS.
           </p>
-          <div className="home-size-stage mt-6">
-            <HomeSpecimen kind="ppds" />
-          </div>
         </article>
       </div>
 
@@ -43,10 +42,6 @@ export const LabelFormats = () => (
         Two formats. The same InstaLabel workflows. Different layouts. Both sizes support default,
         prep, cooked, defrost, use-first and PPDS labels. InstaLabel formats the information to
         suit the selected size.
-      </p>
-      <p className="mt-3 text-xs text-[var(--home-muted)]">
-        Illustrative layouts from the InstaLabel label renderer. The compact example is a prep
-        label. The extended example is a PPDS label. Neither size is limited to one label type.
       </p>
     </div>
   </section>

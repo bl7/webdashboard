@@ -7,7 +7,7 @@ export const CookedLabelsPage = () => (
   <OperationalLabelPage
     config={{
       badge: "Cooked labels",
-      h1: "Keep cooked batches easy to identify.",
+      h1: "Cooked food labels your team can read at a glance.",
       heroBody:
         "Print a consistent cooked label with the item's recorded information and relevant date. Keep the label alongside the cooking, cooling and storage records your kitchen requires.",
       whenTitle: "Identify the item after cooking.",

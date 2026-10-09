@@ -28,6 +28,7 @@ export type OperationalLabelConfig = {
   exampleTitle: string
   itemName: string
   labelType: "prep" | "cooked" | "default"
+  itemType?: "menu" | "ingredients"
   allergens: string[]
   ingredients: { uuid: string; ingredientName: string; allergens: { allergenName: string }[] }[]
   callouts: Callout[]
@@ -47,7 +48,7 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
   const item = {
     uid: config.itemName,
     id: config.itemName,
-    type: "menu" as const,
+    type: config.itemType ?? "menu",
     name: config.itemName,
     quantity: 1,
     ingredients: config.ingredients.map((i) => i.ingredientName),
@@ -69,10 +70,11 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
       {config.hideEmptyContains ? (
         <style>{`.mkt-hide-empty-contains > div > div:last-child{display:none!important}`}</style>
       ) : null}
-      <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
         <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-10 md:flex-row md:gap-16">
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -110,7 +112,7 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
               <LabelRender
                 item={item}
                 expiry={ILLUSTRATIVE_EXPIRY}
-                useInitials={true}
+                useInitials={config.itemType !== "ingredients"}
                 selectedInitial="BL"
                 allergens={config.allergens}
                 labelHeight="40mm"
@@ -123,7 +125,10 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
             </p>
           </motion.div>
         </div>
-        <div className="mkt-hero-fade pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" />
+        <div
+          className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
+          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
+        />
       </section>
 
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
@@ -146,7 +151,7 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
                 <LabelRender
                   item={item}
                   expiry={ILLUSTRATIVE_EXPIRY}
-                  useInitials={true}
+                  useInitials={config.itemType !== "ingredients"}
                   selectedInitial="BL"
                   allergens={config.allergens}
                   labelHeight="40mm"

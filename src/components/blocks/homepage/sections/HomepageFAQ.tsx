@@ -106,8 +106,8 @@ export const HomepageFAQ = () => (
   <section className="home-section">
     <div className="home-wrap grid gap-10 lg:grid-cols-[1fr_1.4fr]">
       <div>
-        <div className="home-eyebrow">Good questions</div>
-        <h2 className="home-h2 mt-4">Before you get rolling.</h2>
+        <div className="home-eyebrow">FAQs</div>
+        <h2 className="home-h2 mt-4">Questions about labels, printers and the trial.</h2>
         <p className="home-lead mt-4">Need to talk through your kitchen’s setup?</p>
         <Link
           href="/bookdemo"

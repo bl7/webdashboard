@@ -13,7 +13,7 @@ interface Cancellation {
   cancelled_at: string
   email?: string
   company_name?: string
-  cancellation_status: "pending" | "scheduled" | "canceled"
+  cancellation_status: "pending" | "scheduled" | "canceled" | "withdrawn"
   status_label: string
   effective_at: string | null
 }
@@ -57,6 +57,7 @@ const CancellationsPage: React.FC = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZE)
   const [modalReason, setModalReason] = useState<string | null>(null)
   const [modalCancellation, setModalCancellation] = useState<Cancellation | null>(null)
+  const [processingId, setProcessingId] = useState<number | null>(null)
 
   // Debounce search input
   useEffect(() => {
@@ -103,6 +104,34 @@ const CancellationsPage: React.FC = () => {
     fetchData()
   }, [fetchData])
 
+  const processCancellation = async (c: Cancellation) => {
+    const who = c.email || c.company_name || c.user_id
+    if (!confirm(`Cancel ${who} at the end of the billing period?`)) return
+    setProcessingId(c.id)
+    try {
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const res = await fetch("/api/subscription_better/cancel", {
+        method: "POST",
+        headers: bossToken
+          ? { "Content-Type": "application/json", Authorization: `Bearer ${bossToken}` }
+          : { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: c.user_id,
+          immediate: false,
+          reason: c.reason,
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) alert(data.error || "Failed to cancel")
+      else {
+        alert(data.message || "Cancellation scheduled")
+        fetchData()
+      }
+    } finally {
+      setProcessingId(null)
+    }
+  }
+
   const totalPages = Math.ceil(total / pageSize)
 
   return (
@@ -136,6 +165,7 @@ const CancellationsPage: React.FC = () => {
                   <th className="px-4 py-2 border-b">Reason</th>
                   <th className="px-4 py-2 border-b">Status</th>
                   <th className="px-4 py-2 border-b">Requested</th>
+                  <th className="px-4 py-2 border-b">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -154,11 +184,24 @@ const CancellationsPage: React.FC = () => {
                     <td className="px-4 py-2 text-xs">
                       {format(new Date(c.requested_at || c.cancelled_at), "yyyy-MM-dd HH:mm")}
                     </td>
+                    <td className="px-4 py-2 text-xs">
+                      {c.cancellation_status === "pending" ? (
+                        <button
+                          className="rounded bg-red-600 px-2 py-1 text-white hover:bg-red-700 disabled:opacity-70"
+                          disabled={processingId === c.id}
+                          onClick={() => processCancellation(c)}
+                        >
+                          {processingId === c.id ? "Cancelling..." : "Cancel at period end"}
+                        </button>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                   </tr>
                 ))}
                 {cancellations.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="text-center py-8 text-gray-400">No cancellations found.</td>
+                    <td colSpan={8} className="text-center py-8 text-gray-400">No cancellations found.</td>
                   </tr>
                 )}
               </tbody>

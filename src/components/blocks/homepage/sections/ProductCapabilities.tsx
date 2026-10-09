@@ -8,7 +8,7 @@ export const ProductCapabilities = () => (
   <section id="features" className="home-section" style={{ scrollMarginTop: "7rem" }}>
     <div className="home-wrap">
       <div className="home-eyebrow">Behind every label</div>
-      <h2 className="home-h2 mt-4">The label is only the final step.</h2>
+      <h2 className="home-h2 mt-4">Save the information, then print the label.</h2>
       <p className="home-lead mt-4 max-w-2xl">
         InstaLabel stores the information your kitchen already works from, then uses it to generate
         the finished label.

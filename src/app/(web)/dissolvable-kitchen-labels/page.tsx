@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import { DissolvableKitchenLabelsPage } from "@/components/blocks/dissolvable-kitchen-labels/dissolvable-kitchen-labels"
 
-const title = "Dissolvable kitchen labels and printer compatibility | InstaLabel"
+const title = "Dissolvable kitchen labels, and how to check the stock. | InstaLabel"
 const description =
-  "Learn what to check before using dissolvable label stock with kitchen labelling software, including printer fit, application conditions and removal."
+  "Dissolvable kitchen labels depend on the roll, the printer and the manufacturer's instructions. InstaLabel prints onto the stock you load."
 
 const faqs = [
   {

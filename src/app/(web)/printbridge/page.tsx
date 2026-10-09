@@ -1,15 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { PrintBridgePage } from "@/components/blocks/printbridge"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "Connect InstaLabel to a label printer installed on Windows or macOS. Learn the PrintBridge setup steps and how to check your first print."
+const description = FOLDER_SEO["/printbridge"].description
 
 export const metadata: Metadata = {
-  title: { absolute: "PrintBridge desktop label printing | InstaLabel" },
+  title: { absolute: FOLDER_SEO["/printbridge"].title },
   description,
+  keywords: [...FOLDER_SEO["/printbridge"].keywords],
   openGraph: {
-    title: "PrintBridge desktop label printing | InstaLabel",
+    title: FOLDER_SEO["/printbridge"].title,
     description,
     url: "https://www.instalabel.co/printbridge",
     type: "website",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PrintBridge desktop label printing | InstaLabel",
+    title: FOLDER_SEO["/printbridge"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -66,7 +67,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "PrintBridge desktop label printing | InstaLabel",
+      name: FOLDER_SEO["/printbridge"].title,
       description,
       url: "https://www.instalabel.co/printbridge",
     },

@@ -1,9 +1,9 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { HaccpLabelsPage } from "@/components/blocks/haccp-labels"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "See how clear item labels and print records can support your kitchen procedures, alongside temperature checks, training and other food-safety records."
+const description = FOLDER_SEO["/haccp-labels"].description
 
 const faqs = [
   {
@@ -23,10 +23,11 @@ const faqs = [
 ]
 
 export const metadata: Metadata = {
-  title: { absolute: "Kitchen labels and HACCP procedures | InstaLabel" },
+  title: { absolute: FOLDER_SEO["/haccp-labels"].title },
   description,
+  keywords: [...FOLDER_SEO["/haccp-labels"].keywords],
   openGraph: {
-    title: "Kitchen labels and HACCP procedures | InstaLabel",
+    title: FOLDER_SEO["/haccp-labels"].title,
     description,
     url: "https://www.instalabel.co/haccp-labels",
     type: "website",
@@ -41,7 +42,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen labels and HACCP procedures | InstaLabel",
+    title: FOLDER_SEO["/haccp-labels"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -66,7 +67,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "Kitchen labels and HACCP procedures | InstaLabel",
+      name: FOLDER_SEO["/haccp-labels"].title,
       description,
       url: "https://www.instalabel.co/haccp-labels",
     },

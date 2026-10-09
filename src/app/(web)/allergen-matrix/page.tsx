@@ -1,11 +1,12 @@
+import { AllergenMatrixHeroChart, AllergenMatrixTool } from "@/components/marketing/AllergenMatrixTool"
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 
-const title = "Restaurant allergen matrix | InstaLabel"
-const description =
-  "Build a 14-allergen matrix from the item records you already use for labels. A blank cell means nothing is recorded there, not that the food is allergen-free."
+const title = FOLDER_SEO["/allergen-matrix"].title
+const description = FOLDER_SEO["/allergen-matrix"].description
 
 const categories = [
   "Celery",
@@ -44,6 +45,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/allergen-matrix"].keywords],
   openGraph: {
     title,
     description,
@@ -91,29 +93,41 @@ export default function AllergenMatrixPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-      <section className="bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-3xl">
-          <p className="text-sm font-medium text-mkt-ink">Allergen matrix</p>
-          <h1 className="mt-3 font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl">
-            See the allergens recorded across your dishes.
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-mkt-ink8">
-            The matrix uses the same saved item records as your labels. It covers the 14 regulated
-            allergen categories. You can export a PDF after you have checked the records.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-4">
-            <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
-              <Link href="/register">
-                Start free trial
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link href="/allergen-guide">Allergen guide</Link>
-            </Button>
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
+          <div className="w-full max-w-2xl space-y-6 text-center md:text-left">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
+              Allergen matrix
+            </div>
+            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
+              An allergen matrix from the item records you already use.
+            </h1>
+            <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
+              The matrix uses the same saved item records as your labels. It covers the 14 regulated
+              allergen categories. You can export a PDF after you have checked the records.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
+              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
+                <Link href="/register">
+                  Start free trial
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/allergen-guide">Allergen guide</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="w-full max-w-[720px]">
+            <AllergenMatrixHeroChart />
           </div>
         </div>
+        <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}         />
       </section>
+      <AllergenMatrixTool />
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-3xl font-black tracking-tight text-mkt-ink">The 14 categories</h2>

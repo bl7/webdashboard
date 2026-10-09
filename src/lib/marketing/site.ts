@@ -14,25 +14,37 @@ export const TRIAL_PERIOD_DAYS = 14
 export const CONTACT = {
   location: "Bournemouth, England",
   email: "contact@instalabel.co",
-  supportEmail: "support@instalabel.co",
   phoneDisplay: "+44 7845 447586",
   phoneHref: "tel:+447845447586",
   whatsapp: "https://wa.me/447845447586",
 } as const
 
 export const PRODUCT_NAV = [
-  { label: "Features", href: "/features" },
+  { label: "All features", href: "/features" },
+  { label: "Label workflows", href: "/uses" },
+  { label: "Allergen matrix", href: "/allergen-matrix" },
+  { label: "Cleaning checklists", href: "/cleaning-checklists" },
+  { label: "Printer compatibility", href: "/printer-compatibility" },
   { label: "Desktop printing", href: "/printbridge" },
   { label: "Android app", href: "/mobile-app" },
-  { label: "Printer compatibility", href: "/printer-compatibility" },
+] as const
+
+export const BUSINESS_NAV = [
+  { label: "Restaurants and pubs", href: "/for/restaurants" },
+  { label: "Cafés and food to go", href: "/for/cafes" },
+  { label: "Takeaways", href: "/for/takeaways" },
+  { label: "Caterers", href: "/for/caterers" },
 ] as const
 
 export const RESOURCES_NAV = [
+  { label: "Guides and setup help", href: "/guides" },
+  { label: "Free tools and templates", href: "/tools" },
+  { label: "Choosing software", href: "/guides/choosing-kitchen-labelling-software" },
+  { label: "Getting started", href: "/bookdemo" },
+  { label: "Frequently asked questions", href: "/faqs" },
   { label: "Allergen guide", href: "/allergen-guide" },
-  { label: "Allergen matrix", href: "/allergen-matrix" },
   { label: "PPDS labels", href: "/natashas-law" },
-  { label: "FAQs", href: "/faqs" },
-  { label: "Guides", href: "/blog" },
+  { label: "Blog", href: "/blog" },
 ] as const
 
 export const WORKFLOW_NAV = [
@@ -43,6 +55,7 @@ export const WORKFLOW_NAV = [
   { label: "Cooked", href: "/cooked-labels" },
   { label: "Defrost", href: "/defrost-labels" },
   { label: "Expiry date", href: "/expiry-date-labels" },
+  { label: "Opened food", href: "/opened-food-labels" },
   { label: "PPDS labels", href: "/natashas-law" },
 ] as const
 
@@ -53,6 +66,9 @@ export const FOOTER_PRODUCT = [
   { label: "PrintBridge", href: "/printbridge" },
   { label: "Android app", href: "/mobile-app" },
   { label: "Printer compatibility", href: "/printer-compatibility" },
+  { label: "Printer buying guide", href: "/kitchen-label-printer" },
+  { label: "Label sizes", href: "/label-sizes" },
+  { label: "CSV import", href: "/csv-import" },
 ] as const
 
 export const FOOTER_RESOURCES = [
@@ -62,7 +78,11 @@ export const FOOTER_RESOURCES = [
   { label: "HACCP and labelling", href: "/haccp-labels" },
   { label: "Label materials", href: "/dissolvable-kitchen-labels" },
   { label: "Compare labelling methods", href: "/label-printer-uk-comparison" },
-  { label: "Guides", href: "/blog" },
+  { label: "Cleaning checklists", href: "/cleaning-checklists" },
+  { label: "Practical guides", href: "/guides" },
+  { label: "Free tools", href: "/tools" },
+  { label: "Restaurants", href: "/for/restaurants" },
+  { label: "Blog", href: "/blog" },
   { label: "FAQs", href: "/faqs" },
 ] as const
 

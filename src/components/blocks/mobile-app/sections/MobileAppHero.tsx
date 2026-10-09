@@ -27,7 +27,7 @@ export const MobileAppHero = () => {
           </div>
 
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            Print kitchen labels from Android.
+            Print kitchen labels from an Android phone or tablet.
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">

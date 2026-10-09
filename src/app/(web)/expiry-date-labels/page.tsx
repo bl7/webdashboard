@@ -1,10 +1,10 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { ExpiryDateLabelsPage } from "@/components/blocks/expiry-date-labels"
 import { Metadata } from "next"
 import React from "react"
 
-const title = "Expiry date labels for kitchens | InstaLabel"
-const description =
-  "Print readable date labels using your kitchen's configured rules. Review item details and support everyday stock-rotation checks with InstaLabel."
+const title = FOLDER_SEO["/expiry-date-labels"].title
+const description = FOLDER_SEO["/expiry-date-labels"].description
 
 const faqs = [
   {
@@ -27,6 +27,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/expiry-date-labels"].keywords],
   openGraph: {
     title,
     description,

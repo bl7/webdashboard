@@ -1,19 +1,41 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import { stripe } from "@/lib/stripe"
-import { sendMail } from "@/lib/mail"
-import { cancellationEmail } from "@/components/templates/subscriptionEmails"
 import { verifyAuthToken } from "@/lib/auth"
 import {
   ensureCancellationStatusColumn,
   PENDING_CANCELLATION_SQL,
 } from "@/lib/cancellationRequest"
 
+async function recordProcessedCancellation(
+  client: { query: (text: string, params?: unknown[]) => Promise<{ rowCount: number | null }> },
+  userId: string,
+  subscriptionId: string,
+  reason?: string
+) {
+  await ensureCancellationStatusColumn(client)
+  const updated = await client.query(
+    `UPDATE subscription_cancellations
+     SET status = 'processed',
+         reason = COALESCE($3, reason)
+     WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
+    [userId, subscriptionId, reason || null]
+  )
+  if ((updated.rowCount ?? 0) === 0) {
+    await client.query(
+      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason, status)
+       VALUES ($1, $2, $3, 'processed')`,
+      [userId, subscriptionId, reason || null]
+    )
+  }
+}
+
 export async function POST(req: NextRequest) {
   const { role, userUuid } = await verifyAuthToken(req)
-  const body = (await req.json()) as { user_id?: string; reason?: string }
+  const body = (await req.json()) as { user_id?: string; reason?: string; immediate?: boolean }
   let user_id: string | undefined = body?.user_id
   const reason: string | undefined = body?.reason
+  const immediate = role === "boss" && body?.immediate === true
 
   // Authorization rules:
   // - boss: may cancel any user_id (must be provided)
@@ -53,49 +75,39 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    const item = stripeSub.items.data[0]
-    if (!item) {
+    if (!stripeSub.items.data[0]) {
       return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid subscription: no items found.",
-        },
+        { success: false, error: "Invalid subscription: no items found." },
         { status: 500 }
       )
     }
 
-    const interval = item.price?.recurring?.interval
-    const amount = item.price?.unit_amount || 0
-    const currency = item.price?.currency || "gbp"
-    const customerId = stripeSub.customer as string
-
-    if (amount <= 0) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid subscription amount. Cannot proceed.",
-        },
-        { status: 500 }
+    if (immediate) {
+      const canceled = await stripe.subscriptions.cancel(sub.stripe_subscription_id)
+      const canceledAt = canceled.canceled_at || Math.floor(Date.now() / 1000)
+      await client.query(
+        `UPDATE subscription_better
+         SET status = 'canceled',
+             cancel_at_period_end = false,
+             cancel_at = to_timestamp($2),
+             pending_plan_change = NULL,
+             pending_price_id = NULL,
+             pending_plan_interval = NULL,
+             pending_plan_name = NULL,
+             pending_plan_change_effective = NULL,
+             refund_due_at = NULL,
+             refund_amount = NULL,
+             updated_at = NOW()
+         WHERE user_id = $1`,
+        [user_id, canceledAt]
       )
+      await recordProcessedCancellation(client, user_id, sub.stripe_subscription_id, reason)
+      return NextResponse.json({
+        success: true,
+        message: "Subscription cancelled immediately.",
+      })
     }
 
-    // Fetch user email from Stripe
-    let userEmail = null
-    if (sub.stripe_customer_id) {
-      const customer = await stripe.customers.retrieve(sub.stripe_customer_id)
-      if (!customer.deleted) {
-        userEmail = (customer as any).email
-      }
-    }
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: "Could not find user email for notification." },
-        { status: 500 }
-      )
-    }
-
-    // Cancel at end of current billing period (policy: no immediate cancellations)
-    // Simplified: no refunds
     await stripe.subscriptions.update(sub.stripe_subscription_id, {
       cancel_at_period_end: true,
     })
@@ -116,32 +128,7 @@ export async function POST(req: NextRequest) {
       [user_id]
     )
 
-    // Store cancellation reason; mark any pending requests as processed
-    await ensureCancellationStatusColumn(client)
-    await client.query(
-      `UPDATE subscription_cancellations
-       SET status = 'processed'
-       WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
-      [user_id, sub.stripe_subscription_id]
-    )
-    await client.query(
-      `INSERT INTO subscription_cancellations (user_id, subscription_id, reason, status)
-       VALUES ($1, $2, $3, 'processed')`,
-      [user_id, sub.stripe_subscription_id, reason || null]
-    )
-
-    // Email sending disabled for subscription cancellations
-    // await sendMail({
-    //   to: userEmail,
-    //   subject: "Subscription Cancellation",
-    //   bcc: "instalabel.co@gmail.com",
-    //   body: cancellationEmail({
-    //     name: userEmail,
-    //     planName: sub.plan_name || sub.plan_id || "",
-    //     cancellationType: "period_end",
-    //     endDate: new Date((stripeSub as any).current_period_end * 1000).toLocaleDateString(),
-    //   }),
-    // })
+    await recordProcessedCancellation(client, user_id, sub.stripe_subscription_id, reason)
 
     return NextResponse.json({
       success: true,
@@ -246,9 +233,15 @@ export async function GET(req: NextRequest) {
         status_label = "Scheduled"
         effective_at = periodEnd || cancelAt
       } else if (requestStatus === "processed") {
-        cancellation_status = "canceled"
-        status_label = "Processed"
-        effective_at = periodEnd || requestedAt
+        if (subStatus && subStatus !== "canceled" && !cancelAtPeriodEnd && !cancelAt) {
+          cancellation_status = "withdrawn"
+          status_label = "Reactivated"
+          effective_at = requestedAt
+        } else {
+          cancellation_status = "canceled"
+          status_label = "Processed"
+          effective_at = periodEnd || requestedAt
+        }
       }
 
       return {

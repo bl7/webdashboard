@@ -1,9 +1,9 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import type { Metadata } from "next"
 import { UseFirstLabelsPage } from "@/components/blocks/use-first-labels/use-first-labels"
 
-const title = "Use First labels for kitchen stock rotation | InstaLabel"
-const description =
-  "Print a Use First marker for the container staff should take next. It does not set a shelf life or replace the item's own date label."
+const title = FOLDER_SEO["/use-first-labels"].title
+const description = FOLDER_SEO["/use-first-labels"].description
 
 const faqs = [
   {
@@ -24,6 +24,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/use-first-labels"].keywords],
   openGraph: {
     title,
     description,

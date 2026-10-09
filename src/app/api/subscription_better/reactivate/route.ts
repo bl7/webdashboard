@@ -51,6 +51,17 @@ export async function POST(req: NextRequest) {
         )
       }
 
+      const stripeSub = await stripe.subscriptions.retrieve(sub.stripe_subscription_id)
+      if (stripeSub.status === "canceled") {
+        return NextResponse.json(
+          {
+            error:
+              "This subscription is already cancelled in Stripe and cannot be reactivated. Start a new subscription.",
+          },
+          { status: 400 }
+        )
+      }
+
       await stripe.subscriptions.update(sub.stripe_subscription_id, {
         cancel_at: null,
         cancel_at_period_end: false,
@@ -65,7 +76,7 @@ export async function POST(req: NextRequest) {
       await client.query(
         `UPDATE subscription_cancellations
          SET status = 'withdrawn'
-         WHERE user_id = $1 AND subscription_id = $2 AND ${PENDING_CANCELLATION_SQL}`,
+         WHERE user_id = $1 AND subscription_id = $2 AND COALESCE(status, 'pending') IN ('pending', 'processed')`,
         [user_id, sub.stripe_subscription_id]
       )
 

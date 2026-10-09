@@ -6,7 +6,7 @@ export const MenuImport = () => (
   <section className="home-section">
     <div className="home-wrap">
       <div className="home-eyebrow">Easy setup</div>
-      <h2 className="home-h2 mt-4 max-w-3xl">Already have your menu? Bring it with you.</h2>
+      <h2 className="home-h2 mt-4 max-w-3xl">Import the menu information you already have.</h2>
       <p className="home-lead mt-4 max-w-2xl">
         You don&apos;t need to build everything from scratch. Import your existing information,
         review it, configure your labels and start printing.

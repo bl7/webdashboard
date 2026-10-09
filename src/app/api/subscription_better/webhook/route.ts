@@ -224,8 +224,10 @@ export async function POST(req: NextRequest) {
         const status = sub.status
         const trial_start = sub.trial_start || null
         const trial_end = sub.trial_end || null
-        const current_period_start = sub.items.data[0]?.current_period_start || null
-        const current_period_end = sub.items.data[0]?.current_period_end || null
+        const current_period_start =
+          sub.items.data[0]?.current_period_start || (sub as any).current_period_start || null
+        const current_period_end =
+          sub.items.data[0]?.current_period_end || (sub as any).current_period_end || null
         const billing_interval = sub.items.data[0]?.price?.recurring?.interval || null
         const amount = sub.items.data[0]?.price?.unit_amount || null
         const currency = sub.items.data[0]?.price?.currency || null
@@ -285,12 +287,12 @@ export async function POST(req: NextRequest) {
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, plan_name = $5, status = $6,
-              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = to_timestamp($9), current_period_end = to_timestamp($10),
+              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = COALESCE(to_timestamp($9), subscription_better.current_period_start), current_period_end = COALESCE(to_timestamp($10), subscription_better.current_period_end),
               billing_interval = $11, amount = $12, currency = $13, cancel_at_period_end = $14,
-              pending_plan_change = $15, pending_plan_change_effective = to_timestamp($16),
+              pending_plan_change = COALESCE($15, subscription_better.pending_plan_change), pending_plan_change_effective = COALESCE(to_timestamp($16), subscription_better.pending_plan_change_effective),
               card_brand = $17, card_last4 = $18, card_exp_month = $19, card_exp_year = $20, card_country = $21, card_fingerprint = $22,
               updated_at = NOW(), price_id = $23, plan_interval = $24,
-              pending_price_id = $25, pending_plan_interval = $26, pending_plan_name = $27, cancel_at = to_timestamp($28)`,
+              pending_price_id = COALESCE($25, subscription_better.pending_price_id), pending_plan_interval = COALESCE($26, subscription_better.pending_plan_interval), pending_plan_name = COALESCE($27, subscription_better.pending_plan_name), cancel_at = to_timestamp($28)`,
             [
               user_id,
               sub.customer,
@@ -722,8 +724,10 @@ export async function POST(req: NextRequest) {
         const status = sub.status
         const trial_start = sub.trial_start || null
         const trial_end = sub.trial_end || null
-        const current_period_start = sub.items.data[0]?.current_period_start || null
-        const current_period_end = sub.items.data[0]?.current_period_end || null
+        const current_period_start =
+          sub.items.data[0]?.current_period_start || (sub as any).current_period_start || null
+        const current_period_end =
+          sub.items.data[0]?.current_period_end || (sub as any).current_period_end || null
         const billing_interval = sub.items.data[0]?.price?.recurring?.interval || null
         const amount = sub.items.data[0]?.price?.unit_amount || null
         const currency = sub.items.data[0]?.price?.currency || null
@@ -783,12 +787,12 @@ export async function POST(req: NextRequest) {
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, plan_name = $5, status = $6,
-              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = to_timestamp($9), current_period_end = to_timestamp($10),
+              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = COALESCE(to_timestamp($9), subscription_better.current_period_start), current_period_end = COALESCE(to_timestamp($10), subscription_better.current_period_end),
               billing_interval = $11, amount = $12, currency = $13, cancel_at_period_end = $14,
-              pending_plan_change = $15, pending_plan_change_effective = to_timestamp($16),
+              pending_plan_change = COALESCE($15, subscription_better.pending_plan_change), pending_plan_change_effective = COALESCE(to_timestamp($16), subscription_better.pending_plan_change_effective),
               card_brand = $17, card_last4 = $18, card_exp_month = $19, card_exp_year = $20, card_country = $21, card_fingerprint = $22,
               updated_at = NOW(), price_id = $23, plan_interval = $24,
-              pending_price_id = $25, pending_plan_interval = $26, pending_plan_name = $27, cancel_at = to_timestamp($28)`,
+              pending_price_id = COALESCE($25, subscription_better.pending_price_id), pending_plan_interval = COALESCE($26, subscription_better.pending_plan_interval), pending_plan_name = COALESCE($27, subscription_better.pending_plan_name), cancel_at = to_timestamp($28)`,
             [
               user_id,
               sub.customer,
@@ -875,8 +879,10 @@ export async function POST(req: NextRequest) {
         const status = sub.status
         const trial_start = sub.trial_start || null
         const trial_end = sub.trial_end || null
-        const current_period_start = sub.items.data[0]?.current_period_start || null
-        const current_period_end = sub.items.data[0]?.current_period_end || null
+        const current_period_start =
+          sub.items.data[0]?.current_period_start || (sub as any).current_period_start || null
+        const current_period_end =
+          sub.items.data[0]?.current_period_end || (sub as any).current_period_end || null
         const billing_interval = sub.items.data[0]?.price?.recurring?.interval || null
         const amount = sub.items.data[0]?.price?.unit_amount || null
         const currency = sub.items.data[0]?.price?.currency || null
@@ -936,12 +942,12 @@ export async function POST(req: NextRequest) {
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, plan_name = $5, status = $6,
-              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = to_timestamp($9), current_period_end = to_timestamp($10),
+              trial_start = to_timestamp($7), trial_end = to_timestamp($8), current_period_start = COALESCE(to_timestamp($9), subscription_better.current_period_start), current_period_end = COALESCE(to_timestamp($10), subscription_better.current_period_end),
               billing_interval = $11, amount = $12, currency = $13, cancel_at_period_end = $14,
-              pending_plan_change = $15, pending_plan_change_effective = to_timestamp($16),
+              pending_plan_change = COALESCE($15, subscription_better.pending_plan_change), pending_plan_change_effective = COALESCE(to_timestamp($16), subscription_better.pending_plan_change_effective),
               card_brand = $17, card_last4 = $18, card_exp_month = $19, card_exp_year = $20, card_country = $21, card_fingerprint = $22,
               updated_at = NOW(), price_id = $23, plan_interval = $24,
-              pending_price_id = $25, pending_plan_interval = $26, pending_plan_name = $27, cancel_at = to_timestamp($28)`,
+              pending_price_id = COALESCE($25, subscription_better.pending_price_id), pending_plan_interval = COALESCE($26, subscription_better.pending_plan_interval), pending_plan_name = COALESCE($27, subscription_better.pending_plan_name), cancel_at = to_timestamp($28)`,
             [
               user_id,
               sub.customer,
@@ -1125,9 +1131,9 @@ export async function POST(req: NextRequest) {
             )
             ON CONFLICT (user_id) DO UPDATE SET
               stripe_customer_id = $2, stripe_subscription_id = $3, plan_id = $4, price_id = $5, plan_name = $6, plan_interval = $7, status = $8,
-              trial_start = $9, trial_end = $10, current_period_start = $11, current_period_end = $12,
+              trial_start = $9, trial_end = $10, current_period_start = COALESCE($11, subscription_better.current_period_start), current_period_end = COALESCE($12, subscription_better.current_period_end),
               billing_interval = $13, amount = $14, currency = $15, cancel_at_period_end = $16,
-              pending_plan_change = $17, pending_plan_change_effective = $18,
+              pending_plan_change = COALESCE($17, subscription_better.pending_plan_change), pending_plan_change_effective = COALESCE($18, subscription_better.pending_plan_change_effective),
               card_brand = $19, card_last4 = $20, card_exp_month = $21, card_exp_year = $22, card_country = $23, card_fingerprint = $24, updated_at = NOW()`,
             [
               user_id,
@@ -1140,11 +1146,11 @@ export async function POST(req: NextRequest) {
               sub.status,
               sub.trial_start ? new Date(Number(sub.trial_start) * 1000) : null,
               sub.trial_end ? new Date(Number(sub.trial_end) * 1000) : null,
-              sub.items.data[0]?.current_period_start
-                ? new Date(Number(sub.items.data[0].current_period_start) * 1000)
+              (sub.items.data[0]?.current_period_start || (sub as any).current_period_start)
+                ? new Date(Number(sub.items.data[0]?.current_period_start || (sub as any).current_period_start) * 1000)
                 : null,
-              sub.items.data[0]?.current_period_end
-                ? new Date(Number(sub.items.data[0].current_period_end) * 1000)
+              (sub.items.data[0]?.current_period_end || (sub as any).current_period_end)
+                ? new Date(Number(sub.items.data[0]?.current_period_end || (sub as any).current_period_end) * 1000)
                 : null,
               sub.items.data[0]?.price?.recurring?.interval || null,
               sub.items.data[0]?.price?.unit_amount || null,

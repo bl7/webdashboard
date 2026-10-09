@@ -1,16 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Homepage } from "@/components/blocks"
 import { Metadata } from "next"
 import "./home-life.css"
 import "./home-bands.css"
 
 export const metadata: Metadata = {
-  title: "Kitchen labelling software",
-  description:
-    "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
+  title: { absolute: FOLDER_SEO["/"].title },
+  description: FOLDER_SEO["/"].description,
+  keywords: [...FOLDER_SEO["/"].keywords],
   openGraph: {
-    title: "Kitchen labelling software | InstaLabel",
-    description:
-      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
+    title: FOLDER_SEO["/"].title,
+    description: FOLDER_SEO["/"].description,
     url: "https://www.instalabel.co",
     type: "website",
     images: [
@@ -24,9 +24,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen labelling software | InstaLabel",
-    description:
-      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
+    title: FOLDER_SEO["/"].title,
+    description: FOLDER_SEO["/"].description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -49,9 +48,8 @@ export default function Home() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Kitchen labelling software | InstaLabel",
-    description:
-      "Create clear, consistent kitchen labels from the ingredient, allergen and date information you already manage.",
+    name: FOLDER_SEO["/"].title,
+    description: FOLDER_SEO["/"].description,
     url: "https://www.instalabel.co",
   }
 

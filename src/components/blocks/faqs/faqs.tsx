@@ -208,9 +208,9 @@ const groups: { id: string; title: string; items: FaqItem[] }[] = [
           "No. It prints labels from the information you save. Your business checks recipes, supplier information and dates, and remains responsible for the labelling that applies to the food.",
       },
       {
-        question: "Does InstaLabel log temperatures or run a HACCP system?",
+        question: "Does InstaLabel run a HACCP system?",
         answer:
-          "No. It does not log temperatures or run a HACCP system. Cleaning checklists record the tasks you schedule. Temperature checks and the rest of your food-safety process stay with your business.",
+          "No. It records temperature checks for equipment, food and deliveries, and the cleaning tasks you schedule. It does not certify the kitchen or replace the rest of your food-safety procedures.",
       },
       {
         question: "Does InstaLabel decide shelf life?",
@@ -231,10 +231,11 @@ const jumps = [
 
 export const FaqsPage = () => (
   <>
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-10 md:flex-row md:gap-16">
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -245,7 +246,7 @@ export const FaqsPage = () => (
             Support
           </div>
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            Questions about InstaLabel?
+            InstaLabel questions and answers.
           </h1>
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
             Find the practical details about labels, item information, printing and getting started.
@@ -277,7 +278,7 @@ export const FaqsPage = () => (
           </p>
         </motion.div>
       </div>
-      <div className="mkt-hero-fade pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" />
+      <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
     </section>
 
     {groups.map((group, groupIndex) => (

@@ -5,31 +5,15 @@ import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 import Link from "next/link"
 import { motion } from "framer-motion"
-import { PPDSLabelRenderer } from "@/app/dashboard/ppds/PPDSLabelRenderer"
-
-const shortbreadItem = {
-  uid: "ppds-shortbread",
-  id: "ppds-shortbread",
-  type: "menu",
-  name: "Butter shortbread",
-  quantity: 1,
-  labelType: "ppds",
-  ingredients: ["flour", "butter", "sugar"],
-}
-
-const shortbreadIngredients = [
-  { uuid: "s1", ingredientName: "flour", allergens: [{ allergenName: "Wheat" }] },
-  { uuid: "s2", ingredientName: "butter", allergens: [{ allergenName: "Milk" }] },
-  { uuid: "s3", ingredientName: "sugar", allergens: [] },
-]
 
 export const NatashasLawHero = () => {
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-50 blur-3xl" />
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
 
-      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-10 md:flex-row md:gap-16">
+      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,7 +24,7 @@ export const NatashasLawHero = () => {
             PPDS labels
           </div>
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            PPDS labels built from the ingredients you use.
+            PPDS labels from your saved ingredient information.
           </h1>
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
             Prepare labels with the food name, ingredient information and clear allergen emphasis.
@@ -65,18 +49,17 @@ export const NatashasLawHero = () => {
           transition={{ duration: 1, delay: 0.3 }}
           className="flex w-full max-w-[500px] flex-col items-center md:items-end"
         >
-          <PPDSLabelRenderer
-            item={shortbreadItem}
-            storageInfo=""
-            businessName=""
-            allIngredients={shortbreadIngredients}
+          <img
+            src="/marketing/ppds-tall-close.jpg"
+            alt="Taller PPDS label on a packed California roll"
+            className="w-full max-w-[420px] rounded-lg border border-mkt-steel1 object-contain"
           />
           <p className="mt-3 text-center text-xs text-mkt-steel md:text-right">
-            Illustrative ingredient layout, not a production-ready label.
+            A 56×80 mm PPDS label on packed food.
           </p>
         </motion.div>
       </div>
-      <div className="mkt-hero-fade pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" />
+      <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
     </section>
   )
 }

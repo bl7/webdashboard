@@ -51,7 +51,7 @@ export const FeaturesBody = () => (
     <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
       <div className="container mx-auto max-w-6xl">
         <h2 className="mb-3 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-          Five steps. Then a label.
+          From saved ingredients to a printed label.
         </h2>
         <p className="mb-10 max-w-2xl text-base leading-relaxed text-mkt-ink8">
           Save the information once. Staff select the item, check it, and print.
@@ -76,9 +76,14 @@ export const FeaturesBody = () => (
         <h2 className="mb-4 max-w-2xl text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
           Cleaning checklists for the tasks you already run.
         </h2>
-        <p className="mb-10 max-w-2xl text-base leading-relaxed text-mkt-ink8">
+        <p className="mb-8 max-w-2xl text-base leading-relaxed text-mkt-ink8">
           Labelling stays the main job. In the same dashboard you can keep the cleaning list: what needs doing, how often, and whether it was done.
         </p>
+        <img
+          src="/marketing/cleaning-checklist.jpg"
+          alt="Cleaning checklist on the InstaLabel dashboard and the Android app"
+          className="mb-10 w-full rounded-lg border border-mkt-steel1"
+        />
         <ul className="grid gap-4 sm:grid-cols-2">
           {[
             {
@@ -105,8 +110,19 @@ export const FeaturesBody = () => (
           ))}
         </ul>
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mkt-ink8">
-          This records the checks you schedule. It does not log temperatures, replace your HACCP records, or certify the kitchen.
+          This records the cleaning checks you schedule. It does not replace your HACCP records or certify the kitchen.
         </p>
+        <h3 className="mb-4 mt-16 max-w-2xl text-3xl font-black tracking-tight text-mkt-ink">
+          Temperature records in the same diary.
+        </h3>
+        <p className="mb-8 max-w-2xl text-base leading-relaxed text-mkt-ink8">
+          Staff enter equipment, food and delivery temperatures on the phone. The dashboard shows today’s record and what is still to enter. Those checks stay separate from the cleaning list.
+        </p>
+        <img
+          src="/marketing/temperature-records.jpg"
+          alt="Temperature records on the InstaLabel dashboard and the Android app"
+          className="w-full rounded-lg border border-mkt-steel1"
+        />
       </div>
     </section>
 

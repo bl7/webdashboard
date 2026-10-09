@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 
-const title = "Privacy policy | InstaLabel"
+const title = "Privacy policy for InstaLabel accounts and the website. | InstaLabel"
 const description =
   "Learn how InstaLabel describes the personal information used for accounts, support, printing activity and website services."
 
@@ -56,8 +56,8 @@ const Page = () => {
       </p>
       <p className="mt-3 text-base leading-relaxed text-mkt-ink8">
         For privacy questions or requests, email{" "}
-        <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
-          support@instalabel.co
+        <a href="mailto:contact@instalabel.co" className="text-mkt-teal hover:underline">
+          contact@instalabel.co
         </a>
         .
       </p>
@@ -87,8 +87,8 @@ const Page = () => {
           </p>
           <p className="mt-3">
             For privacy questions or requests, email{" "}
-            <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
-              support@instalabel.co
+            <a href="mailto:contact@instalabel.co" className="text-mkt-teal hover:underline">
+              contact@instalabel.co
             </a>
             .
           </p>
@@ -186,8 +186,8 @@ const Page = () => {
             <li>You can access, update or delete your account information in the service.</li>
             <li>
               You can request a copy of your data or ask us to delete your account by emailing{" "}
-              <a href="mailto:support@instalabel.co" className="text-mkt-teal hover:underline">
-                support@instalabel.co
+              <a href="mailto:contact@instalabel.co" className="text-mkt-teal hover:underline">
+                contact@instalabel.co
               </a>
               . Some records may be retained where we are required to keep them.
             </li>

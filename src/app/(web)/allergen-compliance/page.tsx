@@ -1,15 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { AllergenCompliancePage } from "@/components/blocks/allergen-compliance"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "Keep recorded ingredient and allergen information together, prepare labels and generate a printable 14-allergen matrix with InstaLabel."
+const description = FOLDER_SEO["/allergen-compliance"].description
 
 export const metadata: Metadata = {
-  title: { absolute: "Allergen labelling software | InstaLabel" },
+  title: { absolute: FOLDER_SEO["/allergen-compliance"].title },
   description,
+  keywords: [...FOLDER_SEO["/allergen-compliance"].keywords],
   openGraph: {
-    title: "Allergen labelling software | InstaLabel",
+    title: FOLDER_SEO["/allergen-compliance"].title,
     description,
     url: "https://www.instalabel.co/allergen-compliance",
     type: "website",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Allergen labelling software | InstaLabel",
+    title: FOLDER_SEO["/allergen-compliance"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -67,7 +68,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "Allergen labelling software | InstaLabel",
+      name: FOLDER_SEO["/allergen-compliance"].title,
       description,
       url: "https://www.instalabel.co/allergen-compliance",
     },

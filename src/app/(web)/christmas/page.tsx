@@ -20,8 +20,8 @@ const included = [
     body: "Schedule the cleaning tasks the kitchen already runs. Staff mark them done, and you can open or print that day’s checklist.",
   },
   {
-    title: "Temperature records",
-    body: "Record routine temperature checks in the dashboard, separate from the cleaning checklist.",
+    title: "Temperature checks",
+    body: "Record equipment, food and delivery temperatures in the compliance diary, separate from the cleaning checklist.",
   },
 ]
 

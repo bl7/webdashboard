@@ -47,15 +47,16 @@ export const Hero = () => {
               Kitchen labelling software
             </div>
             <h1 className="mt-0 font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="text-mkt-ink">Your kitchen moves fast.</span>
+              <span className="text-mkt-ink">Kitchen labelling</span>
               <br />
-              <span className="text-[#154F3B]">Your labels should too.</span>
+              <span className="text-[#154F3B]">without proprietary hardware.</span>
             </h1>
           </div>
           <p className="mb-1 mt-2 text-sm text-mkt-ink8 sm:text-base">
             Create clear, consistent kitchen labels from the ingredient, allergen and date
             information you already manage. Use the label printer already installed on your
-            computer, or the Android app with a supported Bluetooth printer.
+            computer, or the Android app with a supported Bluetooth printer. The same account
+            keeps temperature records, a cleaning checklist and the diary.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
             <Link href="/register">

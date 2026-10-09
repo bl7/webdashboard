@@ -1,9 +1,9 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { NatashasLawPage } from "@/components/blocks/natashas-law"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "Prepare PPDS labels with full ingredient information and clear allergen emphasis. Understand the checks your business needs before printing."
+const description = FOLDER_SEO["/natashas-law"].description
 
 const faqs = [
   {
@@ -29,10 +29,11 @@ const faqs = [
 ]
 
 export const metadata: Metadata = {
-  title: { absolute: "PPDS labels and Natasha's Law | InstaLabel" },
+  title: { absolute: FOLDER_SEO["/natashas-law"].title },
   description,
+  keywords: [...FOLDER_SEO["/natashas-law"].keywords],
   openGraph: {
-    title: "PPDS labels and Natasha's Law | InstaLabel",
+    title: FOLDER_SEO["/natashas-law"].title,
     description,
     url: "https://www.instalabel.co/natashas-law",
     type: "website",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "PPDS labels and Natasha's Law | InstaLabel",
+    title: FOLDER_SEO["/natashas-law"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -72,7 +73,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "PPDS labels and Natasha's Law | InstaLabel",
+      name: FOLDER_SEO["/natashas-law"].title,
       description,
       url: "https://www.instalabel.co/natashas-law",
     },

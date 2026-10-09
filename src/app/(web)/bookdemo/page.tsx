@@ -1,15 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { BookDemo } from "@/components/blocks"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "See item setup, label previews and desktop or Android printing in an InstaLabel demo. Tell us about your kitchen and printer setup."
+const description = FOLDER_SEO["/bookdemo"].description
 
 export const metadata: Metadata = {
-  title: { absolute: "Book an InstaLabel demo" },
+  title: { absolute: FOLDER_SEO["/bookdemo"].title },
   description,
+  keywords: [...FOLDER_SEO["/bookdemo"].keywords],
   openGraph: {
-    title: "Book an InstaLabel demo",
+    title: FOLDER_SEO["/bookdemo"].title,
     description,
     url: "https://www.instalabel.co/bookdemo",
     type: "website",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Book an InstaLabel demo",
+    title: FOLDER_SEO["/bookdemo"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -64,7 +65,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      name: "Book an InstaLabel demo",
+      name: FOLDER_SEO["/bookdemo"].title,
       description,
       url: "https://www.instalabel.co/bookdemo",
     },

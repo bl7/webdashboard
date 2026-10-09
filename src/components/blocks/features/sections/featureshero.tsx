@@ -26,7 +26,7 @@ export const FeaturesHero = () => {
           </div>
 
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            Your kitchen information, ready to label.
+            Kitchen labelling software, with the information behind every label.
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">

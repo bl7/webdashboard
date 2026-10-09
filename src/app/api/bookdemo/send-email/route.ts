@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
               ${
                 subject.includes("Rescheduled")
                   ? `
-                <a href="mailto:support@instalabel.co" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
+                <a href="mailto:contact@instalabel.co" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; font-size: 16px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transition: transform 0.2s;">
                   📧 Contact Us for Questions
                 </a>
               `

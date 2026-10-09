@@ -7,7 +7,7 @@ export const PrepLabelsPage = () => (
   <OperationalLabelPage
     config={{
       badge: "Prep labels",
-      h1: "Keep prepared items clear between shifts.",
+      h1: "Clear prep labels for food made ahead of service.",
       heroBody:
         "Label prepared ingredients and dishes before they move into storage or the next stage of service. Reuse recorded item information and review the applicable date before printing.",
       whenTitle: "For items prepared ahead of service.",

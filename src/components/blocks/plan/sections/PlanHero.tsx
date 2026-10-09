@@ -27,14 +27,14 @@ export const PlanHero = () => {
           </div>
 
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            Straightforward pricing for kitchen labelling.
+            Kitchen labelling software for the printer you already have.
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
             There is no printer in the box. Use a label printer already installed on Windows or
-            macOS, or the Android app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. New subscriptions
-            start with a 14-day trial. Payment details are collected at checkout, there is no charge
-            during the trial, and billing continues after it until you cancel.
+            macOS, or the Android app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. New
+            subscriptions start with a 14-day trial. Payment details are collected at checkout,
+            there is no charge during the trial, and billing continues after it until you cancel.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

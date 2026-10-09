@@ -10,23 +10,6 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
-import { PPDSLabelRenderer } from "@/app/dashboard/ppds/PPDSLabelRenderer"
-
-const shortbreadItem = {
-  uid: "ppds-shortbread-body",
-  id: "ppds-shortbread-body",
-  type: "menu",
-  name: "Butter shortbread",
-  quantity: 1,
-  labelType: "ppds",
-  ingredients: ["flour", "butter", "sugar"],
-}
-
-const shortbreadIngredients = [
-  { uuid: "s1", ingredientName: "flour", allergens: [{ allergenName: "Wheat" }] },
-  { uuid: "s2", ingredientName: "butter", allergens: [{ allergenName: "Milk" }] },
-  { uuid: "s3", ingredientName: "sugar", allergens: [] },
-]
 
 const steps = [
   {
@@ -168,14 +151,13 @@ export const NatashasLawBody = () => (
         </h2>
         <div className="grid items-start gap-10 lg:grid-cols-[auto_1fr]">
           <div>
-            <PPDSLabelRenderer
-              item={shortbreadItem}
-              storageInfo=""
-              businessName=""
-              allIngredients={shortbreadIngredients}
+            <img
+              src="/marketing/ppds-wide.jpg"
+              alt="Wider PPDS label on a packed California roll"
+              className="w-full max-w-md rounded-lg border border-mkt-steel1"
             />
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">
-              Illustrative ingredient layout, not a production-ready label.
+              A 60×40 mm PPDS label on packed food. The taller label above is 56×80 mm.
             </p>
           </div>
           <ul className="space-y-5">
@@ -191,8 +173,8 @@ export const NatashasLawBody = () => (
           </ul>
         </div>
         <p className="mt-8 max-w-3xl text-sm leading-relaxed text-mkt-ink8">
-          This is a layout illustration. Your finished label needs to reflect your own recipe and
-          every requirement that applies to your product.
+          This photo shows a printed PPDS label. Your own label still has to match the recipe and the
+          rules that apply to how the food is packed and sold.
         </p>
       </div>
     </section>

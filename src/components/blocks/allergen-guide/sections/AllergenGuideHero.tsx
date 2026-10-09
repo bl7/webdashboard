@@ -50,7 +50,7 @@ export const AllergenGuideHero = () => {
           </div>
 
           <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            An allergen labelling reference for kitchen teams.
+            The 14 regulated food allergen categories.
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">

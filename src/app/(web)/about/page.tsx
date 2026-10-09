@@ -1,15 +1,15 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { About } from "@/components/blocks"
 import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: { absolute: "About InstaLabel | Kitchen labelling software" },
-  description:
-    "Learn why InstaLabel focuses on clear kitchen labels, reusable item information and flexible printing. Contact the team in Bournemouth.",
+  title: { absolute: FOLDER_SEO["/about"].title },
+  description: FOLDER_SEO["/about"].description,
+  keywords: [...FOLDER_SEO["/about"].keywords],
   openGraph: {
-    title: "About InstaLabel | Kitchen labelling software",
-    description:
-      "Learn why InstaLabel focuses on clear kitchen labels, reusable item information and flexible printing. Contact the team in Bournemouth.",
+    title: FOLDER_SEO["/about"].title,
+    description: FOLDER_SEO["/about"].description,
     url: "https://www.instalabel.co/about",
     type: "website",
     images: [
@@ -23,9 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "About InstaLabel | Kitchen labelling software",
-    description:
-      "Learn why InstaLabel focuses on clear kitchen labels, reusable item information and flexible printing. Contact the team in Bournemouth.",
+    title: FOLDER_SEO["/about"].title,
+    description: FOLDER_SEO["/about"].description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -49,8 +48,7 @@ const Page = () => {
     "@context": "https://schema.org",
     "@type": "WebPage",
     name: "About InstaLabel | Kitchen labelling software",
-    description:
-      "Learn why InstaLabel focuses on clear kitchen labels, reusable item information and flexible printing. Contact the team in Bournemouth.",
+    description: FOLDER_SEO["/about"].description,
     url: "https://www.instalabel.co/about",
   }
 

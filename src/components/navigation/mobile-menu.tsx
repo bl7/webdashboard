@@ -10,7 +10,7 @@ import {
   DrawerTitle,
   DrawerClose,
 } from "@/components/ui/drawer"
-import { PRODUCT_NAV, RESOURCES_NAV } from "@/lib/marketing/site"
+import { BUSINESS_NAV, PRODUCT_NAV, RESOURCES_NAV } from "@/lib/marketing/site"
 
 interface MobileMenuProps {
   open: boolean
@@ -20,7 +20,7 @@ interface MobileMenuProps {
 
 const groups = [
   { heading: "Product", items: PRODUCT_NAV },
-  { heading: "Kitchen workflows", items: [{ label: "All workflows", href: "/uses" }] },
+  { heading: "Food businesses", items: BUSINESS_NAV },
   { heading: "Pricing", items: [{ label: "Pricing", href: "/plan" }] },
   { heading: "Resources", items: RESOURCES_NAV },
   { heading: "Company", items: [{ label: "About", href: "/about" }] },

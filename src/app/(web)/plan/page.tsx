@@ -1,15 +1,16 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Plan } from "@/components/blocks/plan"
 import { Metadata } from "next"
 import React from "react"
 
-const description =
-  "Review InstaLabel's subscription, monthly and annual billing options, trial terms and printing requirements before starting."
+const description = FOLDER_SEO["/plan"].description
 
 export const metadata: Metadata = {
-  title: { absolute: "Pricing | InstaLabel kitchen labelling software" },
+  title: { absolute: FOLDER_SEO["/plan"].title },
   description,
+  keywords: [...FOLDER_SEO["/plan"].keywords],
   openGraph: {
-    title: "Pricing | InstaLabel kitchen labelling software",
+    title: FOLDER_SEO["/plan"].title,
     description,
     url: "https://www.instalabel.co/plan",
     type: "website",
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pricing | InstaLabel kitchen labelling software",
+    title: FOLDER_SEO["/plan"].title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },

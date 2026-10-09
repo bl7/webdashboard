@@ -47,12 +47,18 @@ export async function POST(req: NextRequest) {
         proration_behavior: "none",
       })
 
-      // Update local DB
+      const periodEnd =
+        updated.items.data[0]?.current_period_end ||
+        (updated as { current_period_end?: number }).current_period_end ||
+        extendedTrialEnd
+
       await client.query(
         `UPDATE subscription_better
-         SET trial_end = to_timestamp($1), updated_at = NOW()
-         WHERE user_id = $2`,
-        [extendedTrialEnd, user_id]
+         SET trial_end = to_timestamp($1),
+             current_period_end = to_timestamp($2),
+             updated_at = NOW()
+         WHERE user_id = $3`,
+        [extendedTrialEnd, periodEnd, user_id]
       )
 
       // Optionally record reason in an audit table if exists

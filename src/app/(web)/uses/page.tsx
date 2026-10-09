@@ -1,15 +1,15 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Uses } from "@/components/blocks"
 import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: { absolute: "Kitchen labelling workflows | InstaLabel" },
-  description:
-    "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
+  title: { absolute: FOLDER_SEO["/uses"].title },
+  description: FOLDER_SEO["/uses"].description,
+  keywords: [...FOLDER_SEO["/uses"].keywords],
   openGraph: {
-    title: "Kitchen labelling workflows | InstaLabel",
-    description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
+    title: FOLDER_SEO["/uses"].title,
+    description: FOLDER_SEO["/uses"].description,
     url: "https://www.instalabel.co/uses",
     type: "website",
     images: [
@@ -23,9 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen labelling workflows | InstaLabel",
-    description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
+    title: FOLDER_SEO["/uses"].title,
+    description: FOLDER_SEO["/uses"].description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -48,9 +47,8 @@ const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Kitchen labelling workflows | InstaLabel",
-    description:
-      "Find the right workflow for ingredient storage, prep, cooked batches, defrosting, stock rotation, PPDS labels and a printable allergen matrix with InstaLabel.",
+    name: FOLDER_SEO["/uses"].title,
+    description: FOLDER_SEO["/uses"].description,
     url: "https://www.instalabel.co/uses",
   }
 

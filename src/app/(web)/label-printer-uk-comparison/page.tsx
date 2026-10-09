@@ -6,10 +6,10 @@ const description =
   "Compare handwritten labels, standalone printer workflows and connected labelling software. Use a practical checklist for your kitchen."
 
 export const metadata: Metadata = {
-  title: { absolute: "Compare kitchen labelling methods | InstaLabel" },
+  title: { absolute: "A UK label printer comparison for kitchen labelling methods. | InstaLabel" },
   description,
   openGraph: {
-    title: "Compare kitchen labelling methods | InstaLabel",
+    title: "A UK label printer comparison for kitchen labelling methods. | InstaLabel",
     description,
     url: "https://www.instalabel.co/label-printer-uk-comparison",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compare kitchen labelling methods | InstaLabel",
+    title: "A UK label printer comparison for kitchen labelling methods. | InstaLabel",
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },

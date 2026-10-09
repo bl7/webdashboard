@@ -1,15 +1,15 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Features } from "@/components/blocks"
 import { Metadata } from "next"
 import React from "react"
 
 export const metadata: Metadata = {
-  title: "Kitchen labelling features",
-  description:
-    "Explore item management, allergen information, date rules, CSV import, label previews, desktop printing and Android printing with InstaLabel.",
+  title: { absolute: FOLDER_SEO["/features"].title },
+  description: FOLDER_SEO["/features"].description,
+  keywords: [...FOLDER_SEO["/features"].keywords],
   openGraph: {
-    title: "Kitchen labelling features | InstaLabel",
-    description:
-      "Explore item management, allergen information, date rules, CSV import, label previews, desktop printing and Android printing with InstaLabel.",
+    title: FOLDER_SEO["/features"].title,
+    description: FOLDER_SEO["/features"].description,
     url: "https://www.instalabel.co/features",
     type: "website",
     images: [
@@ -23,9 +23,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kitchen labelling features | InstaLabel",
-    description:
-      "Explore item management, allergen information, date rules, CSV import, label previews, desktop printing and Android printing with InstaLabel.",
+    title: FOLDER_SEO["/features"].title,
+    description: FOLDER_SEO["/features"].description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
   alternates: {
@@ -48,9 +47,8 @@ const Page = () => {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Kitchen labelling features | InstaLabel",
-    description:
-      "Explore item management, allergen information, date rules, CSV import, label previews, desktop printing and Android printing with InstaLabel.",
+    name: FOLDER_SEO["/features"].title,
+    description: FOLDER_SEO["/features"].description,
     url: "https://www.instalabel.co/features",
   }
 

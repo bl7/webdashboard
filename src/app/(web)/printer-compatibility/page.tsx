@@ -1,12 +1,13 @@
+import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import type { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
 import { ANDROID_PRINTERS } from "@/lib/marketing/site"
 
-const title = "Supported printers for InstaLabel"
-const description =
-  "Desktop printing uses a label printer installed on Windows or macOS through PrintBridge. Android printing supports the MUNBYN RW411B, Born4Ship DB403 and Rongta RP425."
+const title = FOLDER_SEO["/printer-compatibility"].title
+const description = FOLDER_SEO["/printer-compatibility"].description
 
 const androidRows = [
   ["MUNBYN", "RW411B"],
@@ -33,6 +34,7 @@ const faqs = [
 export const metadata: Metadata = {
   title: { absolute: title },
   description,
+  keywords: [...FOLDER_SEO["/printer-compatibility"].keywords],
   openGraph: {
     title,
     description,
@@ -80,26 +82,49 @@ export default function PrinterCompatibilityPage() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
-      <section className="bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-3xl">
-          <p className="text-sm font-medium text-mkt-ink">Printer compatibility</p>
-          <h1 className="mt-3 font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl">
-            Check the printer before you buy.
-          </h1>
-          <p className="mt-5 text-lg leading-relaxed text-mkt-ink8">
-            InstaLabel does not include a printer. On Windows or macOS, PrintBridge uses a label
-            printer installed on the computer. On Android, the app prints to the models listed
-            below. Label sizes are 60 × 40 mm and 56 × 80 mm.
-          </p>
-          <div className="mt-8">
-            <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
-              <Link href="/register">
-                Start free trial
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
+        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
+        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
+        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
+        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
+          <div className="w-full max-w-2xl space-y-6 text-center md:text-left">
+            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
+              Printer compatibility
+            </div>
+            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
+              Check your InstaLabel printer compatibility.
+            </h1>
+            <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
+              InstaLabel does not include a printer. On Windows or macOS, PrintBridge uses a label
+              printer installed on the computer. On Android, the app prints to the models listed
+              below. Label sizes are 60 × 40 mm and 56 × 80 mm.
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
+              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
+                <Link href="/register">
+                  Start free trial
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link href="/bookdemo">Book a demo</Link>
+              </Button>
+            </div>
+          </div>
+          <div className="w-full max-w-[500px]">
+            <div className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white shadow-lg">
+              <Image
+                src="/marketing/installed-printer.png"
+                alt="A label printer installed beside a kitchen computer"
+                width={1000}
+                height={750}
+                className="h-auto w-full object-cover"
+                priority
+              />
+            </div>
           </div>
         </div>
+        <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
       </section>
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         <div className="container mx-auto max-w-4xl overflow-x-auto">
