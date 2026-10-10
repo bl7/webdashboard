@@ -708,7 +708,7 @@ export const coveragePages: CoveragePage[] = [
       { href: "/allergen-matrix", label: "Allergen matrix software" },
       { href: "/allergen-guide", label: "The 14 food allergens" },
       { href: "/allergen-compliance", label: "Allergen labelling" },
-      { href: "/tools/allergen-matrix", label: "Free allergen matrix template" },
+      { href: "/tools", label: "Free allergen matrix template" },
     ],
   }),
   page({
@@ -813,7 +813,7 @@ export const coveragePages: CoveragePage[] = [
       },
     ],
     related: [
-      { href: "/tools/allergen-matrix", label: "Free allergen matrix" },
+      { href: "/tools", label: "Free allergen matrix" },
       { href: "/allergen-matrix", label: "Allergen matrix software" },
       { href: "/cleaning-checklists", label: "Cleaning checklists" },
     ],

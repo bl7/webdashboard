@@ -1,4 +1,4 @@
-import { AllergenMatrixHeroChart, AllergenMatrixTool } from "@/components/marketing/AllergenMatrixTool"
+import { AllergenMatrixHeroChart } from "@/components/marketing/AllergenMatrixTool"
 import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import type { Metadata } from "next"
 import Link from "next/link"
@@ -128,7 +128,20 @@ export default function AllergenMatrixPage() {
         </div>
         <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}         />
       </section>
-      <AllergenMatrixTool />
+      <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-3xl font-black tracking-tight text-mkt-ink">Build one without an account.</h2>
+          <p className="mt-4 text-base leading-relaxed text-mkt-ink8">
+            The free chart is on the tools page. Add your dishes, then download the same PDF the
+            dashboard generates.
+          </p>
+          <p className="mt-4">
+            <Link href="/tools" className="font-semibold text-mkt-teal hover:underline">
+              Open the free allergen matrix
+            </Link>
+          </p>
+        </div>
+      </section>
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-3xl font-black tracking-tight text-mkt-ink">The 14 categories</h2>

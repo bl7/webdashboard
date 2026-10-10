@@ -83,7 +83,7 @@ export const FOOTER_RESOURCES = [
   { label: "PPDS labelling requirements", href: "/guides/ppds-labelling-requirements" },
   { label: "Choosing labelling software", href: "/guides/choosing-kitchen-labelling-software" },
   { label: "Free tools", href: "/tools" },
-  { label: "Free allergen matrix", href: "/tools/allergen-matrix" },
+  { label: "Free allergen matrix", href: "/tools" },
   { label: "Restaurants", href: "/for/restaurants" },
   { label: "Cafés", href: "/for/cafes" },
   { label: "Takeaways", href: "/for/takeaways" },

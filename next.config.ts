@@ -188,6 +188,7 @@ const nextConfig = {
       { source: "/guides/opened-food-labelling", destination: "/opened-food-labels", permanent: true },
       { source: "/guides/kitchen-cleaning-schedule", destination: "/cleaning-checklists", permanent: true },
       { source: "/tools/restaurant-cleaning-checklist", destination: "/cleaning-checklists", permanent: true },
+      { source: "/tools/allergen-matrix", destination: "/tools", permanent: true },
       { source: "/guides/preparing-your-menu-data", destination: "/csv-import", permanent: true },
       { source: "/dissolvable-labels", destination: "/dissolvable-kitchen-labels", permanent: true },
       { source: "/kitchen-label-printer-software", destination: "/kitchen-label-printer", permanent: true },

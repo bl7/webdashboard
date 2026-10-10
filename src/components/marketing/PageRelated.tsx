@@ -61,11 +61,11 @@ const RELATED: Record<string, { href: string; label: string }[]> = {
   ],
   "/allergen-guide": [
     { href: "/allergen-compliance", label: "Allergen labelling" },
-    { href: "/tools/allergen-matrix", label: "Free allergen matrix" },
+    { href: "/tools", label: "Free allergen matrix" },
     { href: "/guides/allergen-information-for-restaurants", label: "Restaurant allergen information" },
   ],
   "/allergen-matrix": [
-    { href: "/tools/allergen-matrix", label: "Free allergen matrix" },
+    { href: "/tools", label: "Free allergen matrix" },
     { href: "/ingredient-labels", label: "Ingredient labels" },
     { href: "/allergen-compliance", label: "Allergen labelling" },
   ],
