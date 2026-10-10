@@ -24,6 +24,8 @@ interface BlogPostMeta {
   tags?: string[]
 }
 
+export const dynamicParams = false
+
 export async function generateStaticParams() {
   const dir = path.join(process.cwd(), "src/content/blog")
   const files = await fs.readdir(dir)

@@ -76,13 +76,14 @@ const faqs = [
     q: "What does InstaLabel cost?",
     a: (
       <>
+        The standing price is{" "}
         <Link href="/plan" className="home-link">
           £15.99 a month
         </Link>
-        .{" "}
+        , with a 14-day trial. Until 10 January 2027,{" "}
         <Link href="/christmas" className="home-link">
-          New customers get 60 days free, and an annual plan also gets 30% off the first annual
-          payment, until 10 January 2027
+          new customers can take 60 days free instead, and an annual plan also gets 30% off the
+          first annual payment
         </Link>
         .
       </>

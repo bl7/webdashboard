@@ -93,6 +93,18 @@ const nextConfig = {
   // Redirects configuration to prevent redirect loops
   async redirects() {
     return [
+      {
+        source: "/",
+        has: [{ type: "host", value: "instalabel.co" }],
+        destination: "https://www.instalabel.co/",
+        permanent: true,
+      },
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "instalabel.co" }],
+        destination: "https://www.instalabel.co/:path*",
+        permanent: true,
+      },
       // Handle legacy URLs that might cause redirects
       {
         source: "/home",
@@ -174,7 +186,8 @@ const nextConfig = {
       { source: "/guides/kitchen-labelling-haccp", destination: "/haccp-labels", permanent: true },
       { source: "/guides/defrost-food-labelling", destination: "/defrost-labels", permanent: true },
       { source: "/guides/opened-food-labelling", destination: "/opened-food-labels", permanent: true },
-      { source: "/guides/kitchen-cleaning-schedule", destination: "/tools/restaurant-cleaning-checklist", permanent: true },
+      { source: "/guides/kitchen-cleaning-schedule", destination: "/cleaning-checklists", permanent: true },
+      { source: "/tools/restaurant-cleaning-checklist", destination: "/cleaning-checklists", permanent: true },
       { source: "/guides/preparing-your-menu-data", destination: "/csv-import", permanent: true },
       { source: "/dissolvable-labels", destination: "/dissolvable-kitchen-labels", permanent: true },
       { source: "/kitchen-label-printer-software", destination: "/kitchen-label-printer", permanent: true },

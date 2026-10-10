@@ -13,6 +13,8 @@ const slugs = [
   "choosing-kitchen-labelling-software",
 ]
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }

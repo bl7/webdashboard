@@ -30,7 +30,7 @@ export const PrintBridgeHero = () => {
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            InstaLabel PrintBridge is for Windows kitchen label printing and Mac kitchen label printing from a label printer installed on the computer. After that printer is set up once, desktop food label printing uses the same workflow.
+            PrintBridge sends the label from the browser to a printer already installed on Windows or macOS. Once that printer is set up, staff use the same select, review and print workflow.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

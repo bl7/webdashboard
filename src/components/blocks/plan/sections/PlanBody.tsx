@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/accordion"
 import { cn } from "@/lib/utils"
 
-type PublicPlan = {
+export type PublicPlan = {
   id: number | string
   name: string
   price_monthly: number | string
@@ -49,7 +49,7 @@ const faqs = [
   {
     question: "Where are the subscription conditions?",
     answer:
-      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
+      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can use the Christmas offer instead: 60 days free, and 30% off the first annual payment. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
   },
 ]
 
@@ -62,13 +62,13 @@ function formatGbp(pence: number) {
   return new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" }).format(pence / 100)
 }
 
-export const PlanBody = () => {
+export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | null }) => {
   const [billing, setBilling] = useState<"monthly" | "annually">("monthly")
-  const [plan, setPlan] = useState<PublicPlan | null>(null)
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
+  const [plan, setPlan] = useState<PublicPlan | null>(initialPlan)
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(initialPlan ? "ready" : "loading")
   const abortRef = useRef<AbortController | null>(null)
 
-  const loadPlans = useCallback(() => {
+  const loadPlans = useCallback((background = false) => {
     abortRef.current?.abort()
     const controller = new AbortController()
     abortRef.current = controller
@@ -78,8 +78,10 @@ export const PlanBody = () => {
       controller.abort()
     }, 8000)
 
-    setStatus("loading")
-    setPlan(null)
+    if (!background) {
+      setStatus("loading")
+      setPlan(null)
+    }
     fetch("/api/plans/public", { signal: controller.signal })
       .then(async (res) => {
         if (!res.ok) throw new Error("Failed to fetch plans")
@@ -93,6 +95,7 @@ export const PlanBody = () => {
       .catch(() => {
         if (abortRef.current !== controller) return
         if (controller.signal.aborted && !timedOut) return
+        if (background) return
         setPlan(null)
         setStatus("error")
       })
@@ -102,9 +105,9 @@ export const PlanBody = () => {
   }, [])
 
   useEffect(() => {
-    loadPlans()
+    loadPlans(Boolean(initialPlan))
     return () => abortRef.current?.abort()
-  }, [loadPlans])
+  }, [loadPlans, initialPlan])
 
   const monthly = plan ? toPence(plan.price_monthly) : 0
   const yearly = plan ? toPence(plan.price_yearly) : 0
@@ -182,7 +185,7 @@ export const PlanBody = () => {
                       {formatGbp(monthly)} per month
                     </div>
                     <p className="mt-2 text-sm text-mkt-ink8">
-                      Billed monthly in pounds sterling, as configured in billing.
+                      Billed monthly in pounds sterling.
                     </p>
                   </>
                 ) : (
@@ -194,7 +197,7 @@ export const PlanBody = () => {
                       Equivalent to {formatGbp(equivalentMonthly)} per month, billed annually.
                     </p>
                     <p className="mt-1 text-sm text-mkt-ink8">
-                      Billed annually in pounds sterling, as configured in billing.
+                      Billed annually in pounds sterling.
                     </p>
                   </>
                 )}
@@ -231,8 +234,10 @@ export const PlanBody = () => {
               )}
 
               <p className="mt-4 text-xs leading-relaxed text-mkt-steel">
-                New subscriptions start with a 14-day trial. Payment details are collected at
-                checkout. There is no charge during the trial. After the trial, billing continues at
+                New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer
+                can use the Christmas offer instead: 60 days free, and 30% off the first annual
+                payment. Payment details are collected at checkout. There is no charge during the
+                trial. After the trial, billing continues at
                 the selected interval until you cancel. You may cancel at any time. Review the{" "}
                 <Link href="/terms" className="font-semibold text-mkt-teal hover:underline">
                   terms

@@ -9,6 +9,39 @@ const title = "Kitchen labelling guides from the InstaLabel blog. | InstaLabel"
 const description =
   "Find practical guides to kitchen workflows, allergens, PPDS labels, printer setup and label materials from InstaLabel."
 
+const articles = [
+  {
+    title: "What you still decide",
+    excerpt:
+      "InstaLabel applies the recipes, allergens and date rules a kitchen saves. It does not decide whether a label is legally compliant.",
+    href: "/blog/what-you-still-decide",
+  },
+  {
+    title: "Pen, a dedicated machine, or software",
+    excerpt:
+      "Three ways a kitchen can label food: handwriting, a dedicated labelling device and its rolls, or software on a printer the kitchen already has.",
+    href: "/blog/pen-machine-or-software",
+  },
+  {
+    title: "The first day with InstaLabel",
+    excerpt:
+      "What has to be in the kitchen before the first label: a computer or a supported Android printer, a menu, and someone to check the allergens.",
+    href: "/blog/first-day-with-instalabel",
+  },
+  {
+    title: "What to check on a PPDS label",
+    excerpt:
+      "Before you print a prepacked-for-direct-sale label, check the food name, the ingredient list, the emphasised allergens and the date your procedure requires.",
+    href: "/blog/what-to-check-on-a-ppds-label",
+  },
+  {
+    title: "Staff training for allergen labelling",
+    excerpt:
+      "A short checklist for kitchen teams covering the 14 UK regulated allergens, recorded information and what to say to a customer.",
+    href: "/blog/implement-allergen-labeling-kitchen",
+  },
+]
+
 const featured = [
   {
     title: "Which label does this task need?",
@@ -164,6 +197,38 @@ export default function BlogPage() {
           </div>
         </div>
         <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
+      </section>
+
+      <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+            Articles
+          </h2>
+          <div className="grid gap-8 md:grid-cols-2">
+            {articles.map((card) => (
+              <article
+                key={card.href}
+                className="flex flex-col justify-between rounded-xl border border-mkt-steel1 bg-mkt-canvas p-6"
+              >
+                <div>
+                  <h3 className="mb-3 text-xl font-bold text-mkt-ink">{card.title}</h3>
+                  <p className="mb-6 text-sm leading-relaxed text-mkt-ink8">{card.excerpt}</p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="self-start px-0 text-mkt-teal hover:bg-transparent hover:text-mkt-ink"
+                  asChild
+                >
+                  <Link href={card.href}>
+                    Read article
+                    <ArrowRight className="ml-1 h-3 w-3" />
+                  </Link>
+                </Button>
+              </article>
+            ))}
+          </div>
+        </div>
       </section>
 
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">

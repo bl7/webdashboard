@@ -73,6 +73,10 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/csv-import") ||
     pathname.startsWith("/label-sizes")
 
+  if (pathname === "/404" || pathname.startsWith("/_next")) {
+    return NextResponse.next()
+  }
+
   // Allow public routes to pass through
   if (isPublicRoute) {
     // If user is authenticated and tries to access login/register, redirect to dashboard
@@ -89,6 +93,18 @@ export function middleware(req: NextRequest) {
     response.headers.set("X-Content-Type-Options", "nosniff")
     response.headers.set("X-XSS-Protection", "1; mode=block")
     return response
+  }
+
+  const privatePrefixes = ["/dashboard", "/setup", "/bossdashboard", "/boss"]
+  const isPrivateApp = privatePrefixes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  )
+
+  // Unknown public addresses get a real 404. Private app routes still go to login.
+  if (!isPrivateApp) {
+    const missing = req.nextUrl.clone()
+    missing.pathname = "/404"
+    return NextResponse.rewrite(missing)
   }
 
   // For protected routes (including /dashboard and /setup), redirect to login if no valid token

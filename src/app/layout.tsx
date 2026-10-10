@@ -127,11 +127,6 @@ export default function RootLayout({
     url: "https://www.instalabel.co",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web Browser",
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      ratingCount: "150",
-    },
     provider: {
       "@type": "Organization",
       name: "InstaLabel",
@@ -141,9 +136,9 @@ export default function RootLayout({
 
   const localBusinessData = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": "Organization",
     name: "InstaLabel",
-    description: "Professional kitchen labeling system for restaurants and food businesses",
+    description: "Professional kitchen labelling system for restaurants and food businesses",
     url: "https://www.instalabel.co",
     telephone: "+447845447586",
     email: "contact@instalabel.co",
@@ -153,13 +148,6 @@ export default function RootLayout({
       addressLocality: "Bournemouth",
       addressRegion: "England",
     },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: "50.7192",
-      longitude: "-1.8808",
-    },
-    openingHours: "Mo-Fr 09:00-17:00",
-    priceRange: "££",
     areaServed: {
       "@type": "Country",
       name: "United Kingdom",

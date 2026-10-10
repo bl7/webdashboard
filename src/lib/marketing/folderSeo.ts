@@ -175,13 +175,13 @@ export const FOLDER_SEO = {
   },
   "/guides": {
     title: "Kitchen Labelling Guides, Templates & Setup Help | InstaLabel",
-    description: "Find PPDS and allergen guides, free templates, printing setup help and software comparisons. Search by the job or information you need.",
+    description: "Find PPDS and allergen guides, printing setup help and practical notes for choosing labelling software.",
     keywords: ["InstaLabel resources", "kitchen labelling guides", "food labelling templates"],
   },
   "/tools": {
     title: "Free kitchen labelling tools | InstaLabel",
-    description: "Build a manual allergen matrix or adapt a restaurant cleaning checklist. Download or print your worksheet without signing up.",
-    keywords: ["free kitchen labelling tools", "allergen matrix template", "restaurant cleaning checklist template"],
+    description: "Build a manual allergen matrix and download the same PDF chart the dashboard generates. No account is required.",
+    keywords: ["free kitchen labelling tools", "allergen matrix template", "allergen matrix PDF"],
   },
   "/plan": {
     title: "InstaLabel Pricing: £15.99/Month & 14-Day Trial",
@@ -204,14 +204,14 @@ export const FOLDER_SEO = {
     keywords: ["InstaLabel FAQ", "InstaLabel printer trial labels allergens"],
   },
   "/tools/allergen-matrix": {
-    title: "Free Allergen Matrix Template: Print & Download CSV | InstaLabel",
-    description: "Add your menu items, review the 14 allergen categories and record the result for each cell. Print or download a dated worksheet with review details.",
+    title: "Free Allergen Matrix Template: Download PDF | InstaLabel",
+    description: "Add your menu items, review the 14 allergen categories and record the result for each cell. Download the same allergen matrix PDF the dashboard generates.",
     keywords: ["free allergen matrix template", "printable allergen matrix", "restaurant allergen matrix worksheet"],
   },
   "/tools/restaurant-cleaning-checklist": {
-    title: "Free Restaurant Cleaning Checklist & Schedule Template | InstaLabel",
-    description: "Edit daily, weekly and monthly tasks for your kitchen. Add cleaning methods, responsibility notes and a date, then print or download the checklist.",
-    keywords: ["restaurant cleaning checklist", "kitchen cleaning schedule template", "printable restaurant cleaning checklist"],
+    title: "Kitchen cleaning checklists in the InstaLabel app | InstaLabel",
+    description: "Set daily, weekly and monthly cleaning tasks in InstaLabel. Staff mark them done in the Android app, and the day's checklist can be reviewed from the account.",
+    keywords: ["kitchen cleaning checklist software", "restaurant cleaning schedule software", "recurring cleaning tasks"],
   },
 } as const
 

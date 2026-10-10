@@ -53,11 +53,10 @@ export const Hero = () => {
             </h1>
           </div>
           <p className="mb-1 mt-2 text-sm text-mkt-ink8 sm:text-base">
-            InstaLabel is kitchen labelling software, and food labelling software UK teams use
-            for restaurant kitchen labels from the ingredient, allergen and date information they
-            already manage. Use the label printer already installed on your computer, or the
-            Android app with a supported Bluetooth printer. The same account keeps temperature
-            records, a cleaning checklist and the diary.
+            InstaLabel is kitchen labelling software for UK food businesses. Staff print labels
+            from the ingredient, allergen and date information already saved. Use a printer
+            installed on the computer, or the Android app with a supported Bluetooth printer.
+            The same account keeps temperature records, cleaning tasks and the diary.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
             <Link href="/register">
@@ -85,16 +84,17 @@ export const Hero = () => {
             </Button>
           </div>
           <p className="text-xs text-mkt-steel sm:text-sm">
-            {TRIAL_PERIOD_DAYS}-day trial. Payment details at checkout. No charge during the trial.
+            New subscriptions start with a {TRIAL_PERIOD_DAYS}-day trial. Payment details at
+            checkout. No charge during the trial.
           </p>
           <p className="text-xs text-mkt-steel sm:text-sm">
             <Link href="/plan" className="underline underline-offset-2 hover:text-mkt-ink">
               £15.99 a month
             </Link>
-            .{" "}
+            . Until 10 January 2027,{" "}
             <Link href="/christmas" className="underline underline-offset-2 hover:text-mkt-ink">
-              New customers get 60 days free, and an annual plan also gets 30% off the first
-              annual payment, until 10 January 2027
+              new customers can take 60 days free instead, and an annual plan also gets 30% off
+              the first annual payment
             </Link>
             .
           </p>

@@ -11,7 +11,7 @@ export const About = () => {
           {
             file: "kitchen-portrait.jpg",
             alt: "A kitchen using InstaLabel",
-            label: "A named kitchen, only after they agree to the photo and the words.",
+            label: "A kitchen using InstaLabel.",
           },
         ]}
       />

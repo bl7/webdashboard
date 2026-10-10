@@ -49,10 +49,9 @@ The current public promotion is the Christmas offer. It is for new customers onl
 - [Allergen labelling](https://www.instalabel.co/allergen-compliance): Food allergen labelling software.
 - [The 14 allergens](https://www.instalabel.co/allergen-guide): UK regulated categories.
 - [Allergen matrix](https://www.instalabel.co/allergen-matrix): A matrix from saved item records.
-- [Free allergen matrix](https://www.instalabel.co/tools/allergen-matrix): A manual worksheet.
-- [Cleaning checklists](https://www.instalabel.co/cleaning-checklists): Recurring kitchen cleaning tasks.
-- [Free cleaning checklist](https://www.instalabel.co/tools/restaurant-cleaning-checklist): An editable template.
-- [Free tools](https://www.instalabel.co/tools): The allergen matrix and cleaning checklist templates.
+- [Free allergen matrix](https://www.instalabel.co/tools/allergen-matrix): A manual matrix you can download as a PDF.
+- [Cleaning checklists](https://www.instalabel.co/cleaning-checklists): Recurring cleaning tasks inside the account. Staff mark them done in the Android app.
+- [Free tools](https://www.instalabel.co/tools): The free allergen matrix PDF.
 - [HACCP and labelling](https://www.instalabel.co/haccp-labels): How labels sit inside wider procedures.
 
 ## Businesses

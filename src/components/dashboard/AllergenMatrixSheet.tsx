@@ -71,7 +71,7 @@ export function AllergenMatrixSheet({
             >
               Allergen information
             </p>
-            <h1
+            <p
               style={{
                 margin: "4px 0 0",
                 fontSize: 32,
@@ -81,7 +81,7 @@ export function AllergenMatrixSheet({
               }}
             >
               {businessName}
-            </h1>
+            </p>
           </div>
         </div>
         <div style={{ textAlign: "right", fontFamily: "Arial, Helvetica, sans-serif", fontSize: 12, color: muted }}>

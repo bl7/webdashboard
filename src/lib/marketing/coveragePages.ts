@@ -74,7 +74,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Print consistent prep and service labels from saved item information.",
     h1: "Consistent food labels for restaurant prep and service.",
-    lead: "Kitchen labelling software for restaurants keeps restaurant food labelling consistent for sauces, fillings and prepared food. Pub kitchen labelling software on the same account prints restaurant prep labels so the next shift can identify the item, read its dates and find the ingredient information behind it.",
+    lead: "Restaurants and pubs use one account for sauces, fillings and prepared food. The next shift can identify the item, read its dates and open the ingredient information behind the label.",
     sections: [
       {
         heading: "Give the next shift the same information",
@@ -121,7 +121,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Food labelling software for cafés covers kitchen prep and packed-food labels, including sandwiches and other food packed ahead.",
     h1: "Kitchen prep and packed-food labels for cafés.",
-    lead: "Food labelling software for cafes covers cafe PPDS labels and food to go labelling for fillings, sandwiches and salad pots. Sandwich label software prints the kitchen or PPDS label the job needs from the ingredient information you save.",
+    lead: "Cafés and food-to-go counters keep ingredient information for fillings, sandwiches and salad pots, then print the kitchen or packed-food label that job needs.",
     sections: [
       {
         heading: "Label ingredients prepared before opening",
@@ -169,7 +169,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Print prep, cooked, defrost and ingredient labels for the food behind each order.",
     h1: "Clear labels for the prep behind every takeaway order.",
-    lead: "Kitchen labelling software for takeaways prints takeaway food labels and takeaway prep labels for the food behind each order. Takeaway allergen information comes from the ingredient and allergen records you have saved.",
+    lead: "Takeaway kitchens print labels for the sauces, cooked food, opened ingredients and defrosting stock behind each order, using the ingredient and allergen records already saved.",
     sections: [
       {
         heading: "Keep the preparation line easy to identify",
@@ -210,7 +210,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Print batch food labels from saved ingredients, with a matrix the event team can review.",
     h1: "Batch food labels for catering preparation.",
-    lead: "Kitchen labelling software for caterers prints catering food labels in the quantity a job needs, including bulk kitchen label printing from saved items. A catering allergen matrix can be reviewed from the same records before the event.",
+    lead: "Caterers print the quantity of prep, cooked or packed-food labels a job needs, then review the event menu from the same saved records.",
     sections: [
       {
         heading: "Print for several containers in one job",
@@ -344,7 +344,6 @@ export const coveragePages: CoveragePage[] = [
       },
     ],
     related: [
-      { href: "/tools/restaurant-cleaning-checklist", label: "Free cleaning checklist" },
       { href: "/features", label: "Features" },
       { href: "/mobile-app", label: "Android app" },
       { href: "/haccp-labels", label: "Labels and food-safety procedures" },
@@ -414,7 +413,7 @@ export const coveragePages: CoveragePage[] = [
     description:
       "Match the layout to your stock and the amount of information on the label.",
     h1: "Two label sizes for different amounts of information.",
-    lead: "InstaLabel label sizes cover 60x40 kitchen labels and 56x80 food labels, including PPDS label sizes. Choose between 60 × 40 mm and 56 × 80 mm, then match the printer settings and physical stock to the size you select.",
+    lead: "Choose between 60 × 40 mm and 56 × 80 mm, then match the printer settings and the physical stock to the size you select. Both sizes are used for kitchen labels, including packed-food labels.",
     sections: [
       {
         heading: "60 × 40 mm: a compact format",
@@ -800,24 +799,23 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/tools",
     badge: "Free tools",
-    title: "Free allergen matrix and restaurant cleaning checklist templates.",
+    title: "A free allergen matrix you can download as a PDF.",
     description:
-      "Free kitchen templates let you build a manual allergen matrix or a restaurant cleaning checklist without signing up.",
-    h1: "Free templates for allergen information and kitchen cleaning.",
-    lead: "Build a manual allergen matrix or adapt a restaurant cleaning checklist. Download or print the worksheet without an account.",
+      "Build a manual allergen matrix and download the same PDF chart the dashboard generates, without signing up.",
+    h1: "Build an allergen matrix and download the PDF.",
+    lead: "Add dishes and the allergens recorded on them, then download the PDF. Cleaning tasks are part of the InstaLabel account, not a separate file.",
     sections: [
       {
-        heading: "These worksheets are edited by hand",
+        heading: "The matrix is filled in by hand",
         paragraphs: [
-          "The paid InstaLabel features connect saved item information or recurring tasks to your account. The templates below do not check recipes or guarantee a food-safety outcome.",
+          "This page does not check recipes or guarantee a food-safety outcome. A blank cell means nothing is recorded for that dish and category.",
         ],
       },
     ],
     related: [
       { href: "/tools/allergen-matrix", label: "Free allergen matrix" },
-      { href: "/tools/restaurant-cleaning-checklist", label: "Free cleaning checklist" },
       { href: "/allergen-matrix", label: "Allergen matrix software" },
-      { href: "/cleaning-checklists", label: "Cleaning checklist software" },
+      { href: "/cleaning-checklists", label: "Cleaning checklists" },
     ],
   }),
   page({
@@ -845,17 +843,17 @@ export const coveragePages: CoveragePage[] = [
   }),
   page({
     path: "/tools/restaurant-cleaning-checklist",
-    badge: "Free template",
-    title: "Free restaurant cleaning checklist and schedule template.",
+    badge: "Cleaning checklists",
+    title: "Cleaning checklists are kept inside the InstaLabel account.",
     description:
-      "A free restaurant cleaning checklist lets you edit daily, weekly and monthly tasks, then print or download the schedule.",
-    h1: "Free restaurant cleaning checklist template.",
-    lead: "Edit daily, weekly and monthly tasks for your kitchen. This kitchen cleaning schedule template is the list you edit, then print or download.",
+      "Daily, weekly and monthly cleaning tasks are set in InstaLabel. Staff mark them done in the Android app.",
+    h1: "Cleaning tasks live in the account, not in a download.",
+    lead: "Set the tasks, areas and how often they repeat. Staff open the list in the Android app and mark a task complete after carrying it out. The day's checklist can be reviewed from the account.",
     sections: [
       {
         heading: "The method still belongs to your kitchen",
         paragraphs: [
-          "A checklist records the tasks you choose to list. It does not choose the chemical, dilution or contact time, and it is not a complete HACCP system.",
+          "A completion mark records a staff check. It does not choose the chemical, dilution or contact time, and it is not a complete HACCP system.",
         ],
       },
     ],

@@ -1,7 +1,26 @@
 import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Plan } from "@/components/blocks/plan"
+import type { PublicPlan } from "@/components/blocks/plan/sections/PlanBody"
 import { Metadata } from "next"
 import React from "react"
+
+export const dynamic = "force-dynamic"
+
+async function getInitialPlan(): Promise<PublicPlan | null> {
+  try {
+    const pool = (await import("@/lib/pg")).default
+    const result = await pool.query(
+      `SELECT id, name, price_monthly, price_yearly, description
+       FROM plans
+       WHERE is_active = true
+       ORDER BY price_monthly ASC`
+    )
+    const rows = result.rows as PublicPlan[]
+    return rows.find((item) => item.name === "One Stop") ?? rows[0] ?? null
+  } catch {
+    return null
+  }
+}
 
 const description = FOLDER_SEO["/plan"].description
 
@@ -63,11 +82,12 @@ const faqs = [
   {
     question: "Where are the subscription conditions?",
     answer:
-      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
+      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can use the Christmas offer instead: 60 days free, and 30% off the first annual payment. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
   },
 ]
 
-const Page = () => {
+const Page = async () => {
+  const initialPlan = await getInitialPlan()
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -93,7 +113,7 @@ const Page = () => {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <Plan />
+      <Plan initialPlan={initialPlan} />
     </>
   )
 }

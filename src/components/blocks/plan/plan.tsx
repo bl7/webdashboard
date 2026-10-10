@@ -1,12 +1,12 @@
 import React from "react"
 import { PlanHero } from "./sections/PlanHero"
-import { PlanBody } from "./sections/PlanBody"
+import { PlanBody, type PublicPlan } from "./sections/PlanBody"
 
-export const Plan = () => {
+export const Plan = ({ initialPlan = null }: { initialPlan?: PublicPlan | null }) => {
   return (
     <>
       <PlanHero />
-      <PlanBody />
+      <PlanBody initialPlan={initialPlan} />
     </>
   )
 }

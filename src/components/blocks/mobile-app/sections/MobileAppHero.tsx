@@ -31,9 +31,8 @@ export const MobileAppHero = () => {
           </h1>
 
           <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            The InstaLabel Android app is an Android kitchen label printing app and an Android food
-            label app for Bluetooth kitchen label printing. Select an item, review its label and
-            print through a supported Bluetooth label printer.
+            Staff select an item in the Android app, review the label and print it on a supported
+            Bluetooth printer.
           </p>
 
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

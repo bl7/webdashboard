@@ -6,6 +6,8 @@ import { getCoveragePage } from "@/lib/marketing/coveragePages"
 
 const slugs = ["restaurants", "cafes", "takeaways", "caterers"]
 
+export const dynamicParams = false
+
 export function generateStaticParams() {
   return slugs.map((slug) => ({ slug }))
 }

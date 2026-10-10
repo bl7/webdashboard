@@ -95,9 +95,9 @@ export default function PrinterCompatibilityPage() {
               Check the printer before you rely on it.
             </h1>
             <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-              InstaLabel printer compatibility covers Windows and macOS through PrintBridge, plus
-              MUNBYN RW411B InstaLabel, Born4Ship DB403 InstaLabel and Rongta RP425 InstaLabel on
-              Android. InstaLabel does not include a printer. Label sizes are 60 × 40 mm and 56 ×
+              Check the route before you rely on a printer. Windows and macOS use PrintBridge.
+              Android printing is confirmed for the MUNBYN RW411B, Born4Ship DB403 and Rongta
+              RP425. InstaLabel does not include a printer. Label sizes are 60 × 40 mm and 56 ×
               80 mm.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">

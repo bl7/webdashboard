@@ -84,7 +84,6 @@ export const FOOTER_RESOURCES = [
   { label: "Choosing labelling software", href: "/guides/choosing-kitchen-labelling-software" },
   { label: "Free tools", href: "/tools" },
   { label: "Free allergen matrix", href: "/tools/allergen-matrix" },
-  { label: "Free cleaning checklist", href: "/tools/restaurant-cleaning-checklist" },
   { label: "Restaurants", href: "/for/restaurants" },
   { label: "Cafés", href: "/for/cafes" },
   { label: "Takeaways", href: "/for/takeaways" },

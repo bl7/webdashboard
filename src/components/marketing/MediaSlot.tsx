@@ -18,7 +18,7 @@ export const MediaSlot = ({ file, alt, label, poster, fit = "cover" }: MediaSlot
   const imageSrc = isVideo && posterSrc ? posterSrc : src
 
   return (
-    <figure className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white" title={`Replace public/marketing/${file}`}>
+    <figure className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white">
       {showVideo ? (
         <video
           className="aspect-video w-full bg-[#142124] object-cover object-top"
