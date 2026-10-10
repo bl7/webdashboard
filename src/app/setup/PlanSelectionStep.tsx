@@ -63,14 +63,19 @@ export default function PlanSelectionStep({
   const [checkoutConfirmOpen, setCheckoutConfirmOpen] = useState(false)
   const [planPendingCheckout, setPlanPendingCheckout] = useState<Plan | null>(null)
   const [promoCode, setPromoCode] = useState("")
+  const [appliedOffer, setAppliedOffer] = useState<{
+    code: string
+    trialDays: number
+    yearlyPercentOff: number
+  } | null>(null)
+  const [applyingCode, setApplyingCode] = useState(false)
+  const [promoError, setPromoError] = useState<string | null>(null)
 
   useEffect(() => {
     const fromUrl = new URLSearchParams(window.location.search).get("code")
     const stored = sessionStorage.getItem("campaign_promo_code")
     const initial = (fromUrl || stored || "").trim()
-    if (!initial) return
-    setPromoCode(initial)
-    sessionStorage.setItem("campaign_promo_code", initial)
+    if (initial) setPromoCode(initial)
   }, [])
 
   useEffect(() => {
@@ -198,7 +203,7 @@ export default function PlanSelectionStep({
           email: userEmail,
           billing_period: billingPeriod,
           plan_name: plan.name,
-          promo_code: promoCode.trim(),
+          promo_code: appliedOffer?.code || "",
         }),
       })
 
@@ -239,6 +244,42 @@ export default function PlanSelectionStep({
     if (ok) {
       setCheckoutConfirmOpen(false)
       setPlanPendingCheckout(null)
+    }
+  }
+
+  const applyPromoCode = async () => {
+    const code = promoCode.trim()
+    if (!code) {
+      setAppliedOffer(null)
+      setPromoError("Enter an offer code.")
+      sessionStorage.removeItem("campaign_promo_code")
+      return
+    }
+    setApplyingCode(true)
+    setPromoError(null)
+    try {
+      const response = await fetch("/api/campaign-offer/preview", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, user_id: userId }),
+      })
+      const data = await response.json().catch(() => ({}))
+      if (!response.ok) {
+        setAppliedOffer(null)
+        sessionStorage.removeItem("campaign_promo_code")
+        setPromoError(data.error || "That code is not valid.")
+        return
+      }
+      setAppliedOffer({
+        code,
+        trialDays: data.trialDays,
+        yearlyPercentOff: data.yearlyPercentOff,
+      })
+      sessionStorage.setItem("campaign_promo_code", code)
+    } catch {
+      setPromoError("Could not check that code.")
+    } finally {
+      setApplyingCode(false)
     }
   }
 
@@ -362,10 +403,10 @@ export default function PlanSelectionStep({
               </span>{" "}
               on <span className="font-semibold text-foreground">{pendingBillingLabel}</span>{" "}
               billing? You will be redirected to our secure payment page.
-              {promoCode.trim()
+              {appliedOffer
                 ? billingPeriod === "yearly"
                   ? " This code gives 60 days free, then 30% off the first year."
-                  : " This code gives 60 days free. The 30% discount applies on yearly billing."
+                  : " This code gives 60 days free. The monthly price stays the same."
                 : ""}
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -391,30 +432,58 @@ export default function PlanSelectionStep({
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-4xl font-bold text-gray-900">Choose Your Plan</h1>
           <p className="mx-auto max-w-2xl text-xl text-gray-600">
-            {promoCode.trim()
+            {appliedOffer
               ? billingPeriod === "yearly"
-                ? "With this code: 60 days free, then 30% off your first year. Cancel anytime."
-                : "With this code: 60 days free, then the monthly price. Cancel anytime."
+                ? "Code applied: 60 days free, then 30% off your first year. Cancel anytime."
+                : "Code applied: 60 days free. The monthly price stays the same. Cancel anytime."
               : "Start with a 14-day free trial, with no charges during the trial period. Cancel anytime."}
           </p>
         </div>
 
         <div className="mb-8 flex justify-center">
-          <label className="w-full max-w-sm text-left text-sm text-gray-700">
-            Offer code
-            <input
-              value={promoCode}
-              onChange={(event) => {
-                const next = event.target.value
-                setPromoCode(next)
-                if (next.trim()) sessionStorage.setItem("campaign_promo_code", next.trim())
-                else sessionStorage.removeItem("campaign_promo_code")
-              }}
-              autoComplete="off"
-              spellCheck={false}
-              className="mt-1 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-base text-gray-900 shadow-sm"
-            />
-          </label>
+          <div className="w-full max-w-md text-left text-sm text-gray-700">
+            <label htmlFor="offer-code">Offer code</label>
+            <div className="mt-1 flex gap-2">
+              <input
+                id="offer-code"
+                value={promoCode}
+                onChange={(event) => {
+                  const next = event.target.value
+                  setPromoCode(next)
+                  setPromoError(null)
+                  if (
+                    appliedOffer &&
+                    next.trim().toUpperCase() !== appliedOffer.code.toUpperCase()
+                  ) {
+                    setAppliedOffer(null)
+                  }
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault()
+                    applyPromoCode()
+                  }
+                }}
+                autoComplete="off"
+                spellCheck={false}
+                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-base text-gray-900 shadow-sm"
+              />
+              <button
+                type="button"
+                onClick={applyPromoCode}
+                disabled={applyingCode}
+                className="shrink-0 rounded-lg bg-gray-900 px-4 py-2 font-medium text-white disabled:opacity-50"
+              >
+                {applyingCode ? "Checking…" : "Apply"}
+              </button>
+            </div>
+            {promoError && <p className="mt-2 text-sm text-red-600">{promoError}</p>}
+            {appliedOffer && billingPeriod === "monthly" && (
+              <p className="mt-2 text-sm text-gray-600">
+                60 days free. The monthly price stays the same. The 30% off is on yearly billing.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Billing Toggle */}
@@ -494,6 +563,12 @@ export default function PlanSelectionStep({
               {plans.map((plan) => {
                 const isSelected = selectedPlan === plan.name
                 const isPlanProcessing = processingPlanId === plan.id
+                const listPrice =
+                  billingPeriod === "monthly" ? plan.price_monthly : plan.price_yearly
+                const offerPercent =
+                  appliedOffer && billingPeriod === "yearly" ? appliedOffer.yearlyPercentOff : 0
+                const savedCents = offerPercent ? Math.round((listPrice * offerPercent) / 100) : 0
+                const payCents = listPrice - savedCents
 
                 return (
                   <div
@@ -528,15 +603,22 @@ export default function PlanSelectionStep({
                     <div className="p-8 pb-6 text-center">
                       <h3 className="mb-3 text-2xl font-bold text-gray-900">{plan.name}</h3>
                       <div className="mb-4">
+                        {savedCents > 0 && (
+                          <div className="text-lg text-gray-400 line-through">
+                            ${formatPrice(listPrice)}
+                          </div>
+                        )}
                         <span className="text-5xl font-bold text-gray-900">
-                          $
-                          {formatPrice(
-                            billingPeriod === "monthly" ? plan.price_monthly : plan.price_yearly
-                          )}
+                          ${formatPrice(payCents)}
                         </span>
                         <span className="ml-1 text-lg text-gray-600">
                           /{billingPeriod === "monthly" ? "month" : "year"}
                         </span>
+                        {savedCents > 0 && (
+                          <p className="mt-2 text-sm font-medium text-green-700">
+                            You save ${formatPrice(savedCents)} on the first year
+                          </p>
+                        )}
                       </div>
 
                       {billingPeriod === "yearly" && plan.price_monthly > 0 && (

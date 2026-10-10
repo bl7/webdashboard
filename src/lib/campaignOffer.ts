@@ -83,6 +83,18 @@ export async function decideCampaignOffer(input: {
   }
 }
 
+/** Price preview after the customer applies the code. Monthly price is unchanged. */
+export async function previewCampaignCode(enteredCode: string, isNewCustomer: boolean) {
+  const decision = await decideCampaignOffer({
+    enteredCode,
+    isNewCustomer,
+    interval: "yearly",
+  })
+  if (!decision) return { ok: false as const, error: "Enter an offer code." }
+  if (!decision.ok) return decision
+  return { ok: true as const, trialDays: decision.trialDays, yearlyPercentOff: 30 }
+}
+
 export function trialDaysForCheckout(decision: CampaignDecision | null, isNewCustomer: boolean) {
   if (decision?.ok) return decision.trialDays
   return isNewCustomer ? DEFAULT_TRIAL_DAYS : undefined
