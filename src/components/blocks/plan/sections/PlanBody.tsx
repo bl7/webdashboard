@@ -135,7 +135,7 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
                 <Button
                   size="lg"
                   className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink"
-                  onClick={loadPlans}
+                  onClick={() => loadPlans()}
                 >
                   Try again
                 </Button>

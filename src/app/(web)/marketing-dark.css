@@ -186,13 +186,19 @@
   .marketing .text-gray-900,
   .marketing .text-gray-800,
   .marketing .text-gray-700,
+  .marketing .text-neutral-950,
+  .marketing .text-neutral-900,
+  .marketing .text-neutral-800,
   .marketing .text-black {
     color: #f6f5f1 !important;
   }
 
   .marketing .text-gray-600,
   .marketing .text-gray-500,
-  .marketing .text-gray-400 {
+  .marketing .text-gray-400,
+  .marketing .text-neutral-600,
+  .marketing .text-neutral-500,
+  .marketing .text-neutral-400 {
     color: #b7c4c1 !important;
   }
 
@@ -241,13 +247,19 @@
 .dark .marketing .text-gray-900,
 .dark .marketing .text-gray-800,
 .dark .marketing .text-gray-700,
+.dark .marketing .text-neutral-950,
+.dark .marketing .text-neutral-900,
+.dark .marketing .text-neutral-800,
 .dark .marketing .text-black {
   color: #f6f5f1 !important;
 }
 
 .dark .marketing .text-gray-600,
 .dark .marketing .text-gray-500,
-.dark .marketing .text-gray-400 {
+.dark .marketing .text-gray-400,
+.dark .marketing .text-neutral-600,
+.dark .marketing .text-neutral-500,
+.dark .marketing .text-neutral-400 {
   color: #b7c4c1 !important;
 }
 
