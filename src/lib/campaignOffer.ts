@@ -131,6 +131,48 @@ export async function loadAnnualCampaignPromotion(): Promise<
   return { ok: true, promotionCodeId: promo.id }
 }
 
+/**
+ * A duration of "once" is spent on the £0 trial invoice, so Checkout shows the
+ * full price and the first real payment is not reduced. Three months covers the
+ * invoice at the end of the 60-day trial and not the renewal a year later.
+ */
+const ANNUAL_CHECKOUT_COUPON_ID = "instalabel_xmas_30_first_year"
+
+export async function annualCheckoutCouponId(): Promise<
+  { ok: true; couponId: string } | { ok: false; error: string }
+> {
+  try {
+    const existing = await stripe.coupons.retrieve(ANNUAL_CHECKOUT_COUPON_ID)
+    if (
+      existing.percent_off === 30 &&
+      existing.duration === "repeating" &&
+      existing.duration_in_months === 3
+    ) {
+      return { ok: true, couponId: existing.id }
+    }
+    return { ok: false, error: "The annual discount is not available yet." }
+  } catch (err: any) {
+    if (err?.code !== "resource_missing") {
+      console.error("[CHECKOUT] Campaign coupon", err)
+      return { ok: false, error: "The annual discount is not available yet." }
+    }
+  }
+
+  try {
+    const created = await stripe.coupons.create({
+      id: ANNUAL_CHECKOUT_COUPON_ID,
+      percent_off: 30,
+      duration: "repeating",
+      duration_in_months: 3,
+      name: "30% off first annual payment",
+    })
+    return { ok: true, couponId: created.id }
+  } catch (err) {
+    console.error("[CHECKOUT] Could not create campaign coupon", err)
+    return { ok: false, error: "The annual discount is not available yet." }
+  }
+}
+
 export async function checkCampaignStripe(code: string): Promise<{
   status: "empty" | "missing" | "ready" | "wrong" | "expired"
   detail: string

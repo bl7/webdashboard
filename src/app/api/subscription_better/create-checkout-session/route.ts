@@ -3,6 +3,7 @@ import type Stripe from "stripe"
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import {
+  annualCheckoutCouponId,
   decideCampaignOffer,
   loadAnnualCampaignPromotion,
   trialDaysForCheckout,
@@ -70,13 +71,17 @@ export async function POST(req: NextRequest) {
     }
 
     const trialDays = trialDaysForCheckout(campaign, trialEligible)
-    let annualPromotionCodeId: string | null = null
+    let annualCouponId: string | null = null
     if (campaign?.ok && campaign.applyAnnualDiscount) {
       const promo = await loadAnnualCampaignPromotion()
       if (!promo.ok) {
         return NextResponse.json({ error: promo.error }, { status: 400 })
       }
-      annualPromotionCodeId = promo.promotionCodeId
+      const coupon = await annualCheckoutCouponId()
+      if (!coupon.ok) {
+        return NextResponse.json({ error: coupon.error }, { status: 400 })
+      }
+      annualCouponId = coupon.couponId
     }
 
     const metadata: Record<string, string> = {
@@ -107,8 +112,8 @@ export async function POST(req: NextRequest) {
         name: "auto" as const,
       },
     }
-    if (annualPromotionCodeId) {
-      sessionData.discounts = [{ promotion_code: annualPromotionCodeId }]
+    if (annualCouponId) {
+      sessionData.discounts = [{ coupon: annualCouponId }]
     } else if (!campaign?.ok) {
       sessionData.allow_promotion_codes = true
     }
