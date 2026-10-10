@@ -621,7 +621,7 @@ export default function PlanSelectionStep({
                         )}
                       </div>
 
-                      {billingPeriod === "yearly" && plan.price_monthly > 0 && (
+                      {billingPeriod === "yearly" && plan.price_monthly > 0 && savedCents === 0 && (
                         <div className="mb-4 inline-flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-700">
                           <span className="text-xs text-green-600">17% off</span>
                         </div>
