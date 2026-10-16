@@ -9,6 +9,7 @@ type Founder = {
   detail: string
   href: string
   image: string
+  pinnedImage?: boolean
 }
 
 const fallbacks: Founder[] = [
@@ -26,7 +27,8 @@ const fallbacks: Founder[] = [
     headline: "instalabel.co, MSc Cyber Security and Human Factors",
     detail: "Bournemouth and Poole College | Bournemouth University",
     href: "https://www.linkedin.com/in/nishantghimirenp",
-    image: "",
+    image: "/marketing/founders/nishant-ghimire.png",
+    pinnedImage: true,
   },
   {
     vanity: "bibekrzl",
@@ -102,7 +104,11 @@ export function FounderProfiles() {
       setFounders((current) =>
         current.map((founder) =>
           founder.vanity === vanity
-            ? { ...founder, ...profile, image: profile.image || founder.image }
+            ? {
+                ...founder,
+                ...profile,
+                image: founder.pinnedImage ? founder.image : profile.image || founder.image,
+              }
             : founder
         )
       )
