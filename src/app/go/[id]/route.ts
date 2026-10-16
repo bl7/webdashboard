@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server"
-import { flyerLocationExists, recordFlyerVisit } from "@/lib/flyerLocations"
+import { deviceLabel, flyerLocationExists, recordFlyerVisit } from "@/lib/flyerLocations"
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const home = new URL("/", req.url)
   const exists = await flyerLocationExists(id)
   if (!exists) return NextResponse.redirect(home)
+
+  const purpose = `${req.headers.get("purpose") || ""} ${req.headers.get("sec-purpose") || ""}`
+  if (purpose.toLowerCase().includes("prefetch")) return NextResponse.redirect(home)
 
   const response = NextResponse.redirect(home)
   let visitorId = req.cookies.get("il_vid")?.value
@@ -20,7 +23,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
     })
   }
   try {
-    await recordFlyerVisit(id, visitorId)
+    await recordFlyerVisit(id, visitorId, deviceLabel(req.headers.get("user-agent") || ""))
   } catch (error) {
     console.error("flyer visit", error)
   }

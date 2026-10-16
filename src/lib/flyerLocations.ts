@@ -1,11 +1,17 @@
 import pool from "@/lib/pg"
 
+export type FlyerDeviceCount = {
+  device: string
+  devices: number
+}
+
 export type FlyerLocation = {
   id: string
   name: string
   createdAt: string
-  visits: number
-  people: number
+  scans: number
+  devices: number
+  breakdown: FlyerDeviceCount[]
 }
 
 async function ensureFlyerTables() {
@@ -27,6 +33,17 @@ async function ensureFlyerTables() {
   await pool.query(`
     CREATE INDEX IF NOT EXISTS flyer_visits_location_id_idx ON flyer_visits (location_id)
   `)
+  await pool.query(`ALTER TABLE flyer_visits ADD COLUMN IF NOT EXISTS device text`)
+}
+
+export function deviceLabel(userAgent: string) {
+  if (/iPad/i.test(userAgent)) return "iPad"
+  if (/iPhone|iPod/i.test(userAgent)) return "iPhone"
+  if (/Android/i.test(userAgent)) return "Android"
+  if (/Windows/i.test(userAgent)) return "Windows"
+  if (/Macintosh|Mac OS/i.test(userAgent)) return "Mac"
+  if (/CrOS/i.test(userAgent)) return "Chromebook"
+  return "Other"
 }
 
 function slugify(name: string) {
@@ -49,20 +66,42 @@ export async function listFlyerLocations(): Promise<FlyerLocation[]> {
       l.id,
       l.name,
       l.created_at,
-      COUNT(v.id)::int AS visits,
-      COUNT(DISTINCT v.visitor_id)::int AS people
+      COUNT(v.id)::int AS scans,
+      COUNT(DISTINCT v.visitor_id)::int AS devices,
+      COALESCE(
+        (
+          SELECT json_agg(json_build_object('device', device, 'devices', devices) ORDER BY devices DESC)
+          FROM (
+            SELECT COALESCE(device, 'Unknown') AS device, COUNT(DISTINCT visitor_id)::int AS devices
+            FROM flyer_visits
+            WHERE location_id = l.id
+            GROUP BY 1
+          ) counts
+        ),
+        '[]'::json
+      ) AS breakdown
     FROM flyer_locations l
     LEFT JOIN flyer_visits v ON v.location_id = l.id
     GROUP BY l.id
     ORDER BY l.created_at DESC
   `)
-  return result.rows.map((row: { id: string; name: string; created_at: string; visits: number; people: number }) => ({
-    id: row.id,
-    name: row.name,
-    createdAt: String(row.created_at),
-    visits: row.visits,
-    people: row.people,
-  }))
+  return result.rows.map(
+    (row: {
+      id: string
+      name: string
+      created_at: string
+      scans: number
+      devices: number
+      breakdown: FlyerDeviceCount[] | string
+    }) => ({
+      id: row.id,
+      name: row.name,
+      createdAt: String(row.created_at),
+      scans: row.scans,
+      devices: row.devices,
+      breakdown: typeof row.breakdown === "string" ? JSON.parse(row.breakdown) : row.breakdown || [],
+    })
+  )
 }
 
 export async function createFlyerLocation(name: string): Promise<FlyerLocation> {
@@ -90,8 +129,9 @@ export async function createFlyerLocation(name: string): Promise<FlyerLocation> 
     id: row.id,
     name: row.name,
     createdAt: String(row.created_at),
-    visits: 0,
-    people: 0,
+    scans: 0,
+    devices: 0,
+    breakdown: [],
   }
 }
 
@@ -110,9 +150,9 @@ export async function deleteFlyerLocation(id: string) {
   return (result.rowCount ?? 0) > 0
 }
 
-export async function recordFlyerVisit(id: string, visitorId: string) {
-  await pool.query(`INSERT INTO flyer_visits (location_id, visitor_id) VALUES ($1, $2)`, [
-    id,
-    visitorId,
-  ])
+export async function recordFlyerVisit(id: string, visitorId: string, device: string) {
+  await pool.query(
+    `INSERT INTO flyer_visits (location_id, visitor_id, device) VALUES ($1, $2, $3)`,
+    [id, visitorId, device]
+  )
 }

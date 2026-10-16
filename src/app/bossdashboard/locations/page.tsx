@@ -12,8 +12,9 @@ type LocationRow = {
   name: string
   url: string
   qrDataUrl: string
-  visits: number
-  people: number
+  scans: number
+  devices: number
+  breakdown: { device: string; devices: number }[]
 }
 
 export default function BossLocationsPage() {
@@ -147,9 +148,16 @@ export default function BossLocationsPage() {
                   <h2 className="text-lg font-semibold dark:text-gray-100">{location.name}</h2>
                   <p className="mt-1 break-all text-sm text-gray-600 dark:text-gray-300">{location.url}</p>
                   <p className="mt-3 text-sm text-gray-800 dark:text-gray-100">
-                    {location.visits} {location.visits === 1 ? "visit" : "visits"} · {location.people}{" "}
-                    {location.people === 1 ? "person" : "people"}
+                    {location.devices} {location.devices === 1 ? "device" : "devices"}
+                    {location.scans > location.devices
+                      ? ` · ${location.scans} scans`
+                      : ""}
                   </p>
+                  {location.breakdown.length > 0 && (
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                      {location.breakdown.map((item) => `${item.device} ${item.devices}`).join(" · ")}
+                    </p>
+                  )}
                   <div className="mt-3 flex gap-4">
                     <a
                       href={location.qrDataUrl}
