@@ -1,5 +1,6 @@
 import React from "react"
 import { Contact } from "."
+import { FounderProfiles } from "./FounderProfiles"
 
 export const About = () => {
   return (
@@ -135,6 +136,9 @@ export const About = () => {
               <p>If you work in a kitchen, we&apos;d love for you to see InstaLabel in action.</p>
             </div>
           </div>
+        </div>
+        <div className="mx-auto max-w-6xl">
+          <FounderProfiles />
         </div>
       </section>
       <Contact />

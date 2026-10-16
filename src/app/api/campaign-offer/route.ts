@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { verifyAuthToken } from "@/lib/auth"
 import { checkCampaignStripe, getCampaignCode, setCampaignCode } from "@/lib/campaignOffer"
+import { listPromoSignupCounts } from "@/lib/promoSignups"
 
 async function requireBoss(req: NextRequest) {
   const { role } = await verifyAuthToken(req)
@@ -16,7 +17,8 @@ export async function GET(req: NextRequest) {
     if (denied) return denied
     const saved = await getCampaignCode()
     const stripe = await checkCampaignStripe(saved.code)
-    return NextResponse.json({ ...saved, stripe })
+    const signups = await listPromoSignupCounts()
+    return NextResponse.json({ ...saved, stripe, signups })
   } catch (error: any) {
     console.error("GET /api/campaign-offer", error)
     if (error.message?.includes("Unauthorized")) {

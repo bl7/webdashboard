@@ -71,7 +71,8 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/opened-food-labels") ||
     pathname.startsWith("/cleaning-checklists") ||
     pathname.startsWith("/csv-import") ||
-    pathname.startsWith("/label-sizes")
+    pathname.startsWith("/label-sizes") ||
+    pathname.startsWith("/go/")
 
   if (pathname === "/404" || pathname.startsWith("/_next")) {
     return NextResponse.next()

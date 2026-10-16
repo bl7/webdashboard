@@ -5,6 +5,7 @@ import pool from "@/lib/pg"
 import {
   annualCheckoutCouponId,
   decideCampaignOffer,
+  getCampaignCode,
   loadAnnualCampaignPromotion,
   trialDaysForCheckout,
 } from "@/lib/campaignOffer"
@@ -91,7 +92,11 @@ export async function POST(req: NextRequest) {
       plan_name,
       plan_interval,
     }
-    if (campaign?.ok) metadata.campaign_offer = plan_interval
+    if (campaign?.ok) {
+      metadata.campaign_offer = plan_interval
+      const savedCode = (await getCampaignCode()).code
+      if (savedCode) metadata.promo_code = savedCode
+    }
 
     // Billing address is collected on Stripe Checkout / Portal — not from local DB
     const sessionData: Record<string, unknown> = {

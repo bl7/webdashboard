@@ -22,6 +22,7 @@ import {
   Quote,
   Smartphone,
   Tag,
+  MapPin,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -48,6 +49,7 @@ export default function Sidebar({
     { name: "Analytics", href: "/bossdashboard/analytics", icon: BarChart3 },
     { name: "Plans", href: "/bossdashboard/plans", icon: Settings },
     { name: "Offer code", href: "/bossdashboard/offer-code", icon: Tag },
+    { name: "Locations", href: "/bossdashboard/locations", icon: MapPin },
     { name: "Bosses", href: "/bossdashboard/bosses", icon: Database },
     { name: "Devices", href: "/bossdashboard/devices", icon: Tablet },
     { name: "App Version", href: "/bossdashboard/app-version", icon: Smartphone },

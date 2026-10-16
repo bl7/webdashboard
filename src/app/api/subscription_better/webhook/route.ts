@@ -5,6 +5,7 @@ import Stripe from "stripe"
 import { getPlanNameFromPriceId } from "@/lib/formatPlanName"
 import { sendMail } from "@/lib/mail"
 import { alignCampaignSubscription } from "@/lib/campaignOffer"
+import { recordPromoSignup } from "@/lib/promoSignups"
 import {
   newSubscriptionEmail,
   planChangeEmail,
@@ -1201,6 +1202,8 @@ export async function POST(req: NextRequest) {
             }
           }
           // --- END DEVICE ASSIGNMENT ---
+          const promoCode = session.metadata?.promo_code
+          if (promoCode) await recordPromoSignup(user_id, promoCode)
         } catch (dbErr) {
           console.error("[WEBHOOK] DB error (checkout.session.completed):", dbErr)
         }

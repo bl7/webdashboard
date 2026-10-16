@@ -14,6 +14,7 @@ export default function BossOfferCodePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState("")
+  const [signups, setSignups] = useState<{ code: string; signups: number }[]>([])
 
   const bossHeaders = (): HeadersInit => {
     const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
@@ -33,6 +34,7 @@ export default function BossOfferCodePage() {
         if (!res.ok) throw new Error(data.error || "Failed to load offer code")
         setCode(data.code || "")
         setDetail(data.stripe?.detail || "")
+        setSignups(Array.isArray(data.signups) ? data.signups : [])
       } catch (err: any) {
         setError(err.message || "Failed to load offer code")
       } finally {
@@ -102,6 +104,31 @@ export default function BossOfferCodePage() {
               {saving ? "Saving…" : "Save code"}
             </Button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card className={`mt-8 ${isDarkMode ? "border-gray-700 bg-gray-800" : ""}`}>
+        <CardHeader>
+          <CardTitle className="text-lg dark:text-gray-100">Signups by code</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
+            Completed checkouts that used a Stripe offer code. Earlier checkouts were not stored, so they are not included.
+          </p>
+          {signups.length === 0 ? (
+            <p className="text-sm text-gray-600 dark:text-gray-300">No completed checkouts with a code yet.</p>
+          ) : (
+            <ul className="space-y-2 text-sm dark:text-gray-100">
+              {signups.map((row) => (
+                <li key={row.code} className="flex justify-between gap-4">
+                  <span className="font-medium">{row.code}</span>
+                  <span>
+                    {row.signups} {row.signups === 1 ? "signup" : "signups"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
     </div>
