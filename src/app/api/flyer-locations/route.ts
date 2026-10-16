@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import QRCode from "qrcode"
 import { verifyAuthToken } from "@/lib/auth"
-import { createFlyerLocation, deleteFlyerLocation, flyerPath, listFlyerLocations } from "@/lib/flyerLocations"
+import { createFlyerLocation, deleteFlyerLocation, flyerPath, listFlyerLocations, type FlyerLocation } from "@/lib/flyerLocations"
 
 async function requireBoss(req: NextRequest) {
   const { role } = await verifyAuthToken(req)
@@ -11,7 +11,7 @@ async function requireBoss(req: NextRequest) {
   return null
 }
 
-async function withQr(origin: string, location: { id: string; name: string; createdAt: string; visits: number; people: number }) {
+async function withQr(origin: string, location: FlyerLocation) {
   const url = `${origin}${flyerPath(location.id)}`
   const qrDataUrl = await QRCode.toDataURL(url, { width: 512, margin: 1 })
   return { ...location, url, qrDataUrl }
