@@ -8,7 +8,7 @@ export const About = () => {
         <div className="mx-auto max-w-[920px]">
           <p className="text-sm text-neutral-500">About InstaLabel</p>
           <h1 className="mt-3 max-w-2xl text-4xl font-bold tracking-tight text-neutral-950 sm:text-5xl">
-            It started with a problem we knew firsthand.
+            Built to make everyday kitchen labelling simpler.
           </h1>
           <div className="mt-16 grid items-center gap-10 md:mt-24 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-16">
             <img
@@ -20,30 +20,16 @@ export const About = () => {
             />
             <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
               <p>
-                We were three friends who came to the UK to study IT. Alongside our studies, we
-                worked part-time in kitchens, where we began noticing everyday tasks that could be
-                simpler.
+                In a busy kitchen, there&apos;s always something to prepare, something to store, and
+                something to label.
               </p>
               <p>
-                We&apos;d always enjoyed building things and finding practical uses for technology.
-                Eventually, one of those everyday problems became an idea we wanted to bring to life.
+                Food labels might seem like a small part of the job, but they&apos;re part of the
+                routine every day.
               </p>
-            </div>
-          </div>
-          <div className="mt-20 grid items-center gap-10 md:mt-28 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-16">
-            <img
-              src="/marketing/about-making.png?v=2"
-              alt="A person at a laptop surrounded by sketches, screens and a light bulb"
-              width={1024}
-              height={512}
-              className="h-auto w-full"
-            />
-            <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
-              <p>We&apos;ve always been curious about how things work and how they could work better.</p>
               <p>
-                We enjoyed experimenting with technology, exploring ideas, and figuring things out
-                for ourselves. We weren&apos;t starting with a business plan. We simply liked the
-                process of making something and seeing where an idea could lead.
+                We know that routine firsthand. Before InstaLabel existed, we were three friends
+                studying IT in the UK and working part-time in kitchens.
               </p>
             </div>
           </div>
@@ -56,16 +42,35 @@ export const About = () => {
               className="h-auto w-full"
             />
             <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
-              <p>Working in kitchens gave us a different perspective on everyday problems.</p>
+              <p>We saw how much attention went into getting labels right.</p>
               <p>
-                Food labels were one of those things that seemed simple, but still took time and
-                attention. Labels had to be handwritten, dates needed to be kept track of, and
-                allergen information had to be clear and consistent.
+                Names had to be handwritten, dates needed to be tracked, and allergen information
+                had to be clear and consistent. Each label was a small task, but it was one more
+                thing to manage alongside everything else happening in the kitchen.
+              </p>
+              <p>We began to wonder whether there was a better way to handle it.</p>
+            </div>
+          </div>
+          <div className="mt-20 grid items-center gap-10 md:mt-28 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-16">
+            <img
+              src="/marketing/about-making.png?v=2"
+              alt="A person at a laptop surrounded by sketches, screens and a light bulb"
+              width={1024}
+              height={512}
+              className="h-auto w-full"
+            />
+            <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
+              <p>
+                We&apos;ve always enjoyed figuring things out and exploring what technology could do.
               </p>
               <p>
-                Having an interest in technology, we started to see an opportunity to make this part
-                of kitchen life a little simpler. Not by changing how kitchens work, but by making
-                one of their everyday tasks easier.
+                One after-work gaming session, the conversation turned to the labelling problems
+                we&apos;d seen in kitchens. We started wondering whether we could build something to
+                help.
+              </p>
+              <p>
+                It wasn&apos;t a formal business plan. It was an idea between friends, and we decided
+                to see where it could go.
               </p>
             </div>
           </div>
@@ -79,19 +84,17 @@ export const About = () => {
             />
             <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
               <p>
-                The idea for InstaLabel came up during an after-work gaming session. We started
-                talking about the labelling problems we&apos;d seen in kitchens and wondering whether
-                we could build something to help.
-              </p>
-              <p>
                 When we finally got our first label to print, it was blurry, magnified, and
-                completely misaligned. It looked nothing like what we had in mind. But something had
-                printed. And at that point, that was enough to make us happy.
+                completely misaligned.
               </p>
               <p>
-                Of course, getting a label to print was only the beginning. It took several versions,
-                plenty of tweaking, and a lot of learning to get from that first attempt to the
-                product we have today.
+                It looked nothing like what we had in mind. But something had printed, and we were
+                happy.
+              </p>
+              <p>
+                That first attempt was only the beginning. It took several versions, plenty of
+                tweaking, and a lot of learning to get from that wonky print to the InstaLabel we
+                have today.
               </p>
             </div>
           </div>
@@ -104,14 +107,12 @@ export const About = () => {
               className="h-auto w-full"
             />
             <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
+              <p>InstaLabel turns kitchen labelling into a digital workflow.</p>
               <p>
-                InstaLabel helps kitchen teams create and print food labels with the information they
-                need, from expiry dates to allergen details.
+                Kitchen teams can create and print labels with the information they need, including
+                dates and allergen details, without having to handwrite each one.
               </p>
-              <p>
-                Instead of handwriting every label, teams can prepare consistent labels through a
-                simple digital workflow and print them when they&apos;re needed.
-              </p>
+              <p>It&apos;s the solution we set out to build for a task we knew from experience.</p>
             </div>
           </div>
           <div className="mt-20 grid items-center gap-10 md:mt-28 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-16">
@@ -124,14 +125,14 @@ export const About = () => {
             />
             <div className="max-w-sm space-y-4 text-[15px] leading-relaxed text-neutral-900">
               <p>
-                What began as a conversation between friends has become a product we can share with
-                kitchens.
+                Today, InstaLabel is something we&apos;re continuing to build, improve, and share
+                with kitchens.
               </p>
               <p>
-                We&apos;re proud to have taken an idea from that first conversation through all its
-                different versions to something real. And we&apos;re looking forward to seeing where
-                we take it next.
+                What began as a conversation between friends has grown into a product that people
+                can use in their day-to-day work.
               </p>
+              <p>If you work in a kitchen, we&apos;d love for you to see InstaLabel in action.</p>
             </div>
           </div>
         </div>
