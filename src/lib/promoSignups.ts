@@ -34,5 +34,5 @@ export async function listPromoSignupCounts(): Promise<PromoSignupCount[]> {
     GROUP BY code
     ORDER BY signups DESC, code ASC
   `)
-  return result.rows.map((row) => ({ code: row.code, signups: row.signups }))
+  return result.rows.map((row: { code: string; signups: number }) => ({ code: row.code, signups: row.signups }))
 }

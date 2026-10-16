@@ -56,7 +56,7 @@ export async function listFlyerLocations(): Promise<FlyerLocation[]> {
     GROUP BY l.id
     ORDER BY l.created_at DESC
   `)
-  return result.rows.map((row) => ({
+  return result.rows.map((row: { id: string; name: string; created_at: string; visits: number; people: number }) => ({
     id: row.id,
     name: row.name,
     createdAt: String(row.created_at),
@@ -85,7 +85,7 @@ export async function createFlyerLocation(name: string): Promise<FlyerLocation> 
     `INSERT INTO flyer_locations (id, name) VALUES ($1, $2) RETURNING id, name, created_at`,
     [id, clean]
   )
-  const row = result.rows[0]
+  const row = result.rows[0] as { id: string; name: string; created_at: string }
   return {
     id: row.id,
     name: row.name,
