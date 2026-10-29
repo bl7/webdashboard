@@ -22,6 +22,14 @@ interface AdminPinModalProps {
 
 type Step = "enter" | "otp" | "new-pin"
 
+function authHeaders(): HeadersInit {
+  const token = localStorage.getItem("token")
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  }
+}
+
 export default function AdminPinModal({
   isOpen,
   onClose,
@@ -103,7 +111,7 @@ export default function AdminPinModal({
     try {
       const res = await fetch("/api/verify-pin", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ userId, pin }),
       })
 
@@ -135,7 +143,7 @@ export default function AdminPinModal({
     try {
       const res = await fetch("/api/admin-pin/forgot", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ userId }),
       })
       const data = await res.json()
@@ -168,7 +176,7 @@ export default function AdminPinModal({
     try {
       const res = await fetch("/api/admin-pin/verify-otp", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ userId, otp }),
       })
       const data = await res.json()
@@ -208,7 +216,7 @@ export default function AdminPinModal({
     try {
       const res = await fetch("/api/admin-pin/reset", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders(),
         body: JSON.stringify({ userId, resetToken, pin }),
       })
       const data = await res.json()

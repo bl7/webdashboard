@@ -407,9 +407,13 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending test to ${testTo}...`])
     try {
+      const bossToken = localStorage.getItem("bossToken")
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(bossToken ? { Authorization: `Bearer ${bossToken}` } : {}),
+        },
         body: JSON.stringify({
           subject: fields.subject,
           fields,
@@ -437,9 +441,13 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending to ${recipients.length} recipients...`])
     try {
+      const bossToken = localStorage.getItem("bossToken")
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(bossToken ? { Authorization: `Bearer ${bossToken}` } : {}),
+        },
         body: JSON.stringify({
           subject: fields.subject,
           fields,

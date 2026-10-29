@@ -35,9 +35,10 @@ export async function GET(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { user_id, settings } = await req.json()
+    const { userUuid } = await verifyAuthToken(req)
+    const { settings } = await req.json()
 
-    if (!user_id || !Array.isArray(settings)) {
+    if (!Array.isArray(settings)) {
       return NextResponse.json({ error: "Invalid payload" }, { status: 400 })
     }
 
@@ -53,7 +54,7 @@ export async function PUT(req: NextRequest) {
           ON CONFLICT (user_id, label_type)
           DO UPDATE SET expiry_days = EXCLUDED.expiry_days
           `,
-          [user_id, label_type, expiry_days]
+          [userUuid, label_type, expiry_days]
         )
       }
 
@@ -66,8 +67,10 @@ export async function PUT(req: NextRequest) {
       client.release()
     }
   } catch (error: unknown) {
-    let message = "Internal Server Error"
-    if (error instanceof Error) message = error.message
-    return withCORS(NextResponse.json({ error: message }, { status: 500 }))
+    const message = error instanceof Error ? error.message : ""
+    if (message.includes("Unauthorized")) {
+      return withCORS(NextResponse.json({ error: "Unauthorized" }, { status: 401 }))
+    }
+    return withCORS(NextResponse.json({ error: "Internal Server Error" }, { status: 500 }))
   }
 }

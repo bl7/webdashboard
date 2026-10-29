@@ -1,5 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
+
+const SECRET_PROFILE_FIELDS = ["square_access_token", "square_refresh_token"]
+
+function publicProfile(row: Record<string, unknown> | undefined) {
+  if (!row) return null
+  const copy = { ...row }
+  for (const key of SECRET_PROFILE_FIELDS) delete copy[key]
+  return copy
+}
 
 // CORS helper
 function withCORS(res: Response | NextResponse) {
@@ -13,20 +23,36 @@ export async function GET(req: NextRequest) {
   const userId = req.nextUrl.searchParams.get("user_id")
   if (!userId) return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
 
-  // Use SELECT * to get columns in the correct table order
-  const result = await pool.query(`SELECT * FROM user_profiles WHERE user_id = $1`, [userId])
+  let auth: Awaited<ReturnType<typeof verifyAuthToken>> | null = null
+  try {
+    auth = await verifyAuthToken(req)
+  } catch {
+    auth = null
+  }
 
+  if (!auth || (auth.role !== "boss" && String(auth.userUuid) !== String(userId))) {
+    const result = await pool.query(
+      `SELECT company_name FROM user_profiles WHERE user_id = $1`,
+      [userId]
+    )
+    return NextResponse.json({
+      profile: result.rows[0] ? { company_name: result.rows[0].company_name } : null,
+    })
+  }
+
+  const result = await pool.query(`SELECT * FROM user_profiles WHERE user_id = $1`, [userId])
   if (result.rowCount === 0) {
     return NextResponse.json({ profile: null })
   }
 
-  return NextResponse.json({ profile: result.rows[0] })
+  return NextResponse.json({ profile: publicProfile(result.rows[0]) })
 }
 
 export async function PUT(req: NextRequest) {
   try {
+    const auth = await verifyAuthToken(req)
     const {
-      user_id,
+      user_id: requestedId,
       full_name = null,
       email = null,
       company_name = null,
@@ -42,6 +68,7 @@ export async function PUT(req: NextRequest) {
       setup_completed = null,
     } = await req.json()
 
+    const user_id = auth.role === "boss" && requestedId ? requestedId : auth.userUuid
     if (!user_id) {
       return NextResponse.json({ error: "Missing user_id" }, { status: 400 })
     }
@@ -107,8 +134,10 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json({ success: true })
   } catch (error: unknown) {
-    let message = "Internal Server Error"
-    if (error instanceof Error) message = error.message
-    return NextResponse.json({ error: message }, { status: 500 })
+    const message = error instanceof Error ? error.message : "Internal Server Error"
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 })
   }
 }

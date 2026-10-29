@@ -82,8 +82,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('Square debug error:', error)
     return NextResponse.json({ 
-      error: error.message || 'Failed to debug Square connection',
-      stack: error.stack
+      error: 'Failed to debug Square connection',
     }, { status: 500 })
   }
 } 

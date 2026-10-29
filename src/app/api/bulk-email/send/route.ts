@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { sendMail } from "@/lib/mail"
+import { verifyAuthToken } from "@/lib/auth"
 
 type Recipient = { email: string; name?: string }
 
@@ -235,8 +236,12 @@ function renderEmailHTML(
 	</html>`
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req)
+    if (role !== "boss") {
+      return NextResponse.json({ status: "error", message: "Unauthorized" }, { status: 401 })
+    }
     const { subject, html, fields, recipients, templateId } = (await req.json()) as {
       subject: string
       html?: string
@@ -283,6 +288,10 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ status: "ok", sent, failed })
   } catch (e) {
+    const message = e instanceof Error ? e.message : ""
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ status: "error", message: "Unauthorized" }, { status: 401 })
+    }
     return NextResponse.json({ status: "error" }, { status: 500 })
   }
 }

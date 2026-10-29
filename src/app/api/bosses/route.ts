@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/pg';
 import bcrypt from "bcryptjs"
+import { verifyAuthToken } from "@/lib/auth"
 
-export async function GET() {
+async function requireBoss(req: NextRequest) {
   try {
+    const { role } = await verifyAuthToken(req)
+    if (role !== "boss") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+    return null
+  } catch {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const denied = await requireBoss(req)
+    if (denied) return denied
     const { rows } = await pool.query('SELECT id, username, email FROM bossess');
     console.log("Bosses API response:", rows);
     return NextResponse.json(rows);
@@ -15,6 +30,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
+    const denied = await requireBoss(request)
+    if (denied) return denied
     const { username, email, password } = await request.json();
     const hash = await bcrypt.hash(password, 12)
     const client = await pool.connect();
@@ -29,6 +46,8 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const denied = await requireBoss(request)
+    if (denied) return denied
     const { id, username, email, password } = await request.json();
     const client = await pool.connect();
     if (password) {
@@ -47,6 +66,8 @@ export async function PUT(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const denied = await requireBoss(request)
+    if (denied) return denied
     const { id } = await request.json();
     const client = await pool.connect();
     await client.query('DELETE FROM bossess WHERE id = $1', [id]);

@@ -57,7 +57,10 @@ const ProfileDashboard = () => {
       }
     }
 
-    fetch(`/api/profile?user_id=${storedId}`)
+    const token = localStorage.getItem("token")
+    fetch(`/api/profile?user_id=${storedId}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    })
       .then((res) => res.json())
       .then((data) => {
         if (data?.profile) {
@@ -79,7 +82,6 @@ const ProfileDashboard = () => {
       .catch(() => toast.error("Failed to load profile"))
 
     // Load real name/email from the auth backend (don't trust the JWT/localStorage).
-    const token = localStorage.getItem("token")
     if (token) {
       fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -229,9 +231,14 @@ const ProfileDashboard = () => {
 
     try {
       // Verify current PIN
+      const token = localStorage.getItem("token")
+      const headers = {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      }
       const verifyRes = await fetch("/api/verify-pin", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ userId, pin: currentPin }),
       })
 
@@ -247,7 +254,7 @@ const ProfileDashboard = () => {
       // Set new PIN
       const setRes = await fetch("/api/set-admin-pin", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ userId, pin: newPin }),
       })
 

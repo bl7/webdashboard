@@ -63,14 +63,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchData = async () => {
       try {
         const [profileRes, subscriptionRes, adminRes] = await Promise.all([
-          fetch(`/api/profile?user_id=${userId}`),
+          fetch(`/api/profile?user_id=${userId}`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          }),
           fetch(`/api/subscription_better/status`, {
             headers: {
               "Authorization": `Bearer ${token}`,
               "Content-Type": "application/json"
             }
           }),
-          fetch(`/api/admin-access?user_id=${userId}`),
+          fetch(`/api/admin-access?user_id=${userId}`, {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          }),
         ])
 
         // Check if any of the responses indicate authentication failure

@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
+
+const DEVICE_STATUSES = new Set(["pending", "shipped", "delivered", "return_requested", "returned", "lost"])
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { role } = await verifyAuthToken(req)
+    if (role !== "boss") {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     const { id } = await params
     const body = await req.json()
     
@@ -15,7 +22,7 @@ export async function PATCH(
       let statusRaw = body.status
       const status = typeof statusRaw === 'string' ? statusRaw.trim() : statusRaw
       
-      if (!status) {
+      if (!status || !DEVICE_STATUSES.has(status)) {
         return NextResponse.json({ error: "Status is required" }, { status: 400 })
       }
       
@@ -117,7 +124,10 @@ export async function PATCH(
     }
     
   } catch (error: any) {
+    if (String(error?.message || "").includes("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     console.error("Error updating device:", error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: "Failed to update device" }, { status: 500 })
   }
 } 

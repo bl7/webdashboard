@@ -80,7 +80,9 @@ export function LoginForm() {
           // Check user status and redirect appropriately
           try {
             const [profileRes, subRes] = await Promise.all([
-              fetch(`/api/profile?user_id=${response.uuid}`),
+              fetch(`/api/profile?user_id=${response.uuid}`, {
+                headers: token ? { Authorization: `Bearer ${token}` } : {},
+              }),
               fetch(`/api/subscription_better/status`, {
                 headers: {
                   Authorization: `Bearer ${token}`,

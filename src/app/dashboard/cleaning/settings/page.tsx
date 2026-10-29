@@ -30,7 +30,7 @@ export default function CleaningSettingsPage() {
     if (!token) return
     cleaningGet("/cleaning/settings", token)
       .then((response) => {
-        setEnabled(response.data.overdueEmailEnabled)
+        setEnabled(response.data.overdueEmailEnabled !== false && response.data.overdueEmailEnabled !== 0 && response.data.overdueEmailEnabled !== "0")
         setTimezone(response.data.timezone)
         setSendTime(response.data.diaryEmailTime || "23:00")
         setNote(response.data.defaults?.note || "")

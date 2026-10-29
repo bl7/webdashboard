@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from "next/server"
-import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
+import { adminPinMatches } from "@/lib/adminPinReset"
 
-export async function POST(req: Request) {
-  const { userId, pin } = await req.json()
+export async function POST(req: NextRequest) {
+  try {
+    const { userUuid } = await verifyAuthToken(req)
+    const { pin } = await req.json()
 
-  if (!userId || !pin) {
-    return NextResponse.json({ valid: false, message: "Missing userId or pin" }, { status: 400 })
+    if (!pin) {
+      return NextResponse.json({ valid: false, message: "Missing pin" }, { status: 400 })
+    }
+
+    const valid = await adminPinMatches(String(userUuid), pin)
+    return NextResponse.json({ valid })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : ""
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ valid: false, message: "Unauthorized" }, { status: 401 })
+    }
+    console.error("Error verifying admin PIN:", error)
+    return NextResponse.json({ valid: false, message: "Internal server error" }, { status: 500 })
   }
-
-  const result = await pool.query("SELECT pin FROM admin_access WHERE user_id = $1", [userId])
-
-  const storedPin = (result.rows[0]?.pin || "0000").trim()
-  const receivedPin = pin.trim()
-
-  console.log("Stored PIN:", storedPin)
-  console.log("Received PIN:", receivedPin)
-
-  return NextResponse.json({ valid: storedPin === receivedPin })
 }

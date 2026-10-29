@@ -27,7 +27,11 @@ export default function ProfileSetupPage() {
           return
         }
 
-        const [profileRes] = await Promise.all([fetch(`/api/profile?user_id=${storedUserId}`)])
+        const [profileRes] = await Promise.all([
+          fetch(`/api/profile?user_id=${storedUserId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ])
 
         if (profileRes.ok) {
           const { profile } = await profileRes.json()

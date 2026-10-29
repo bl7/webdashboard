@@ -1,27 +1,29 @@
 import { NextRequest, NextResponse } from "next/server"
-import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
+import { saveAdminPin } from "@/lib/adminPinReset"
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    const { userId, pin } = await req.json()
+    const { userUuid } = await verifyAuthToken(req)
+    const { pin } = await req.json()
 
-    if (!userId || !pin) {
+    if (!pin) {
       return NextResponse.json(
-        { success: false, message: "Missing userId or pin" },
+        { success: false, message: "Missing pin" },
         { status: 400 }
       )
     }
 
-    // Upsert: insert new or update existing PIN for the user
-    await pool.query(
-      `INSERT INTO admin_access (user_id, pin)
-       VALUES ($1, $2)
-       ON CONFLICT (user_id) DO UPDATE SET pin = EXCLUDED.pin`,
-      [userId, pin]
-    )
-
+    await saveAdminPin(String(userUuid), pin)
     return NextResponse.json({ success: true })
   } catch (error) {
+    const message = error instanceof Error ? error.message : "Internal server error"
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 })
+    }
+    if (message === "PIN must be 4 digits.") {
+      return NextResponse.json({ success: false, message }, { status: 400 })
+    }
     console.error("Error setting admin PIN:", error)
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 })
   }

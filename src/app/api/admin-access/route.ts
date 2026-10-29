@@ -1,18 +1,21 @@
 import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
+import { verifyAuthToken } from "@/lib/auth"
 
-// Check if user has admin access PIN set (not default '0000')
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const userId = searchParams.get("user_id")
+export async function GET(req: NextRequest) {
+  try {
+    const { userUuid } = await verifyAuthToken(req)
+    const result = await pool.query("SELECT pin FROM admin_access WHERE user_id = $1", [userUuid])
+    const stored = result.rows[0]?.pin
+    const hasPin = Boolean(stored) && stored !== "0000"
 
-  if (!userId) {
-    return NextResponse.json({ hasPin: false, message: "Missing user_id" }, { status: 400 })
+    return NextResponse.json({ hasPin })
+  } catch (error) {
+    const message = error instanceof Error ? error.message : ""
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ hasPin: false, message: "Unauthorized" }, { status: 401 })
+    }
+    console.error("Error checking admin PIN:", error)
+    return NextResponse.json({ hasPin: false, message: "Internal server error" }, { status: 500 })
   }
-
-  const result = await pool.query("SELECT pin FROM admin_access WHERE user_id = $1", [userId])
-
-  const hasPin = result.rows.length > 0 && result.rows[0].pin !== "0000"
-
-  return NextResponse.json({ hasPin })
 }

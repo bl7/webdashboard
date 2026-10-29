@@ -1,4 +1,5 @@
 import crypto from "crypto"
+import bcrypt from "bcryptjs"
 import pool from "@/lib/pg"
 import { sendMail } from "@/lib/mail"
 
@@ -152,15 +153,36 @@ export async function resetAdminPinWithToken(userId: string, resetToken: string,
   if (row.reset_token_hash !== hashValue(resetToken)) {
     return { ok: false as const, message: "Invalid or expired reset session." }
   }
+  if (!/^\d{4}$/.test(String(pin).trim())) {
+    return { ok: false as const, message: "PIN must be 4 digits." }
+  }
 
-  await pool.query(
-    `INSERT INTO admin_access (user_id, pin)
-     VALUES ($1, $2)
-     ON CONFLICT (user_id) DO UPDATE SET pin = EXCLUDED.pin`,
-    [userId, pin]
-  )
+  await saveAdminPin(userId, pin)
 
   await pool.query(`DELETE FROM admin_pin_resets WHERE user_id = $1`, [userId])
 
   return { ok: true as const }
+}
+
+export async function saveAdminPin(userId: string, pin: string) {
+  const clean = String(pin).trim()
+  if (!/^\d{4}$/.test(clean)) {
+    throw new Error("PIN must be 4 digits.")
+  }
+  const hash = await bcrypt.hash(clean, 10)
+  await pool.query(
+    `INSERT INTO admin_access (user_id, pin)
+     VALUES ($1, $2)
+     ON CONFLICT (user_id) DO UPDATE SET pin = EXCLUDED.pin`,
+    [userId, hash]
+  )
+}
+
+export async function adminPinMatches(userId: string, pin: string) {
+  const result = await pool.query("SELECT pin FROM admin_access WHERE user_id = $1", [userId])
+  const stored = result.rows[0]?.pin
+  const received = String(pin || "").trim()
+  if (!stored) return received === "0000"
+  if (String(stored).startsWith("$2")) return bcrypt.compare(received, String(stored))
+  return String(stored).trim() === received
 }

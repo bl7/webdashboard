@@ -199,7 +199,9 @@ export async function GET(req: NextRequest) {
 // UPDATE a log (e.g., to add more details)
 export async function PUT(req: NextRequest) {
   try {
-    const { id, user_id, action, details } = await req.json()
+    const { userUuid } = await verifyAuthToken(req)
+    const { id, action, details } = await req.json()
+    const user_id = userUuid
 
     if (!id || !user_id || !action) {
       return NextResponse.json({ error: "Missing id, user_id, or action" }, { status: 400 })
@@ -219,6 +221,10 @@ export async function PUT(req: NextRequest) {
 
     return withCORS(NextResponse.json({ log: result.rows[0] }, { status: 200 }))
   } catch (err) {
+    const message = err instanceof Error ? err.message : ""
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     console.error("PUT /api/logs error:", err)
     return NextResponse.json({ error: "Failed to update log" }, { status: 500 })
   }
@@ -227,7 +233,9 @@ export async function PUT(req: NextRequest) {
 // DELETE a log
 export async function DELETE(req: NextRequest) {
   try {
-    const { id, user_id } = await req.json()
+    const { userUuid } = await verifyAuthToken(req)
+    const { id } = await req.json()
+    const user_id = userUuid
 
     if (!id || !user_id) {
       return NextResponse.json({ error: "Missing id or user_id" }, { status: 400 })
@@ -244,6 +252,10 @@ export async function DELETE(req: NextRequest) {
 
     return withCORS(NextResponse.json({ deleted: result.rows[0] }, { status: 200 }))
   } catch (err) {
+    const message = err instanceof Error ? err.message : ""
+    if (message.includes("Unauthorized")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
     console.error("DELETE /api/logs error:", err)
     return NextResponse.json({ error: "Failed to delete log" }, { status: 500 })
   }
