@@ -9,14 +9,12 @@ import ComplianceSections from "@/components/dashboard/compliance/ComplianceSect
 const LINKS = [
   { href: "/dashboard/compliance", label: "Today", exact: true },
   { href: "/dashboard/compliance/equipment", label: "Equipment" },
-  { href: "/dashboard/compliance/methods", label: "Safe methods" },
   { href: "/dashboard/compliance/probes", label: "Probes" },
   { href: "/dashboard/compliance/history", label: "History" },
 ]
 
 const BLURBS: Array<{ match: string; exact?: boolean; text: string }> = [
   { match: "/dashboard/compliance/equipment", text: "The fridges and freezers, and the food kept on a display or sandwich unit." },
-  { match: "/dashboard/compliance/methods", text: "The temperatures this kitchen works to. Staff do not change these on the phone." },
   { match: "/dashboard/compliance/probes", text: "The thermometers, and when each one was last checked." },
   { match: "/dashboard/compliance/history", text: "Past temperature records. This download is the temperature diary only." },
   { match: "/dashboard/compliance", exact: true, text: "Today’s record. Staff enter the temperatures on the phone." },
@@ -26,9 +24,12 @@ export default function ComplianceNav() {
   const pathname = usePathname()
   const checks = pathname.startsWith("/dashboard/compliance/checks")
   const diary = pathname.startsWith("/dashboard/compliance/diary")
+  const settings = pathname.startsWith("/dashboard/compliance/settings")
   const blurb = BLURBS.find((item) => (item.exact ? pathname === item.match : pathname.startsWith(item.match)))
-  const title = diary ? "Diary" : checks ? "Checklist" : "Temperature records"
-  const text = diary
+  const title = settings ? "Settings" : diary ? "Diary" : checks ? "Checklist" : "Temperature records"
+  const text = settings
+    ? "Sign-off PIN, the temperatures this kitchen works to, and the end-of-day diary email."
+    : diary
     ? "The full diary: temperatures, checklist, cleaning, corrective actions, and the sign-off."
     : checks
       ? pathname.startsWith("/dashboard/compliance/checks/history")
@@ -42,7 +43,7 @@ export default function ComplianceNav() {
         <h1 className="text-2xl font-bold text-slate-900">{title}</h1>
         <p className="text-sm text-slate-500">{text}</p>
       </div>
-      {diary ? null : checks ? (
+      {diary || settings ? null : checks ? (
       <div className="flex flex-wrap gap-2">
         {[
           { href: "/dashboard/compliance/checks", label: "List", exact: true },

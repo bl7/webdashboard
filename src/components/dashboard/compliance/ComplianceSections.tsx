@@ -9,6 +9,7 @@ const SECTIONS = [
   { href: "/dashboard/compliance/checks", label: "Checklist", id: "checks" },
   { href: "/dashboard/cleaning", label: "Cleaning", id: "cleaning" },
   { href: "/dashboard/compliance/diary", label: "Diary", id: "diary" },
+  { href: "/dashboard/compliance/settings", label: "Settings", id: "settings" },
 ]
 
 export default function ComplianceSections() {
@@ -23,9 +24,12 @@ export default function ComplianceSections() {
               ? pathname.startsWith("/dashboard/cleaning")
               : section.id === "diary"
                 ? pathname.startsWith("/dashboard/compliance/diary")
-                : pathname.startsWith("/dashboard/compliance") &&
-                  !pathname.startsWith("/dashboard/compliance/checks") &&
-                  !pathname.startsWith("/dashboard/compliance/diary")
+                : section.id === "settings"
+                  ? pathname.startsWith("/dashboard/compliance/settings")
+                  : pathname.startsWith("/dashboard/compliance") &&
+                    !pathname.startsWith("/dashboard/compliance/checks") &&
+                    !pathname.startsWith("/dashboard/compliance/diary") &&
+                    !pathname.startsWith("/dashboard/compliance/settings")
         return (
           <Link
             key={section.id}

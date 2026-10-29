@@ -11,7 +11,6 @@ const LINKS = [
   { href: "/dashboard/cleaning/tasks", label: "Tasks" },
   { href: "/dashboard/cleaning/templates", label: "Templates" },
   { href: "/dashboard/cleaning/history", label: "History" },
-  { href: "/dashboard/cleaning/settings", label: "Settings" },
 ]
 
 export default function CleaningNav() {
