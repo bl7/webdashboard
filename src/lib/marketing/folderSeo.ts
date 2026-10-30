@@ -59,19 +59,19 @@ export const FOLDER_SEO = {
     keywords: ["allergen matrix software", "restaurant allergen matrix", "printable allergen matrix", "allergen matrix PDF"],
   },
   "/cleaning-checklists": {
-    title: "Kitchen Cleaning Checklist Software for Restaurants | InstaLabel",
-    description: "Set daily, weekly, monthly or one-off cleaning tasks. Staff finish them in the Android app with their name and a photo, and you can print that day’s checklist.",
-    keywords: ["kitchen cleaning checklist software", "restaurant cleaning schedule software", "recurring cleaning tasks"],
+    title: "Kitchen Cleaning Rota App for Restaurants | InstaLabel",
+    description: "Run a kitchen cleaning rota in the Android app. Set daily, weekly, monthly or one-off tasks. Staff finish them with their name and a photo, and you can print that day’s checklist.",
+    keywords: ["kitchen cleaning rota app", "restaurant cleaning schedule app", "kitchen cleaning checklist software"],
   },
   "/temperature-records": {
-    title: "Kitchen Temperature Records for Restaurants | InstaLabel",
-    description: "Record fridge, food and delivery temperatures on the phone. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
-    keywords: ["kitchen temperature records", "restaurant fridge temperature log", "food temperature checks"],
+    title: "Fridge Temperature Log App for Restaurants | InstaLabel",
+    description: "Keep a fridge temperature log on the phone, with food and delivery readings on the same screen. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
+    keywords: ["fridge temperature log app", "kitchen temperature log app", "restaurant temperature records"],
   },
   "/opening-closing-checks": {
-    title: "Opening and Closing Checklists for Restaurants | InstaLabel",
-    description: "Tick opening and closing lines on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
-    keywords: ["restaurant opening checklist", "restaurant closing checklist", "kitchen opening and closing checks"],
+    title: "Opening and Closing Checks for Restaurants | InstaLabel",
+    description: "Run opening and closing checks on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
+    keywords: ["restaurant opening and closing checks", "opening and closing checks app", "kitchen opening and closing checks"],
   },
   "/csv-import": {
     title: "CSV Ingredient & Menu Import for Kitchen Labels | InstaLabel",
@@ -221,7 +221,7 @@ export const FOLDER_SEO = {
   "/tools/restaurant-cleaning-checklist": {
     title: "Kitchen cleaning checklists in the InstaLabel app | InstaLabel",
     description: "Set daily, weekly, monthly and one-off cleaning tasks in InstaLabel. Staff mark them done in the Android app, and the day's checklist can be reviewed from the account.",
-    keywords: ["kitchen cleaning checklist software", "restaurant cleaning schedule software", "recurring cleaning tasks"],
+    keywords: ["kitchen cleaning rota app", "restaurant cleaning schedule app", "kitchen cleaning checklist software"],
   },
 } as const
 

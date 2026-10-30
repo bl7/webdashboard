@@ -297,10 +297,10 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/cleaning-checklists",
     badge: "Cleaning checklists",
-    title: "Kitchen cleaning checklist software for restaurants.",
+    title: "Kitchen cleaning rota app for restaurants.",
     description:
-      "Set daily, weekly, monthly or one-off cleaning tasks. Staff finish them in the Android app with their name and a photo, and you can print that day’s checklist.",
-    h1: "Keep the cleaning list your restaurant already runs.",
+      "Run a kitchen cleaning rota in the Android app. Set daily, weekly, monthly or one-off tasks. Staff finish them with their name and a photo, and you can print that day’s checklist.",
+    h1: "A kitchen cleaning rota your team finishes on the phone.",
     lead: "Set each task by area, how often it repeats, and the time it is due. Staff finish it on the phone with their name and a photo of the work. You can open that day’s checklist or print it.",
     sections: [
       {
@@ -362,10 +362,10 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/temperature-records",
     badge: "Temperature records",
-    title: "Kitchen temperature records for restaurants.",
+    title: "Fridge temperature log app for restaurants.",
     description:
-      "Record fridge, food and delivery temperatures on the phone. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
-    h1: "Fridge, food and delivery temperatures, taken on the phone.",
+      "Keep a fridge temperature log on the phone, with food and delivery readings on the same screen. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
+    h1: "A fridge temperature log, taken on the phone.",
     lead: "Set the equipment and the limits your kitchen uses. Staff enter the reading during the shift, with the accepted range on screen. A reading outside the limit is marked, and they record what they did. The day’s temperatures stay in the diary.",
     sections: [
       {
@@ -424,10 +424,10 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/opening-closing-checks",
     badge: "Opening and closing",
-    title: "Opening and closing checklists for restaurants.",
+    title: "Opening and closing checks for restaurants.",
     description:
-      "Tick opening and closing lines on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
-    h1: "Opening and closing lines the team can tick on the phone.",
+      "Run opening and closing checks on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
+    h1: "Opening and closing checks the team tick on the phone.",
     lead: "A new account starts with common opening and closing lines. Add, rewrite or retire any line so it matches the restaurant. Staff tick them before service and at the end of the night. A line that is not done needs a note of what they did.",
     sections: [
       {
