@@ -42,10 +42,20 @@ export const CleaningChecklist = () => (
       <p className="mt-6 max-w-2xl text-sm leading-relaxed text-[var(--home-muted)]">
         It records the cleaning checks you set. It does not certify the kitchen.
       </p>
-      <Link href="/features#cleaning" className="home-link mt-4 inline-flex items-center gap-2">
-        See how it fits
-        <ArrowRight className="h-4 w-4" />
-      </Link>
+      <div className="mt-4 flex flex-wrap gap-4">
+        <Link href="/cleaning-checklists" className="home-link inline-flex items-center gap-2">
+          Cleaning checklists
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+        <Link href="/temperature-records" className="home-link inline-flex items-center gap-2">
+          Temperature records
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+        <Link href="/opening-closing-checks" className="home-link inline-flex items-center gap-2">
+          Opening and closing checks
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      </div>
       <h3 className="mt-16 max-w-3xl text-3xl font-extrabold tracking-tight">Temperature records in the diary.</h3>
       <p className="home-lead mt-4 max-w-2xl">
         Staff enter equipment, food and delivery temperatures on the phone. The dashboard shows

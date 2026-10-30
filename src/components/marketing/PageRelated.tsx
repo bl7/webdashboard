@@ -14,6 +14,8 @@ const RELATED: Record<string, { href: string; label: string }[]> = {
     { href: "/uses", label: "Label workflows" },
     { href: "/allergen-matrix", label: "Allergen matrix" },
     { href: "/cleaning-checklists", label: "Cleaning checklists" },
+    { href: "/temperature-records", label: "Temperature records" },
+    { href: "/opening-closing-checks", label: "Opening and closing checks" },
     { href: "/plan", label: "Pricing" },
   ],
   "/prep-labels": [
@@ -72,6 +74,8 @@ const RELATED: Record<string, { href: string; label: string }[]> = {
   "/haccp-labels": [
     { href: "/features", label: "Features" },
     { href: "/cleaning-checklists", label: "Cleaning checklists" },
+    { href: "/temperature-records", label: "Temperature records" },
+    { href: "/opening-closing-checks", label: "Opening and closing checks" },
     { href: "/guides/food-labelling-checklist", label: "Food labelling checklist" },
   ],
   "/dissolvable-kitchen-labels": [
@@ -103,7 +107,8 @@ const RELATED: Record<string, { href: string; label: string }[]> = {
   "/mobile-app": [
     { href: "/printer-compatibility", label: "Printer compatibility" },
     { href: "/cleaning-checklists", label: "Cleaning checklists" },
-    { href: "/printbridge", label: "PrintBridge" },
+    { href: "/temperature-records", label: "Temperature records" },
+    { href: "/opening-closing-checks", label: "Opening and closing checks" },
   ],
   "/plan": [
     { href: "/christmas", label: "Christmas offer" },

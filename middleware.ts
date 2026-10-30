@@ -70,6 +70,8 @@ export function middleware(req: NextRequest) {
     pathname.startsWith("/tools") ||
     pathname.startsWith("/opened-food-labels") ||
     pathname.startsWith("/cleaning-checklists") ||
+    pathname.startsWith("/temperature-records") ||
+    pathname.startsWith("/opening-closing-checks") ||
     pathname.startsWith("/csv-import") ||
     pathname.startsWith("/label-sizes") ||
     pathname.startsWith("/go/")
