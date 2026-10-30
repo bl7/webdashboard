@@ -44,10 +44,18 @@ type Task = {
   daysOfWeek?: number[] | null
   dayOfMonth?: number | null
   dueTime: string
+  onceDate?: string | null
   dueLabel: string
   isActive: boolean
   scheduleLabel: string
   nextOccurrence?: { label: string } | null
+}
+
+function todayInput() {
+  const now = new Date()
+  const month = String(now.getMonth() + 1).padStart(2, "0")
+  const day = String(now.getDate()).padStart(2, "0")
+  return `${now.getFullYear()}-${month}-${day}`
 }
 
 const emptyForm = {
@@ -57,6 +65,7 @@ const emptyForm = {
   frequency: "daily",
   daysOfWeek: [1] as number[],
   dayOfMonth: 1,
+  onceDate: "",
   dueTime: "22:00",
   isActive: true,
 }
@@ -114,6 +123,10 @@ export default function CleaningTasksPage() {
       setError("Choose at least one day.")
       return
     }
+    if (form.frequency === "once" && !form.onceDate) {
+      setError("Choose the day this task should appear.")
+      return
+    }
     setSaving(true)
     setError("")
     try {
@@ -121,6 +134,7 @@ export default function CleaningTasksPage() {
         ...form,
         daysOfWeek: form.frequency === "weekly" ? form.daysOfWeek : null,
         dayOfMonth: form.frequency === "monthly" ? Number(form.dayOfMonth) : null,
+        onceDate: form.frequency === "once" ? form.onceDate : null,
       }
       if (editing) await cleaningSend(`/cleaning/tasks/${editing}`, token, "PATCH", body)
       else await cleaningSend("/cleaning/tasks", token, "POST", body)
@@ -144,6 +158,7 @@ export default function CleaningTasksPage() {
       frequency: task.frequency,
       daysOfWeek: task.daysOfWeek || [1],
       dayOfMonth: task.dayOfMonth || 1,
+      onceDate: task.onceDate || "",
       dueTime: task.dueTime,
       isActive: task.isActive,
     })
@@ -199,7 +214,7 @@ export default function CleaningTasksPage() {
           <Button
             onClick={() => {
               setEditing(null)
-              setForm({ ...emptyForm, areaId: areas[0]?.uuid || "" })
+              setForm({ ...emptyForm, areaId: areas[0]?.uuid || "", onceDate: todayInput() })
               setOpen(true)
             }}
           >
@@ -299,11 +314,18 @@ export default function CleaningTasksPage() {
                 <select
                   className="h-10 w-full rounded-md border px-3 text-sm"
                   value={form.frequency}
-                  onChange={(e) => setForm({ ...form, frequency: e.target.value })}
+                  onChange={(e) =>
+                    setForm({
+                      ...form,
+                      frequency: e.target.value,
+                      onceDate: e.target.value === "once" ? form.onceDate || todayInput() : form.onceDate,
+                    })
+                  }
                 >
                   <option value="daily">Daily</option>
                   <option value="weekly">Weekly</option>
                   <option value="monthly">Monthly</option>
+                  <option value="once">Once</option>
                 </select>
               </div>
               <div className="space-y-2">
@@ -332,6 +354,19 @@ export default function CleaningTasksPage() {
                     {day.label}
                   </label>
                 ))}
+              </div>
+            ) : null}
+            {form.frequency === "once" ? (
+              <div className="max-w-xs space-y-2">
+                <Label>Day it appears</Label>
+                <Input
+                  type="date"
+                  value={form.onceDate}
+                  onChange={(e) => setForm({ ...form, onceDate: e.target.value })}
+                />
+                <p className="text-xs text-slate-500">
+                  It shows on that day. After it is completed it leaves the list and stays in the diary.
+                </p>
               </div>
             ) : null}
             {form.frequency === "monthly" ? (
