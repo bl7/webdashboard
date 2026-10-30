@@ -14,6 +14,13 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { CleaningMessage } from "@/components/dashboard/cleaning/CleaningNav"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { cleaningGet, cleaningSend, cleaningToken } from "@/lib/cleaningApi"
 
 const WEEKDAYS = [
@@ -199,7 +206,7 @@ export default function CleaningTasksPage() {
             New task
           </Button>
         </div>
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error && !open ? <p className="text-sm text-red-600">{error}</p> : null}
         {tasks.length === 0 ? (
           <CleaningMessage
             title="No cleaning tasks yet"
@@ -249,9 +256,17 @@ export default function CleaningTasksPage() {
           </div>
         )}
 
-        {open ? (
-          <div className="space-y-4 rounded-2xl bg-white p-5 shadow-sm">
-            <h3 className="font-semibold">{editing ? "Edit task" : "New task"}</h3>
+        <Dialog
+          open={open}
+          onOpenChange={(next) => {
+            setOpen(next)
+            if (!next) setEditing(null)
+          }}
+        >
+          <DialogContent className="max-h-[85vh] max-w-xl overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{editing ? "Edit task" : "New task"}</DialogTitle>
+            </DialogHeader>
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Task name</Label>
@@ -338,16 +353,17 @@ export default function CleaningTasksPage() {
               <Switch checked={form.isActive} onCheckedChange={(checked) => setForm({ ...form, isActive: checked })} />
               <span className="text-sm">{form.isActive ? "Active" : "Inactive"}</span>
             </div>
-            <div className="flex gap-2">
-              <Button onClick={save} disabled={saving}>
-                {saving ? "Saving…" : "Save task"}
-              </Button>
+            {error ? <p className="text-sm text-red-600">{error}</p> : null}
+            <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
-            </div>
-          </div>
-        ) : null}
+              <Button onClick={save} disabled={saving}>
+                {saving ? "Saving…" : "Save task"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="space-y-3 rounded-2xl bg-white p-4 shadow-sm">
