@@ -59,9 +59,19 @@ export const FOLDER_SEO = {
     keywords: ["allergen matrix software", "restaurant allergen matrix", "printable allergen matrix", "allergen matrix PDF"],
   },
   "/cleaning-checklists": {
-    title: "Recurring Kitchen Cleaning Checklist Software | InstaLabel",
-    description: "Set recurring daily, weekly and monthly cleaning tasks. Staff mark them done in the Android app, and you can review or print the checklist for that day.",
+    title: "Kitchen Cleaning Checklist Software for Restaurants | InstaLabel",
+    description: "Set daily, weekly, monthly or one-off cleaning tasks. Staff finish them in the Android app with their name and a photo, and you can print that day’s checklist.",
     keywords: ["kitchen cleaning checklist software", "restaurant cleaning schedule software", "recurring cleaning tasks"],
+  },
+  "/temperature-records": {
+    title: "Kitchen Temperature Records for Restaurants | InstaLabel",
+    description: "Record fridge, food and delivery temperatures on the phone. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
+    keywords: ["kitchen temperature records", "restaurant fridge temperature log", "food temperature checks"],
+  },
+  "/opening-closing-checks": {
+    title: "Opening and Closing Checklists for Restaurants | InstaLabel",
+    description: "Tick opening and closing lines on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
+    keywords: ["restaurant opening checklist", "restaurant closing checklist", "kitchen opening and closing checks"],
   },
   "/csv-import": {
     title: "CSV Ingredient & Menu Import for Kitchen Labels | InstaLabel",
@@ -210,7 +220,7 @@ export const FOLDER_SEO = {
   },
   "/tools/restaurant-cleaning-checklist": {
     title: "Kitchen cleaning checklists in the InstaLabel app | InstaLabel",
-    description: "Set daily, weekly and monthly cleaning tasks in InstaLabel. Staff mark them done in the Android app, and the day's checklist can be reviewed from the account.",
+    description: "Set daily, weekly, monthly and one-off cleaning tasks in InstaLabel. Staff mark them done in the Android app, and the day's checklist can be reviewed from the account.",
     keywords: ["kitchen cleaning checklist software", "restaurant cleaning schedule software", "recurring cleaning tasks"],
   },
 } as const

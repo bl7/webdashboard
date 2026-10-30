@@ -25,6 +25,14 @@ const HERO_MEDIA: Record<string, { src: string; alt: string; fit?: "contain" }> 
     src: "/marketing/cleaning-checklist.jpg",
     alt: "Cleaning checklist on the InstaLabel dashboard and the Android app",
   },
+  "/temperature-records": {
+    src: "/marketing/temperature-records.jpg",
+    alt: "Temperature records on the InstaLabel dashboard and the Android app",
+  },
+  "/opening-closing-checks": {
+    src: "/marketing/kitchen-portrait.jpg",
+    alt: "Work in a commercial kitchen",
+  },
   "/tools/restaurant-cleaning-checklist": {
     src: "/marketing/cleaning-checklist.jpg",
     alt: "Cleaning checklist on the InstaLabel dashboard and the Android app",

@@ -88,19 +88,19 @@ export const FeaturesBody = () => (
           {[
             {
               title: "Set the task",
-              body: "Choose an area, then daily, weekly or monthly. If a monthly date does not exist, the task runs on the last day of that month.",
+              body: "Choose an area, then daily, weekly, monthly or once. If a monthly date does not exist, the task runs on the last day of that month.",
             },
             {
               title: "Staff complete it",
-              body: "On the Android app they open the tasks due, pick who did the check, and mark it done.",
+              body: "On the Android app they open the tasks due, pick who did the check, and take a photo of the finished work.",
             },
             {
               title: "Look back by day",
               body: "History is that day’s checklist, not a list of future dates. The PDF prints one page per day, using the business name on your profile.",
             },
             {
-              title: "One overdue email",
-              body: "If a task passes its due time and emails are on, the account receives one message. Opening the dashboard does not send another.",
+              title: "One email at the end of the day",
+              body: "If it is on, one message lists cleaning, checklist lines and temperatures still not done, and attaches that day’s diary.",
             },
           ].map((item) => (
             <li key={item.title} className="rounded-xl border border-mkt-steel1 bg-white p-6">
@@ -110,13 +110,23 @@ export const FeaturesBody = () => (
           ))}
         </ul>
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mkt-ink8">
-          This records the cleaning checks you schedule. It does not replace your HACCP records or certify the kitchen.
+          This records the cleaning checks you schedule. It does not replace your HACCP records or certify the kitchen.{" "}
+          <Link href="/cleaning-checklists" className="font-semibold text-mkt-teal hover:underline">
+            Cleaning checklists
+          </Link>
         </p>
         <h3 className="mb-4 mt-16 max-w-2xl text-3xl font-black tracking-tight text-mkt-ink">
           Temperature records in the same diary.
         </h3>
         <p className="mb-8 max-w-2xl text-base leading-relaxed text-mkt-ink8">
-          Staff enter equipment, food and delivery temperatures on the phone. The dashboard shows today’s record and what is still to enter. Those checks stay separate from the cleaning list.
+          Staff enter equipment, food and delivery temperatures on the phone, with the accepted range on screen. Opening and closing lines are ticked separately. The dashboard shows today’s record and what is still to enter.{" "}
+          <Link href="/temperature-records" className="font-semibold text-mkt-teal hover:underline">
+            Temperature records
+          </Link>
+          {" · "}
+          <Link href="/opening-closing-checks" className="font-semibold text-mkt-teal hover:underline">
+            Opening and closing checks
+          </Link>
         </p>
         <img
           src="/marketing/temperature-records.jpg"

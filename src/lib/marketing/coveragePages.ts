@@ -97,7 +97,7 @@ export const coveragePages: CoveragePage[] = [
       {
         heading: "Put cleaning on a recurring schedule",
         paragraphs: [
-          "Create daily, weekly and monthly tasks for the areas your team cleans. Staff can record completion in the Android app, and you can review the checklist for the day.",
+          "Create daily, weekly, monthly or one-off tasks for the areas your team cleans. Staff record completion in the Android app, and you can review the checklist for the day.",
         ],
       },
       {
@@ -112,6 +112,8 @@ export const coveragePages: CoveragePage[] = [
       { href: "/cooked-labels", label: "Cooked food labels" },
       { href: "/allergen-matrix", label: "Allergen matrix" },
       { href: "/cleaning-checklists", label: "Cleaning checklists" },
+      { href: "/temperature-records", label: "Temperature records" },
+      { href: "/opening-closing-checks", label: "Opening and closing checks" },
     ],
   }),
   page({
@@ -295,40 +297,42 @@ export const coveragePages: CoveragePage[] = [
   page({
     path: "/cleaning-checklists",
     badge: "Cleaning checklists",
-    title: "Kitchen cleaning checklist software for recurring tasks.",
+    title: "Kitchen cleaning checklist software for restaurants.",
     description:
-      "Kitchen cleaning checklist software schedules daily, weekly and monthly tasks and keeps a checklist for the day.",
-    h1: "Schedule kitchen cleaning tasks and keep a daily checklist.",
-    lead: "Set recurring daily, weekly and monthly cleaning tasks. Staff mark them done in the Android app, and you can review or print the checklist for that day.",
+      "Set daily, weekly, monthly or one-off cleaning tasks. Staff finish them in the Android app with their name and a photo, and you can print that day’s checklist.",
+    h1: "Keep the cleaning list your restaurant already runs.",
+    lead: "Set each task by area, how often it repeats, and the time it is due. Staff finish it on the phone with their name and a photo of the work. You can open that day’s checklist or print it.",
     sections: [
       {
-        heading: "Set the task, area and frequency",
+        heading: "A task for the job, not a blank form",
         paragraphs: [
-          "Create the cleaning tasks your kitchen needs and group them by area. Choose daily, weekly or monthly recurrence.",
+          "Group tasks by area, such as the kitchen, bar or dining room. Choose daily, weekly or monthly, or a one-off for a job that should not come back.",
+          "A weekly task runs on the days you pick. If a monthly date does not exist, it runs on the last day of that month. A one-off appears on the day you choose and leaves the working list once it is done. The diary still keeps who finished it.",
         ],
       },
       {
-        heading: "Give staff the list of tasks due",
+        heading: "Staff finish it during the shift",
         paragraphs: [
-          "In the Android app, staff open the scheduled tasks, select their name and mark a task complete after carrying it out.",
+          "On the Android app they open the tasks that are due, choose their name, and take a photo of the finished work. An overdue task stays on the list until that duty is done.",
+          "The photo is kept for seven days. The completion, the name and the time stay in the diary after the photo has gone.",
         ],
       },
       {
-        heading: "Review the checklist for a particular day",
+        heading: "See one day, then print it",
         paragraphs: [
-          "Look back at that day’s checklist and export it as a PDF. It is a daily checklist, rather than a complete record of every food-safety activity.",
+          "The dashboard opens one day at a time, up to today. You can see what was done, what was missed, and what is still open, then download that day’s checklist as a PDF.",
         ],
       },
       {
-        heading: "One email at the end of the day",
+        heading: "One email when the day should be closed",
         paragraphs: [
-          "If the end-of-day email is on, one message is sent at the time the kitchen chooses, in its own timezone. It lists cleaning tasks still not done, checklist lines and temperatures, and attaches that day’s diary.",
+          "If the end-of-day email is on, one message is sent at the time the kitchen chooses, in its own timezone. It lists cleaning tasks, checklist lines and temperatures still not done, and attaches that day’s diary.",
         ],
       },
       {
-        heading: "Keep the cleaning method clear",
+        heading: "The method still belongs to the kitchen",
         paragraphs: [
-          "A completion mark records a staff check. Your team still needs the right chemical, dilution, contact time and equipment instructions.",
+          "A completion records that a named person marked the task done. It does not choose the chemical, dilution or contact time, and it does not certify the kitchen.",
         ],
       },
     ],
@@ -336,17 +340,139 @@ export const coveragePages: CoveragePage[] = [
       {
         question: "Does the cleaning checklist record temperatures?",
         answer:
-          "No. Cleaning tasks are separate. Temperature checks for equipment, food and deliveries are recorded in the compliance diary. The end-of-day email can include both.",
+          "No. Cleaning tasks are separate from temperature checks and from the opening and closing lines. The diary and the end-of-day email can include all three.",
+      },
+      {
+        question: "Can a one-off task be used for a deep clean?",
+        answer:
+          "Yes. Choose Once and the day it should appear. It shows on the phone that day. When someone completes it, it leaves the working list and stays in the diary.",
       },
       {
         question: "Can the checklist be printed?",
-        answer: "Yes. You can export the checklist for a day as a PDF and print it.",
+        answer: "Yes. You can download the checklist for a day as a PDF and print it.",
       },
     ],
     related: [
-      { href: "/features", label: "Features" },
+      { href: "/temperature-records", label: "Temperature records" },
+      { href: "/opening-closing-checks", label: "Opening and closing checks" },
       { href: "/mobile-app", label: "Android app" },
-      { href: "/haccp-labels", label: "Labels and food-safety procedures" },
+      { href: "/features", label: "Features" },
+    ],
+  }),
+  page({
+    path: "/temperature-records",
+    badge: "Temperature records",
+    title: "Kitchen temperature records for restaurants.",
+    description:
+      "Record fridge, food and delivery temperatures on the phone. Staff see the accepted range, and a reading outside the limit needs a note of what was done.",
+    h1: "Fridge, food and delivery temperatures, taken on the phone.",
+    lead: "Set the equipment and the limits your kitchen uses. Staff enter the reading during the shift, with the accepted range on screen. A reading outside the limit is marked, and they record what they did. The day’s temperatures stay in the diary.",
+    sections: [
+      {
+        heading: "The units the restaurant already checks",
+        paragraphs: [
+          "Add each fridge, walk-in, display or sandwich unit, freezer, or other cabinet. Set how many times a day it is checked. You can set an operating target and a critical limit, or leave them blank and use the safe-method defaults.",
+          "A fridge starts at twice a day. A freezer starts at once a day. On a display or sandwich unit, the cabinet is one check and each item of food on it is probed on its own.",
+        ],
+      },
+      {
+        heading: "Cooking, cooling, hot holding and deliveries",
+        paragraphs: [
+          "Staff can record cooking, reheating, hot holding and cooling, and the temperature of a chilled or frozen delivery. The phone shows the accepted range for the method you have set, while they enter the number.",
+          "Cooling can be a blast chiller, shallow containers, an ice bath, or another method you choose. The check uses the time and final temperature set for that method.",
+        ],
+      },
+      {
+        heading: "A reading outside the limit is not left blank",
+        paragraphs: [
+          "A reading warmer than the critical limit is marked as failed. Staff then record what was done, such as food moved or discarded, the equipment adjusted, an engineer contacted, or the temperature rechecked.",
+          "A reading warmer than the operating target, but still within the critical limit, is marked for attention. The record does not decide that the food was cooked safely. Your business sets the limits and remains responsible for the action.",
+        ],
+      },
+      {
+        heading: "The probe is checked as well",
+        paragraphs: [
+          "Each probe can be checked on its own interval. Staff record an ice reading and a boiling-water reading, with the accepted range shown above the keypad.",
+        ],
+      },
+      {
+        heading: "What a manager can see the same day",
+        paragraphs: [
+          "The dashboard shows today’s temperatures and which checks are still to record. The diary PDF brings those readings together with the opening and closing lines, the cleaning record, corrective actions and the manager sign-off.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Does this replace a paper temperature log?",
+        answer:
+          "It keeps the readings your staff enter, with the limit that applied and what was done if a reading failed. Your business still decides the safe methods and trains the people who take the readings.",
+      },
+      {
+        question: "Are temperature checks the same as cleaning tasks?",
+        answer:
+          "No. They are separate lists. A fridge check does not mark a cleaning task done, and a finished cleaning task does not record a temperature.",
+      },
+    ],
+    related: [
+      { href: "/opening-closing-checks", label: "Opening and closing checks" },
+      { href: "/cleaning-checklists", label: "Cleaning checklists" },
+      { href: "/mobile-app", label: "Android app" },
+      { href: "/features", label: "Features" },
+    ],
+  }),
+  page({
+    path: "/opening-closing-checks",
+    badge: "Opening and closing",
+    title: "Opening and closing checklists for restaurants.",
+    description:
+      "Tick opening and closing lines on the phone. A line that is not done needs a note, and a supervisor can sign the day off in the same diary.",
+    h1: "Opening and closing lines the team can tick on the phone.",
+    lead: "A new account starts with common opening and closing lines. Add, rewrite or retire any line so it matches the restaurant. Staff tick them before service and at the end of the night. A line that is not done needs a note of what they did.",
+    sections: [
+      {
+        heading: "Lines for the start and the end of service",
+        paragraphs: [
+          "Opening lines cover the checks before food is served, such as fridges and freezers working, staff fit for work, and hand-wash supplies in place. Closing lines cover the end of the night, such as food put away, waste removed, and surfaces cleaned.",
+          "Those starting lines are a list you can change. They are not a complete set of legal requirements, and they are not a substitute for the rest of your food-safety procedures.",
+        ],
+      },
+      {
+        heading: "Done, or a note of what was done instead",
+        paragraphs: [
+          "On the Android app, staff tick each line. If a line is not done, they record what they did about it. The manager can see which lines are still open before the day is signed off.",
+        ],
+      },
+      {
+        heading: "A supervisor signs the day",
+        paragraphs: [
+          "Sign-off uses a PIN set in the dashboard. The person who signs is a different person from the one who recorded the checks. The day can be signed off even when some tasks are still open, and a late record can still be added afterwards.",
+        ],
+      },
+      {
+        heading: "The same diary as temperatures and cleaning",
+        paragraphs: [
+          "Opening lines, closing lines, temperature readings and cleaning tasks are separate lists. They are written into one diary for the day, which you can download. If the end-of-day email is on, it lists checklist lines that are still not done.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Can we change the opening and closing lines?",
+        answer:
+          "Yes. Add a line, retire one you do not use, or restore it later. Staff only see the lines that are active.",
+      },
+      {
+        question: "Does every line have to be ticked before sign-off?",
+        answer:
+          "No. A supervisor can sign the day off while some lines are still open. Those open lines stay visible in the record.",
+      },
+    ],
+    related: [
+      { href: "/temperature-records", label: "Temperature records" },
+      { href: "/cleaning-checklists", label: "Cleaning checklists" },
+      { href: "/mobile-app", label: "Android app" },
+      { href: "/features", label: "Features" },
     ],
   }),
   page({
@@ -846,9 +972,9 @@ export const coveragePages: CoveragePage[] = [
     badge: "Cleaning checklists",
     title: "Cleaning checklists are kept inside the InstaLabel account.",
     description:
-      "Daily, weekly and monthly cleaning tasks are set in InstaLabel. Staff mark them done in the Android app.",
+      "Daily, weekly, monthly and one-off cleaning tasks are set in InstaLabel. Staff mark them done in the Android app.",
     h1: "Cleaning tasks live in the account, not in a download.",
-    lead: "Set the tasks, areas and how often they repeat. Staff open the list in the Android app and mark a task complete after carrying it out. The day's checklist can be reviewed from the account.",
+    lead: "Set the tasks, areas and how often they repeat, including a one-off for a single day. Staff open the list in the Android app, choose their name and mark a task complete. The day's checklist can be reviewed from the account.",
     sections: [
       {
         heading: "The method still belongs to your kitchen",
@@ -860,8 +986,8 @@ export const coveragePages: CoveragePage[] = [
     sources: [FSA_SAFETY],
     related: [
       { href: "/cleaning-checklists", label: "Cleaning checklist software" },
-      { href: "/features", label: "Features" },
-      { href: "/haccp-labels", label: "Labels and procedures" },
+      { href: "/temperature-records", label: "Temperature records" },
+      { href: "/opening-closing-checks", label: "Opening and closing checks" },
     ],
   }),
 ]

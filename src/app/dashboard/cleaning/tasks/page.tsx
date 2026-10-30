@@ -48,7 +48,28 @@ type Task = {
   dueLabel: string
   isActive: boolean
   scheduleLabel: string
+  onceState?: "open" | "done" | "missed" | null
   nextOccurrence?: { label: string } | null
+}
+
+const GROUPS = [
+  { id: "once", title: "One-off", hint: "These show on one day. They stay in this list after they are done, and in the diary." },
+  { id: "daily", title: "Daily", hint: "" },
+  { id: "weekly", title: "Weekly", hint: "" },
+  { id: "monthly", title: "Monthly", hint: "" },
+]
+
+function onceRank(task: Task) {
+  if (task.onceState === "open" || (!task.onceState && task.nextOccurrence)) return 0
+  if (task.onceState === "missed") return 1
+  return 2
+}
+
+function nextLabel(task: Task) {
+  if (task.frequency === "once" && task.onceState === "done") return "Done"
+  if (task.frequency === "once" && task.onceState === "missed") return "Missed"
+  if (task.frequency === "once" && !task.onceState && !task.nextOccurrence) return "Done"
+  return task.nextOccurrence?.label || "—"
 }
 
 function todayInput() {
@@ -228,47 +249,64 @@ export default function CleaningTasksPage() {
             body="Create your first cleaning task or start from a template."
           />
         ) : (
-          <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Task</TableHead>
-                  <TableHead>Area</TableHead>
-                  <TableHead>Frequency</TableHead>
-                  <TableHead>Due</TableHead>
-                  <TableHead>Next</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead />
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {tasks.map((task) => (
-                  <TableRow key={task.uuid}>
-                    <TableCell className="font-medium">{task.name}</TableCell>
-                    <TableCell>{task.areaName}</TableCell>
-                    <TableCell>
-                      <div className="capitalize">{task.frequency}</div>
-                      <div className="text-xs text-slate-500">{task.scheduleLabel}</div>
-                    </TableCell>
-                    <TableCell>{task.dueLabel}</TableCell>
-                    <TableCell>{task.nextOccurrence?.label || "—"}</TableCell>
-                    <TableCell>{task.isActive ? "Active" : "Inactive"}</TableCell>
-                    <TableCell className="space-x-2 text-right">
-                      <Button size="sm" variant="outline" onClick={() => startEdit(task)}>
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => deactivate(task)}>
-                        {task.isActive ? "Deactivate" : "Activate"}
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => remove(task)}>
-                        Delete
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          GROUPS.map((group) => {
+            const rows = tasks
+              .filter((task) => task.frequency === group.id)
+              .sort((a, b) =>
+                group.id === "once"
+                  ? onceRank(a) - onceRank(b) || a.name.localeCompare(b.name)
+                  : a.name.localeCompare(b.name)
+              )
+            if (rows.length === 0) return null
+            return (
+              <section key={group.id} className="space-y-2">
+                <div>
+                  <h3 className="font-semibold text-slate-900">{group.title}</h3>
+                  {group.hint ? <p className="text-sm text-slate-500">{group.hint}</p> : null}
+                </div>
+                <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Task</TableHead>
+                        <TableHead>Area</TableHead>
+                        <TableHead>When</TableHead>
+                        <TableHead>Due</TableHead>
+                        <TableHead>{group.id === "once" ? "Result" : "Next"}</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead />
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {rows.map((task) => (
+                        <TableRow key={task.uuid}>
+                          <TableCell className="font-medium">{task.name}</TableCell>
+                          <TableCell>{task.areaName}</TableCell>
+                          <TableCell>
+                            <div className="text-sm text-slate-600">{task.scheduleLabel}</div>
+                          </TableCell>
+                          <TableCell>{task.dueLabel}</TableCell>
+                          <TableCell>{nextLabel(task)}</TableCell>
+                          <TableCell>{task.isActive ? "Active" : "Inactive"}</TableCell>
+                          <TableCell className="space-x-2 text-right">
+                            <Button size="sm" variant="outline" onClick={() => startEdit(task)}>
+                              Edit
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => deactivate(task)}>
+                              {task.isActive ? "Deactivate" : "Activate"}
+                            </Button>
+                            <Button size="sm" variant="ghost" onClick={() => remove(task)}>
+                              Delete
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </section>
+            )
+          })
         )}
 
         <Dialog

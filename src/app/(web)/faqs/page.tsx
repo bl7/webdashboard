@@ -159,7 +159,7 @@ const faqs = [
   {
     question: "Does InstaLabel run a HACCP system?",
     answer:
-      "No. It records temperature checks for equipment, food and deliveries, and the cleaning tasks you schedule. It does not certify the kitchen or replace the rest of your food-safety procedures.",
+      "No. It records temperature checks for equipment, food and deliveries, the opening and closing lines you keep, and the cleaning tasks you schedule. It does not certify the kitchen or replace the rest of your food-safety procedures.",
   },
   {
     question: "Does InstaLabel decide shelf life?",
