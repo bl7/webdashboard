@@ -7,6 +7,7 @@ export async function sendMail({
   useBulk = false,
   cc,
   bcc,
+  replyTo,
 }: {
   to: string | string[]
   subject: string
@@ -14,6 +15,7 @@ export async function sendMail({
   useBulk?: boolean
   cc?: string | string[]
   bcc?: string | string[]
+  replyTo?: string
 }) {
   const { SMTP_EMAIL, SMTP_PASSWORD, SMTP_BULK_EMAIL, SMTP_BULK_PASSWORD } = process.env
 
@@ -44,6 +46,7 @@ export async function sendMail({
       html: body,
       ...(cc && { cc }),
       ...(bcc && { bcc }),
+      ...(replyTo && { replyTo }),
     })
     console.log("[MAIL] Email sent:", { to, cc, subject, bcc })
   } catch (error) {

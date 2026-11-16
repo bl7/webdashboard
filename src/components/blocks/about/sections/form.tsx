@@ -14,7 +14,6 @@ import React, { useState } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { template } from "@/components/templates/template"
 import { FaSpinner } from "react-icons/fa6"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
@@ -51,25 +50,17 @@ export const ContactForm = () => {
   async function onSubmit(data: FormValues) {
     setLoading(true)
     setStatus("idle")
-    const message = data.business?.trim()
-      ? `Business: ${data.business.trim()}\n\n${data.message}`
-      : data.message
 
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          to: data.email,
-          subject: `Enquiry from ${data.name}`,
-          body: template({
-            name: data.name,
-            email: data.email,
-            phone: data.phone,
-            category: "Website enquiry",
-            message,
-          }),
-          bcc: "instalabel.co@gmail.com",
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          business: data.business,
+          message: data.message,
         }),
       })
 

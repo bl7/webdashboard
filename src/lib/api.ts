@@ -509,14 +509,14 @@ export async function verifyOtpPin(email: string, pin: string) {
   return await response.json()
 }
 
-export async function resetPassword(email: string, newPassword: string, confirmPassword: string) {
+export async function resetPassword(email: string, newPassword: string, confirmPassword: string, pin: string) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reset-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ email, newPassword, confirmPassword }),
+    body: JSON.stringify({ email, newPassword, confirmPassword, pin }),
   })
 
   const contentType = response.headers.get("content-type")

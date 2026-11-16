@@ -45,17 +45,20 @@ export function ForgotPasswordForm() {
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [email, setEmail] = useState("")
+  const [pin, setPin] = useState("")
 
   useEffect(() => {
     setEmail(localStorage.getItem("resetEmail") || "")
+    setPin(sessionStorage.getItem("resetPin") || "")
   }, [])
 
   async function onSubmit(values: z.infer<typeof forgotPassFormSchema>) {
     setError(null)
     setLoading(true)
     try {
-      await resetPassword(email, values.password, values.confirm)
+      await resetPassword(email, values.password, values.confirm, pin)
       localStorage.removeItem("resetEmail")
+      sessionStorage.removeItem("resetPin")
       router.push("/login")
     } catch (err: any) {
       setError(err.message || "Failed to reset password")

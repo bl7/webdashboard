@@ -58,6 +58,7 @@ export function VerifyOtpForm() {
     setLoading(true)
     try {
       await verifyOtpPin(email, values.otp)
+      sessionStorage.setItem("resetPin", values.otp)
       router.push("/reset-password")
     } catch (err: any) {
       setError(err.message || "OTP verification failed")

@@ -1,20 +1,23 @@
 import { NextRequest } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
+import { getJwtSecret } from "@/lib/jwtSecret"
 
-const JWT_SECRET = process.env.JWT_SECRET || "changeme"
+// Bearer tokens stay in localStorage and a JavaScript-readable cookie because
+// label_it_node and the mobile client authenticate with Authorization headers.
+// Do not switch this app to an HttpOnly cookie until those clients are updated.
 
 export async function verifyToken(token: string) {
+  const secret = new TextEncoder().encode(getJwtSecret())
   try {
-    const secret = new TextEncoder().encode(JWT_SECRET)
     const { payload } = await jwtVerify(token, secret)
     return payload
-  } catch (error) {
+  } catch {
     return null
   }
 }
 
 export async function createToken(payload: any) {
-  const secret = new TextEncoder().encode(JWT_SECRET)
+  const secret = new TextEncoder().encode(getJwtSecret())
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()

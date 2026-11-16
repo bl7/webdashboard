@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Package, Truck, CreditCard, RefreshCw, Download, MapPin, Phone, Mail, Calendar, CheckCircle, Clock, AlertCircle } from 'lucide-react';
-import { useLabelAISuggestion } from './hooks/useLabelAISuggestion'
 
 interface Order {
   id: string | number;
@@ -39,16 +38,6 @@ export default function OrderLabelsTab() {
   const [success, setSuccess] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>('demo'); // fallback to 'demo' if not found
 
-  // Add duration options
-  const durationOptions = [7, 14, 30, 60];
-  const [customDays, setCustomDays] = useState<number | null>(null);
-  const [days, setDays] = useState<number>(14);
-
-  // Pass labelsPerDay to AI suggestion hook
-  const [labelsPerDay, setLabelsPerDay] = useState<number>(80); // Default fallback
-  const [labelsPerDayLoading, setLabelsPerDayLoading] = useState<boolean>(true);
-  const [labelsPerDayError, setLabelsPerDayError] = useState<string | null>(null);
-
   // Add state for selected label product
   const [labelProducts, setLabelProducts] = useState<LabelProduct[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
@@ -56,12 +45,8 @@ export default function OrderLabelsTab() {
   const rollsPerBundle = selectedProduct?.rolls_per_bundle || 1;
   const labelsPerRoll = selectedProduct?.labels_per_roll || 1;
   const priceCents = selectedProduct?.price_cents ?? 0;
-  // The AI should be told how many labels are in a roll (not a bundle)
-  const goal = 'Suggest how many rolls to order (1 bundle = ' + rollsPerBundle + ' rolls, 1 roll = ' + labelsPerRoll + ' labels)';
-  const { suggestion, loading: aiLoading, error: aiError, refetch } = useLabelAISuggestion({ usageData: { labelsPerDay, labelsPerRoll, days }, goal })
-  const [aiOrderQty, setAiOrderQty] = useState<number | null>(null)
 
-  // Calculate total rolls and labels for the AI
+  // Calculate total rolls and labels
   const totalRolls = bundleCount * rollsPerBundle;
   const totalLabels = totalRolls * labelsPerRoll;
   const totalPrice = (bundleCount * priceCents) / 100;
@@ -86,42 +71,6 @@ export default function OrderLabelsTab() {
           setEmail(p.email || '');
         })
         .catch(() => {});
-      // Fetch print logs and calculate average labels per day
-      setLabelsPerDayLoading(true);
-      setLabelsPerDayError(null);
-      fetch('/api/logs', {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
-      })
-        .then(res => res.json())
-        .then(data => {
-          if (!data.logs || !Array.isArray(data.logs)) throw new Error('No logs');
-          // Filter for print_label actions
-          const printLogs = data.logs.filter((log: any) => log.action === 'print_label');
-          if (printLogs.length === 0) {
-            setLabelsPerDay(0); // no data, set to 0
-            setLabelsPerDayLoading(false);
-            return;
-          }
-          // Aggregate by date
-          const usageByDate: Record<string, number> = {};
-          printLogs.forEach((log: any) => {
-            const date = new Date(log.timestamp).toISOString().split('T')[0];
-            const qty = Number(log.details?.quantity) || 1;
-            usageByDate[date] = (usageByDate[date] || 0) + qty;
-          });
-          // Get last 30 days
-          const allDates = Object.keys(usageByDate).sort();
-          const last30Dates = allDates.slice(-30);
-          const total = last30Dates.reduce((sum, date) => sum + usageByDate[date], 0);
-          const avg = last30Dates.length > 0 ? total / last30Dates.length : 0;
-          setLabelsPerDay(Math.round(avg));
-          setLabelsPerDayLoading(false);
-        })
-        .catch(err => {
-          setLabelsPerDay(0);
-          setLabelsPerDayLoading(false);
-          setLabelsPerDayError('Could not load usage data');
-        });
     }
   }, []);
 
@@ -133,8 +82,6 @@ export default function OrderLabelsTab() {
       .then(data => setLabelProducts(Array.isArray(data) ? data.map(p => ({ ...p, price_cents: p.price_cents ?? p.price })) : []))
       .catch(() => setLabelProducts([]));
   }, []);
-
-  const [showAISuggestion, setShowAISuggestion] = useState(false);
 
   const fetchOrders = (): void => {
     const token = localStorage?.getItem('token');
@@ -255,74 +202,6 @@ export default function OrderLabelsTab() {
             </div>
             
             <div className="p-6 space-y-6">
-              {/* Duration Picker and AI Suggestion */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-gray-900 mb-2">
-                  How long should this order last?
-                </label>
-                <div className="flex items-center gap-2 mb-2">
-                  {durationOptions.map(opt => (
-                    <button
-                      key={opt}
-                      type="button"
-                      className={`px-3 py-1 rounded-lg border text-sm font-medium ${days === opt ? 'bg-purple-500 text-white border-purple-500' : 'bg-white text-gray-700 border-gray-300'}`}
-                      onClick={() => { setDays(opt); setCustomDays(null); setShowAISuggestion(false); }}
-                    >
-                      {opt} days
-                    </button>
-                  ))}
-                  <input
-                    type="number"
-                    min={1}
-                    placeholder="Custom"
-                    value={customDays !== null ? customDays : ''}
-                    onChange={e => {
-                      const val = Number(e.target.value);
-                      setCustomDays(val);
-                      setDays(val);
-                      setShowAISuggestion(false);
-                    }}
-                    className="w-20 px-2 py-1 border rounded-lg text-sm"
-                  />
-                  <button
-                    type="button"
-                    className="ml-4 px-4 py-2 rounded-lg bg-purple-500 text-white font-semibold text-sm hover:bg-purple-600 transition"
-                    onClick={() => { refetch(); setShowAISuggestion(true); }}
-                    disabled={aiLoading}
-                  >
-                    {aiLoading ? 'Getting AI Suggestion...' : 'Get AI Suggestion'}
-                  </button>
-                </div>
-                {/* Show calculated average labels per day */}
-                <div className="mb-2 text-xs text-purple-700">
-                  {labelsPerDayLoading ? (
-                    <span>Loading your average label usage...</span>
-                  ) : labelsPerDayError ? (
-                    <span className="text-red-600">{labelsPerDayError}</span>
-                  ) : labelsPerDay === 0 ? (
-                    <span className="text-purple-700">You have not printed any labels yet. Need more data to analyze.</span>
-                  ) : (
-                    <span>Based on your history, you print <span className="font-bold">{labelsPerDay}</span> labels per day (avg, last 30 days).</span>
-                  )}
-                </div>
-                {/* AI Suggestion Box */}
-                {showAISuggestion && (
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4">
-                    <div className="font-semibold text-purple-900 mb-1">AI Recommendation</div>
-                    <div className="text-xs text-purple-700 mb-2">AI considers your real usage patterns (weekends, trends, etc.)</div>
-                    {aiLoading ? (
-                      <div className="text-purple-600 animate-pulse">Loading AI suggestion...</div>
-                    ) : aiError ? (
-                      <div className="text-red-600">{aiError}</div>
-                    ) : suggestion ? (
-                      <div className="whitespace-pre-line text-purple-900">{suggestion}</div>
-                    ) : (
-                      <div className="text-gray-500">No suggestion yet.</div>
-                    )}
-                  </div>
-                )}
-              </div>
-
               {/* Product dropdown and bundle quantity side by side */}
               <div className="flex flex-col md:flex-row gap-4 mb-6">
                 <div className="flex-1">
