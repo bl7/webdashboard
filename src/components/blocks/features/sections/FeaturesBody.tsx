@@ -34,8 +34,8 @@ const steps = [
   {
     title: "Finished label",
     body: "Review the preview, then print from a computer with PrintBridge or from the Android app on a supported printer.",
-    file: "prep-on-container.png",
-    alt: "A finished prep label",
+    file: "dashboard-print.png",
+    alt: "The print screen in InstaLabel",
   },
 ]
 
@@ -84,7 +84,7 @@ export const FeaturesBody = () => (
           alt="Cleaning checklist on the InstaLabel dashboard and the Android app"
           className="mb-10 w-full rounded-lg border border-mkt-steel1"
         />
-        <ul className="grid gap-4 sm:grid-cols-2">
+        <dl className="max-w-3xl border-t border-mkt-steel1">
           {[
             {
               title: "Set the task",
@@ -103,12 +103,12 @@ export const FeaturesBody = () => (
               body: "If it is on, one message lists cleaning, checklist lines and temperatures still not done, and attaches that day’s diary.",
             },
           ].map((item) => (
-            <li key={item.title} className="rounded-xl border border-mkt-steel1 bg-white p-6">
-              <h3 className="text-lg font-extrabold text-mkt-ink">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-mkt-ink8">{item.body}</p>
-            </li>
+            <div key={item.title} className="grid gap-1 border-b border-mkt-steel1 py-4 sm:grid-cols-[14rem_1fr] sm:gap-6">
+              <dt className="text-sm font-semibold text-mkt-ink">{item.title}</dt>
+              <dd className="text-sm leading-relaxed text-mkt-ink8">{item.body}</dd>
+            </div>
           ))}
-        </ul>
+        </dl>
         <p className="mt-8 max-w-2xl text-sm leading-relaxed text-mkt-ink8">
           This records the cleaning checks you schedule. It does not replace your HACCP records or certify the kitchen.{" "}
           <Link href="/cleaning-checklists" className="font-semibold text-mkt-teal hover:underline">

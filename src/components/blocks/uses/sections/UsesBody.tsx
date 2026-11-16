@@ -316,7 +316,7 @@ export const UsesBody = () => (
               className="w-full max-w-md rounded-lg border border-mkt-steel1"
             />
             <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">
-              A 60×40 mm PPDS label. The 56×80 mm size is shown with the other label photos above.
+              A 60×40 mm PPDS label on a packed California roll. The 56×80 mm size is on the label sizes page.
             </p>
           </div>
         </div>

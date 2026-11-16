@@ -79,51 +79,50 @@ export const KitchenWorkflowExplorer = () => {
           information can be printed for each job.
         </p>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[16rem_1fr]">
-          <div className="flex flex-wrap gap-2 lg:flex-col">
-            {workflows.map((item) => (
-              <button
-                key={item.key}
-                type="button"
-                className="home-chip"
-                style={{
-                  background: selected === item.key ? "var(--home-chip-on)" : "transparent",
-                  color: selected === item.key ? "var(--home-chip-on-text)" : "#fff",
-                  borderColor: selected === item.key ? "var(--home-chip-on-text)" : "rgba(255,255,255,0.25)",
-                }}
-                aria-pressed={selected === item.key}
-                onClick={() => {
-                  setSelected(item.key)
-                  emitHomeEvent("workflow_select", { type: item.key })
-                }}
-              >
-                {item.choice}
-              </button>
-            ))}
+        <div className="home-catalogue">
+          <div className="home-catalogue-index">
+            <p className="home-catalogue-kicker">Contents</p>
+            <ol>
+              {workflows.map((item, index) => (
+                <li key={item.key}>
+                  <button
+                    type="button"
+                    className="home-catalogue-row"
+                    aria-pressed={selected === item.key}
+                    onClick={() => {
+                      setSelected(item.key)
+                      emitHomeEvent("workflow_select", { type: item.key })
+                    }}
+                  >
+                    <span className="home-catalogue-num">{String(index + 1).padStart(2, "0")}</span>
+                    <span>
+                      <span className="home-catalogue-name">{item.choice}</span>
+                      <span className="home-catalogue-line">{item.body}</span>
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
           </div>
-
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div className="flex flex-col items-center">
-              <div className="flex w-full justify-center overflow-visible rounded-2xl bg-white px-8 py-16 md:px-12 md:py-20">
-                <div className="home-workflow-specimen">
-                  <HomeSpecimen key={current.key} kind={current.key} />
-                </div>
+          <div className="home-catalogue-spine" aria-hidden="true" />
+          <div className="home-catalogue-sheet">
+            <p className="home-catalogue-kicker">{current.choice}</p>
+            <div className={`home-catalogue-label${current.key === "ppds" ? " is-tall" : ""}`}>
+              <div className="home-workflow-specimen">
+                <HomeSpecimen key={current.key} kind={current.key} />
               </div>
-              <p className="mt-3 max-w-md text-center text-xs text-white/70">
-                Illustrative layout. Dates must follow your kitchen’s procedures.
-              </p>
             </div>
-            <div>
-              <h3 className="text-3xl font-extrabold">{current.heading}</h3>
-              <p className="mt-4 text-[0.95rem] leading-relaxed text-[#c9d4cc]">{current.body}</p>
-              <Link href={current.href} className="home-link mt-5 inline-flex items-center gap-2">
-                {current.link}
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <p className="sr-only" aria-live="polite">
-                Showing {current.choice} labels.
-              </p>
-            </div>
+            <h3 className="home-catalogue-title">{current.heading}</h3>
+            <Link href={current.href} className="home-link home-catalogue-link">
+              {current.link}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <p className="home-catalogue-note">
+              Illustrative layout. Dates must follow your kitchen’s procedures.
+            </p>
+            <p className="sr-only" aria-live="polite">
+              Showing {current.choice} labels.
+            </p>
           </div>
         </div>
       </div>

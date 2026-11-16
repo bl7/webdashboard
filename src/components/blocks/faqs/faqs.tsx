@@ -4,7 +4,6 @@ import React from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
-import { motion } from "framer-motion"
 import {
   Accordion,
   AccordionContent,
@@ -231,55 +230,27 @@ const jumps = [
 
 export const FaqsPage = () => (
   <>
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-      <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
-      <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-      <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
-      <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="w-full max-w-2xl space-y-6 text-center md:text-left"
-        >
-          <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
-            Support
-          </div>
-          <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-            InstaLabel questions and answers.
-          </h1>
-          <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-            Find the practical details about labels, item information, printing and getting started.
-          </p>
-          <nav aria-label="FAQ sections" className="flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
-            {jumps.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-mkt-ink ring-1 ring-mkt-steel1 hover:text-mkt-teal"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="w-full max-w-[500px] space-y-4 text-left"
-        >
-          <p className="text-xs font-semibold uppercase tracking-wide text-mkt-steel">
-            Where to start
-          </p>
-          <p className="text-lg font-bold text-mkt-ink">Printers, labels, trial</p>
-          <p className="text-sm leading-relaxed text-mkt-ink8">
-            The printer you already have, what a label can show, and what InstaLabel does not decide.
-          </p>
-        </motion.div>
-      </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full" style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }} />
-    </section>
+    <header className="mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">Support</p>
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">
+        InstaLabel questions and answers.
+      </h1>
+      <p className="mt-4 text-lg leading-relaxed text-mkt-ink8">
+        Find the practical details about labels, item information, printing and getting started.
+        The printer you already have, what a label can show, and what InstaLabel does not decide.
+      </p>
+      <nav aria-label="FAQ sections" className="mt-8 flex flex-col border-t border-mkt-steel1">
+        {jumps.map((item) => (
+          <a
+            key={item.href}
+            href={item.href}
+            className="border-b border-mkt-steel1 py-3 text-sm font-semibold text-mkt-ink hover:text-mkt-teal"
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </header>
 
     {groups.map((group, groupIndex) => (
       <section

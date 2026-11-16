@@ -33,10 +33,7 @@ const PACKS: Record<string, Pack> = {
   restaurants: {
     business: "Restaurant kitchen",
     file: "restaurant-kitchen-example.pdf",
-    photos: [
-      { src: "/marketing/prep-on-container.png", alt: "Prep label on a kitchen container" },
-      { src: "/marketing/cooked-on-container.jpg", alt: "Cooked food label on a container" },
-    ],
+    photos: [],
     labels: [
       {
         name: "Tomato sauce",
@@ -88,7 +85,6 @@ const PACKS: Record<string, Pack> = {
     file: "cafe-kitchen-example.pdf",
     photos: [
       { src: "/marketing/ppds-tall-close.jpg", alt: "Taller PPDS label on a packed California roll" },
-      { src: "/marketing/prep-on-container.png", alt: "Prep label on a filling container" },
     ],
     labels: [
       {
@@ -140,10 +136,7 @@ const PACKS: Record<string, Pack> = {
   takeaways: {
     business: "Takeaway kitchen",
     file: "takeaway-kitchen-example.pdf",
-    photos: [
-      { src: "/marketing/cooked-on-container.jpg", alt: "Cooked food label on a container" },
-      { src: "/marketing/defrost-on-container.png", alt: "Label on food leaving the freezer" },
-    ],
+    photos: [],
     labels: [
       {
         name: "Curry base",
@@ -191,10 +184,7 @@ const PACKS: Record<string, Pack> = {
   caterers: {
     business: "Catering kitchen",
     file: "catering-kitchen-example.pdf",
-    photos: [
-      { src: "/marketing/prep-on-container.png", alt: "Prep label on a batch container" },
-      { src: "/marketing/cooked-on-container.jpg", alt: "Cooked batch label on a container" },
-    ],
+    photos: [],
     labels: [
       {
         name: "Batch gravy",
@@ -315,20 +305,24 @@ function renderLabel(label: ExampleLabel) {
   const allergens = allergensOf(label)
   if (label.kind === "ppds") {
     return (
-      <PPDSLabelRenderer
-        item={{
-          uid: label.name,
-          id: label.name,
-          type: "menu",
-          name: label.name,
-          quantity: 1,
-          labelType: "ppds",
-          ingredients: names,
-        }}
-        storageInfo=""
-        businessName=""
-        allIngredients={ingredients}
-      />
+      <div style={{ width: "56mm", height: "80mm", background: "white", textAlign: "left" }}>
+        <PPDSLabelRenderer
+          item={{
+            uid: label.name,
+            id: label.name,
+            type: "menu",
+            name: label.name,
+            quantity: 1,
+            labelType: "ppds",
+            ingredients: names,
+            printedOn: PRINTED.slice(0, 10),
+            expiryDate: EXPIRY.slice(0, 10),
+          }}
+          storageInfo=""
+          businessName="InstaLabel Ltd"
+          allIngredients={ingredients}
+        />
+      </div>
     )
   }
   const labelType = label.kind === "cooked" ? "cooked" : label.kind === "prep" ? "prep" : "default"
@@ -377,10 +371,13 @@ export function SectorPack({ slug }: { slug: string }) {
         <p className="mb-8 max-w-3xl text-base leading-relaxed text-mkt-ink8">
           Labels, an allergen matrix, the cleaning list and temperature checks for this kind of kitchen. The figures are samples. Your own items and readings replace them.
         </p>
-        <div className="grid gap-8 md:grid-cols-3">
+        <div className="grid items-end gap-8 md:grid-cols-3">
           {pack.labels.map((label) => (
             <div key={label.name}>
-              <div className="mb-3" style={{ color: "#000" }}>
+              <div
+                className={pack.labels.some((item) => item.kind === "ppds") ? "mb-3 flex min-h-[80mm] items-end" : "mb-3"}
+                style={{ color: "#000" }}
+              >
                 {renderLabel(label)}
               </div>
               <p className="text-sm font-semibold text-mkt-ink">{label.name}</p>
@@ -398,11 +395,13 @@ export function SectorPack({ slug }: { slug: string }) {
             </div>
           ))}
         </div>
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {pack.photos.map((photo) => (
-            <img key={photo.src} src={photo.src} alt={photo.alt} className="h-48 w-full rounded-lg object-cover" />
-          ))}
-        </div>
+        {pack.photos.length ? (
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {pack.photos.map((photo) => (
+              <img key={photo.src} src={photo.src} alt={photo.alt} className="h-auto max-h-80 w-full rounded-lg object-contain" />
+            ))}
+          </div>
+        ) : null}
         <div className="mt-10">
           <h3 className="mb-3 text-lg font-extrabold text-mkt-ink">Allergen matrix</h3>
           <ExampleMatrix business={pack.business} dishes={pack.dishes} />

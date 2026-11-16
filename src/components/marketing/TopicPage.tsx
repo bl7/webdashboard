@@ -3,7 +3,6 @@
 import React from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
 import { Button } from "@/components/ui"
 import {
   Accordion,
@@ -15,12 +14,12 @@ import Image from "next/image"
 import { liveHref } from "@/lib/marketing/liveHref"
 import type { CoveragePage } from "@/lib/marketing/coveragePages"
 
-const HERO_MEDIA: Record<string, { src: string; alt: string; fit?: "contain" }> = {
-  "/for/restaurants": { src: "/marketing/cooked-on-container.jpg", alt: "Cooked food label on a container" },
+const HERO_MEDIA: Record<string, { src: string; alt: string; fit?: "contain" } | null> = {
+  "/for/restaurants": null,
   "/for/cafes": { src: "/marketing/ppds-wide.jpg", alt: "Wider PPDS label on a packed California roll" },
-  "/for/takeaways": { src: "/marketing/defrost-on-container.png", alt: "Label on food leaving the freezer" },
-  "/for/caterers": { src: "/marketing/prep-on-container.png", alt: "Prep label on a kitchen container" },
-  "/opened-food-labels": { src: "/marketing/ingredient-on-container.png", alt: "Ingredient label on a container" },
+  "/for/takeaways": null,
+  "/for/caterers": null,
+  "/opening-closing-checks": null,
   "/cleaning-checklists": {
     src: "/marketing/cleaning-checklist.jpg",
     alt: "Cleaning checklist on the InstaLabel dashboard and the Android app",
@@ -28,10 +27,6 @@ const HERO_MEDIA: Record<string, { src: string; alt: string; fit?: "contain" }> 
   "/temperature-records": {
     src: "/marketing/temperature-records.jpg",
     alt: "Temperature records on the InstaLabel dashboard and the Android app",
-  },
-  "/opening-closing-checks": {
-    src: "/marketing/kitchen-portrait.jpg",
-    alt: "Work in a commercial kitchen",
   },
   "/tools/restaurant-cleaning-checklist": {
     src: "/marketing/cleaning-checklist.jpg",
@@ -43,13 +38,46 @@ const HERO_MEDIA: Record<string, { src: string; alt: string; fit?: "contain" }> 
     alt: "60 by 40 mm and 56 by 80 mm California roll labels side by side",
     fit: "contain",
   },
+  "/guides/ppds-labelling-requirements": {
+    src: "/marketing/ppds-wide.jpg",
+    alt: "Wider PPDS label on a packed California roll",
+  },
+  "/guides/allergen-information-for-restaurants": {
+    src: "/marketing/dashboard-matrix.png",
+    alt: "Allergen matrix in InstaLabel",
+  },
+  "/guides/choosing-kitchen-labelling-software": {
+    src: "/marketing/dashboard-print.png",
+    alt: "The print screen in InstaLabel",
+  },
 }
 
 function heroMedia(path: string) {
-  if (HERO_MEDIA[path]) return HERO_MEDIA[path]
+  if (path in HERO_MEDIA) return HERO_MEDIA[path]
   if (path.startsWith("/tools")) return { src: "/marketing/dashboard-matrix.png", alt: "Allergen matrix in InstaLabel" }
-  if (path.startsWith("/guides")) return { src: "/marketing/printed-beside.png", alt: "A printed kitchen label beside a handwritten label" }
-  return { src: "/marketing/kitchen-portrait.jpg", alt: "Work in a commercial kitchen" }
+  return null
+}
+
+function pageKind(path: string) {
+  if (path.startsWith("/guides") || path.startsWith("/tools")) return "article"
+  if (path.startsWith("/for")) return "kitchen"
+  return "record"
+}
+
+function TopicActions() {
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-4">
+      <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink" asChild>
+        <Link href="/register">
+          Start free trial
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Link>
+      </Button>
+      <Link href="/bookdemo" className="text-sm font-semibold text-mkt-teal">
+        Book a demo
+      </Link>
+    </div>
+  )
 }
 
 export function TopicPage({
@@ -61,65 +89,60 @@ export function TopicPage({
   children?: React.ReactNode
   examples?: React.ReactNode
 }) {
+  const media = heroMedia(page.path)
+  const kind = pageKind(page.path)
+  const figure = media ? (
+    <Image
+      src={media.src}
+      alt={media.alt}
+      width={1200}
+      height={800}
+      className={media.fit === "contain" ? "h-auto w-full bg-mkt-canvas object-contain" : "h-auto w-full object-cover"}
+      priority
+    />
+  ) : null
+
   return (
     <>
-      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
-        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-full max-w-2xl space-y-6 text-center md:text-left"
-          >
-            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
-              {page.badge}
-            </div>
-            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
-              {page.h1}
-            </h1>
-            <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">{page.lead}</p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
-                <Link href="/register">
-                  Start free trial
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/bookdemo">Book a demo</Link>
-              </Button>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="w-full max-w-[500px]"
-          >
-            <div className="overflow-hidden rounded-lg border border-mkt-steel1 bg-white shadow-lg">
-              <Image
-                src={heroMedia(page.path).src}
-                alt={heroMedia(page.path).alt}
-                width={1000}
-                height={750}
-                className={
-                  heroMedia(page.path).fit === "contain"
-                    ? "h-auto w-full bg-mkt-canvas object-contain"
-                    : "h-auto w-full object-cover"
-                }
-                priority
-              />
-            </div>
-          </motion.div>
-        </div>
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
-          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
-        />
-      </section>
+      {kind === "article" ? (
+        <header className="mx-auto max-w-[44rem] px-4 pb-2 pt-28 sm:px-6">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{page.badge}</p>
+          <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">{page.h1}</h1>
+          <p className="mt-4 text-lg leading-relaxed text-mkt-ink8">{page.lead}</p>
+          <TopicActions />
+          {figure ? <figure className="mt-10">{figure}</figure> : null}
+        </header>
+      ) : null}
+
+      {kind === "kitchen" ? (
+        <header className="bg-mkt-canvas">
+          {figure ? <figure className="mx-auto max-w-6xl px-4 pt-24 sm:px-6">{figure}</figure> : null}
+          <div className={figure ? "mx-auto max-w-3xl px-4 pb-12 pt-8 sm:px-6" : "mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6"}>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{page.badge}</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">{page.h1}</h1>
+            <p className="mt-4 text-lg leading-relaxed text-mkt-ink8">{page.lead}</p>
+            <TopicActions />
+          </div>
+        </header>
+      ) : null}
+
+      {kind === "record" ? (
+        <header
+          className={
+            figure
+              ? "mx-auto grid max-w-6xl items-end gap-10 px-4 pb-4 pt-28 sm:px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:px-8"
+              : "mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6"
+          }
+        >
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{page.badge}</p>
+            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">{page.h1}</h1>
+            <p className="mt-4 max-w-xl text-lg leading-relaxed text-mkt-ink8">{page.lead}</p>
+            <TopicActions />
+          </div>
+          {figure ? <figure>{figure}</figure> : null}
+        </header>
+      ) : null}
 
       {examples}
 
@@ -133,7 +156,7 @@ export function TopicPage({
           }
         >
           <div className="container mx-auto max-w-3xl">
-            <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+            <h2 className="mb-4 text-2xl font-semibold tracking-tight text-mkt-ink">
               {section.heading}
             </h2>
             {section.paragraphs.map((paragraph) => (
@@ -197,7 +220,7 @@ export function TopicPage({
       {page.faqs?.length ? (
         <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
           <div className="container mx-auto max-w-3xl">
-            <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+            <h2 className="mb-6 text-2xl font-semibold tracking-tight text-mkt-ink">
               Questions about this page
             </h2>
             <Accordion type="single" collapsible className="w-full space-y-3">
@@ -223,7 +246,7 @@ export function TopicPage({
       {page.sources?.length ? (
         <section className="bg-mkt-canvas px-4 py-12 sm:px-6 md:px-12 lg:px-16">
           <div className="container mx-auto max-w-3xl">
-            <h2 className="mb-4 text-xl font-black tracking-tight text-mkt-ink">Sources</h2>
+            <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-mkt-teal">Sources</h2>
             <ul className="space-y-2 text-sm text-mkt-ink8">
               {page.sources.map((source) => (
                 <li key={source.url}>
@@ -241,17 +264,18 @@ export function TopicPage({
 
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
         <div className="container mx-auto max-w-3xl">
-          <h2 className="mb-6 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-[0.12em] text-mkt-teal">
             Related pages
           </h2>
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul className="border-t border-mkt-steel1">
             {page.related.map((link) => (
-              <li key={link.href}>
+              <li key={link.href} className="border-b border-mkt-steel1">
                 <Link
                   href={liveHref(link.href)}
-                  className="block rounded-lg border border-mkt-steel1 bg-mkt-canvas px-4 py-3 text-sm font-semibold text-mkt-ink hover:text-mkt-teal"
+                  className="flex items-center justify-between py-3 text-sm font-semibold text-mkt-ink hover:text-mkt-teal"
                 >
                   {link.label}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </li>
             ))}

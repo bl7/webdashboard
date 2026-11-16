@@ -74,20 +74,24 @@ export function HomeSpecimen({
 function renderSpecimen(kind: HomeLabelKind, labelHeight: "40mm" | "80mm") {
   if (kind === "ppds") {
     return (
-      <PPDSLabelRenderer
-        item={{
-          uid: "home-ppds",
-          id: "home-ppds",
-          type: "menu",
-          name: "Cheddar sandwich",
-          quantity: 1,
-          labelType: "ppds",
-          ingredients: ["bread", "cheddar", "butter"],
-        }}
-        storageInfo=""
-        businessName=""
-        allIngredients={sandwichIngredients}
-      />
+      <div style={{ width: "56mm", height: "80mm", background: "white" }}>
+        <PPDSLabelRenderer
+          item={{
+            uid: "home-ppds",
+            id: "home-ppds",
+            type: "menu",
+            name: "Cheddar sandwich",
+            quantity: 1,
+            labelType: "ppds",
+            ingredients: ["bread", "cheddar", "butter"],
+            printedOn: ILLUSTRATIVE_PRINTED.slice(0, 10),
+            expiryDate: ILLUSTRATIVE_EXPIRY.slice(0, 10),
+          }}
+          storageInfo=""
+          businessName="InstaLabel Ltd"
+          allIngredients={sandwichIngredients}
+        />
+      </div>
     )
   }
 

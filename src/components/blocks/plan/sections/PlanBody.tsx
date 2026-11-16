@@ -2,7 +2,7 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Check } from "lucide-react"
 import { Button } from "@/components/ui"
 import {
   Accordion,
@@ -11,6 +11,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
+import labelPrinterInKitchen from "@/assets/images/labelPrunterInKitchen.png"
 
 export type PublicPlan = {
   id: number | string
@@ -120,138 +122,117 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
 
   return (
     <>
-      <section id="pricing" className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-xl">
+      <section id="pricing" className="bg-[#e7eef2] pb-16">
+        <div className="w-full bg-[#142124] px-6 pb-36 pt-40 text-center text-white">
+          <h1 className="mx-auto max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl">
+            Kitchen labelling for the printer you already have.
+          </h1>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
+            There is no printer in the box. Use a label printer already installed on Windows or
+            macOS, or the Android app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. New
+            subscriptions start with a 14-day trial. There is no charge during the trial.
+          </p>
+          <div className="mt-8 inline-flex rounded-full bg-white/10 p-1">
+            {(["monthly", "annually"] as const).map((interval) => (
+              <button
+                key={interval}
+                type="button"
+                onClick={() => setBilling(interval)}
+                className={cn(
+                  "rounded-full px-5 py-2 text-sm font-semibold",
+                  billing === interval ? "bg-white text-[#142124]" : "text-white/80"
+                )}
+              >
+                {interval === "monthly" ? "Monthly" : "Annually"}
+                {interval === "annually" && savePercent > 0 ? ` · Save ${savePercent}%` : ""}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="relative z-10 mx-auto -mt-24 max-w-md px-2">
           {status === "loading" ? (
-            <p className="text-center text-base text-mkt-ink8">Loading current plans…</p>
+            <p className="rounded-[1.5rem] bg-[#efe6d6] px-8 py-10 text-center text-mkt-ink8">
+              Loading current plans…
+            </p>
           ) : null}
 
           {status === "error" ? (
-            <div className="text-center">
+            <div className="rounded-[1.5rem] bg-[#efe6d6] px-8 py-10 text-center">
               <p className="mb-6 text-base leading-relaxed text-mkt-ink8">
                 We couldn&apos;t load pricing. Try again.
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-3">
-                <Button
-                  size="lg"
-                  className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink"
-                  onClick={() => loadPlans()}
-                >
-                  Try again
-                </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <a href="/about#contact">Contact us</a>
-                </Button>
-              </div>
+              <Button className="bg-mkt-ink text-white hover:bg-mkt-ink" onClick={() => loadPlans()}>
+                Try again
+              </Button>
             </div>
           ) : null}
 
           {status === "ready" && plan ? (
-            <div className="rounded-2xl border border-mkt-steel1 bg-mkt-canvas p-6 sm:p-8">
-              <div className="mb-6 text-center">
-                <h2 className="text-2xl font-black tracking-tight text-mkt-ink">{plan.name}</h2>
-                <p className="mt-2 text-sm leading-relaxed text-mkt-ink8">
-                  Kitchen labelling with web and Android access.
+            <article className="rounded-[1.5rem] bg-[#efe6d6] px-8 py-8 text-center text-[#142124]">
+              <h2 className="text-2xl font-semibold tracking-tight">{plan.name}</h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#142124]/70">
+                Kitchen labelling with web and Android access.
+              </p>
+              <p className="mt-8 text-5xl font-semibold tracking-tight">
+                {billing === "monthly" ? formatGbp(monthly) : formatGbp(yearly)}
+                <span className="ml-1 text-base font-medium text-[#142124]/60">
+                  {billing === "monthly" ? "/month" : "/year"}
+                </span>
+              </p>
+              {billing === "annually" && equivalentMonthly > 0 ? (
+                <p className="mt-2 text-sm text-[#142124]/70">
+                  Equivalent to {formatGbp(equivalentMonthly)} per month, billed annually.
                 </p>
-              </div>
-
-              <div className="mb-8 flex justify-center">
-                <div className="inline-flex items-center rounded-full border border-mkt-steel1 bg-white p-1">
-                  {(["monthly", "annually"] as const).map((interval) => (
-                    <button
-                      key={interval}
-                      type="button"
-                      onClick={() => setBilling(interval)}
-                      className={cn(
-                        "relative rounded-full px-5 py-2 text-sm font-semibold transition-colors",
-                        billing === interval
-                          ? "bg-mkt-ink text-white"
-                          : "text-mkt-ink8 hover:text-mkt-ink"
-                      )}
-                    >
-                      {interval === "monthly" ? "Monthly" : "Annually"}
-                      {interval === "annually" && savePercent > 0 ? (
-                        <span className="ml-2 text-xs font-semibold">Save {savePercent}%</span>
-                      ) : null}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="mb-6 text-center">
-                {billing === "monthly" ? (
-                  <>
-                    <div className="text-4xl font-black tracking-tight text-mkt-ink">
-                      {formatGbp(monthly)} per month
-                    </div>
-                    <p className="mt-2 text-sm text-mkt-ink8">
-                      Billed monthly in pounds sterling.
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-4xl font-black tracking-tight text-mkt-ink">
-                      {formatGbp(yearly)} per year
-                    </div>
-                    <p className="mt-2 text-sm text-mkt-ink8">
-                      Equivalent to {formatGbp(equivalentMonthly)} per month, billed annually.
-                    </p>
-                    <p className="mt-1 text-sm text-mkt-ink8">
-                      Billed annually in pounds sterling.
-                    </p>
-                  </>
-                )}
-              </div>
-
-              <ul className="mb-8 space-y-3">
-                {included.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed text-mkt-ink8">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-mkt-ink" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-
-              {priceReady ? (
-                <Button
-                  size="lg"
-                  className="w-full bg-mkt-ink py-3 text-white hover:bg-mkt-ink"
-                  asChild
-                >
-                  <Link href="/register">
-                    Start free trial
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
               ) : (
-                <Button
-                  size="lg"
-                  className="w-full bg-mkt-ink py-3 text-white hover:bg-mkt-ink"
-                  disabled
+                <p className="mt-2 text-sm text-[#142124]/70">Billed monthly in pounds sterling.</p>
+              )}
+              {priceReady ? (
+                <Link
+                  href="/register"
+                  className="mt-8 block rounded-full bg-[#17675f] px-6 py-3 text-sm font-semibold text-white"
                 >
                   Start free trial
-                </Button>
+                </Link>
+              ) : (
+                <span className="mt-8 block rounded-full bg-[#17675f]/50 px-6 py-3 text-sm font-semibold text-white">
+                  Start free trial
+                </span>
               )}
-
-              <p className="mt-4 text-xs leading-relaxed text-mkt-steel">
-                New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer
-                can use the Christmas offer instead: 60 days free, and 30% off the first annual
-                payment. Payment details are collected at checkout. There is no charge during the
-                trial. After the trial, billing continues at
-                the selected interval until you cancel. You may cancel at any time. Review the{" "}
-                <Link href="/terms" className="font-semibold text-mkt-teal hover:underline">
-                  terms
-                </Link>{" "}
-                presented with your selected plan.
-              </p>
-            </div>
+            </article>
           ) : null}
         </div>
+
+        {status === "ready" && plan ? (
+          <div className="mx-auto mt-10 max-w-md px-2">
+            <h3 className="text-sm font-semibold text-[#142124]">Included</h3>
+            <ul className="mt-4 space-y-3">
+              {included.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm leading-relaxed text-[#142124]/80">
+                  <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#17675f]" aria-hidden="true" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <p className="mt-6 text-xs leading-relaxed text-[#5f6d70]">
+              New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can
+              use the Christmas offer instead: 60 days free, and 30% off the first annual payment.
+              Payment details are collected at checkout. There is no charge during the trial. After
+              the trial, billing continues at the selected interval until you cancel. You may cancel
+              at any time. Review the{" "}
+              <Link href="/terms" className="font-semibold text-[#17675f]">
+                terms
+              </Link>{" "}
+              presented with your selected plan.
+            </p>
+          </div>
+        ) : null}
       </section>
 
       <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-3xl">
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
+        <div className="container mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
+          <div>
+          <h2 className="mb-4 text-3xl font-semibold tracking-tight text-mkt-ink">
             Check your printing setup.
           </h2>
           <p className="mb-4 text-base leading-relaxed text-mkt-ink8">
@@ -265,6 +246,13 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
             from the subscription.
           </p>
           <TextLink href="/kitchen-label-printer">View printer requirements</TextLink>
+          </div>
+          <Image
+            src={labelPrinterInKitchen}
+            alt="Label printer in a kitchen"
+            className="h-auto w-full"
+            sizes="288px"
+          />
         </div>
       </section>
 

@@ -168,3 +168,47 @@ body:has(.marketing) [data-radix-dropdown-menu-content] a,
 body:has(.marketing) [data-radix-dropdown-menu-item] {
   color: #142124 !important;
 }
+
+/* The homepage hero keeps its composition. Other full-viewport heroes lose the blur, the fade, and the extra-bold scale. */
+.marketing section.min-h-screen:not(.home-hero-keep) {
+  min-height: 0;
+  align-items: flex-start;
+  padding-top: 7.5rem;
+  padding-bottom: 3.5rem;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) .blur-3xl,
+.marketing section.min-h-screen:not(.home-hero-keep) > .pointer-events-none {
+  display: none;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) h1 {
+  font-weight: 600;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) .text-center {
+  text-align: left;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) .justify-center {
+  justify-content: flex-start;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) .rounded-full.ring-1 {
+  border-radius: 0;
+  background: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.marketing section.min-h-screen:not(.home-hero-keep) .shadow-lg {
+  box-shadow: none;
+}

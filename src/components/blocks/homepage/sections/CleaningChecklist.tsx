@@ -31,14 +31,14 @@ export const CleaningChecklist = () => (
         alt="Cleaning checklist on the InstaLabel dashboard and the Android app"
         className="mt-8 w-full rounded-lg"
       />
-      <ul className="mt-8 grid gap-4 md:grid-cols-3">
+      <dl className="mt-8 max-w-3xl border-t border-[var(--home-line)]">
         {points.map((point) => (
-          <li key={point.title} className="home-card p-6">
-            <h3 className="text-lg font-extrabold">{point.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-[var(--home-muted)]">{point.body}</p>
-          </li>
+          <div key={point.title} className="grid gap-1 border-b border-[var(--home-line)] py-4 sm:grid-cols-[8rem_1fr] sm:gap-6">
+            <dt className="text-sm font-semibold">{point.title}</dt>
+            <dd className="text-sm leading-relaxed text-[var(--home-muted)]">{point.body}</dd>
+          </div>
         ))}
-      </ul>
+      </dl>
       <p className="mt-6 max-w-2xl text-sm leading-relaxed text-[var(--home-muted)]">
         It records the cleaning checks you set. It does not certify the kitchen.
       </p>

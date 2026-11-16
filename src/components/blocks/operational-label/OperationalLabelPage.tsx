@@ -4,7 +4,6 @@ import React from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui"
-import { motion } from "framer-motion"
 import {
   Accordion,
   AccordionContent,
@@ -65,163 +64,92 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
     labelType: config.labelType,
   }
 
+  const label = (
+    <div className={config.hideEmptyContains ? "mkt-hide-empty-contains" : undefined}>
+      <LabelRender
+        item={item}
+        expiry={ILLUSTRATIVE_EXPIRY}
+        useInitials={config.itemType !== "ingredients"}
+        selectedInitial="BL"
+        allergens={config.allergens}
+        labelHeight="40mm"
+        allIngredients={config.ingredients}
+      />
+    </div>
+  )
+
   return (
     <>
       {config.hideEmptyContains ? (
         <style>{`.mkt-hide-empty-contains > div > div:last-child{display:none!important}`}</style>
       ) : null}
-      <section className="relative flex min-h-screen items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:px-12 lg:px-16">
-        <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
-        <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-10 blur-3xl" />
-        <div className="absolute left-[40%] top-[30%] isolate -z-10 h-96 w-96 scale-150 rounded-full bg-mkt-canvas opacity-80 blur-3xl" />
-        <div className="container relative z-10 mx-auto flex flex-col-reverse items-center justify-between gap-16 md:flex-row">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="w-full max-w-2xl space-y-6 text-center md:text-left"
-          >
-            <div className="inline-flex items-center rounded-full bg-mkt-canvas px-4 py-2 text-sm font-medium text-mkt-ink ring-1 ring-mkt-steel1">
-              {config.badge}
-            </div>
-            <h1 className="font-accent text-4xl font-extrabold leading-tight tracking-tight text-mkt-ink sm:text-5xl lg:text-6xl">
+      <article className="bg-mkt-canvas px-4 pb-20 pt-28 sm:px-6 md:px-12 lg:px-16">
+        <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-[minmax(0,1fr)_16.5rem] lg:gap-16">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{config.badge}</p>
+            <h1 className="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">
               {config.h1}
             </h1>
-            <p className="max-w-xl text-base text-mkt-ink8 sm:text-lg md:text-xl">
-              {config.heroBody}
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-4 pt-4 md:justify-start">
-              <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-mkt-ink8">{config.heroBody}</p>
+            <div className="mt-12 grid items-start gap-10 border-t border-mkt-steel1 pt-10 md:grid-cols-[auto_minmax(0,1fr)]">
+              <div>
+                {label}
+                <p className="mt-3 max-w-[16rem] text-xs leading-relaxed text-mkt-steel">
+                  {config.heroNote ?? config.caption}
+                </p>
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold tracking-tight text-mkt-ink">{config.exampleTitle}</h2>
+                <dl className="mt-5 border-t border-mkt-steel1">
+                  {config.callouts.map((callout) => (
+                    <div key={callout.title} className="grid gap-1 border-b border-mkt-steel1 py-3 sm:grid-cols-[9rem_1fr] sm:gap-4">
+                      <dt className="text-sm font-semibold text-mkt-ink">{callout.title}</dt>
+                      <dd className="text-sm leading-relaxed text-mkt-ink8">{callout.body}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+          </div>
+          <aside className="border-t border-mkt-steel1 pt-8 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-16">
+            <h2 className="text-base font-semibold leading-snug text-mkt-ink">{config.workflowTitle}</h2>
+            <ol className="mt-4 space-y-4">
+              {config.steps.map((step, index) => (
+                <li key={step} className="grid grid-cols-[1.5rem_1fr] gap-2 text-sm leading-relaxed text-mkt-ink8">
+                  <span className="font-semibold text-mkt-ink">{index + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <h2 className="mt-10 text-base font-semibold leading-snug text-mkt-ink">{config.whenTitle}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-mkt-ink8">{config.whenBody}</p>
+            <h2 className="mt-10 text-base font-semibold leading-snug text-mkt-ink">{config.handoverTitle}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-mkt-ink8">{config.handoverBody}</p>
+            <div className="mt-8 flex flex-col items-start gap-3">
+              <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink" asChild>
                 <Link href="/register">
                   Start free trial
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/uses">All kitchen workflows</Link>
-              </Button>
+              <Link href="/uses" className="text-sm font-semibold text-mkt-teal">
+                All kitchen workflows
+              </Link>
             </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="flex w-full max-w-[500px] flex-col items-center md:items-end"
-          >
-            <div className={config.hideEmptyContains ? "mkt-hide-empty-contains" : undefined}>
-              <LabelRender
-                item={item}
-                expiry={ILLUSTRATIVE_EXPIRY}
-                useInitials={config.itemType !== "ingredients"}
-                selectedInitial="BL"
-                allergens={config.allergens}
-                labelHeight="40mm"
-                allIngredients={config.ingredients}
-              />
-            </div>
-            <p className="mt-3 text-center text-xs text-mkt-steel md:text-right">
-              {config.heroNote ??
-                "Illustrative layout. Dates must follow your kitchen's procedures."}
-            </p>
-          </motion.div>
+          </aside>
         </div>
-        <div
-          className="pointer-events-none absolute bottom-0 left-0 z-0 h-24 w-full"
-          style={{ background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, #fff 100%)" }}
-        />
-      </section>
+      </article>
 
       <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            {config.whenTitle}
-          </h2>
-          <p className="max-w-3xl text-base leading-relaxed text-mkt-ink8">{config.whenBody}</p>
-        </div>
-      </section>
-
-      <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            {config.exampleTitle}
-          </h2>
-          <div className="grid items-start gap-10 lg:grid-cols-[auto_1fr]">
-            <div>
-              <div className={config.hideEmptyContains ? "mkt-hide-empty-contains" : undefined}>
-                <LabelRender
-                  item={item}
-                  expiry={ILLUSTRATIVE_EXPIRY}
-                  useInitials={config.itemType !== "ingredients"}
-                  selectedInitial="BL"
-                  allergens={config.allergens}
-                  labelHeight="40mm"
-                  allIngredients={config.ingredients}
-                />
-              </div>
-              <p className="mt-3 max-w-xs text-xs leading-relaxed text-mkt-steel">
-                {config.caption}
-              </p>
-            </div>
-            <ul className="space-y-5">
-              {config.callouts.map((itemCallout) => (
-                <li key={itemCallout.title} className="flex items-start gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-mkt-teal" />
-                  <div>
-                    <h3 className="text-lg font-bold text-mkt-ink">{itemCallout.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-mkt-ink8">{itemCallout.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            {config.workflowTitle}
-          </h2>
-          <ol className="max-w-3xl space-y-4">
-            {config.steps.map((step, i) => (
-              <li key={step} className="flex items-start gap-4">
-                <span className="mt-0.5 shrink-0 text-xs font-semibold text-mkt-teal">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
-                <p className="text-base leading-relaxed text-mkt-ink8">{step}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            {config.handoverTitle}
-          </h2>
-          <p className="max-w-3xl text-base leading-relaxed text-mkt-ink8">{config.handoverBody}</p>
-        </div>
-      </section>
-
-      <section className="bg-white px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-3xl">
-          <h2 className="mb-8 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            Questions about this label
-          </h2>
-          <Accordion type="single" collapsible className="w-full space-y-3">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[16rem_minmax(0,1fr)]">
+          <h2 className="text-lg font-semibold tracking-tight text-mkt-ink">Questions about this label</h2>
+          <Accordion type="single" collapsible className="w-full">
             {config.faqs.map((faq, index) => (
-              <AccordionItem
-                key={faq.question}
-                value={`item-${index}`}
-                className="rounded-lg border border-mkt-steel1 bg-mkt-canvas px-4"
-              >
-                <AccordionTrigger className="text-left text-sm font-semibold text-mkt-ink hover:text-mkt-teal">
+              <AccordionItem key={faq.question} value={`item-${index}`} className="border-b border-mkt-steel1">
+                <AccordionTrigger className="text-left text-base font-semibold text-mkt-ink hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-sm leading-relaxed text-mkt-ink8">
-                  {faq.answer}
-                </AccordionContent>
+                <AccordionContent className="text-sm leading-relaxed text-mkt-ink8">{faq.answer}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
@@ -229,12 +157,12 @@ export const OperationalLabelPage = ({ config }: { config: OperationalLabelConfi
       </section>
 
       <section className="bg-mkt-canvas px-4 py-16 sm:px-6 md:px-12 lg:px-16">
-        <div className="container mx-auto max-w-3xl text-center">
-          <h2 className="mb-4 text-3xl font-black tracking-tight text-mkt-ink sm:text-4xl">
-            {config.closingTitle}
-          </h2>
-          <p className="mb-8 text-base leading-relaxed text-mkt-ink8">{config.closingBody}</p>
-          <Button size="lg" className="bg-mkt-ink px-8 py-3 text-white hover:bg-mkt-ink" asChild>
+        <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="max-w-xl text-3xl font-semibold tracking-tight text-mkt-ink">{config.closingTitle}</h2>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-mkt-ink8">{config.closingBody}</p>
+          </div>
+          <Button size="lg" className="bg-mkt-ink px-6 py-3 text-white hover:bg-mkt-ink" asChild>
             <Link href="/bookdemo">
               Book a demo
               <ArrowRight className="ml-2 h-4 w-4" />
