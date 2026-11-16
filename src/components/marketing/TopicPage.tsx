@@ -116,12 +116,32 @@ export function TopicPage({
 
       {kind === "kitchen" ? (
         <header className="bg-mkt-canvas">
-          {figure ? <figure className="mx-auto max-w-6xl px-4 pt-24 sm:px-6">{figure}</figure> : null}
-          <div className={figure ? "mx-auto max-w-3xl px-4 pb-12 pt-8 sm:px-6" : "mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6"}>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{page.badge}</p>
-            <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">{page.h1}</h1>
-            <p className="mt-4 text-lg leading-relaxed text-mkt-ink8">{page.lead}</p>
-            <TopicActions />
+          <div
+            className={
+              figure
+                ? "mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-28 sm:px-6 lg:grid-cols-[minmax(0,1.15fr)_22rem] lg:gap-16 lg:px-8"
+                : "mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6"
+            }
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">{page.badge}</p>
+              <h1 className="mt-3 text-4xl font-semibold tracking-tight text-mkt-ink sm:text-5xl">{page.h1}</h1>
+              <p className="mt-4 text-lg leading-relaxed text-mkt-ink8">{page.lead}</p>
+              <TopicActions />
+            </div>
+            {media ? (
+              <figure className="mx-auto w-full max-w-[22rem]">
+                <Image
+                  src={media.src}
+                  alt={media.alt}
+                  width={853}
+                  height={1024}
+                  sizes="22rem"
+                  className="h-auto w-full"
+                  priority
+                />
+              </figure>
+            ) : null}
           </div>
         </header>
       ) : null}
