@@ -440,7 +440,7 @@ export default function PlansPage() {
   const fetchPlans = async () => {
     setLoading(true)
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       const res = await fetch("/api/plans", {
         headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
@@ -477,7 +477,7 @@ export default function PlansPage() {
     if (!selectedPlan) return
     setDeleteLoading(true)
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       const res = await fetch(`/api/plans/${selectedPlan.id}`, {
         method: "DELETE",
         headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}

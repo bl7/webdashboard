@@ -407,7 +407,7 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending test to ${testTo}...`])
     try {
-      const bossToken = localStorage.getItem("bossToken")
+      const bossToken = localStorage.getItem("bossAuthed")
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
         headers: {
@@ -441,7 +441,7 @@ export default function BulkEmailPage() {
     setSending(true)
     setLog((l) => [...l, `Sending to ${recipients.length} recipients...`])
     try {
-      const bossToken = localStorage.getItem("bossToken")
+      const bossToken = localStorage.getItem("bossAuthed")
       const res = await fetch("/api/bulk-email/send", {
         method: "POST",
         headers: {

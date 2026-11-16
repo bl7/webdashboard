@@ -107,7 +107,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
 
   const loadSquareStatus = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const response = await fetch(`/api/square/status?user_id=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -127,7 +127,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
 
   const loadLocations = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const response = await fetch(`/api/square/locations?user_id=${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
@@ -147,7 +147,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
   const connectToSquare = async () => {
     setIsConnecting(true)
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const response = await fetch("/api/square/connect", {
         method: "POST",
         headers: {
@@ -172,7 +172,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
 
   const disconnectSquare = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const response = await fetch("/api/square/disconnect", {
         method: "POST",
         headers: {
@@ -203,7 +203,7 @@ export default function SquareIntegration({ userId, onSyncComplete }: SquareInte
 
     setIsSyncing(true)
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const response = await fetch("/api/square/sync", {
         method: "POST",
         headers: {

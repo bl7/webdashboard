@@ -75,20 +75,15 @@ export default function OrderLabelsTab() {
   }, []);
 
   useEffect(() => {
-    fetch('/api/label-products', {
-      headers: { 'Authorization': `Bearer ${localStorage.getItem('token') || ''}` }
-    })
+    fetch('/api/label-products', { credentials: 'include' })
       .then(res => res.json())
       .then(data => setLabelProducts(Array.isArray(data) ? data.map(p => ({ ...p, price_cents: p.price_cents ?? p.price })) : []))
       .catch(() => setLabelProducts([]));
   }, []);
 
   const fetchOrders = (): void => {
-    const token = localStorage?.getItem('token');
     setFetchingOrders(true);
-    fetch('/api/label-orders', {
-      headers: token ? { 'Authorization': `Bearer ${token}` } : undefined
-    })
+    fetch('/api/label-orders', { credentials: 'include' })
       .then(res => res.json())
       .then((data: { orders?: Order[] }) => setOrders(data.orders || []))
       .catch(() => setOrders([]))
@@ -130,12 +125,11 @@ export default function OrderLabelsTab() {
       .join(', ');
     
     try {
-      const token = localStorage?.getItem('token');
       const res = await fetch('/api/label-orders', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
-          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify({ bundle_count: bundleCount, shipping_address: shippingAddress, label_product_id: selectedProductId ?? labelProducts[0]?.id }),
       });

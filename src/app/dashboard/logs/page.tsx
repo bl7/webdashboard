@@ -232,7 +232,7 @@ export default function PrintSessionsPage() {
   // Fetch ingredients and menu items data
   useEffect(() => {
     const fetchData = async () => {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       try {
@@ -272,7 +272,7 @@ export default function PrintSessionsPage() {
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         throw new Error("No authentication token found")
       }
@@ -616,7 +616,7 @@ export default function PrintSessionsPage() {
       const allergenNames = allergens.map((a: any) => a.allergenName?.toLowerCase() || "")
 
       // Fetch label settings for proper expiry calculation
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       let labelSettings: any[] = []
       if (token) {
         try {

@@ -15,6 +15,17 @@ export function clearAuthSession() {
 }
 
 export function logoutToLogin() {
+  void fetch("/api/session/logout", { method: "POST", credentials: "include", keepalive: true })
   clearAuthSession()
   window.location.replace("/login")
+}
+
+export function logoutBoss() {
+  void fetch("/api/session/boss-logout", { method: "POST", credentials: "include", keepalive: true })
+  try {
+    localStorage.removeItem("bossAuthed")
+    localStorage.removeItem("bossToken")
+  } catch {
+    // The HttpOnly cookie is cleared by the request above.
+  }
 }

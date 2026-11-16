@@ -288,7 +288,7 @@ const ReportsPage: React.FC = () => {
       setLoading(false)
       return
     }
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     fetch(url, {
       headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
     })
@@ -309,7 +309,7 @@ const ReportsPage: React.FC = () => {
   useEffect(() => {
     if (activeTab === 'devices') {
       setLoading(true)
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       fetch('/api/devices', {
         headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
@@ -319,7 +319,7 @@ const ReportsPage: React.FC = () => {
         .finally(() => setLoading(false))
     } else if (activeTab === 'label_orders') {
       setLoading(true)
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       fetch('/api/label-orders/all', {
         headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })

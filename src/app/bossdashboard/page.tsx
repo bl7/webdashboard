@@ -114,7 +114,7 @@ export default function BossDashboard() {
   >([])
 
   useEffect(() => {
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
 
     const today = new Date().toISOString().slice(0, 10)

@@ -68,7 +68,7 @@ export default function LabelProductsPage() {
     const method = editProduct ? "PUT" : "POST";
     const body = editProduct ? { ...form, id: editProduct.id } : form;
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       const res = await fetch("/api/label-products", {
         method,
         headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
@@ -93,7 +93,7 @@ export default function LabelProductsPage() {
     setFeedback(null);
     setSaving(true);
     try {
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       const res = await fetch("/api/label-products", {
         method: "DELETE",
         headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },

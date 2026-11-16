@@ -27,7 +27,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   // On mount, load from localStorage once
   useEffect(() => {
     setUserid(localStorage.getItem("userid"))
-    setToken(localStorage.getItem("token"))
+    setToken(localStorage.getItem("userid"))
     setName(localStorage.getItem("name"))
     setIsAdmin(localStorage.getItem("adminAccess") === "true")
   }, [])

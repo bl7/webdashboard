@@ -28,7 +28,7 @@ export function useIngredients() {
 
   // Fetch all ingredients
   const fetchIngredients = async () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       setError("Authentication token not found")
       return
@@ -53,7 +53,7 @@ export function useIngredients() {
 
   // Add new ingredient
   const addNewIngredient = async (ingredientData: AddIngredientData) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -77,7 +77,7 @@ export function useIngredients() {
 
   // Update existing ingredient
   const updateExistingIngredient = async (uuid: string, ingredientData: UpdateIngredientData) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -101,7 +101,7 @@ export function useIngredients() {
 
   // Delete ingredient
   const deleteExistingIngredient = async (uuid: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false

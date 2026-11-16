@@ -24,7 +24,7 @@ export async function logAction(action: string, details: any = {}) {
   let token: string | null = null
 
   if (typeof window !== "undefined") {
-    token = localStorage.getItem("token")
+    token = localStorage.getItem("userid")
   } else {
     // For server-side logging, we might need a different approach
     console.warn("logAction on server side - token not available")

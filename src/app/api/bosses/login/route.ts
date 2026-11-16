@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import pool from "@/lib/pg"
 import bcrypt from "bcryptjs"
 import { createToken } from "@/lib/auth"
+import { BOSS_COOKIE, BOSS_MAX_AGE, sessionCookieOptions } from "@/lib/sessionCookie"
 
 export async function POST(request: NextRequest) {
   try {
@@ -47,15 +48,20 @@ export async function POST(request: NextRequest) {
       role: "boss"
     })
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
-      token,
       user: {
         id: user.id,
         email: user.email,
         username: user.username
       }
     })
+    response.cookies.set(
+      BOSS_COOKIE,
+      token,
+      sessionCookieOptions(BOSS_MAX_AGE, process.env.NODE_ENV === "production")
+    )
+    return response
   } catch (error) {
     console.error("Login error:", error)
     return NextResponse.json(

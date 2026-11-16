@@ -43,7 +43,7 @@ export default function Settings() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("userid")
         if (!token) {
           console.error("No token found")
           return
@@ -99,7 +99,7 @@ export default function Settings() {
     useInitialsVal: boolean
   ) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         showFeedback("No authentication token found", "error")
         return
@@ -188,7 +188,7 @@ export default function Settings() {
     }))
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         showFeedback("No authentication token found", "error")
         return

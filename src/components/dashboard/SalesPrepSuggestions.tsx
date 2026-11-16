@@ -58,7 +58,7 @@ export default function SalesPrepSuggestions() {
     setError(null)
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) throw new Error("No authentication token")
 
       const response = await fetch("/api/square/sales", {

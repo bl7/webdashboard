@@ -39,7 +39,7 @@ const ICONS = [
 ]
 
 const fetcher = async (url: string) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  const token = typeof window !== "undefined" ? localStorage.getItem("userid") : null
   if (!token) return { logs: [] }
   
   try {
@@ -57,7 +57,7 @@ const fetcher = async (url: string) => {
 }
 
 const labelOrdersFetcher = async (url: string) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  const token = typeof window !== "undefined" ? localStorage.getItem("userid") : null
   if (!token) return { orders: [] }
   
   try {

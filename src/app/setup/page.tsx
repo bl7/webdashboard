@@ -21,7 +21,7 @@ export default function ProfileSetupPage() {
       }
 
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("userid")
         if (!token) {
           setLoading(false)
           return

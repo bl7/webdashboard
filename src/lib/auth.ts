@@ -2,9 +2,7 @@ import { NextRequest } from "next/server"
 import { jwtVerify, SignJWT } from "jose"
 import { getJwtSecret } from "@/lib/jwtSecret"
 
-// Bearer tokens stay in localStorage and a JavaScript-readable cookie because
-// label_it_node and the mobile client authenticate with Authorization headers.
-// Do not switch this app to an HttpOnly cookie until those clients are updated.
+// The website session is an HttpOnly cookie. The phone app still sends Authorization.
 
 export async function verifyToken(token: string) {
   const secret = new TextEncoder().encode(getJwtSecret())
@@ -37,13 +35,28 @@ export function getTokenFromHeader(req: NextRequest) {
   return authHeader.substring(7) // Remove "Bearer " prefix
 }
 
-export async function verifyAuthToken(req: NextRequest) {
-  const token = getTokenFromHeader(req) || getTokenFromCookie(req)
-  if (!token) {
-    throw new Error("Unauthorized: No token provided")
-  }
+function sessionCandidates(req: NextRequest) {
+  const header = getTokenFromHeader(req)
+  const customer = req.cookies.get("token")?.value
+  const boss = req.cookies.get("bossToken")?.value
+  if (req.headers.get("x-session-role") === "boss") return [boss, header, customer]
+  return [header, customer, boss]
+}
 
-  const payload = await verifyToken(token)
+export async function readSessionToken(req: NextRequest) {
+  for (const candidate of sessionCandidates(req)) {
+    if (candidate && (await verifyToken(candidate))) return candidate
+  }
+  return null
+}
+
+export async function verifyAuthToken(req: NextRequest) {
+  let payload = null
+  for (const candidate of sessionCandidates(req)) {
+    if (!candidate) continue
+    payload = await verifyToken(candidate)
+    if (payload) break
+  }
   if (!payload) {
     throw new Error("Unauthorized: Invalid token")
   }

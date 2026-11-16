@@ -52,7 +52,7 @@ export default function BossOrdersPage() {
     setLoading(true)
     setError(null)
     try {
-      const token = localStorage.getItem("bossToken")
+      const token = localStorage.getItem("bossAuthed")
       const res = await fetch("/api/label-orders/all", {
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       })
@@ -103,7 +103,7 @@ export default function BossOrdersPage() {
     setMarkingId(orderId)
     setConfirmShip(false)
     try {
-      const token = localStorage.getItem("bossToken")
+      const token = localStorage.getItem("bossAuthed")
       const res = await fetch(`/api/label-orders/${orderId}/ship`, {
         method: "POST",
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,

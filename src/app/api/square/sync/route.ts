@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/pg'
-import { verifyAuthToken } from '@/lib/auth'
+import { readSessionToken, verifyAuthToken } from '@/lib/auth'
 import { addCustomAllergen, addIngredient, addMenuItems, getAllCustomAllergens, getAllIngredients, getAllMenuItems } from '@/lib/api'
 import { calculateSmartExpiryDays } from '@/lib/smartIngredientExtractor'
 
@@ -116,7 +116,7 @@ export async function POST(req: NextRequest) {
   
   try {
     const { userUuid } = await verifyAuthToken(req)
-    const token = req.headers.get('authorization')?.replace('Bearer ', '') || ''
+    const token = (await readSessionToken(req)) || ''
     
     if (!token) {
       return NextResponse.json({ error: 'No authorization token provided' }, { status: 401 })

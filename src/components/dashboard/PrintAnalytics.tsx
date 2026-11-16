@@ -63,7 +63,7 @@ type AnalyticsData = {
 }
 
 const fetcher = async (url: string) => {
-  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+  const token = typeof window !== "undefined" ? localStorage.getItem("userid") : null
   if (!token) return null
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },

@@ -1,4 +1,15 @@
 import { NextRequest, NextResponse } from "next/server"
+import { CUSTOMER_COOKIE, CUSTOMER_MAX_AGE, sessionCookieOptions } from "./src/lib/sessionCookie"
+
+function withHttpOnlySession(response: NextResponse, token: string | null) {
+  if (!token) return response
+  response.cookies.set(
+    CUSTOMER_COOKIE,
+    token,
+    sessionCookieOptions(CUSTOMER_MAX_AGE, process.env.NODE_ENV === "production")
+  )
+  return response
+}
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
@@ -85,7 +96,7 @@ export function middleware(req: NextRequest) {
     // If user is authenticated and tries to access login/register, redirect to dashboard
     if (token && (pathname === "/login" || pathname === "/register")) {
       const dashboardUrl = new URL("/dashboard", req.url)
-      return NextResponse.redirect(dashboardUrl)
+      return withHttpOnlySession(NextResponse.redirect(dashboardUrl), token)
     }
     
     // Otherwise, allow access to public routes
@@ -95,7 +106,7 @@ export function middleware(req: NextRequest) {
     response.headers.set("X-Frame-Options", "DENY")
     response.headers.set("X-Content-Type-Options", "nosniff")
     response.headers.set("X-XSS-Protection", "1; mode=block")
-    return response
+    return withHttpOnlySession(response, token)
   }
 
   const privatePrefixes = ["/dashboard", "/setup", "/bossdashboard", "/boss"]
@@ -120,7 +131,7 @@ export function middleware(req: NextRequest) {
   const allowedAuthenticatedRoutes = ["/setup", "/dashboard"]
   if (token && !allowedAuthenticatedRoutes.some(route => pathname.startsWith(route))) {
     const dashboardUrl = new URL("/dashboard", req.url)
-    return NextResponse.redirect(dashboardUrl)
+    return withHttpOnlySession(NextResponse.redirect(dashboardUrl), token)
   }
 
   // Add security headers
@@ -138,7 +149,7 @@ export function middleware(req: NextRequest) {
   // X-XSS-Protection
   response.headers.set("X-XSS-Protection", "1; mode=block")
 
-  return response
+  return withHttpOnlySession(response, token)
 }
 
 export const config = {

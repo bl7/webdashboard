@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/pg'
-import { verifyAuthToken } from '@/lib/auth'
+import { readSessionToken, verifyAuthToken } from '@/lib/auth'
 import { getAllCustomAllergens, getAllIngredients, getAllMenuItems } from '@/lib/api'
 
 interface SquareItem {
@@ -162,7 +162,7 @@ export async function POST(req: NextRequest) {
     const { square_access_token, square_merchant_id } = userResult.rows[0]
 
     // Get the user's token for API calls
-    const token = req.headers.get('authorization')?.replace('Bearer ', '') || ''
+    const token = (await readSessionToken(req)) || ''
 
     // Pre-load existing data for comparison
     const existingAllergens = await getAllCustomAllergens(token)

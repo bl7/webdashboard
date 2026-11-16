@@ -77,7 +77,7 @@ const CancellationsPage: React.FC = () => {
     })
     if (search) params.append("search", search)
     
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     fetch(`/api/subscription_better/cancel?${params.toString()}`, {
       headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
     })
@@ -109,7 +109,7 @@ const CancellationsPage: React.FC = () => {
     if (!confirm(`Cancel ${who} at the end of the billing period?`)) return
     setProcessingId(c.id)
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const res = await fetch("/api/subscription_better/cancel", {
         method: "POST",
         headers: bossToken

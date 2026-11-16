@@ -55,7 +55,7 @@ export default function AdminNotifications() {
 
   const fetchNotifications = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch("/api/admin/notifications", {
@@ -90,7 +90,7 @@ export default function AdminNotifications() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/admin/notifications/${notificationId}/read`, {

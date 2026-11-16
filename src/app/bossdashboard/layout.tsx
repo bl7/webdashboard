@@ -4,6 +4,7 @@ import Sidebar from "./components/sidebar"
 import Header from "./components/header"
 import { DarkModeProvider, useDarkMode } from "./context/DarkModeContext" // Adjust path as needed
 import { useRouter } from "next/navigation"
+import { logoutBoss } from "@/lib/client-auth"
 
 interface LayoutProps {
   children: React.ReactNode
@@ -22,18 +23,29 @@ function AdminLayoutInner({ children, title = "Dashboard" }: LayoutProps) {
 
   // Check authentication on mount
   useEffect(() => {
-    const token = localStorage.getItem("bossToken")
-    console.log("[DEBUG] bossToken:", token)
-    if (!token) {
-      router.push("/boss/login")
-      return
+    let cancelled = false
+    fetch("/api/session/boss", { credentials: "include" })
+      .then((res) => {
+        if (cancelled) return
+        if (!res.ok) {
+          logoutBoss()
+          router.push("/boss/login")
+          return
+        }
+        localStorage.setItem("bossAuthed", "1")
+        setIsAuthenticated(true)
+        setIsLoading(false)
+      })
+      .catch(() => {
+        if (!cancelled) router.push("/boss/login")
+      })
+    return () => {
+      cancelled = true
     }
-    setIsAuthenticated(true)
-    setIsLoading(false)
   }, [router])
 
   const handleLogout = () => {
-    localStorage.removeItem("bossToken")
+    logoutBoss()
     router.push("/boss/login")
   }
 

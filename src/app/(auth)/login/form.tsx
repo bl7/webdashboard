@@ -58,36 +58,20 @@ export function LoginForm() {
         setUnverifiedEmail(null)
         const response = await loginUser(values)
 
-        if (response?.token || response?.success) {
-          const token = response.token
-          
-          // Store in localStorage
-          localStorage.setItem("token", token)
+        if (response?.success) {
           localStorage.setItem("userid", response.uuid)
           localStorage.setItem("email", response.email)
           localStorage.setItem("full_name", response.name)
           localStorage.setItem("name", response.name)
-          
-          // Also set cookie so middleware can see it
-          // Set cookie with 7 days expiry, secure on HTTPS
-          const maxAge = 7 * 24 * 60 * 60 // 7 days in seconds
-          const isSecure = typeof window !== 'undefined' && window.location.protocol === 'https:'
-          document.cookie = `token=${token}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`
-          
-          console.log("Login successful, token stored")
+          localStorage.removeItem("token")
           toast.success("Login successful")
 
-          // Check user status and redirect appropriately
           try {
             const [profileRes, subRes] = await Promise.all([
-              fetch(`/api/profile?user_id=${response.uuid}`, {
-                headers: token ? { Authorization: `Bearer ${token}` } : {},
-              }),
+              fetch(`/api/profile?user_id=${response.uuid}`, { credentials: "include" }),
               fetch(`/api/subscription_better/status`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
               }),
             ])
 

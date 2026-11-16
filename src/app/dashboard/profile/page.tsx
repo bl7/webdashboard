@@ -57,7 +57,7 @@ const ProfileDashboard = () => {
       }
     }
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     fetch(`/api/profile?user_id=${storedId}`, {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     })
@@ -140,7 +140,7 @@ const ProfileDashboard = () => {
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const r = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/profile`, {
         method: "PUT",
         headers: {
@@ -231,7 +231,7 @@ const ProfileDashboard = () => {
 
     try {
       // Verify current PIN
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const headers = {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),

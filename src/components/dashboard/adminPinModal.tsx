@@ -23,7 +23,7 @@ interface AdminPinModalProps {
 type Step = "enter" | "otp" | "new-pin"
 
 function authHeaders(): HeadersInit {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("userid")
   return {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),

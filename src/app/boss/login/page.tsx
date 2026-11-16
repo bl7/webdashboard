@@ -32,6 +32,7 @@ export default function BossLogin() {
     try {
       const response = await fetch("/api/bosses/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,8 +45,8 @@ export default function BossLogin() {
         throw new Error(data.message || "Login failed")
       }
 
-      // Store token in localStorage
-      localStorage.setItem("bossToken", data.token)
+      localStorage.setItem("bossAuthed", "1")
+      localStorage.removeItem("bossToken")
       
       setSuccess("Login successful! Redirecting...")
       

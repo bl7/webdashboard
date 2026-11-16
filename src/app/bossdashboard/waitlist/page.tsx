@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { logoutBoss } from "@/lib/client-auth"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -70,7 +71,7 @@ export default function WaitlistPage() {
 
   const fetchWaitlist = async () => {
     try {
-      const bossToken = localStorage.getItem("bossToken")
+      const bossToken = localStorage.getItem("bossAuthed")
       if (!bossToken) {
         toast.error("Authentication required")
         return
@@ -115,7 +116,7 @@ export default function WaitlistPage() {
     if (!editingEntry) return
 
     try {
-      const bossToken = localStorage.getItem("bossToken")
+      const bossToken = localStorage.getItem("bossAuthed")
       if (!bossToken) {
         toast.error("Authentication required")
         return
@@ -151,7 +152,7 @@ export default function WaitlistPage() {
     if (!confirm("Are you sure you want to delete this entry?")) return
 
     try {
-      const bossToken = localStorage.getItem("bossToken")
+      const bossToken = localStorage.getItem("bossAuthed")
       if (!bossToken) {
         toast.error("Authentication required")
         return
@@ -257,7 +258,7 @@ export default function WaitlistPage() {
   })
 
   const redirectToLogin = () => {
-    localStorage.removeItem("bossToken")
+    logoutBoss()
     router.push("/boss/login")
   }
 

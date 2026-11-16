@@ -51,7 +51,7 @@ export default function LowStockAlerts() {
     setError(null)
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) throw new Error("No authentication token")
 
       const response = await fetch("/api/square/inventory", {

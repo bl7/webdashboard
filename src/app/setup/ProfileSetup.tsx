@@ -104,7 +104,7 @@ export default function MultiStepProfileSetup({ userId }: MultiStepProfileSetupP
     setPinError(null)
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       const res = await fetch("/api/set-admin-pin", {
         method: "POST",
         headers: {

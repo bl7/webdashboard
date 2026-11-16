@@ -225,7 +225,7 @@ export default function LabelDemo() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("userid")
         if (!token) {
           console.error("No token found")
           return
@@ -272,7 +272,7 @@ export default function LabelDemo() {
   }, [activeTab, searchTerm])
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     getAllAllergens(token)
       .then((res) => res?.data && setAllergens(res.data))
@@ -280,7 +280,7 @@ export default function LabelDemo() {
   }, [])
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     setIsLoading(true)
     getAllIngredients(token)
@@ -302,7 +302,7 @@ export default function LabelDemo() {
   }, [])
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     setIsLoading(true)
     getAllMenuItems(token)

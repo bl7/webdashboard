@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "node --import tsx --test src/lib/contactMessage.test.ts src/lib/jwtSecret.test.ts",
+    "test": "node --import tsx --test src/lib/contactMessage.test.ts src/lib/jwtSecret.test.ts src/lib/sessionCookie.test.ts",
     "test-db": "tsx test.ts",
     "test-db2": "tsx test2.ts",
     "analyze": "ANALYZE=true npm run build",

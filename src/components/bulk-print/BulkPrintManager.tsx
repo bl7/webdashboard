@@ -139,7 +139,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
   const fetchExpirySettings = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/label-settings`, {
@@ -167,7 +167,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
   const fetchLists = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch("/api/bulk-print/lists", {
@@ -197,7 +197,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch("/api/bulk-print/lists", {
@@ -235,7 +235,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${editingList.id}`, {
@@ -275,7 +275,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${listId}`, {
@@ -309,7 +309,7 @@ export default function BulkPrintManager({ onPrintList, onViewList }: BulkPrintM
 
     try {
       setIsPrinting(true)
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         toast.error("Authentication required")
         return

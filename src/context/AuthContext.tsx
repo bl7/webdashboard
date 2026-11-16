@@ -2,6 +2,7 @@
 "use client"
 
 import { createContext, useContext, useEffect, useState } from "react"
+import "@/lib/installSessionFetch"
 import { logoutToLogin } from "@/lib/client-auth"
 import { startWebHeartbeat, stopWebHeartbeat } from "@/lib/webHeartbeat"
 
@@ -43,18 +44,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
     const userId = localStorage.getItem("userid")
     const name = localStorage.getItem("name")
     const admin = localStorage.getItem("adminAccess") === "true"
     const avatar = localStorage.getItem("avatar")
 
-    if (!token || !userId) {
+    if (!userId) {
       setLoading(false)
       return
     }
 
-    setToken(token)
+    setToken(userId)
     setUserId(userId)
     setName(name)
     setIsAdmin(admin)
@@ -63,18 +63,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchData = async () => {
       try {
         const [profileRes, subscriptionRes, adminRes] = await Promise.all([
-          fetch(`/api/profile?user_id=${userId}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }),
+          fetch(`/api/profile?user_id=${userId}`, { credentials: "include" }),
           fetch(`/api/subscription_better/status`, {
-            headers: {
-              "Authorization": `Bearer ${token}`,
-              "Content-Type": "application/json"
-            }
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
           }),
-          fetch(`/api/admin-access?user_id=${userId}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }),
+          fetch(`/api/admin-access?user_id=${userId}`, { credentials: "include" }),
         ])
 
         // Check if any of the responses indicate authentication failure
@@ -128,7 +122,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       stopWebHeartbeat()
       return
     }
-    startWebHeartbeat(token)
+    startWebHeartbeat()
     return () => stopWebHeartbeat()
   }, [token, loading])
 

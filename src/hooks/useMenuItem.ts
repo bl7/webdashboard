@@ -69,7 +69,7 @@ export function useMenuItems() {
 
   // Fetch all menu items
   const fetchMenuItems = async () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       setError("Authentication token not found")
       return
@@ -115,7 +115,7 @@ export function useMenuItems() {
 
   // Add new menu item
   const addNewMenuItem = async (menuItemData: AddMenuItemData) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -188,7 +188,7 @@ export function useMenuItems() {
 
   // Update existing menu item
   const updateExistingMenuItem = async (menuItemId: string, menuItemData: UpdateMenuItemData) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -214,7 +214,7 @@ export function useMenuItems() {
 
   // Delete menu item
   const deleteExistingMenuItem = async (menuItemId: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -240,7 +240,7 @@ export function useMenuItems() {
 
   // Get single menu item by ID
   const getMenuItemById = async (menuItemId: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return null

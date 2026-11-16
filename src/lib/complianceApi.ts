@@ -17,7 +17,7 @@ async function parseJson(response: Response) {
 
 export function complianceToken() {
   if (typeof window === "undefined") return null
-  return localStorage.getItem("token")
+  return localStorage.getItem("userid")
 }
 
 export async function complianceGet(path: string, token: string | null) {

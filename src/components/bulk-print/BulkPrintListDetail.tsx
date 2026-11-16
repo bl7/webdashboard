@@ -153,7 +153,7 @@ export default function BulkPrintListDetail({
 
   const fetchExpirySettings = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/label-settings`, {
@@ -181,7 +181,7 @@ export default function BulkPrintListDetail({
 
   const fetchListDetails = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${listId}`, {
@@ -207,7 +207,7 @@ export default function BulkPrintListDetail({
 
   const fetchAllItems = async () => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       // Fetch ingredients and menu items from external API
@@ -240,7 +240,7 @@ export default function BulkPrintListDetail({
 
   const updateItemQuantity = async (itemId: string, quantity: number) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${listId}/items/${itemId}`, {
@@ -266,7 +266,7 @@ export default function BulkPrintListDetail({
 
   const updateItemLabelType = async (itemId: string, labelType: string) => {
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${listId}/items/${itemId}`, {
@@ -296,7 +296,7 @@ export default function BulkPrintListDetail({
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const response = await fetch(`/api/bulk-print/lists/${listId}/items/${itemId}`, {
@@ -323,7 +323,7 @@ export default function BulkPrintListDetail({
 
     try {
       setIsPrinting(true)
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         toast.error("Authentication required")
         return
@@ -514,7 +514,7 @@ export default function BulkPrintListDetail({
 
     try {
       setIsPrinting(true)
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) {
         toast.error("Authentication required")
         return

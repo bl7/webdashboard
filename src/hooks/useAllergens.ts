@@ -27,7 +27,7 @@ export function useAllergens() {
 
   // Fetch all allergens
   const fetchAllergens = useCallback(async () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       setError("No access token found")
       setIsLoading(false)
@@ -68,7 +68,7 @@ export function useAllergens() {
 
   // Add new allergen
   const addAllergen = useCallback(async (allergenName: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       throw new Error("No access token found")
     }
@@ -97,7 +97,7 @@ export function useAllergens() {
 
   // Update allergen
   const updateAllergenItem = useCallback(async (id: string, allergenName: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       throw new Error("No access token found")
     }
@@ -125,7 +125,7 @@ export function useAllergens() {
 
   // Delete allergen
   const deleteAllergenItem = useCallback(async (id: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       throw new Error("No access token found")
     }

@@ -56,5 +56,5 @@ export async function downloadCleaningPdf(token: string | null, query: string) {
 
 export function cleaningToken() {
   if (typeof window === "undefined") return null
-  return localStorage.getItem("token")
+  return localStorage.getItem("userid")
 }

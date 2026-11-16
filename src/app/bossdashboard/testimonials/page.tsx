@@ -45,7 +45,7 @@ export default function BossTestimonialsPage() {
       setLoading(true)
       setError('')
       try {
-        const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null
+        const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null
         const res = await fetch('/api/testimonials', {
           headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
         })

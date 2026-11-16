@@ -125,7 +125,7 @@ export default function UsersPage() {
   const usersPerPage = 10
 
   const reloadUsers = async () => {
-    const refToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const refToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     const r = await fetch("/api/subscription_better/users", {
       headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
     })
@@ -137,7 +137,7 @@ export default function UsersPage() {
     setActionNotice(null)
     setActionLoading(true)
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const res = await fetch("/api/subscription_better/reactivate", {
         method: "POST",
         headers: bossToken
@@ -162,7 +162,7 @@ export default function UsersPage() {
   useEffect(() => {
     const fetchUsers = async () => {
       setLoading(true)
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
       const [usersRes, devicesSummaryRes] = await Promise.all([
         fetch("/api/subscription_better/users", { headers }),
@@ -197,7 +197,7 @@ export default function UsersPage() {
       setAppDevicesSummary(null)
       return
     }
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     const headers: HeadersInit = bossToken ? { Authorization: `Bearer ${bossToken}` } : {}
 
     fetch("/api/devices", { headers })
@@ -332,7 +332,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     if (!printsOpen || !selectedUser) return
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     const buildRange = () => {
       const today = new Date().toISOString().slice(0, 10)
       if (printsRange === "today") return `?date_from=${today}&date_to=${today}`
@@ -373,7 +373,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     if (!billingOpen || !selectedUser) return
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     setBillingLoading(true)
     fetch(`/api/subscription_better/invoices?user_id=${selectedUser.user_id}`, {
       headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
@@ -386,7 +386,7 @@ export default function UsersPage() {
 
   useEffect(() => {
     if (!appDevicesOpen || !selectedUser) return
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     setAppDevicesLoading(true)
     fetch(`/api/app-devices/summary/user/${selectedUser.user_id}`, {
       headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
@@ -1000,7 +1000,7 @@ export default function UsersPage() {
                     setActionLoading(true)
                     try {
                       const bossToken =
-                        typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                        typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
                       const res = await fetch("/api/subscription_better/extend-trial", {
                         method: "POST",
                         headers: bossToken
@@ -1023,7 +1023,7 @@ export default function UsersPage() {
                         setShowExtendTrialModal(false)
                         // refresh users
                         const refToken =
-                          typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                          typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
                         const r = await fetch("/api/subscription_better/users", {
                           headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
                         })
@@ -1105,7 +1105,7 @@ export default function UsersPage() {
                     setActionLoading(true)
                     try {
                       const bossToken =
-                        typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                        typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
                       const res = await fetch("/api/subscription_better/cancel", {
                         method: "POST",
                         headers: bossToken
@@ -1128,7 +1128,7 @@ export default function UsersPage() {
                         setShowCancelModal(false)
                         // refresh users
                         const refToken =
-                          typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+                          typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
                         const r = await fetch("/api/subscription_better/users", {
                           headers: refToken ? { Authorization: `Bearer ${refToken}` } : {},
                         })

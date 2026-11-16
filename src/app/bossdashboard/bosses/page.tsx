@@ -19,7 +19,7 @@ export default function BossesPage() {
 
   const fetchBosses = async () => {
     setLoading(true);
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     const res = await fetch("/api/bosses", {
       headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
     });
@@ -30,7 +30,7 @@ export default function BossesPage() {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     await fetch("/api/bosses", {
       method: "POST",
       headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
@@ -48,7 +48,7 @@ export default function BossesPage() {
   const handleEditSave = async (id: number) => {
     const payload: any = { id, username: editForm.username, email: editForm.email };
     if (editForm.password) payload.password = editForm.password;
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     await fetch(`/api/bosses`, {
       method: "PUT",
       headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },
@@ -60,7 +60,7 @@ export default function BossesPage() {
 
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this boss?")) return;
-    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+    const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
     await fetch(`/api/bosses`, {
       method: "DELETE",
       headers: bossToken ? { "Content-Type": "application/json", 'Authorization': `Bearer ${bossToken}` } : { "Content-Type": "application/json" },

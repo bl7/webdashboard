@@ -49,7 +49,7 @@ export default function BossBookDemoPage() {
     setLoading(true)
     setError("")
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const res = await fetch("/api/bookdemo", {
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
@@ -76,7 +76,7 @@ export default function BossBookDemoPage() {
     if (!attended) {
       setUpdatingId(id)
       try {
-        const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+        const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
         const res = await fetch(`/api/bookdemo/${id}`, {
           method: "PUT",
           headers: bossToken
@@ -129,7 +129,7 @@ export default function BossBookDemoPage() {
     if (!emailDialog || !emailSubject.trim() || !emailBody.trim()) return
     setSendingCustomEmail(true)
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const res = await fetch("/api/bookdemo/send-custom-email", {
         method: "POST",
         headers: bossToken
@@ -159,7 +159,7 @@ export default function BossBookDemoPage() {
     if (!window.confirm("Delete this request?")) return
     setDeletingId(id)
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const res = await fetch(`/api/bookdemo/${id}`, {
         method: "DELETE",
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},

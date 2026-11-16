@@ -36,7 +36,7 @@ export function useGroups() {
 
   // Fetch all categories
   const fetchCategories = useCallback(async () => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       setError("Authentication token not found")
       return
@@ -75,7 +75,7 @@ export function useGroups() {
 
   // Add item category
   const addNewItemCategory = async (categoryName: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -98,7 +98,7 @@ export function useGroups() {
 
   // Update item category
   const updateExistingItemCategory = async (uuid: string, categoryName: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -121,7 +121,7 @@ export function useGroups() {
 
   // Delete item category
   const deleteExistingItemCategory = async (uuid: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -144,7 +144,7 @@ export function useGroups() {
 
   // Add ingredient category
   const addNewIngredientCategory = async (categoryName: string, expiryDays: number) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -167,7 +167,7 @@ export function useGroups() {
 
   // Update ingredient category
   const updateExistingIngredientCategory = async (uuid: string, expiryDays: number) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -190,7 +190,7 @@ export function useGroups() {
 
   // Delete ingredient category
   const deleteExistingIngredientCategory = async (uuid: string) => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return false
@@ -213,7 +213,7 @@ export function useGroups() {
 
   // Get items by category
   const getItemsByCategory = useCallback(async (categoryId: string, categoryType: "Menu Item Group" | "Ingredient Group") => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) {
       toast.error("Authentication token not found")
       return []

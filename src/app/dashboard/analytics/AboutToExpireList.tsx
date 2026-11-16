@@ -45,7 +45,7 @@ export default function AboutToExpireList() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null
+      const token = typeof window !== "undefined" ? localStorage.getItem("userid") : null
       if (!token) {
         setLoading(false)
         return

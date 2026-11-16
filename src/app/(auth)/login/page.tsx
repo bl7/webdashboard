@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import React from "react"
 import { LoginForm } from "./form"
 import Link from "next/link"
@@ -14,7 +13,6 @@ function getTimeOfDayGreeting() {
 }
 
 export default function LoginPage() {
-  const router = useRouter()
   const [isLoading, setIsLoading] = useState(true)
   
   useEffect(() => {
@@ -31,39 +29,9 @@ export default function LoginPage() {
           return
         }
 
-        // Check both cookie and localStorage for token
-        const getCookie = (name: string) => {
-          const value = `; ${document.cookie}`
-          const parts = value.split(`; ${name}=`)
-          if (parts.length === 2) return parts.pop()?.split(';').shift()
-          return null
-        }
+        localStorage.removeItem("token")
 
-        const cookieToken = getCookie("token")
-        const localStorageToken = localStorage.getItem("token")
-        const userId = localStorage.getItem("userid")
-
-        // Only redirect if we have BOTH cookie and localStorage token
-        // This ensures middleware and client are in sync
-        if (cookieToken && localStorageToken && userId) {
-          console.log("User already authenticated, redirecting to dashboard")
-          clearTimeout(timeoutId)
-          router.push("/dashboard")
-          return
-        }
-
-        // If we have localStorage token but no cookie, sync them
-        if (localStorageToken && !cookieToken && userId) {
-          const maxAge = 7 * 24 * 60 * 60 // 7 days
-          const isSecure = window.location.protocol === 'https:'
-          document.cookie = `token=${localStorageToken}; path=/; max-age=${maxAge}; SameSite=Lax${isSecure ? '; Secure' : ''}`
-          // After setting cookie, redirect will be handled by middleware on next request
-          clearTimeout(timeoutId)
-          router.push("/dashboard")
-          return
-        }
-
-        // User is not authenticated, show login form
+        // A valid session is an HttpOnly cookie. Middleware redirects that request.
         clearTimeout(timeoutId)
         setIsLoading(false)
       } catch (error) {
@@ -81,7 +49,7 @@ export default function LoginPage() {
       clearTimeout(timeoutId)
       clearTimeout(checkId)
     }
-  }, [router])
+  }, [])
 
   // Show loading spinner while checking authentication
   if (isLoading) {

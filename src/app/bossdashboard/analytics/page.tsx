@@ -97,7 +97,7 @@ export default function AnalyticsDashboard() {
 
   useEffect(() => {
     const bossToken =
-      typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     const headers: HeadersInit = bossToken
       ? { Authorization: `Bearer ${bossToken}` }
       : {}

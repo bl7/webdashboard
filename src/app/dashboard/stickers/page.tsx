@@ -96,7 +96,7 @@ export default function StickersPage() {
   const { isConnected, selectedPrinter, print } = usePrinter()
 
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
 
     setLoading(true)

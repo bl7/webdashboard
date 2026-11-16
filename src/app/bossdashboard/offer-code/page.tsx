@@ -17,7 +17,7 @@ export default function BossOfferCodePage() {
   const [signups, setSignups] = useState<{ code: string; signups: number }[]>([])
 
   const bossHeaders = (): HeadersInit => {
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     return {
       "Content-Type": "application/json",
       ...(bossToken ? { Authorization: `Bearer ${bossToken}` } : {}),

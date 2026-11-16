@@ -72,7 +72,7 @@ interface UseBillingDataReturn {
 
 const useBillingData = (userId: string | null, token?: string | null): UseBillingDataReturn => {
   const effectiveToken =
-    token ?? (typeof window !== "undefined" ? localStorage.getItem("token") : null)
+    token ?? (typeof window !== "undefined" ? localStorage.getItem("userid") : null)
 
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [profile, setProfile] = useState<Profile | null>(null)

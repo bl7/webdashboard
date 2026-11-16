@@ -1,3 +1,5 @@
+import "@/lib/installSessionFetch"
+
 export async function registerUser(data: any) {
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/register`, {
     method: "POST",
@@ -25,14 +27,15 @@ export async function registerUser(data: any) {
 }
 
 export async function loginUser(data: any) {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+  const browser = typeof window !== "undefined"
+  const response = await fetch(browser ? "/api/session/login" : `${process.env.NEXT_PUBLIC_API_URL}/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
     body: JSON.stringify(data),
-    // credentials: "include",
+    credentials: browser ? "include" : undefined,
   })
 
   const contentType = response.headers.get("content-type")

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { useRouter } from "next/navigation"
+import { logoutBoss } from "@/lib/client-auth"
 
 interface AdminNotification {
   id: number
@@ -62,7 +63,7 @@ export default function Header({
   const fetchUnreadNotifications = async () => {
     try {
       setLoading(true)
-      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossToken') : null;
+      const bossToken = typeof window !== 'undefined' ? localStorage.getItem('bossAuthed') : null;
       const response = await fetch('/api/admin-notifications?read=false&limit=10', {
         headers: bossToken ? { 'Authorization': `Bearer ${bossToken}` } : {}
       })
@@ -170,10 +171,7 @@ export default function Header({
   }
 
   const handleLogout = () => {
-    // Clear the bossToken from localStorage
-    localStorage.removeItem("bossToken")
-    
-    // Redirect to boss login
+    logoutBoss()
     router.push("/boss/login")
   }
 

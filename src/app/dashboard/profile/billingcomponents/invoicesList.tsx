@@ -18,7 +18,7 @@ export default function PaymentHistory({ userId, itemsPerPage }: Props) {
   useEffect(() => {
     if (!userId) return
 
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
 
     fetch(`/api/subscription_better/invoices?user_id=${userId}`, {

@@ -27,7 +27,7 @@ export default function BossLocationsPage() {
   const [error, setError] = useState("")
 
   const bossHeaders = (): HeadersInit => {
-    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+    const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
     return {
       "Content-Type": "application/json",
       ...(bossToken ? { Authorization: `Bearer ${bossToken}` } : {}),

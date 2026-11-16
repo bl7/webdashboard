@@ -123,37 +123,19 @@ export default function Sidebar({ isSetupPage = false }: SidebarProps) {
 
     const loadUserData = async () => {
       const userId = localStorage.getItem("userid")
-      const token = localStorage.getItem("token")
-      
-      // Check cookie as well
-      const getCookie = (name: string) => {
-        const value = `; ${document.cookie}`
-        const parts = value.split(`; ${name}=`)
-        if (parts.length === 2) return parts.pop()?.split(';').shift()
-        return null
-      }
-      const cookieToken = getCookie("token")
-      
-      // If no token in either localStorage or cookie, redirect to login
-      if (!userId || (!token && !cookieToken)) {
+      if (!userId) {
         logoutToLogin()
         return
       }
 
       try {
         const [profileRes, subRes, adminRes] = await Promise.all([
-          fetch(`/api/profile?user_id=${userId}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }),
+          fetch(`/api/profile?user_id=${userId}`, { credentials: "include" }),
           fetch(`/api/subscription_better/status`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
           }),
-          fetch(`/api/admin-access?user_id=${userId}`, {
-            headers: token ? { Authorization: `Bearer ${token}` } : {},
-          }),
+          fetch(`/api/admin-access?user_id=${userId}`, { credentials: "include" }),
         ])
 
         // Check if any of the responses indicate authentication failure

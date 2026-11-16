@@ -113,7 +113,7 @@ export default function NotificationsPage() {
 
   const fetchNotifications = async () => {
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const response = await fetch("/api/admin-notifications", {
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
       })
@@ -195,7 +195,7 @@ export default function NotificationsPage() {
 
   const markAsRead = async (notificationId: number) => {
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const response = await fetch(`/api/admin-notifications/${notificationId}/read`, {
         method: "PATCH",
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
@@ -210,7 +210,7 @@ export default function NotificationsPage() {
 
   const markAllAsRead = async () => {
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const response = await fetch("/api/admin-notifications/mark-all-read", {
         method: "PATCH",
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
@@ -225,7 +225,7 @@ export default function NotificationsPage() {
 
   const deleteNotification = async (notificationId: number) => {
     try {
-      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossToken") : null
+      const bossToken = typeof window !== "undefined" ? localStorage.getItem("bossAuthed") : null
       const response = await fetch(`/api/admin-notifications/${notificationId}`, {
         method: "DELETE",
         headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},

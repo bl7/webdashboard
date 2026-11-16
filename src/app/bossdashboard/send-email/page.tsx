@@ -114,7 +114,7 @@ export default function SendEmailPage() {
     const load = async () => {
       setLoading(true)
       try {
-        const bossToken = localStorage.getItem('bossToken')
+        const bossToken = localStorage.getItem('bossAuthed')
         const res = await fetch('/api/subscription_better/users', {
           headers: bossToken ? { Authorization: `Bearer ${bossToken}` } : {},
         })
@@ -163,7 +163,7 @@ export default function SendEmailPage() {
     }
     setSending(true)
     try {
-      const bossToken = localStorage.getItem('bossToken')
+      const bossToken = localStorage.getItem('bossAuthed')
       const selectedUser =
         toEmails.length === 1
           ? users.find((u) => u.email.toLowerCase() === toEmails[0].toLowerCase())

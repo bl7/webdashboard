@@ -197,7 +197,7 @@ export default function PPDSPage() {
 
   // Fetch menu items
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     setIsLoading(true)
     getAllMenuItems(token)
@@ -230,7 +230,7 @@ export default function PPDSPage() {
 
   // Fetch all ingredients (with allergens)
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     getAllIngredients(token).then((data) => {
       const items = (Array.isArray(data) ? data : data.data) || []
@@ -240,7 +240,7 @@ export default function PPDSPage() {
 
   // Fetch expiry days for PPDS
   useEffect(() => {
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("userid")
     if (!token) return
     fetch("/api/label-settings", {
       headers: { Authorization: `Bearer ${token}` },

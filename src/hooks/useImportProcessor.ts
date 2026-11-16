@@ -260,7 +260,7 @@ export function useImportProcessor() {
           if (success) {
             // Fetch the real ingredient from the backend by name
             try {
-              const token = localStorage.getItem("token")
+              const token = localStorage.getItem("userid")
               if (token) {
                 const allIngredientsRes = await import("@/lib/api").then(m => m.getAllIngredients(token))
                 const realIngredient = Array.isArray(allIngredientsRes.data)

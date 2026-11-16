@@ -72,7 +72,7 @@ export default function BulkPrintItemSelector({
   const fetchItems = async () => {
     setLoading(true)
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       // Fetch ingredients and menu items from external API
@@ -158,7 +158,7 @@ export default function BulkPrintItemSelector({
     }
 
     try {
-      const token = localStorage.getItem("token")
+      const token = localStorage.getItem("userid")
       if (!token) return
 
       const itemsToAdd = Array.from(selectedItems.entries()).map(([itemId, config]) => {
