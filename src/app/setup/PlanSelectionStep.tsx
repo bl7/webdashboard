@@ -13,6 +13,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
+import { isChristmasOfferActive } from "@/lib/marketing/trialOffer"
 
 interface Plan {
   id: string
@@ -436,7 +437,9 @@ export default function PlanSelectionStep({
               ? billingPeriod === "yearly"
                 ? "Code applied: 60 days free, then 30% off your first year. Cancel anytime."
                 : "Code applied: 60 days free. The monthly price stays the same. Cancel anytime."
-              : "Start with a 14-day free trial, with no charges during the trial period. Cancel anytime."}
+              : isChristmasOfferActive()
+                ? "Christmas offer: 60 days free, then £15.99 a month. Annual plans get 30% off the first annual payment. Offer ends 10 January 2027."
+                : "Start with a 14-day free trial, with no charges during the trial period. Cancel anytime."}
           </p>
         </div>
 

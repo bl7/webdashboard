@@ -1,13 +1,19 @@
 import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { FaqsPage } from "@/components/blocks/faqs/faqs"
 import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { CHRISTMAS_OFFER_COPY, isChristmasOfferActive } from "@/lib/marketing/trialOffer"
 import { Metadata } from "next"
 import React from "react"
 
-const title = FOLDER_SEO["/faqs"].title
-const description = FOLDER_SEO["/faqs"].description
+export const dynamic = "force-dynamic"
 
-export const metadata: Metadata = {
+export async function generateMetadata(): Promise<Metadata> {
+  const offerOn = isChristmasOfferActive()
+  const title = FOLDER_SEO["/faqs"].title
+  const description = offerOn
+    ? CHRISTMAS_OFFER_COPY
+    : FOLDER_SEO["/faqs"].description
+  return {
   title: { absolute: title },
   description,
   keywords: [...FOLDER_SEO["/faqs"].keywords],
@@ -45,6 +51,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  }
 }
 
 const faqs = [
@@ -169,6 +176,14 @@ const faqs = [
 ]
 
 const Page = () => {
+  const offerOn = isChristmasOfferActive()
+  const title = FOLDER_SEO["/faqs"].title
+  const description = offerOn ? CHRISTMAS_OFFER_COPY : FOLDER_SEO["/faqs"].description
+  const liveFaqs = faqs.map((faq) =>
+    faq.question === "Is there a trial?" && offerOn
+      ? { ...faq, answer: `Yes. ${CHRISTMAS_OFFER_COPY}` }
+      : faq
+  )
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -180,7 +195,7 @@ const Page = () => {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faqs.map((faq) => ({
+      mainEntity: liveFaqs.map((faq) => ({
         "@type": "Question",
         name: faq.question,
         acceptedAnswer: { "@type": "Answer", text: faq.answer },

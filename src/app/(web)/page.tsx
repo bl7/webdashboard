@@ -4,6 +4,8 @@ import { Metadata } from "next"
 import "./home-life.css"
 import "./home-bands.css"
 
+export const dynamic = "force-dynamic"
+
 export const metadata: Metadata = {
   title: { absolute: FOLDER_SEO["/"].title },
   description: FOLDER_SEO["/"].description,

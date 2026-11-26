@@ -11,6 +11,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { CHRISTMAS_OFFER_COPY, isChristmasOfferActive } from "@/lib/marketing/trialOffer"
 
 type FaqItem = {
   question: string
@@ -228,7 +229,9 @@ const jumps = [
   { href: "#getting-started", label: "Trial and price" },
 ]
 
-export const FaqsPage = () => (
+export const FaqsPage = () => {
+  const offerOn = isChristmasOfferActive()
+  return (
   <>
     <header className="mx-auto max-w-3xl px-4 pb-4 pt-28 sm:px-6">
       <p className="text-xs font-semibold uppercase tracking-[0.14em] text-mkt-teal">Support</p>
@@ -277,7 +280,9 @@ export const FaqsPage = () => (
                   forceMount
                   className="text-sm leading-relaxed text-mkt-ink8"
                 >
-                  {faq.answer}
+                  {faq.question === "Is there a trial?" && offerOn
+                    ? `Yes. ${CHRISTMAS_OFFER_COPY}`
+                    : faq.answer}
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -309,4 +314,5 @@ export const FaqsPage = () => (
       </div>
     </section>
   </>
-)
+  )
+}

@@ -9,6 +9,7 @@ import {
   loadAnnualCampaignPromotion,
   trialDaysForCheckout,
 } from "@/lib/campaignOffer"
+import { isChristmasOfferActive } from "@/lib/marketing/trialOffer"
 
 export async function POST(req: NextRequest) {
   let body
@@ -73,10 +74,14 @@ export async function POST(req: NextRequest) {
 
     const trialDays = trialDaysForCheckout(campaign, trialEligible)
     let annualCouponId: string | null = null
-    if (campaign?.ok && campaign.applyAnnualDiscount) {
-      const promo = await loadAnnualCampaignPromotion()
-      if (!promo.ok) {
-        return NextResponse.json({ error: promo.error }, { status: 400 })
+    const offerAnnual =
+      plan_interval === "yearly" && trialEligible && (Boolean(campaign?.ok && campaign.applyAnnualDiscount) || isChristmasOfferActive())
+    if (offerAnnual) {
+      if (campaign?.ok) {
+        const promo = await loadAnnualCampaignPromotion()
+        if (!promo.ok) {
+          return NextResponse.json({ error: promo.error }, { status: 400 })
+        }
       }
       const coupon = await annualCheckoutCouponId()
       if (!coupon.ok) {

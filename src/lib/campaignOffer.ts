@@ -2,11 +2,16 @@ import { stripe } from "@/lib/stripe"
 import pool from "@/lib/pg"
 import type Stripe from "stripe"
 
-/** Last moment of 10 January 2027, UK (GMT). */
-export const CAMPAIGN_END_MS = Date.parse("2027-01-10T23:59:59.999Z")
-export const CAMPAIGN_END_LABEL = "10 January 2027"
-export const CAMPAIGN_TRIAL_DAYS = 60
-const DEFAULT_TRIAL_DAYS = 14
+import {
+  CAMPAIGN_END_LABEL,
+  CAMPAIGN_END_MS,
+  CHRISTMAS_TRIAL_DAYS,
+  STANDARD_TRIAL_DAYS,
+} from "@/lib/marketing/trialOffer"
+
+export { CAMPAIGN_END_LABEL, CAMPAIGN_END_MS }
+export const CAMPAIGN_TRIAL_DAYS = CHRISTMAS_TRIAL_DAYS
+const DEFAULT_TRIAL_DAYS = STANDARD_TRIAL_DAYS
 
 async function ensureCampaignOfferRow() {
   await pool.query(`
@@ -95,9 +100,15 @@ export async function previewCampaignCode(enteredCode: string, isNewCustomer: bo
   return { ok: true as const, trialDays: decision.trialDays, yearlyPercentOff: 30 }
 }
 
-export function trialDaysForCheckout(decision: CampaignDecision | null, isNewCustomer: boolean) {
+export function trialDaysForCheckout(
+  decision: CampaignDecision | null,
+  isNewCustomer: boolean,
+  now = Date.now()
+) {
   if (decision?.ok) return decision.trialDays
-  return isNewCustomer ? DEFAULT_TRIAL_DAYS : undefined
+  if (!isNewCustomer) return undefined
+  // TODO: Revert to 14-day trial after 10 January 2027
+  return now <= CAMPAIGN_END_MS ? CHRISTMAS_TRIAL_DAYS : DEFAULT_TRIAL_DAYS
 }
 
 function couponOf(promo: Stripe.PromotionCode): Stripe.Coupon | string | null {

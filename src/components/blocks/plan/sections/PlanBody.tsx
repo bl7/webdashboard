@@ -13,6 +13,12 @@ import {
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import labelPrinterInKitchen from "@/assets/images/labelPrunterInKitchen.png"
+import {
+  CHRISTMAS_OFFER_COPY,
+  isChristmasOfferActive,
+  planConditionsAnswer,
+  trialCtaLabel,
+} from "@/lib/marketing/trialOffer"
 
 export type PublicPlan = {
   id: number | string
@@ -51,7 +57,7 @@ const faqs = [
   {
     question: "Where are the subscription conditions?",
     answer:
-      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can use the Christmas offer instead: 60 days free, and 30% off the first annual payment. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
+      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
   },
 ]
 
@@ -119,6 +125,9 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
       ? Math.round((1 - yearly / (monthly * 12)) * 100)
       : 0
   const priceReady = status === "ready" && monthly > 0 && yearly > 0
+  const offerOn = isChristmasOfferActive()
+  const firstAnnual = yearly > 0 ? Math.round(yearly * 0.7) : 0
+  const cta = trialCtaLabel()
 
   return (
     <>
@@ -129,8 +138,10 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
             There is no printer in the box. Use a label printer already installed on Windows or
-            macOS, or the Android app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425. New
-            subscriptions start with a 14-day trial. There is no charge during the trial.
+            macOS, or the Android app with a MUNBYN RW411B, Born4Ship DB403 or Rongta RP425.{" "}
+            {offerOn
+              ? CHRISTMAS_OFFER_COPY
+              : "New subscriptions start with a 14-day trial. There is no charge during the trial."}
           </p>
           <div className="mt-8 inline-flex rounded-full bg-white/10 p-1">
             {(["monthly", "annually"] as const).map((interval) => (
@@ -174,13 +185,27 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
               <p className="mt-2 text-sm leading-relaxed text-[#142124]/70">
                 Kitchen labelling with web and Android access.
               </p>
-              <p className="mt-8 text-5xl font-semibold tracking-tight">
-                {billing === "monthly" ? formatGbp(monthly) : formatGbp(yearly)}
-                <span className="ml-1 text-base font-medium text-[#142124]/60">
-                  {billing === "monthly" ? "/month" : "/year"}
-                </span>
-              </p>
-              {billing === "annually" && equivalentMonthly > 0 ? (
+              {billing === "annually" && offerOn && firstAnnual > 0 ? (
+                <p className="mt-8 flex flex-wrap items-baseline justify-center gap-x-3">
+                  <span className="text-2xl font-medium text-[#142124]/40 line-through">
+                    {formatGbp(yearly)}
+                  </span>
+                  <span className="text-5xl font-semibold tracking-tight">{formatGbp(firstAnnual)}</span>
+                  <span className="text-base font-medium text-[#142124]/60">/year</span>
+                </p>
+              ) : (
+                <p className="mt-8 text-5xl font-semibold tracking-tight">
+                  {billing === "monthly" ? formatGbp(monthly) : formatGbp(yearly)}
+                  <span className="ml-1 text-base font-medium text-[#142124]/60">
+                    {billing === "monthly" ? "/month" : "/year"}
+                  </span>
+                </p>
+              )}
+              {billing === "annually" && offerOn && firstAnnual > 0 ? (
+                <p className="mt-2 text-sm text-[#142124]/70">
+                  First annual payment {formatGbp(firstAnnual)}. Then {formatGbp(yearly)} a year.
+                </p>
+              ) : billing === "annually" && equivalentMonthly > 0 ? (
                 <p className="mt-2 text-sm text-[#142124]/70">
                   Equivalent to {formatGbp(equivalentMonthly)} per month, billed annually.
                 </p>
@@ -192,11 +217,11 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
                   href="/register"
                   className="mt-8 block rounded-full bg-[#17675f] px-6 py-3 text-sm font-semibold text-white"
                 >
-                  Start free trial
+                  {cta}
                 </Link>
               ) : (
                 <span className="mt-8 block rounded-full bg-[#17675f]/50 px-6 py-3 text-sm font-semibold text-white">
-                  Start free trial
+                  {cta}
                 </span>
               )}
             </article>
@@ -215,11 +240,11 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
               ))}
             </ul>
             <p className="mt-6 text-xs leading-relaxed text-[#5f6d70]">
-              New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can
-              use the Christmas offer instead: 60 days free, and 30% off the first annual payment.
-              Payment details are collected at checkout. There is no charge during the trial. After
-              the trial, billing continues at the selected interval until you cancel. You may cancel
-              at any time. Review the{" "}
+              {offerOn
+                ? CHRISTMAS_OFFER_COPY
+                : "New subscriptions start with a 14-day trial. There is no charge during the trial."}{" "}
+              Payment details are collected at checkout. After the trial, billing continues at the
+              selected interval until you cancel. You may cancel at any time. Review the{" "}
               <Link href="/terms" className="font-semibold text-[#17675f]">
                 terms
               </Link>{" "}
@@ -272,7 +297,9 @@ export const PlanBody = ({ initialPlan = null }: { initialPlan?: PublicPlan | nu
                   {faq.question}
                 </AccordionTrigger>
                 <AccordionContent className="text-sm leading-relaxed text-mkt-ink8">
-                  {faq.answer}
+                  {faq.question === "Where are the subscription conditions?"
+                    ? planConditionsAnswer()
+                    : faq.answer}
                   {faq.question === "Can I check my printer first?" ? (
                     <>
                       {" "}

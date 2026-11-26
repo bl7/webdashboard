@@ -29,7 +29,7 @@ export const ScrollBeforeAfter = () => {
   return (
     <section
       className="home-life home-section"
-      style={{ marginBottom: "4.5rem" }}
+      style={{ marginBottom: "4.5rem", paddingTop: "clamp(4.5rem, 8vw, 6.5rem)" }}
       aria-label="Handwritten label compared with a printed label"
     >
       <div className="home-wrap grid w-full items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">

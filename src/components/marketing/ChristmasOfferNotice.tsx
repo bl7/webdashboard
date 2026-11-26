@@ -10,7 +10,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-const END = Date.parse("2027-01-10T23:59:59.999Z")
+import { isChristmasOfferActive } from "@/lib/marketing/trialOffer"
+
 const SEEN = "xmas-offer-seen"
 
 export function ChristmasOfferNotice() {
@@ -19,9 +20,26 @@ export function ChristmasOfferNotice() {
 
   useEffect(() => {
     if (pathname === "/christmas") return
-    if (Date.now() > END) return
+    if (!isChristmasOfferActive()) return
     if (sessionStorage.getItem(SEEN)) return
-    setOpen(true)
+    let waited = false
+    const heroClear = () => {
+      const hero = document.querySelector("h1")
+      if (!hero) return true
+      return hero.getBoundingClientRect().bottom < 80
+    }
+    const maybeOpen = () => {
+      if (waited && heroClear()) setOpen(true)
+    }
+    const timer = window.setTimeout(() => {
+      waited = true
+      maybeOpen()
+    }, 15000)
+    window.addEventListener("scroll", maybeOpen, { passive: true })
+    return () => {
+      window.clearTimeout(timer)
+      window.removeEventListener("scroll", maybeOpen)
+    }
   }, [pathname])
 
   function dismiss() {

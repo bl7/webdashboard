@@ -7,10 +7,12 @@ import React from "react"
 import instaLabel3 from "@/assets/images/instalabel3.png"
 import { motion } from "framer-motion"
 import Link from "next/link"
-import { formatAndroidPrinters, TRIAL_PERIOD_DAYS } from "@/lib/marketing/site"
+import { isChristmasOfferActive, trialCtaLabel } from "@/lib/marketing/trialOffer"
 import { emitHomeEvent } from "../home-labels"
 
 export const Hero = () => {
+  const offerOn = isChristmasOfferActive()
+
   return (
     <section
       className="home-hero-keep relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:flex-row md:px-12 lg:px-16"
@@ -47,16 +49,11 @@ export const Hero = () => {
               Kitchen labelling software
             </div>
             <h1 className="mt-0 font-accent text-4xl font-black leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-              <span className="text-mkt-ink">Kitchen labelling</span>
-              <br />
-              <span className="text-[#154F3B]">without proprietary hardware.</span>
+              <span className="text-mkt-ink">Inspection-ready labels in seconds.</span>
             </h1>
           </div>
-          <p className="mb-1 mt-2 text-sm text-mkt-ink8 sm:text-base">
-            InstaLabel is kitchen labelling software for UK food businesses. Staff print labels
-            from the ingredient, allergen and date information already saved. Use a printer
-            installed on the computer, or the Android app with a supported Bluetooth printer.
-            The same account keeps temperature records, cleaning tasks and the diary.
+          <p className="mb-1 mt-2 text-lg text-mkt-ink8 sm:text-xl">
+            Allergens, use-by dates and temp checks — without paper, handwriting, or guesswork.
           </p>
           <div className="mt-2 flex flex-wrap items-center justify-center gap-3 pt-2 md:justify-start">
             <Link href="/register">
@@ -65,7 +62,7 @@ export const Hero = () => {
                 className="border-0 font-semibold text-white shadow-lg"
                 style={{ backgroundColor: "#142124", backgroundImage: "none" }}
               >
-                Start free trial
+                {trialCtaLabel()}
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
@@ -84,23 +81,9 @@ export const Hero = () => {
             </Button>
           </div>
           <p className="text-xs text-mkt-steel sm:text-sm">
-            New subscriptions start with a {TRIAL_PERIOD_DAYS}-day trial. Payment details at
-            checkout. No charge during the trial.
-          </p>
-          <p className="text-xs text-mkt-steel sm:text-sm">
-            <Link href="/plan" className="underline underline-offset-2 hover:text-mkt-ink">
-              £15.99 a month
-            </Link>
-            . Until 10 January 2027,{" "}
-            <Link href="/christmas" className="underline underline-offset-2 hover:text-mkt-ink">
-              new customers can take 60 days free instead, and an annual plan also gets 30% off
-              the first annual payment
-            </Link>
-            .
-          </p>
-          <p className="text-xs text-mkt-steel sm:text-sm">
-            No printer in the box. Windows or macOS with PrintBridge, or Android with{" "}
-            {formatAndroidPrinters("or")}.
+            {offerOn
+              ? "£15.99 a month after your free period. No printer in the box — use the one you already have. Christmas offer ends 10 January 2027."
+              : "£15.99 a month after your 14-day trial. No printer in the box — use the one you already have."}
           </p>
         </div>
       </div>

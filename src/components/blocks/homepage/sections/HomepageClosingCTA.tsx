@@ -3,6 +3,7 @@
 import React from "react"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import { trialCtaLabel } from "@/lib/marketing/trialOffer"
 import { emitHomeEvent } from "../home-labels"
 
 export const HomepageClosingCTA = () => (
@@ -22,7 +23,7 @@ export const HomepageClosingCTA = () => (
           className="home-btn home-btn-primary"
           onClick={() => emitHomeEvent("trial_click", { location: "closing" })}
         >
-          Start free trial
+          {trialCtaLabel()}
           <ArrowRight className="h-4 w-4" />
         </Link>
         <Link

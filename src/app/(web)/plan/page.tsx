@@ -1,6 +1,7 @@
 import { FOLDER_SEO } from "@/lib/marketing/folderSeo"
 import { Plan } from "@/components/blocks/plan"
 import type { PublicPlan } from "@/components/blocks/plan/sections/PlanBody"
+import { CHRISTMAS_OFFER_COPY, isChristmasOfferActive, planConditionsAnswer } from "@/lib/marketing/trialOffer"
 import { Metadata } from "next"
 import React from "react"
 
@@ -22,14 +23,16 @@ async function getInitialPlan(): Promise<PublicPlan | null> {
   }
 }
 
-const description = FOLDER_SEO["/plan"].description
-
-export const metadata: Metadata = {
-  title: { absolute: FOLDER_SEO["/plan"].title },
+export async function generateMetadata(): Promise<Metadata> {
+  const offerOn = isChristmasOfferActive()
+  const title = offerOn ? "InstaLabel Pricing: £15.99/Month & 60 Days Free" : FOLDER_SEO["/plan"].title
+  const description = offerOn ? CHRISTMAS_OFFER_COPY : FOLDER_SEO["/plan"].description
+  return {
+  title: { absolute: title },
   description,
   keywords: [...FOLDER_SEO["/plan"].keywords],
   openGraph: {
-    title: FOLDER_SEO["/plan"].title,
+    title,
     description,
     url: "https://www.instalabel.co/plan",
     type: "website",
@@ -44,7 +47,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: FOLDER_SEO["/plan"].title,
+    title,
     description,
     images: ["https://www.instalabel.co/opengraph-image.png"],
   },
@@ -62,6 +65,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  }
 }
 
 const faqs = [
@@ -82,12 +86,19 @@ const faqs = [
   {
     question: "Where are the subscription conditions?",
     answer:
-      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Until 10 January 2027, a new customer can use the Christmas offer instead: 60 days free, and 30% off the first annual payment. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
+      "Review the terms presented with your selected plan before subscribing. New subscriptions start with a 14-day trial. Payment details are collected at checkout, there is no charge during the trial, and billing continues at the selected interval after the trial until you cancel. You may cancel at any time.",
   },
 ]
 
 const Page = async () => {
   const initialPlan = await getInitialPlan()
+  const offerOn = isChristmasOfferActive()
+  const description = offerOn ? CHRISTMAS_OFFER_COPY : FOLDER_SEO["/plan"].description
+  const liveFaqs = faqs.map((faq) =>
+    faq.question === "Where are the subscription conditions?"
+      ? { ...faq, answer: planConditionsAnswer() }
+      : faq
+  )
   const structuredData = [
     {
       "@context": "https://schema.org",
@@ -99,7 +110,7 @@ const Page = async () => {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faqs.map((faq) => ({
+      mainEntity: liveFaqs.map((faq) => ({
         "@type": "Question",
         name: faq.question,
         acceptedAnswer: { "@type": "Answer", text: faq.answer },

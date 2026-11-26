@@ -19,10 +19,10 @@ export const Homepage = () => {
     <>
       <Hero />
       <TrustedBySection />
+      <ScrollBeforeAfter />
       <div className="home-life">
         <WhyLabelling />
       </div>
-      <ScrollBeforeAfter />
       <div className="home-life">
         <LabelTypeStrip />
         <KitchenWorkflowExplorer />

@@ -2,6 +2,7 @@
 
 import React from "react"
 import Link from "next/link"
+import { CHRISTMAS_OFFER_COPY, isChristmasOfferActive } from "@/lib/marketing/trialOffer"
 import { emitHomeEvent } from "../home-labels"
 
 const faqs = [
@@ -80,12 +81,7 @@ const faqs = [
         <Link href="/plan" className="home-link">
           £15.99 a month
         </Link>
-        , with a 14-day trial. Until 10 January 2027,{" "}
-        <Link href="/christmas" className="home-link">
-          new customers can take 60 days free instead, and an annual plan also gets 30% off the
-          first annual payment
-        </Link>
-        .
+        , with a 14-day trial.
       </>
     ),
   },
@@ -119,7 +115,14 @@ const faqs = [
   },
 ]
 
-export const HomepageFAQ = () => (
+export const HomepageFAQ = () => {
+  const items = faqs.map((faq) =>
+    faq.q === "What does InstaLabel cost?" && isChristmasOfferActive()
+      ? { ...faq, a: CHRISTMAS_OFFER_COPY }
+      : faq
+  )
+
+  return (
   <section className="home-section">
     <div className="home-wrap grid gap-10 lg:grid-cols-[1fr_1.4fr]">
       <div>
@@ -135,7 +138,7 @@ export const HomepageFAQ = () => (
         </Link>
       </div>
       <div>
-        {faqs.map((faq, index) => (
+        {items.map((faq, index) => (
           <details
             key={faq.q}
             className="home-faq"
@@ -151,5 +154,6 @@ export const HomepageFAQ = () => (
         ))}
       </div>
     </div>
-  </section>
-)
+    </section>
+  )
+}
