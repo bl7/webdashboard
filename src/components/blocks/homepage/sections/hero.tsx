@@ -15,8 +15,7 @@ export const Hero = () => {
 
   return (
     <section
-      className="home-hero-keep relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-mkt-canvas px-4 pb-16 pt-32 sm:px-6 md:flex-row md:px-12 lg:px-16"
-      style={{ minHeight: "100vh" }}
+      className="home-hero-keep relative flex flex-col-reverse items-center overflow-hidden bg-mkt-canvas px-4 pb-8 pt-32 sm:px-6 md:flex-row md:px-12 lg:px-16"
     >
       <div className="absolute left-0 top-0 isolate -z-10 h-80 w-80 scale-125 rounded-full bg-mkt-steel1 opacity-60 blur-3xl" />
       <div className="absolute -bottom-32 -right-20 isolate -z-10 h-96 w-96 rounded-full bg-mkt-ink opacity-20 blur-3xl" />

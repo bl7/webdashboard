@@ -29,6 +29,7 @@ export function ChristmasOfferNotice() {
       return hero.getBoundingClientRect().bottom < 80
     }
     const maybeOpen = () => {
+      if (sessionStorage.getItem(SEEN)) return
       if (waited && heroClear()) setOpen(true)
     }
     const timer = window.setTimeout(() => {
